@@ -1,0 +1,5 @@
+ffbb:
+    resource: "@FfbbBundle/Resources/config/routing.yml"
+    prefix:   /
+
+

@@ -1,0 +1,4 @@
+services:
+#    ffbb.example:
+#        class: Optimouv\FfbbBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

@@ -1,0 +1,27 @@
+ffbb_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: FfbbBundle:Default:index }
+
+ffbb_rencontres:
+    path:     /rencontres
+    defaults: { _controller: FfbbBundle:Rencontres:index }
+
+ffbb_competitions:
+    path:     /competitions
+    defaults: { _controller: FfbbBundle:Competitions:index }
+
+ffbb_rapports:
+    path:     /rapports
+    defaults: { _controller: FfbbBundle:Rapports:index }
+
+ffbb_help:
+    path:     /help
+    defaults: { _controller: FfbbBundle:Help:index }
+
+ffbb_barycentre:
+    path:     /barycentre
+    defaults: { _controller: FfbbBundle:Rencontres:barycentre }
+
+ffbb_exclusion:
+    path:     /exculsion
+    defaults: { _controller: FfbbBundle:Rencontres:exclusion }
