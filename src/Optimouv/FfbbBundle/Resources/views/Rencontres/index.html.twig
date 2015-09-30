@@ -3,513 +3,545 @@
 {% block body %}
     <div id="wrapper">
 
-        <!-- Navigation -->
-        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index.html">Logo</a>
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html">Logo</a>
+        </div>
+        <!-- /.navbar-header -->
+
+        <ul class="nav navbar-top-links navbar-right">
+
+            <!-- /.dropdown -->
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                    </li>
+                </ul>
+                <!-- /.dropdown-user -->
+            </li>
+            <!-- /.dropdown -->
+        </ul>
+
+    </nav>
+
+    <div id="page-wrapper">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="{{ path('ffbb_rencontres') }}">Rencontres <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li><a href="{{ path('ffbb_competitions') }}">Competitions</a></li>
+                    <li><a href="{{ path('ffbb_rapports') }}">Rapports</a></li>
+                    <li><a href="{{ path('ffbb_help') }}">Aide</a></li>
+                    {#<li class="dropdown">#}
+                    {#<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>#}
+                    {#<ul class="dropdown-menu">#}
+                    {#<li><a href="#">Action</a></li>#}
+                    {#<li><a href="#">Another action</a></li>#}
+                    {#<li><a href="#">Something else here</a></li>#}
+                    {#<li role="separator" class="divider"></li>#}
+                    {#<li><a href="#">Separated link</a></li>#}
+                    {#<li role="separator" class="divider"></li>#}
+                    {#<li><a href="#">One more separated link</a></li>#}
+                    {#</ul>#}
+                    {#</li>#}
+                </ul>
+
+
             </div>
-            <!-- /.navbar-header -->
-
-            <ul class="nav navbar-top-links navbar-right">
-
-                <!-- /.dropdown -->
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
-                        </li>
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
-                        </li>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Définissez le meilleur lieu de rencontre </h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="panel panel-red">
+                <div class="panel-heading">
+                    Participants
+                </div>
+                <div class="panel-body">
+                    <ul>
+                        <li> SAINT-LAURENT-DU-VAR</li>
+                        <li> HYERES</li>
+                        <li> LYON</li>
+                        <li> AVIGNON</li>
+                        <li> BREST</li>
                     </ul>
-                    <!-- /.dropdown-user -->
-                </li>
-                <!-- /.dropdown -->
-            </ul>
-
-        </nav>
-
-        <div id="page-wrapper">
-            <nav class="navbar navbar-default">
-                <div class="container-fluid">
-                    <!-- Collect the nav links, forms, and other content for toggling -->
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav">
-                            <li class="active"><a href="{{ path('ffbb_rencontres') }}">Rencontres <span class="sr-only">(current)</span></a>
-                            </li>
-                            <li><a href="{{ path('ffbb_competitions') }}">Competitions</a></li>
-                            <li><a href="{{ path('ffbb_rapports') }}">Rapports</a></li>
-                            <li><a href="{{ path('ffbb_help') }}">Aide</a></li>
-                            {#<li class="dropdown">#}
-                            {#<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>#}
-                            {#<ul class="dropdown-menu">#}
-                            {#<li><a href="#">Action</a></li>#}
-                            {#<li><a href="#">Another action</a></li>#}
-                            {#<li><a href="#">Something else here</a></li>#}
-                            {#<li role="separator" class="divider"></li>#}
-                            {#<li><a href="#">Separated link</a></li>#}
-                            {#<li role="separator" class="divider"></li>#}
-                            {#<li><a href="#">One more separated link</a></li>#}
-                            {#</ul>#}
-                            {#</li>#}
-                        </ul>
-
-
-                    </div>
-                    <!-- /.navbar-collapse -->
                 </div>
-                <!-- /.container-fluid -->
-            </nav>
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header">Définissez le meilleur lieu de rencontre </h1>
-                </div>
-                <!-- /.col-lg-12 -->
+                {#<div class="panel-footer">#}
+                {#Panel Footer#}
+                {#</div>#}
             </div>
-            <!-- /.row -->
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="panel panel-red">
-                        <div class="panel-heading">
-                            Participants
-                        </div>
-                        <div class="panel-body">
-                            <ul>
-                                <li> SAINT-LAURENT-DU-VAR</li>
-                                <li> HYERES</li>
-                                <li> LYON</li>
-                                <li> AVIGNON</li>
-                                <li> BREST</li>
-                            </ul>
-                        </div>
-                        {#<div class="panel-footer">#}
-                        {#Panel Footer#}
-                        {#</div>#}
-                    </div>
-                </div>
-                <!-- /.col-lg-4 -->
-                <form>
-                <div class="col-lg-4">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            Type du lieu
-                        </div>
+        </div>
+        <!-- /.col-lg-4 -->
 
-
-
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1"
-                                           checked>
-                                    Lieux définis
-                                </label>
-                            </div>
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-                                    Barycentre
-                                </label>
-                            </div>
-
-
-
-
-                    </div>
+        <div class="col-lg-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Type de lieu
                 </div>
 
+                <form action="{{ path('ffbb_contact') }}" method="post">
 
-                <!-- /.col-lg-4 -->
-                <div class="col-lg-4">
-                    <div class="panel panel-yellow">
-                        <div class="panel-heading">
-                            Ajouter des contraintes
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">
-                                Exclusion de zone géographique
-                            </label>
-                        </div>
-
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1"
+                                   checked>
+                            Lieux définis
+                        </label>
                     </div>
-                </div>
-                    <button type="submit" class="btn btn-default">Lancer le calcul</button>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                            Barycentre
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-default  pull-right">Lancer le calcul sans contrainte</button>
 
 
                 </form>
-                <!-- /.col-lg-4 -->
-            </div>
-            <!-- /.row -->
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Les scénarios ci dessous présentent les résultats les plus écoresponsables correspondent
-                            à votre recherche !
-                        </div>
-                        <!-- .panel-heading -->
-                        <div class="panel-body">
-                            <div class="col-lg-6">
-                                <div class="panel-body">
-                                    <div class="panel-group" id="accordion">
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                    <a data-toggle="collapse" data-parent="#accordion"
-                                                       href="#collapseOne">Scénario Optimal</a>
-                                                </h4>
-                                            </div>
-                                            <div id="collapseOne" class="panel-collapse collapse in">
-                                                <div class="panel-body"> <!-- premier scÃ©nario -->
-                                                    <div id="map"
-                                                         style="width: 100%; height: 400px; background: grey"></div>
-                                                    <script type="text/javascript" charset="UTF-8">
-
-
-                                                        /**
-                                                         * Adds markers to the map highlighting the locations of the captials of
-                                                         * France, Italy, Germany, Spain and the United Kingdom.
-                                                         *
-                                                         * @param  {H.Map} map      A HERE Map instance within the application
-                                                         */
-                                                        function addMarkersToMap(map) {
-
-                                                            var incrment = 1;
-                                                            //tracer dynamiquement les points de villes
-                                                            {% for coordonneeVille in coordonneesVille %}
-                                                            var coordonneeVille = '{{ coordonneeVille }}';
-
-                                                            var xy = coordonneeVille.split("%2C");
-                                                            var x = xy[0];
-                                                            var y = xy[1];
-
-                                                            var marker = 'marker' + incrment;
-                                                            window[marker] = new H.map.Marker({
-                                                                lat: parseInt(x),
-                                                                lng: parseInt(y)
-                                                            });
-                                                            map.addObject(window[marker]);
-
-                                                            var incrment = incrment + 1
-
-                                                            {% endfor %}
-
-
-                                                        }
-                                                        /**
-                                                         * Markeur principal
-                                                         */
-
-                                                        // Create a marker icon from an image URL:
-                                                        var icon = new H.map.Icon('{{ asset('bundles/ffbb/images/depart.png') }}');
-
-                                                        // Create a marker using the previously instantiated icon:
-                                                        var markerPrincipal = new H.map.Marker({
-                                                            lat: '{{ longPtDep }}',
-                                                            lng: '{{ latPtDep }}'
-                                                        }, {icon: icon});
-
-                                                        /**
-                                                         *
-                                                         * Changer la langue de la carte
-                                                         */
-                                                        function switchMapLanguage(map, platform) {
-                                                            var mapTileService = platform.getMapTileService({
-                                                                        type: 'base'
-                                                                    }),
-                                                                    frenchMapLayer = mapTileService.createTileLayer(
-                                                                            'maptile',
-                                                                            'normal.day',
-                                                                            256,
-                                                                            'png8',
-                                                                            {lg: 'fre'}
-                                                                    );
-                                                            map.setBaseLayer(frenchMapLayer);
-
-
-                                                        }
-                                                        /*
-                                                         Fin fn changer langue
-                                                         */
-
-                                                        /**
-                                                         * Boilerplate map initialization code starts below:
-                                                         */
-
-                                                        //Step 1: initialize communication with the platform
-                                                        var platform = new H.service.Platform({
-                                                            app_id: 'DemoAppId01082013GAL',
-                                                            app_code: 'AJKnXv84fjrb0KIHawS0Tg',
-                                                            useCIT: true,
-                                                            useHTTPS: true
-                                                        });
-                                                        var defaultLayers = platform.createDefaultLayers();
-
-                                                        //Step 2: initialize a map - this map is centered over Europe
-                                                        var map = new H.Map(document.getElementById('map'),
-                                                                defaultLayers.normal.map, {
-                                                                    center: {lat: 48.8567, lng: 2.3508},
-                                                                    zoom: 4
-                                                                });
-
-
-                                                        var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-
-                                                        // Create the default UI components
-                                                        //    var ui = H.ui.UI.createDefault(map, defaultLayers);
-                                                        var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
-
-
-                                                        // Add the marker to the map:
-                                                        map.addObject(markerPrincipal);
-
-                                                        addMarkersToMap(map);
-                                                        switchMapLanguage(map, platform);
-
-
-                                                    </script>
-                                                    <!-- Nav tabs -->
-                                                    <ul class="nav nav-tabs">
-                                                        <li class="active"><a href="#Estimations" data-toggle="tab">Estimations</a>
-                                                        </li>
-                                                        <li><a href="#Details" data-toggle="tab">Voir le détail</a>
-                                                        </li>
-
-                                                    </ul>
-
-                                                    <!-- Tab panes -->
-                                                    <div class="tab-content">
-                                                        <div class="tab-pane fade in active" id="Estimations">
-
-
-                                                            <p>- La ville de départ
-                                                                est:<strong>{{ villeDepart }}</strong> .</p>
-
-                                                            <p>- <strong>{{ distanceMin /1000 }}</strong> Km au total à 
-                                                                parcourir pour l'ensemble du scénario.</p>
-
-                                                            <p>-
-                                                                <strong>{{ dureeTrajet // 3600 }}
-                                                                    H{{ dureeTrajet % 3600 // 60 }}</strong>
-                                                                de trajet pour l'ensemble du scénario.</p>
-
-                                                            <p>-111135 Kg équivalent
-                                                                CO2 d'émissions totales de GES pour une équipe de 11
-                                                                jouueurs en voiture individuelle
-                                                                pour le scénario.</p>
-
-
-                                                        </div>
-                                                        <div class="tab-pane fade" id="Details">
-                                                            <div class="table-responsive">
-                                                                <table class="table table-striped table-bordered table-hover">
-                                                                    <thead>
-                                                                    <tr>
-
-                                                                    </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                    <tr>
-                                                                        <th> Participant</th>
-                                                                        {% for maVille in mesVilles %}
-                                                                            <td>    {{ maVille }} </td>
-                                                                        {% endfor %}
-
-
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th>Kms à  parcourir</th>
-
-                                                                        {% for dist in distVille %}
-                                                                            <td>  {{ dist/1000 }}</td>
-                                                                        {% endfor %}
-
-
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th>Temps de parcours</th>
-
-                                                                        {% for duree in dureeVille %}
-                                                                            <td>     {{ duree }} </td>
-                                                                        {% endfor %}
-
-
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th>Coût de parcours</th>
-                                                                    </tr>
-
-
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                            <!-- /.table-responsive -->
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                    <a data-toggle="collapse" data-parent="#accordion"
-                                                       href="#collapseTwo">Scénario Initial</a>
-                                                </h4>
-                                            </div>
-                                            <div id="collapseTwo" class="panel-collapse collapse">
-                                                <div class="panel-body">
-                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-                                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-                                                    ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                                                    aliquip ex ea commodo consequat. Duis aute irure dolor in
-                                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                                                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                                                    culpa qui officia deserunt mollit anim id est laborum.
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <!-- .panel-body -->
-                                <!-- /.panel -->
-                            </div>
-                            <!-- /.col-lg-6 -->
-
-                            <div class="col-lg-6">
-                                <div class="panel-body">
-                                    <div class="panel-group" id="accordion2">
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                    <a data-toggle="collapse" data-parent="#accordion2"
-                                                       href="#collapseOne2">Scénario Equitable</a>
-                                                </h4>
-                                            </div>
-                                            <div id="collapseOne2" class="panel-collapse collapse in">
-                                                <div class="panel-body"> <!-- premier scÃ©nario -->
-                                                    <div id="map"
-                                                         style="width: 100%; height: 400px; background: grey"></div>
-
-                                                    <!-- Nav tabs -->
-                                                    <ul class="nav nav-tabs">
-                                                        <li class="active"><a href="#EstimationsEq" data-toggle="tab">Estimations</a>
-                                                        </li>
-                                                        <li><a href="#DetailsEq" data-toggle="tab">Voir le détail</a>
-                                                        </li>
-
-                                                    </ul>
-
-                                                    <!-- Tab panes -->
-                                                    <div class="tab-content">
-                                                        <div class="tab-pane fade in active" id="EstimationsEq">
-                                                            <p>- 1500 Km au total à  parcourir pour l'ensemble du
-                                                                scénario.</p>
-
-                                                            <p>- 20H52 de trajet pour l'ensemble du scénario.</p>
-
-                                                            <p>- 1230.32 Kg équivalent CO2 d'émissions totales de GES
-                                                                pour le scénario.</p>
-                                                        </div>
-                                                        <div class="tab-pane fade" id="DetailsEq">
-                                                            <div class="table-responsive">
-                                                                <table class="table table-striped table-bordered table-hover">
-                                                                    <thead>
-                                                                    <tr>
-                                                                        <th>Participant</th>
-                                                                        <th>Kms à parcourir</th>
-                                                                        <th>Temps de parcours</th>
-                                                                        <th>Coût de parcours</th>
-                                                                        <th> Emissions de GES (kg/CO2/km)</th>
-                                                                    </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                    <tr>
-                                                                        <td>1</td>
-                                                                        <td>Mark</td>
-                                                                        <td>Otto</td>
-                                                                        <td>@mdo</td>
-                                                                        <td>0</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>2</td>
-                                                                        <td>Jacob</td>
-                                                                        <td>Thornton</td>
-                                                                        <td>@fat</td>
-                                                                        <td>0</td>
-
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>3</td>
-                                                                        <td>Larry</td>
-                                                                        <td>the Bird</td>
-                                                                        <td>@twitter</td>
-                                                                        <td>0</td>
-
-                                                                    </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                            <!-- /.table-responsive -->
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                    <a data-toggle="collapse" data-parent="#accordion2"
-                                                       href="#collapseTwo2">scénario Initial</a>
-                                                </h4>
-                                            </div>
-                                            <div id="collapseTwo2" class="panel-collapse collapse">
-                                                <div class="panel-body">
-                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-                                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-                                                    ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                                                    aliquip ex ea commodo consequat. Duis aute irure dolor in
-                                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                                                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                                                    culpa qui officia deserunt mollit anim id est laborum.
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <!-- .panel-body -->
-                                <!-- /.panel -->
-                            </div>
-                            <!-- /.col-lg-6 -->
-                        </div>
-                        <!-- .panel-body -->
-                    </div>
-                    <!-- /.panel -->
-                </div>
-                <!-- /.col-lg-12 -->
-            </div>
-
-            <div>
 
 
             </div>
-
         </div>
-        <!-- /#page-wrapper -->
+
+
+        <!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+            <div class="panel panel-yellow">
+                <div class="panel-heading">
+                    Ajouter des contraintes
+                </div>
+
+                <form>
+
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox"> Exclusion de zone géographique
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-default  pull-right">Lancer le calcul avec contrainte</button>
+                </form>
+
+
+            </div>
+        </div>
+
+        <!-- /.col-lg-4 -->
+    </div>
+    <!-- /.row -->
+
+    <div class="row">
+    <div class="col-lg-12">
+    <div class="panel panel-default">
+    <div class="panel-heading">
+        Les scénarios ci dessous présentent les résultats les plus écoresponsables correspondant
+        à votre recherche !
+    </div>
+    <!-- .panel-heading -->
+    <div class="panel-body">
+    <div class="col-lg-6">
+    <div class="panel-body">
+    <div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion"
+               href="#collapseOne">Scénario optimal</a>
+        </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in">
+        <div class="panel-body"> <!-- premier scÃ©nario -->
+            <div id="map"
+                 style="width: 100%; height: 400px; background: grey"></div>
+            <script type="text/javascript" charset="UTF-8">
+
+
+                /**
+                 * Adds markers to the map highlighting the locations of the captials of
+                 * France, Italy, Germany, Spain and the United Kingdom.
+                 *
+                 * @param  {H.Map} map      A HERE Map instance within the application
+                 */
+                function addMarkersToMap(map) {
+
+                    var incrment = 1;
+                    //tracer dynamiquement les points de villes
+                    {% for coordonneeVille in coordonneesVille %}
+                    var coordonneeVille = '{{ coordonneeVille }}';
+
+                    var xy = coordonneeVille.split("%2C");
+                    var x = xy[0];
+                    var y = xy[1];
+
+                    var marker = 'marker' + incrment;
+                    window[marker] = new H.map.Marker({
+                        lat: parseInt(x),
+                        lng: parseInt(y)
+                    });
+                    map.addObject(window[marker]);
+
+                    var incrment = incrment + 1
+
+                    {% endfor %}
+
+
+                }
+                /**
+                 * Markeur principal
+                 */
+
+                // Create a marker icon from an image URL:
+                var icon = new H.map.Icon('{{ asset('bundles/ffbb/images/depart.png') }}');
+
+                // Create a marker using the previously instantiated icon:
+                var markerPrincipal = new H.map.Marker({
+                    lat: '{{ longPtDep }}',
+                    lng: '{{ latPtDep }}'
+                }, {icon: icon});
+
+                /**
+                 *
+                 * Changer la langue de la carte
+                 */
+                function switchMapLanguage(map, platform) {
+                    var mapTileService = platform.getMapTileService({
+                                type: 'base'
+                            }),
+                            frenchMapLayer = mapTileService.createTileLayer(
+                                    'maptile',
+                                    'normal.day',
+                                    256,
+                                    'png8',
+                                    {lg: 'fre'}
+                            );
+                    map.setBaseLayer(frenchMapLayer);
+
+
+                }
+                /*
+                 Fin fn changer langue
+                 */
+
+                /**
+                 * Boilerplate map initialization code starts below:
+                 */
+
+                //Step 1: initialize communication with the platform
+                var platform = new H.service.Platform({
+                    app_id: 'DemoAppId01082013GAL',
+                    app_code: 'AJKnXv84fjrb0KIHawS0Tg',
+                    useCIT: true,
+                    useHTTPS: true
+                });
+                var defaultLayers = platform.createDefaultLayers();
+
+                //Step 2: initialize a map - this map is centered over Europe
+                var map = new H.Map(document.getElementById('map'),
+                        defaultLayers.normal.map, {
+                            center: {lat: 48.8567, lng: 2.3508},
+                            zoom: 4
+                        });
+
+
+                var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+                // Create the default UI components
+                //    var ui = H.ui.UI.createDefault(map, defaultLayers);
+                var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
+
+
+                // Add the marker to the map:
+                map.addObject(markerPrincipal);
+
+                addMarkersToMap(map);
+                switchMapLanguage(map, platform);
+
+
+            </script>
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#Estimations" data-toggle="tab">Estimations</a>
+                </li>
+                <li><a href="#Details" data-toggle="tab">Voir le détail</a>
+                </li>
+
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="Estimations">
+
+
+                    <p>- Le meilleur lieu de rencontre
+                        est <strong>{{ villeDepart }}</strong></p>
+
+                    <p>- <strong>{{ distanceMin }}</strong> kilomètres au total à
+                        parcourir pour l'ensemble du scénario</p>
+
+                    <p>- <strong>{{ (distanceMin * 0.481395349)|round }}</strong>
+                        € pour réaliser les trajets de l'ensemble du scénario</p>
+
+                    <p>-
+                        <strong>{{ dureeTrajet // 3600 }}H{{ dureeTrajet % 3600 // 60 }}</strong>
+                        de trajet pour l'ensemble du scénario</p>
+
+                    <p>- <strong>{{ (distanceMin *12*0.30144186)|round }}</strong> Kg équivalent
+                        CO2 d'émissions totales de GES pour une équipe de 12
+                        joueurs en voiture individuelle
+                        pour le scénario</p>
+
+                    <p>- <strong>{{ (distanceMin *(12/4)*0.30144186)|round }}</strong> Kg équivalent
+                        CO2 d'émissions totales de GES pour une équipe de 12
+                        joueurs en co-voiturage pour le scénario</p>
+
+
+                </div>
+                <div class="tab-pane fade" id="Details">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover" style="overflow-x: scroll;">
+
+                            <tbody>
+                            <tr>
+                                <th> Participants</th>
+                                {% for maVille in mesVilles %}
+                                    <td><strong> {{ maVille }}</strong></td>
+                                {% endfor %}
+
+
+                            </tr>
+                            <tr>
+                                <th>Kilomètres à  parcourir</th>
+
+                                {% for dist in distVille %}
+                                    <td>  {{ dist //1000 }}</td>
+                                {% endfor %}
+
+
+                            </tr>
+                            <tr>
+                                <th>Temps de parcours</th>
+
+                                {% for duree in dureeVille %}
+                                    <td>     {{ duree // 3600 }}H{{ duree % 3600 // 60 }} </td>
+                                {% endfor %}
+
+
+                            </tr>
+                            <tr>
+                                <th>Coût de parcours (€)</th>
+
+                                {% for dist in distVille %}
+                                    <td>  {{ (dist // 1000 * 0.481395349)|round }}</td>
+                                {% endfor %}
+
+
+                            </tr>
+
+                            <tr>
+                                <th>Emissions GES voitures individuelle (en kilos équivalent CO2)</th>
+
+                                {% for dist in distVille %}
+                                    <td>  {{ (dist //1000 *12*0.30144186)|round  }}</td>
+                                {% endfor %}
+
+
+                            </tr>
+                            <tr>
+                                <th>Emissions GES covoiturage (en kilos équivalent CO2)</th>
+
+                                {% for dist in distVille %}
+                                    <td>  {{ (dist //1000 *(12/4)*0.30144186)|round  }}</td>
+                                {% endfor %}
+
+
+                            </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.table-responsive -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion"
+                   href="#collapseTwo">Scénario initial</a>
+            </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse">
+            <div class="panel-body">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+                ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                aliquip ex ea commodo consequat. Duis aute irure dolor in
+                reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                culpa qui officia deserunt mollit anim id est laborum.
+            </div>
+        </div>
+    </div>
+
+    </div>
+    </div>
+    <!-- .panel-body -->
+    <!-- /.panel -->
+    </div>
+    <!-- /.col-lg-6 -->
+
+    <div class="col-lg-6">
+        <div class="panel-body">
+            <div class="panel-group" id="accordion2">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion2"
+                               href="#collapseOne2">Scénario équitable</a>
+                        </h4>
+                    </div>
+                    <div id="collapseOne2" class="panel-collapse collapse in">
+                        <div class="panel-body"> <!-- premier scÃ©nario -->
+                            <div id="map"
+                                 style="width: 100%; height: 400px; background: grey"></div>
+
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#EstimationsEq" data-toggle="tab">Estimations</a>
+                                </li>
+                                <li><a href="#DetailsEq" data-toggle="tab">Voir le détail</a>
+                                </li>
+
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div class="tab-pane fade in active" id="EstimationsEq">
+                                    <p>- 1500 kilomètres au total à  parcourir pour l'ensemble du
+                                        scénario.</p>
+
+                                    <p>- 20H52 de trajet pour l'ensemble du scénario.</p>
+
+                                    <p>- 1230.32 Kg équivalent CO2 d'émissions totales de GES
+                                        pour le scénario.</p>
+                                </div>
+                                <div class="tab-pane fade" id="DetailsEq">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-bordered table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>Participant</th>
+                                                <th>kilomètres à parcourir</th>
+                                                <th>Temps de parcours</th>
+                                                <th>Coût de parcours</th>
+                                                <th> Emissions de GES (kg/CO2/km)</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>Mark</td>
+                                                <td>Otto</td>
+                                                <td>@mdo</td>
+                                                <td>0</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td>Jacob</td>
+                                                <td>Thornton</td>
+                                                <td>@fat</td>
+                                                <td>0</td>
+
+                                            </tr>
+                                            <tr>
+                                                <td>3</td>
+                                                <td>Larry</td>
+                                                <td>the Bird</td>
+                                                <td>@twitter</td>
+                                                <td>0</td>
+
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /.table-responsive -->
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion2"
+                               href="#collapseTwo2">scénario sans contrainte</a>
+                        </h4>
+                    </div>
+                    <div id="collapseTwo2" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+                            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+                            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                            aliquip ex ea commodo consequat. Duis aute irure dolor in
+                            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                            culpa qui officia deserunt mollit anim id est laborum.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- .panel-body -->
+        <!-- /.panel -->
+    </div>
+    <!-- /.col-lg-6 -->
+    </div>
+    <!-- .panel-body -->
+    </div>
+    <!-- /.panel -->
+    </div>
+    <!-- /.col-lg-12 -->
+    </div>
+
+    <div>
+
+
+    </div>
+
+    </div>
+    <!-- /#page-wrapper -->
 
     </div>
 {% endblock %}

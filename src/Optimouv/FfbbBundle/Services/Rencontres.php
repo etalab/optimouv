@@ -6,6 +6,7 @@
  * Time: 11:43
  */
 namespace Optimouv\FfbbBundle\Services;
+
 use \PDO;
 
 class Rencontres
@@ -28,7 +29,7 @@ class Rencontres
         $distanceDest = []; //tableau qui contient toutes les distances vers les destinations d un point de d�part
         $dureeDest = []; //tableau qui contient toutes les dur�es vers les destinations d un point de d�part
         $coordonneesDest = []; //tableau qui contient toutes les coordonn�es vers les destinations d un point de d�part
-        
+
         $longueurTab = count($villes);
         for ($i = 0; $i < $longueurTab; $i++) {
             $start = $villes[0];
@@ -132,6 +133,7 @@ class Rencontres
 
         }
 
+
         $infosVilles = [];
         $infosVilles[0] = $mesVilles;
         $infosVilles[1] = $distVille;
@@ -142,6 +144,9 @@ class Rencontres
         $longPtDep = $positionPtDepart[0]; // piece1
         $latPtDep = $positionPtDepart[1]; // piece2
 
+        //calcul arrondie de la distance min:
+        $distanceMin = $distanceMin / 1000;
+        $distanceMin = round($distanceMin, 0);
         $retour = [];
 
         $retour[0] = $villeDepart;

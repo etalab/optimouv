@@ -3,6 +3,7 @@
 namespace Optimouv\FfbbBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 class RencontresController extends Controller
 {
@@ -87,5 +88,9 @@ class RencontresController extends Controller
         ));
 
 
+    }
+    public function contactAction()
+    {
+        return new Response('<h1>Contactez nous!</h1>');
     }
 }

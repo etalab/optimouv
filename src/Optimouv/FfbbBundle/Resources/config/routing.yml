@@ -1,5 +1,5 @@
 ffbb_homepage:
-    path:     /hello/{name}
+    path:     /
     defaults: { _controller: FfbbBundle:Default:index }
 
 ffbb_rencontres:
@@ -25,3 +25,8 @@ ffbb_barycentre:
 ffbb_exclusion:
     path:     /exculsion
     defaults: { _controller: FfbbBundle:Rencontres:exclusion }
+
+
+ffbb_contact:
+    path:     /contact
+    defaults: { _controller: FfbbBundle:Rencontres:contact }
