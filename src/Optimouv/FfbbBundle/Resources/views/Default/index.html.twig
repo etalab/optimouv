@@ -280,12 +280,12 @@
             function typeLieu()
             {
                 if(document.getElementById("meilleurLieuOption").checked == true){
-                    window.location.href =  "http://localhost/Optimouv/web/app_dev.php/rencontres";
+                    window.location.href =  "{{ path('ffbb_rencontres') }}";
 //                    alert("optimal");
                 }
                 else{
-                    {#window.location.href = "{{ path('ffbb_barycentre') }}";#}
-                    alert("Barycentre");
+                    window.location.href = "{{ path('ffbb_barycentre') }}";
+//                    alert("Barycentre");
 
                 }
 
