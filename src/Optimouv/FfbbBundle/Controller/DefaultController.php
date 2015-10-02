@@ -8,6 +8,11 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('FfbbBundle:Default:index.html.twig');
+        $coordonneesVille = $this->get('service_rencontres')->index();
+
+        return $this->render('FfbbBundle:Default:index.html.twig', array(
+
+            'coordonneesVille' => $coordonneesVille,
+        ));
     }
 }
