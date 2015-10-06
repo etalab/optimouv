@@ -30,3 +30,7 @@ ffbb_exclusion:
 ffbb_contact:
     path:     /contact
     defaults: { _controller: FfbbBundle:Rencontres:contact }
+
+ffbb_terrain:
+    path:     /terrain-neutre
+    defaults: { _controller: FfbbBundle:Rencontres:terrainNeutre }

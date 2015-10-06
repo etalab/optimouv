@@ -25,8 +25,9 @@ class Rencontres
 
 
         //urlencode pour supprimer les espaces vides dans l'url
-        $villes = ["43.67353%2C7.19013", "43.12022%2C6.13101", "45.76931%2C4.84977", "43.95465%2C4.81606", "48.39044%2C-4.48658"];
-
+//        $villes = ["43.67353%2C7.19013", "43.12022%2C6.13101", "45.76931%2C4.84977", "43.95465%2C4.81606", "48.39044%2C-4.48658"];
+        //on récupère le tableau des villes
+        $villes = $this->index();
         $T2 = []; //tableau interm�diaire qui contient les coordonnees des pts d arrivees
 
         $lesDistances = []; // la somme des distances
@@ -173,13 +174,13 @@ class Rencontres
     //Calcul du barycentre
     public function Barycentre()
     {
-        $villes = ["43.67353%2C7.19013", "43.12022%2C6.13101", "45.76931%2C4.84977", "43.95465%2C4.81606", "48.39044%2C-4.48658"];
-
-        //Décalaration du tableau de retour
-        $retour = [];
+//        $villes = ["43.67353%2C7.19013", "43.12022%2C6.13101", "45.76931%2C4.84977", "43.95465%2C4.81606", "48.39044%2C-4.48658"];
+        //on récupère le tableau des villes
+        $villes = $this->index();
 
         $length = count($villes);
         $lan = $lat = null;
+       //Calcul des coordonnes des X Y
         for ($i = 0; $i < $length; $i++) {
 
             $Coordonnes = explode("%2C", $villes[$i]);
@@ -193,17 +194,7 @@ class Rencontres
         $latY = $lat / $length;
         $coord = $lanX . '%2C' . $latY;
 
-        $coor_url = 'https://places.demo.api.here.com/places/v1/discover/explore?at=' . $coord . '&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
-        $coor_json = file_get_contents($coor_url);
-
-        $coor_array = json_decode($coor_json, true);
-
-        $barycentreVille = $coor_array['search']['context']['location']['address']['city'];
-
-        $retour[0] = $villes;
-        $retour[1] = $barycentreVille;
-        $retour[2] = $lanX;
-        $retour[3] = $latY;
+        $retour = $this->routingMatrix($coord, $villes);
 
         return $retour;
 
@@ -211,11 +202,18 @@ class Rencontres
     }
 
     //Calcul exclusion géographique
-    public function Exclusion()
+    public function Exclusion($dbcon)
     {
 
 
-        $villes = ["43.67353%2C7.19013", "43.12022%2C6.13101", "45.76931%2C4.84977", "43.95465%2C4.81606", "48.39044%2C-4.48658"];
+        //params de connexion
+
+        $dbname = $dbcon[0];
+        $dbuser = $dbcon[1];
+        $dbpwd = $dbcon[2];
+        //on récupère le tableau des villes
+        $villes = $this->index();
+//        $villes = ["43.67353%2C7.19013", "43.12022%2C6.13101", "45.76931%2C4.84977", "43.95465%2C4.81606", "48.39044%2C-4.48658"];
 
         $length = count($villes);
         $lan = $lat = null;
@@ -246,14 +244,8 @@ class Rencontres
         $city = addslashes($city);
 
 
-        /*
-                $dbname = 'optimouv';
-                $dbuser = 'root';
-                $dbpass = '';
-        */
-
         try {
-            $bdd = new PDO('mysql:host=localhost;dbname=optimouv;charset=utf8', 'root', '');
+            $bdd = new PDO('mysql:host=localhost;dbname='.$dbname.';charset=utf8', $dbuser, $dbpwd);
         } catch (PDOException $e) {
             die('Erreur : ' . $e->getMessage());
         }
@@ -268,14 +260,18 @@ class Rencontres
         $retourBarycentre = [];
         if ($population < 45000) {
 
-            $longBarycentre = $resultReq['ville_latitude_deg'];
-            $latBarycentre = $resultReq['ville_longitude_deg'];
-            $retourBarycentre [0] = $city;
-            $retourBarycentre [1] = $population;
-            $retourBarycentre [2] = $longBarycentre;
-            $retourBarycentre [3] = $latBarycentre;
+            $lanX = $resultReq['ville_latitude_deg'];
+            $latY = $resultReq['ville_longitude_deg'];
+            $coord = $lanX . '%2C' . $latY;
+            $retour = $this->Barycentre();
 
-            return $retourBarycentre;
+            return $retour;
+
+//            $retourBarycentre [0] = $city;
+//            $retourBarycentre [1] = $population;
+//            $retourBarycentre [2] = $longBarycentre;
+//            $retourBarycentre [3] = $latBarycentre;
+
 
         } else {
 
@@ -290,19 +286,12 @@ order by Proximite limit 1,5 ;");
                     continue;
                 } else {
 
+                    $lanX = $row['ville_latitude_deg'];
+                    $latY = $row['ville_longitude_deg'];
+                    $coord = $lanX . '%2C' . $latY;
+                    $retour = $this->routingMatrix($coord, $villes);
 
-                    $longBarycentre = $row['ville_latitude_deg'];
-                    $latBarycentre = $row['ville_longitude_deg'];
-                    $city = $row['ville_nom'];
-                    $population = $row['ville_population_2012'];
-
-
-                    $retourBarycentre [0] = $city;
-                    $retourBarycentre [1] = $population;
-                    $retourBarycentre [2] = $longBarycentre;
-                    $retourBarycentre [3] = $latBarycentre;
-
-                    return $retourBarycentre;
+                    return $retour;
 
 
                 }
@@ -316,7 +305,8 @@ order by Proximite limit 1,5 ;");
     //Calcul du scénario équitable
     public function scenarioEquitable()
     {
-        $villes = ["43.67353%2C7.19013", "43.12022%2C6.13101", "45.76931%2C4.84977", "43.95465%2C4.81606", "48.39044%2C-4.48658"];
+//        $villes = ["43.67353%2C7.19013", "43.12022%2C6.13101", "45.76931%2C4.84977", "43.95465%2C4.81606", "48.39044%2C-4.48658"];
+        $villes = $this->index();
 
         $T2 = []; //tableau interm?diaire qui contient les coordonnees des pts d arrivees
 
@@ -465,6 +455,171 @@ order by Proximite limit 1,5 ;");
         $retour[8] = $dureeVille;
 
         return $retour;
+
+    }
+
+    public function routingMatrix($coord, $villes){
+
+        $coor_url = 'https://places.demo.api.here.com/places/v1/discover/explore?at=' . $coord . '&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+        $coor_json = file_get_contents($coor_url);
+
+        $coor_array = json_decode($coor_json, true);
+
+        $barycentreVille = $coor_array['search']['context']['location']['address']['city'];
+
+        $start = $coord;
+        $T2 = $villes;
+
+        //on fait appel à la première partie de l'url here
+        $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Btruck%3Btraffic%3Adisabled%3B&start0=' . $start;
+        //on parcourt tous les éléments du deuxième tableau: long + lat
+        for ($j = 0; $j < count($T2); $j++) {
+
+            $elt = $T2[$j];
+            $maps_url .= '&destination' . $j . '=' . $elt;
+        }
+
+        //on ram?ne le dernier element de l'url
+        $maps_url .= '&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+
+        $maps_json = file_get_contents($maps_url);
+
+        $maps_array = json_decode($maps_json, true);
+
+        //On r?cup?re le nombre des distances ? stocker dans un tableau
+        $nbrDistances = count($maps_array['Response']['MatrixEntry']);
+
+        $distance = null;
+        $duree = null;
+        $tabDistance = [];
+        $tabDuree = [];
+
+        for ($j = 0; $j < $nbrDistances; $j++) {
+
+            //calcul des distances pour chaque ville + duree
+            $uneDistance = $maps_array['Response']['MatrixEntry'][$j]['Route']['Summary']['Distance'];
+            $uneDuree = $maps_array['Response']['MatrixEntry'][$j]['Route']['Summary']['BaseTime'];
+
+            //Tab des distances des villes
+            array_push($tabDistance, $uneDistance);
+
+            //Tab des durées des trajets des villes
+            array_push($tabDuree, $uneDuree);
+
+            //calcul somme des distances
+            $distance += $maps_array['Response']['MatrixEntry'][$j]['Route']['Summary']['Distance'];
+
+            //calcul somme des durees
+            $duree += $maps_array['Response']['MatrixEntry'][$j]['Route']['Summary']['BaseTime'];
+        }
+
+        //Récupérer les noms de villes de destination
+
+        $mesVilles = [];
+        //geocoder inversement les villes pour ramener les noms de villes
+        for ($l = 0; $l < count($villes); $l++) {
+
+
+            $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox=' . $villes[$l] . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+
+            $coor_json = file_get_contents($coor_url);
+
+            $coor_array = json_decode($coor_json, true);
+
+
+            $maVille = $coor_array['Response']['View'][0]['Result'][0]['Location']['Address']['City'];
+
+            //Ramener tous les noms des villes
+            array_push($mesVilles, $maVille);
+
+        }
+
+        $distance = $distance / 1000;
+        $distance = round($distance, 0);
+
+        $coord = explode("%2C", $coord);
+        $lanX = $coord[0];
+        $latY = $coord[1];
+
+        $retour = [];
+
+        $retour[0] = $barycentreVille;
+        $retour[1] = $lanX;
+        $retour[2] = $latY;
+        $retour[3] = $distance;
+        $retour[4] = $duree;
+        $retour[5] = $villes;
+        $retour[6] = $mesVilles;
+        $retour[7] = $tabDistance;
+        $retour[8] = $tabDuree;
+
+        return $retour;
+    }
+
+    public function terrainNeutre(){
+
+        $equipe = $this->index();
+
+        $terrainNeutre = ["50.9527484%2C1.8688621", "50.289264%2C2.7678621", "43.5669216%2C3.8988209", "49.1705257%2C-0.3095025", "43.6040707%2C1.4346847"];
+
+        $distanceMin = null;
+        $lesDistances = [];
+        $lesDurees = [];
+
+        for ($i = 0; $i < count($terrainNeutre); $i++) {
+
+            $start = $terrainNeutre[$i];
+
+            //on fait appel à la première partie de l'url here
+            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Btruck%3Btraffic%3Adisabled%3B&start0=' . $start;
+            for ($j = 0; $j < count($equipe); $j++) {
+                $destination = $equipe[$j];
+
+                $maps_url .= '&destination' . $j . '=' . $destination;
+            }
+
+            //on ramène le dernier element de l'url
+            $maps_url .= '&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+
+            $maps_json = file_get_contents($maps_url);
+
+            $maps_array = json_decode($maps_json, true);
+
+            //On récupère le nombre des distances à stocker dans un tableau
+            $nbrDistances = count($maps_array['Response']['MatrixEntry']);
+            $tabDistance = [];
+            $tabDuree = [];
+            $distance = null;
+            $duree = null;
+            //On récupère chaque distance
+            for ($k = 0; $k < $nbrDistances; $k++) {
+                $distance += $maps_array['Response']['MatrixEntry'][$k]['Route']['Summary']['Distance'];
+                $duree += $maps_array['Response']['MatrixEntry'][$k]['Route']['Summary']['BaseTime'];
+
+            }
+
+            //somme des distances
+            array_push($lesDistances, $distance);
+
+            //somme des distances
+            array_push($lesDurees, $duree);
+
+
+        }
+
+        //Somme des distances
+        $distanceMin = min($lesDistances);
+        $key = array_search($distanceMin, $lesDistances);
+
+        $coord = $terrainNeutre[$key];
+
+
+        $retour = $this->routingMatrix($coord, $equipe);
+
+        return $retour;
+
+
+
 
     }
 

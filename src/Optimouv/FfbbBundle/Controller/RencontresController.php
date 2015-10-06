@@ -37,7 +37,6 @@ class RencontresController extends Controller
         $dureeVilleEq = $retourEq[8];
 
 
-
         return $this->render('FfbbBundle:Rencontres:index.html.twig', array(
 
             //Données du scénario optimal
@@ -70,20 +69,30 @@ class RencontresController extends Controller
 
 
         $retour = $this->get('service_rencontres')->Barycentre();
-        print_r($retour);
-        exit;
 
-        $villes = $retour [0];
-        $barycentreVille = $retour [1];
-        $lanX = $retour [2];
-        $latY = $retour [3];
+        //Données du scénario optimal
+        $villeDepart = $retour[0];
+        $longPtDep = $retour[1];
+        $latPtDep = $retour[2];
+        $distanceMin = $retour[3];
+        $dureeTrajet = $retour[4];
+        $coordonneesVille = $retour[5];
+        $mesVilles = $retour[6];
+        $distVille = $retour[7];
+        $dureeVille = $retour[8];
 
-        return $this->render('FfbbBundle:Rencontres:index.html.twig', array(
-            'villes' => $villes,
-            'barycentreVille' => $barycentreVille,
-            'lanX' => $lanX,
-            'latY' => $latY,
+        return $this->render('FfbbBundle:Rencontres:barycentre.html.twig', array(
 
+            //Données du scénario optimal
+            'villeDepart' => $villeDepart,
+            'longPtDep' => $longPtDep,
+            'latPtDep' => $latPtDep,
+            'distanceMin' => $distanceMin,
+            'dureeTrajet' => $dureeTrajet,
+            'coordonneesVille' => $coordonneesVille,
+            'mesVilles' => $mesVilles,
+            'distVille' => $distVille,
+            'dureeVille' => $dureeVille,
 
         ));
 
@@ -93,28 +102,111 @@ class RencontresController extends Controller
     public function exclusionAction()
     {
 
-//        $dbname = $this->container->getParameter('database_name');
+        //Params de connexion
+        $dbname = $this->container->getParameter('database_name');
+        $dbuser = $this->container->getParameter('database_user');
+        $dbpwd = $this->container->getParameter('database_password');
+
+        //stcoker les params de connexion dans un tableau -> envoyer comme param à la fn exclusion
+        $dbcon = [];
+        $dbcon[0]=$dbname;
+        $dbcon[1]=$dbuser;
+        $dbcon[2]=$dbpwd;
 
 
-        $retour = $this->get('service_rencontres')->Exclusion();
-        print_r($retour);
-        exit;
 
-        $city = stripcslashes($retour [0]);
+        //Récupération du résultat du calcul avec contrainte
+        $retour = $this->get('service_rencontres')->Exclusion($dbcon);
 
-        $population = $retour [1];
-        $longBarycentre = $retour [2];
-        $latBarycentre = $retour [3];
 
-        return $this->render('FfbbBundle:Rencontres:index.html.twig', array(
-            'city' => $city,
-            'population' => $population,
-            'longBarycentre' => $longBarycentre,
-            'latBarycentre' => $latBarycentre,
+        //Données du scénario optimal
+        $villeDepart = $retour[0];
+        $longPtDep = $retour[1];
+        $latPtDep = $retour[2];
+        $distanceMin = $retour[3];
+        $dureeTrajet = $retour[4];
+        $coordonneesVille = $retour[5];
+        $mesVilles = $retour[6];
+        $distVille = $retour[7];
+        $dureeVille = $retour[8];
+
+        //Récupération du résultat du calcul sans contrainte
+        $retourEq = $this->get('service_rencontres')->Barycentre();
+
+        //Données du scénario équitable
+
+        $villeDepartEq = $retourEq[0];
+        $longPtDepEq = $retourEq[1];
+        $latPtDepEq = $retourEq[2];
+        $distanceTotaleEq = $retourEq[3];
+        $dureeTrajetEq = $retourEq[4];
+        $coordonneesVilleEq = $retourEq[5];
+        $mesVillesEq = $retourEq[6];
+        $distVilleEq = $retourEq[7];
+        $dureeVilleEq = $retourEq[8];
+
+//        $city = stripcslashes($retour [0]);
+
+        return $this->render('FfbbBundle:Rencontres:exclusion.html.twig', array(
+            //Données du scénario avec contrainte
+            'villeDepart' => $villeDepart,
+            'longPtDep' => $longPtDep,
+            'latPtDep' => $latPtDep,
+            'distanceMin' => $distanceMin,
+            'dureeTrajet' => $dureeTrajet,
+            'coordonneesVille' => $coordonneesVille,
+            'mesVilles' => $mesVilles,
+            'distVille' => $distVille,
+            'dureeVille' => $dureeVille,
+
+            //données scénario sans contrainte
+            'villeDepartEq' => $villeDepartEq,
+            'longPtDepEq' => $longPtDepEq,
+            'latPtDepEq' => $latPtDepEq,
+            'distanceTotaleEq' => $distanceTotaleEq,
+            'dureeTrajetEq' => $dureeTrajetEq,
+            'coordonneesVilleEq' => $coordonneesVilleEq,
+            'mesVillesEq' => $mesVillesEq,
+            'distVilleEq' => $distVilleEq,
+            'dureeVilleEq' => $dureeVilleEq,
+
 
 
         ));
 
+
+    }
+
+    public function terrainNeutreAction(){
+
+        //Récupération du résultat du calcul avec contrainte
+        $retour = $this->get('service_rencontres')->terrainNeutre();
+
+        //Données du scénario optimal
+        $villeDepart = $retour[0];
+        $longPtDep = $retour[1];
+        $latPtDep = $retour[2];
+        $distanceMin = $retour[3];
+        $dureeTrajet = $retour[4];
+        $coordonneesVille = $retour[5];
+        $mesVilles = $retour[6];
+        $distVille = $retour[7];
+        $dureeVille = $retour[8];
+
+        return $this->render('FfbbBundle:Rencontres:terrainNeutre.html.twig', array(
+
+            //Données du scénario optimal
+            'villeDepart' => $villeDepart,
+            'longPtDep' => $longPtDep,
+            'latPtDep' => $latPtDep,
+            'distanceMin' => $distanceMin,
+            'dureeTrajet' => $dureeTrajet,
+            'coordonneesVille' => $coordonneesVille,
+            'mesVilles' => $mesVilles,
+            'distVille' => $distVille,
+            'dureeVille' => $dureeVille,
+
+        ));
 
     }
     public function contactAction()

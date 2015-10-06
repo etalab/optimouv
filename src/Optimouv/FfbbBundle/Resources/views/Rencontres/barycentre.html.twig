@@ -104,35 +104,35 @@
                         <div class="panel-heading">
                             Type de lieu
                         </div>
-
-                        <form action="{{ path('ffbb_contact') }}" method="post">
+                        {#{{ dump(meilleurLieuOption.value) }}#}
+                        <form name="typeLieux">
 
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1"
-                                           checked>
+                                    <input type="radio" name="optionsRadios" id="meilleurLieuOption" value="option1">
                                     Lieux définis
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                                    <input type="radio" name="optionsRadios" id="BarycentreOption" value="option2" checked>
                                     Barycentre
                                 </label>
                             </div>
 
-                            <button type="submit" class="btn btn-default  pull-right">Lancer le calcul sans contrainte
+
+                            <button type="button" class="btn btn-default  pull-right" onclick="typeLieu()">Lancer le calcul sans contrainte
                             </button>
 
 
                         </form>
 
-
                     </div>
                 </div>
 
 
-                <!-- /.col-lg-4 -->
+                <!-- /.col-lg-6 -->
+
             </div>
             <!-- /.row -->
 
@@ -140,21 +140,21 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Les scénarios ci dessous présentent les résultats les plus écoresponsables correspondant
-                            à votre recherche !
+                            Le scénario ci dessous présente la répartition des villes sur la carte
                         </div>
                         <!-- .panel-heading -->
                         <div class="panel-body">
-                            <div class="col-lg-6">
+                            <div class="col-lg-12">
                                 <div class="panel-body">
                                     <div class="panel-group" id="accordion">
                                         <div class="panel panel-default">
                                             <div class="panel-heading">
                                                 <h4 class="panel-title">
-                                                    Scénario optimal
+                                                        Scénario initial
                                                 </h4>
                                             </div>
-                                                 <div class="panel-body"> <!-- premier scÃ©nario -->
+                                            <div id="collapseOne" class="panel-collapse collapse in">
+                                                <div class="panel-body"> <!-- premier scÃ©nario -->
                                                     <div id="map"
                                                          style="width: 100%; height: 400px; background: grey"></div>
                                                     <script type="text/javascript" charset="UTF-8">
@@ -380,239 +380,12 @@
                                                         </div>
 
                                                     </div>
+
+
+
                                                 </div>
-                                         </div>
-
-
-                                    </div>
-                                </div>
-                                <!-- .panel-body -->
-                                <!-- /.panel -->
-                            </div>
-                            <!-- /.col-lg-6 -->
-
-                            <div class="col-lg-6">
-                                <div class="panel-body">
-                                    <div class="panel-group" id="accordion2">
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                    Scénario équitable
-                                                </h4>
                                             </div>
-                                                 <div class="panel-body"> <!-- premier scÃ©nario -->
-                                                    <div id="mapEquitable"
-                                                         style="width: 100%; height: 400px; background: grey"></div>
-                                                    <script type="text/javascript" charset="UTF-8">
-
-                                                        function addMarkersToMap(map) {
-
-                                                            var incrmentEq = 1;
-                                                            //tracer dynamiquement les points de villes
-                                                            {% for coordonneeVilleEq in coordonneesVilleEq %}
-                                                            var coordonneeVilleEq = '{{ coordonneeVilleEq }}';
-
-                                                            var xy = coordonneeVilleEq.split("%2C");
-                                                            var x = xy[0];
-                                                            var y = xy[1];
-
-                                                            var markerEq = 'marker' + incrmentEq;
-                                                            window[markerEq] = new H.map.Marker({
-                                                                lat: parseInt(x),
-                                                                lng: parseInt(y)
-                                                            });
-                                                            map.addObject(window[markerEq]);
-
-                                                            var incrmentEq = incrmentEq + 1
-
-                                                            {% endfor %}
-
-
-                                                        }
-                                                        /**
-                                                         * Markeur principal
-                                                         */
-
-                                                        // Create a marker icon from an image URL:
-                                                        var icon = new H.map.Icon('{{ asset('bundles/ffbb/images/depart.png') }}');
-
-                                                        // Create a marker using the previously instantiated icon:
-                                                        var markerPrincipalEq = new H.map.Marker({
-                                                            lat: '{{ longPtDepEq }}',
-                                                            lng: '{{ latPtDepEq }}'
-                                                        }, {icon: icon});
-                                                        // Changer la langue de la carte
-                                                        function switchMapLanguage(map, platform) {
-                                                            var mapTileService = platform.getMapTileService({
-                                                                        type: 'base'
-                                                                    }),
-                                                                    frenchMapLayer = mapTileService.createTileLayer(
-                                                                            'maptile',
-                                                                            'normal.day',
-                                                                            256,
-                                                                            'png8',
-                                                                            {lg: 'fre'}
-                                                                    );
-                                                            map.setBaseLayer(frenchMapLayer);
-
-
-                                                        }
-                                                        // Fin fn changer langue
-                                                        /**
-                                                         * Boilerplate map initialization code starts below:
-                                                         */
-
-                                                        //Step 1: initialize communication with the platform
-                                                        var platform = new H.service.Platform({
-                                                            app_id: 'DemoAppId01082013GAL',
-                                                            app_code: 'AJKnXv84fjrb0KIHawS0Tg',
-                                                            useCIT: true,
-                                                            useHTTPS: true
-                                                        });
-                                                        var defaultLayers = platform.createDefaultLayers();
-
-                                                        //Step 2: initialize a map - this map is centered over Europe
-                                                        var map = new H.Map(document.getElementById('mapEquitable'),
-                                                                defaultLayers.normal.map, {
-                                                                    center: {lat: 48.8567, lng: 2.3508},
-                                                                    zoom: 4
-                                                                });
-
-
-                                                        var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-
-                                                        // Create the default UI components
-                                                        //    var ui = H.ui.UI.createDefault(map, defaultLayers);
-                                                        var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
-
-                                                        // Add the marker to the map:
-                                                        map.addObject(markerPrincipalEq);
-                                                        addMarkersToMap(map);
-                                                        switchMapLanguage(map, platform);
-
-
-                                                    </script>
-
-                                                    <!-- Nav tabs -->
-                                                    <ul class="nav nav-tabs">
-                                                        <li class="active"><a href="#EstimationsEq" data-toggle="tab">Estimations</a>
-                                                        </li>
-                                                        <li><a href="#DetailsEq" data-toggle="tab">Voir le détail</a>
-                                                        </li>
-
-                                                    </ul>
-
-                                                    <!-- Tab panes -->
-                                                    <div class="tab-content">
-                                                        <div class="tab-pane fade in active" id="EstimationsEq">
-
-
-                                                            <p>- Le meilleur lieu de rencontre
-                                                                est <strong>{{ villeDepartEq }}</strong></p>
-
-                                                            <p>- <strong>{{ distanceTotaleEq }}</strong> kilomètres au
-                                                                total à
-                                                                parcourir pour l'ensemble du scénario</p>
-
-                                                            <p>-
-                                                                <strong>{{ (distanceTotaleEq * 0.481395349)|round }}</strong>
-                                                                € pour réaliser les trajets de l'ensemble du scénario
-                                                            </p>
-
-                                                            <p>-
-                                                                <strong>{{ dureeTrajetEq // 3600 }}H{{ dureeTrajetEq % 3600 // 60 }}</strong>
-                                                                de trajet pour l'ensemble du scénario</p>
-
-                                                            <p>-
-                                                                <strong>{{ (distanceTotaleEq *12*0.30144186)|round }}</strong>
-                                                                Kg équivalent
-                                                                CO2 d'émissions totales de GES pour une équipe de 12
-                                                                joueurs en voiture individuelle
-                                                                pour le scénario</p>
-
-                                                            <p>-
-                                                                <strong>{{ (distanceTotaleEq *(12/4)*0.30144186)|round }}</strong>
-                                                                Kg équivalent
-                                                                CO2 d'émissions totales de GES pour une équipe de 12
-                                                                joueurs en co-voiturage pour le scénario</p>
-
-
-                                                        </div>
-                                                        <div class="tab-pane fade" id="DetailsEq">
-                                                            <div class="table-responsive">
-                                                                <table class="table table-striped table-bordered table-hover"
-                                                                       style="overflow-x: scroll;">
-
-                                                                    <tbody>
-                                                                    <tr>
-                                                                        <th> Participants</th>
-                                                                        {% for maVilleEq in mesVillesEq %}
-                                                                            <td><strong> {{ maVilleEq }}</strong></td>
-                                                                        {% endfor %}
-
-
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th>Kilomètres à  parcourir</th>
-
-                                                                        {% for distEq in distVilleEq %}
-                                                                            <td>  {{ distEq //1000 }}</td>
-                                                                        {% endfor %}
-
-
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th>Temps de parcours</th>
-
-                                                                        {% for dureeEq in dureeVilleEq %}
-                                                                            <td>     {{ dureeEq // 3600 }}H{{ dureeEq % 3600 // 60 }} </td>
-                                                                        {% endfor %}
-
-
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th>Coût de parcours (€)</th>
-
-                                                                        {% for distEq in distVilleEq %}
-                                                                            <td>  {{ (distEq // 1000 * 0.481395349)|round }}</td>
-                                                                        {% endfor %}
-
-
-                                                                    </tr>
-
-                                                                    <tr>
-                                                                        <th>Emissions GES voitures individuelle (en
-                                                                            kilos équivalent CO2)
-                                                                        </th>
-
-                                                                        {% for distEq in distVilleEq %}
-                                                                            <td>  {{ (distEq //1000 *12*0.30144186)|round }}</td>
-                                                                        {% endfor %}
-
-
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th>Emissions GES covoiturage (en kilos
-                                                                            équivalent CO2)
-                                                                        </th>
-
-                                                                        {% for distEq in distVilleEq %}
-                                                                            <td>  {{ (distEq //1000 *(12/4)*0.30144186)|round }}</td>
-                                                                        {% endfor %}
-
-
-                                                                    </tr>
-
-
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                            <!-- /.table-responsive -->
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                         </div>
+                                        </div>
 
 
                                     </div>
@@ -621,6 +394,8 @@
                                 <!-- /.panel -->
                             </div>
                             <!-- /.col-lg-6 -->
+
+
                         </div>
                         <!-- .panel-body -->
                     </div>
@@ -635,8 +410,32 @@
             </div>
 
         </div>
+        {% block javascript %}
         <!-- /#page-wrapper -->
+        <script type="text/javascript" charset="UTF-8">
+            function typeLieu()
+            {
+                if(document.getElementById("meilleurLieuOption").checked == true){
+                    window.location.href =  "{{ path('ffbb_rencontres') }}";
+//                    alert("optimal");
+                }
+                else{
+                    window.location.href = "{{ path('ffbb_barycentre') }}";
+//                    alert("Barycentre");
 
+                }
+
+//        var element = document.typeLieux.rencontre;
+//        for (var i=0; i < element.length; i++)
+//        {
+//            if (element[i].checked)
+//            {
+//                alert(element[i].value);
+//            }
+//        }
+            }
+        </script>
+        {% endblock %}
     </div>
 {% endblock %}
 
