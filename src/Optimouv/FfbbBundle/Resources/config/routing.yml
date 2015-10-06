@@ -23,7 +23,7 @@ ffbb_barycentre:
     defaults: { _controller: FfbbBundle:Rencontres:barycentre }
 
 ffbb_exclusion:
-    path:     /exculsion
+    path:     /exclusion
     defaults: { _controller: FfbbBundle:Rencontres:exclusion }
 
 
