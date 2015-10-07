@@ -318,13 +318,13 @@ table.dataTable thead .sorting:after {
 }
 
 .panel-red {
-    border-color: #a4bd10;
+    border-color: #CECECE;
 }
 
 .panel-red .panel-heading {
-    border-color: #a4bd10;
-    color: #fff;
-    background-color: #a4bd10;
+    border-color: #F5F5F5;
+    color: #000;
+    background-color: #F5F5F5;
 }
 
 .panel-red a {

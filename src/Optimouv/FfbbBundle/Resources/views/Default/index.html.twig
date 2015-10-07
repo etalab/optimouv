@@ -1,306 +1,214 @@
 {% extends '::BOLayout.html.twig' %}
 
-{% block body %}
-    <div id="wrapper">
+     {% block pagewrapper %}
 
-        <!-- Navigation -->
-        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index.html">Logo</a>
-            </div>
-            <!-- /.navbar-header -->
+         <div id="page-wrapper">
 
-            <ul class="nav navbar-top-links navbar-right">
+             <div class="row">
+                 <div class="col-lg-12">
+                     <h3 class="page-header">Obtenez le meilleur lieu de rencontre </h3>
+                 </div>
+                 <!-- /.col-lg-12 -->
+             </div>
+             <!-- /.row -->
+             <div class="row">
+                 <div class="col-lg-6">
+                     <div class="panel panel-red">
+                         <div class="panel-heading">
+                             Participants
+                         </div>
+                         <div class="panel-body">
+                             <ul class="list-unstyled" style="padding-left:20px; list-style-image: url('{{ asset('bundles/ffbb/images/puce-mini.png') }}')">
 
-                <!-- /.dropdown -->
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
-                        </li>
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
-                        </li>
-                    </ul>
-                    <!-- /.dropdown-user -->
-                </li>
-                <!-- /.dropdown -->
-            </ul>
+                                 <li> SAINT-LAURENT-DU-VAR</li>
+                                 <li> HYERES</li>
+                                 <li> LYON</li>
+                                 <li> AVIGNON</li>
+                                 <li> BREST</li>
+                             </ul>
+                         </div>
+                         {#<div class="panel-footer">#}
+                         {#Panel Footer#}
+                         {#</div>#}
+                     </div>
+                 </div>
+                 <!-- /.col-lg-4 -->
 
-        </nav>
+                 <div class="col-lg-6">
+                     <div class="panel panel-primary">
+                         <div class="panel-heading">
+                             Type de lieu
+                         </div>
+                         {#{{ dump(meilleurLieuOption.value) }}#}
+                         <form name="typeLieux" style="padding-left:20px;">
 
-        <div id="page-wrapper">
-            <nav class="navbar navbar-default">
-                <div class="container-fluid">
-                    <!-- Collect the nav links, forms, and other content for toggling -->
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav">
-                            <li class="active"><a href="{{ path('ffbb_rencontres') }}">Rencontres <span class="sr-only">(current)</span></a>
-                            </li>
-                            <li><a href="{{ path('ffbb_competitions') }}">Competitions</a></li>
-                            <li><a href="{{ path('ffbb_rapports') }}">Rapports</a></li>
-                            <li><a href="{{ path('ffbb_help') }}">Aide</a></li>
-                            {#<li class="dropdown">#}
-                            {#<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>#}
-                            {#<ul class="dropdown-menu">#}
-                            {#<li><a href="#">Action</a></li>#}
-                            {#<li><a href="#">Another action</a></li>#}
-                            {#<li><a href="#">Something else here</a></li>#}
-                            {#<li role="separator" class="divider"></li>#}
-                            {#<li><a href="#">Separated link</a></li>#}
-                            {#<li role="separator" class="divider"></li>#}
-                            {#<li><a href="#">One more separated link</a></li>#}
-                            {#</ul>#}
-                            {#</li>#}
-                        </ul>
+                             <div class="radio">
+                                 <label>
+                                     <input type="radio" name="optionsRadios" id="meilleurLieuOption" value="option1">
+                                     Lieux définis
+                                 </label>
+                             </div>
+                             <div class="radio">
+                                 <label>
+                                     <input type="radio" name="optionsRadios" id="BarycentreOption" value="option2">
+                                     Barycentre
+                                 </label>
+                             </div>
 
 
-                    </div>
-                    <!-- /.navbar-collapse -->
-                </div>
-                <!-- /.container-fluid -->
-            </nav>
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header">Définissez le meilleur lieu de rencontre </h1>
-                </div>
-                <!-- /.col-lg-12 -->
-            </div>
-            <!-- /.row -->
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="panel panel-red">
-                        <div class="panel-heading">
-                            Participants
-                        </div>
-                        <div class="panel-body">
-                            <ul>
-                                <li> SAINT-LAURENT-DU-VAR</li>
-                                <li> HYERES</li>
-                                <li> LYON</li>
-                                <li> AVIGNON</li>
-                                <li> BREST</li>
-                            </ul>
-                        </div>
-                        {#<div class="panel-footer">#}
-                        {#Panel Footer#}
-                        {#</div>#}
-                    </div>
-                </div>
-                <!-- /.col-lg-4 -->
-
-                <div class="col-lg-6">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            Type de lieu
-                        </div>
-                        {#{{ dump(meilleurLieuOption.value) }}#}
-                        <form name="typeLieux">
-
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" name="optionsRadios" id="meilleurLieuOption" value="option1">
-                                    Lieux définis
-                                </label>
-                            </div>
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" name="optionsRadios" id="BarycentreOption" value="option2">
-                                    Barycentre
-                                </label>
-                            </div>
+                             <button type="button" class="btn btn-default  pull-right" onclick="typeLieu()">Lancer le
+                                 calcul
+                                 sans contrainte
+                             </button>
 
 
-                            <button type="button" class="btn btn-default  pull-right" onclick="typeLieu()">Lancer le calcul sans contrainte
-                            </button>
+                         </form>
+
+                     </div>
+                 </div>
 
 
-                        </form>
+                 <!-- /.col-lg-6 -->
 
-                    </div>
-                </div>
+             </div>
+             <!-- /.row -->
 
-
-                <!-- /.col-lg-6 -->
-
-            </div>
-            <!-- /.row -->
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Le scénario ci dessous présente la répartition des villes sur la carte
-                        </div>
-                        <!-- .panel-heading -->
-                        <div class="panel-body">
-                            <div class="col-lg-12">
-                                <div class="panel-body">
-                                    <div class="panel-group" id="accordion">
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                        Scénario initial
-                                                </h4>
-                                            </div>
-                                            <div id="collapseOne" class="panel-collapse collapse in">
-                                                <div class="panel-body"> <!-- premier scÃ©nario -->
-                                                    <div id="map" style="width: 100%; height: 400px; background: grey"></div>
-                                                    <script type="text/javascript" charset="UTF-8">
+             <div class="row">
+                 <div class="col-lg-12">
+                     <div class="panel panel-default">
+                         <div class="panel-heading">
+                             Vos participants
+                         </div>
+                         <!-- .panel-heading -->
+                         <div id="collapseOne" class="panel-collapse collapse in">
+                             <div class="panel-body"> <!-- premier scÃ©nario -->
+                                 <div id="map"
+                                      style="width: 100%; height: 400px; background: grey"></div>
+                                 <script type="text/javascript" charset="UTF-8">
 
 
-                                                        function addMarkersAndSetViewBounds() {
-                                                            var incrment = 1;
-                                                            var points = [];
-                                                            //tracer dynamiquement les points de villes
-                                                            {% for coordonneeVille in coordonneesVille %}
-                                                            var coordonneeVille = '{{ coordonneeVille }}';
+                                     function addMarkersAndSetViewBounds() {
+                                         var incrment = 1;
+                                         var points = [];
+                                         //tracer dynamiquement les points de villes
+                                         {% for coordonneeVille in coordonneesVille %}
+                                         var coordonneeVille = '{{ coordonneeVille }}';
 
-                                                            var xy = coordonneeVille.split("%2C");
-                                                            var x = xy[0];
-                                                            var y = xy[1];
+                                         var xy = coordonneeVille.split("%2C");
+                                         var x = xy[0];
+                                         var y = xy[1];
 
-                                                            var marker = 'marker' + incrment;
-                                                             window[marker] = new H.map.Marker({
-                                                                lat: parseInt(x),
-                                                                lng: parseInt(y)
-                                                            });
+                                         var marker = 'marker' + incrment;
+                                         window[marker] = new H.map.Marker({
+                                             lat: parseInt(x),
+                                             lng: parseInt(y)
+                                         });
 
-                                                            points.push(window[marker]);
+                                         points.push(window[marker]);
 
-                                                             var incrment = incrment + 1;
+                                         var incrment = incrment + 1;
 
-                                                            {% endfor %}
-                                                            group = new H.map.Group();
-                                                            // add markers to the group
-                                                            group.addObjects(points);
-                                                             map.addObject(group);
-                                                            // get geo bounding box for the group and set it to the map
-                                                            map.setViewBounds(group.getBounds());
-                                                        }
-
-
-
-                                                        /**
-                                                         *
-                                                         * Changer la langue de la carte
-                                                         */
-                                                        function switchMapLanguage(map, platform) {
-                                                            var mapTileService = platform.getMapTileService({
-                                                                        type: 'base'
-                                                                    }),
-                                                                    frenchMapLayer = mapTileService.createTileLayer(
-                                                                            'maptile',
-                                                                            'normal.day',
-                                                                            256,
-                                                                            'png8',
-                                                                            {lg: 'fre'}
-                                                                    );
-                                                            map.setBaseLayer(frenchMapLayer);
+                                         {% endfor %}
+                                         group = new H.map.Group();
+                                         // add markers to the group
+                                         group.addObjects(points);
+                                         map.addObject(group);
+                                         // get geo bounding box for the group and set it to the map
+                                         map.setViewBounds(group.getBounds());
+                                     }
 
 
-                                                        }
-                                                        /*
-                                                         Fin fn changer langue
-                                                         */
+                                     /**
+                                      *
+                                      * Changer la langue de la carte
+                                      */
+                                     function switchMapLanguage(map, platform) {
+                                         var mapTileService = platform.getMapTileService({
+                                                     type: 'base'
+                                                 }),
+                                                 frenchMapLayer = mapTileService.createTileLayer(
+                                                         'maptile',
+                                                         'normal.day',
+                                                         256,
+                                                         'png8',
+                                                         {lg: 'fre'}
+                                                 );
+                                         map.setBaseLayer(frenchMapLayer);
 
-                                                        /**
-                                                         * Boilerplate map initialization code starts below:
-                                                         */
 
-                                                        //Step 1: initialize communication with the platform
-                                                        var platform = new H.service.Platform({
-                                                            app_id: 'DemoAppId01082013GAL',
-                                                            app_code: 'AJKnXv84fjrb0KIHawS0Tg',
-                                                            useCIT: true,
-                                                            useHTTPS: true
-                                                        });
-                                                        var defaultLayers = platform.createDefaultLayers();
+                                     }
+                                     /*
+                                      Fin fn changer langue
+                                      */
 
-                                                        //Step 2: initialize a map - this map is centered over Europe
-                                                        var map = new H.Map(document.getElementById('map'),
-                                                                defaultLayers.normal.map, {
-                                                                    center: {lat: 48.8567, lng: 2.3508},
-                                                                    zoom: 4
-                                                                });
+                                     /**
+                                      * Boilerplate map initialization code starts below:
+                                      */
 
-                                                        var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-                                                        // Create the default UI components
-                                                        //    var ui = H.ui.UI.createDefault(map, defaultLayers);
-                                                        var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
+                                     //Step 1: initialize communication with the platform
+                                     var platform = new H.service.Platform({
+                                         app_id: 'DemoAppId01082013GAL',
+                                         app_code: 'AJKnXv84fjrb0KIHawS0Tg',
+                                         useCIT: true,
+                                         useHTTPS: true
+                                     });
+                                     var defaultLayers = platform.createDefaultLayers();
 
-                                                        // Now use the map as required...
-                                                        addMarkersAndSetViewBounds(map);
-                                                         switchMapLanguage(map, platform);
+                                     //Step 2: initialize a map - this map is centered over Europe
+                                     var map = new H.Map(document.getElementById('map'),
+                                             defaultLayers.normal.map, {
+                                                 center: {lat: 48.8567, lng: 2.3508},
+                                                 zoom: 4
+                                             });
 
-                                                    </script>
+                                     var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+                                     // Create the default UI components
+                                     //    var ui = H.ui.UI.createDefault(map, defaultLayers);
+                                     var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
+
+                                     // Now use the map as required...
+                                     addMarkersAndSetViewBounds(map);
+                                     switchMapLanguage(map, platform);
+
+                                 </script>
+
+
+                             </div>
+                         </div>
+                         <!-- .panel-body -->
+                     </div>
+                     <!-- /.panel -->
+                 </div>
+                 <!-- /.col-lg-12 -->
+             </div>
+
+             <div>
+
+
+             </div>
+         </div>
+
+     {% endblock %}
 
 
 
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                    </div>
-                                </div>
-                                <!-- .panel-body -->
-                                <!-- /.panel -->
-                            </div>
-                            <!-- /.col-lg-6 -->
-
-
-                        </div>
-                        <!-- .panel-body -->
-                    </div>
-                    <!-- /.panel -->
-                </div>
-                <!-- /.col-lg-12 -->
-            </div>
-
-            <div>
-
-
-            </div>
-
-        </div>
-        {% block javascript %}
+    {% block javascript %}
         <!-- /#page-wrapper -->
         <script type="text/javascript" charset="UTF-8">
-            function typeLieu()
-            {
-                if(document.getElementById("meilleurLieuOption").checked == true){
-                    window.location.href =  "{{ path('ffbb_rencontres') }}";
+            function typeLieu() {
+                if (document.getElementById("meilleurLieuOption").checked == true) {
+                    window.location.href = "{{ path('ffbb_rencontres') }}";
 //                    alert("optimal");
                 }
-                else{
+                else {
                     window.location.href = "{{ path('ffbb_barycentre') }}";
 //                    alert("Barycentre");
 
                 }
 
-//        var element = document.typeLieux.rencontre;
-//        for (var i=0; i < element.length; i++)
-//        {
-//            if (element[i].checked)
-//            {
-//                alert(element[i].value);
-//            }
-//        }
             }
         </script>
-        {% endblock %}
-    </div>
-{% endblock %}
+    {% endblock %}
+
 
 

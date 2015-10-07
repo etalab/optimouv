@@ -1,78 +1,12 @@
 {% extends '::BOLayout.html.twig' %}
 
-{% block body %}
-    <div id="wrapper">
-
-        <!-- Navigation -->
-        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index.html">Logo</a>
-            </div>
-            <!-- /.navbar-header -->
-
-            <ul class="nav navbar-top-links navbar-right">
-
-                <!-- /.dropdown -->
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
-                        </li>
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
-                        </li>
-                    </ul>
-                    <!-- /.dropdown-user -->
-                </li>
-                <!-- /.dropdown -->
-            </ul>
-
-        </nav>
+{% block pagewrapper %}
 
         <div id="page-wrapper">
-            <nav class="navbar navbar-default">
-                <div class="container-fluid">
-                    <!-- Collect the nav links, forms, and other content for toggling -->
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav">
-                            <li class="active"><a href="{{ path('ffbb_rencontres') }}">Rencontres <span class="sr-only">(current)</span></a>
-                            </li>
-                            <li><a href="{{ path('ffbb_competitions') }}">Competitions</a></li>
-                            <li><a href="{{ path('ffbb_rapports') }}">Rapports</a></li>
-                            <li><a href="{{ path('ffbb_help') }}">Aide</a></li>
-                            {#<li class="dropdown">#}
-                            {#<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>#}
-                            {#<ul class="dropdown-menu">#}
-                            {#<li><a href="#">Action</a></li>#}
-                            {#<li><a href="#">Another action</a></li>#}
-                            {#<li><a href="#">Something else here</a></li>#}
-                            {#<li role="separator" class="divider"></li>#}
-                            {#<li><a href="#">Separated link</a></li>#}
-                            {#<li role="separator" class="divider"></li>#}
-                            {#<li><a href="#">One more separated link</a></li>#}
-                            {#</ul>#}
-                            {#</li>#}
-                        </ul>
 
-
-                    </div>
-                    <!-- /.navbar-collapse -->
-                </div>
-                <!-- /.container-fluid -->
-            </nav>
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Définissez le meilleur lieu de rencontre </h1>
+                    <h3 class="page-header">Choisissez un type de lieu </h3>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -84,7 +18,7 @@
                             Participants
                         </div>
                         <div class="panel-body">
-                            <ul>
+                            <ul class="list-unstyled" style="padding-left:20px; list-style-image: url('{{ asset('bundles/ffbb/images/puce-mini.png') }}')">
                                 <li> SAINT-LAURENT-DU-VAR</li>
                                 <li> HYERES</li>
                                 <li> LYON</li>
@@ -105,23 +39,22 @@
                             Type de lieu
                         </div>
 
-                        <form action="{{ path('ffbb_contact') }}" method="post">
+                        <form style="padding-left:20px;">
 
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1"
-                                           >
+                                    <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
                                     Lieux définis
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2" checked>
+                                    <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
                                     Barycentre
                                 </label>
                             </div>
 
-                            <button type="submit" class="btn btn-default  pull-right">Lancer le calcul sans contrainte
+                            <button type="button" class="btn btn-default  pull-right" onclick="typeLieu()">Lancer le calcul
                             </button>
 
 
@@ -140,8 +73,8 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Les scénarios ci dessous présentent les résultats les plus écoresponsables correspondant
-                            à votre recherche !
+                            Les scénarios ci-dessous présentent les résultats les plus écoresponsables correspondant
+                            à votre recherche
                         </div>
                         <!-- .panel-heading -->
                         <div class="panel-body">
@@ -151,7 +84,7 @@
                                         <div class="panel panel-default">
                                             <div class="panel-heading">
                                                 <h4 class="panel-title">
-                                                    Scénario optimal
+                                                    Scénario avec contrainte
                                                 </h4>
                                             </div>
                                             <div class="panel-body"> <!-- premier scÃ©nario -->
@@ -266,7 +199,7 @@
                                                 <ul class="nav nav-tabs">
                                                     <li class="active"><a href="#Estimations" data-toggle="tab">Estimations</a>
                                                     </li>
-                                                    <li><a href="#Details" data-toggle="tab">Voir le détail</a>
+                                                    <li><a href="#Details" data-toggle="tab">Détails</a>
                                                     </li>
 
                                                 </ul>
@@ -275,36 +208,42 @@
                                                 <div class="tab-content">
                                                     <div class="tab-pane fade in active" id="Estimations">
 
+                                                        <div class="list-group">
+                                                            <a href="#" class="list-group-item">
+                                                                <i class="fa  fa-thumb-tack fa-fw"></i> Le meilleur lieu de rencontre
+                                                                est <strong>{{ villeDepart }}</strong>
+                                                            </a>
+                                                            <a href="#" class="list-group-item">
+                                                                <i class="fa fa-road fa-fw"></i> <strong>{{ distanceMin }}</strong> kilomètres au total
+                                                                à parcourir pour l'ensemble du scénario
+                                                            </a>
+                                                            <a href="#" class="list-group-item">
+                                                                <i class="fa  fa-credit-card fa-fw"></i> <strong>{{ (distanceMin * 0.481395349)|round }}</strong>
+                                                                € pour réaliser les trajets de l'ensemble du scénario
 
-                                                        <p>- Le meilleur lieu de rencontre
-                                                            est <strong>{{ villeDepart }}</strong></p>
+                                                            </a>
+                                                            <a href="#" class="list-group-item">
+                                                                <i class="fa fa-clock-o fa-fw"></i> <strong>{{ dureeTrajet // 3600 }}H{{ dureeTrajet % 3600 // 60 }}</strong>
+                                                                de trajet pour l'ensemble du scénario
 
-                                                        <p>- <strong>{{ distanceMin }}</strong> kilomètres au total
-                                                            à
-                                                            parcourir pour l'ensemble du scénario</p>
+                                                            </a>
+                                                            <a href="#" class="list-group-item">
+                                                                <i class="fa fa-automobile fa-fw"></i> <strong>{{ (distanceMin *12*0.30144186)|round }}</strong>
+                                                                Kg équivalent
+                                                                CO2 d'émissions totales de GES pour une équipe de 12
+                                                                joueurs en voiture individuelle
+                                                                pour le scénario
 
-                                                        <p>-
-                                                            <strong>{{ (distanceMin * 0.481395349)|round }}</strong>
-                                                            € pour réaliser les trajets de l'ensemble du scénario
-                                                        </p>
+                                                            </a>
+                                                            <a href="#" class="list-group-item">
+                                                                <i class="fa fa-automobile fa-fw"></i> <strong>{{ (distanceMin *(12/4)*0.30144186)|round }}</strong>
+                                                                Kg équivalent
+                                                                CO2 d'émissions totales de GES pour une équipe de 12
+                                                                joueurs en co-voiturage pour le scénario
 
-                                                        <p>-
-                                                            <strong>{{ dureeTrajet // 3600 }}H{{ dureeTrajet % 3600 // 60 }}</strong>
-                                                            de trajet pour l'ensemble du scénario</p>
+                                                            </a>
 
-                                                        <p>-
-                                                            <strong>{{ (distanceMin *12*0.30144186)|round }}</strong>
-                                                            Kg équivalent
-                                                            CO2 d'émissions totales de GES pour une équipe de 12
-                                                            joueurs en voiture individuelle
-                                                            pour le scénario</p>
-
-                                                        <p>-
-                                                            <strong>{{ (distanceMin *(12/4)*0.30144186)|round }}</strong>
-                                                            Kg équivalent
-                                                            CO2 d'émissions totales de GES pour une équipe de 12
-                                                            joueurs en co-voiturage pour le scénario</p>
-
+                                                        </div>
 
                                                     </div>
                                                     <div class="tab-pane fade" id="Details">
@@ -397,7 +336,7 @@
                                         <div class="panel panel-default">
                                             <div class="panel-heading">
                                                 <h4 class="panel-title">
-                                                    Scénario équitable
+                                                    Scénario sans contrainte
                                                 </h4>
                                             </div>
                                             <div class="panel-body"> <!-- premier scÃ©nario -->
@@ -497,7 +436,7 @@
                                                 <ul class="nav nav-tabs">
                                                     <li class="active"><a href="#EstimationsEq" data-toggle="tab">Estimations</a>
                                                     </li>
-                                                    <li><a href="#DetailsEq" data-toggle="tab">Voir le détail</a>
+                                                    <li><a href="#DetailsEq" data-toggle="tab">Détails</a>
                                                     </li>
 
                                                 </ul>
@@ -506,35 +445,42 @@
                                                 <div class="tab-content">
                                                     <div class="tab-pane fade in active" id="EstimationsEq">
 
+                                                        <div class="list-group">
+                                                            <a href="#" class="list-group-item">
+                                                                <i class="fa  fa-thumb-tack fa-fw"></i> Le meilleur lieu de rencontre
+                                                                est <strong>{{ villeDepartEq }}</strong>
+                                                            </a>
+                                                            <a href="#" class="list-group-item">
+                                                                <i class="fa fa-road fa-fw"></i> <strong>{{ distanceTotaleEq }}</strong> kilomètres au total
+                                                                à parcourir pour l'ensemble du scénario
+                                                            </a>
+                                                            <a href="#" class="list-group-item">
+                                                                <i class="fa  fa-credit-card fa-fw"></i> <strong>{{ (distanceTotaleEq * 0.481395349)|round }}</strong>
+                                                                € pour réaliser les trajets de l'ensemble du scénario
 
-                                                        <p>- Le meilleur lieu de rencontre
-                                                            est <strong>{{ villeDepartEq }}</strong></p>
+                                                            </a>
+                                                            <a href="#" class="list-group-item">
+                                                                <i class="fa fa-clock-o fa-fw"></i> <strong>{{ dureeTrajetEq // 3600 }}H{{ dureeTrajetEq % 3600 // 60 }}</strong>
+                                                                de trajet pour l'ensemble du scénario
 
-                                                        <p>- <strong>{{ distanceTotaleEq }}</strong> kilomètres au
-                                                            total à
-                                                            parcourir pour l'ensemble du scénario</p>
+                                                            </a>
+                                                            <a href="#" class="list-group-item">
+                                                                <i class="fa fa-automobile fa-fw"></i> <strong>{{ (distanceTotaleEq *12*0.30144186)|round }}</strong>
+                                                                Kg équivalent
+                                                                CO2 d'émissions totales de GES pour une équipe de 12
+                                                                joueurs en voiture individuelle
+                                                                pour le scénario
 
-                                                        <p>-
-                                                            <strong>{{ (distanceTotaleEq * 0.481395349)|round }}</strong>
-                                                            € pour réaliser les trajets de l'ensemble du scénario
-                                                        </p>
+                                                            </a>
+                                                            <a href="#" class="list-group-item">
+                                                                <i class="fa fa-automobile fa-fw"></i> <strong>{{ (distanceTotaleEq *(12/4)*0.30144186)|round }}</strong>
+                                                                Kg équivalent
+                                                                CO2 d'émissions totales de GES pour une équipe de 12
+                                                                joueurs en co-voiturage pour le scénario
 
-                                                        <p>-
-                                                            <strong>{{ dureeTrajetEq // 3600 }}H{{ dureeTrajetEq % 3600 // 60 }}</strong>
-                                                            de trajet pour l'ensemble du scénario</p>
+                                                            </a>
 
-                                                        <p>-
-                                                            <strong>{{ (distanceTotaleEq *12*0.30144186)|round }}</strong>
-                                                            Kg équivalent
-                                                            CO2 d'émissions totales de GES pour une équipe de 12
-                                                            joueurs en voiture individuelle
-                                                            pour le scénario</p>
-
-                                                        <p>-
-                                                            <strong>{{ (distanceTotaleEq *(12/4)*0.30144186)|round }}</strong>
-                                                            Kg équivalent
-                                                            CO2 d'émissions totales de GES pour une équipe de 12
-                                                            joueurs en co-voiturage pour le scénario</p>
+                                                        </div>
 
 
                                                     </div>
@@ -636,8 +582,22 @@
 
         </div>
         <!-- /#page-wrapper -->
+    {% block javascript %}
+        <!-- /#page-wrapper -->
+        <script type="text/javascript" charset="UTF-8">
+            function typeLieu() {
+                if (document.getElementById("meilleurLieuOption").checked == true) {
+                    window.location.href = "{{ path('ffbb_rencontres') }}";
+                 }
+                else {
+                    window.location.href = "{{ path('ffbb_barycentre') }}";
 
-    </div>
-{% endblock %}
+                }
+
+            }
+        </script>
+    {% endblock %}
+
+ {% endblock %}
 
 
