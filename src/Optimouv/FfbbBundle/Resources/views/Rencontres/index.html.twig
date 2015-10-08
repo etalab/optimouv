@@ -43,19 +43,18 @@
 
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1"
-                                           checked>
+                                    <input type="radio" name="optionsRadios" id="meilleurLieuOption" value="option1" checked>
                                     Lieux définis
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                                    <input type="radio" name="optionsRadios" id="BarycentreOption" value="option2">
                                     Barycentre
                                 </label>
                             </div>
 
-                            <button type="button" class="btn btn-default  pull-right">Lancer le calcul sans contrainte
+                            <button type="button" class="btn btn-default  pull-right" onclick="typeLieu()">Lancer le calcul
                             </button>
 
 
@@ -584,6 +583,21 @@
 
         </div>
         <!-- /#page-wrapper -->
+    {% block javascript %}
+        <!-- /#page-wrapper -->
+        <script type="text/javascript" charset="UTF-8">
+            function typeLieu() {
+                if (document.getElementById("meilleurLieuOption").checked == true) {
+                    window.location.href = "{{ path('ffbb_rencontres') }}";
+                }
+                else {
+                    window.location.href = "{{ path('ffbb_barycentre') }}";
+
+                }
+
+            }
+        </script>
+    {% endblock %}
 
  {% endblock %}
 
