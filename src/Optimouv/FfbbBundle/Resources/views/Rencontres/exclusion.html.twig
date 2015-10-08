@@ -261,7 +261,7 @@
 
                                                                 </tr>
                                                                 <tr>
-                                                                    <th>Kilomètres à  parcourir</th>
+                                                                    <th>Kilomètres à parcourir</th>
 
                                                                     {% for dist in distVille %}
                                                                         <td>  {{ dist //1000 }}</td>
@@ -279,7 +279,7 @@
 
                                                                 </tr>
                                                                 <tr>
-                                                                    <th>Coût de parcours (€)</th>
+                                                                    <th>Coût du parcours (€)</th>
 
                                                                     {% for dist in distVille %}
                                                                         <td>  {{ (dist // 1000 * 0.481395349)|round }}</td>
@@ -447,25 +447,24 @@
 
                                                         <div class="list-group">
                                                             <a href="#" class="list-group-item">
-                                                                <i class="fa  fa-thumb-tack fa-fw"></i> Le meilleur lieu de rencontre
+                                                                <i class="fa  fa-thumb-tack fa-fw" style="padding-right: 30px"></i> Le meilleur lieu de rencontre
                                                                 est <strong>{{ villeDepartEq }}</strong>
                                                             </a>
                                                             <a href="#" class="list-group-item">
-                                                                <i class="fa fa-road fa-fw"></i> <strong>{{ distanceTotaleEq }}</strong> kilomètres au total
+                                                                <i class="fa fa-road fa-fw" style="padding-right: 30px"></i> <strong>{{ distanceTotaleEq }}</strong> kilomètres au total
                                                                 à parcourir pour l'ensemble du scénario
                                                             </a>
                                                             <a href="#" class="list-group-item">
-                                                                <i class="fa  fa-credit-card fa-fw"></i> <strong>{{ (distanceTotaleEq * 0.481395349)|round }}</strong>
+                                                                <i class="fa  fa-credit-card fa-fw" style="padding-right: 30px"></i> <strong>{{ (distanceTotaleEq * 0.481395349)|round }}</strong>
                                                                 € pour réaliser les trajets de l'ensemble du scénario
 
                                                             </a>
                                                             <a href="#" class="list-group-item">
-                                                                <i class="fa fa-clock-o fa-fw"></i> <strong>{{ dureeTrajetEq // 3600 }}H{{ dureeTrajetEq % 3600 // 60 }}</strong>
-                                                                de trajet pour l'ensemble du scénario
-
+                                                                <i class="fa fa-clock-o fa-fw" style="padding-right: 30px"></i> <strong>{{ dureeTrajetEq // 3600 }}H{{ dureeTrajetEq % 3600 // 60 }}</strong>
+                                                                de temps de trajet total pour l'ensemble du scénario
                                                             </a>
                                                             <a href="#" class="list-group-item">
-                                                                <i class="fa fa-automobile fa-fw"></i> <strong>{{ (distanceTotaleEq *12*0.30144186)|round }}</strong>
+                                                                <i class="fa fa-automobile fa-fw" style="padding-right: 30px"></i> <strong>{{ (distanceTotaleEq *12*0.30144186)|round }}</strong>
                                                                 Kg équivalent
                                                                 CO2 d'émissions totales de GES pour une équipe de 12
                                                                 joueurs en voiture individuelle
@@ -473,7 +472,7 @@
 
                                                             </a>
                                                             <a href="#" class="list-group-item">
-                                                                <i class="fa fa-automobile fa-fw"></i> <strong>{{ (distanceTotaleEq *(12/4)*0.30144186)|round }}</strong>
+                                                                <i class="fa fa-automobile fa-fw" style="padding-right: 30px"></i> <strong>{{ (distanceTotaleEq *(12/4)*0.30144186)|round }}</strong>
                                                                 Kg équivalent
                                                                 CO2 d'émissions totales de GES pour une équipe de 12
                                                                 joueurs en co-voiturage pour le scénario
@@ -499,7 +498,7 @@
 
                                                                 </tr>
                                                                 <tr>
-                                                                    <th>Kilomètres à  parcourir</th>
+                                                                    <th>Kilomètres à parcourir</th>
 
                                                                     {% for distEq in distVilleEq %}
                                                                         <td>  {{ distEq //1000 }}</td>
@@ -517,7 +516,7 @@
 
                                                                 </tr>
                                                                 <tr>
-                                                                    <th>Coût de parcours (€)</th>
+                                                                    <th>Coût du parcours (€)</th>
 
                                                                     {% for distEq in distVilleEq %}
                                                                         <td>  {{ (distEq // 1000 * 0.481395349)|round }}</td>
