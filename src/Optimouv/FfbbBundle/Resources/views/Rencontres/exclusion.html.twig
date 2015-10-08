@@ -12,7 +12,7 @@
             </div>
             <!-- /.row -->
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <div class="panel panel-red">
                         <div class="panel-heading">
                             Participants
@@ -33,7 +33,7 @@
                 </div>
                 <!-- /.col-lg-4 -->
 
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             Type de lieu
@@ -49,7 +49,7 @@
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="optionsRadios" id="BarycentreOption" value="option2">
+                                    <input type="radio" name="optionsRadios" id="BarycentreOption" value="option2" checked>
                                     Barycentre
                                 </label>
                             </div>
@@ -60,6 +60,24 @@
 
                         </form>
 
+
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            Ajouter des contraintes
+                        </div>
+                        <form name="typeLieuxContrainte" style="padding-left:20px;">
+
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="optionsContrainte" id="Contrainte" value="Contrainte" checked>
+                                    Exclusion de zones géographiques
+                                </label>
+                            </div>
+                            <button type="button" class="btn btn-default  pull-right" onclick="xxxx()">Lancer le calcul</button>
+                        </form>
 
                     </div>
                 </div>
@@ -84,7 +102,7 @@
                                         <div class="panel panel-default">
                                             <div class="panel-heading">
                                                 <h4 class="panel-title">
-                                                    Scénario avec contrainte
+                                                    Scénario optimal
                                                 </h4>
                                             </div>
                                             <div class="panel-body"> <!-- premier scÃ©nario -->
@@ -593,6 +611,12 @@
 
                 }
 
+            }
+
+            function xxxx() {
+                if (document.getElementById("Contrainte").checked == true) {
+                    window.location.href = "{{ path('ffbb_exclusion') }}";
+                }
             }
         </script>
     {% endblock %}
