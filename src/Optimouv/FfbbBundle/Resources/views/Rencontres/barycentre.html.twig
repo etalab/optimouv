@@ -297,8 +297,7 @@
                                                                     <th>Temps de parcours</th>
 
                                                                     {% for duree in dureeVille %}
-                                                                        <td>     {{ duree // 3600 }}
-                                                                            H{{ duree % 3600 // 60 }} </td>
+                                                                        <td>     {{ duree // 3600 }}H{{ duree % 3600 // 60 }} </td>
                                                                     {% endfor %}
 
 
