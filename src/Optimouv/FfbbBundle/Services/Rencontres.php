@@ -174,6 +174,7 @@ class Rencontres
     //Calcul du barycentre
     public function Barycentre()
     {
+
 //        $villes = ["43.67353%2C7.19013", "43.12022%2C6.13101", "45.76931%2C4.84977", "43.95465%2C4.81606", "48.39044%2C-4.48658"];
         //on récupère le tableau des villes
         $villes = $this->index();
@@ -613,6 +614,71 @@ order by Proximite limit 1,5 ;");
 
         $coord = $terrainNeutre[$key];
 
+
+        $retour = $this->routingMatrix($coord, $equipe);
+
+        return $retour;
+
+
+
+
+    }
+
+    public function terrainNeutreEquitable(){
+
+        $equipe = ["43.67353%2C7.19013", "43.12022%2C6.13101", "45.76931%2C4.84977", "43.95465%2C4.81606", "48.39044%2C-4.48658"];
+//        $equipe = $this->index();
+
+        $terrainNeutre = ["50.9527484%2C1.8688621", "50.289264%2C2.7678621", "43.5669216%2C3.8988209", "49.1705257%2C-0.3095025", "43.6040707%2C1.4346847"];
+
+        $coord = null;
+
+        $distancesMax = [];//tableau qui contient toutes les distances maxi des différents scénarios
+
+        for ($i = 0; $i < count($terrainNeutre); $i++) {
+
+            $start = $terrainNeutre[$i];
+
+            //on fait appel à la première partie de l'url here
+            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Btruck%3Btraffic%3Adisabled%3B&start0=' . $start;
+            for ($j = 0; $j < count($equipe); $j++) {
+                $destination = $equipe[$j];
+
+                $maps_url .= '&destination' . $j . '=' . $destination;
+            }
+
+            //on ramène le dernier element de l'url
+            $maps_url .= '&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+
+            $maps_json = file_get_contents($maps_url);
+
+            $maps_array = json_decode($maps_json, true);
+
+            //On récupère le nombre des distances à stocker dans un tableau
+            $nbrDistances = count($maps_array['Response']['MatrixEntry']);
+
+            $tabDistance = [];
+
+            //On récupère chaque distance
+            for ($k = 0; $k < $nbrDistances; $k++) {
+
+                //calcul des distances pour chaque ville + duree
+                $uneDistance = $maps_array['Response']['MatrixEntry'][$k]['Route']['Summary']['Distance'];
+                array_push($tabDistance, $uneDistance);
+            }
+
+            //Calcul le min des distances Max
+            $distanceMax = max($tabDistance);
+
+            array_push($distancesMax, $distanceMax);
+
+
+        }
+
+        //position de la ville equitable
+        $distanceEquitable = min($distancesMax);
+        $key = array_search($distanceEquitable, $distancesMax);
+        $coord = $terrainNeutre[$key];
 
         $retour = $this->routingMatrix($coord, $equipe);
 

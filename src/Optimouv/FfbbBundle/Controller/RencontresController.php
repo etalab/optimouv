@@ -179,9 +179,8 @@ class RencontresController extends Controller
 
     public function terrainNeutreAction(){
 
-        //Récupération du résultat du calcul avec contrainte
+        //Récupération du résultat du calcul du terrain neutre
         $retour = $this->get('service_rencontres')->terrainNeutre();
-
         //Données du scénario optimal
         $villeDepart = $retour[0];
         $longPtDep = $retour[1];
@@ -192,6 +191,21 @@ class RencontresController extends Controller
         $mesVilles = $retour[6];
         $distVille = $retour[7];
         $dureeVille = $retour[8];
+
+        //Récupération du résultat du calcul du terrain neutre Equitable
+        $retourEq = $this->get('service_rencontres')->terrainNeutreEquitable();
+
+        //Données du scénario équitable
+
+        $villeDepartEq = $retourEq[0];
+        $longPtDepEq = $retourEq[1];
+        $latPtDepEq = $retourEq[2];
+        $distanceTotaleEq = $retourEq[3];
+        $dureeTrajetEq = $retourEq[4];
+        $coordonneesVilleEq = $retourEq[5];
+        $mesVillesEq = $retourEq[6];
+        $distVilleEq = $retourEq[7];
+        $dureeVilleEq = $retourEq[8];
 
         return $this->render('FfbbBundle:Rencontres:terrainNeutre.html.twig', array(
 
@@ -206,11 +220,23 @@ class RencontresController extends Controller
             'distVille' => $distVille,
             'dureeVille' => $dureeVille,
 
+            //données scénario sans contrainte
+            'villeDepartEq' => $villeDepartEq,
+            'longPtDepEq' => $longPtDepEq,
+            'latPtDepEq' => $latPtDepEq,
+            'distanceTotaleEq' => $distanceTotaleEq,
+            'dureeTrajetEq' => $dureeTrajetEq,
+            'coordonneesVilleEq' => $coordonneesVilleEq,
+            'mesVillesEq' => $mesVillesEq,
+            'distVilleEq' => $distVilleEq,
+            'dureeVilleEq' => $dureeVilleEq,
+
         ));
 
     }
     public function contactAction()
     {
+
         return new Response('<h1>Contactez nous!</h1>');
     }
 }
