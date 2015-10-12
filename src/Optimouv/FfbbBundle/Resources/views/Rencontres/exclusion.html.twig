@@ -19,11 +19,11 @@
                         </div>
                         <div class="panel-body">
                             <ul class="list-unstyled" style="padding-left:20px; list-style-image: url('{{ asset('bundles/ffbb/images/puce-mini.png') }}')">
-                                <li> SAINT-LAURENT-DU-VAR</li>
-                                <li> HYERES</li>
-                                <li> LYON</li>
-                                <li> AVIGNON</li>
-                                <li> BREST</li>
+                                <li> LE LUC</li>
+                                <li> BELLEY</li>
+                                <li> TOUL</li>
+                                <li> MAISONS-ALFORT</li>
+                                <li> MORSBACH</li>
                             </ul>
                         </div>
                         {#<div class="panel-footer">#}
@@ -130,8 +130,8 @@
 
                                                         var marker = 'marker' + incrment;
                                                         window[marker] = new H.map.Marker({
-                                                            lat: parseInt(x),
-                                                            lng: parseInt(y)
+                                                            lat: parseFloat(x),
+                                                            lng: parseFloat(y)
                                                         });
                                                         map.addObject(window[marker]);
 
@@ -377,8 +377,8 @@
 
                                                         var markerEq = 'marker' + incrmentEq;
                                                         window[markerEq] = new H.map.Marker({
-                                                            lat: parseInt(x),
-                                                            lng: parseInt(y)
+                                                            lat: parseFloat(x),
+                                                            lng: parseFloat(y)
                                                         });
                                                         map.addObject(window[markerEq]);
 

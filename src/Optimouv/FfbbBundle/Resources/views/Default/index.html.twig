@@ -100,8 +100,8 @@
 
                                          var marker = 'marker' + incrment;
                                          window[marker] = new H.map.Marker({
-                                             lat: parseInt(x),
-                                             lng: parseInt(y)
+                                             lat: parseFloat(x),
+                                             lng: parseFloat(y)
                                          });
 
                                          points.push(window[marker]);

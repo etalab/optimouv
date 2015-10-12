@@ -22,11 +22,12 @@
                         </div>
                         <div class="panel-body">
                             <ul class="list-unstyled" style="padding-left:20px; list-style-image: url('{{ asset('bundles/ffbb/images/puce-mini.png') }}')">
-                                <li> SAINT-LAURENT-DU-VAR</li>
-                                <li> HYERES</li>
-                                <li> LYON</li>
-                                <li> AVIGNON</li>
-                                <li> BREST</li>
+                                <li> MONT-DE-MARSAN</li>
+                                <li> REZE</li>
+                                <li> ANGERS</li>
+                                <li> BOURGES</li>
+                                <li> CHARLEVILLE-MEZIERES</li>
+                                <li> NICE</li>
                             </ul>
                         </div>
                         {#<div class="panel-footer">#}
@@ -46,9 +47,8 @@
                                 <li> CALAIS</li>
                                 <li> ARRAS</li>
                                 <li> LATTES</li>
-                                <li> MONDEVILLES</li>
-                                <li> TOULOUSE</li>
-                            </ul>
+                                <li> LYON</li>
+                             </ul>
                         </div>
 
                     </div>
@@ -103,8 +103,8 @@
 
                                                         var marker = 'marker' + incrment;
                                                         window[marker] = new H.map.Marker({
-                                                            lat: parseInt(x),
-                                                            lng: parseInt(y)
+                                                            lat: parseFloat(x),
+                                                            lng: parseFloat(y)
                                                         });
                                                         map.addObject(window[marker]);
 
@@ -350,8 +350,8 @@
 
                                                         var markerEq = 'marker' + incrmentEq;
                                                         window[markerEq] = new H.map.Marker({
-                                                            lat: parseInt(x),
-                                                            lng: parseInt(y)
+                                                            lat: parseFloat(x),
+                                                            lng: parseFloat(y)
                                                         });
                                                         map.addObject(window[markerEq]);
 

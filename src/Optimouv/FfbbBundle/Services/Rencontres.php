@@ -15,7 +15,7 @@ class Rencontres
     public function index()
     {
 
-        $villes = ["43.67353%2C7.19013", "43.12022%2C6.13101", "45.76931%2C4.84977", "43.95465%2C4.81606", "48.39044%2C-4.48658"];
+        $villes = ["43.88953%2C-0.49893", "47.19126%2C-1.5698", "47.46317%2C-0.59261", "47.086%2C2.39315", "49.76019%2C4.71909", "43.70821%2C7.29597"];
         return $villes;
     }
 
@@ -58,6 +58,7 @@ class Rencontres
             //on ram�ne le dernier element de l'url
             $maps_url .= '&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
 
+
             $maps_json = file_get_contents($maps_url);
 
             $maps_array = json_decode($maps_json, true);
@@ -82,6 +83,7 @@ class Rencontres
                 $duree += $maps_array['Response']['MatrixEntry'][$j]['Route']['Summary']['BaseTime'];
             }
 
+
             //distances pour chaque ville + duree
             array_push($distanceDest, $tabDistance);
             array_push($dureeDest, $tabDuree);
@@ -98,10 +100,14 @@ class Rencontres
             $villes = $T2;
         }
 
+
+
+
         //Somme des distances
         $distanceMin = min($lesDistances);
         $key = array_search($distanceMin, $lesDistances);
         $positionPtDepart = $lesPtsDeparts[$key];
+
 
         //Nom de la ville de d�part
 
@@ -169,6 +175,7 @@ class Rencontres
 
 
         return $retour;
+
     }
 
     //Calcul du barycentre
@@ -214,7 +221,8 @@ class Rencontres
         $dbpwd = $dbcon[2];
         //on récupère le tableau des villes
         $villes = $this->index();
-//        $villes = ["43.67353%2C7.19013", "43.12022%2C6.13101", "45.76931%2C4.84977", "43.95465%2C4.81606", "48.39044%2C-4.48658"];
+//        $villes = ["43.39498%2C6.3141", "45.76679%2C5.66442", "48.6721%2C5.88819", "48.80155%2C2.43209", "49.16847%2C6.869"];
+
 
         $length = count($villes);
         $lan = $lat = null;
@@ -259,7 +267,7 @@ class Rencontres
         $population = $resultReq['ville_population_2012'];
 
         $retourBarycentre = [];
-        if ($population < 45000) {
+        if ($population < 300) {
 
             $lanX = $resultReq['ville_latitude_deg'];
             $latY = $resultReq['ville_longitude_deg'];
@@ -282,7 +290,7 @@ order by Proximite limit 1,5 ;");
             $stmt1->execute();
             while ($row = $stmt1->fetch(PDO::FETCH_ASSOC)) {
 
-                if ($row['ville_population_2012'] > 45000) {
+                if ($row['ville_population_2012'] > 300) {
 
                     continue;
                 } else {
@@ -561,7 +569,7 @@ order by Proximite limit 1,5 ;");
 
         $equipe = $this->index();
 
-        $terrainNeutre = ["50.9527484%2C1.8688621", "50.289264%2C2.7678621", "43.5669216%2C3.8988209", "49.1705257%2C-0.3095025", "43.6040707%2C1.4346847"];
+        $terrainNeutre = ["50.9531%2C1.85316", "50.29103%2C2.77896", "43.57035%2C3.90526", "45.73546%2C4.87235"];
 
         $distanceMin = null;
         $lesDistances = [];
@@ -626,10 +634,10 @@ order by Proximite limit 1,5 ;");
 
     public function terrainNeutreEquitable(){
 
-        $equipe = ["43.67353%2C7.19013", "43.12022%2C6.13101", "45.76931%2C4.84977", "43.95465%2C4.81606", "48.39044%2C-4.48658"];
+        $equipe = ["43.88953%2C-0.49893", "47.19126%2C-1.5698", "47.46317%2C-0.59261", "47.086%2C2.39315", "49.76019%2C4.71909", "43.70821%2C7.29597"];
 //        $equipe = $this->index();
 
-        $terrainNeutre = ["50.9527484%2C1.8688621", "50.289264%2C2.7678621", "43.5669216%2C3.8988209", "49.1705257%2C-0.3095025", "43.6040707%2C1.4346847"];
+        $terrainNeutre = ["50.9531%2C1.85316", "50.29103%2C2.77896", "43.57035%2C3.90526", "45.73546%2C4.87235"];
 
         $coord = null;
 
