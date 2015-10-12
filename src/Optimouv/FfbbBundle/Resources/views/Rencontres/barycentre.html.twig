@@ -111,7 +111,7 @@
                                         <div id="collapseOne" class="panel-collapse collapse in">
                                             <div class="panel-body"> <!-- premier scÃ©nario -->
                                                 <div id="map"
-                                                     style="width: 100%; height: 400px; background: grey"></div>
+                                                     style="width: 100%; height: 600px; background: grey"></div>
                                                 <script type="text/javascript" charset="UTF-8">
 
 
@@ -246,7 +246,7 @@
 
                                                             </a>
                                                             <a href="#" class="list-group-item">
-                                                                <i class="fa fa-clock-o fa-fw" style="padding-right: 30px"></i> <strong>{{ dureeTrajet  }}H </strong>
+                                                                <i class="fa fa-clock-o fa-fw" style="padding-right: 30px"></i> <strong>{{ dureeTrajet // 3600 }}H{{ dureeTrajet % 3600 // 60 }}</strong>
                                                                 de temps de trajet total pour l'ensemble du scénario
 
                                                             </a>
@@ -298,7 +298,7 @@
                                                                     <th>Temps de parcours</th>
 
                                                                     {% for duree in dureeVille %}
-                                                                        <td>     {{ duree / 60 }}H </td>
+                                                                        <td> {{ duree // 3600 }}H{{ duree % 3600 // 60 }}</td>
                                                                     {% endfor %}
 
 
