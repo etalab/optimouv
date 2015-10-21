@@ -94,6 +94,11 @@
                         <div class="panel-heading">
                             Les scénarios ci-dessous présentent les résultats les plus écoresponsables correspondant
                             à votre recherche
+                            {% if villeDepart == villeDepartEq %}
+                                OK
+                            {% else %}
+                                KO
+                            {% endif %}
                         </div>
                         <!-- .panel-heading -->
                         <div class="panel-body">
@@ -266,73 +271,41 @@
 
                                                     </div>
                                                     <div class="tab-pane fade" id="Details">
-                                                        <div class="table-responsive">
-                                                            <table class="table table-striped table-bordered table-hover"
-                                                                   style="overflow-x: scroll;">
+                                                        <div class="table-responsive" style="padding-top: 10px">
 
-                                                                <tbody>
-                                                                <tr>
-                                                                    <th> Participants</th>
-                                                                    {% for maVille in mesVilles %}
-                                                                        <td><strong> {{ maVille }}</strong></td>
-                                                                    {% endfor %}
-
-
-                                                                </tr>
-                                                                <tr>
-                                                                    <th>Kilomètres à parcourir</th>
-
-                                                                    {% for dist in distVille %}
-                                                                        <td>  {{ dist //1000 }}</td>
-                                                                    {% endfor %}
-
-
-                                                                </tr>
-                                                                <tr>
+                                                            <table id="exampleExclusion" class="display" cellspacing="0"
+                                                                   width="100%" >
+                                                                <thead>
+                                                                <tr >
+                                                                    <th>Participants</th>
+                                                                    <th>Kilomètres à parcourir</th>
                                                                     <th>Temps de parcours</th>
-
-                                                                    {% for duree in dureeVille %}
-                                                                        <td>     {{ duree // 3600 }}H{{ duree % 3600 // 60 }} </td>
-                                                                    {% endfor %}
-
-
-                                                                </tr>
-                                                                <tr>
                                                                     <th>Coût du parcours (€)</th>
-
-                                                                    {% for dist in distVille %}
-                                                                        <td>  {{ (dist // 1000 * 0.481395349)|round }}</td>
-                                                                    {% endfor %}
-
-
-                                                                </tr>
-
-                                                                <tr>
-                                                                    <th>Emissions GES voitures individuelle (en
-                                                                        kilos équivalent CO2)
-                                                                    </th>
-
-                                                                    {% for dist in distVille %}
-                                                                        <td>  {{ (dist //1000 *12*0.30144186)|round }}</td>
-                                                                    {% endfor %}
-
-
-                                                                </tr>
-                                                                <tr>
-                                                                    <th>Emissions GES covoiturage (en kilos
+                                                                    <th>Emissions GES voiture individuelle (en kilos
                                                                         équivalent CO2)
                                                                     </th>
-
-                                                                    {% for dist in distVille %}
-                                                                        <td>  {{ (dist //1000 *(12/4)*0.30144186)|round }}</td>
-                                                                    {% endfor %}
-
-
+                                                                    <th>Emissions GES covoiturage (en kilos équivalent
+                                                                        CO2)
+                                                                    </th>
                                                                 </tr>
+                                                                </thead>
+                                                                <tbody>
+
+                                                                {% for participant in participants %}
+                                                                    <tr>
+                                                                        <td><strong> {{ participant.ville}}</strong></td>
+                                                                        <td style="text-align:right"> {{ participant.distance //1000}}</td>
+                                                                        <td style="text-align:right"> {{ participant.duree // 3600 }}H{{ participant.duree % 3600 // 60 }}</td>
+                                                                        <td style="text-align:right"> {{ (participant.distance // 1000 * 0.481395349)|round }}</td>
+                                                                        <td style="text-align:right"> {{ (participant.distance //1000 *12*0.30144186)|round }}</td>
+                                                                        <td style="text-align:right"> {{ (participant.distance /1000 *(12/4)*0.30144186)|round  }} </td>
+                                                                    </tr>
 
 
+                                                                {% endfor %}
                                                                 </tbody>
                                                             </table>
+
                                                         </div>
                                                         <!-- /.table-responsive -->
                                                     </div>
@@ -505,73 +478,41 @@
 
                                                     </div>
                                                     <div class="tab-pane fade" id="DetailsEq">
-                                                        <div class="table-responsive">
-                                                            <table class="table table-striped table-bordered table-hover"
-                                                                   style="overflow-x: scroll;">
+                                                        <div class="table-responsive" style="padding-top: 10px">
 
-                                                                <tbody>
-                                                                <tr>
-                                                                    <th> Participants</th>
-                                                                    {% for maVilleEq in mesVillesEq %}
-                                                                        <td><strong> {{ maVilleEq }}</strong></td>
-                                                                    {% endfor %}
-
-
-                                                                </tr>
-                                                                <tr>
-                                                                    <th>Kilomètres à parcourir</th>
-
-                                                                    {% for distEq in distVilleEq %}
-                                                                        <td>  {{ distEq //1000 }}</td>
-                                                                    {% endfor %}
-
-
-                                                                </tr>
-                                                                <tr>
+                                                            <table id="exampleExclusionEq" class="display" cellspacing="0"
+                                                                   width="100%" >
+                                                                <thead>
+                                                                <tr >
+                                                                    <th>Participants</th>
+                                                                    <th>Kilomètres à parcourir</th>
                                                                     <th>Temps de parcours</th>
-
-                                                                    {% for dureeEq in dureeVilleEq %}
-                                                                        <td>     {{ dureeEq // 3600 }}H{{ dureeEq % 3600 // 60 }} </td>
-                                                                    {% endfor %}
-
-
-                                                                </tr>
-                                                                <tr>
                                                                     <th>Coût du parcours (€)</th>
-
-                                                                    {% for distEq in distVilleEq %}
-                                                                        <td>  {{ (distEq // 1000 * 0.481395349)|round }}</td>
-                                                                    {% endfor %}
-
-
-                                                                </tr>
-
-                                                                <tr>
-                                                                    <th>Emissions GES voitures individuelle (en
-                                                                        kilos équivalent CO2)
-                                                                    </th>
-
-                                                                    {% for distEq in distVilleEq %}
-                                                                        <td>  {{ (distEq //1000 *12*0.30144186)|round }}</td>
-                                                                    {% endfor %}
-
-
-                                                                </tr>
-                                                                <tr>
-                                                                    <th>Emissions GES covoiturage (en kilos
+                                                                    <th>Emissions GES voiture individuelle (en kilos
                                                                         équivalent CO2)
                                                                     </th>
-
-                                                                    {% for distEq in distVilleEq %}
-                                                                        <td>  {{ (distEq //1000 *(12/4)*0.30144186)|round }}</td>
-                                                                    {% endfor %}
-
-
+                                                                    <th>Emissions GES covoiturage (en kilos équivalent
+                                                                        CO2)
+                                                                    </th>
                                                                 </tr>
+                                                                </thead>
+                                                                <tbody>
+
+                                                                {% for participantEq in participantsEq %}
+                                                                    <tr>
+                                                                        <td><strong> {{ participantEq.villeEq}}</strong></td>
+                                                                        <td style="text-align:right"> {{ participantEq.distanceEq //1000}}</td>
+                                                                        <td style="text-align:right"> {{ participantEq.dureeEq // 3600 }}H{{ participantEq.dureeEq % 3600 // 60 }}</td>
+                                                                        <td style="text-align:right"> {{ (participantEq.distanceEq // 1000 * 0.481395349)|round }}</td>
+                                                                        <td style="text-align:right"> {{ (participantEq.distanceEq //1000 *12*0.30144186)|round }}</td>
+                                                                        <td style="text-align:right"> {{ (participantEq.distanceEq /1000 *(12/4)*0.30144186)|round  }} </td>
+                                                                    </tr>
 
 
+                                                                {% endfor %}
                                                                 </tbody>
                                                             </table>
+
                                                         </div>
                                                         <!-- /.table-responsive -->
                                                     </div>

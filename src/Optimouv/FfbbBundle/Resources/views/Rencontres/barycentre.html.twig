@@ -80,7 +80,8 @@
                                 Exclusion de zones géographiques
                             </label>
                         </div>
-                        <button type="button" class="btn btn-default  pull-right" onclick="xxxx()">Lancer le calcul</button>
+                        <button type="button" class="btn btn-default  pull-right" onclick="xxxx()">Lancer le calcul
+                        </button>
                     </form>
 
                 </div>
@@ -233,25 +234,36 @@
 
                                                         <div class="list-group">
                                                             <a href="#" class="list-group-item">
-                                                                <i class="fa  fa-thumb-tack fa-fw" style="padding-right: 30px"></i> Le meilleur lieu de rencontre
+                                                                <i class="fa  fa-thumb-tack fa-fw"
+                                                                   style="padding-right: 30px"></i> Le meilleur lieu de
+                                                                rencontre
                                                                 est <strong>{{ villeDepart }}</strong>
                                                             </a>
                                                             <a href="#" class="list-group-item">
-                                                                <i class="fa fa-road fa-fw" style="padding-right: 30px"></i> <strong>{{ distanceMin }}</strong> kilomètres au total
+                                                                <i class="fa fa-road fa-fw"
+                                                                   style="padding-right: 30px"></i>
+                                                                <strong>{{ distanceMin }}</strong> kilomètres au total
                                                                 à parcourir pour l'ensemble du scénario
                                                             </a>
                                                             <a href="#" class="list-group-item">
-                                                                <i class="fa  fa-credit-card fa-fw" style="padding-right: 30px" ></i> <strong>{{ (distanceMin * 0.481395349)|round }}</strong>
+                                                                <i class="fa  fa-credit-card fa-fw"
+                                                                   style="padding-right: 30px"></i>
+                                                                <strong>{{ (distanceMin * 0.481395349)|round }}</strong>
                                                                 € pour réaliser les trajets de l'ensemble du scénario
 
                                                             </a>
                                                             <a href="#" class="list-group-item">
-                                                                <i class="fa fa-clock-o fa-fw" style="padding-right: 30px"></i> <strong>{{ dureeTrajet // 3600 }}H{{ dureeTrajet % 3600 // 60 }}</strong>
+                                                                <i class="fa fa-clock-o fa-fw"
+                                                                   style="padding-right: 30px"></i>
+                                                                <strong>{{ dureeTrajet // 3600 }}
+                                                                    H{{ dureeTrajet % 3600 // 60 }}</strong>
                                                                 de temps de trajet total pour l'ensemble du scénario
 
                                                             </a>
                                                             <a href="#" class="list-group-item">
-                                                                <i class="fa fa-automobile fa-fw" style="padding-right: 30px"></i> <strong>{{ (distanceMin *12*0.30144186)|round }}</strong>
+                                                                <i class="fa fa-automobile fa-fw"
+                                                                   style="padding-right: 30px"></i>
+                                                                <strong>{{ (distanceMin *12*0.30144186)|round }}</strong>
                                                                 Kg équivalent
                                                                 CO2 d'émissions totales de GES pour une équipe de 12
                                                                 joueurs en voiture individuelle
@@ -259,7 +271,9 @@
 
                                                             </a>
                                                             <a href="#" class="list-group-item">
-                                                                <i class="fa fa-automobile fa-fw" style="padding-right: 30px"></i> <strong>{{ (distanceMin *(12/4)*0.30144186)|round }}</strong>
+                                                                <i class="fa fa-automobile fa-fw"
+                                                                   style="padding-right: 30px"></i>
+                                                                <strong>{{ (distanceMin *(12/4)*0.30144186)|round }}</strong>
                                                                 Kg équivalent
                                                                 CO2 d'émissions totales de GES pour une équipe de 12
                                                                 joueurs en co-voiturage pour le scénario
@@ -272,78 +286,47 @@
                                                     </div>
 
                                                     <div class="tab-pane fade" id="Details">
-                                                        <div class="table-responsive">
-                                                            <table class="table table-striped table-bordered table-hover"
-                                                                   style="overflow-x: scroll;">
+                                                        <div class="table-responsive" style="padding-top: 10px">
 
-                                                                <tbody>
-                                                                <tr>
-                                                                    <th> Participants</th>
-                                                                    {% for maVille in mesVilles %}
-                                                                        <td><strong> {{ maVille }}</strong></td>
-                                                                    {% endfor %}
-
-
-                                                                </tr>
-                                                                <tr>
-                                                                    <th>Kilomètres à parcourir</th>
-
-                                                                    {% for dist in distVille %}
-                                                                        <td>  {{ dist //1000 }}</td>
-                                                                    {% endfor %}
-
-
-                                                                </tr>
-                                                                <tr>
+                                                            <table id="example" class="display" cellspacing="0"
+                                                                   width="100%" >
+                                                                <thead>
+                                                                <tr >
+                                                                    <th>Participants</th>
+                                                                    <th>Kilomètres à parcourir</th>
                                                                     <th>Temps de parcours</th>
-
-                                                                    {% for duree in dureeVille %}
-                                                                        <td> {{ duree // 3600 }}H{{ duree % 3600 // 60 }}</td>
-                                                                    {% endfor %}
-
-
-                                                                </tr>
-                                                                <tr>
                                                                     <th>Coût du parcours (€)</th>
-
-                                                                    {% for dist in distVille %}
-                                                                        <td>  {{ (dist // 1000 * 0.481395349)|round }}</td>
-                                                                    {% endfor %}
-
-
-                                                                </tr>
-
-                                                                <tr>
-                                                                    <th>Emissions GES voiture individuelle (en
-                                                                        kilos équivalent CO2)
-                                                                    </th>
-
-                                                                    {% for dist in distVille %}
-                                                                        <td>  {{ (dist //1000 *12*0.30144186)|round }}</td>
-                                                                    {% endfor %}
-
-
-                                                                </tr>
-                                                                <tr>
-                                                                    <th>Emissions GES covoiturage (en kilos
+                                                                    <th>Emissions GES voiture individuelle (en kilos
                                                                         équivalent CO2)
                                                                     </th>
-
-                                                                    {% for dist in distVille %}
-                                                                        <td>  {{ (dist //1000 *(12/4)*0.30144186)|round }}</td>
-                                                                    {% endfor %}
-
-
+                                                                    <th>Emissions GES covoiturage (en kilos équivalent
+                                                                        CO2)
+                                                                    </th>
                                                                 </tr>
+                                                                </thead>
+                                                                <tbody>
+
+                                                                {% for participant in participants %}
+                                                                    <tr>
+                                                                        <td><strong> {{ participant.ville}}</strong></td>
+                                                                        <td style="text-align:right"> {{ participant.distance //1000}}</td>
+                                                                        <td style="text-align:right"> {{ participant.duree // 3600 }}H{{ participant.duree % 3600 // 60 }}</td>
+                                                                        <td style="text-align:right"> {{ (participant.distance // 1000 * 0.481395349)|round }}</td>
+                                                                        <td style="text-align:right"> {{ (participant.distance //1000 *12*0.30144186)|round }}</td>
+                                                                        <td style="text-align:right"> {{ (participant.distance /1000 *(12/4)*0.30144186)|round  }} </td>
+                                                                    </tr>
 
 
+                                                                {% endfor %}
                                                                 </tbody>
                                                             </table>
+
                                                         </div>
                                                         <!-- /.table-responsive -->
                                                     </div>
 
-                                                    <button type="button" class="btn btn-default  pull-right">Exporter</button>
+                                                    <button type="button" class="btn btn-default  pull-right">Exporter
+                                                    </button>
 
                                                 </div>
 
