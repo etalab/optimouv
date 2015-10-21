@@ -20,9 +20,10 @@ class RencontresController extends Controller
         $distanceMin = $retour[3];
         $dureeTrajet = $retour[4];
         $coordonneesVille = $retour[5];
-        $mesVilles = $retour[6];
-        $distVille = $retour[7];
-        $dureeVille = $retour[8];
+        foreach($retour[6] as $key => $value ){
+
+            $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key]);
+        }
 
         //Données du scénario équitable
 
@@ -32,9 +33,10 @@ class RencontresController extends Controller
         $distanceTotaleEq = $retourEq[3];
         $dureeTrajetEq = $retourEq[4];
         $coordonneesVilleEq = $retourEq[5];
-        $mesVillesEq = $retourEq[6];
-        $distVilleEq = $retourEq[7];
-        $dureeVilleEq = $retourEq[8];
+        foreach($retourEq[6] as $key => $value ){
+
+            $participantsEq[]= array('villeEq' => $value, 'distanceEq' => $retourEq[7][$key], 'dureeEq' => $retourEq[8][$key]);
+        }
 
 
         return $this->render('FfbbBundle:Rencontres:index.html.twig', array(
@@ -46,9 +48,7 @@ class RencontresController extends Controller
             'distanceMin' => $distanceMin,
             'dureeTrajet' => $dureeTrajet,
             'coordonneesVille' => $coordonneesVille,
-            'mesVilles' => $mesVilles,
-            'distVille' => $distVille,
-            'dureeVille' => $dureeVille,
+            'participants' => $participants,
 
             //données scénario équitable
             'villeDepartEq' => $villeDepartEq,
@@ -57,9 +57,7 @@ class RencontresController extends Controller
             'distanceTotaleEq' => $distanceTotaleEq,
             'dureeTrajetEq' => $dureeTrajetEq,
             'coordonneesVilleEq' => $coordonneesVilleEq,
-            'mesVillesEq' => $mesVillesEq,
-            'distVilleEq' => $distVilleEq,
-            'dureeVilleEq' => $dureeVilleEq,
+            'participantsEq' => $participantsEq,
 
         ));
     }
@@ -68,6 +66,7 @@ class RencontresController extends Controller
     {
 
 
+        $participants = [];
         $retour = $this->get('service_rencontres')->Barycentre();
 
         //Données du scénario optimal
@@ -77,10 +76,15 @@ class RencontresController extends Controller
         $distanceMin = $retour[3];
         $dureeTrajet = $retour[4];
         $coordonneesVille = $retour[5];
-        $mesVilles = $retour[6];
-        $distVille = $retour[7];
-        $dureeVille = $retour[8];
 
+        foreach($retour[6] as $key => $value ){
+
+            $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key]);
+        }
+
+
+
+//        echo '<pre>',print_r($participants,1),'</pre>';exit;
         return $this->render('FfbbBundle:Rencontres:barycentre.html.twig', array(
 
             //Données du scénario optimal
@@ -90,9 +94,8 @@ class RencontresController extends Controller
             'distanceMin' => $distanceMin,
             'dureeTrajet' => $dureeTrajet,
             'coordonneesVille' => $coordonneesVille,
-            'mesVilles' => $mesVilles,
-            'distVille' => $distVille,
-            'dureeVille' => $dureeVille,
+            'participants' => $participants,
+
 
         ));
 
@@ -126,9 +129,11 @@ class RencontresController extends Controller
         $distanceMin = $retour[3];
         $dureeTrajet = $retour[4];
         $coordonneesVille = $retour[5];
-        $mesVilles = $retour[6];
-        $distVille = $retour[7];
-        $dureeVille = $retour[8];
+        foreach($retour[6] as $key => $value ){
+
+            $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key]);
+        }
+
 
         //Récupération du résultat du calcul sans contrainte
         $retourEq = $this->get('service_rencontres')->Barycentre();
@@ -141,9 +146,10 @@ class RencontresController extends Controller
         $distanceTotaleEq = $retourEq[3];
         $dureeTrajetEq = $retourEq[4];
         $coordonneesVilleEq = $retourEq[5];
-        $mesVillesEq = $retourEq[6];
-        $distVilleEq = $retourEq[7];
-        $dureeVilleEq = $retourEq[8];
+        foreach($retourEq[6] as $key => $value ){
+
+            $participantsEq[]= array('villeEq' => $value, 'distanceEq' => $retourEq[7][$key], 'dureeEq' => $retourEq[8][$key]);
+        }
 
 //        $city = stripcslashes($retour [0]);
 
@@ -155,9 +161,7 @@ class RencontresController extends Controller
             'distanceMin' => $distanceMin,
             'dureeTrajet' => $dureeTrajet,
             'coordonneesVille' => $coordonneesVille,
-            'mesVilles' => $mesVilles,
-            'distVille' => $distVille,
-            'dureeVille' => $dureeVille,
+            'participants' => $participants,
 
             //données scénario sans contrainte
             'villeDepartEq' => $villeDepartEq,
@@ -166,9 +170,8 @@ class RencontresController extends Controller
             'distanceTotaleEq' => $distanceTotaleEq,
             'dureeTrajetEq' => $dureeTrajetEq,
             'coordonneesVilleEq' => $coordonneesVilleEq,
-            'mesVillesEq' => $mesVillesEq,
-            'distVilleEq' => $distVilleEq,
-            'dureeVilleEq' => $dureeVilleEq,
+            'participantsEq' => $participantsEq,
+
 
 
 
@@ -188,9 +191,10 @@ class RencontresController extends Controller
         $distanceMin = $retour[3];
         $dureeTrajet = $retour[4];
         $coordonneesVille = $retour[5];
-        $mesVilles = $retour[6];
-        $distVille = $retour[7];
-        $dureeVille = $retour[8];
+        foreach($retour[6] as $key => $value ){
+
+            $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key]);
+        }
 
         //Récupération du résultat du calcul du terrain neutre Equitable
         $retourEq = $this->get('service_rencontres')->terrainNeutreEquitable();
@@ -203,9 +207,10 @@ class RencontresController extends Controller
         $distanceTotaleEq = $retourEq[3];
         $dureeTrajetEq = $retourEq[4];
         $coordonneesVilleEq = $retourEq[5];
-        $mesVillesEq = $retourEq[6];
-        $distVilleEq = $retourEq[7];
-        $dureeVilleEq = $retourEq[8];
+        foreach($retourEq[6] as $key => $value ){
+
+            $participantsEq[]= array('villeEq' => $value, 'distanceEq' => $retourEq[7][$key], 'dureeEq' => $retourEq[8][$key]);
+        }
 
         return $this->render('FfbbBundle:Rencontres:terrainNeutre.html.twig', array(
 
@@ -216,9 +221,8 @@ class RencontresController extends Controller
             'distanceMin' => $distanceMin,
             'dureeTrajet' => $dureeTrajet,
             'coordonneesVille' => $coordonneesVille,
-            'mesVilles' => $mesVilles,
-            'distVille' => $distVille,
-            'dureeVille' => $dureeVille,
+            'participants' => $participants,
+
 
             //données scénario sans contrainte
             'villeDepartEq' => $villeDepartEq,
@@ -227,9 +231,8 @@ class RencontresController extends Controller
             'distanceTotaleEq' => $distanceTotaleEq,
             'dureeTrajetEq' => $dureeTrajetEq,
             'coordonneesVilleEq' => $coordonneesVilleEq,
-            'mesVillesEq' => $mesVillesEq,
-            'distVilleEq' => $distVilleEq,
-            'dureeVilleEq' => $dureeVilleEq,
+            'participantsEq' => $participantsEq,
+
 
         ));
 

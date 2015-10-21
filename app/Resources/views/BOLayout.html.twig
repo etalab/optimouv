@@ -32,6 +32,10 @@
                 src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js"></script>
 
 
+        {#<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/bs-3.3.5/jq-2.1.4,dt-1.10.8/datatables.min.css"/>#}
+
+
+
     {% endblock %}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
 </head>
@@ -121,6 +125,86 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="{{ asset('bundles/ffbb/dist/js/sb-admin-2.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('bundles/ffbb/js/datatables.min.js') }}"></script>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function() {
+            $('#example').DataTable();
+        } );
+        {# Exclusion de zone géographique #}
+        $(document).ready(function() {
+            $('#exampleExclusion').DataTable();
+        } );
+
+        $(document).ready(function() {
+            $('#exampleExclusionEq').DataTable();
+        } );
+        {# Meilleur lieu de rencontre #}
+        $(document).ready(function() {
+            $('#exampleRencontre').DataTable();
+        } );
+        $(document).ready(function() {
+            $('#exampleRencontreEq').DataTable();
+        } );
+
+        {# Terrain Neutre #}
+        $(document).ready(function() {
+            $('#exampleTerrain').DataTable();
+        } );
+        $(document).ready(function() {
+            $('#exampleTerrainEq').DataTable();
+        } );
+    </script>
+
+
+
+    <!-- -->
+    <script type="text/javascript">
+        // For demo to fit into DataTables site builder...
+        $('#example')
+                .removeClass( 'display' )
+                .addClass('table table-striped table-bordered');
+    </script>
+    {# Exclusion de zone géographique #}
+    <script type="text/javascript">
+        // For demo to fit into DataTables site builder...
+        $('#exampleExclusion')
+                .removeClass( 'display' )
+                .addClass('table table-striped table-bordered');
+    </script>
+    <script type="text/javascript">
+        // For demo to fit into DataTables site builder...
+        $('#exampleExclusionEq')
+                .removeClass( 'display' )
+                .addClass('table table-striped table-bordered');
+    </script>
+    {# Meilleur lieu de rencontre #}
+    <script type="text/javascript">
+        // For demo to fit into DataTables site builder...
+        $('#exampleRencontre')
+                .removeClass( 'display' )
+                .addClass('table table-striped table-bordered');
+    </script>
+    <script type="text/javascript">
+        // For demo to fit into DataTables site builder...
+        $('#exampleRencontreEq')
+                .removeClass( 'display' )
+                .addClass('table table-striped table-bordered');
+    </script>
+
+    {# Terrain Neutre #}
+    <script type="text/javascript">
+        // For demo to fit into DataTables site builder...
+        $('#exampleTerrain')
+                .removeClass( 'display' )
+                .addClass('table table-striped table-bordered');
+    </script>
+    <script type="text/javascript">
+        // For demo to fit into DataTables site builder...
+        $('#exampleTerrainEq')
+                .removeClass( 'display' )
+                .addClass('table table-striped table-bordered');
+    </script>
 
 {% endblock %}
 </body>

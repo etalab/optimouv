@@ -46,7 +46,7 @@ class Rencontres
             $T2 = array_values($villes);
 
             //on fait appel � la premi�re partie de l'url here
-            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Btruck%3Btraffic%3Adisabled%3B&start0=' . $start;
+            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0=' . $start;
 
             //on parcourt tous les �l�ments du deuxi�me tableau: long + lat
             for ($j = 0; $j < count($T2); $j++) {
@@ -337,7 +337,7 @@ order by Proximite limit 1,5 ;");
             $T2 = array_values($villes);
 
             //on fait appel ? la premi?re partie de l'url here
-            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Btruck%3Btraffic%3Adisabled%3B&start0=' . $start;
+            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0=' . $start;
 
             //on parcourt tous les ?l?ments du deuxi?me tableau: long + lat
             for ($j = 0; $j < count($T2); $j++) {
@@ -480,7 +480,7 @@ order by Proximite limit 1,5 ;");
         $T2 = $villes;
 
         //on fait appel à la première partie de l'url here
-        $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Btruck%3Btraffic%3Adisabled%3B&start0=' . $start;
+        $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0=' . $start;
         //on parcourt tous les éléments du deuxième tableau: long + lat
         for ($j = 0; $j < count($T2); $j++) {
 
@@ -580,7 +580,7 @@ order by Proximite limit 1,5 ;");
             $start = $terrainNeutre[$i];
 
             //on fait appel à la première partie de l'url here
-            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Btruck%3Btraffic%3Adisabled%3B&start0=' . $start;
+            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0=' . $start;
             for ($j = 0; $j < count($equipe); $j++) {
                 $destination = $equipe[$j];
 
@@ -648,7 +648,7 @@ order by Proximite limit 1,5 ;");
             $start = $terrainNeutre[$i];
 
             //on fait appel à la première partie de l'url here
-            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Btruck%3Btraffic%3Adisabled%3B&start0=' . $start;
+            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0=' . $start;
             for ($j = 0; $j < count($equipe); $j++) {
                 $destination = $equipe[$j];
 
