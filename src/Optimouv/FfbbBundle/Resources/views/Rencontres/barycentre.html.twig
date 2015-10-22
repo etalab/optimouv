@@ -116,15 +116,9 @@
                                                 <script type="text/javascript" charset="UTF-8">
 
 
-                                                    /**
-                                                     * Adds markers to the map highlighting the locations of the captials of
-                                                     * France, Italy, Germany, Spain and the United Kingdom.
-                                                     *
-                                                     * @param  {H.Map} map      A HERE Map instance within the application
-                                                     */
-                                                    function addMarkersToMap(map) {
-
+                                                    function addMarkersAndSetViewBounds() {
                                                         var incrment = 1;
+                                                        var points = [];
                                                         //tracer dynamiquement les points de villes
                                                         {% for coordonneeVille in coordonneesVille %}
                                                         var coordonneeVille = '{{ coordonneeVille }}';
@@ -134,18 +128,22 @@
                                                         var y = xy[1];
 
                                                         var marker = 'marker' + incrment;
-
                                                         window[marker] = new H.map.Marker({
                                                             lat: parseFloat(x),
                                                             lng: parseFloat(y)
                                                         });
-                                                        map.addObject(window[marker]);
 
-                                                        var incrment = incrment + 1
+                                                        points.push(window[marker]);
+
+                                                        var incrment = incrment + 1;
 
                                                         {% endfor %}
-
-
+                                                        group = new H.map.Group();
+                                                        // add markers to the group
+                                                        group.addObjects(points);
+                                                        map.addObject(group);
+                                                        // get geo bounding box for the group and set it to the map
+                                                        map.setViewBounds(group.getBounds());
                                                     }
                                                     /**
                                                      * Markeur principal
@@ -159,6 +157,7 @@
                                                         lat: '{{ longPtDep }}',
                                                         lng: '{{ latPtDep }}'
                                                     }, {icon: icon});
+
 
                                                     /**
                                                      *
@@ -203,20 +202,16 @@
                                                                 zoom: 4
                                                             });
 
-
                                                     var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-
                                                     // Create the default UI components
                                                     //    var ui = H.ui.UI.createDefault(map, defaultLayers);
                                                     var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
 
-
+                                                    // Now use the map as required...
                                                     // Add the marker to the map:
                                                     map.addObject(markerPrincipal);
-
-                                                    addMarkersToMap(map);
+                                                    addMarkersAndSetViewBounds(map);
                                                     switchMapLanguage(map, platform);
-
 
                                                 </script>
                                                 <!-- Nav tabs -->
@@ -252,14 +247,14 @@
                                                                 € pour réaliser les trajets de l'ensemble du scénario
 
                                                             </a>
-                                                            <a href="#" class="list-group-item">
-                                                                <i class="fa fa-clock-o fa-fw"
-                                                                   style="padding-right: 30px"></i>
-                                                                <strong>{{ dureeTrajet // 3600 }}
-                                                                    H{{ dureeTrajet % 3600 // 60 }}</strong>
-                                                                de temps de trajet total pour l'ensemble du scénario
+                                                            {#<a href="#" class="list-group-item">#}
+                                                            {#<i class="fa fa-clock-o fa-fw"#}
+                                                            {#style="padding-right: 30px"></i>#}
+                                                            {#<strong>{{ dureeTrajet // 3600 }}#}
+                                                            {#H{{ dureeTrajet % 3600 // 60 }}</strong>#}
+                                                            {#de temps de trajet total pour l'ensemble du scénario#}
 
-                                                            </a>
+                                                            {#</a>#}
                                                             <a href="#" class="list-group-item">
                                                                 <i class="fa fa-automobile fa-fw"
                                                                    style="padding-right: 30px"></i>
@@ -289,9 +284,9 @@
                                                         <div class="table-responsive" style="padding-top: 10px">
 
                                                             <table id="example" class="display" cellspacing="0"
-                                                                   width="100%" >
+                                                                   width="100%">
                                                                 <thead>
-                                                                <tr >
+                                                                <tr>
                                                                     <th>Participants</th>
                                                                     <th>Kilomètres à parcourir</th>
                                                                     <th>Temps de parcours</th>
@@ -308,12 +303,14 @@
 
                                                                 {% for participant in participants %}
                                                                     <tr>
-                                                                        <td><strong> {{ participant.ville}}</strong></td>
-                                                                        <td style="text-align:right"> {{ participant.distance //1000}}</td>
-                                                                        <td style="text-align:right"> {{ participant.duree // 3600 }}H{{ participant.duree % 3600 // 60 }}</td>
+                                                                        <td><strong> {{ participant.ville }}</strong>
+                                                                        </td>
+                                                                        <td style="text-align:right"> {{ participant.distance //1000 }}</td>
+                                                                        <td style="text-align:right"> {{ participant.duree // 3600 }}
+                                                                            H{{ participant.duree % 3600 // 60 }}</td>
                                                                         <td style="text-align:right"> {{ (participant.distance // 1000 * 0.481395349)|round }}</td>
                                                                         <td style="text-align:right"> {{ (participant.distance //1000 *12*0.30144186)|round }}</td>
-                                                                        <td style="text-align:right"> {{ (participant.distance /1000 *(12/4)*0.30144186)|round  }} </td>
+                                                                        <td style="text-align:right"> {{ (participant.distance /1000 *(12/4)*0.30144186)|round }} </td>
                                                                     </tr>
 
 

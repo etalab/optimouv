@@ -92,14 +92,15 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Les scénarios ci-dessous présentent les résultats les plus écoresponsables correspondant
-                            à votre recherche
+                            <p>Les scénarios ci-dessous présentent les résultats les plus écoresponsables correspondant
+                            à votre recherche </p>
                             {% if villeDepart == villeDepartEq %}
-                                OK
+                                <p style="text-indent:10px;"><i>Pour vos critères de recherche, le scénario optimal et le scénario équitable sont équivalents.</i></p>
                             {% else %}
-                                KO
+                                <p></p>
                             {% endif %}
                         </div>
+
                         <!-- .panel-heading -->
                         <div class="panel-body">
                             <div class="col-lg-6">
@@ -117,15 +118,9 @@
                                                 <script type="text/javascript" charset="UTF-8">
 
 
-                                                    /**
-                                                     * Adds markers to the map highlighting the locations of the captials of
-                                                     * France, Italy, Germany, Spain and the United Kingdom.
-                                                     *
-                                                     * @param  {H.Map} map      A HERE Map instance within the application
-                                                     */
-                                                    function addMarkersToMap(map) {
-
+                                                    function addMarkersAndSetViewBounds() {
                                                         var incrment = 1;
+                                                        var points = [];
                                                         //tracer dynamiquement les points de villes
                                                         {% for coordonneeVille in coordonneesVille %}
                                                         var coordonneeVille = '{{ coordonneeVille }}';
@@ -139,13 +134,18 @@
                                                             lat: parseFloat(x),
                                                             lng: parseFloat(y)
                                                         });
-                                                        map.addObject(window[marker]);
 
-                                                        var incrment = incrment + 1
+                                                        points.push(window[marker]);
+
+                                                        var incrment = incrment + 1;
 
                                                         {% endfor %}
-
-
+                                                        group = new H.map.Group();
+                                                        // add markers to the group
+                                                        group.addObjects(points);
+                                                        map.addObject(group);
+                                                        // get geo bounding box for the group and set it to the map
+                                                        map.setViewBounds(group.getBounds());
                                                     }
                                                     /**
                                                      * Markeur principal
@@ -159,6 +159,7 @@
                                                         lat: '{{ longPtDep }}',
                                                         lng: '{{ latPtDep }}'
                                                     }, {icon: icon});
+
 
                                                     /**
                                                      *
@@ -203,20 +204,16 @@
                                                                 zoom: 4
                                                             });
 
-
                                                     var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-
                                                     // Create the default UI components
                                                     //    var ui = H.ui.UI.createDefault(map, defaultLayers);
                                                     var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
 
-
+                                                    // Now use the map as required...
                                                     // Add the marker to the map:
                                                     map.addObject(markerPrincipal);
-
-                                                    addMarkersToMap(map);
+                                                    addMarkersAndSetViewBounds(map);
                                                     switchMapLanguage(map, platform);
-
 
                                                 </script>
                                                 <!-- Nav tabs -->
@@ -246,11 +243,11 @@
                                                                 € pour réaliser les trajets de l'ensemble du scénario
 
                                                             </a>
-                                                            <a href="#" class="list-group-item">
-                                                                <i class="fa fa-clock-o fa-fw" style="padding-right: 30px"></i> <strong>{{ dureeTrajet // 3600 }}H{{ dureeTrajet % 3600 // 60 }}</strong>
-                                                                de trajet pour l'ensemble du scénario
+                                                            {#<a href="#" class="list-group-item">#}
+                                                                {#<i class="fa fa-clock-o fa-fw" style="padding-right: 30px"></i> <strong>{{ dureeTrajet // 3600 }}H{{ dureeTrajet % 3600 // 60 }}</strong>#}
+                                                                {#de trajet pour l'ensemble du scénario#}
 
-                                                            </a>
+                                                            {#</a>#}
                                                             <a href="#" class="list-group-item">
                                                                 <i class="fa fa-automobile fa-fw" style="padding-right: 30px"></i> <strong>{{ (distanceMin *12*0.30144186)|round }}</strong>
                                                                 Kg équivalent
@@ -338,9 +335,10 @@
                                                      style="width: 100%; height: 500px; background: grey"></div>
                                                 <script type="text/javascript" charset="UTF-8">
 
-                                                    function addMarkersToMap(map) {
 
+                                                    function addMarkersAndSetViewBounds() {
                                                         var incrmentEq = 1;
+                                                        var points = [];
                                                         //tracer dynamiquement les points de villes
                                                         {% for coordonneeVilleEq in coordonneesVilleEq %}
                                                         var coordonneeVilleEq = '{{ coordonneeVilleEq }}';
@@ -354,13 +352,18 @@
                                                             lat: parseFloat(x),
                                                             lng: parseFloat(y)
                                                         });
-                                                        map.addObject(window[markerEq]);
 
-                                                        var incrmentEq = incrmentEq + 1
+                                                        points.push(window[markerEq]);
+
+                                                        var incrmentEq = incrmentEq + 1;
 
                                                         {% endfor %}
-
-
+                                                        group = new H.map.Group();
+                                                        // add markers to the group
+                                                        group.addObjects(points);
+                                                        map.addObject(group);
+                                                        // get geo bounding box for the group and set it to the map
+                                                        map.setViewBounds(group.getBounds());
                                                     }
                                                     /**
                                                      * Markeur principal
@@ -374,7 +377,12 @@
                                                         lat: '{{ longPtDepEq }}',
                                                         lng: '{{ latPtDepEq }}'
                                                     }, {icon: icon});
-                                                    // Changer la langue de la carte
+
+
+                                                    /**
+                                                     *
+                                                     * Changer la langue de la carte
+                                                     */
                                                     function switchMapLanguage(map, platform) {
                                                         var mapTileService = platform.getMapTileService({
                                                                     type: 'base'
@@ -390,7 +398,10 @@
 
 
                                                     }
-                                                    // Fin fn changer langue
+                                                    /*
+                                                     Fin fn changer langue
+                                                     */
+
                                                     /**
                                                      * Boilerplate map initialization code starts below:
                                                      */
@@ -411,18 +422,16 @@
                                                                 zoom: 4
                                                             });
 
-
                                                     var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-
                                                     // Create the default UI components
                                                     //    var ui = H.ui.UI.createDefault(map, defaultLayers);
                                                     var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
 
+                                                    // Now use the map as required...
                                                     // Add the marker to the map:
                                                     map.addObject(markerPrincipalEq);
-                                                    addMarkersToMap(map);
+                                                    addMarkersAndSetViewBounds(map);
                                                     switchMapLanguage(map, platform);
-
 
                                                 </script>
 
@@ -453,10 +462,10 @@
                                                                 € pour réaliser les trajets de l'ensemble du scénario
 
                                                             </a>
-                                                            <a href="#" class="list-group-item">
-                                                                <i class="fa fa-clock-o fa-fw" style="padding-right: 30px"></i> <strong>{{ dureeTrajetEq // 3600 }}H{{ dureeTrajetEq % 3600 // 60 }}</strong>
-                                                                de temps de trajet total pour l'ensemble du scénario
-                                                            </a>
+                                                            {#<a href="#" class="list-group-item">#}
+                                                                {#<i class="fa fa-clock-o fa-fw" style="padding-right: 30px"></i> <strong>{{ dureeTrajetEq // 3600 }}H{{ dureeTrajetEq % 3600 // 60 }}</strong>#}
+                                                                {#de temps de trajet total pour l'ensemble du scénario#}
+                                                            {#</a>#}
                                                             <a href="#" class="list-group-item">
                                                                 <i class="fa fa-automobile fa-fw" style="padding-right: 30px"></i> <strong>{{ (distanceTotaleEq *12*0.30144186)|round }}</strong>
                                                                 Kg équivalent

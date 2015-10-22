@@ -2,528 +2,568 @@
 
 {% block pagewrapper %}
 
-        <div id="page-wrapper">
+    <div id="page-wrapper">
 
-            <div class="row">
-                <div class="col-lg-12">
-                    <h3 class="page-header">Obtenez le meilleur lieu de rencontre </h3>
-                </div>
-                <!-- /.col-lg-12 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="page-header">Obtenez le meilleur lieu de rencontre </h3>
             </div>
-            <!-- /.row -->
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="panel panel-red">
-                        <div class="panel-heading">
-                            Participants
-                        </div>
-                        <div class="panel-body">
-                            <ul class="list-unstyled" style="padding-left:20px; list-style-image: url('{{ asset('bundles/ffbb/images/puce-mini.png') }}')">
-                                <li> MONT-DE-MARSAN</li>
-                                <li> REZE</li>
-                                <li> ANGERS</li>
-                                <li> BOURGES</li>
-                                <li> CHARLEVILLE-MEZIERES</li>
-                                <li> NICE</li>
-                            </ul>
-                        </div>
-                        {#<div class="panel-footer">#}
-                        {#Panel Footer#}
-                        {#</div>#}
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="panel panel-red">
+                    <div class="panel-heading">
+                        Participants
                     </div>
-                </div>
-                <!-- /.col-lg-4 -->
-
-                <div class="col-lg-6">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            Type de lieu
-                        </div>
-
-                        <form style="padding-left:20px;">
-
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" name="optionsRadios" id="meilleurLieuOption" value="option1" checked>
-                                    Lieux définis
-                                </label>
-                            </div>
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" name="optionsRadios" id="BarycentreOption" value="option2">
-                                    Barycentre
-                                </label>
-                            </div>
-
-                            <button type="button" class="btn btn-default  pull-right" onclick="typeLieu()">Lancer le calcul
-                            </button>
-
-
-                        </form>
-
-
+                    <div class="panel-body">
+                        <ul class="list-unstyled"
+                            style="padding-left:20px; list-style-image: url('{{ asset('bundles/ffbb/images/puce-mini.png') }}')">
+                            <li> MONT-DE-MARSAN</li>
+                            <li> REZE</li>
+                            <li> ANGERS</li>
+                            <li> BOURGES</li>
+                            <li> CHARLEVILLE-MEZIERES</li>
+                            <li> NICE</li>
+                        </ul>
                     </div>
+                    {#<div class="panel-footer">#}
+                    {#Panel Footer#}
+                    {#</div>#}
                 </div>
-
-
-                <!-- /.col-lg-4 -->
             </div>
-            <!-- /.row -->
+            <!-- /.col-lg-4 -->
 
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Les scénarios ci-dessous présentent les résultats les plus écoresponsables correspondant
-                            à votre recherche
+            <div class="col-lg-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Type de lieu
+                    </div>
+
+                    <form style="padding-left:20px;">
+
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="optionsRadios" id="meilleurLieuOption" value="option1"
+                                       checked>
+                                Lieux définis
+                            </label>
                         </div>
-                        <!-- .panel-heading -->
-                        <div class="panel-body">
-                            <div class="col-lg-6">
-                                <div class="panel-body">
-                                    <div class="panel-group" id="accordion">
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                    Scénario optimal
-                                                </h4>
-                                            </div>
-                                                 <div class="panel-body"> <!-- premier scÃ©nario -->
-                                                    <div id="map"
-                                                         style="width: 100%; height: 500px; background: grey"></div>
-                                                    <script type="text/javascript" charset="UTF-8">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="optionsRadios" id="BarycentreOption" value="option2">
+                                Barycentre
+                            </label>
+                        </div>
+
+                        <button type="button" class="btn btn-default  pull-right" onclick="typeLieu()">Lancer le calcul
+                        </button>
 
 
-                                                        /**
-                                                         * Adds markers to the map highlighting the locations of the captials of
-                                                         * France, Italy, Germany, Spain and the United Kingdom.
-                                                         *
-                                                         * @param  {H.Map} map      A HERE Map instance within the application
-                                                         */
-                                                        function addMarkersToMap(map) {
-
-                                                            var incrment = 1;
-                                                            //tracer dynamiquement les points de villes
-                                                            {% for coordonneeVille in coordonneesVille %}
-                                                            var coordonneeVille = '{{ coordonneeVille }}';
-
-                                                            var xy = coordonneeVille.split("%2C");
-                                                            var x = xy[0];
-                                                            var y = xy[1];
-
-                                                            var marker = 'marker' + incrment;
-                                                            window[marker] = new H.map.Marker({
-                                                                lat: parseFloat(x),
-                                                                lng: parseFloat(y)
-                                                            });
-                                                            map.addObject(window[marker]);
-
-                                                            var incrment = incrment + 1
-
-                                                            {% endfor %}
+                    </form>
 
 
-                                                        }
-                                                        /**
-                                                         * Markeur principal
-                                                         */
-
-                                                        // Create a marker icon from an image URL:
-                                                        var icon = new H.map.Icon('{{ asset('bundles/ffbb/images/depart.png') }}');
-
-                                                        // Create a marker using the previously instantiated icon:
-                                                        var markerPrincipal = new H.map.Marker({
-                                                            lat: '{{ longPtDep }}',
-                                                            lng: '{{ latPtDep }}'
-                                                        }, {icon: icon});
-
-                                                        /**
-                                                         *
-                                                         * Changer la langue de la carte
-                                                         */
-                                                        function switchMapLanguage(map, platform) {
-                                                            var mapTileService = platform.getMapTileService({
-                                                                        type: 'base'
-                                                                    }),
-                                                                    frenchMapLayer = mapTileService.createTileLayer(
-                                                                            'maptile',
-                                                                            'normal.day',
-                                                                            256,
-                                                                            'png8',
-                                                                            {lg: 'fre'}
-                                                                    );
-                                                            map.setBaseLayer(frenchMapLayer);
+                </div>
+            </div>
 
 
-                                                        }
-                                                        /*
-                                                         Fin fn changer langue
-                                                         */
+            <!-- /.col-lg-4 -->
+        </div>
+        <!-- /.row -->
 
-                                                        /**
-                                                         * Boilerplate map initialization code starts below:
-                                                         */
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Les scénarios ci-dessous présentent les résultats les plus écoresponsables correspondant
+                        à votre recherche
+                        {% if villeDepart == villeDepartEq %}
+                            <p style="text-indent:10px;"><i>Pour vos critères de recherche, le scénario optimal et le
+                                    scénario équitable sont équivalents.</i></p>
+                        {% else %}
+                            <p></p>
+                        {% endif %}
+                    </div>
+                    <!-- .panel-heading -->
+                    <div class="panel-body">
+                        <div class="col-lg-6">
+                            <div class="panel-body">
+                                <div class="panel-group" id="accordion">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Scénario optimal
+                                            </h4>
+                                        </div>
+                                        <div class="panel-body"> <!-- premier scÃ©nario -->
+                                            <div id="map"
+                                                 style="width: 100%; height: 500px; background: grey"></div>
+                                            <script type="text/javascript" charset="UTF-8">
 
-                                                        //Step 1: initialize communication with the platform
-                                                        var platform = new H.service.Platform({
-                                                            app_id: 'DemoAppId01082013GAL',
-                                                            app_code: 'AJKnXv84fjrb0KIHawS0Tg',
-                                                            useCIT: true,
-                                                            useHTTPS: true
+
+                                                function addMarkersAndSetViewBounds() {
+                                                    var incrment = 1;
+                                                    var points = [];
+                                                    //tracer dynamiquement les points de villes
+                                                    {% for coordonneeVille in coordonneesVille %}
+                                                    var coordonneeVille = '{{ coordonneeVille }}';
+
+                                                    var xy = coordonneeVille.split("%2C");
+                                                    var x = xy[0];
+                                                    var y = xy[1];
+
+                                                    var marker = 'marker' + incrment;
+                                                    window[marker] = new H.map.Marker({
+                                                        lat: parseFloat(x),
+                                                        lng: parseFloat(y)
+                                                    });
+
+                                                    points.push(window[marker]);
+
+                                                    var incrment = incrment + 1;
+
+                                                    {% endfor %}
+                                                    group = new H.map.Group();
+                                                    // add markers to the group
+                                                    group.addObjects(points);
+                                                    map.addObject(group);
+                                                    // get geo bounding box for the group and set it to the map
+                                                    map.setViewBounds(group.getBounds());
+                                                }
+                                                /**
+                                                 * Markeur principal
+                                                 */
+
+                                                // Create a marker icon from an image URL:
+                                                var icon = new H.map.Icon('{{ asset('bundles/ffbb/images/depart.png') }}');
+
+                                                // Create a marker using the previously instantiated icon:
+                                                var markerPrincipal = new H.map.Marker({
+                                                    lat: '{{ longPtDep }}',
+                                                    lng: '{{ latPtDep }}'
+                                                }, {icon: icon});
+
+
+                                                /**
+                                                 *
+                                                 * Changer la langue de la carte
+                                                 */
+                                                function switchMapLanguage(map, platform) {
+                                                    var mapTileService = platform.getMapTileService({
+                                                                type: 'base'
+                                                            }),
+                                                            frenchMapLayer = mapTileService.createTileLayer(
+                                                                    'maptile',
+                                                                    'normal.day',
+                                                                    256,
+                                                                    'png8',
+                                                                    {lg: 'fre'}
+                                                            );
+                                                    map.setBaseLayer(frenchMapLayer);
+
+
+                                                }
+                                                /*
+                                                 Fin fn changer langue
+                                                 */
+
+                                                /**
+                                                 * Boilerplate map initialization code starts below:
+                                                 */
+
+                                                //Step 1: initialize communication with the platform
+                                                var platform = new H.service.Platform({
+                                                    app_id: 'DemoAppId01082013GAL',
+                                                    app_code: 'AJKnXv84fjrb0KIHawS0Tg',
+                                                    useCIT: true,
+                                                    useHTTPS: true
+                                                });
+                                                var defaultLayers = platform.createDefaultLayers();
+
+                                                //Step 2: initialize a map - this map is centered over Europe
+                                                var map = new H.Map(document.getElementById('map'),
+                                                        defaultLayers.normal.map, {
+                                                            center: {lat: 48.8567, lng: 2.3508},
+                                                            zoom: 4
                                                         });
-                                                        var defaultLayers = platform.createDefaultLayers();
 
-                                                        //Step 2: initialize a map - this map is centered over Europe
-                                                        var map = new H.Map(document.getElementById('map'),
-                                                                defaultLayers.normal.map, {
-                                                                    center: {lat: 48.8567, lng: 2.3508},
-                                                                    zoom: 4
-                                                                });
+                                                var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+                                                // Create the default UI components
+                                                //    var ui = H.ui.UI.createDefault(map, defaultLayers);
+                                                var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
 
+                                                // Now use the map as required...
+                                                // Add the marker to the map:
+                                                map.addObject(markerPrincipal);
+                                                addMarkersAndSetViewBounds(map);
+                                                switchMapLanguage(map, platform);
 
-                                                        var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+                                            </script>
+                                            <!-- Nav tabs -->
+                                            <ul class="nav nav-tabs">
+                                                <li class="active"><a href="#Estimations"
+                                                                      data-toggle="tab">Estimations</a>
+                                                </li>
+                                                <li><a href="#Details" data-toggle="tab">Détails</a>
+                                                </li>
 
-                                                        // Create the default UI components
-                                                        //    var ui = H.ui.UI.createDefault(map, defaultLayers);
-                                                        var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
+                                            </ul>
 
+                                            <!-- Tab panes -->
+                                            <div class="tab-content">
+                                                <div class="tab-pane fade in active" id="Estimations">
 
-                                                        // Add the marker to the map:
-                                                        map.addObject(markerPrincipal);
+                                                    <div class="list-group">
+                                                        <a href="#" class="list-group-item">
+                                                            <i class="fa  fa-thumb-tack fa-fw"
+                                                               style="padding-right: 30px"></i> Le meilleur lieu de
+                                                            rencontre
+                                                            est <strong>{{ villeDepart }}</strong>
+                                                        </a>
+                                                        <a href="#" class="list-group-item">
+                                                            <i class="fa fa-road fa-fw" style="padding-right: 30px"></i>
+                                                            <strong>{{ distanceMin }}</strong> kilomètres au total
+                                                            à parcourir pour l'ensemble du scénario
+                                                        </a>
+                                                        <a href="#" class="list-group-item">
+                                                            <i class="fa  fa-credit-card fa-fw"
+                                                               style="padding-right: 30px"></i>
+                                                            <strong>{{ (distanceMin * 0.481395349)|round }}</strong>
+                                                            € pour réaliser les trajets de l'ensemble du scénario
 
-                                                        addMarkersToMap(map);
-                                                        switchMapLanguage(map, platform);
+                                                        </a>
+                                                        {#<a href="#" class="list-group-item">#}
+                                                        {#<i class="fa fa-clock-o fa-fw" style="padding-right: 30px"></i> <strong>{{ dureeTrajet // 3600 }}H{{ dureeTrajet % 3600 // 60 }}</strong>#}
+                                                        {#de temps de trajet total pour l'ensemble du scénario#}
 
+                                                        {#</a>#}
+                                                        <a href="#" class="list-group-item">
+                                                            <i class="fa fa-automobile fa-fw"
+                                                               style="padding-right: 30px"></i>
+                                                            <strong>{{ (distanceMin *12*0.30144186)|round }}</strong>
+                                                            Kg équivalent
+                                                            CO2 d'émissions totales de GES pour une équipe de 12
+                                                            joueurs en voiture individuelle
+                                                            pour le scénario
 
-                                                    </script>
-                                                    <!-- Nav tabs -->
-                                                    <ul class="nav nav-tabs">
-                                                        <li class="active"><a href="#Estimations" data-toggle="tab">Estimations</a>
-                                                        </li>
-                                                        <li><a href="#Details" data-toggle="tab">Détails</a>
-                                                        </li>
+                                                        </a>
+                                                        <a href="#" class="list-group-item">
+                                                            <i class="fa fa-automobile fa-fw"
+                                                               style="padding-right: 30px"></i>
+                                                            <strong>{{ (distanceMin *(12/4)*0.30144186)|round }}</strong>
+                                                            Kg équivalent
+                                                            CO2 d'émissions totales de GES pour une équipe de 12
+                                                            joueurs en co-voiturage pour le scénario
 
-                                                    </ul>
-
-                                                    <!-- Tab panes -->
-                                                    <div class="tab-content">
-                                                        <div class="tab-pane fade in active" id="Estimations">
-
-                                                            <div class="list-group">
-                                                                <a href="#" class="list-group-item">
-                                                                    <i class="fa  fa-thumb-tack fa-fw" style="padding-right: 30px"></i> Le meilleur lieu de rencontre
-                                                                    est <strong>{{ villeDepart }}</strong>
-                                                                </a>
-                                                                <a href="#" class="list-group-item">
-                                                                    <i class="fa fa-road fa-fw" style="padding-right: 30px"></i> <strong>{{ distanceMin }}</strong> kilomètres au total
-                                                                    à parcourir pour l'ensemble du scénario
-                                                                </a>
-                                                                <a href="#" class="list-group-item">
-                                                                    <i class="fa  fa-credit-card fa-fw" style="padding-right: 30px"></i> <strong>{{ (distanceMin * 0.481395349)|round }}</strong>
-                                                                    € pour réaliser les trajets de l'ensemble du scénario
-
-                                                                </a>
-                                                                <a href="#" class="list-group-item">
-                                                                    <i class="fa fa-clock-o fa-fw" style="padding-right: 30px"></i> <strong>{{ dureeTrajet // 3600 }}H{{ dureeTrajet % 3600 // 60 }}</strong>
-                                                                    de temps de trajet total pour l'ensemble du scénario
-
-                                                                </a>
-                                                                <a href="#" class="list-group-item">
-                                                                    <i class="fa fa-automobile fa-fw" style="padding-right: 30px"></i> <strong>{{ (distanceMin *12*0.30144186)|round }}</strong>
-                                                                    Kg équivalent
-                                                                    CO2 d'émissions totales de GES pour une équipe de 12
-                                                                    joueurs en voiture individuelle
-                                                                    pour le scénario
-
-                                                                </a>
-                                                                <a href="#" class="list-group-item">
-                                                                    <i class="fa fa-automobile fa-fw" style="padding-right: 30px"></i> <strong>{{ (distanceMin *(12/4)*0.30144186)|round }}</strong>
-                                                                    Kg équivalent
-                                                                    CO2 d'émissions totales de GES pour une équipe de 12
-                                                                    joueurs en co-voiturage pour le scénario
-
-                                                                </a>
-
-                                                            </div>
-
-                                                        </div>
-                                                        <div class="tab-pane fade" id="Details">
-                                                            <div class="table-responsive" style="padding-top: 10px">
-
-                                                                <table id="exampleRencontre" class="display" cellspacing="0"
-                                                                       width="100%" >
-                                                                    <thead>
-                                                                    <tr >
-                                                                        <th>Participants</th>
-                                                                        <th>Kilomètres à parcourir</th>
-                                                                        <th>Temps de parcours</th>
-                                                                        <th>Coût du parcours (€)</th>
-                                                                        <th>Emissions GES voiture individuelle (en kilos
-                                                                            équivalent CO2)
-                                                                        </th>
-                                                                        <th>Emissions GES covoiturage (en kilos équivalent
-                                                                            CO2)
-                                                                        </th>
-                                                                    </tr>
-                                                                    </thead>
-                                                                    <tbody>
-
-                                                                    {% for participant in participants %}
-                                                                        <tr>
-                                                                            <td><strong> {{ participant.ville}}</strong></td>
-                                                                            <td style="text-align:right"> {{ participant.distance //1000}}</td>
-                                                                            <td style="text-align:right"> {{ participant.duree // 3600 }}H{{ participant.duree % 3600 // 60 }}</td>
-                                                                            <td style="text-align:right"> {{ (participant.distance // 1000 * 0.481395349)|round }}</td>
-                                                                            <td style="text-align:right"> {{ (participant.distance //1000 *12*0.30144186)|round }}</td>
-                                                                            <td style="text-align:right"> {{ (participant.distance /1000 *(12/4)*0.30144186)|round  }} </td>
-                                                                        </tr>
-
-
-                                                                    {% endfor %}
-                                                                    </tbody>
-                                                                </table>
-
-                                                            </div>
-                                                            <!-- /.table-responsive -->
-                                                        </div>
-                                                        <button type="button" class="btn btn-default  pull-right">Exporter</button>
-
+                                                        </a>
 
                                                     </div>
+
                                                 </div>
-                                         </div>
+                                                <div class="tab-pane fade" id="Details">
+                                                    <div class="table-responsive" style="padding-top: 10px">
 
+                                                        <table id="exampleRencontre" class="display" cellspacing="0"
+                                                               width="100%">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Participants</th>
+                                                                <th>Kilomètres à parcourir</th>
+                                                                <th>Temps de parcours</th>
+                                                                <th>Coût du parcours (€)</th>
+                                                                <th>Emissions GES voiture individuelle (en kilos
+                                                                    équivalent CO2)
+                                                                </th>
+                                                                <th>Emissions GES covoiturage (en kilos équivalent
+                                                                    CO2)
+                                                                </th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
 
-                                    </div>
-                                </div>
-                                <!-- .panel-body -->
-                                <!-- /.panel -->
-                            </div>
-                            <!-- /.col-lg-6 -->
+                                                            {% for participant in participants %}
+                                                                <tr>
+                                                                    <td><strong> {{ participant.ville }}</strong></td>
+                                                                    <td style="text-align:right"> {{ participant.distance //1000 }}</td>
+                                                                    <td style="text-align:right"> {{ participant.duree // 3600 }}
+                                                                        H{{ participant.duree % 3600 // 60 }}</td>
+                                                                    <td style="text-align:right"> {{ (participant.distance // 1000 * 0.481395349)|round }}</td>
+                                                                    <td style="text-align:right"> {{ (participant.distance //1000 *12*0.30144186)|round }}</td>
+                                                                    <td style="text-align:right"> {{ (participant.distance /1000 *(12/4)*0.30144186)|round }} </td>
+                                                                </tr>
 
-                            <div class="col-lg-6">
-                                <div class="panel-body">
-                                    <div class="panel-group" id="accordion2">
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                    Scénario équitable
-                                                </h4>
-                                            </div>
-                                                 <div class="panel-body"> <!-- premier scÃ©nario -->
-                                                    <div id="mapEquitable"
-                                                         style="width: 100%; height: 500px; background: grey"></div>
-                                                    <script type="text/javascript" charset="UTF-8">
-
-                                                        function addMarkersToMap(map) {
-
-                                                            var incrmentEq = 1;
-                                                            //tracer dynamiquement les points de villes
-                                                            {% for coordonneeVilleEq in coordonneesVilleEq %}
-                                                            var coordonneeVilleEq = '{{ coordonneeVilleEq }}';
-
-                                                            var xy = coordonneeVilleEq.split("%2C");
-                                                            var x = xy[0];
-                                                            var y = xy[1];
-
-                                                            var markerEq = 'marker' + incrmentEq;
-                                                            window[markerEq] = new H.map.Marker({
-                                                                lat: parseFloat(x),
-                                                                lng: parseFloat(y)
-                                                            });
-                                                            map.addObject(window[markerEq]);
-
-                                                            var incrmentEq = incrmentEq + 1
 
                                                             {% endfor %}
-
-
-                                                        }
-                                                        /**
-                                                         * Markeur principal
-                                                         */
-
-                                                        // Create a marker icon from an image URL:
-                                                        var icon = new H.map.Icon('{{ asset('bundles/ffbb/images/depart.png') }}');
-
-                                                        // Create a marker using the previously instantiated icon:
-                                                        var markerPrincipalEq = new H.map.Marker({
-                                                            lat: '{{ longPtDepEq }}',
-                                                            lng: '{{ latPtDepEq }}'
-                                                        }, {icon: icon});
-                                                        // Changer la langue de la carte
-                                                        function switchMapLanguage(map, platform) {
-                                                            var mapTileService = platform.getMapTileService({
-                                                                        type: 'base'
-                                                                    }),
-                                                                    frenchMapLayer = mapTileService.createTileLayer(
-                                                                            'maptile',
-                                                                            'normal.day',
-                                                                            256,
-                                                                            'png8',
-                                                                            {lg: 'fre'}
-                                                                    );
-                                                            map.setBaseLayer(frenchMapLayer);
-
-
-                                                        }
-                                                        // Fin fn changer langue
-                                                        /**
-                                                         * Boilerplate map initialization code starts below:
-                                                         */
-
-                                                        //Step 1: initialize communication with the platform
-                                                        var platform = new H.service.Platform({
-                                                            app_id: 'DemoAppId01082013GAL',
-                                                            app_code: 'AJKnXv84fjrb0KIHawS0Tg',
-                                                            useCIT: true,
-                                                            useHTTPS: true
-                                                        });
-                                                        var defaultLayers = platform.createDefaultLayers();
-
-                                                        //Step 2: initialize a map - this map is centered over Europe
-                                                        var map = new H.Map(document.getElementById('mapEquitable'),
-                                                                defaultLayers.normal.map, {
-                                                                    center: {lat: 48.8567, lng: 2.3508},
-                                                                    zoom: 4
-                                                                });
-
-
-                                                        var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-
-                                                        // Create the default UI components
-                                                        //    var ui = H.ui.UI.createDefault(map, defaultLayers);
-                                                        var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
-
-                                                        // Add the marker to the map:
-                                                        map.addObject(markerPrincipalEq);
-                                                        addMarkersToMap(map);
-                                                        switchMapLanguage(map, platform);
-
-
-                                                    </script>
-
-                                                    <!-- Nav tabs -->
-                                                    <ul class="nav nav-tabs">
-                                                        <li class="active"><a href="#EstimationsEq" data-toggle="tab">Estimations</a>
-                                                        </li>
-                                                        <li><a href="#DetailsEq" data-toggle="tab">Détails</a>
-                                                        </li>
-
-                                                    </ul>
-
-                                                    <!-- Tab panes -->
-                                                    <div class="tab-content">
-                                                        <div class="tab-pane fade in active" id="EstimationsEq">
-
-
-                                                            <div class="list-group">
-                                                                <a href="#" class="list-group-item">
-                                                                    <i class="fa  fa-thumb-tack fa-fw" style="padding-right: 30px"></i> Le meilleur lieu de rencontre
-                                                                    est <strong>{{ villeDepartEq }}</strong>
-                                                                </a>
-                                                                <a href="#" class="list-group-item">
-                                                                    <i class="fa fa-road fa-fw" style="padding-right: 30px"></i> <strong>{{ distanceTotaleEq }}</strong> kilomètres au total
-                                                                    à parcourir pour l'ensemble du scénario
-                                                                </a>
-                                                                <a href="#" class="list-group-item">
-                                                                    <i class="fa  fa-credit-card fa-fw" style="padding-right: 30px"></i> <strong>{{ (distanceTotaleEq * 0.481395349)|round }}</strong>
-                                                                    € pour réaliser les trajets de l'ensemble du scénario
-
-                                                                </a>
-                                                                <a href="#" class="list-group-item">
-                                                                    <i class="fa fa-clock-o fa-fw" style="padding-right: 30px"></i> <strong>{{ dureeTrajetEq // 3600 }}H{{ dureeTrajetEq % 3600 // 60 }}</strong>
-                                                                    de temps de trajet total pour l'ensemble du scénario
-
-                                                                </a>
-                                                                <a href="#" class="list-group-item">
-                                                                    <i class="fa fa-automobile fa-fw" style="padding-right: 30px"></i> <strong>{{ (distanceTotaleEq *12*0.30144186)|round }}</strong>
-                                                                    Kg équivalent
-                                                                    CO2 d'émissions totales de GES pour une équipe de 12
-                                                                    joueurs en voiture individuelle
-                                                                    pour le scénario
-
-                                                                </a>
-                                                                <a href="#" class="list-group-item">
-                                                                    <i class="fa fa-automobile fa-fw" style="padding-right: 30px"></i> <strong>{{ (distanceTotaleEq *(12/4)*0.30144186)|round }}</strong>
-                                                                    Kg équivalent
-                                                                    CO2 d'émissions totales de GES pour une équipe de 12
-                                                                    joueurs en co-voiturage pour le scénario
-
-                                                                </a>
-
-                                                            </div>
-
-
-                                                        </div>
-                                                        <div class="tab-pane fade" id="DetailsEq">
-                                                            <div class="table-responsive" style="padding-top: 10px">
-
-                                                                <table id="exampleRencontreEq" class="display" cellspacing="0"
-                                                                       width="100%" >
-                                                                    <thead>
-                                                                    <tr >
-                                                                        <th>Participants</th>
-                                                                        <th>Kilomètres à parcourir</th>
-                                                                        <th>Temps de parcours</th>
-                                                                        <th>Coût du parcours (€)</th>
-                                                                        <th>Emissions GES voiture individuelle (en kilos
-                                                                            équivalent CO2)
-                                                                        </th>
-                                                                        <th>Emissions GES covoiturage (en kilos équivalent
-                                                                            CO2)
-                                                                        </th>
-                                                                    </tr>
-                                                                    </thead>
-                                                                    <tbody>
-
-                                                                    {% for participantEq in participantsEq %}
-                                                                        <tr>
-                                                                            <td><strong> {{ participantEq.villeEq}}</strong></td>
-                                                                            <td style="text-align:right"> {{ participantEq.distanceEq //1000}}</td>
-                                                                            <td style="text-align:right"> {{ participantEq.dureeEq // 3600 }}H{{ participantEq.dureeEq % 3600 // 60 }}</td>
-                                                                            <td style="text-align:right"> {{ (participantEq.distanceEq // 1000 * 0.481395349)|round }}</td>
-                                                                            <td style="text-align:right"> {{ (participantEq.distanceEq //1000 *12*0.30144186)|round }}</td>
-                                                                            <td style="text-align:right"> {{ (participantEq.distanceEq /1000 *(12/4)*0.30144186)|round  }} </td>
-                                                                        </tr>
-
-
-                                                                    {% endfor %}
-                                                                    </tbody>
-                                                                </table>
-
-                                                            </div>
-                                                            <!-- /.table-responsive -->
-                                                        </div>
-                                                        <button type="button" class="btn btn-default  pull-right">Exporter</button>
-
+                                                            </tbody>
+                                                        </table>
 
                                                     </div>
+                                                    <!-- /.table-responsive -->
                                                 </div>
-                                         </div>
+                                                <button type="button" class="btn btn-default  pull-right">Exporter
+                                                </button>
 
 
+                                            </div>
+                                        </div>
                                     </div>
+
+
                                 </div>
-                                <!-- .panel-body -->
-                                <!-- /.panel -->
                             </div>
-                            <!-- /.col-lg-6 -->
+                            <!-- .panel-body -->
+                            <!-- /.panel -->
                         </div>
-                        <!-- .panel-body -->
+                        <!-- /.col-lg-6 -->
+
+                        <div class="col-lg-6">
+                            <div class="panel-body">
+                                <div class="panel-group" id="accordion2">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Scénario équitable
+                                            </h4>
+                                        </div>
+                                        <div class="panel-body"> <!-- premier scÃ©nario -->
+                                            <div id="mapEquitable"
+                                                 style="width: 100%; height: 500px; background: grey"></div>
+                                            <script type="text/javascript" charset="UTF-8">
+
+
+                                                function addMarkersAndSetViewBounds() {
+                                                    var incrmentEq = 1;
+                                                    var points = [];
+                                                    //tracer dynamiquement les points de villes
+                                                    {% for coordonneeVilleEq in coordonneesVilleEq %}
+                                                    var coordonneeVilleEq = '{{ coordonneeVilleEq }}';
+
+                                                    var xy = coordonneeVilleEq.split("%2C");
+                                                    var x = xy[0];
+                                                    var y = xy[1];
+
+                                                    var markerEq = 'marker' + incrmentEq;
+                                                    window[markerEq] = new H.map.Marker({
+                                                        lat: parseFloat(x),
+                                                        lng: parseFloat(y)
+                                                    });
+
+                                                    points.push(window[markerEq]);
+
+                                                    var incrmentEq = incrmentEq + 1;
+
+                                                    {% endfor %}
+                                                    group = new H.map.Group();
+                                                    // add markers to the group
+                                                    group.addObjects(points);
+                                                    map.addObject(group);
+                                                    // get geo bounding box for the group and set it to the map
+                                                    map.setViewBounds(group.getBounds());
+                                                }
+                                                /**
+                                                 * Markeur principal
+                                                 */
+
+                                                // Create a marker icon from an image URL:
+                                                var icon = new H.map.Icon('{{ asset('bundles/ffbb/images/depart.png') }}');
+
+                                                // Create a marker using the previously instantiated icon:
+                                                var markerPrincipalEq = new H.map.Marker({
+                                                    lat: '{{ longPtDepEq }}',
+                                                    lng: '{{ latPtDepEq }}'
+                                                }, {icon: icon});
+
+
+                                                /**
+                                                 *
+                                                 * Changer la langue de la carte
+                                                 */
+                                                function switchMapLanguage(map, platform) {
+                                                    var mapTileService = platform.getMapTileService({
+                                                                type: 'base'
+                                                            }),
+                                                            frenchMapLayer = mapTileService.createTileLayer(
+                                                                    'maptile',
+                                                                    'normal.day',
+                                                                    256,
+                                                                    'png8',
+                                                                    {lg: 'fre'}
+                                                            );
+                                                    map.setBaseLayer(frenchMapLayer);
+
+
+                                                }
+                                                /*
+                                                 Fin fn changer langue
+                                                 */
+
+                                                /**
+                                                 * Boilerplate map initialization code starts below:
+                                                 */
+
+                                                //Step 1: initialize communication with the platform
+                                                var platform = new H.service.Platform({
+                                                    app_id: 'DemoAppId01082013GAL',
+                                                    app_code: 'AJKnXv84fjrb0KIHawS0Tg',
+                                                    useCIT: true,
+                                                    useHTTPS: true
+                                                });
+                                                var defaultLayers = platform.createDefaultLayers();
+
+                                                //Step 2: initialize a map - this map is centered over Europe
+                                                var map = new H.Map(document.getElementById('mapEquitable'),
+                                                        defaultLayers.normal.map, {
+                                                            center: {lat: 48.8567, lng: 2.3508},
+                                                            zoom: 4
+                                                        });
+
+                                                var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+                                                // Create the default UI components
+                                                //    var ui = H.ui.UI.createDefault(map, defaultLayers);
+                                                var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
+
+                                                // Now use the map as required...
+                                                // Add the marker to the map:
+                                                map.addObject(markerPrincipalEq);
+                                                addMarkersAndSetViewBounds(map);
+                                                switchMapLanguage(map, platform);
+
+                                            </script>
+
+                                            <!-- Nav tabs -->
+                                            <ul class="nav nav-tabs">
+                                                <li class="active"><a href="#EstimationsEq" data-toggle="tab">Estimations</a>
+                                                </li>
+                                                <li><a href="#DetailsEq" data-toggle="tab">Détails</a>
+                                                </li>
+
+                                            </ul>
+
+                                            <!-- Tab panes -->
+                                            <div class="tab-content">
+                                                <div class="tab-pane fade in active" id="EstimationsEq">
+
+
+                                                    <div class="list-group">
+                                                        <a href="#" class="list-group-item">
+                                                            <i class="fa  fa-thumb-tack fa-fw"
+                                                               style="padding-right: 30px"></i> Le meilleur lieu de
+                                                            rencontre
+                                                            est <strong>{{ villeDepartEq }}</strong>
+                                                        </a>
+                                                        <a href="#" class="list-group-item">
+                                                            <i class="fa fa-road fa-fw" style="padding-right: 30px"></i>
+                                                            <strong>{{ distanceTotaleEq }}</strong> kilomètres au total
+                                                            à parcourir pour l'ensemble du scénario
+                                                        </a>
+                                                        <a href="#" class="list-group-item">
+                                                            <i class="fa  fa-credit-card fa-fw"
+                                                               style="padding-right: 30px"></i>
+                                                            <strong>{{ (distanceTotaleEq * 0.481395349)|round }}</strong>
+                                                            € pour réaliser les trajets de l'ensemble du scénario
+
+                                                        </a>
+                                                        {#<a href="#" class="list-group-item">#}
+                                                        {#<i class="fa fa-clock-o fa-fw" style="padding-right: 30px"></i> <strong>{{ dureeTrajetEq // 3600 }}H{{ dureeTrajetEq % 3600 // 60 }}</strong>#}
+                                                        {#de temps de trajet total pour l'ensemble du scénario#}
+
+                                                        {#</a>#}
+                                                        <a href="#" class="list-group-item">
+                                                            <i class="fa fa-automobile fa-fw"
+                                                               style="padding-right: 30px"></i>
+                                                            <strong>{{ (distanceTotaleEq *12*0.30144186)|round }}</strong>
+                                                            Kg équivalent
+                                                            CO2 d'émissions totales de GES pour une équipe de 12
+                                                            joueurs en voiture individuelle
+                                                            pour le scénario
+
+                                                        </a>
+                                                        <a href="#" class="list-group-item">
+                                                            <i class="fa fa-automobile fa-fw"
+                                                               style="padding-right: 30px"></i>
+                                                            <strong>{{ (distanceTotaleEq *(12/4)*0.30144186)|round }}</strong>
+                                                            Kg équivalent
+                                                            CO2 d'émissions totales de GES pour une équipe de 12
+                                                            joueurs en co-voiturage pour le scénario
+
+                                                        </a>
+
+                                                    </div>
+
+
+                                                </div>
+                                                <div class="tab-pane fade" id="DetailsEq">
+                                                    <div class="table-responsive" style="padding-top: 10px">
+
+                                                        <table id="exampleRencontreEq" class="display" cellspacing="0"
+                                                               width="100%">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Participants</th>
+                                                                <th>Kilomètres à parcourir</th>
+                                                                <th>Temps de parcours</th>
+                                                                <th>Coût du parcours (€)</th>
+                                                                <th>Emissions GES voiture individuelle (en kilos
+                                                                    équivalent CO2)
+                                                                </th>
+                                                                <th>Emissions GES covoiturage (en kilos équivalent
+                                                                    CO2)
+                                                                </th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+
+                                                            {% for participantEq in participantsEq %}
+                                                                <tr>
+                                                                    <td><strong> {{ participantEq.villeEq }}</strong>
+                                                                    </td>
+                                                                    <td style="text-align:right"> {{ participantEq.distanceEq //1000 }}</td>
+                                                                    <td style="text-align:right"> {{ participantEq.dureeEq // 3600 }}
+                                                                        H{{ participantEq.dureeEq % 3600 // 60 }}</td>
+                                                                    <td style="text-align:right"> {{ (participantEq.distanceEq // 1000 * 0.481395349)|round }}</td>
+                                                                    <td style="text-align:right"> {{ (participantEq.distanceEq //1000 *12*0.30144186)|round }}</td>
+                                                                    <td style="text-align:right"> {{ (participantEq.distanceEq /1000 *(12/4)*0.30144186)|round }} </td>
+                                                                </tr>
+
+
+                                                            {% endfor %}
+                                                            </tbody>
+                                                        </table>
+
+                                                    </div>
+                                                    <!-- /.table-responsive -->
+                                                </div>
+                                                <button type="button" class="btn btn-default  pull-right">Exporter
+                                                </button>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <!-- .panel-body -->
+                            <!-- /.panel -->
+                        </div>
+                        <!-- /.col-lg-6 -->
                     </div>
-                    <!-- /.panel -->
+                    <!-- .panel-body -->
                 </div>
-                <!-- /.col-lg-12 -->
+                <!-- /.panel -->
             </div>
+            <!-- /.col-lg-12 -->
+        </div>
 
-            <div>
+        <div>
 
-
-            </div>
 
         </div>
-        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#page-wrapper -->
     {% block javascript %}
         <!-- /#page-wrapper -->
         <script type="text/javascript" charset="UTF-8">
@@ -540,6 +580,6 @@
         </script>
     {% endblock %}
 
- {% endblock %}
+{% endblock %}
 
 
