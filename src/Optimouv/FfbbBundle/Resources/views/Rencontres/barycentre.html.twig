@@ -287,14 +287,14 @@
                                                                    width="100%">
                                                                 <thead>
                                                                 <tr>
-                                                                    <th>Participants</th>
-                                                                    <th>Kilomètres à parcourir</th>
-                                                                    <th>Temps de parcours</th>
-                                                                    <th>Coût du parcours (€)</th>
-                                                                    <th>Emissions GES voiture individuelle (en kilos
+                                                                    <th style="font-weight: bold !important;">Participants</th>
+                                                                    <th style="text-align:right">Kilomètres à parcourir</th>
+                                                                    <th style="text-align:right">Temps de parcours (H:M)</th>
+                                                                    <th style="text-align:right">Coût du parcours (€)</th>
+                                                                    <th style="text-align:right">Emissions GES voiture individuelle (en kilos
                                                                         équivalent CO2)
                                                                     </th>
-                                                                    <th>Emissions GES covoiturage (en kilos équivalent
+                                                                    <th style="text-align:right">Emissions GES covoiturage (en kilos équivalent
                                                                         CO2)
                                                                     </th>
                                                                 </tr>
@@ -306,8 +306,7 @@
                                                                         <td><strong> {{ participant.ville }}</strong>
                                                                         </td>
                                                                         <td style="text-align:right"> {{ participant.distance //1000 }}</td>
-                                                                        <td style="text-align:right"> {{ participant.duree // 3600 }}
-                                                                            H{{ participant.duree % 3600 // 60 }}</td>
+                                                                        <td style="text-align:right"> {{ participant.duree|date('H:i')}}</td>
                                                                         <td style="text-align:right"> {{ (participant.distance // 1000 * 0.481395349)|round }}</td>
                                                                         <td style="text-align:right"> {{ (participant.distance //1000 *12*0.30144186)|round }}</td>
                                                                         <td style="text-align:right"> {{ (participant.distance /1000 *(12/4)*0.30144186)|round }} </td>
