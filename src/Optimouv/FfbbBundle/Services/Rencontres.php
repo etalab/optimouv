@@ -3,26 +3,27 @@
  * Created by PhpStorm.
  * User: IT4PME
  * Date: 11/09/2015
- * Time: 11:43
+ * Time: 11:43.
  */
 namespace Optimouv\FfbbBundle\Services;
 
-use \PDO;
+use PDO;
 
 class Rencontres
 {
 
+
+
     public function index()
     {
+        $villes = ['43.88953%2C-0.49893', '47.19126%2C-1.5698', '47.46317%2C-0.59261', '47.086%2C2.39315', '49.76019%2C4.71909', '43.70821%2C7.29597'];
 
-        $villes = ["43.88953%2C-0.49893", "47.19126%2C-1.5698", "47.46317%2C-0.59261", "47.086%2C2.39315", "49.76019%2C4.71909", "43.70821%2C7.29597"];
         return $villes;
     }
 
     //Calcul du meilleur lieu de rencontre
     public function meilleurLieuRencontre()
     {
-
 
         //urlencode pour supprimer les espaces vides dans l'url
 //        $villes = ["43.67353%2C7.19013", "43.12022%2C6.13101", "45.76931%2C4.84977", "43.95465%2C4.81606", "48.39044%2C-4.48658"];
@@ -39,25 +40,23 @@ class Rencontres
         $coordonneesDest = []; //tableau qui contient toutes les coordonn�es vers les destinations d un point de d�part
 
         $longueurTab = count($villes);
-        for ($i = 0; $i < $longueurTab; $i++) {
+        for ($i = 0; $i < $longueurTab; ++$i) {
             $start = $villes[0];
 
             unset($villes[0]);
             $T2 = array_values($villes);
 
             //on fait appel � la premi�re partie de l'url here
-            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0=' . $start;
+            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0='.$start;
 
             //on parcourt tous les �l�ments du deuxi�me tableau: long + lat
-            for ($j = 0; $j < count($T2); $j++) {
-
+            for ($j = 0; $j < count($T2); ++$j) {
                 $elt = $T2[$j];
-                $maps_url .= '&destination' . $j . '=' . $elt;
+                $maps_url .= '&destination'.$j.'='.$elt;
             }
 
             //on ram�ne le dernier element de l'url
             $maps_url .= '&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
-
 
             $maps_json = file_get_contents($maps_url);
 
@@ -71,7 +70,7 @@ class Rencontres
             $tabDistance = [];
             $tabDuree = [];
 
-            for ($j = 0; $j < $nbrDistances; $j++) {
+            for ($j = 0; $j < $nbrDistances; ++$j) {
 
                 //calcul des distances pour chaque ville + duree
                 $uneDistance = $maps_array['Response']['MatrixEntry'][$j]['Route']['Summary']['Distance'];
@@ -82,7 +81,6 @@ class Rencontres
                 $distance += $maps_array['Response']['MatrixEntry'][$j]['Route']['Summary']['Distance'];
                 $duree += $maps_array['Response']['MatrixEntry'][$j]['Route']['Summary']['BaseTime'];
             }
-
 
             //distances pour chaque ville + duree
             array_push($distanceDest, $tabDistance);
@@ -100,25 +98,20 @@ class Rencontres
             $villes = $T2;
         }
 
-
-
-
         //Somme des distances
         $distanceMin = min($lesDistances);
         $key = array_search($distanceMin, $lesDistances);
         $positionPtDepart = $lesPtsDeparts[$key];
 
-
         //Nom de la ville de d�part
 
-        $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox=' . $positionPtDepart . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+        $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox='.$positionPtDepart.'&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
 
         $coor_json = file_get_contents($coor_url);
 
         $coor_array = json_decode($coor_json, true);
 
         $villeDepart = $coor_array['Response']['View'][0]['Result'][0]['Location']['Address']['City'];
-
 
         //somme des durees
         $dureeTrajet = $lesDurees[$key];
@@ -130,23 +123,18 @@ class Rencontres
 
         $mesVilles = [];
         //geocoder inversement les villes pour ramener les noms de villes
-        for ($l = 0; $l < count($coordonneesVille); $l++) {
-
-
-            $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox=' . $coordonneesVille[$l] . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+        for ($l = 0; $l < count($coordonneesVille); ++$l) {
+            $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox='.$coordonneesVille[$l].'&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
 
             $coor_json = file_get_contents($coor_url);
 
             $coor_array = json_decode($coor_json, true);
 
-
             $maVille = $coor_array['Response']['View'][0]['Result'][0]['Location']['Address']['City'];
 
             //Ramener tous les noms des villes
             array_push($mesVilles, $maVille);
-
         }
-
 
         $infosVilles = [];
         $infosVilles[0] = $mesVilles;
@@ -154,7 +142,7 @@ class Rencontres
         $infosVilles[2] = $dureeVille;
 
         //Coordonnées point depart
-        $positionPtDepart = explode("%2C", $positionPtDepart);
+        $positionPtDepart = explode('%2C', $positionPtDepart);
         $longPtDep = $positionPtDepart[0]; // piece1
         $latPtDep = $positionPtDepart[1]; // piece2
 
@@ -173,9 +161,7 @@ class Rencontres
         $retour[7] = $distVille;
         $retour[8] = $dureeVille;
 
-
         return $retour;
-
     }
 
     //Calcul du barycentre
@@ -189,30 +175,24 @@ class Rencontres
         $length = count($villes);
         $lan = $lat = null;
        //Calcul des coordonnes des X Y
-        for ($i = 0; $i < $length; $i++) {
-
-            $Coordonnes = explode("%2C", $villes[$i]);
+        for ($i = 0; $i < $length; ++$i) {
+            $Coordonnes = explode('%2C', $villes[$i]);
             $lan += $Coordonnes[0];
             $lat += $Coordonnes[1];
-
-
         }
 
         $lanX = $lan / $length;
         $latY = $lat / $length;
-        $coord = $lanX . '%2C' . $latY;
+        $coord = $lanX.'%2C'.$latY;
 
         $retour = $this->routingMatrix($coord, $villes);
 
         return $retour;
-
-
     }
 
     //Calcul exclusion géographique
-    public function Exclusion($dbcon)
+    public function Exclusion($dbcon, $valeurExclusion)
     {
-
 
         //params de connexion
 
@@ -226,9 +206,8 @@ class Rencontres
 
         $length = count($villes);
         $lan = $lat = null;
-        for ($i = 0; $i < $length; $i++) {
-
-            $Coordonnes = explode("%2C", $villes[$i]);
+        for ($i = 0; $i < $length; ++$i) {
+            $Coordonnes = explode('%2C', $villes[$i]);
             $lan += $Coordonnes[0];
             $lat += $Coordonnes[1];
         }
@@ -236,12 +215,11 @@ class Rencontres
         // Somme des X & Somme des Y
         $lanX = $lan / $length;
         $latY = $lat / $length;
-        $coord = $lanX . '%2C' . $latY;
-
+        $coord = $lanX.'%2C'.$latY;
 
         //Mentionner les X,Y du point (Barycentre) et chercher l'emplacement du point sur la carte
 
-        $coor_url = 'https://places.demo.api.here.com/places/v1/discover/explore?at=' . $coord . '&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+        $coor_url = 'https://places.demo.api.here.com/places/v1/discover/explore?at='.$coord.'&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
         $coor_json = file_get_contents($coor_url);
         $coor_array = json_decode($coor_json, true);
 
@@ -252,13 +230,11 @@ class Rencontres
         //addslashes — Ajoute des antislashs dans une chaîne
         $city = addslashes($city);
 
-
         try {
             $bdd = new PDO('mysql:host=localhost;dbname='.$dbname.';charset=utf8', $dbuser, $dbpwd);
         } catch (PDOException $e) {
-            die('Erreur : ' . $e->getMessage());
+            die('Erreur : '.$e->getMessage());
         }
-
 
         $stmt = $bdd->prepare("SELECT ville_longitude_deg, ville_latitude_deg, ville_population_2012 FROM  villes_france_free where ville_code_postal = '$postalCode' AND ville_nom = '$city' ;");
         $stmt->execute();
@@ -267,11 +243,10 @@ class Rencontres
         $population = $resultReq['ville_population_2012'];
 
         $retourBarycentre = [];
-        if ($population < 300) {
-
+        if ($population < $valeurExclusion) {
             $lanX = $resultReq['ville_latitude_deg'];
             $latY = $resultReq['ville_longitude_deg'];
-            $coord = $lanX . '%2C' . $latY;
+            $coord = $lanX.'%2C'.$latY;
             $retour = $this->Barycentre();
 
             return $retour;
@@ -280,41 +255,30 @@ class Rencontres
 //            $retourBarycentre [1] = $population;
 //            $retourBarycentre [2] = $longBarycentre;
 //            $retourBarycentre [3] = $latBarycentre;
-
-
         } else {
-
             $stmt1 = $bdd->prepare("SELECT ville_longitude_deg, ville_latitude_deg,ville_code_postal, ville_nom, ville_population_2012,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
 from villes_france_free
-order by Proximite limit 1,5 ;");
+order by Proximite limit 1,15 ;");
             $stmt1->execute();
             while ($row = $stmt1->fetch(PDO::FETCH_ASSOC)) {
-
-                if ($row['ville_population_2012'] > 300) {
-
+                if ($row['ville_population_2012'] > $valeurExclusion) {
                     continue;
                 } else {
-
                     $lanX = $row['ville_latitude_deg'];
                     $latY = $row['ville_longitude_deg'];
-                    $coord = $lanX . '%2C' . $latY;
+                    $coord = $lanX.'%2C'.$latY;
                     $retour = $this->routingMatrix($coord, $villes);
 
                     return $retour;
-
-
                 }
-
-
             }
-
         }
     }
 
     //Calcul du scénario équitable
     public function scenarioEquitable()
     {
-//        $villes = ["43.67353%2C7.19013", "43.12022%2C6.13101", "45.76931%2C4.84977", "43.95465%2C4.81606", "48.39044%2C-4.48658"];
+        //        $villes = ["43.67353%2C7.19013", "43.12022%2C6.13101", "45.76931%2C4.84977", "43.95465%2C4.81606", "48.39044%2C-4.48658"];
         $villes = $this->index();
 
         $T2 = []; //tableau interm?diaire qui contient les coordonnees des pts d arrivees
@@ -330,20 +294,19 @@ order by Proximite limit 1,5 ;");
         $distancesMax = [];//tableau qui contient toutes les distances maxi des différents scénarios
 
         $longueurTab = count($villes);
-        for ($i = 0; $i < $longueurTab; $i++) {
+        for ($i = 0; $i < $longueurTab; ++$i) {
             $start = $villes[0];
 
             unset($villes[0]);
             $T2 = array_values($villes);
 
             //on fait appel ? la premi?re partie de l'url here
-            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0=' . $start;
+            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0='.$start;
 
             //on parcourt tous les ?l?ments du deuxi?me tableau: long + lat
-            for ($j = 0; $j < count($T2); $j++) {
-
+            for ($j = 0; $j < count($T2); ++$j) {
                 $elt = $T2[$j];
-                $maps_url .= '&destination' . $j . '=' . $elt;
+                $maps_url .= '&destination'.$j.'='.$elt;
             }
 
             //on ram?ne le dernier element de l'url
@@ -353,7 +316,6 @@ order by Proximite limit 1,5 ;");
 
             $maps_array = json_decode($maps_json, true);
 
-
             //On r?cup?re le nombre des distances ? stocker dans un tableau
             $nbrDistances = count($maps_array['Response']['MatrixEntry']);
 
@@ -361,7 +323,7 @@ order by Proximite limit 1,5 ;");
             $duree = null;
             $tabDistance = [];
             $tabDuree = [];
-            for ($j = 0; $j < $nbrDistances; $j++) {
+            for ($j = 0; $j < $nbrDistances; ++$j) {
 
                 //calcul des distances pour chaque ville + duree
                 $uneDistance = $maps_array['Response']['MatrixEntry'][$j]['Route']['Summary']['Distance'];
@@ -389,10 +351,8 @@ order by Proximite limit 1,5 ;");
             //somme des durees
             array_push($lesDurees, $duree);
 
-
             array_push($T2, $start);
             $villes = $T2;
-
         }
         //position de la ville equitable
         $distanceEquitable = min($distancesMax);
@@ -403,7 +363,7 @@ order by Proximite limit 1,5 ;");
 
         //Nom de la ville de d?part
 
-        $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox=' . $positionPtDepart . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+        $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox='.$positionPtDepart.'&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
 
         $coor_json = file_get_contents($coor_url);
 
@@ -421,24 +381,20 @@ order by Proximite limit 1,5 ;");
 
         $mesVilles = [];
         //geocoder inversement les villes pour ramener les noms de villes
-        for ($l = 0; $l < count($coordonneesVille); $l++) {
-
-
-            $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox=' . $coordonneesVille[$l] . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+        for ($l = 0; $l < count($coordonneesVille); ++$l) {
+            $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox='.$coordonneesVille[$l].'&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
 
             $coor_json = file_get_contents($coor_url);
 
             $coor_array = json_decode($coor_json, true);
 
-
             $maVille = $coor_array['Response']['View'][0]['Result'][0]['Location']['Address']['City'];
 
             //Ramener tous les noms des villes
             array_push($mesVilles, $maVille);
-
         }
         //Distance totale à parcourir
-        $distanceTotale = (array_sum($distVille))/ 1000;
+        $distanceTotale = (array_sum($distVille)) / 1000;
         $distanceTotale = round($distanceTotale, 0);
 
         $infosVilles = [];
@@ -447,7 +403,7 @@ order by Proximite limit 1,5 ;");
         $infosVilles[2] = $dureeVille;
 
         //Coordonnées point depart
-        $positionPtDepart = explode("%2C", $positionPtDepart);
+        $positionPtDepart = explode('%2C', $positionPtDepart);
         $longPtDep = $positionPtDepart[0]; // piece1
         $latPtDep = $positionPtDepart[1]; // piece2
 
@@ -464,12 +420,11 @@ order by Proximite limit 1,5 ;");
         $retour[8] = $dureeVille;
 
         return $retour;
-
     }
 
-    public function routingMatrix($coord, $villes){
-
-        $coor_url = 'https://places.demo.api.here.com/places/v1/discover/explore?at=' . $coord . '&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+    public function routingMatrix($coord, $villes)
+    {
+        $coor_url = 'https://places.demo.api.here.com/places/v1/discover/explore?at='.$coord.'&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
         $coor_json = file_get_contents($coor_url);
 
         $coor_array = json_decode($coor_json, true);
@@ -480,12 +435,11 @@ order by Proximite limit 1,5 ;");
         $T2 = $villes;
 
         //on fait appel à la première partie de l'url here
-        $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0=' . $start;
+        $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0='.$start;
         //on parcourt tous les éléments du deuxième tableau: long + lat
-        for ($j = 0; $j < count($T2); $j++) {
-
+        for ($j = 0; $j < count($T2); ++$j) {
             $elt = $T2[$j];
-            $maps_url .= '&destination' . $j . '=' . $elt;
+            $maps_url .= '&destination'.$j.'='.$elt;
         }
 
         //on ram?ne le dernier element de l'url
@@ -503,7 +457,7 @@ order by Proximite limit 1,5 ;");
         $tabDistance = [];
         $tabDuree = [];
 
-        for ($j = 0; $j < $nbrDistances; $j++) {
+        for ($j = 0; $j < $nbrDistances; ++$j) {
 
             //calcul des distances pour chaque ville + duree
             $uneDistance = $maps_array['Response']['MatrixEntry'][$j]['Route']['Summary']['Distance'];
@@ -526,27 +480,23 @@ order by Proximite limit 1,5 ;");
 
         $mesVilles = [];
         //geocoder inversement les villes pour ramener les noms de villes
-        for ($l = 0; $l < count($villes); $l++) {
-
-
-            $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox=' . $villes[$l] . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+        for ($l = 0; $l < count($villes); ++$l) {
+            $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox='.$villes[$l].'&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
 
             $coor_json = file_get_contents($coor_url);
 
             $coor_array = json_decode($coor_json, true);
 
-
             $maVille = $coor_array['Response']['View'][0]['Result'][0]['Location']['Address']['City'];
 
             //Ramener tous les noms des villes
             array_push($mesVilles, $maVille);
-
         }
 
         $distance = $distance / 1000;
         $distance = round($distance, 0);
 
-        $coord = explode("%2C", $coord);
+        $coord = explode('%2C', $coord);
         $lanX = $coord[0];
         $latY = $coord[1];
 
@@ -565,26 +515,25 @@ order by Proximite limit 1,5 ;");
         return $retour;
     }
 
-    public function terrainNeutre(){
-
+    public function terrainNeutre()
+    {
         $equipe = $this->index();
 
-        $terrainNeutre = ["50.9531%2C1.85316", "50.29103%2C2.77896", "43.57035%2C3.90526", "45.73546%2C4.87235"];
+        $terrainNeutre = ['50.9531%2C1.85316', '50.29103%2C2.77896', '43.57035%2C3.90526', '45.73546%2C4.87235'];
 
         $distanceMin = null;
         $lesDistances = [];
         $lesDurees = [];
 
-        for ($i = 0; $i < count($terrainNeutre); $i++) {
-
+        for ($i = 0; $i < count($terrainNeutre); ++$i) {
             $start = $terrainNeutre[$i];
 
             //on fait appel à la première partie de l'url here
-            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0=' . $start;
-            for ($j = 0; $j < count($equipe); $j++) {
+            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0='.$start;
+            for ($j = 0; $j < count($equipe); ++$j) {
                 $destination = $equipe[$j];
 
-                $maps_url .= '&destination' . $j . '=' . $destination;
+                $maps_url .= '&destination'.$j.'='.$destination;
             }
 
             //on ramène le dernier element de l'url
@@ -601,10 +550,9 @@ order by Proximite limit 1,5 ;");
             $distance = null;
             $duree = null;
             //On récupère chaque distance
-            for ($k = 0; $k < $nbrDistances; $k++) {
+            for ($k = 0; $k < $nbrDistances; ++$k) {
                 $distance += $maps_array['Response']['MatrixEntry'][$k]['Route']['Summary']['Distance'];
                 $duree += $maps_array['Response']['MatrixEntry'][$k]['Route']['Summary']['BaseTime'];
-
             }
 
             //somme des distances
@@ -612,8 +560,6 @@ order by Proximite limit 1,5 ;");
 
             //somme des distances
             array_push($lesDurees, $duree);
-
-
         }
 
         //Somme des distances
@@ -622,37 +568,31 @@ order by Proximite limit 1,5 ;");
 
         $coord = $terrainNeutre[$key];
 
-
         $retour = $this->routingMatrix($coord, $equipe);
 
         return $retour;
-
-
-
-
     }
 
-    public function terrainNeutreEquitable(){
-
-        $equipe = ["43.88953%2C-0.49893", "47.19126%2C-1.5698", "47.46317%2C-0.59261", "47.086%2C2.39315", "49.76019%2C4.71909", "43.70821%2C7.29597"];
+    public function terrainNeutreEquitable()
+    {
+        $equipe = ['43.88953%2C-0.49893', '47.19126%2C-1.5698', '47.46317%2C-0.59261', '47.086%2C2.39315', '49.76019%2C4.71909', '43.70821%2C7.29597'];
 //        $equipe = $this->index();
 
-        $terrainNeutre = ["50.9531%2C1.85316", "50.29103%2C2.77896", "43.57035%2C3.90526", "45.73546%2C4.87235"];
+        $terrainNeutre = ['50.9531%2C1.85316', '50.29103%2C2.77896', '43.57035%2C3.90526', '45.73546%2C4.87235'];
 
         $coord = null;
 
         $distancesMax = [];//tableau qui contient toutes les distances maxi des différents scénarios
 
-        for ($i = 0; $i < count($terrainNeutre); $i++) {
-
+        for ($i = 0; $i < count($terrainNeutre); ++$i) {
             $start = $terrainNeutre[$i];
 
             //on fait appel à la première partie de l'url here
-            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0=' . $start;
-            for ($j = 0; $j < count($equipe); $j++) {
+            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0='.$start;
+            for ($j = 0; $j < count($equipe); ++$j) {
                 $destination = $equipe[$j];
 
-                $maps_url .= '&destination' . $j . '=' . $destination;
+                $maps_url .= '&destination'.$j.'='.$destination;
             }
 
             //on ramène le dernier element de l'url
@@ -668,7 +608,7 @@ order by Proximite limit 1,5 ;");
             $tabDistance = [];
 
             //On récupère chaque distance
-            for ($k = 0; $k < $nbrDistances; $k++) {
+            for ($k = 0; $k < $nbrDistances; ++$k) {
 
                 //calcul des distances pour chaque ville + duree
                 $uneDistance = $maps_array['Response']['MatrixEntry'][$k]['Route']['Summary']['Distance'];
@@ -679,8 +619,6 @@ order by Proximite limit 1,5 ;");
             $distanceMax = max($tabDistance);
 
             array_push($distancesMax, $distanceMax);
-
-
         }
 
         //position de la ville equitable
@@ -691,11 +629,5 @@ order by Proximite limit 1,5 ;");
         $retour = $this->routingMatrix($coord, $equipe);
 
         return $retour;
-
-
-
-
     }
-
 }
-

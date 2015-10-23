@@ -105,6 +105,9 @@ class RencontresController extends Controller
     public function exclusionAction()
     {
 
+        //Récupération de la valeur saisie par l'utilisateur
+        $valeurExclusion = $_POST["valeurExclusion"];
+
         //Params de connexion
         $dbname = $this->container->getParameter('database_name');
         $dbuser = $this->container->getParameter('database_user');
@@ -119,7 +122,7 @@ class RencontresController extends Controller
 
 
         //Récupération du résultat du calcul avec contrainte
-        $retour = $this->get('service_rencontres')->Exclusion($dbcon);
+        $retour = $this->get('service_rencontres')->Exclusion($dbcon, $valeurExclusion);
 
 
         //Données du scénario optimal

@@ -266,7 +266,7 @@
                                                                         <td style="text-align:right"> {{ participant.duree|date('H:i') }}</td>
                                                                         <td style="text-align:right"> {{ (participant.distance // 1000 * 0.481395349)|round }}</td>
                                                                         <td style="text-align:right"> {{ (participant.distance //1000 *12*0.30144186)|round }}</td>
-                                                                        <td style="text-align:right"> {{ (participant.distance /1000 *(12/4)*0.30144186)|round  }} </td>
+                                                                        <td style="text-align:right"> {{ (participant.distance //1000 *(12/4)*0.30144186)|round  }} </td>
                                                                     </tr>
 
 
@@ -468,7 +468,7 @@
                                                                     <th style="text-align:right">Kilomètres à parcourir</th>
                                                                     <th style="text-align:right">Temps de parcours (H:M)</th>
                                                                     <th style="text-align:right">Coût du parcours (€)</th>
-                                                                    <th>Emissions GES voiture individuelle (en kilos
+                                                                    <th style="text-align:right">Emissions GES voiture individuelle (en kilos
                                                                         équivalent CO2)
                                                                     </th>
                                                                     <th style="text-align:right">Emissions GES covoiturage (en kilos équivalent
@@ -485,7 +485,7 @@
                                                                         <td style="text-align:right"> {{ participantEq.dureeEq|date('H:i') }}</td>
                                                                         <td style="text-align:right"> {{ (participantEq.distanceEq // 1000 * 0.481395349)|round }}</td>
                                                                         <td style="text-align:right"> {{ (participantEq.distanceEq //1000 *12*0.30144186)|round }}</td>
-                                                                        <td style="text-align:right"> {{ (participantEq.distanceEq /1000 *(12/4)*0.30144186)|round  }} </td>
+                                                                        <td style="text-align:right"> {{ (participantEq.distanceEq //1000 *(12/4)*0.30144186)|round  }} </td>
                                                                     </tr>
 
 

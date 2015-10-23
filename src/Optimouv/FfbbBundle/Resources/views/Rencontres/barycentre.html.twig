@@ -72,15 +72,17 @@
                     <div class="panel-heading">
                         Ajouter des contraintes
                     </div>
-                    <form name="typeLieuxContrainte" style="padding-left:20px;">
+                    <form name="typeLieuxContrainte" style="padding-left:20px;" action="{{ path('ffbb_exclusion') }}" method="POST">
 
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="optionsContrainte" id="Contrainte" value="Contrainte">
-                                Exclusion de zones géographiques
-                            </label>
+                        <div style="padding-top: 10px">
+                             Exclusion de zones géographiques
+
                         </div>
-                        <button type="button" class="btn btn-default  pull-right" onclick="xxxx()">Lancer le calcul
+                        <div class="form-group">
+                            {#<label>Text Input with Placeholder</label>#}
+                            <input name="valeurExclusion" id="valeurExclusion" type="number" class="form-control" placeholder="Saisissez ici le nombre d'habitants des zones à exclure">
+                        </div>
+                        <button type="submit" class="btn btn-default  pull-right" >Lancer le calcul
                         </button>
                     </form>
 
@@ -309,7 +311,7 @@
                                                                         <td style="text-align:right"> {{ participant.duree|date('H:i')}}</td>
                                                                         <td style="text-align:right"> {{ (participant.distance // 1000 * 0.481395349)|round }}</td>
                                                                         <td style="text-align:right"> {{ (participant.distance //1000 *12*0.30144186)|round }}</td>
-                                                                        <td style="text-align:right"> {{ (participant.distance /1000 *(12/4)*0.30144186)|round }} </td>
+                                                                        <td style="text-align:right"> {{ (participant.distance //1000 *(12/4)*0.30144186)|round }} </td>
                                                                     </tr>
 
 

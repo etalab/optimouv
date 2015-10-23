@@ -289,7 +289,7 @@
                                                                     <td style="text-align:right"> {{ participant.duree|date('H:i')}}</td>
                                                                     <td style="text-align:right"> {{ (participant.distance // 1000 * 0.481395349)|round }}</td>
                                                                     <td style="text-align:right"> {{ (participant.distance //1000 *12*0.30144186)|round }}</td>
-                                                                    <td style="text-align:right"> {{ (participant.distance /1000 *(12/4)*0.30144186)|round }} </td>
+                                                                    <td style="text-align:right"> {{ (participant.distance //1000 *(12/4)*0.30144186)|round }} </td>
                                                                 </tr>
 
 
@@ -521,7 +521,7 @@
                                                                     <td style="text-align:right"> {{ participantEq.dureeEq|date('H:i')}}</td>
                                                                     <td style="text-align:right"> {{ (participantEq.distanceEq // 1000 * 0.481395349)|round }}</td>
                                                                     <td style="text-align:right"> {{ (participantEq.distanceEq //1000 *12*0.30144186)|round }}</td>
-                                                                    <td style="text-align:right"> {{ (participantEq.distanceEq /1000 *(12/4)*0.30144186)|round }} </td>
+                                                                    <td style="text-align:right"> {{ (participantEq.distanceEq //1000 *(12/4)*0.30144186)|round }} </td>
                                                                 </tr>
 
 
