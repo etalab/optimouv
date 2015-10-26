@@ -1,0 +1,213 @@
+{% extends '::BOLayout.html.twig' %}
+
+     {% block pagewrapper %}
+
+         <div id="page-wrapper">
+
+             <div class="row">
+                 <div class="col-lg-12">
+                     <h3 class="page-header">Obtenez le meilleur lieu de rencontre </h3>
+                 </div>
+                 <!-- /.col-lg-12 -->
+             </div>
+             <!-- /.row -->
+             <div class="row">
+                 <div class="col-lg-6">
+                     <div class="panel panel-red">
+                         <div class="panel-heading">
+                             Participants
+                         </div>
+                         <div class="panel-body">
+                             <ul class="list-unstyled" style="padding-left:20px; list-style-image: url('{{ asset('bundles/ffbb/images/puce-mini.png') }}')">
+                                 <li> MONT-DE-MARSAN</li>
+                                 <li> REZE</li>
+                                 <li> ANGERS</li>
+                                 <li> BOURGES</li>
+                                 <li> CHARLEVILLE-MEZIERES</li>
+                                 <li> NICE</li>
+                             </ul>
+                         </div>
+                         {#<div class="panel-footer">#}
+                         {#Panel Footer#}
+                         {#</div>#}
+                     </div>
+                 </div>
+                 <!-- /.col-lg-4 -->
+
+                 <div class="col-lg-6">
+                     <div class="panel panel-primary">
+                         <div class="panel-heading">
+                             Type de lieu
+                         </div>
+                         {#{{ dump(meilleurLieuOption.value) }}#}
+                         <form name="typeLieux" style="padding-left:20px;">
+
+                             <div class="radio">
+                                 <label>
+                                     <input type="radio" name="optionsRadios" id="meilleurLieuOption" value="option1">
+                                     Lieux définis
+                                 </label>
+                             </div>
+                             <div class="radio">
+                                 <label>
+                                     <input type="radio" name="optionsRadios" id="BarycentreOption" value="option2">
+                                     Barycentre
+                                 </label>
+                             </div>
+
+
+                             <button type="button" class="btn btn-default  pull-right" onclick="typeLieu()">Lancer le
+                                 calcul
+                                 sans contrainte
+                             </button>
+
+
+                         </form>
+
+                     </div>
+                 </div>
+
+
+                 <!-- /.col-lg-6 -->
+
+             </div>
+             <!-- /.row -->
+
+             <div class="row">
+                 <div class="col-lg-12">
+                     <div class="panel panel-default">
+                         <div class="panel-heading">
+                             Vos participants
+                         </div>
+                         <!-- .panel-heading -->
+                         <div id="collapseOne" class="panel-collapse collapse in">
+                             <div class="panel-body"> <!-- premier scÃ©nario -->
+                                 <div id="map"
+                                      style="width: 100%; height: 600px; background: grey"></div>
+                                 <script type="text/javascript" charset="UTF-8">
+
+
+                                     function addMarkersAndSetViewBounds() {
+                                         var incrment = 1;
+                                         var points = [];
+                                         //tracer dynamiquement les points de villes
+                                         {% for coordonneeVille in coordonneesVille %}
+                                         var coordonneeVille = '{{ coordonneeVille }}';
+
+                                         var xy = coordonneeVille.split("%2C");
+                                         var x = xy[0];
+                                         var y = xy[1];
+
+                                         var marker = 'marker' + incrment;
+                                         window[marker] = new H.map.Marker({
+                                             lat: parseFloat(x),
+                                             lng: parseFloat(y)
+                                         });
+
+                                         points.push(window[marker]);
+
+                                         var incrment = incrment + 1;
+
+                                         {% endfor %}
+                                         group = new H.map.Group();
+                                         // add markers to the group
+                                         group.addObjects(points);
+                                         map.addObject(group);
+                                         // get geo bounding box for the group and set it to the map
+                                         map.setViewBounds(group.getBounds());
+                                     }
+
+
+                                     /**
+                                      *
+                                      * Changer la langue de la carte
+                                      */
+                                     function switchMapLanguage(map, platform) {
+                                         var mapTileService = platform.getMapTileService({
+                                                     type: 'base'
+                                                 }),
+                                                 frenchMapLayer = mapTileService.createTileLayer(
+                                                         'maptile',
+                                                         'normal.day',
+                                                         256,
+                                                         'png8',
+                                                         {lg: 'fre'}
+                                                 );
+                                         map.setBaseLayer(frenchMapLayer);
+
+
+                                     }
+                                     /*
+                                      Fin fn changer langue
+                                      */
+
+                                     /**
+                                      * Boilerplate map initialization code starts below:
+                                      */
+
+                                     //Step 1: initialize communication with the platform
+                                     var platform = new H.service.Platform({
+                                         app_id: 'DemoAppId01082013GAL',
+                                         app_code: 'AJKnXv84fjrb0KIHawS0Tg',
+                                         useCIT: true,
+                                         useHTTPS: true
+                                     });
+                                     var defaultLayers = platform.createDefaultLayers();
+
+                                     //Step 2: initialize a map - this map is centered over Europe
+                                     var map = new H.Map(document.getElementById('map'),
+                                             defaultLayers.normal.map, {
+                                                 center: {lat: 48.8567, lng: 2.3508},
+                                                 zoom: 4
+                                             });
+
+                                     var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+                                     // Create the default UI components
+                                     //    var ui = H.ui.UI.createDefault(map, defaultLayers);
+                                     var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
+
+                                     // Now use the map as required...
+                                     addMarkersAndSetViewBounds(map);
+                                     switchMapLanguage(map, platform);
+
+                                 </script>
+
+
+                             </div>
+                         </div>
+                         <!-- .panel-body -->
+                     </div>
+                     <!-- /.panel -->
+                 </div>
+                 <!-- /.col-lg-12 -->
+             </div>
+
+             <div>
+
+
+             </div>
+         </div>
+         {% block javascript %}
+             <!-- /#page-wrapper -->
+             <script type="text/javascript" charset="UTF-8">
+                 function typeLieu() {
+                     if (document.getElementById("meilleurLieuOption").checked == true) {
+                         window.location.href = "{{ path('ffbb_rencontres') }}";
+                      }
+                     else {
+                         window.location.href = "{{ path('ffbb_barycentre') }}";
+
+                     }
+
+                 }
+             </script>
+         {% endblock %}
+
+
+     {% endblock %}
+
+
+
+
+
+

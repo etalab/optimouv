@@ -34,3 +34,7 @@ ffbb_contact:
 ffbb_terrain:
     path:     /terrain-neutre
     defaults: { _controller: FfbbBundle:Rencontres:terrainNeutre }
+
+ffbb_table:
+    path:     /groupe
+    defaults: { _controller: FfbbBundle:Groupe:index }
