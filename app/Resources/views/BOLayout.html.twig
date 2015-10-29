@@ -17,6 +17,20 @@
         <link href="{{ asset('bundles/ffbb/bower_components/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet"
               type="text/css">
 
+        <!-- style sortable provisoire -->
+        <style>
+
+
+            .handles span {
+                cursor: move;
+            }
+
+
+
+
+        </style>
+        <!-- fin style sortable provisoire -->
+
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -55,10 +69,9 @@
             <!-- /.navbar-header -->
 
 
-
         </nav>
 
-        <nav class="navbar navbar-default"  style="background-color:#CECECE !important;">
+        <nav class="navbar navbar-default" style="background-color:#CECECE !important;">
             <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
@@ -76,14 +89,15 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                         <li><a href="{{ path('ffbb_competitions') }}">Optimisation des poules</a></li>
-                        <li style="background-color:#A4BD10;"><a href="{{ path('ffbb_competitions') }}">Meilleur lieu de rencontre</a></li>
+                        <li style="background-color:#A4BD10;"><a href="{{ path('ffbb_competitions') }}">Meilleur lieu de
+                                rencontre</a></li>
                         <li><a href="{{ path('ffbb_rapports') }}">Rapports</a></li>
 
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="{{ path('ffbb_help') }}">Aide</a></li>
-                         <li class="dropdown">
+                        <li><a href="">Aide</a></li>
+                        <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                             </a>
@@ -97,7 +111,7 @@
                             </ul>
                             <!-- /.dropdown-user -->
                         </li>
-                     </ul>
+                    </ul>
                 </div>
                 <!-- /.navbar-collapse -->
             </div>
@@ -126,69 +140,73 @@
     <!-- Custom Theme JavaScript -->
     <script src="{{ asset('bundles/ffbb/dist/js/sb-admin-2.js') }}"></script>
 
+
+
+    <!-- code filtre resultats calcul ~ pages internes-->
+
     <script type="text/javascript" src="{{ asset('bundles/ffbb/js/datatables.min.js') }}"></script>
     <script type="text/javascript" charset="utf-8">
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#example').DataTable();
-        } );
+        });
         {# Exclusion de zone géographique #}
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#exampleExclusion').DataTable();
-        } );
+        });
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#exampleExclusionEq').DataTable();
-        } );
+        });
         {# Meilleur lieu de rencontre #}
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#exampleRencontre').DataTable();
-        } );
-        $(document).ready(function() {
+        });
+        $(document).ready(function () {
             $('#exampleRencontreEq').DataTable();
-        } );
+        });
 
         {# Terrain Neutre #}
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#exampleTerrain').DataTable();
-        } );
-        $(document).ready(function() {
+        });
+        $(document).ready(function () {
             $('#exampleTerrainEq').DataTable();
-        } );
+        });
     </script>
 
 
 
-    <!-- -->
+    <!-- Code pour les filtres des détails de chaque calcul ~ pages internes-->
     <script type="text/javascript">
         // For demo to fit into DataTables site builder...
         $('#example')
-                .removeClass( 'display' )
+                .removeClass('display')
                 .addClass('table table-striped table-bordered');
     </script>
     {# Exclusion de zone géographique #}
     <script type="text/javascript">
         // For demo to fit into DataTables site builder...
         $('#exampleExclusion')
-                .removeClass( 'display' )
+                .removeClass('display')
                 .addClass('table table-striped table-bordered');
     </script>
     <script type="text/javascript">
         // For demo to fit into DataTables site builder...
         $('#exampleExclusionEq')
-                .removeClass( 'display' )
+                .removeClass('display')
                 .addClass('table table-striped table-bordered');
     </script>
     {# Meilleur lieu de rencontre #}
     <script type="text/javascript">
         // For demo to fit into DataTables site builder...
         $('#exampleRencontre')
-                .removeClass( 'display' )
+                .removeClass('display')
                 .addClass('table table-striped table-bordered');
     </script>
     <script type="text/javascript">
         // For demo to fit into DataTables site builder...
         $('#exampleRencontreEq')
-                .removeClass( 'display' )
+                .removeClass('display')
                 .addClass('table table-striped table-bordered');
     </script>
 
@@ -196,15 +214,64 @@
     <script type="text/javascript">
         // For demo to fit into DataTables site builder...
         $('#exampleTerrain')
-                .removeClass( 'display' )
+                .removeClass('display')
                 .addClass('table table-striped table-bordered');
     </script>
     <script type="text/javascript">
         // For demo to fit into DataTables site builder...
         $('#exampleTerrainEq')
-                .removeClass( 'display' )
+                .removeClass('display')
                 .addClass('table table-striped table-bordered');
     </script>
+
+    <!-- Code Jquery sortable list -->
+    <script src="{{ asset('bundles/ffbb/js/jquery.sortable.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(function () {
+                $('.sortable').sortable();
+                $('.handles').sortable({
+                    handle: 'span'
+                });
+                $('.connected').sortable({
+                    connectWith: '.connected'
+                });
+                $('.exclude').sortable({
+                    items: ':not(.disabled)'
+                });
+            });
+
+
+        });
+
+        function loadListItems(){
+
+            var items = [];
+
+            $("ul.maliste").children().each(function () {
+
+                //Récupération de l'ordre actuel
+
+                var itemOrder = $(this).find('label').data().value;
+
+                items.push(itemOrder);
+
+
+
+            });
+
+//            alert(items);
+            return items;
+        }
+
+        function myFunction() {
+
+            var items = loadListItems();
+            document.getElementById("inputListItems").value = items;
+        }
+
+     </script>
 
 {% endblock %}
 </body>

@@ -4,11 +4,11 @@ namespace Optimouv\FfbbBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class HelpController extends Controller
+class GroupeController extends Controller
 {
     public function indexAction()
     {
-//       $x = $this->get('service_rencontres')->myFunction();
-        return $this->render('FfbbBundle:Help:index.html.twig');
+
+        return $this->render('FfbbBundle:Groupe:index.html.twig');
     }
 }

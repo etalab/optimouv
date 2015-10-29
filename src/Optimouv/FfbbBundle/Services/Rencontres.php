@@ -12,11 +12,46 @@ use PDO;
 class Rencontres
 {
 
+    private $database_name;
+    private $database_user;
+    private $database_password;
 
-
+    public function __construct($database_name, $database_user, $database_password)
+    {
+        $this->database_name = $database_name;
+        $this->database_user = $database_user;
+        $this->database_password = $database_password;
+    }
     public function index()
     {
-        $villes = ['43.88953%2C-0.49893', '47.19126%2C-1.5698', '47.46317%2C-0.59261', '47.086%2C2.39315', '49.76019%2C4.71909', '43.70821%2C7.29597'];
+
+//        print_r($this->database_host); "%database_name%", "%database_user%", "%database_password%"
+//        exit;
+        //params de connexion
+
+        $dbname = $this->database_name;
+        $dbuser = $this->database_user;
+        $dbpwd = $this->database_password;
+
+        try {
+            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
+
+        } catch (PDOException $e) {
+            die('Erreur : ' . $e->getMessage());
+        }
+        $villes = [];
+        $stmt = $bdd->prepare("SELECT longitude, latitude FROM  villes ;");
+        $stmt->execute();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $longitude = $row['longitude'];
+            $latitude = $row['latitude'];
+            $coordonnee = $longitude . "%2C" . $latitude;
+            array_push($villes, $coordonnee);
+
+        }
+
+//        $villes = ['43.88953%2C-0.49893', '47.19126%2C-1.5698', '47.46317%2C-0.59261', '47.086%2C2.39315', '49.76019%2C4.71909', '43.70821%2C7.29597'];
+       // $villes = ["44.05513%2C4.6983", "48.8276353%2C2.2602854", "49.4926%2C3.70997", "49.50153%2C3.59576", "49.49291%2C3.30955", "48.7929%2C2.28623", "48.90686%2C2.24473", "43.69319%2C3.80698", "47.16489%2C0.28529", "44.89553%2C-0.71666", "48.14808%2C-1.6567", "45.21823%2C5.86072"];
 
         return $villes;
     }
@@ -47,12 +82,12 @@ class Rencontres
             $T2 = array_values($villes);
 
             //on fait appel � la premi�re partie de l'url here
-            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0='.$start;
+            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0=' . $start;
 
             //on parcourt tous les �l�ments du deuxi�me tableau: long + lat
             for ($j = 0; $j < count($T2); ++$j) {
                 $elt = $T2[$j];
-                $maps_url .= '&destination'.$j.'='.$elt;
+                $maps_url .= '&destination' . $j . '=' . $elt;
             }
 
             //on ram�ne le dernier element de l'url
@@ -105,7 +140,7 @@ class Rencontres
 
         //Nom de la ville de d�part
 
-        $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox='.$positionPtDepart.'&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+        $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox=' . $positionPtDepart . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
 
         $coor_json = file_get_contents($coor_url);
 
@@ -124,7 +159,7 @@ class Rencontres
         $mesVilles = [];
         //geocoder inversement les villes pour ramener les noms de villes
         for ($l = 0; $l < count($coordonneesVille); ++$l) {
-            $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox='.$coordonneesVille[$l].'&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+            $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox=' . $coordonneesVille[$l] . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
 
             $coor_json = file_get_contents($coor_url);
 
@@ -167,23 +202,22 @@ class Rencontres
     //Calcul du barycentre
     public function Barycentre()
     {
-
-//        $villes = ["43.67353%2C7.19013", "43.12022%2C6.13101", "45.76931%2C4.84977", "43.95465%2C4.81606", "48.39044%2C-4.48658"];
         //on récupère le tableau des villes
         $villes = $this->index();
 
         $length = count($villes);
         $lan = $lat = null;
-       //Calcul des coordonnes des X Y
-        for ($i = 0; $i < $length; ++$i) {
-            $Coordonnes = explode('%2C', $villes[$i]);
+        for ($i =0; $i<$length; $i++){
+
+            $Coordonnes = explode("%2C", $villes[$i]);
             $lan += $Coordonnes[0];
             $lat += $Coordonnes[1];
+
         }
 
-        $lanX = $lan / $length;
-        $latY = $lat / $length;
-        $coord = $lanX.'%2C'.$latY;
+        $lanX = $lan/$length;
+        $latY = $lat/$length;
+        $coord = $lanX.'%2C'.$latY ;
 
         $retour = $this->routingMatrix($coord, $villes);
 
@@ -191,14 +225,12 @@ class Rencontres
     }
 
     //Calcul exclusion géographique
-    public function Exclusion($dbcon, $valeurExclusion)
+    public function Exclusion($valeurExclusion)
     {
+        $dbname = $this->database_name;
+        $dbuser = $this->database_user;
+        $dbpwd = $this->database_password;
 
-        //params de connexion
-
-        $dbname = $dbcon[0];
-        $dbuser = $dbcon[1];
-        $dbpwd = $dbcon[2];
         //on récupère le tableau des villes
         $villes = $this->index();
 //        $villes = ["43.39498%2C6.3141", "45.76679%2C5.66442", "48.6721%2C5.88819", "48.80155%2C2.43209", "49.16847%2C6.869"];
@@ -215,11 +247,11 @@ class Rencontres
         // Somme des X & Somme des Y
         $lanX = $lan / $length;
         $latY = $lat / $length;
-        $coord = $lanX.'%2C'.$latY;
+        $coord = $lanX . '%2C' . $latY;
 
         //Mentionner les X,Y du point (Barycentre) et chercher l'emplacement du point sur la carte
 
-        $coor_url = 'https://places.demo.api.here.com/places/v1/discover/explore?at='.$coord.'&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+        $coor_url = 'https://places.demo.api.here.com/places/v1/discover/explore?at=' . $coord . '&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
         $coor_json = file_get_contents($coor_url);
         $coor_array = json_decode($coor_json, true);
 
@@ -231,9 +263,10 @@ class Rencontres
         $city = addslashes($city);
 
         try {
-            $bdd = new PDO('mysql:host=localhost;dbname='.$dbname.';charset=utf8', $dbuser, $dbpwd);
+            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
+
         } catch (PDOException $e) {
-            die('Erreur : '.$e->getMessage());
+            die('Erreur : ' . $e->getMessage());
         }
 
         $stmt = $bdd->prepare("SELECT ville_longitude_deg, ville_latitude_deg, ville_population_2012 FROM  villes_france_free where ville_code_postal = '$postalCode' AND ville_nom = '$city' ;");
@@ -246,7 +279,7 @@ class Rencontres
         if ($population < $valeurExclusion) {
             $lanX = $resultReq['ville_latitude_deg'];
             $latY = $resultReq['ville_longitude_deg'];
-            $coord = $lanX.'%2C'.$latY;
+            $coord = $lanX . '%2C' . $latY;
             $retour = $this->Barycentre();
 
             return $retour;
@@ -266,7 +299,7 @@ order by Proximite limit 1,15 ;");
                 } else {
                     $lanX = $row['ville_latitude_deg'];
                     $latY = $row['ville_longitude_deg'];
-                    $coord = $lanX.'%2C'.$latY;
+                    $coord = $lanX . '%2C' . $latY;
                     $retour = $this->routingMatrix($coord, $villes);
 
                     return $retour;
@@ -301,12 +334,12 @@ order by Proximite limit 1,15 ;");
             $T2 = array_values($villes);
 
             //on fait appel ? la premi?re partie de l'url here
-            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0='.$start;
+            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0=' . $start;
 
             //on parcourt tous les ?l?ments du deuxi?me tableau: long + lat
             for ($j = 0; $j < count($T2); ++$j) {
                 $elt = $T2[$j];
-                $maps_url .= '&destination'.$j.'='.$elt;
+                $maps_url .= '&destination' . $j . '=' . $elt;
             }
 
             //on ram?ne le dernier element de l'url
@@ -363,7 +396,7 @@ order by Proximite limit 1,15 ;");
 
         //Nom de la ville de d?part
 
-        $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox='.$positionPtDepart.'&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+        $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox=' . $positionPtDepart . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
 
         $coor_json = file_get_contents($coor_url);
 
@@ -382,7 +415,7 @@ order by Proximite limit 1,15 ;");
         $mesVilles = [];
         //geocoder inversement les villes pour ramener les noms de villes
         for ($l = 0; $l < count($coordonneesVille); ++$l) {
-            $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox='.$coordonneesVille[$l].'&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+            $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox=' . $coordonneesVille[$l] . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
 
             $coor_json = file_get_contents($coor_url);
 
@@ -424,7 +457,7 @@ order by Proximite limit 1,15 ;");
 
     public function routingMatrix($coord, $villes)
     {
-        $coor_url = 'https://places.demo.api.here.com/places/v1/discover/explore?at='.$coord.'&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+        $coor_url = 'https://places.demo.api.here.com/places/v1/discover/explore?at=' . $coord . '&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
         $coor_json = file_get_contents($coor_url);
 
         $coor_array = json_decode($coor_json, true);
@@ -435,11 +468,11 @@ order by Proximite limit 1,15 ;");
         $T2 = $villes;
 
         //on fait appel à la première partie de l'url here
-        $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0='.$start;
+        $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0=' . $start;
         //on parcourt tous les éléments du deuxième tableau: long + lat
         for ($j = 0; $j < count($T2); ++$j) {
             $elt = $T2[$j];
-            $maps_url .= '&destination'.$j.'='.$elt;
+            $maps_url .= '&destination' . $j . '=' . $elt;
         }
 
         //on ram?ne le dernier element de l'url
@@ -481,7 +514,7 @@ order by Proximite limit 1,15 ;");
         $mesVilles = [];
         //geocoder inversement les villes pour ramener les noms de villes
         for ($l = 0; $l < count($villes); ++$l) {
-            $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox='.$villes[$l].'&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+            $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox=' . $villes[$l] . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
 
             $coor_json = file_get_contents($coor_url);
 
@@ -529,11 +562,11 @@ order by Proximite limit 1,15 ;");
             $start = $terrainNeutre[$i];
 
             //on fait appel à la première partie de l'url here
-            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0='.$start;
+            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0=' . $start;
             for ($j = 0; $j < count($equipe); ++$j) {
                 $destination = $equipe[$j];
 
-                $maps_url .= '&destination'.$j.'='.$destination;
+                $maps_url .= '&destination' . $j . '=' . $destination;
             }
 
             //on ramène le dernier element de l'url
@@ -575,8 +608,8 @@ order by Proximite limit 1,15 ;");
 
     public function terrainNeutreEquitable()
     {
-        $equipe = ['43.88953%2C-0.49893', '47.19126%2C-1.5698', '47.46317%2C-0.59261', '47.086%2C2.39315', '49.76019%2C4.71909', '43.70821%2C7.29597'];
-//        $equipe = $this->index();
+//        $equipe = ['43.88953%2C-0.49893', '47.19126%2C-1.5698', '47.46317%2C-0.59261', '47.086%2C2.39315', '49.76019%2C4.71909', '43.70821%2C7.29597'];
+        $equipe = $this->index();
 
         $terrainNeutre = ['50.9531%2C1.85316', '50.29103%2C2.77896', '43.57035%2C3.90526', '45.73546%2C4.87235'];
 
@@ -588,11 +621,11 @@ order by Proximite limit 1,15 ;");
             $start = $terrainNeutre[$i];
 
             //on fait appel à la première partie de l'url here
-            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0='.$start;
+            $maps_url = 'https://route.st.nlp.nokia.com/routing/6.2/calculatematrix.json?mode=fastest%3Bcar%3Btraffic%3Aenabled%3B&start0=' . $start;
             for ($j = 0; $j < count($equipe); ++$j) {
                 $destination = $equipe[$j];
 
-                $maps_url .= '&destination'.$j.'='.$destination;
+                $maps_url .= '&destination' . $j . '=' . $destination;
             }
 
             //on ramène le dernier element de l'url
@@ -630,4 +663,71 @@ order by Proximite limit 1,15 ;");
 
         return $retour;
     }
+
+    public function geocoderVilles($villes)
+    {
+
+
+        $dbname = $this->database_name;
+        $dbuser = $this->database_user;
+        $dbpwd = $this->database_password;
+
+        try {
+            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
+
+        } catch (PDOException $e) {
+            die('Erreur : ' . $e->getMessage());
+        }
+
+
+        //vider la table villes
+
+        $truncate = $bdd->prepare("truncate table villes");
+        $truncate->execute();
+
+
+        $longueur = count($villes);
+
+        for ($i = 0; $i < $longueur; $i++) {
+            $req = addslashes($villes[$i]);
+
+            $req = str_replace(' ', '%20', $req);
+
+            $reqGeocode = 'https://geocoder.cit.api.here.com/6.2/geocode.json?searchtext=' . $req . '&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg&gen=8';
+            $reqGeocodeJson = file_get_contents($reqGeocode);
+
+            $reqGeocodeArray = json_decode($reqGeocodeJson, true);
+
+            $Longitude = $reqGeocodeArray['Response']['View'][0]['Result'][0]['Location']['DisplayPosition']['Latitude'];
+            $Latitude = $reqGeocodeArray['Response']['View'][0]['Result'][0]['Location']['DisplayPosition']['Longitude'];
+            $city = $reqGeocodeArray['Response']['View'][0]['Result'][0]['Location']['Address']['City'];
+            $city = addslashes($city);
+            $PostalCode = $reqGeocodeArray['Response']['View'][0]['Result'][0]['Location']['Address']['PostalCode'];
+
+            $insert = $bdd->prepare("INSERT INTO  villes (code_postale, nom, longitude, latitude) VALUES ( '$PostalCode', '$city', '$Longitude', '$Latitude');");
+            $insert->execute();
+
+
+        }
+
+    }
+
+    public function nomsVilles($villes)
+    {
+
+        $longueur = count($villes);
+        $mesVilles = [];
+        for ($i = 0; $i < $longueur; $i++) {
+
+            $nomVille = substr($villes[$i], 6);
+            array_push($mesVilles, $nomVille);
+
+        }
+
+        return $mesVilles;
+
+
+    }
 }
+
+

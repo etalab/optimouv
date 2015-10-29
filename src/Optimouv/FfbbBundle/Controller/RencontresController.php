@@ -108,21 +108,8 @@ class RencontresController extends Controller
         //Récupération de la valeur saisie par l'utilisateur
         $valeurExclusion = $_POST["valeurExclusion"];
 
-        //Params de connexion
-        $dbname = $this->container->getParameter('database_name');
-        $dbuser = $this->container->getParameter('database_user');
-        $dbpwd = $this->container->getParameter('database_password');
-
-        //stcoker les params de connexion dans un tableau -> envoyer comme param à la fn exclusion
-        $dbcon = [];
-        $dbcon[0]=$dbname;
-        $dbcon[1]=$dbuser;
-        $dbcon[2]=$dbpwd;
-
-
-
         //Récupération du résultat du calcul avec contrainte
-        $retour = $this->get('service_rencontres')->Exclusion($dbcon, $valeurExclusion);
+        $retour = $this->get('service_rencontres')->Exclusion($valeurExclusion);
 
 
         //Données du scénario optimal

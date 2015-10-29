@@ -19,12 +19,9 @@
                          </div>
                          <div class="panel-body">
                              <ul class="list-unstyled" style="padding-left:20px; list-style-image: url('{{ asset('bundles/ffbb/images/puce-mini.png') }}')">
-                                 <li> MONT-DE-MARSAN</li>
-                                 <li> REZE</li>
-                                 <li> ANGERS</li>
-                                 <li> BOURGES</li>
-                                 <li> CHARLEVILLE-MEZIERES</li>
-                                 <li> NICE</li>
+                                 {% for nomVille in nomsVilles %}
+                                 <li>{{ nomVille }}</li>
+                                 {% endfor %}
                              </ul>
                          </div>
                          {#<div class="panel-footer">#}

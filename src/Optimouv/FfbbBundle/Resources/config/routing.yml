@@ -14,10 +14,6 @@ ffbb_rapports:
     path:     /rapports
     defaults: { _controller: FfbbBundle:Rapports:index }
 
-ffbb_help:
-    path:     /help
-    defaults: { _controller: FfbbBundle:Help:index }
-
 ffbb_barycentre:
     path:     /barycentre
     defaults: { _controller: FfbbBundle:Rencontres:barycentre }

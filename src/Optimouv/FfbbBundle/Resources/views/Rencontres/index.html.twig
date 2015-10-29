@@ -20,12 +20,10 @@
                     <div class="panel-body">
                         <ul class="list-unstyled"
                             style="padding-left:20px; list-style-image: url('{{ asset('bundles/ffbb/images/puce-mini.png') }}')">
-                            <li> MONT-DE-MARSAN</li>
-                            <li> REZE</li>
-                            <li> ANGERS</li>
-                            <li> BOURGES</li>
-                            <li> CHARLEVILLE-MEZIERES</li>
-                            <li> NICE</li>
+                            <li>{{ villeDepart }}</li>
+                            {% for participant in participants %}
+                                <li> {{ participant.ville }}</li>
+                            {% endfor %}
                         </ul>
                     </div>
                     {#<div class="panel-footer">#}
@@ -229,7 +227,7 @@
                                                         <a href="#" class="list-group-item">
                                                             <i class="fa  fa-credit-card fa-fw"
                                                                style="padding-right: 30px"></i>
-                                                            <strong>{{ (distanceMin * 0.481395349)|round }}</strong>
+                                                            <strong>{{ (distanceMin * 0.8)|round }}</strong>
                                                             € pour réaliser les trajets de l'ensemble du scénario
 
                                                         </a>
@@ -241,7 +239,7 @@
                                                         <a href="#" class="list-group-item">
                                                             <i class="fa fa-automobile fa-fw"
                                                                style="padding-right: 30px"></i>
-                                                            <strong>{{ (distanceMin *12*0.30144186)|round }}</strong>
+                                                            <strong>{{ (distanceMin *12*0.157)|round }}</strong>
                                                             Kg équivalent
                                                             CO2 d'émissions totales de GES pour une équipe de 12
                                                             joueurs en voiture individuelle
@@ -251,10 +249,26 @@
                                                         <a href="#" class="list-group-item">
                                                             <i class="fa fa-automobile fa-fw"
                                                                style="padding-right: 30px"></i>
-                                                            <strong>{{ (distanceMin *(12/4)*0.30144186)|round }}</strong>
+                                                            <strong>{{ (distanceMin *(12/4)*0.157)|round }}</strong>
                                                             Kg équivalent
                                                             CO2 d'émissions totales de GES pour une équipe de 12
                                                             joueurs en co-voiturage pour le scénario
+
+                                                        </a>
+                                                        <a href="#" class="list-group-item">
+                                                            <i class="fa  fa-credit-card fa-fw"
+                                                               style="padding-right: 30px"></i>
+                                                            <strong>{{ (distanceMin * 1.31)|round }}</strong>
+                                                            € pour réaliser les trajets de l'ensemble du scénario en minibus
+
+                                                        </a>
+                                                        <a href="#" class="list-group-item">
+                                                            <i class="fa fa-automobile fa-fw"
+                                                               style="padding-right: 30px"></i>
+                                                            <strong>{{ (distanceMin *(12/9)*0.185)|round }}</strong>
+                                                            Kg équivalent
+                                                            CO2 d'émissions totales de GES pour une équipe de 12
+                                                            joueurs en minibus pour le scénario
 
                                                         </a>
 
@@ -278,6 +292,10 @@
                                                                 <th style="text-align:right">Emissions GES covoiturage (en kilos équivalent
                                                                     CO2)
                                                                 </th>
+                                                                <th style="text-align:right">Coût du parcours en minibus(€)</th>
+                                                                <th style="text-align:right">Emissions GES minibus (en kilos
+                                                                    équivalent CO2)
+                                                                </th>
                                                             </tr>
                                                             </thead>
                                                             <tbody>
@@ -287,9 +305,11 @@
                                                                     <td><strong> {{ participant.ville }}</strong></td>
                                                                     <td style="text-align:right"> {{ participant.distance //1000 }}</td>
                                                                     <td style="text-align:right"> {{ participant.duree|date('H:i')}}</td>
-                                                                    <td style="text-align:right"> {{ (participant.distance // 1000 * 0.481395349)|round }}</td>
-                                                                    <td style="text-align:right"> {{ (participant.distance //1000 *12*0.30144186)|round }}</td>
-                                                                    <td style="text-align:right"> {{ (participant.distance //1000 *(12/4)*0.30144186)|round }} </td>
+                                                                    <td style="text-align:right"> {{ (participant.distance // 1000 * 0.80)|round }}</td>
+                                                                    <td style="text-align:right"> {{ (participant.distance //1000 *12*0.157)|round }}</td>
+                                                                    <td style="text-align:right"> {{ (participant.distance //1000 *(12/4)*0.157)|round }} </td>
+                                                                    <td style="text-align:right"> {{ (participant.distance // 1000 * 1.31)|round }}</td>
+                                                                    <td style="text-align:right"> {{ (participant.distance //1000 *(12/9)*0.185)|round }} </td>
                                                                 </tr>
 
 
@@ -459,7 +479,7 @@
                                                         <a href="#" class="list-group-item">
                                                             <i class="fa  fa-credit-card fa-fw"
                                                                style="padding-right: 30px"></i>
-                                                            <strong>{{ (distanceTotaleEq * 0.481395349)|round }}</strong>
+                                                            <strong>{{ (distanceTotaleEq * 0.80)|round }}</strong>
                                                             € pour réaliser les trajets de l'ensemble du scénario
 
                                                         </a>
@@ -471,7 +491,7 @@
                                                         <a href="#" class="list-group-item">
                                                             <i class="fa fa-automobile fa-fw"
                                                                style="padding-right: 30px"></i>
-                                                            <strong>{{ (distanceTotaleEq *12*0.30144186)|round }}</strong>
+                                                            <strong>{{ (distanceTotaleEq *12*0.157)|round }}</strong>
                                                             Kg équivalent
                                                             CO2 d'émissions totales de GES pour une équipe de 12
                                                             joueurs en voiture individuelle
@@ -481,12 +501,27 @@
                                                         <a href="#" class="list-group-item">
                                                             <i class="fa fa-automobile fa-fw"
                                                                style="padding-right: 30px"></i>
-                                                            <strong>{{ (distanceTotaleEq *(12/4)*0.30144186)|round }}</strong>
+                                                            <strong>{{ (distanceTotaleEq *(12/4)*0.157)|round }}</strong>
                                                             Kg équivalent
                                                             CO2 d'émissions totales de GES pour une équipe de 12
                                                             joueurs en co-voiturage pour le scénario
 
                                                         </a>
+                                                        <a href="#" class="list-group-item">
+                                                            <i class="fa  fa-credit-card fa-fw"
+                                                               style="padding-right: 30px"></i>
+                                                            <strong>{{ (distanceTotaleEq * 1.31)|round }}</strong>
+                                                            € pour réaliser les trajets de l'ensemble du scénario en minibus
+
+                                                        </a>
+                                                        <a href="#" class="list-group-item">
+                                                            <i class="fa fa-automobile fa-fw"
+                                                               style="padding-right: 30px"></i>
+                                                            <strong>{{ (distanceTotaleEq *(12/9)*0.185)|round }}</strong>
+                                                            Kg équivalent
+                                                            CO2 d'émissions totales de GES pour une équipe de 12
+                                                            joueurs en minibus pour le scénario
+                                                            </a>
 
                                                     </div>
 
@@ -509,6 +544,11 @@
                                                                 <th style="text-align:right">Emissions GES covoiturage (en kilos équivalent
                                                                     CO2)
                                                                 </th>
+                                                                <th style="text-align:right">Coût du parcours en minibus(€)</th>
+                                                                <th style="text-align:right">Emissions GES minibus (en kilos équivalent
+                                                                    CO2)
+                                                                </th>
+
                                                             </tr>
                                                             </thead>
                                                             <tbody>
@@ -519,9 +559,11 @@
                                                                     </td>
                                                                     <td style="text-align:right"> {{ participantEq.distanceEq //1000 }}</td>
                                                                     <td style="text-align:right"> {{ participantEq.dureeEq|date('H:i')}}</td>
-                                                                    <td style="text-align:right"> {{ (participantEq.distanceEq // 1000 * 0.481395349)|round }}</td>
-                                                                    <td style="text-align:right"> {{ (participantEq.distanceEq //1000 *12*0.30144186)|round }}</td>
-                                                                    <td style="text-align:right"> {{ (participantEq.distanceEq //1000 *(12/4)*0.30144186)|round }} </td>
+                                                                    <td style="text-align:right"> {{ (participantEq.distanceEq // 1000 *  0.80)|round }}</td>
+                                                                    <td style="text-align:right"> {{ (participantEq.distanceEq //1000 *12*0.157)|round }}</td>
+                                                                    <td style="text-align:right"> {{ (participantEq.distanceEq //1000 *(12/4)*0.157)|round }} </td>
+                                                                    <td style="text-align:right"> {{ (participantEq.distanceEq //1000 *(12/9)*0.185)|round }} </td>
+                                                                    <td style="text-align:right"> {{ (participantEq.distanceEq // 1000 *  1.31)|round }}</td>
                                                                 </tr>
 
 
