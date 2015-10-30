@@ -10,7 +10,7 @@
 /web/bundles/
 # Composer
 /composer.phar
-/composer.lock
+
 
 # .idea dossier phpStorm
 /.idea
