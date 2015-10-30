@@ -13,11 +13,11 @@
              <!-- /.row -->
              <div class="row">
                  <div class="col-lg-6">
-                     <div class="panel panel-red">
+                     <div class="panel panel-red"  style="resize:vertical; overflow-y:auto;">
                          <div class="panel-heading">
                              Participants
                          </div>
-                         <div class="panel-body">
+                         <div class="panel-body" style="min-height: 150px; max-height: 190px">
                              <ul class="list-unstyled" style="padding-left:20px; list-style-image: url('{{ asset('bundles/ffbb/images/puce-mini.png') }}')">
                                  {% for nomVille in nomsVilles %}
                                  <li>{{ nomVille }}</li>
