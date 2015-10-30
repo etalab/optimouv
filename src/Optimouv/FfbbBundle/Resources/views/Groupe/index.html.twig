@@ -88,7 +88,7 @@
                                      <li><label data-value="28630 BARJOUVILLE">BARJOUVILLE</label></li>
                                      <li><label data-value="41350 VINEUIL">VINEUIL</label></li>
                                      <li><label data-value="45140 ORMES">ORMES</label></li>
-                                     <li><label data-value="27000 Évreux">Évreux </label></li>
+                                     <li><label data-value="27000 ÉVREUX">ÉVREUX </label></li>
                                      <li><label data-value="75007 PARIS  7E  ARRONDISSEMENT">PARIS  7E  ARRONDISSEMENT</label></li>
                                      <li><label data-value="77350 LE MEE-SUR-SEINE">LE MEE-SUR-SEINE</label></li>
                                      <li><label data-value="78190 TRAPPES">TRAPPES</label></li>
@@ -162,7 +162,7 @@
                              </div>
 
                          </div>
-                         <button onclick="myFunction()">Vérifier</button>
+
                      </div>
 
 
@@ -170,7 +170,7 @@
                      <div class="col-lg-6">
                          <div class="panel panel-primary">
                              <div class="panel-heading">
-                                 Groupe
+                                 Votre groupe
                               </div>
 
                              <div class="panel-body" style="overflow-y: scroll; min-height: 150px; max-height: 190px">
@@ -187,9 +187,11 @@
                          <form name="getListItems" action="{{ path('ffbb_homepage') }}" method="POST">
 
                              <input type="hidden" name="inputListItems" id="inputListItems"  >
-                             <button   name="test">Envoyer</button>
+                             <button   name="envoyer" class="btn btn-default  pull-right">Envoyer</button>
 
                          </form>
+                         <button onclick="myFunction()" class="btn btn-default  pull-right">Vérifier</button>
+
 
                      </div>
 
@@ -212,6 +214,33 @@
 
 
 
+
+
+             </div>
+             <div class="row">
+                 <div class="col-lg-6">
+                     <div class="panel panel-red" style="resize:vertical; overflow-y:auto;">
+                         <div class="panel-heading">
+                             Terrains neutres
+                         </div>
+                         <div class="panel-body"  style="min-height: 150px; max-height: 190px">
+
+                             <ul class="connected list list-unstyled"
+                                 style=" padding-left:20px; list-style-image: url('{{ asset('bundles/ffbb/images/puce-mini.png') }}')">
+                                 <li><label data-value="94054 ORLY">ORLY</label></li>
+                                 <li><label data-value="56186 QUIBERON">QUIBERON</label></li>
+                                 <li><label data-value="83133 TANNERON">TANNERON</label></li>
+                                 <li><label data-value="49105 CONTIGNE">CONTIGNE</label></li>
+                                 <li><label data-value="57693 VANTOUX">VANTOUX</label></li>
+
+
+
+                             </ul>
+                         </div>
+
+                     </div>
+
+                 </div>
 
 
              </div>

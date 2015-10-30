@@ -13,15 +13,14 @@
             <!-- /.row -->
             <div class="row">
                 <div class="col-lg-4">
-                    <div class="panel panel-red">
+                    <div class="panel panel-red" style="resize:vertical; overflow-y:auto;">
                         <div class="panel-heading">
                             Participants
                         </div>
-                        <div class="panel-body">
+                        <div class="panel-body" style="min-height: 150px; max-height: 190px">
                             <ul class="list-unstyled" style="padding-left:20px; list-style-image: url('{{ asset('bundles/ffbb/images/puce-mini.png') }}')">
-                                <li>{{ villeDepart }}</li>
-                                {% for participant in participants %}
-                                    <li> {{ participant.ville }}</li>
+                                 {% for participant in participants %}
+                                    <li> {{ participant.ville|upper }}</li>
                                 {% endfor %}
                             </ul>
                         </div>
@@ -237,14 +236,16 @@
                                                             </a>
                                                             <a href="#" class="list-group-item">
                                                                 <i class="fa  fa-credit-card fa-fw" style="padding-right: 30px"></i> <strong>{{ (distanceMin * 0.80)|round }}</strong>
-                                                                € pour réaliser les trajets de l'ensemble du scénario
+                                                                € pour réaliser les trajets de l'ensemble du scénario en voiture ou covoiturage
 
                                                             </a>
-                                                            {#<a href="#" class="list-group-item">#}
-                                                                {#<i class="fa fa-clock-o fa-fw" style="padding-right: 30px"></i> <strong>{{ dureeTrajet // 3600 }}H{{ dureeTrajet % 3600 // 60 }}</strong>#}
-                                                                {#de trajet pour l'ensemble du scénario#}
+                                                            <a href="#" class="list-group-item">
+                                                                <i class="fa  fa-credit-card fa-fw"
+                                                                   style="padding-right: 30px"></i>
+                                                                <strong>{{ (distanceMin * 1.31)|round }}</strong>
+                                                                € pour réaliser les trajets de l'ensemble du scénario en minibus
 
-                                                            {#</a>#}
+                                                            </a>
                                                             <a href="#" class="list-group-item">
                                                                 <i class="fa fa-automobile fa-fw" style="padding-right: 30px"></i> <strong>{{ (distanceMin *12*0.157)|round }}</strong>
                                                                 Kg équivalent
@@ -260,15 +261,9 @@
                                                                 joueurs en co-voiturage pour le scénario
 
                                                             </a>
-                                                            <a href="#" class="list-group-item">
-                                                                <i class="fa  fa-credit-card fa-fw"
-                                                                   style="padding-right: 30px"></i>
-                                                                <strong>{{ (distanceMin * 1.31)|round }}</strong>
-                                                                € pour réaliser les trajets de l'ensemble du scénario en minibus
 
-                                                            </a>
                                                             <a href="#" class="list-group-item">
-                                                                <i class="fa fa-automobile fa-fw"
+                                                                <i class="fa fa-bus fa-fw"
                                                                    style="padding-right: 30px"></i>
                                                                 <strong>{{ (distanceMin *(12/9)*0.185)|round }}</strong>
                                                                 Kg équivalent
@@ -290,14 +285,15 @@
                                                                     <th style="font-weight: bold !important;">Participants</th>
                                                                     <th style="text-align:right">Kilomètres à parcourir</th>
                                                                     <th style="text-align:right">Temps de parcours (H:M)</th>
-                                                                    <th style="text-align:right">Coût du parcours (€)</th>
+                                                                    <th style="text-align:right">Coût du parcours en voiture ou covoiturage(€)</th>
+                                                                    <th style="text-align:right">Coût du parcours en minibus(€)</th>
                                                                     <th style="text-align:right">Emissions GES voiture individuelle (en kilos
                                                                         équivalent CO2)
                                                                     </th>
                                                                     <th style="text-align:right">Emissions GES covoiturage (en kilos équivalent
                                                                         CO2)
                                                                     </th>
-                                                                    <th style="text-align:right">Coût du parcours en minibus(€)</th>
+
                                                                     <th style="text-align:right">Emissions GES minibus (en kilos
                                                                         équivalent CO2)
                                                                     </th>
@@ -311,9 +307,9 @@
                                                                         <td style="text-align:right"> {{ participant.distance //1000}}</td>
                                                                         <td style="text-align:right"> {{ participant.duree|date('H:i') }}</td>
                                                                         <td style="text-align:right"> {{ (participant.distance // 1000 * 0.80)|round }}</td>
+                                                                        <td style="text-align:right"> {{ (participant.distance // 1000 * 1.31)|round }}</td>
                                                                         <td style="text-align:right"> {{ (participant.distance //1000 *12*0.157)|round }}</td>
                                                                         <td style="text-align:right"> {{ (participant.distance //1000 *(12/4)*0.157)|round  }} </td>
-                                                                        <td style="text-align:right"> {{ (participant.distance // 1000 * 1.31)|round }}</td>
                                                                         <td style="text-align:right"> {{ (participant.distance //1000 *(12/9)*0.185)|round }} </td>
                                                                     </tr>
 
@@ -478,13 +474,17 @@
                                                             </a>
                                                             <a href="#" class="list-group-item">
                                                                 <i class="fa  fa-credit-card fa-fw" style="padding-right: 30px"></i> <strong>{{ (distanceTotaleEq * 0.80)|round }}</strong>
-                                                                € pour réaliser les trajets de l'ensemble du scénario
+                                                                € pour réaliser les trajets de l'ensemble du scénario en voiture ou covoiturage
 
                                                             </a>
-                                                            {#<a href="#" class="list-group-item">#}
-                                                                {#<i class="fa fa-clock-o fa-fw" style="padding-right: 30px"></i> <strong>{{ dureeTrajetEq // 3600 }}H{{ dureeTrajetEq % 3600 // 60 }}</strong>#}
-                                                                {#de temps de trajet total pour l'ensemble du scénario#}
-                                                            {#</a>#}
+                                                            <a href="#" class="list-group-item">
+                                                                <i class="fa  fa-credit-card fa-fw"
+                                                                   style="padding-right: 30px"></i>
+                                                                <strong>{{ (distanceTotaleEq * 1.31)|round }}</strong>
+                                                                € pour réaliser les trajets de l'ensemble du scénario en minibus
+
+                                                            </a>
+
                                                             <a href="#" class="list-group-item">
                                                                 <i class="fa fa-automobile fa-fw" style="padding-right: 30px"></i> <strong>{{ (distanceTotaleEq *12*0.157)|round }}</strong>
                                                                 Kg équivalent
@@ -500,15 +500,9 @@
                                                                 joueurs en co-voiturage pour le scénario
 
                                                             </a>
-                                                            <a href="#" class="list-group-item">
-                                                                <i class="fa  fa-credit-card fa-fw"
-                                                                   style="padding-right: 30px"></i>
-                                                                <strong>{{ (distanceTotaleEq * 1.31)|round }}</strong>
-                                                                € pour réaliser les trajets de l'ensemble du scénario en minibus
 
-                                                            </a>
                                                             <a href="#" class="list-group-item">
-                                                                <i class="fa fa-automobile fa-fw"
+                                                                <i class="fa fa-bus fa-fw"
                                                                    style="padding-right: 30px"></i>
                                                                 <strong>{{ (distanceTotaleEq *(12/9)*0.185)|round }}</strong>
                                                                 Kg équivalent
@@ -531,14 +525,15 @@
                                                                     <th style="font-weight: bold !important;">Participants</th>
                                                                     <th style="text-align:right">Kilomètres à parcourir</th>
                                                                     <th style="text-align:right">Temps de parcours (H:M)</th>
-                                                                    <th style="text-align:right">Coût du parcours (€)</th>
+                                                                    <th style="text-align:right">Coût du parcours en voiture ou covoiturage(€)</th>
+                                                                    <th style="text-align:right">Coût du parcours en minibus(€)</th>
                                                                     <th style="text-align:right">Emissions GES voiture individuelle (en kilos
                                                                         équivalent CO2)
                                                                     </th>
                                                                     <th style="text-align:right">Emissions GES covoiturage (en kilos équivalent
                                                                         CO2)
                                                                     </th>
-                                                                    <th style="text-align:right">Coût du parcours en minibus(€)</th>
+
                                                                     <th style="text-align:right">Emissions GES minibus (en kilos équivalent
                                                                         CO2)
                                                                     </th>
@@ -552,10 +547,11 @@
                                                                         <td style="text-align:right"> {{ participantEq.distanceEq //1000}}</td>
                                                                         <td style="text-align:right"> {{ participantEq.dureeEq|date('H:i') }}</td>
                                                                         <td style="text-align:right"> {{ (participantEq.distanceEq // 1000 * 0.80)|round }}</td>
+                                                                        <td style="text-align:right"> {{ (participantEq.distanceEq // 1000 *  1.31)|round }}</td>
                                                                         <td style="text-align:right"> {{ (participantEq.distanceEq //1000 *12*0.157)|round }}</td>
                                                                         <td style="text-align:right"> {{ (participantEq.distanceEq //1000 *(12/4)*0.157)|round  }} </td>
                                                                         <td style="text-align:right"> {{ (participantEq.distanceEq //1000 *(12/9)*0.185)|round }} </td>
-                                                                        <td style="text-align:right"> {{ (participantEq.distanceEq // 1000 *  1.31)|round }}</td>
+
                                                                     </tr>
 
 
