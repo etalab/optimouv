@@ -20,7 +20,7 @@
                     <div class="panel-body" style="min-height: 150px; max-height: 190px">
                         <ul class="list-unstyled"
                             style="padding-left:20px; list-style-image: url('{{ asset('bundles/ffbb/images/puce-mini.png') }}')">
-                            <li>{{ villeDepart }}</li>
+                            <li>{{ villeDepart|upper }}</li>
                             {% for participant in participants %}
                                 <li> {{ participant.ville|upper }}</li>
                             {% endfor %}
