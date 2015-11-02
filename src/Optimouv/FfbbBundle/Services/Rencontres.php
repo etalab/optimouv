@@ -409,7 +409,7 @@ order by Proximite limit 1,15 ;");
 
         //Nom de la ville de d?part
 
-        $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox=' . $positionPtDepart . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+        $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox=' . $positionPtDepart . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id='.$app_id.'&app_code='.$app_code;
 
         $coor_json = file_get_contents($coor_url);
 
@@ -428,7 +428,7 @@ order by Proximite limit 1,15 ;");
         $mesVilles = [];
         //geocoder inversement les villes pour ramener les noms de villes
         for ($l = 0; $l < count($coordonneesVille); ++$l) {
-            $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox=' . $coordonneesVille[$l] . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+            $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox=' . $coordonneesVille[$l] . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id='.$app_id.'&app_code='.$app_code;
 
             $coor_json = file_get_contents($coor_url);
 
@@ -717,10 +717,12 @@ order by Proximite limit 1,15 ;");
 
         for ($i = 0; $i < $longueur; $i++) {
             $req = addslashes($villes[$i]);
+            $codePostal = substr($req, 0,5);
+            $nomVille = substr($req, 6);
 
-            $req = str_replace(' ', '%20', $req);
+//            $req = str_replace(' ', '%2C', $req);
 
-            $reqGeocode = 'https://geocoder.cit.api.here.com/6.2/geocode.json?searchtext=' . $req . '&app_id='.$app_id.'&app_code='.$app_code.'&gen=8';
+            $reqGeocode = 'https://geocoder.cit.api.here.com/6.2/geocode.json?country=France&city='.$nomVille.'&postalCode='.$codePostal.'&app_id='.$app_id.'&app_code='.$app_code.'&gen=8';
             $reqGeocodeJson = file_get_contents($reqGeocode);
 
             $reqGeocodeArray = json_decode($reqGeocodeJson, true);
