@@ -15,12 +15,16 @@ class Rencontres
     private $database_name;
     private $database_user;
     private $database_password;
+    private $app_id;
+    private $app_code;
 
-    public function __construct($database_name, $database_user, $database_password)
+    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code)
     {
         $this->database_name = $database_name;
         $this->database_user = $database_user;
         $this->database_password = $database_password;
+        $this->app_id = $app_id;
+        $this->app_code = $app_code;
     }
     public function index()
     {
@@ -59,6 +63,8 @@ class Rencontres
     //Calcul du meilleur lieu de rencontre
     public function meilleurLieuRencontre()
     {
+        $app_id = $this->app_id;
+        $app_code = $this->app_code;
 
         //urlencode pour supprimer les espaces vides dans l'url
 //        $villes = ["43.67353%2C7.19013", "43.12022%2C6.13101", "45.76931%2C4.84977", "43.95465%2C4.81606", "48.39044%2C-4.48658"];
@@ -91,7 +97,7 @@ class Rencontres
             }
 
             //on ram�ne le dernier element de l'url
-            $maps_url .= '&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+            $maps_url .= '&app_id='.$app_id.'&app_code='.$app_code;
 
             $maps_json = file_get_contents($maps_url);
 
@@ -202,6 +208,7 @@ class Rencontres
     //Calcul du barycentre
     public function Barycentre()
     {
+
         //on récupère le tableau des villes
         $villes = $this->index();
 
@@ -227,6 +234,9 @@ class Rencontres
     //Calcul exclusion géographique
     public function Exclusion($valeurExclusion)
     {
+        $app_id = $this->app_id;
+        $app_code = $this->app_code;
+
         $dbname = $this->database_name;
         $dbuser = $this->database_user;
         $dbpwd = $this->database_password;
@@ -251,7 +261,7 @@ class Rencontres
 
         //Mentionner les X,Y du point (Barycentre) et chercher l'emplacement du point sur la carte
 
-        $coor_url = 'https://places.demo.api.here.com/places/v1/discover/explore?at=' . $coord . '&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+        $coor_url = 'https://places.demo.api.here.com/places/v1/discover/explore?at=' . $coord . '&app_id='.$app_id.'&app_code='.$app_code;
         $coor_json = file_get_contents($coor_url);
         $coor_array = json_decode($coor_json, true);
 
@@ -311,6 +321,9 @@ order by Proximite limit 1,15 ;");
     //Calcul du scénario équitable
     public function scenarioEquitable()
     {
+        $app_id = $this->app_id;
+        $app_code = $this->app_code;
+
         //        $villes = ["43.67353%2C7.19013", "43.12022%2C6.13101", "45.76931%2C4.84977", "43.95465%2C4.81606", "48.39044%2C-4.48658"];
         $villes = $this->index();
 
@@ -343,7 +356,7 @@ order by Proximite limit 1,15 ;");
             }
 
             //on ram?ne le dernier element de l'url
-            $maps_url .= '&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+            $maps_url .= '&app_id='.$app_id.'&app_code='.$app_code;
 
             $maps_json = file_get_contents($maps_url);
 
@@ -457,7 +470,10 @@ order by Proximite limit 1,15 ;");
 
     public function routingMatrix($coord, $villes)
     {
-        $coor_url = 'https://places.demo.api.here.com/places/v1/discover/explore?at=' . $coord . '&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+        $app_id =$this->app_id;
+        $app_code = $this->app_code;
+
+        $coor_url = 'https://places.demo.api.here.com/places/v1/discover/explore?at=' . $coord . '&app_id='.$app_id.'&app_code='.$app_code;
         $coor_json = file_get_contents($coor_url);
 
         $coor_array = json_decode($coor_json, true);
@@ -476,7 +492,7 @@ order by Proximite limit 1,15 ;");
         }
 
         //on ram?ne le dernier element de l'url
-        $maps_url .= '&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+        $maps_url .= '&app_id='.$app_id.'&app_code='.$app_code;
 
         $maps_json = file_get_contents($maps_url);
 
@@ -514,7 +530,7 @@ order by Proximite limit 1,15 ;");
         $mesVilles = [];
         //geocoder inversement les villes pour ramener les noms de villes
         for ($l = 0; $l < count($villes); ++$l) {
-            $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox=' . $villes[$l] . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+            $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox=' . $villes[$l] . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id='.$app_id.'&app_code='.$app_code;
 
             $coor_json = file_get_contents($coor_url);
 
@@ -550,8 +566,10 @@ order by Proximite limit 1,15 ;");
 
     public function terrainNeutre()
     {
-        $equipe = $this->index();
+        $app_id =$this->app_id;
+        $app_code = $this->app_code;
 
+        $equipe = $this->index();
 
         $terrainNeutre = ['48.8357%2C2.2473', '47.48569%2C-3.11922', '43.5732938%2C6.8188967', '47.724709%2C-0.5227929', '49.12878%2C6.22851'];
 
@@ -571,7 +589,7 @@ order by Proximite limit 1,15 ;");
             }
 
             //on ramène le dernier element de l'url
-            $maps_url .= '&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+            $maps_url .= '&app_id='.$app_id.'&app_code='.$app_code;
 
             $maps_json = file_get_contents($maps_url);
 
@@ -609,6 +627,10 @@ order by Proximite limit 1,15 ;");
 
     public function terrainNeutreEquitable()
     {
+
+        $app_id =$this->app_id;
+        $app_code = $this->app_code;
+
 //        $equipe = ['43.88953%2C-0.49893', '47.19126%2C-1.5698', '47.46317%2C-0.59261', '47.086%2C2.39315', '49.76019%2C4.71909', '43.70821%2C7.29597'];
         $equipe = $this->index();
 
@@ -632,7 +654,7 @@ order by Proximite limit 1,15 ;");
             }
 
             //on ramène le dernier element de l'url
-            $maps_url .= '&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+            $maps_url .= '&app_id='.$app_id.'&app_code='.$app_code;
 
             $maps_json = file_get_contents($maps_url);
 
@@ -670,6 +692,8 @@ order by Proximite limit 1,15 ;");
     public function geocoderVilles($villes)
     {
 
+         $app_id = $this->app_id;
+         $app_code = $this->app_code;
 
         $dbname = $this->database_name;
         $dbuser = $this->database_user;
@@ -696,7 +720,7 @@ order by Proximite limit 1,15 ;");
 
             $req = str_replace(' ', '%20', $req);
 
-            $reqGeocode = 'https://geocoder.cit.api.here.com/6.2/geocode.json?searchtext=' . $req . '&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg&gen=8';
+            $reqGeocode = 'https://geocoder.cit.api.here.com/6.2/geocode.json?searchtext=' . $req . '&app_id='.$app_id.'&app_code='.$app_code.'&gen=8';
             $reqGeocodeJson = file_get_contents($reqGeocode);
 
             $reqGeocodeArray = json_decode($reqGeocodeJson, true);

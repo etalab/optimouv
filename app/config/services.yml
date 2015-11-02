@@ -6,4 +6,4 @@ parameters:
 services:
     service_rencontres:
         class: Optimouv\FfbbBundle\Services\Rencontres
-        arguments: ["%database_name%", "%database_user%", "%database_password%"]
+        arguments: ["%database_name%", "%database_user%", "%database_password%", "%app_id%", "%app_code%"]

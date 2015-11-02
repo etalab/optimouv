@@ -79,13 +79,14 @@
                             <LI> VANTOUX</LI>
                         </ul>
                     </div>
-                    <form style="padding-left:20px;" action="{{ path('ffbb_terrain') }}" method="post">
 
-                        <button type="submit" class="btn btn-default  pull-right">Lancer le calcul </button>
-
-
-                    </form>
                 </div>
+                <form style="padding-left:20px;" action="{{ path('ffbb_terrain') }}" method="post">
+
+                    <button type="submit" class="btn btn-default  pull-right">Lancer le calcul </button>
+
+
+                </form>
 
             </div>
 
@@ -197,8 +198,8 @@
 
                                                 //Step 1: initialize communication with the platform
                                                 var platform = new H.service.Platform({
-                                                    app_id: 'DemoAppId01082013GAL',
-                                                    app_code: 'AJKnXv84fjrb0KIHawS0Tg',
+                                                    app_id: '{{ app_id }}',
+                                                    app_code: '{{ app_code }}',
                                                     useCIT: true,
                                                     useHTTPS: true
                                                 });
@@ -256,11 +257,7 @@
                                                             € pour réaliser les trajets de l'ensemble du scénario en voiture ou covoiturage
 
                                                         </a>
-                                                        {#<a href="#" class="list-group-item">#}
-                                                        {#<i class="fa fa-clock-o fa-fw" style="padding-right: 30px"></i> <strong>{{ dureeTrajet // 3600 }}H{{ dureeTrajet % 3600 // 60 }}</strong>#}
-                                                        {#de temps de trajet total pour l'ensemble du scénario#}
 
-                                                        {#</a>#}
                                                         <a href="#" class="list-group-item">
                                                             <i class="fa fa-automobile fa-fw"
                                                                style="padding-right: 30px"></i>
@@ -449,8 +446,8 @@
 
                                                 //Step 1: initialize communication with the platform
                                                 var platform = new H.service.Platform({
-                                                    app_id: 'DemoAppId01082013GAL',
-                                                    app_code: 'AJKnXv84fjrb0KIHawS0Tg',
+                                                    app_id: '{{ app_id }}',
+                                                    app_code: '{{ app_code }}',
                                                     useCIT: true,
                                                     useHTTPS: true
                                                 });

@@ -17,3 +17,7 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+    #code Here
+    app_id: rN87f7vFKpr0W4j5PY55
+    app_code: L1gB1BWEH_Yq_k3KxRkj9Q
+
