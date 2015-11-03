@@ -10,9 +10,10 @@ class DefaultController extends Controller
     {
 
 
-        $retour = $_POST["inputListItems"];
+        $villes = $_POST["duallistbox_demo1"];
 
-        $villes = explode(",", $retour);
+
+//        $villes = explode(",", $retour);
 
         $this->get('service_rencontres')->geocoderVilles($villes);
         $nomsVilles = $this->get('service_rencontres')->nomsVilles($villes);

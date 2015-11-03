@@ -17,6 +17,12 @@
         <link href="{{ asset('bundles/ffbb/bower_components/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet"
               type="text/css">
 
+        <!-- css dual list box -->
+        <link href="{{ asset('bundles/ffbb/css/bootstrap-duallistbox.css') }}" rel="stylesheet"
+              type="text/css">
+        <link href="{{ asset('bundles/ffbb/css/prettify.min.css') }}" rel="stylesheet"
+              type="text/css">
+
         <!-- style sortable provisoire -->
         <style>
 
@@ -44,6 +50,9 @@
         <script type="text/javascript" charset="UTF-8" src="https://js.api.here.com/v3/3.0/mapsjs-ui.js"></script>
         <script type="text/javascript" charset="UTF-8"
                 src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js"></script>
+        <script src="{{ asset('bundles/ffbb/bower_components/jquery/dist/jquery.min.js') }}"></script>
+        <script src="{{ asset('bundles/ffbb/js/jquery.bootstrap-duallistbox.js') }}"></script>
+        <script src="{{ asset('bundles/ffbb/js/run_prettify.min.js') }}"></script>
 
 
         {#<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/bs-3.3.5/jq-2.1.4,dt-1.10.8/datatables.min.css"/>#}
@@ -128,8 +137,7 @@
 
 {% endblock %}
 {% block javascripts %}
-    <!-- jQuery -->
-    <script src="{{ asset('bundles/ffbb/bower_components/jquery/dist/jquery.min.js') }}"></script>
+
 
     <!-- Bootstrap Core JavaScript -->
     <script src="{{ asset('bundles/ffbb/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
@@ -139,6 +147,8 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="{{ asset('bundles/ffbb/dist/js/sb-admin-2.js') }}"></script>
+
+
 
 
 
@@ -272,6 +282,8 @@
         }
 
      </script>
+
+
 
 {% endblock %}
 </body>
