@@ -147,7 +147,7 @@ class Rencontres
 
         //Nom de la ville de d�part
 
-        $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox=' . $positionPtDepart . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+        $coor_url = 'http://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox=' . $positionPtDepart . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
 
         $coor_json = file_get_contents($coor_url);
 
@@ -166,7 +166,7 @@ class Rencontres
         $mesVilles = [];
         //geocoder inversement les villes pour ramener les noms de villes
         for ($l = 0; $l < count($coordonneesVille); ++$l) {
-            $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox=' . $coordonneesVille[$l] . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
+            $coor_url = 'http://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox=' . $coordonneesVille[$l] . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=Zu1dv3uaX2PrzVrLglxr&app_code=hwW5E_XPS9E6A15-PYHBkg';
 
             $coor_json = file_get_contents($coor_url);
 
@@ -262,7 +262,7 @@ class Rencontres
 
         //Mentionner les X,Y du point (Barycentre) et chercher l'emplacement du point sur la carte
 
-        $coor_url = 'https://places.demo.api.here.com/places/v1/discover/explore?at=' . $coord . '&app_id=' . $app_id . '&app_code=' . $app_code;
+        $coor_url = 'http://places.api.here.com/places/v1/discover/explore?at=' . $coord . '&app_id=' . $app_id . '&app_code=' . $app_code;
         $coor_json = file_get_contents($coor_url);
         $coor_array = json_decode($coor_json, true);
 
@@ -410,7 +410,7 @@ order by Proximite limit 1,15 ;");
 
         //Nom de la ville de d?part
 
-        $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox=' . $positionPtDepart . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=' . $app_id . '&app_code=' . $app_code;
+        $coor_url = 'http://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox=' . $positionPtDepart . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=' . $app_id . '&app_code=' . $app_code;
 
         $coor_json = file_get_contents($coor_url);
 
@@ -429,7 +429,7 @@ order by Proximite limit 1,15 ;");
         $mesVilles = [];
         //geocoder inversement les villes pour ramener les noms de villes
         for ($l = 0; $l < count($coordonneesVille); ++$l) {
-            $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox=' . $coordonneesVille[$l] . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=' . $app_id . '&app_code=' . $app_code;
+            $coor_url = 'http://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox=' . $coordonneesVille[$l] . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=' . $app_id . '&app_code=' . $app_code;
 
             $coor_json = file_get_contents($coor_url);
 
@@ -474,7 +474,7 @@ order by Proximite limit 1,15 ;");
         $app_id = $this->app_id;
         $app_code = $this->app_code;
 
-        $coor_url = 'https://places.demo.api.here.com/places/v1/discover/explore?at=' . $coord . '&app_id=' . $app_id . '&app_code=' . $app_code;
+        $coor_url = 'http://places.api.here.com/places/v1/discover/explore?at=' . $coord . '&app_id=' . $app_id . '&app_code=' . $app_code;
         $coor_json = file_get_contents($coor_url);
 
         $coor_array = json_decode($coor_json, true);
@@ -494,7 +494,8 @@ order by Proximite limit 1,15 ;");
 
         //on ram?ne le dernier element de l'url
         $maps_url .= '&app_id=' . $app_id . '&app_code=' . $app_code;
-
+        print_r($maps_url);
+        exit;
         $maps_json = file_get_contents($maps_url);
 
         $maps_array = json_decode($maps_json, true);
@@ -531,7 +532,7 @@ order by Proximite limit 1,15 ;");
         $mesVilles = [];
         //geocoder inversement les villes pour ramener les noms de villes
         for ($l = 0; $l < count($villes); ++$l) {
-            $coor_url = 'https://reverse.geocoder.cit.api.here.com/6.2/reversegeocode.json?prox=' . $villes[$l] . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=' . $app_id . '&app_code=' . $app_code;
+            $coor_url = 'http://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox=' . $villes[$l] . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=' . $app_id . '&app_code=' . $app_code;
 
             $coor_json = file_get_contents($coor_url);
 
@@ -725,19 +726,26 @@ order by Proximite limit 1,15 ;");
 
             //remplace les espaces vides dans les noms des villes par '%20' selon la syntaxe de la req Here
             $nomVille = urlencode($nomVille);
-            $reqGeocode = 'https://geocoder.cit.api.here.com/6.2/geocode.json?country=France&city=' . $nomVille . '&postalCode=' . $codePostal . '&app_id=' . $app_id . '&app_code=' . $app_code . '&gen=8';
+            $reqGeocode = 'http://geocoder.api.here.com/6.2/geocode.json?country=France&city=' . $nomVille . '&postalCode=' . $codePostal . '&app_id=' . $app_id . '&app_code=' . $app_code . '&gen=8';
+
             $reqGeocodeJson = file_get_contents($reqGeocode);
 
             $reqGeocodeArray = json_decode($reqGeocodeJson, true);
 
             $Longitude = $reqGeocodeArray['Response']['View'][0]['Result'][0]['Location']['DisplayPosition']['Latitude'];
             $Latitude = $reqGeocodeArray['Response']['View'][0]['Result'][0]['Location']['DisplayPosition']['Longitude'];
-            $city = $reqGeocodeArray['Response']['View'][0]['Result'][0]['Location']['Address']['City'];
-            $city = addslashes($city);
-            $PostalCode = $reqGeocodeArray['Response']['View'][0]['Result'][0]['Location']['Address']['PostalCode'];
+            if (isset($Longitude, $Latitude)){
+                $city = $reqGeocodeArray['Response']['View'][0]['Result'][0]['Location']['Address']['City'];
+                $city = addslashes($city);
+                $PostalCode = $reqGeocodeArray['Response']['View'][0]['Result'][0]['Location']['Address']['PostalCode'];
 
-            $insert = $bdd->prepare("INSERT INTO  villes (code_postale, nom, longitude, latitude) VALUES ( '$PostalCode', '$city', '$Longitude', '$Latitude');");
-            $insert->execute();
+                $insert = $bdd->prepare("INSERT INTO  villes (code_postale, nom, longitude, latitude) VALUES ( '$PostalCode', '$city', '$Longitude', '$Latitude');");
+                $insert->execute();
+            }
+            else{
+                continue;
+            }
+
 
 
         }
