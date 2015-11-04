@@ -494,8 +494,8 @@ order by Proximite limit 1,15 ;");
 
         //on ram?ne le dernier element de l'url
         $maps_url .= '&app_id=' . $app_id . '&app_code=' . $app_code;
-        print_r($maps_url);
-        exit;
+//        print_r($maps_url);
+//        exit;
         $maps_json = file_get_contents($maps_url);
 
         $maps_array = json_decode($maps_json, true);
