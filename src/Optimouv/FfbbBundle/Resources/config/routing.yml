@@ -1,5 +1,9 @@
-ffbb_homepage:
+ffbb_table:
     path:     /
+    defaults: { _controller: FfbbBundle:Groupe:index }
+
+ffbb_homepage:
+    path:     /villes
     defaults: { _controller: FfbbBundle:Default:index }
 
 ffbb_rencontres:
@@ -31,6 +35,4 @@ ffbb_terrain:
     path:     /terrain-neutre
     defaults: { _controller: FfbbBundle:Rencontres:terrainNeutre }
 
-ffbb_table:
-    path:     /groupe
-    defaults: { _controller: FfbbBundle:Groupe:index }
+

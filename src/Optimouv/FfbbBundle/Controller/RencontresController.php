@@ -161,6 +161,7 @@ class RencontresController extends Controller
             'dureeTrajetEq' => $dureeTrajetEq,
             'coordonneesVilleEq' => $coordonneesVilleEq,
             'participantsEq' => $participantsEq,
+            'valeurExclusion' => $valeurExclusion,
 
 
 

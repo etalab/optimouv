@@ -74,7 +74,7 @@
                             </div>
                             <div class="form-group">
                                 {#<label>Text Input with Placeholder</label>#}
-                                <input name="valeurExclusion" id="valeurExclusion" type="number" class="form-control" placeholder="Saisissez ici le nombre d'habitants des zones à exclure" min="0">
+                                <input name="valeurExclusion" id="valeurExclusion" type="number" class="form-control" min="0" value="{{ valeurExclusion }}">
                             </div>
                             <button type="submit" class="btn btn-default  pull-right" >Lancer le calcul
                             </button>
@@ -105,7 +105,7 @@
                                         <div class="panel panel-default">
                                             <div class="panel-heading">
                                                 <h4 class="panel-title">
-                                                    Scénario optimal
+                                                    Scénario optimal avec contrainte
                                                 </h4>
                                             </div>
                                             <div class="panel-body"> <!-- premier scÃ©nario -->
@@ -342,7 +342,7 @@
                                         <div class="panel panel-default">
                                             <div class="panel-heading">
                                                 <h4 class="panel-title">
-                                                    Scénario sans contrainte
+                                                    Scénario optimal sans contrainte
                                                 </h4>
                                             </div>
                                             <div class="panel-body"> <!-- premier scÃ©nario -->
