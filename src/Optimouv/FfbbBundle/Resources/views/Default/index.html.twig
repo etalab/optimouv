@@ -84,9 +84,15 @@
                                  <script type="text/javascript" charset="UTF-8">
 
 
-                                     function addMarkersAndSetViewBounds() {
+                                     /**
+                                      * Adds markers to the map highlighting the locations of the captials of
+                                      * France, Italy, Germany, Spain and the United Kingdom.
+                                      *
+                                      * @param  {H.Map} map      A HERE Map instance within the application
+                                      */
+                                     function addMarkersToMap(map) {
+
                                          var incrment = 1;
-                                         var points = [];
                                          //tracer dynamiquement les points de villes
                                          {% for coordonneeVille in coordonneesVille %}
                                          var coordonneeVille = '{{ coordonneeVille }}';
@@ -96,22 +102,18 @@
                                          var y = xy[1];
 
                                          var marker = 'marker' + incrment;
+
                                          window[marker] = new H.map.Marker({
                                              lat: parseFloat(x),
                                              lng: parseFloat(y)
                                          });
+                                         map.addObject(window[marker]);
 
-                                         points.push(window[marker]);
-
-                                         var incrment = incrment + 1;
+                                         var incrment = incrment + 1
 
                                          {% endfor %}
-                                         group = new H.map.Group();
-                                         // add markers to the group
-                                         group.addObjects(points);
-                                         map.addObject(group);
-                                         // get geo bounding box for the group and set it to the map
-                                         map.setViewBounds(group.getBounds());
+
+
                                      }
 
 
@@ -155,17 +157,22 @@
                                      var map = new H.Map(document.getElementById('map'),
                                              defaultLayers.normal.map, {
                                                  center: {lat: 48.8567, lng: 2.3508},
-                                                 zoom: 4
+                                                 zoom: 5.5
                                              });
 
+
                                      var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
                                      // Create the default UI components
                                      //    var ui = H.ui.UI.createDefault(map, defaultLayers);
                                      var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
 
-                                     // Now use the map as required...
-                                     addMarkersAndSetViewBounds(map);
+
+                                     // Add the marker to the map:
+
+                                     addMarkersToMap(map);
                                      switchMapLanguage(map, platform);
+
 
                                  </script>
 
