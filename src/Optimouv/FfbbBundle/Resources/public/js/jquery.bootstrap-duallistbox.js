@@ -4,7 +4,7 @@
     defaults = {
       bootstrap2Compatible: false,
       filterTextClear: 'Tout Voir',
-      filterPlaceHolder: 'Filtre',
+      filterPlaceHolder: 'Rechercher',
       moveSelectedLabel: 'Déplacer la sélection',
       moveAllLabel: 'Tout déplacer',
       removeSelectedLabel: 'Enlever la sélection',
