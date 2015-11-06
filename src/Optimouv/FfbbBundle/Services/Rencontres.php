@@ -208,9 +208,6 @@ class Rencontres
     //Calcul exclusion géographique
     public function Exclusion($valeurExclusion)
     {
-        $app_id = $this->app_id;
-        $app_code = $this->app_code;
-
         $dbname = $this->database_name;
         $dbuser = $this->database_user;
         $dbpwd = $this->database_password;
@@ -233,18 +230,7 @@ class Rencontres
         $latY = $lat / $length;
         $coord = $lanX . '%2C' . $latY;
 
-        //Mentionner les X,Y du point (Barycentre) et chercher l'emplacement du point sur la carte
 
-        $coor_url = 'http://places.api.here.com/places/v1/discover/explore?at=' . $coord . '&app_id=' . $app_id . '&app_code=' . $app_code;
-        $coor_json = file_get_contents($coor_url);
-        $coor_array = json_decode($coor_json, true);
-
-        //trouver le code postal + nom de la ville
-
-        $postalCode = $coor_array['search']['context']['location']['address']['postalCode'];
-        $city = $coor_array['search']['context']['location']['address']['city'];
-        //addslashes — Ajoute des antislashs dans une chaîne
-        $city = addslashes($city);
 
         try {
             $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
@@ -253,43 +239,35 @@ class Rencontres
             die('Erreur : ' . $e->getMessage());
         }
 
-        $stmt = $bdd->prepare("SELECT ville_longitude_deg, ville_latitude_deg, ville_population_2012 FROM  villes_france_free where ville_code_postal = '$postalCode' AND ville_nom = '$city' ;");
-        $stmt->execute();
-        $resultReq = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        $population = $resultReq['ville_population_2012'];
-
-        $retourBarycentre = [];
-        if ($population < $valeurExclusion) {
-            $lanX = $resultReq['ville_latitude_deg'];
-            $latY = $resultReq['ville_longitude_deg'];
-            $coord = $lanX . '%2C' . $latY;
-            $retour = $this->Barycentre();
-
-            return $retour;
-
-//            $retourBarycentre [0] = $city;
-//            $retourBarycentre [1] = $population;
-//            $retourBarycentre [2] = $longBarycentre;
-//            $retourBarycentre [3] = $latBarycentre;
-        } else {
-            $stmt1 = $bdd->prepare("SELECT ville_longitude_deg, ville_latitude_deg,ville_code_postal, ville_nom, ville_population_2012,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
+            $stmt1 = $bdd->prepare("SELECT ville_longitude_deg, ville_latitude_deg,ville_code_postal, ville_population_2012,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
 from villes_france_free
-order by Proximite limit 1,15 ;");
+where ville_population_2012 < $valeurExclusion
+order by Proximite limit 1;");
             $stmt1->execute();
-            while ($row = $stmt1->fetch(PDO::FETCH_ASSOC)) {
-                if ($row['ville_population_2012'] > $valeurExclusion) {
-                    continue;
-                } else {
-                    $lanX = $row['ville_latitude_deg'];
-                    $latY = $row['ville_longitude_deg'];
+        $result = $stmt1->fetch(PDO::FETCH_ASSOC);
+
+                    $lanX = $result['ville_latitude_deg'];
+                    $latY = $result['ville_longitude_deg'];
                     $coord = $lanX . '%2C' . $latY;
                     $retour = $this->routingMatrix($coord, $villes);
 
                     return $retour;
-                }
-            }
-        }
+
+
+
+//            while ($row = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+//                if ($row['ville_population_2012'] > $valeurExclusion) {
+//                    continue;
+//                } else {
+//                    $lanX = $row['ville_latitude_deg'];
+//                    $latY = $row['ville_longitude_deg'];
+//                    $coord = $lanX . '%2C' . $latY;
+//                    $retour = $this->routingMatrix($coord, $villes);
+//
+//                    return $retour;
+//                }
+//            }
+
     }
 
     //Calcul du scénario équitable
@@ -422,12 +400,40 @@ order by Proximite limit 1,15 ;");
         $app_id = $this->app_id;
         $app_code = $this->app_code;
 
-        $coor_url = 'http://places.api.here.com/places/v1/discover/explore?at=' . $coord . '&app_id=' . $app_id . '&app_code=' . $app_code;
-        $coor_json = file_get_contents($coor_url);
+        $dbname = $this->database_name;
+        $dbuser = $this->database_user;
+        $dbpwd = $this->database_password;
 
-        $coor_array = json_decode($coor_json, true);
+//
+//        $coor_url = 'http://places.api.here.com/places/v1/discover/explore?at=' . $coord . '&app_id=' . $app_id . '&app_code=' . $app_code;
+//        $coor_json = file_get_contents($coor_url);
+//
+//        $coor_array = json_decode($coor_json, true);
+//
+//        $barycentreVille = $coor_array['search']['context']['location']['address']['city'];
 
-        $barycentreVille = $coor_array['search']['context']['location']['address']['city'];
+        $coord = explode('%2C', $coord);
+        $lanX = $coord[0];
+        $latY = $coord[1];
+
+        try {
+            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
+
+        } catch (PDOException $e) {
+            die('Erreur : ' . $e->getMessage());
+        }
+
+        $stmt1 = $bdd->prepare("SELECT ville_nom, ville_longitude_deg, ville_latitude_deg,ville_code_postal, ville_population_2012,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
+from villes_france_free
+order by Proximite limit 1;");
+        $stmt1->execute();
+        $result = $stmt1->fetch(PDO::FETCH_ASSOC);
+
+        $lanX = $result['ville_latitude_deg'];
+        $latY = $result['ville_longitude_deg'];
+        $coord = $lanX . '%2C' . $latY;
+
+        $barycentreVille = $result['ville_nom'];
 
         $start = $coord;
 
@@ -477,7 +483,7 @@ order by Proximite limit 1,15 ;");
 
         $equipe = $this->index();
 
-        $terrainNeutre = ['48.8357%2C2.2473', '47.48569%2C-3.11922', '43.5732938%2C6.8188967', '47.724709%2C-0.5227929', '49.12878%2C6.22851'];
+        $terrainNeutre = ['48.74305%2C2.4014', '47.48569%2C-3.11922', '43.5732938%2C6.8188967', '47.724709%2C-0.5227929', '49.12878%2C6.22851'];
 
 
         $toutesLesDistances = [];
@@ -568,7 +574,7 @@ order by Proximite limit 1,15 ;");
         $equipe = $this->index();
 
 
-        $terrainNeutre = ['48.8357%2C2.2473', '47.48569%2C-3.11922', '43.5732938%2C6.8188967', '47.724709%2C-0.5227929', '49.12878%2C6.22851'];
+        $terrainNeutre = ['48.7402617%2C2.367652', '47.48569%2C-3.11922', '43.5732938%2C6.8188967', '47.724709%2C-0.5227929', '49.12878%2C6.22851'];
 
         $toutesLesDistances = [];
         $toutesLesDurees = [];
