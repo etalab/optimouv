@@ -23,19 +23,7 @@
         <link href="{{ asset('bundles/ffbb/css/prettify.min.css') }}" rel="stylesheet"
               type="text/css">
 
-        <!-- style sortable provisoire -->
-        <style>
 
-
-            .handles span {
-                cursor: move;
-            }
-
-
-
-
-        </style>
-        <!-- fin style sortable provisoire -->
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -72,10 +60,13 @@
             <!-- /.container-fluid -->
             <div class="navbar-header">
 
-                <a class="navbar-brand" href="#">OPTIMOUV</a>
+                <a class="navbar-brand" href="{{ path('ffbb_table') }}">OPTIMOUV</a>
 
             </div>
-            <!-- /.navbar-header -->
+            <div style="position: relative; float: right;">
+                <img src="{{ asset('bundles/ffbb/images/logo-IT4PME.png') }}" width="68px" height="40px" />
+            </div>
+             <!-- /.navbar-header -->
 
 
         </nav>
@@ -235,7 +226,7 @@
     </script>
 
     <!-- Code Jquery sortable list -->
-    <script src="{{ asset('bundles/ffbb/js/jquery.sortable.js') }}"></script>
+    {#<script src="{{ asset('bundles/ffbb/js/jquery.sortable.js') }}"></script>#}
 
     <script type="text/javascript">
         $(document).ready(function () {
