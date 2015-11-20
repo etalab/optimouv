@@ -35,4 +35,7 @@ ffbb_terrain:
     path:     /terrain-neutre
     defaults: { _controller: FfbbBundle:Rencontres:terrainNeutre }
 
-
+# routing ajouté pour la liste de participants et de lieux neutres
+ffbb_listes:
+    path:     /listes
+    defaults: { _controller: FfbbBundle:Listes:index }
