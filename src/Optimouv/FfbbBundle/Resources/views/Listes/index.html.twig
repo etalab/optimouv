@@ -1,0 +1,58 @@
+{% extends '::BOLayout.html.twig' %}
+
+     {% block pagewrapper %}
+
+         <div id="page-wrapper">
+
+             <div class="row">
+                 <div class="col-lg-12">
+                     <h3 class="page-header">Vos Listes </h3>
+                 </div>
+             </div>
+
+
+             <div class="col-md-6">
+                 <input class="filter form-control" type="text" placeholder="Rechercher parmi mes listes de participants">
+                 <select multiple="multiple" id="liste_partcipants" class="form-control" style="height: 100px;"></select>
+             </div>
+
+
+             <div class="row">
+                 <div class="col-lg-12">
+                     <h3 class="page-header">Ajouter des lieux </h3>
+                 </div>
+             </div>
+
+             <div class="col-md-6">
+                 <input class="filter form-control" type="text" placeholder="Rechercher parmi mes listes de lieux">
+                 <select multiple="multiple" id="liste_lieux" class="form-control" style="height: 100px;"></select>
+             </div>
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+         {% block javascripts %}
+             <!-- code interne dual list box -->
+             <script>
+                 var demo1 = $('select[name="duallistbox_demo1[]"]').bootstrapDualListbox();
+             </script>
+         {% endblock %}
+
+
+     {% endblock %}
+
+
+
+
+
+
