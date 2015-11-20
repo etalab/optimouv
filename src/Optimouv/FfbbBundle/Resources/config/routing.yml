@@ -35,4 +35,9 @@ ffbb_terrain:
     path:     /terrain-neutre
     defaults: { _controller: FfbbBundle:Rencontres:terrainNeutre }
 
+ffbb_details_calcul:
+    path:     /details_calcul
+    defaults: { _controller: FfbbBundle:Rencontres:detailsCalcul }
+
+
 

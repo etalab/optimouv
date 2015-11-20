@@ -13,7 +13,7 @@ class RencontresController extends Controller
         $retour = $this->get('service_rencontres')->meilleurLieuRencontre();
         $retourEq = $this->get('service_rencontres')->scenarioEquitable();
 
-        //Données du scénario optimal
+        //Donnï¿½es du scï¿½nario optimal
         $villeDepart = $retour[0];
         $longPtDep = $retour[1];
         $latPtDep = $retour[2];
@@ -25,7 +25,7 @@ class RencontresController extends Controller
             $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key]);
         }
 
-        //Données du scénario équitable
+        //Donnï¿½es du scï¿½nario ï¿½quitable
 
         $villeDepartEq = $retourEq[0];
         $longPtDepEq = $retourEq[1];
@@ -41,7 +41,7 @@ class RencontresController extends Controller
 
         return $this->render('FfbbBundle:Rencontres:index.html.twig', array(
 
-            //Données du scénario optimal
+            //Donnï¿½es du scï¿½nario optimal
             'villeDepart' => $villeDepart,
             'longPtDep' => $longPtDep,
             'latPtDep' => $latPtDep,
@@ -50,7 +50,7 @@ class RencontresController extends Controller
             'coordonneesVille' => $coordonneesVille,
             'participants' => $participants,
 
-            //données scénario équitable
+            //donnï¿½es scï¿½nario ï¿½quitable
             'villeDepartEq' => $villeDepartEq,
             'longPtDepEq' => $longPtDepEq,
             'latPtDepEq' => $latPtDepEq,
@@ -69,7 +69,7 @@ class RencontresController extends Controller
         $participants = [];
         $retour = $this->get('service_rencontres')->Barycentre();
 
-        //Données du scénario optimal
+        //Donnï¿½es du scï¿½nario optimal
         $villeDepart = $retour[0];
         $longPtDep = $retour[1];
         $latPtDep = $retour[2];
@@ -87,7 +87,7 @@ class RencontresController extends Controller
 //        echo '<pre>',print_r($participants,1),'</pre>';exit;
         return $this->render('FfbbBundle:Rencontres:barycentre.html.twig', array(
 
-            //Données du scénario optimal
+            //Donnï¿½es du scï¿½nario optimal
             'villeDepart' => $villeDepart,
             'longPtDep' => $longPtDep,
             'latPtDep' => $latPtDep,
@@ -105,14 +105,14 @@ class RencontresController extends Controller
     public function exclusionAction()
     {
 
-        //Récupération de la valeur saisie par l'utilisateur
+        //Rï¿½cupï¿½ration de la valeur saisie par l'utilisateur
         $valeurExclusion = $_POST["valeurExclusion"];
 
-        //Récupération du résultat du calcul avec contrainte
+        //Rï¿½cupï¿½ration du rï¿½sultat du calcul avec contrainte
         $retour = $this->get('service_rencontres')->Exclusion($valeurExclusion);
 
 
-        //Données du scénario optimal
+        //Donnï¿½es du scï¿½nario optimal
         $villeDepart = $retour[0];
         $longPtDep = $retour[1];
         $latPtDep = $retour[2];
@@ -125,10 +125,10 @@ class RencontresController extends Controller
         }
 
 
-        //Récupération du résultat du calcul sans contrainte
+        //Rï¿½cupï¿½ration du rï¿½sultat du calcul sans contrainte
         $retourEq = $this->get('service_rencontres')->Barycentre();
 
-        //Données du scénario équitable
+        //Donnï¿½es du scï¿½nario ï¿½quitable
 
         $villeDepartEq = $retourEq[0];
         $longPtDepEq = $retourEq[1];
@@ -144,7 +144,7 @@ class RencontresController extends Controller
 //        $city = stripcslashes($retour [0]);
 
         return $this->render('FfbbBundle:Rencontres:exclusion.html.twig', array(
-            //Données du scénario avec contrainte
+            //Donnï¿½es du scï¿½nario avec contrainte
             'villeDepart' => $villeDepart,
             'longPtDep' => $longPtDep,
             'latPtDep' => $latPtDep,
@@ -153,7 +153,7 @@ class RencontresController extends Controller
             'coordonneesVille' => $coordonneesVille,
             'participants' => $participants,
 
-            //données scénario sans contrainte
+            //donnï¿½es scï¿½nario sans contrainte
             'villeDepartEq' => $villeDepartEq,
             'longPtDepEq' => $longPtDepEq,
             'latPtDepEq' => $latPtDepEq,
@@ -173,9 +173,9 @@ class RencontresController extends Controller
 
     public function terrainNeutreAction(){
 
-        //Récupération du résultat du calcul du terrain neutre
+        //Rï¿½cupï¿½ration du rï¿½sultat du calcul du terrain neutre
         $retour = $this->get('service_rencontres')->terrainNeutre();
-        //Données du scénario optimal
+        //Donnï¿½es du scï¿½nario optimal
         $villeDepart = $retour[0];
         $longPtDep = $retour[1];
         $latPtDep = $retour[2];
@@ -188,10 +188,10 @@ class RencontresController extends Controller
             $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key]);
         }
 
-        //Récupération du résultat du calcul du terrain neutre Equitable
+        //Rï¿½cupï¿½ration du rï¿½sultat du calcul du terrain neutre Equitable
         $retourEq = $this->get('service_rencontres')->terrainNeutreEquitable();
 
-        //Données du scénario équitable
+        //Donnï¿½es du scï¿½nario ï¿½quitable
 
         $villeDepartEq = $retourEq[0];
         $longPtDepEq = $retourEq[1];
@@ -207,7 +207,7 @@ class RencontresController extends Controller
 
         return $this->render('FfbbBundle:Rencontres:terrainNeutre.html.twig', array(
 
-            //Données du scénario optimal
+            //Donnï¿½es du scï¿½nario optimal
             'villeDepart' => $villeDepart,
             'longPtDep' => $longPtDep,
             'latPtDep' => $latPtDep,
@@ -217,7 +217,7 @@ class RencontresController extends Controller
             'participants' => $participants,
 
 
-            //données scénario sans contrainte
+            //donnï¿½es scï¿½nario sans contrainte
             'villeDepartEq' => $villeDepartEq,
             'longPtDepEq' => $longPtDepEq,
             'latPtDepEq' => $latPtDepEq,
@@ -230,9 +230,9 @@ class RencontresController extends Controller
         ));
 
     }
-    public function contactAction()
+    public function detailsCalculAction()
     {
 
-        return new Response('<h1>Contactez nous!</h1>');
+        return $this->render('FfbbBundle:Rencontres:detailsCalcul.html.twig');
     }
 }
