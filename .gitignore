@@ -14,3 +14,6 @@
 
 # .idea dossier phpStorm
 /.idea
+
+
+/app/DoctrineMigrations/
