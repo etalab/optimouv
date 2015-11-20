@@ -78,9 +78,10 @@
                         </div>
                         <div class="form-group">
                             {#<label>Text Input with Placeholder</label>#}
-                            <input name="valeurExclusion" id="valeurExclusion" type="number" class="form-control" placeholder="Exemple : '50 000' si je souhaite exclure les zones de plus de 50 000 habitants" min="0">
+                            <input name="valeurExclusion" id="valeurExclusion" type="number" onchange="showBtn()"
+                                   class="form-control" placeholder="Exemple : '50 000' si je souhaite exclure les zones de plus de 50 000 habitants" min="100">
                         </div>
-                        <button type="submit" class="btn btn-default  pull-right" >Lancer le calcul
+                        <button type="submit" class="btn btn-default  pull-right" id="bntLancerCalcul" style="visibility: hidden" >Lancer le calcul
                         </button>
                     </form>
 
@@ -393,6 +394,12 @@
                 if (document.getElementById("Contrainte").checked == true) {
                     window.location.href = "{{ path('ffbb_exclusion') }}";
                 }
+            }
+
+            function showBtn(){
+
+
+                document.getElementById('bntLancerCalcul').style.visibility="visible";
             }
 
 
