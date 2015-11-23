@@ -16,4 +16,4 @@
 /.idea
 
 
-/app/DoctrineMigrations/
+/app/DoctrineMigrations/*
