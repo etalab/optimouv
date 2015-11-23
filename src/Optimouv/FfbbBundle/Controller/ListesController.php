@@ -25,11 +25,6 @@ class ListesController extends Controller
 
         return $this->render('FfbbBundle:Listes:index.html.twig', $outputArray);
 
-//        $myfile = fopen("/tmp/ListeController_uploadAction.log", "w") or die("Unable to open file!");
-//        fwrite($myfile, "outputArray: ".print_r($outputArray, true));
-
-//        fclose($myfile);
-
 
     }
 
