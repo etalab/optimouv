@@ -92,6 +92,13 @@ class Groupe
     private $nbParticipants;
 
     /**
+     * @var text
+     *
+     * @ORM\Column(name="equipes", type="text", nullable=false)
+     */
+    private $equipes;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="date_creation", type="date", nullable=false)
@@ -403,5 +410,29 @@ class Groupe
     public function getDateModification()
     {
         return $this->dateModification;
+    }
+
+    /**
+     * Set equipes
+     *
+     * @param string $equipes
+     *
+     * @return Groupe
+     */
+    public function setEquipes($equipes)
+    {
+        $this->equipes = $equipes;
+
+        return $this;
+    }
+
+    /**
+     * Get equipes
+     *
+     * @return string
+     */
+    public function getEquipes()
+    {
+        return $this->equipes;
     }
 }

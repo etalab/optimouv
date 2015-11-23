@@ -17,23 +17,9 @@ class Villes
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="code_postale", type="string", length=5, nullable=false)
-     */
-    private $codePostale;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="nom", type="string", length=45, nullable=false)
-     */
-    private $nom;
 
     /**
      * @var string
@@ -49,6 +35,13 @@ class Villes
      */
     private $latitude;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_creation", type="date", nullable=false)
+     */
+    private $dateCreation;
+
 
 
     /**
@@ -61,53 +54,7 @@ class Villes
         return $this->id;
     }
 
-    /**
-     * Set codePostale
-     *
-     * @param string $codePostale
-     *
-     * @return Villes
-     */
-    public function setCodePostale($codePostale)
-    {
-        $this->codePostale = $codePostale;
 
-        return $this;
-    }
-
-    /**
-     * Get codePostale
-     *
-     * @return string
-     */
-    public function getCodePostale()
-    {
-        return $this->codePostale;
-    }
-
-    /**
-     * Set nom
-     *
-     * @param string $nom
-     *
-     * @return Villes
-     */
-    public function setNom($nom)
-    {
-        $this->nom = $nom;
-
-        return $this;
-    }
-
-    /**
-     * Get nom
-     *
-     * @return string
-     */
-    public function getNom()
-    {
-        return $this->nom;
-    }
 
     /**
      * Set longitude
@@ -155,5 +102,45 @@ class Villes
     public function getLatitude()
     {
         return $this->latitude;
+    }
+
+
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     *
+     * @return Villes
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Set dateCreation
+     *
+     * @param \DateTime $dateCreation
+     *
+     * @return Villes
+     */
+    public function setDateCreation($dateCreation)
+    {
+        $this->dateCreation = $dateCreation;
+
+        return $this;
+    }
+
+    /**
+     * Get dateCreation
+     *
+     * @return \DateTime
+     */
+    public function getDateCreation()
+    {
+        return $this->dateCreation;
     }
 }
