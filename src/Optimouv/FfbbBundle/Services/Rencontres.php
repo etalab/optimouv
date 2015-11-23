@@ -129,14 +129,14 @@ class Rencontres
             $lanX = $start[0];
             $latY = $start[1];
 
-            $stmt1 = $bdd->prepare("SELECT id, ville_nom, ville_longitude_deg, ville_latitude_deg,ville_code_postal, ville_population_2012,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
+            $stmt1 = $bdd->prepare("SELECT ville_id, ville_nom, ville_longitude_deg, ville_latitude_deg,ville_code_postal, ville_population_2012,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
 from villes_france_free
 order by Proximite limit 1;");
             $stmt1->execute();
             $result = $stmt1->fetch(PDO::FETCH_ASSOC);
 
             //Recuperation des infos concernant point de depart
-            $idStart = $result['id'];
+            $idStart = $result['ville_id'];
             $lanX = $result['ville_latitude_deg'];
             $latY = $result['ville_longitude_deg'];
             $coordStart = $lanX . '%2C' . $latY;
@@ -452,14 +452,14 @@ order by Proximite limit 1;");
             $latY = $start[1];
 
 
-            $stmt1 = $bdd->prepare("SELECT id,  ville_longitude_deg, ville_latitude_deg,ville_code_postal, ville_population_2012,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
+            $stmt1 = $bdd->prepare("SELECT ville_id,  ville_longitude_deg, ville_latitude_deg,ville_code_postal, ville_population_2012,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
 from villes_france_free
 order by Proximite limit 1;");
             $stmt1->execute();
             $result = $stmt1->fetch(PDO::FETCH_ASSOC);
 
             //Recuperation des infos concernant point de depart
-            $idStart = $result['id'];
+            $idStart = $result['ville_id'];
             $lanX = $result['ville_latitude_deg'];
             $latY = $result['ville_longitude_deg'];
             $coordStart = $lanX . '%2C' . $latY;
@@ -940,7 +940,7 @@ order by Proximite limit 1;");
 
             //chercher l'id de la ville selon la table de reference
 
-            $reqID = $bdd->prepare("SELECT id FROM villes_france_free where ville_nom_simple LIKE '$nomVille%';");
+            $reqID = $bdd->prepare("SELECT ville_id FROM villes_france_free where ville_nom_simple LIKE '$nomVille%';");
             $reqID->execute();
             $idVille = $reqID->fetchColumn();
 
@@ -997,7 +997,7 @@ order by Proximite limit 1;");
         $villes = [];
 
         for ($i = 0; $i < count($reqVilles); $i++) {
-            $stmt = $bdd->prepare("SELECT ville_nom FROM  villes_france_free WHERE id = '$reqVilles[$i]';");
+            $stmt = $bdd->prepare("SELECT ville_nom FROM  villes_france_free WHERE ville_id = '$reqVilles[$i]';");
             $stmt->execute();
             $nomVille = $stmt->fetchColumn();
             array_push($villes, $nomVille);
@@ -1149,7 +1149,7 @@ order by Proximite limit 1;");
 
             //chercher l'id de la ville selon la table de reference
 
-            $reqID = $bdd->prepare("SELECT id FROM villes_france_free where ville_nom_simple LIKE '$nomVille%';");
+            $reqID = $bdd->prepare("SELECT ville_id FROM villes_france_free where ville_nom_simple LIKE '$nomVille%';");
             $reqID->execute();
             $idVille = $reqID->fetchColumn();
 
@@ -1215,7 +1215,7 @@ order by Proximite limit 1;");
          $Latitude = $decoded['Response']['View'][0]['Result'][0]['Location']['DisplayPosition']['Latitude'];
          $Longitude = $decoded['Response']['View'][0]['Result'][0]['Location']['DisplayPosition']['Longitude'];
  */
-        $reqVille = $bdd->prepare("SELECT ville_latitude_deg, ville_longitude_deg FROM villes_france_free where id = '$idVille';");
+        $reqVille = $bdd->prepare("SELECT ville_latitude_deg, ville_longitude_deg FROM villes_france_free where ville_id = '$idVille';");
         $reqVille->execute();
         $row = $reqVille->fetch(PDO::FETCH_ASSOC);
         $Latitude = $row['ville_latitude_deg'];
@@ -1255,14 +1255,14 @@ order by Proximite limit 1;");
             die('Erreur : ' . $e->getMessage());
         }
 
-        $stmt1 = $bdd->prepare("SELECT id, ville_nom, ville_longitude_deg, ville_latitude_deg,ville_code_postal, ville_population_2012,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
+        $stmt1 = $bdd->prepare("SELECT ville_id, ville_nom, ville_longitude_deg, ville_latitude_deg,ville_code_postal, ville_population_2012,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
 from villes_france_free
 order by Proximite limit 1;");
         $stmt1->execute();
         $result = $stmt1->fetch(PDO::FETCH_ASSOC);
 
         //Recuperation des infos concernant point de depart
-        $idStart = $result['id'];
+        $idStart = $result['ville_id'];
         $lanX = $result['ville_latitude_deg'];
         $latY = $result['ville_longitude_deg'];
         $coordStart = $lanX . '%2C' . $latY;
