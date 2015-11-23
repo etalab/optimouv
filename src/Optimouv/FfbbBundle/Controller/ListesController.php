@@ -25,8 +25,37 @@ class ListesController extends Controller
 
         return $this->render('FfbbBundle:Listes:index.html.twig', $outputArray);
 
+    }
+
+    public function creerListeParticipantsAction()
+    {
+        $myfile = fopen("/tmp/ListesController_creerListeParticipantsAction.log", "w") or die("Unable to open file!");
+//        fwrite($myfile, "outputArray: ".print_r($outputArray, true));
+
+
+
+//        return $this->render('FfbbBundle:Fichier:upload.html.twig', array(
+//                // ...
+//            ));
+
+        fclose($myfile);
+    }
+
+    public function creerListeLieuxAction()
+    {
+        $myfile = fopen("/tmp/ListesController_creerListeLieuxAction.log", "w") or die("Unable to open file!");
+//        fwrite($myfile, "outputArray: ".print_r($outputArray, true));
+
+
+
+//        return $this->render('FfbbBundle:Fichier:upload.html.twig', array(
+//                // ...
+//            ));
+
+        fclose($myfile);
 
     }
+
 
 
 }
