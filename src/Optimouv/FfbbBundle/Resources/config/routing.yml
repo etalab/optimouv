@@ -39,3 +39,7 @@ ffbb_terrain:
 ffbb_listes:
     path:     /listes
     defaults: { _controller: FfbbBundle:Listes:index }
+
+upload:
+    path:     /upload
+    defaults: { _controller: FfbbBundle:Fichier:upload }
