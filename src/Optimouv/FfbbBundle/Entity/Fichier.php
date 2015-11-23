@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Fichier
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="Optimouv\FfbbBundle\Entity\FichierRepository")
+ * @ORM\Entity
  */
 class Fichier
 {
@@ -34,6 +34,20 @@ class Fichier
      * @ORM\Column(name="chemin", type="string", length=100)
      */
     private $chemin;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_utilisateur", type="integer")
+     */
+    private $idUtilisateur;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_creation", type="date")
+     */
+    private $dateCreation;
 
 
     /**
@@ -92,6 +106,54 @@ class Fichier
     public function getChemin()
     {
         return $this->chemin;
+    }
+
+    /**
+     * Set idUtilisateur
+     *
+     * @param integer $idUtilisateur
+     *
+     * @return Fichier
+     */
+    public function setIdUtilisateur($idUtilisateur)
+    {
+        $this->idUtilisateur = $idUtilisateur;
+
+        return $this;
+    }
+
+    /**
+     * Get idUtilisateur
+     *
+     * @return integer
+     */
+    public function getIdUtilisateur()
+    {
+        return $this->idUtilisateur;
+    }
+
+    /**
+     * Set dateCreation
+     *
+     * @param \DateTime $dateCreation
+     *
+     * @return Fichier
+     */
+    public function setDateCreation($dateCreation)
+    {
+        $this->dateCreation = $dateCreation;
+
+        return $this;
+    }
+
+    /**
+     * Get dateCreation
+     *
+     * @return \DateTime
+     */
+    public function getDateCreation()
+    {
+        return $this->dateCreation;
     }
 }
 
