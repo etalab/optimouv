@@ -33,7 +33,7 @@
                  <input class="filter form-control" type="text" placeholder="Rechercher parmi mes listes de lieux">
                  <select multiple="multiple" id="liste_lieux" class="form-control" style="height: 100px;">
                      {% for listeLieux in listesLieux %}
-                         <option	value={{ listeLieux }}>{{ listeLieux }}</option>
+                         <option	value={{ listeLieux.nom}}>{{ listeLieux.nom }}</option>
                      {% endfor %}
 
                  </select>
