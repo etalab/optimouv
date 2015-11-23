@@ -14,8 +14,8 @@
              <div class="col-md-6">
                  <input class="filter form-control" type="text" placeholder="Rechercher parmi mes listes de participants">
                  <select multiple="multiple" id="liste_partcipants" class="form-control" style="height: 100px;">
-                     {% for participant in listeParticipants %}
-                         <option	value={{ participant }}>{{ participant }}</option>
+                     {% for ListeParticipants in listesParticipants %}
+                         <option	value={{ ListeParticipants }}>{{ ListeParticipants }}</option>
                      {% endfor %}
                  </select>
                  <br>
@@ -32,8 +32,8 @@
              <div class="col-md-6">
                  <input class="filter form-control" type="text" placeholder="Rechercher parmi mes listes de lieux">
                  <select multiple="multiple" id="liste_lieux" class="form-control" style="height: 100px;">
-                     {% for lieu in listeLieux %}
-                         <option	value={{ lieu }}>{{ lieu }}</option>
+                     {% for listeLieux in listesLieux %}
+                         <option	value={{ listeLieux }}>{{ listeLieux }}</option>
                      {% endfor %}
 
                  </select>
