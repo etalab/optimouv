@@ -40,6 +40,10 @@ ffbb_listes:
     path:     /listes
     defaults: { _controller: FfbbBundle:Listes:index }
 
-upload:
-    path:     /upload
-    defaults: { _controller: FfbbBundle:Fichier:upload }
+ffbb_creer_liste_participants:
+    path:     /creer_liste_participants
+    defaults: { _controller: FfbbBundle:Listes:creerListeParticipants }
+
+ffbb_creer_liste_lieux:
+    path:     /creer_liste_lieux
+    defaults: { _controller: FfbbBundle:Listes:creerListeLieux }
