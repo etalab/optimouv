@@ -15,11 +15,11 @@
                  <input class="filter form-control" type="text" placeholder="Rechercher parmi mes listes de participants">
                  <select multiple="multiple" id="liste_partcipants" class="form-control" style="height: 100px;">
                      {% for ListeParticipants in listesParticipants %}
-                         <option	value={{ ListeParticipants }}>{{ ListeParticipants }}</option>
+                         <option	value={{ ListeParticipants.nom }}>{{ ListeParticipants.nom }}</option>
                      {% endfor %}
                  </select>
                  <br>
-                 <button type="submit" class="btn btn-default  pull-right">Importer une nouvelle liste </button>
+                 <button id="btn_liste_participants" type="submit" class="btn btn-default  pull-right">Importer une nouvelle liste </button>
              </div>
 
 
@@ -35,10 +35,9 @@
                      {% for listeLieux in listesLieux %}
                          <option	value={{ listeLieux.nom}}>{{ listeLieux.nom }}</option>
                      {% endfor %}
-
                  </select>
                  <br>
-                 <button type="submit" class="btn btn-default  pull-right">Importer une nouvelle liste </button>
+                 <button id="btn_liste_lieux" type="submit" class="btn btn-default  pull-right">Importer une nouvelle liste </button>
              </div>
 
 
@@ -57,7 +56,7 @@
          {% block javascripts %}
              <!-- code interne dual list box -->
              <script>
-                 var demo1 = $('select[name="duallistbox_demo1[]"]').bootstrapDualListbox();
+
              </script>
          {% endblock %}
 
