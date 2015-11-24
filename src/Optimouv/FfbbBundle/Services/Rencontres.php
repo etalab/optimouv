@@ -55,7 +55,8 @@ class Rencontres
 
 
         for ($i = 0; $i < count($reqVilles); $i++) {
-            $stmt = $bdd->prepare("SELECT id FROM  villes WHERE id = '$reqVilles[$i]';");
+            $stmt = $bdd->prepare("SELECT id FROM  villes WHERE id = :id;");
+            $stmt->bindParam(':id', $reqVilles[$i]);
             $stmt->execute();
             $row = $stmt->fetchColumn();
             if (empty($row)) {
@@ -73,7 +74,8 @@ class Rencontres
 
             }
 
-            $stmt = $bdd->prepare("SELECT longitude, latitude FROM  villes WHERE id = '$reqVilles[$i]';");
+            $stmt = $bdd->prepare("SELECT longitude, latitude FROM  villes WHERE id = :id ;");
+            $stmt->bindParam(':id', $reqVilles[$i]);
             $stmt->execute();
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $latitude = $row['latitude'];
@@ -380,8 +382,10 @@ order by Proximite limit 1;");
 
             $stmt1 = $bdd->prepare("SELECT ville_longitude_deg, ville_latitude_deg,ville_code_postal, ville_population_2012,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
 from villes_france_free
-where ville_population_2012 < $valeurExclusion
+where ville_population_2012 < :valeurExclusion
 order by Proximite limit 1;");
+            $stmt1->bindParam(':valeurExclusion', $valeurExclusion );
+
             $stmt1->execute();
             $result = $stmt1->fetch(PDO::FETCH_ASSOC);
 
@@ -940,7 +944,8 @@ order by Proximite limit 1;");
 
             //chercher l'id de la ville selon la table de reference
 
-            $reqID = $bdd->prepare("SELECT ville_id FROM villes_france_free where ville_nom_simple LIKE '$nomVille%';");
+            $reqID = $bdd->prepare("SELECT ville_id FROM villes_france_free where ville_nom_simple LIKE '$nomVille%' AND  ville_code_postal LIKE '$codePostal%'; ");
+
             $reqID->execute();
             $idVille = $reqID->fetchColumn();
 
@@ -960,7 +965,11 @@ order by Proximite limit 1;");
 //                $city = addslashes($city);
 //                $PostalCode = $reqGeocodeArray['Response']['View'][0]['Result'][0]['Location']['Address']['PostalCode'];
 
-                $insert = $bdd->prepare("INSERT INTO  villes (id, longitude, latitude) VALUES ( '$idVille', '$Longitude','$Latitude');");
+                $insert = $bdd->prepare("INSERT INTO  villes (id, longitude, latitude) VALUES ( :idVille, :Longitude,:Latitude);");
+                $insert -> bindParam(':idVille', $idVille);
+                $insert -> bindParam(':Longitude', $Longitude);
+                $insert -> bindParam(':Latitude', $Latitude);
+
                 $insert->execute();
             } else {
                 continue;
@@ -997,7 +1006,8 @@ order by Proximite limit 1;");
         $villes = [];
 
         for ($i = 0; $i < count($reqVilles); $i++) {
-            $stmt = $bdd->prepare("SELECT ville_nom FROM  villes_france_free WHERE ville_id = '$reqVilles[$i]';");
+            $stmt = $bdd->prepare("SELECT ville_nom FROM  villes_france_free WHERE ville_id = :ville_id ;");
+            $stmt -> bindParam(':ville_id', $reqVilles[$i]);
             $stmt->execute();
             $nomVille = $stmt->fetchColumn();
             array_push($villes, $nomVille);
@@ -1096,16 +1106,38 @@ order by Proximite limit 1;");
         $app_id = $this->app_id;
         $app_code = $this->app_code;
 
+        $dbname = $this->database_name;
+        $dbuser = $this->database_user;
+        $dbpwd = $this->database_password;
+
+        try {
+            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
+
+        } catch (PDOException $e) {
+            die('Erreur : ' . $e->getMessage());
+        }
+
         $mesVilles = [];
         //geocoder inversement les villes pour ramener les noms de villes
         for ($l = 0; $l < count($villes); ++$l) {
-            $coor_url = 'http://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox=' . $villes[$l] . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=' . $app_id . '&app_code=' . $app_code;
+
+            $start = explode('%2C', $villes[$l]);
+            $lanX = $start[0];
+            $latY = $start[1];
+         /*   $coor_url = 'http://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox=' . $villes[$l] . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=' . $app_id . '&app_code=' . $app_code;
 
             $coor_json = file_get_contents($coor_url);
 
             $coor_array = json_decode($coor_json, true);
 
             $maVille = $coor_array['Response']['View'][0]['Result'][0]['Location']['Address']['City'];
+*/
+            $stmt1 = $bdd->prepare("SELECT ville_nom,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
+                                    from villes_france_free
+                                    order by Proximite limit 1;");
+            $stmt1->execute();
+            $result = $stmt1->fetch(PDO::FETCH_ASSOC);
+            $maVille = $result['ville_nom'];
 
             //Ramener tous les noms des villes
             array_push($mesVilles, $maVille);
@@ -1140,7 +1172,7 @@ order by Proximite limit 1;");
 
         for ($i = 0; $i < $nbrVilles; $i++) {
             $req = addslashes($villes[$i]);
-            $codePostal = substr($req, 0, 5);
+            $codePostal = substr($req, 0, 2);
             $nomVille = substr($req, 6);
 
             $char = array("-", "_", "'");
@@ -1149,18 +1181,29 @@ order by Proximite limit 1;");
 
             //chercher l'id de la ville selon la table de reference
 
-            $reqID = $bdd->prepare("SELECT ville_id FROM villes_france_free where ville_nom_simple LIKE '$nomVille%';");
+            $reqID = $bdd->prepare("SELECT ville_id FROM villes_france_free where ville_nom_simple LIKE '$nomVille%' AND  ville_code_postal LIKE '$codePostal%';");
+
             $reqID->execute();
             $idVille = $reqID->fetchColumn();
+            if($idVille){
+                array_push($idVilles, $idVille);
 
-            array_push($idVilles, $idVille);
+            }
+            else{
+                error_log(print_R($idVilles, TRUE), 3, "error_log_optimouv.txt");
+
+                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+            }
+
 
         }
         $idVilles = implode(",", $idVilles);
         $dateCreation = date("Y-m-d");
 
 
-        $reqGroupe = $bdd->prepare("INSERT INTO  groupe (equipes, date_creation) VALUES ( '$idVilles', '$dateCreation');");
+        $reqGroupe = $bdd->prepare("INSERT INTO  groupe (equipes, date_creation) VALUES ( :idVilles, :dateCreation);");
+        $reqGroupe->bindParam(':idVilles', $idVilles);
+        $reqGroupe->bindParam(':dateCreation', $dateCreation);
         $reqGroupe->execute();
 
 
@@ -1215,7 +1258,8 @@ order by Proximite limit 1;");
          $Latitude = $decoded['Response']['View'][0]['Result'][0]['Location']['DisplayPosition']['Latitude'];
          $Longitude = $decoded['Response']['View'][0]['Result'][0]['Location']['DisplayPosition']['Longitude'];
  */
-        $reqVille = $bdd->prepare("SELECT ville_latitude_deg, ville_longitude_deg FROM villes_france_free where ville_id = '$idVille';");
+        $reqVille = $bdd->prepare("SELECT ville_latitude_deg, ville_longitude_deg FROM villes_france_free where ville_id = :idVille;");
+        $reqVille->bindParam(':idVille', $idVille);
         $reqVille->execute();
         $row = $reqVille->fetch(PDO::FETCH_ASSOC);
         $Latitude = $row['ville_latitude_deg'];
@@ -1227,7 +1271,11 @@ order by Proximite limit 1;");
 
 
         if (isset($Latitude, $Longitude)) {
-            $insert = $bdd->prepare("INSERT INTO  villes (id, longitude, latitude, date_creation) VALUES ( '$idVille', '$Longitude','$Latitude', '$dateCreation');");
+            $insert = $bdd->prepare("INSERT INTO  villes (id, longitude, latitude, date_creation) VALUES ( :idVille, :Longitude,:Latitude, :dateCreation);");
+            $insert->bindParam(':idVille', $idVille);
+            $insert->bindParam(':Longitude', $Longitude);
+            $insert->bindParam(':Latitude', $Latitude);
+            $insert->bindParam(':dateCreation', $dateCreation);
             $insert->execute();
 
             return true;
@@ -1287,14 +1335,18 @@ order by Proximite limit 1;");
 
                 //recuperer l id de la ville
 
-                $reqID = $bdd->prepare("SELECT id FROM villes where latitude = '$X' AND longitude = '$Y';");
+                $reqID = $bdd->prepare("SELECT id FROM villes where latitude = :X AND longitude = :Y;");
+                $reqID->bindParam(':X', $X);
+                $reqID->bindParam(':Y', $Y);
                 $reqID->execute();
                 $idVille = $reqID->fetchColumn();
 
 
                 //tester si on a deja le calcul de trajet entre le point start et notre point actuel
 
-                $req = $bdd->prepare("SELECT distance, duree FROM trajet where depart = '$idStart' AND destination = '$idVille';");
+                $req = $bdd->prepare("SELECT distance, duree FROM trajet where depart = :idStart AND destination = :idVille;");
+                $req->bindParam(':idStart', $idStart);
+                $req->bindParam(':idVille', $idVille);
                 $req->execute();
                 $res = $req->fetch(PDO::FETCH_ASSOC);
 
@@ -1338,7 +1390,12 @@ order by Proximite limit 1;");
                     //insérer dans la base la distance + la duree
 
                     if (isset($distance, $duree)) {
-                        $insert = $bdd->prepare("INSERT INTO  trajet (depart, destination, distance, duree, date_creation) VALUES ( '$idStart', '$idVille', '$distance','$duree', '$dateCreation');");
+                        $insert = $bdd->prepare("INSERT INTO  trajet (depart, destination, distance, duree, date_creation) VALUES ( :idStart, :idVille, :distance,:duree, :dateCreation);");
+                        $insert -> bindParam(':idStart', $idStart);
+                        $insert -> bindParam(':idVille', $idVille);
+                        $insert -> bindParam(':distance', $distance);
+                        $insert -> bindParam(':duree', $duree);
+                        $insert -> bindParam(':dateCreation', $dateCreation);
                         $insert->execute();
 
                     }
