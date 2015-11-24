@@ -31,19 +31,14 @@ class Listes{
     public function creerListe(){
         $myfile = fopen("/tmp/ListesService_creerListe.log", "w") or die("Unable to open file!");
 
-        # insérer dans la base de données
-
+        # récupérer les parametres de connexion
         $dbname = $this->database_name;
         $dbuser = $this->database_user;
         $dbpwd = $this->database_password;
 
-
-
-
         try {
+            # créer une objet PDO
             $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
-            fwrite($myfile, "pdo: ".print_r($bdd, true)."\n");
-
         } catch (PDOException $e) {
             die('Erreur : ' . $e->getMessage());
         }
@@ -53,38 +48,38 @@ class Listes{
             die("\nPDO::errorInfo():\n");
         } else {
 
-
+            # obtenir la date courante du système
             date_default_timezone_set('Europe/Paris');
             $dateCreation = date('Y-m-d', time());
             $dateCreationNom = date('Ymd', time());
 
-            $sql = "SELECT count(*) as cnt FROM  liste_participants where date_creation = '$dateCreation' ;";
-            fwrite($myfile, "sql : ".print_r($sql, true)."\n");
-
+            # obtenir le nombre d'enregistrements dans la table liste_participants
+            $sql = "SELECT count(*) as cnt FROM  liste_participants where date_creation = :dateCreation ;";
             $stmt = $bdd->prepare($sql);
+            $stmt->bindParam(':dateCreation', $dateCreation);
             $stmt->execute();
             $resultat = $stmt->fetch(PDO::FETCH_ASSOC);
-
             $nbrResultat = $resultat["cnt"];
 
-            fwrite($myfile, "resultat  : ".print_r($resultat , true)."\n");
-
-
+            # récuperer la valeur des autres variables
             $nomUtilisateur = "henz";
-
-            fwrite($myfile, "dateCreation: ".print_r($dateCreation, true)."\n");
-
             $nom = "liste_equipe".$nbrResultat."_".$nomUtilisateur."_".$dateCreationNom;
             $idUtilisateur = 1;
             $equipes = "[1,2,3]";
 
 
-            $sql = "INSERT INTO  liste_participants (nom, id_utilisateur, date_creation, equipes) VALUES ( '$nom', '$idUtilisateur', '$dateCreation', '$equipes');\"";
-            fwrite($myfile, "sql : ".print_r($sql , true)."\n");
-            $insert = $bdd->prepare($sql);
-            $insert->execute();
-        }
+            # insérer dans la base de données
+            $sql = "INSERT INTO  liste_participants (nom, id_utilisateur, date_creation, equipes) VALUES ( :nom, :idUtilisateur, :dateCreation, :equipes);\"";
+            $stmt = $bdd->prepare($sql);
+            $stmt->bindParam(':nom', $nom);
+            $stmt->bindParam(':idUtilisateur', $idUtilisateur);
+            $stmt->bindParam(':dateCreation', $dateCreation);
+            $stmt->bindParam(':equipes', $equipes);
 
+
+            fwrite($myfile, "sql : ".print_r($sql , true)."\n"); # FIXME
+            $stmt->execute();
+        }
 
 
         $retour = json_encode(
@@ -94,12 +89,7 @@ class Listes{
             )
         );
 
-        fwrite($myfile, "retour : ".print_r($retour , true)."\n");
-
-
         return $retour;
-
-
     }
 
 
