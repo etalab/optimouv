@@ -10,4 +10,4 @@ services:
 
     service_listes:
             class: Optimouv\FfbbBundle\Services\Listes
-          #  arguments: ["%database_name%", "%database_user%", "%database_password%", "%app_id%", "%app_code%"]
+            arguments: ["%database_name%", "%database_user%", "%database_password%", "%app_id%", "%app_code%"]
