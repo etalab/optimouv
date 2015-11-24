@@ -7,25 +7,77 @@
  */
 namespace Optimouv\FfbbBundle\Services;
 
-use PDO;
+use SplFileObject;
 
-class Listes
-{
+class Listes{
 
-    private $database_name;
-    private $database_user;
-    private $database_password;
-    private $app_id;
-    private $app_code;
 
-    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code)
+    public function uploadFichier()
     {
-        $this->database_name = $database_name;
-        $this->database_user = $database_user;
-        $this->database_password = $database_password;
-        $this->app_id = $app_id;
-        $this->app_code = $app_code;
+        $myfile = fopen("/tmp/ListesService_uploadFichier.log", "w") or die("Unable to open file!");
+
+
+        $tempFilename = $_FILES["file-0"]["tmp_name"];
+
+        // Dès qu'un fichier a été reçu par le serveur
+        if (file_exists($tempFilename) || is_uploaded_file($tempFilename)) {
+
+            // détecte le type de fichier
+
+            // lire le contenu du fichier
+
+
+            $file = new \SplFileObject($tempFilename, 'r');
+            $delimiter = ",";
+
+            // On lui indique que c'est du CSV
+            $file->setFlags(SplFileObject::READ_CSV);
+
+            // préciser le délimiteur et le caractère enclosure
+            $file->setCsvControl($delimiter);
+
+            // Obtient données des en-tetes
+            $headerData = $file->fgetcsv();
+
+            fwrite($myfile, "headerData : ".print_r($headerData , true));
+
+
+
+//            fwrite($myfile, "headerData: ".print_r($headerData, true));
+
+//        // Gestion des headers : présence ou non
+//        if ($request["header_opt"] == 1) {
+//
+//            // Obtient données des en-tetes
+//            $headerData = $file->fgetcsv();
+//
+//            // Données de l'aperçu
+//            $preview = $this->_preview($file);
+//
+//            // supprimer le fichier temporaire
+//            unlink($tempFile);
+//
+//            $str = json_encode(
+//                array(
+//                    "success" => true,
+//                    "data" => $headerData,
+//                    "lignes" => $preview
+//                )
+//            );
+//            echo $str;
+//            exit;
+
+        }
+
+
+
+
+        $retour = "hello";
+
+        return $retour;
     }
+
+
 
 
 
