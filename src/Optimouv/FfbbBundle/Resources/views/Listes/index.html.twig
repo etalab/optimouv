@@ -15,7 +15,7 @@
              <input class="filter form-control" type="text" placeholder="Rechercher parmi mes listes de participants">
              <select multiple="multiple" id="liste_partcipants" class="form-control" style="height: 100px;">
                  {% for ListeParticipants in listesParticipants %}
-                     <option	value={{ ListeParticipants.nom }}>{{ ListeParticipants.nom }}</option>
+                     <option	value={{ ListeParticipants.nom }}> {{ ListeParticipants.nom }}</option>
                  {% endfor %}
              </select>
              <br>
@@ -72,7 +72,15 @@
                     if(typeof data.error === 'undefined')
                     {
                         // Success so call function to process the form
-                        console.log('SUCCESS: ' + data.success);
+                        console.log('SUCCESS: ' + data);
+
+                        // supprimer les enfants de l'élement select liste_partcipants
+                        $("#liste_partcipants").empty();
+
+                        $.each(data, function(index, value){
+                            $("#liste_partcipants").append("<option value=" + value.nom + ">" + value.nom + "</option>");
+                        });
+
                     }
                     else
                     {
