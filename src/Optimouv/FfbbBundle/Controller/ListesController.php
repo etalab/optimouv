@@ -39,7 +39,7 @@ class ListesController extends Controller
 //        fwrite($myfile, "idsEntite : ".print_r($idsEntite , true)."\n"); # FIXME
 
         # créer une liste dans la table liste_participants
-        $retourListe = $this->get('service_listes')->creerListe($idsEntite);
+        $retourListe = $this->get('service_listes')->creerListeParticipants($idsEntite);
 
         # obtenir entity manager
         $em = $this->getDoctrine()->getManager();
