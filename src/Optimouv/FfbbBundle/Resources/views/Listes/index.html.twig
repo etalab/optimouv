@@ -53,9 +53,6 @@
         $("#btn_liste_participants").click(function(){
             console.log("upload listeParticipants");
 
-            var data = $("#input_liste_participants").val();
-            console.log(data);
-
             var data = new FormData();
             $.each($('#input_liste_participants')[0].files, function(i, file) {
                 data.append('file-'+i, file);
