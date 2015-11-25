@@ -30,13 +30,13 @@ class ListesController extends Controller
 
     public function creerListeParticipantsAction()
     {
-        $myfile = fopen("/tmp/ListesController_creerListeParticipantsAction.log", "w") or die("Unable to open file!");
+        $myfile = fopen("/tmp/ListesController_creerListeParticipantsAction.log", "w") or die("Unable to open file!"); # FIXME
 
         # créer des entités dans la table entite
         $retourEntites = $this->get('service_listes')->creerEntites();
         $idsEntite = $retourEntites["idsEntite"];
 
-//        fwrite($myfile, "idsEntite : ".print_r($idsEntite , true)."\n"); # FIXME
+        fwrite($myfile, "idsEntite : ".print_r($idsEntite , true)."\n"); # FIXME
 
         # créer une liste dans la table liste_participants
         $retourListe = $this->get('service_listes')->creerListeParticipants($idsEntite);
@@ -48,17 +48,28 @@ class ListesController extends Controller
         $listesParticipants = $em->getRepository('FfbbBundle:ListeParticipants')->getListes();
 
         return new JsonResponse($listesParticipants);
-
     }
 
     public function creerListeLieuxAction()
     {
-        $myfile = fopen("/tmp/ListesController_creerListeLieuxAction.log", "w") or die("Unable to open file!");
+        $myfile = fopen("/tmp/ListesController_creerListeLieuxAction.log", "w") or die("Unable to open file!"); # FIXME
 
+        # créer des entités dans la table entite
+        $retourEntites = $this->get('service_listes')->creerEntites();
+        $idsEntite = $retourEntites["idsEntite"];
 
+        fwrite($myfile, "idsEntite  : ".print_r($idsEntite , true)."\n"); # FIXME
 
-        return new Response();
+        # créer une liste dans la table liste_participants
+        $retourListe = $this->get('service_listes')->creerListeLieux($idsEntite);
 
+        # obtenir entity manager
+        $em = $this->getDoctrine()->getManager();
+
+        # obtenir listes des participants
+        $listesLieux = $em->getRepository('FfbbBundle:ListeLieux')->getListes();
+
+        return new JsonResponse($listesLieux);
     }
 
 }
