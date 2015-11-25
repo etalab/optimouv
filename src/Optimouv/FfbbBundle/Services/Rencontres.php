@@ -51,6 +51,7 @@ class Rencontres
         $reqVilles = $reqVilles->fetchColumn();
         $reqVilles = explode(",", $reqVilles);
 
+
         $villes = [];
 
 
@@ -61,33 +62,31 @@ class Rencontres
             $row = $stmt->fetchColumn();
             if (empty($row)) {
                 $idVille = $reqVilles[$i];
-               /* $reqVille = $bdd->prepare("SELECT ville_nom, ville_code_postal FROM villes_france_free where id = '$idVille';");
-                $reqVille->execute();
-                while ($row = $reqVille->fetch(PDO::FETCH_ASSOC)) {
-                    $nom = $row['ville_nom'];
-                    $codePostal = $row['ville_code_postal'];
-                    $codePostal = substr($codePostal, 0, 5);
 
-
-                }*/
                 $this->geocoderUneVille($idVille);
 
             }
 
-            $stmt = $bdd->prepare("SELECT longitude, latitude FROM  villes WHERE id = :id ;");
-            $stmt->bindParam(':id', $reqVilles[$i]);
-            $stmt->execute();
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $latitude = $row['latitude'];
-                $longitude = $row['longitude'];
-                $coordonnee = $latitude . "%2C" . $longitude;
-                array_push($villes, $coordonnee);
+        }
+        $reqVilles = implode(",", $reqVilles);
 
-            }
+        //select in : une seule req pour recuperer long + latt
+
+        $stmt = $bdd->prepare("SELECT longitude, latitude FROM  villes WHERE  find_in_set (id, :reqVilles) ;");
+        $stmt->bindParam(':reqVilles', $reqVilles);
+
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $latitude = $row['latitude'];
+            $longitude = $row['longitude'];
+
+            $coordonnee = $latitude . "%2C" . $longitude;
+            array_push($villes, $coordonnee);
 
         }
 
-        return $villes;
+         return $villes;
     }
 
     //Calcul du meilleur lieu de rencontre
@@ -113,208 +112,98 @@ class Rencontres
         $lesDistances = []; // la somme des distances
         $lesDurees = []; // la somme des durees
         $lesPtsDeparts = []; // tableau qui contient tous les points de depart
+        $coordonneesVilles = [];
 
         $distanceDest = []; //tableau qui contient toutes les distances vers les destinations d un point de d�part
         $dureeDest = []; //tableau qui contient toutes les dur�es vers les destinations d un point de d�part
         $coordonneesDest = []; //tableau qui contient toutes les coordonn�es vers les destinations d un point de d�part
-
+        $sommeDistances = [];
+        $sommeDurees = [];
         $longueurTab = count($villes);
-
         for ($i = 0; $i < $longueurTab; ++$i) {
-
             $start = $villes[0];
 
             unset($villes[0]);
             $T2 = array_values($villes);
 
-            $start = explode('%2C', $start);
-            $lanX = $start[0];
-            $latY = $start[1];
 
-            $stmt1 = $bdd->prepare("SELECT ville_id, ville_nom, ville_longitude_deg, ville_latitude_deg,ville_code_postal, ville_population_2012,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
-from villes_france_free
-order by Proximite limit 1;");
-            $stmt1->execute();
-            $result = $stmt1->fetch(PDO::FETCH_ASSOC);
+             $Coordonnes = explode("%2C", $start);
+            $lanX = $Coordonnes[0];
+            $lanY = $Coordonnes[1];
 
-            //Recuperation des infos concernant point de depart
-            $idStart = $result['ville_id'];
-            $lanX = $result['ville_latitude_deg'];
-            $latY = $result['ville_longitude_deg'];
-            $coordStart = $lanX . '%2C' . $latY;
+            $resultat = $this->calculRoute($lanX, $lanY, $T2);
 
-            $distanceTotale = [];
-            $dureeTotale = [];
+            $distanceDest = $resultat[0];
+            $dureeDest = $resultat[1];
+            $coordonneesDest = $T2;
+            $sommeDistanceDep = array_sum($distanceDest);
+            $sommeDureeDep = array_sum($dureeDest);
 
-            //parcourir tout le tableau des villes
-            for ($i = 0; $i < count($T2); $i++) {
+            //on groupe les résultats de tous les cas possibles!
 
-
-                $maVille = $T2[$i];
-
-                $coordVille = explode('%2C', $maVille);
-
-                try {
-
-                    $X = $coordVille[0];
-                    $Y = $coordVille[1];
-
-                    //recuperer l id de la ville
-
-                    $reqID = $bdd->prepare("SELECT id FROM villes where latitude = '$X' AND longitude = '$Y';");
-                    $reqID->execute();
-                    $idVille = $reqID->fetchColumn();
-
-
-                    //tester si on a deja le calcul de trajet entre le point start et notre point actuel
-
-                    $req = $bdd->prepare("SELECT distance, duree FROM trajet where depart = '$idStart' AND destination = '$idVille';");
-                    $req->execute();
-                    $res = $req->fetch(PDO::FETCH_ASSOC);
-
-                    if ($res) {
-
-                        $distance = $res['distance'];
-                        $duree = $res['duree'];
-                        array_push($distanceTotale, $distance);
-                        array_push($dureeTotale, $duree);
-
-                    } else {
-                        $reqRoute = 'http://route.api.here.com/routing/7.2/calculateroute.json?waypoint0=' . $coordStart . '&waypoint1=' . $T2[$i] . '&mode=fastest%3Bcar%3Btraffic%3Adisabled&app_id=' . $app_id . '&app_code=' . $app_code . '&departure=now';
-
-                        $curl = curl_init($reqRoute);
-                        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                        curl_setopt($curl, CURLOPT_FAILONERROR, true);
-
-                        $curl_response = curl_exec($curl);
-
-                        if ($curl_response === false) {
-                            $info = curl_getinfo($curl);
-                            curl_close($curl);
-                            error_log(print_R($info, TRUE), 3, "error_log_optimouv.txt");
-
-                            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
-
-                        }
-                        curl_close($curl);
-                        $decoded = json_decode($curl_response, true);
-                        if (isset($decoded->response->status) && $decoded->response->status == 'ERROR') {
-                            die('Erreur: ' . $decoded->response->errormessage);
-                        }
-
-                        $distance = $decoded['response']['route'][0]['summary']['distance'];
-                        $duree = $decoded['response']['route'][0]['summary']['baseTime'];
-
-                        //recuperer la date du jour
-                        $date = new \DateTime();
-                        $dateCreation = $date->format('Y-m-d');
-
-                        //insérer dans la base la distance + la duree
-
-                        if (isset($distance, $duree)) {
-                            $insert = $bdd->prepare("INSERT INTO  trajet (depart, destination, distance, duree, date_creation) VALUES ( '$idStart', '$idVille', '$distance','$duree', '$dateCreation');");
-                            $insert->execute();
-
-                        }
-
-                        array_push($distanceTotale, $distance);
-                        array_push($dureeTotale, $duree);
-                    }
-                } catch (Exception $e) {
-                    echo 'Exception reçue : ', $e->getMessage(), "\n";
-                }
-
-
-            }//fin parcourir tab T2
-
-            array_push($distanceDest, $distanceTotale);
-            array_push($dureeDest, $dureeTotale);
-            array_push($coordonneesDest, $T2);
+            array_push($lesDistances, $distanceDest);
+            array_push($lesDurees, $dureeDest);
+            array_push($coordonneesVilles, $coordonneesDest);
             array_push($lesPtsDeparts, $start);
-
+            array_push($sommeDistances, $sommeDistanceDep);
+            array_push($sommeDurees, $sommeDureeDep);
 
 
             array_push($T2, $start);
             $villes = $T2;
-
         }//fin parcourir longuerTab
 
-//        print_r($distanceDest);
-//
-//        print_r("***");
-//        print_r($dureeDest);
-//exit;
-
-        $tousLesCalculs[0] = $distanceDest;
-        $tousLesCalculs[1] = $dureeDest;
-        $tousLesCalculs[2] = $coordonneesDest;
-
-        $sommesDistances = [];
-        for ($j = 0; $j < count($tousLesCalculs[0]); $j++) {
-            $sommeDistance = array_sum($tousLesCalculs[0][$j]);
-            array_push($sommesDistances, $sommeDistance);
-        }
         //Min Somme des distances
-        $distanceMin = min($sommesDistances);
-        $key = array_search($distanceMin, $sommesDistances);
+        $distanceMin = min($sommeDistances);
+        $key = array_search($distanceMin, $sommeDistances);//on récupère la position de la somme min
 
-        $coord = $lesPtsDeparts[$key];
+        $coord = $lesPtsDeparts[$key]; //on récupère le point de depart
 
-//        print_r($coord);
+        $distanceTotale = $sommeDistances[$key];//on recupere la somme des tistances pour notre ville de depart
+        $distanceTotale = $distanceTotale/1000;
+        $distanceTotale = round($distanceTotale,0);//on fait l'arrondie de la distance totale
 
-        $distanceTotale = $tousLesCalculs[0][$key];
-        $dureeTotale = $tousLesCalculs[1][$key];
+        $dureeTotale = $sommeDurees[$key];//on recupere la somme des durees trajets pour notre ville de depart
 
+        //Nom de la ville de depart
+        $coordVille = explode('%2C', $coord);
 
-        //somme des distances
-        $distance = array_sum($distanceTotale) / 1000;
-        $distance = round($distance, 0);
+        $lanX = $coordVille[0];
+        $latY = $coordVille[1];
 
-        //somme des durées
-        $duree = array_sum($dureeTotale);
+        $stmt1 = $bdd->prepare("SELECT ville_nom,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
+                                    from villes_france_free
+                                    order by Proximite limit 1;");
+        $stmt1->execute();
+        $result = $stmt1->fetch(PDO::FETCH_ASSOC);
+        $villeDepart = $result['ville_nom'];
 
-//        $coord = explode('%2C', $coord);
-        $lanX = $coord[0];
-        $latY = $coord[1];
-
-        $mesVillesXY = $coordonneesDest[$key];
+        $mesVillesXY = $coordonneesVilles[$key];
         //Récupérer les noms de villes de destination
         $mesVilles = $this->mesVilles($mesVillesXY);
 
-
-        //Nom de la ville de d�part
-
-        $coor_url = 'http://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox=' . $lanX . '%2C' . $latY . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=' . $app_id . '&app_code=' . $app_code;
-
-        $coor_json = file_get_contents($coor_url);
-
-        $coor_array = json_decode($coor_json, true);
-
-        $villeDepart = $coor_array['Response']['View'][0]['Result'][0]['Location']['Address']['City'];
-
-
         //distance ville
-        $distVille = $distanceDest[$key];
-        $dureeVille = $dureeDest[$key];
-
-
-        $infosVilles = [];
-        $infosVilles[0] = $mesVilles;
-        $infosVilles[1] = $distVille;
-        $infosVilles[2] = $dureeVille;
-
+        $distVille = $lesDistances[$key];
+        $dureeVille = $lesDurees[$key];
 
         $retour = [];
 
         $retour[0] = $villeDepart;
         $retour[1] = $lanX;
         $retour[2] = $latY;
-        $retour[3] = $distance;
-        $retour[4] = $duree;
+        $retour[3] = $distanceTotale;
+        $retour[4] = $dureeTotale;
         $retour[5] = $mesVillesXY;
         $retour[6] = $mesVilles;
         $retour[7] = $distVille;
         $retour[8] = $dureeVille;
+
+
+
+        //echo '<pre>',print_r($mesVilles,1),'</pre>';
+     //   print_r("$$$$$");
+//exit;
+
 
         return $retour;
     }
@@ -407,242 +296,115 @@ order by Proximite limit 1;");
     //Calcul du scénario équitable
     public function scenarioEquitable()
     {
+
         $app_id = $this->app_id;
         $app_code = $this->app_code;
+        $dbname = $this->database_name;
+        $dbuser = $this->database_user;
+        $dbpwd = $this->database_password;
 
-        //        $villes = ["43.67353%2C7.19013", "43.12022%2C6.13101", "45.76931%2C4.84977", "43.95465%2C4.81606", "48.39044%2C-4.48658"];
+        try {
+            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
+
+        } catch (PDOException $e) {
+            die('Erreur : ' . $e->getMessage());
+        }
+
+        //on récupère le tableau des villes
         $villes = $this->index();
-
-        $T2 = []; //tableau interm?diaire qui contient les coordonnees des pts d arrivees
+        $T2 = []; //tableau interm�diaire qui contient les coordonnees des pts d arrivees
 
         $lesDistances = []; // la somme des distances
         $lesDurees = []; // la somme des durees
         $lesPtsDeparts = []; // tableau qui contient tous les points de depart
+        $coordonneesVilles = [];
 
-        $distanceDest = []; //tableau qui contient toutes les distances vers les destinations d un point de d?part
-        $dureeDest = []; //tableau qui contient toutes les dur?es vers les destinations d un point de d?part
-        $coordonneesDest = []; //tableau qui contient toutes les coordonn?es vers les destinations d un point de d?part
-
-        $distancesMax = [];//tableau qui contient toutes les distances maxi des différents scénarios
-
+        $distanceDest = []; //tableau qui contient toutes les distances vers les destinations d un point de d�part
+        $dureeDest = []; //tableau qui contient toutes les dur�es vers les destinations d un point de d�part
+        $coordonneesDest = []; //tableau qui contient toutes les coordonn�es vers les destinations d un point de d�part
+        $sommeDistances = [];
+        $sommeDurees = [];
+        $distancesMax = [];//tableau qui contient toutes les distances maxi
         $longueurTab = count($villes);
-        /////////////********************************/////////////////
         for ($i = 0; $i < $longueurTab; ++$i) {
-
             $start = $villes[0];
 
             unset($villes[0]);
             $T2 = array_values($villes);
 
-            /*
-             $retourRoutingMatrixUnStart = $this->calculRoute($start, $T2);
 
-            $distanceTotal = $retourRoutingMatrixUnStart[0];
-            $dureeTotale = $retourRoutingMatrixUnStart[1];
-            */
-            ///////////////////////////
-            $dbname = $this->database_name;
-            $dbuser = $this->database_user;
-            $dbpwd = $this->database_password;
+            $Coordonnes = explode("%2C", $start);
+            $lanX = $Coordonnes[0];
+            $lanY = $Coordonnes[1];
 
-            try {
-                $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
+            $resultat = $this->calculRoute($lanX, $lanY, $T2);
 
-            } catch (PDOException $e) {
-                die('Erreur : ' . $e->getMessage());
-            }
-            $start = explode('%2C', $start);
-            $lanX = $start[0];
-            $latY = $start[1];
+            $distanceDest = $resultat[0];
+            $dureeDest = $resultat[1];
+            $coordonneesDest = $T2;
+            $sommeDistanceDep = array_sum($distanceDest);
+            $sommeDureeDep = array_sum($dureeDest);
+            $distanceMax = max($distanceDest);
 
+            //on groupe les résultats de tous les cas possibles!
 
-            $stmt1 = $bdd->prepare("SELECT ville_id,  ville_longitude_deg, ville_latitude_deg,ville_code_postal, ville_population_2012,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
-from villes_france_free
-order by Proximite limit 1;");
-            $stmt1->execute();
-            $result = $stmt1->fetch(PDO::FETCH_ASSOC);
+              array_push($lesDistances, $distanceDest);
+              array_push($lesDurees, $dureeDest);
+              array_push($coordonneesVilles, $coordonneesDest);
+              array_push($lesPtsDeparts, $start);
+              array_push($sommeDistances, $sommeDistanceDep);
+              array_push($sommeDurees, $sommeDureeDep);
+              array_push($distancesMax, $distanceMax);
 
-            //Recuperation des infos concernant point de depart
-            $idStart = $result['ville_id'];
-            $lanX = $result['ville_latitude_deg'];
-            $latY = $result['ville_longitude_deg'];
-            $coordStart = $lanX . '%2C' . $latY;
-
-            //initialisation des tableaux
-             $distanceTotal = [];
-             $dureeTotale = [];
-
-            //parcourir tout le tableau des villes
-            for ($i = 0; $i < count($T2); $i++) {
-
-
-                $maVille = $T2[$i];
-
-                $coordVille = explode('%2C', $maVille);
-
-                try {
-
-                    $X = $coordVille[0];
-                    $Y = $coordVille[1];
-
-                    //recuperer l id de la ville
-
-                    $reqID = $bdd->prepare("SELECT id FROM villes where latitude = '$X' AND longitude = '$Y';");
-                    $reqID->execute();
-                    $idVille = $reqID->fetchColumn();
-
-
-                    //tester si on a deja le calcul de trajet entre le point start et notre point actuel
-
-                    $req = $bdd->prepare("SELECT distance, duree FROM trajet where depart = '$idStart' AND destination = '$idVille';");
-                    $req->execute();
-                    $res = $req->fetch(PDO::FETCH_ASSOC);
-
-                    if ($res) {
-
-                        $distance = $res['distance'];
-                        $duree = $res['duree'];
-                        array_push($distanceTotal, $distance);
-                        array_push($dureeTotale, $duree);
-
-                    } else {
-                        $reqRoute = 'http://route.api.here.com/routing/7.2/calculateroute.json?waypoint0=' . $coordStart . '&waypoint1=' . $T2[$i] . '&mode=fastest%3Bcar%3Btraffic%3Aenabled&app_id=' . $app_id . '&app_code=' . $app_code . '&departure=now';
-
-                        $curl = curl_init($reqRoute);
-                        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                        curl_setopt($curl, CURLOPT_FAILONERROR, true);
-
-                        $curl_response = curl_exec($curl);
-
-                        if ($curl_response === false) {
-                            $info = curl_getinfo($curl);
-                            curl_close($curl);
-                            error_log(print_R($info, TRUE), 3, "error_log_optimouv.txt");
-
-                            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
-
-                        }
-                        curl_close($curl);
-                        $decoded = json_decode($curl_response, true);
-                        if (isset($decoded->response->status) && $decoded->response->status == 'ERROR') {
-                            die('Erreur: ' . $decoded->response->errormessage);
-                        }
-
-                        $distance = $decoded['response']['route'][0]['summary']['distance'];
-                        $duree = $decoded['response']['route'][0]['summary']['baseTime'];
-
-                        //recuperer la date du jour
-                        $date = new \DateTime();
-                        $dateCreation = $date->format('Y-m-d');
-
-                        //insérer dans la base la distance + la duree
-
-                        if (isset($distance, $duree)) {
-                            $insert = $bdd->prepare("INSERT INTO  trajet (depart, destination, distance, duree, date_creation) VALUES ( '$idStart', '$idVille', '$distance','$duree', '$dateCreation');");
-                            $insert->execute();
-
-                        }
-
-                        array_push($distanceTotal, $distance);
-                        array_push($dureeTotale, $duree);
-                    }
-                } catch (Exception $e) {
-                    echo 'Exception reçue : ', $e->getMessage(), "\n";
-                }
-
-
-            }
-
-
-
-
-            /////////////////////////
-            array_push($distanceDest, $distanceTotal);
-            array_push($dureeDest, $dureeTotale);
-            array_push($coordonneesDest, $T2);
-            array_push($lesPtsDeparts, $start);
 
             array_push($T2, $start);
             $villes = $T2;
+        }//fin parcourir longuerTab
 
-        }
+        //Min des distances Max
+        $distanceMin = min($distancesMax);
+        $key = array_search($distanceMin, $distancesMax);//on récupère la position de la somme min
 
-        /////////////********************************/////////////////
+        $coord = $lesPtsDeparts[$key]; //on récupère le point de depart
 
-        $tousLesCalculs[0] = $distanceDest;
-        $tousLesCalculs[1] = $dureeDest;
-        $tousLesCalculs[2] = $coordonneesDest;
+        $distanceTotale = $sommeDistances[$key];//on recupere la somme des tistances pour notre ville de depart
+        $distanceTotale = $distanceTotale/1000;
+        $distanceTotale = round($distanceTotale,0);//on fait l'arrondie de la distance totale
 
-        $distancesMax = [];
-        for($j=0; $j<count($tousLesCalculs[0]); $j++){
-            $distanceMax = max($tousLesCalculs[0][$j]);
-            array_push($distancesMax, $distanceMax);
-        }
+        $dureeTotale = $sommeDurees[$key];//on recupere la somme des durees trajets pour notre ville de depart
 
-        //position de la ville equitable
-        $distanceEquitable = min($distancesMax);
-        $key = array_search($distanceEquitable, $distancesMax);
+        //Nom de la ville de depart
+        $coordVille = explode('%2C', $coord);
 
-        $coord = $lesPtsDeparts[$key];
-        $distanceTotal = $tousLesCalculs[0][$key];
-        $dureeTotale = $tousLesCalculs[1][$key];
+        $lanX = $coordVille[0];
+        $latY = $coordVille[1];
 
-        /////////////********************************/////////////////
+        $stmt1 = $bdd->prepare("SELECT ville_nom,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
+                                    from villes_france_free
+                                    order by Proximite limit 1;");
+        $stmt1->execute();
+        $result = $stmt1->fetch(PDO::FETCH_ASSOC);
+        $villeDepart = $result['ville_nom'];
 
-        //somme des distances
-        $distance = array_sum($distanceTotal) / 1000;
-        $distance = round($distance, 0);
-
-        //somme des durées
-        $duree = array_sum($dureeTotale);
-
-
-        //$coord = explode('%2C', $coord);
-        $lanX = $coord[0];
-        $latY = $coord[1];
-
-        $mesVillesXY = $coordonneesDest[$key];
+        $mesVillesXY = $coordonneesVilles[$key];
         //Récupérer les noms de villes de destination
         $mesVilles = $this->mesVilles($mesVillesXY);
 
-
-
-        //Nom de la ville de d?part
-
-        $coor_url = 'http://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox=' .$lanX.'%2C'.$latY. '&mode=retrieveAddresses&maxresults=1&gen=8&app_id='.$app_id.'&app_code='.$app_code;
-
-        $coor_json = file_get_contents($coor_url);
-
-        $coor_array = json_decode($coor_json, true);
-
-        $villeDepart = $coor_array['Response']['View'][0]['Result'][0]['Location']['Address']['City'];
-
-
-
         //distance ville
-        $distVille = $distanceDest[$key];
-        $dureeVille = $dureeDest[$key];
-
-
-        $infosVilles = [];
-        $infosVilles[0] = $mesVilles;
-        $infosVilles[1] = $distVille;
-        $infosVilles[2] = $dureeVille;
-
+        $distVille = $lesDistances[$key];
+        $dureeVille = $lesDurees[$key];
 
         $retour = [];
 
         $retour[0] = $villeDepart;
         $retour[1] = $lanX;
         $retour[2] = $latY;
-        $retour[3] = $distance;
-        $retour[4] = $duree;
+        $retour[3] = $distanceTotale;
+        $retour[4] = $dureeTotale;
         $retour[5] = $mesVillesXY;
         $retour[6] = $mesVilles;
         $retour[7] = $distVille;
         $retour[8] = $dureeVille;
-
-
 
 
         return $retour;
