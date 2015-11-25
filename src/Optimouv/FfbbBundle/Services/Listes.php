@@ -28,7 +28,7 @@ class Listes{
         $this->app_code = $app_code;
     }
 
-    public function creerListe(){
+    public function creerListe($idsEntite){
         $myfile = fopen("/tmp/ListesService_creerListe.log", "w") or die("Unable to open file!");
 
         # obtenir l'objet PDO
@@ -42,21 +42,21 @@ class Listes{
             # obtenir la date courante du système
             date_default_timezone_set('Europe/Paris');
             $dateCreation = date('Y-m-d', time());
-            $dateCreationNom = date('Ymd', time());
-
-            # obtenir le nombre d'enregistrements dans la table liste_participants
-            $sql = "SELECT count(*) as cnt FROM  liste_participants where date_creation = :dateCreation ;";
-            $stmt = $bdd->prepare($sql);
-            $stmt->bindParam(':dateCreation', $dateCreation);
-            $stmt->execute();
-            $resultat = $stmt->fetch(PDO::FETCH_ASSOC);
-            $nbrResultat = $resultat["cnt"];
+            $dateCreationNom = date('Y-m-d_g:i:s', time());
 
             # récuperer la valeur des autres variables
             $nomUtilisateur = "henz";
-            $nom = "liste_equipe".$nbrResultat."_".$nomUtilisateur."_".$dateCreationNom;
+            $nom = "liste_equipe_".$nomUtilisateur."_".$dateCreationNom;
             $idUtilisateur = 1;
-            $equipes = "[1,2,3]";
+
+            # construire la liste d'équipes
+            $equipes = "";
+            for ($i=0; $i<count($idsEntite); $i++){
+                $equipes .= $idsEntite[$i].",";
+            }
+            // supprimer la dernière virgule
+            $equipes = rtrim($equipes, ",");
+//            fwrite($myfile, "equipes  : " . print_r($equipes , true) . "\n"); # FIXME
 
             # insérer dans la base de données
             $sql = "INSERT INTO  liste_participants (nom, id_utilisateur, date_creation, equipes) VALUES ( :nom, :idUtilisateur, :dateCreation, :equipes);\"";
@@ -69,17 +69,13 @@ class Listes{
 
         }
 
-        $retour = json_encode(
-            array(
+        $retour = array(
                 "success" => true,
                 "data" => "",
-            )
         );
 
         return $retour;
     }
-
-
 
 
 
@@ -111,7 +107,7 @@ class Listes{
 //            fwrite($myfile, "donneesEntete : ".print_r($donneesEntete , true)."\n"); # FIXME
 
             // obtenir les données pour chaque ligne
-            $nbrEntites = 0;
+            $idsEntite = [];
             while(!$file->eof()) {
                 $donnéesLigne = $file->fgetcsv();
 
@@ -150,7 +146,6 @@ class Listes{
                         ."VALUES ( :id_utilisateur, :type_entite, :nom, :adresse, :code_postal, :ville, :longitude, :latitude, "
                             ." :projection, :participants, :licencies, :lieu_rencontre_possible, :date_creation, :date_modification );\"";
                     $stmt = $bdd->prepare($sql);
-//                    fwrite($myfile, "sql  : " . print_r($sql , true) . "\n"); # FIXME
                     $stmt->bindParam(':id_utilisateur', $idUtilisateur);
                     $stmt->bindParam(':type_entite', $typeEntite);
                     $stmt->bindParam(':nom', $nom);
@@ -168,18 +163,17 @@ class Listes{
 
                     $stmt->execute();
 
+                    $idEntite = $bdd->lastInsertId();
+                    array_push($idsEntite, $idEntite);
                 }
 
-                $nbrEntites ++;
             }
 
         }
 
-        $retour = json_encode(
-            array(
+        $retour = array(
                 "success" => true,
-                "nbrEntites" => $nbrEntites,
-                )
+                "idsEntite" => $idsEntite
         );
 
 
