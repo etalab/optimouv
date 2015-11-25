@@ -31,17 +31,8 @@ class Listes{
     public function creerListe(){
         $myfile = fopen("/tmp/ListesService_creerListe.log", "w") or die("Unable to open file!");
 
-        # récupérer les parametres de connexion
-        $dbname = $this->database_name;
-        $dbuser = $this->database_user;
-        $dbpwd = $this->database_password;
-
-        try {
-            # créer une objet PDO
-            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
-        } catch (PDOException $e) {
-            die('Erreur : ' . $e->getMessage());
-        }
+        # obtenir l'objet PDO
+        $bdd = $this->getPdo();
 
         if (!$bdd) {
             //erreur de connexion!
@@ -67,7 +58,6 @@ class Listes{
             $idUtilisateur = 1;
             $equipes = "[1,2,3]";
 
-
             # insérer dans la base de données
             $sql = "INSERT INTO  liste_participants (nom, id_utilisateur, date_creation, equipes) VALUES ( :nom, :idUtilisateur, :dateCreation, :equipes);\"";
             $stmt = $bdd->prepare($sql);
@@ -75,12 +65,9 @@ class Listes{
             $stmt->bindParam(':idUtilisateur', $idUtilisateur);
             $stmt->bindParam(':dateCreation', $dateCreation);
             $stmt->bindParam(':equipes', $equipes);
-
-
-            fwrite($myfile, "sql : ".print_r($sql , true)."\n"); # FIXME
             $stmt->execute();
-        }
 
+        }
 
         $retour = json_encode(
             array(
@@ -98,22 +85,19 @@ class Listes{
 
     public function creerEntites()
     {
-
-
         $myfile = fopen("/tmp/ListesService_creerEntites.log", "w") or die("Unable to open file!");
 
-
-        $tempFilename = $_FILES["file-0"]["tmp_name"];
+        # obtenir le nom du fichier uploadé
+        $nomFichierTemp = $_FILES["file-0"]["tmp_name"];
 
         // Dès qu'un fichier a été reçu par le serveur
-        if (file_exists($tempFilename) || is_uploaded_file($tempFilename)) {
+        if (file_exists($nomFichierTemp) || is_uploaded_file($nomFichierTemp)) {
 
             // détecte le type de fichier
-
-
+            # TODO
 
             // lire le contenu du fichier
-            $file = new SplFileObject($tempFilename, 'r');
+            $file = new SplFileObject($nomFichierTemp, 'r');
             $delimiter = ",";
 
             // On lui indique que c'est du CSV
@@ -123,19 +107,78 @@ class Listes{
             $file->setCsvControl($delimiter);
 
             // Obtient données des en-tetes
-            $headerData = $file->fgetcsv();
+            $donneesEntete = $file->fgetcsv();
+//            fwrite($myfile, "donneesEntete : ".print_r($donneesEntete , true)."\n"); # FIXME
 
-            fwrite($myfile, "headerData : ".print_r($headerData , true));
+            // obtenir les données pour chaque ligne
+            $nbrEntites = 0;
+            while(!$file->eof()) {
+                $donnéesLigne = $file->fgetcsv();
 
+                // obtenir la valeur pour chaque paramètre
+                $idFederation = $donnéesLigne[1];
+                $typeEntite = $donnéesLigne[2];
+                $nom = $donnéesLigne[3];
+                $adresse = $donnéesLigne[4];
+                $codePostal = $donnéesLigne[5];
+                $ville = $donnéesLigne[6];
+                $lon = $donnéesLigne[7];
+                $lat = $donnéesLigne[8];
+                $projection = $donnéesLigne[9];
+                $nbrParticipants = $donnéesLigne[10];
+                $nbrLicencies = $donnéesLigne[11];
+                $lieuRencontrePossible = $donnéesLigne[12];
 
+                # obtenir la date courante du système
+                date_default_timezone_set('Europe/Paris');
+                $dateCreation = date('Y-m-d', time());
+                $dateModification = date('Y-m-d', time());
 
+                # obtenir l'id d'utilisateur
+                $idUtilisateur = 1;
+
+                # obtenir l'objet PDO
+                $bdd = $this->getPdo();
+
+                if (!$bdd) {
+                    //erreur de connexion!
+                    die("\nPDO::errorInfo():\n");
+                } else {
+                    # insérer dans la base de données
+                    $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, adresse, code_postal, ville, longitude, latitude,"
+                            ." projection, participants, licencies, lieu_rencontre_possible, date_creation, date_modification )"
+                        ."VALUES ( :id_utilisateur, :type_entite, :nom, :adresse, :code_postal, :ville, :longitude, :latitude, "
+                            ." :projection, :participants, :licencies, :lieu_rencontre_possible, :date_creation, :date_modification );\"";
+                    $stmt = $bdd->prepare($sql);
+//                    fwrite($myfile, "sql  : " . print_r($sql , true) . "\n"); # FIXME
+                    $stmt->bindParam(':id_utilisateur', $idUtilisateur);
+                    $stmt->bindParam(':type_entite', $typeEntite);
+                    $stmt->bindParam(':nom', $nom);
+                    $stmt->bindParam(':adresse', $adresse);
+                    $stmt->bindParam(':code_postal', $codePostal);
+                    $stmt->bindParam(':ville', $ville);
+                    $stmt->bindParam(':longitude', $lon);
+                    $stmt->bindParam(':latitude', $lat);
+                    $stmt->bindParam(':projection', $projection);
+                    $stmt->bindParam(':participants', $nbrParticipants);
+                    $stmt->bindParam(':licencies', $nbrLicencies);
+                    $stmt->bindParam(':lieu_rencontre_possible', $lieuRencontrePossible);
+                    $stmt->bindParam(':date_creation', $dateCreation);
+                    $stmt->bindParam(':date_modification', $dateModification);
+
+                    $stmt->execute();
+
+                }
+
+                $nbrEntites ++;
+            }
 
         }
 
         $retour = json_encode(
             array(
                 "success" => true,
-                "data" => $headerData,
+                "nbrEntites" => $nbrEntites,
                 )
         );
 
@@ -144,7 +187,22 @@ class Listes{
         return $retour;
     }
 
+    # retourner un objet PDO qu'on peut utiliser dans d'autres fonctions
+    public function getPdo(){
+        # récupérer les parametres de connexion
+        $dbname = $this->database_name;
+        $dbuser = $this->database_user;
+        $dbpwd = $this->database_password;
 
+        try {
+            # créer une objet PDO
+            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
+        } catch (PDOException $e) {
+            die('Erreur : ' . $e->getMessage());
+        }
+
+        return $bdd;
+    }
 
 
 
