@@ -28,7 +28,7 @@ class Listes{
         $this->app_code = $app_code;
     }
 
-    public function creerListe($idsEntite){
+    public function creerListeParticipants($idsEntite){
         $myfile = fopen("/tmp/ListesService_creerListe.log", "w") or die("Unable to open file!");
 
         # obtenir l'objet PDO
@@ -42,7 +42,7 @@ class Listes{
             # obtenir la date courante du système
             date_default_timezone_set('Europe/Paris');
             $dateCreation = date('Y-m-d', time());
-            $dateCreationNom = date('Y-m-d_g:i:s', time());
+            $dateCreationNom = date('Y-m-d_G:i:s', time());
 
             # récuperer la valeur des autres variables
             $nomUtilisateur = "henz";
