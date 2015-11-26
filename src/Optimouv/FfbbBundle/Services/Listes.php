@@ -29,8 +29,6 @@ class Listes{
     }
 
     public function creerListeParticipants($idsEntite){
-//        $myfile = fopen("/tmp/ListesService_creerListeParticipants.log", "w") or die("Unable to open file!"); # FIXME
-
         # obtenir l'objet PDO
         $bdd = $this->getPdo();
 
@@ -77,8 +75,6 @@ class Listes{
     }
 
     public function creerListeLieux($idsEntite){
-//        $myfile = fopen("/tmp/ListesService_creerListeLieux.log", "w") or die("Unable to open file!");
-
         # obtenir l'objet PDO
         $bdd = $this->getPdo();
 
@@ -125,10 +121,6 @@ class Listes{
     }
 
 
-
-
-
-
     public function creerEntites()
     {
         $myfile = fopen("/tmp/ListesService_creerEntites.log", "w") or die("Unable to open file!");
@@ -157,21 +149,21 @@ class Listes{
 
             // initialiser toutes les vars
             $idUtilisateur = 1;
-            $nom = "";
-            $prenom = "";
-            $adresse = "";
-            $codePostal = "";
-            $ville = "";
-            $lon = -1;
-            $lat = -1;
-            $projection = "";
-            $typeEquipement = "";
-            $nombreEquipement = -1;
-            $capaciteRencontre = -1;
-            $capacitePhaseFinale = -1;
-            $participants = -1;
-            $licencies = -1;
-            $lieuRencontrePossible = -1;
+//            $nom = "";
+//            $prenom = "";
+//            $adresse = "";
+//            $codePostal = "";
+//            $ville = "";
+//            $longitude = -1;
+//            $latitude = -1;
+//            $projection = "";
+//            $typeEquipement = "";
+//            $nombreEquipement = -1;
+//            $capaciteRencontre = -1;
+//            $capacitePhaseFinale = -1;
+//            $participants = -1;
+//            $licencies = -1;
+//            $lieuRencontrePossible = -1;
 
             # obtenir la date courante du système
             date_default_timezone_set('Europe/Paris');
@@ -192,81 +184,125 @@ class Listes{
 
                     // obtenir la valeur pour chaque paramètre
                     $typeEntite = $donnéesLigne[0];
+                    fwrite($myfile, "typeEntite  : " . print_r($typeEntite , true) . "\n"); # FIXME
 
                     // obtenir les valeurs selon le type d'entité
-                    if ($typeEntite == "EQUPE") {
+                    if (strtolower($typeEntite) == "equipe") {
                         $nom = $donnéesLigne[1];
                         $adresse = $donnéesLigne[2];
                         $codePostal = $donnéesLigne[3];
                         $ville = $donnéesLigne[4];
-                        $lon = $donnéesLigne[5];
-                        $lat = $donnéesLigne[6];
+                        $longitude = $donnéesLigne[5];
+                        $latitude = $donnéesLigne[6];
                         $projection = $donnéesLigne[7];
                         $participants = $donnéesLigne[8];
                         $licencies = $donnéesLigne[9];
-                        $lieuRencontrePossible = $donnéesLigne[10];
-                    } elseif ($typeEntite == "LIEU") {
-                        $nom = $donnéesLigne[1];
-                        $adresse = $donnéesLigne[2];
-                        $codePostal = $donnéesLigne[3];
-                        $ville = $donnéesLigne[4];
-                        $lon = $donnéesLigne[5];
-                        $lat = $donnéesLigne[6];
-                        $projection = $donnéesLigne[7];
-                        $typeEquipement = $donnéesLigne[8];
-                        $nombreEquipement = $donnéesLigne[9];
-                        $capaciteRencontre = $donnéesLigne[10];
-                        $capacitePhaseFinale = $donnéesLigne[11];
-                        $lieuRencontrePossible = $donnéesLigne[12];
-                    } elseif ($typeEntite == "PERSONNE") {
+                        $lieuRencontrePossible = $this->getBoolean($donnéesLigne[10]);
+
+                        $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, adresse, code_postal, ville, longitude, latitude,"
+                            ." projection, participants, "
+                            ." licencies, lieu_rencontre_possible, date_creation, date_modification )"
+                            ."VALUES ( :id_utilisateur, :type_entite, :nom, :adresse, :code_postal, :ville, :longitude, :latitude, "
+                            ." :projection, :participants, "
+                            .":licencies, :lieu_rencontre_possible, :date_creation, :date_modification );";
+
+                        $stmt = $bdd->prepare($sql);
+                        $stmt->bindParam(':id_utilisateur', $idUtilisateur);
+                        $stmt->bindParam(':type_entite', $typeEntite);
+                        $stmt->bindParam(':nom', $nom);
+                        $stmt->bindParam(':adresse', $adresse);
+                        $stmt->bindParam(':code_postal', $codePostal);
+                        $stmt->bindParam(':ville', $ville);
+                        $stmt->bindParam(':longitude', $longitude);
+                        $stmt->bindParam(':latitude', $latitude);
+                        $stmt->bindParam(':projection', $projection);
+                        $stmt->bindParam(':participants', $participants);
+                        $stmt->bindParam(':licencies', $licencies);
+                        $stmt->bindParam(':lieu_rencontre_possible', $lieuRencontrePossible);
+                        $stmt->bindParam(':date_creation', $dateCreation);
+                        $stmt->bindParam(':date_modification', $dateModification);
+                        $stmt->execute();
+
+                    }
+                    elseif (strtolower($typeEntite) == "personne") {
                         $nom = $donnéesLigne[1];
                         $prenom = $donnéesLigne[2];
                         $adresse = $donnéesLigne[3];
                         $codePostal = $donnéesLigne[4];
                         $ville = $donnéesLigne[5];
-                        $lon = $donnéesLigne[6];
-                        $lat = $donnéesLigne[7];
+                        $longitude = $donnéesLigne[6];
+                        $latitude = $donnéesLigne[7];
                         $projection = $donnéesLigne[8];
-                        $lieuRencontrePossible = $donnéesLigne[9];
+                        $lieuRencontrePossible = $this->getBoolean($donnéesLigne[9]);
+
+                        $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, prenom, adresse, code_postal, ville, longitude, latitude,"
+                            ." projection, lieu_rencontre_possible, date_creation, date_modification )"
+                            ."VALUES ( :id_utilisateur, :type_entite, :nom, :prenom, :adresse, :code_postal, :ville, :longitude, :latitude, "
+                            ." :projection, :lieu_rencontre_possible, :date_creation, :date_modification );";
+
+                        $stmt = $bdd->prepare($sql);
+                        $stmt->bindParam(':id_utilisateur', $idUtilisateur);
+                        $stmt->bindParam(':type_entite', $typeEntite);
+                        $stmt->bindParam(':nom', $nom);
+                        $stmt->bindParam(':prenom', $prenom);
+                        $stmt->bindParam(':adresse', $adresse);
+                        $stmt->bindParam(':code_postal', $codePostal);
+                        $stmt->bindParam(':ville', $ville);
+                        $stmt->bindParam(':longitude', $longitude);
+                        $stmt->bindParam(':latitude', $latitude);
+                        $stmt->bindParam(':projection', $projection);
+                        $stmt->bindParam(':lieu_rencontre_possible', $lieuRencontrePossible);
+                        $stmt->bindParam(':date_creation', $dateCreation);
+                        $stmt->bindParam(':date_modification', $dateModification);
+                        $stmt->execute();
+
                     }
+                    elseif ($typeEntite == "LIEU") {
+                        $nom = $donnéesLigne[1];
+                        $adresse = $donnéesLigne[2];
+                        $codePostal = $donnéesLigne[3];
+                        $ville = $donnéesLigne[4];
+                        $longitude = $donnéesLigne[5];
+                        $latitude = $donnéesLigne[6];
+                        $projection = $donnéesLigne[7];
+                        $typeEquipement = $donnéesLigne[8];
+                        $nombreEquipement = $donnéesLigne[9];
+                        $capaciteRencontre = $this->getBoolean($donnéesLigne[10]);
+                        $capacitePhaseFinale = $this->getBoolean($donnéesLigne[11]);
+                        $lieuRencontrePossible = $this->getBoolean($donnéesLigne[12]);
 
+                        $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, adresse, code_postal, ville, longitude, latitude,"
+                            ." projection, type_equipement, nombre_equipement, capacite_rencontre, capacite_phase_finale, "
+                            ." lieu_rencontre_possible, date_creation, date_modification )"
+                            ."VALUES ( :id_utilisateur, :type_entite, :nom, :adresse, :code_postal, :ville, :longitude, :latitude, "
+                            ." :projection, :type_equipement, :nombre_equipement, :capacite_rencontre, :capacite_phase_finale, "
+                            ." :lieu_rencontre_possible, :date_creation, :date_modification );";
 
-                    # insérer dans la base de données
-                    $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, prenom, adresse, code_postal, ville, longitude, latitude,"
-                        ." projection, type_equipement, nombre_equipement, capacite_rencontre, capacite_phase_finale, participants, "
-                        ." licencies, lieu_rencontre_possible, date_creation, date_modification )"
-                        ."VALUES ( :id_utilisateur, :type_entite, :nom, :prenom, :adresse, :code_postal, :ville, :longitude, :latitude, "
-                        ." :projection, :type_equipement, :nombre_equipement, :capacite_rencontre, :capacite_phase_finale,  :participants, "
-                        .":licencies, :lieu_rencontre_possible, :date_creation, :date_modification );";
+                        fwrite($myfile, "sql  : " . print_r($sql , true) . "\n"); # FIXME
+                        $stmt = $bdd->prepare($sql);
+                        $stmt->bindParam(':id_utilisateur', $idUtilisateur);
+                        $stmt->bindParam(':type_entite', $typeEntite);
+                        $stmt->bindParam(':nom', $nom);
+                        $stmt->bindParam(':adresse', $adresse);
+                        $stmt->bindParam(':code_postal', $codePostal);
+                        $stmt->bindParam(':ville', $ville);
+                        $stmt->bindParam(':longitude', $longitude);
+                        $stmt->bindParam(':latitude', $latitude);
+                        $stmt->bindParam(':projection', $projection);
+                        $stmt->bindParam(':type_equipement', $typeEquipement);
+                        $stmt->bindParam(':nombre_equipement', $nombreEquipement);
+                        $stmt->bindParam(':capacite_rencontre', $capaciteRencontre);
+                        $stmt->bindParam(':capacite_phase_finale', $capacitePhaseFinale);
+                        $stmt->bindParam(':lieu_rencontre_possible', $lieuRencontrePossible);
+                        $stmt->bindParam(':date_creation', $dateCreation);
+                        $stmt->bindParam(':date_modification', $dateModification);
+                        $stmt->execute();
 
-                    fwrite($myfile, "sql  : " . print_r($sql , true) . "\n"); # FIXME
-                    $stmt = $bdd->prepare($sql);
-                    $stmt->bindParam(':id_utilisateur', $idUtilisateur);
-                    $stmt->bindParam(':type_entite', $typeEntite);
-                    $stmt->bindParam(':nom', $nom);
-                    $stmt->bindParam(':prenom', $prenom);
-                    $stmt->bindParam(':adresse', $adresse);
-                    $stmt->bindParam(':code_postal', $codePostal);
-                    $stmt->bindParam(':ville', $ville);
-                    $stmt->bindParam(':longitude', $lon);
-                    $stmt->bindParam(':latitude', $lat);
-                    $stmt->bindParam(':projection', $projection);
-                    $stmt->bindParam(':type_equipement', $typeEquipement);
-                    $stmt->bindParam(':nombre_equipement', $nombreEquipement);
-                    $stmt->bindParam(':capacite_rencontre', $capaciteRencontre);
-                    $stmt->bindParam(':capacite_phase_finale', $capacitePhaseFinale);
-                    $stmt->bindParam(':participants', $participants);
-                    $stmt->bindParam(':licencies', $licencies);
-                    $stmt->bindParam(':lieu_rencontre_possible', $lieuRencontrePossible);
-                    $stmt->bindParam(':date_creation', $dateCreation);
-                    $stmt->bindParam(':date_modification', $dateModification);
-                    $stmt->execute();
+                    }
 
                     # obtenir l'id de l"entité créée
                     $idEntite = $bdd->lastInsertId();
                     array_push($idsEntite, $idEntite);
-
-
                 }
             }
         }
@@ -277,6 +313,19 @@ class Listes{
         );
 
         return $retour;
+    }
+
+    # convertir la valeur du champ lieuRencontrePossible
+    public function getBoolean($input){
+
+        // convertir la valeur en boolean
+        if (strtolower($input)  == "oui"){
+            $input = 1;
+        }
+        elseif(strtolower($input) == "non"){
+            $input = 0;
+        }
+        return $input;
     }
 
     # retourner un objet PDO qu'on peut utiliser dans d'autres fonctions
