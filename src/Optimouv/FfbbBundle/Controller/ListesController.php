@@ -30,13 +30,9 @@ class ListesController extends Controller
 
     public function creerListeParticipantsAction()
     {
-        $myfile = fopen("/tmp/ListesController_creerListeParticipantsAction.log", "w") or die("Unable to open file!"); # FIXME
-
         # créer des entités dans la table entite
         $retourEntites = $this->get('service_listes')->creerEntites();
         $idsEntite = $retourEntites["idsEntite"];
-
-        fwrite($myfile, "idsEntite : ".print_r($idsEntite , true)."\n"); # FIXME
 
         # créer une liste dans la table liste_participants
         $retourListe = $this->get('service_listes')->creerListeParticipants($idsEntite);
@@ -52,13 +48,9 @@ class ListesController extends Controller
 
     public function creerListeLieuxAction()
     {
-        $myfile = fopen("/tmp/ListesController_creerListeLieuxAction.log", "w") or die("Unable to open file!"); # FIXME
-
         # créer des entités dans la table entite
         $retourEntites = $this->get('service_listes')->creerEntites();
         $idsEntite = $retourEntites["idsEntite"];
-
-        fwrite($myfile, "idsEntite  : ".print_r($idsEntite , true)."\n"); # FIXME
 
         # créer une liste dans la table liste_participants
         $retourListe = $this->get('service_listes')->creerListeLieux($idsEntite);
