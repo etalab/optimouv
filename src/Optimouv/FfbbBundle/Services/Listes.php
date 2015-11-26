@@ -32,19 +32,20 @@ class Listes{
         # obtenir l'objet PDO
         $bdd = $this->getPdo();
 
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateCreation = date('Y-m-d', time());
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
         if (!$bdd) {
-            //erreur de connexion!
-            die("\nPDO::errorInfo():\n");
+            //erreur de connexion
+            error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerListeParticipants, datetime: ".$dateTimeNow, 3, "/tmp/optimouv.log");
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         } else {
-
-            # obtenir la date courante du système
-            date_default_timezone_set('Europe/Paris');
-            $dateCreation = date('Y-m-d', time());
-            $dateCreationNom = date('Y-m-d_G:i:s', time());
-
+            
             # récuperer la valeur des autres variables
             $nomUtilisateur = "henz";
-            $nom = "liste_participants_".$nomUtilisateur."_".$dateCreationNom;
+            $nom = "liste_participants_".$nomUtilisateur."_".$dateTimeNow;
             $idUtilisateur = 1;
 
             # construire la liste d'équipes
@@ -64,6 +65,10 @@ class Listes{
             $stmt->bindParam(':equipes', $equipes);
             $stmt->execute();
 
+            # afficher le statut de la requete executée
+            error_log("\n Service: Listes, Function: creerListeParticipants, datetime: ".$dateTimeNow
+                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/tmp/optimouv.log");
+
         }
 
         $retour = array(
@@ -78,19 +83,19 @@ class Listes{
         # obtenir l'objet PDO
         $bdd = $this->getPdo();
 
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateCreation = date('Y-m-d', time());
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
         if (!$bdd) {
-            //erreur de connexion!
-            die("\nPDO::errorInfo():\n");
+            //erreur de connexion
+            error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerListeLieux, datetime: ".$dateTimeNow, 3, "/tmp/optimouv.log");
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         } else {
-
-            # obtenir la date courante du système
-            date_default_timezone_set('Europe/Paris');
-            $dateCreation = date('Y-m-d', time());
-            $dateCreationNom = date('Y-m-d_G:i:s', time());
-
             # récuperer la valeur des autres variables
             $nomUtilisateur = "henz";
-            $nom = "liste_terrains_neutres_".$nomUtilisateur."_".$dateCreationNom;
+            $nom = "liste_terrains_neutres_".$nomUtilisateur."_".$dateTimeNow;
             $idUtilisateur = 1;
 
             # construire la liste d'équipes
@@ -110,6 +115,9 @@ class Listes{
             $stmt->bindParam(':lieux', $lieux);
             $stmt->execute();
 
+            # afficher le statut de la requete executée
+            error_log("\n Service: Listes, Function: creerListeLieux, datetime: ".$dateTimeNow
+                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/tmp/optimouv.log");
         }
 
         $retour = array(
@@ -123,8 +131,6 @@ class Listes{
 
     public function creerEntites()
     {
-        $myfile = fopen("/tmp/ListesService_creerEntites.log", "w") or die("Unable to open file!");
-
         # obtenir le nom du fichier uploadé
         $nomFichierTemp = $_FILES["file-0"]["tmp_name"];
 
@@ -149,33 +155,20 @@ class Listes{
 
             // initialiser toutes les vars
             $idUtilisateur = 1;
-//            $nom = "";
-//            $prenom = "";
-//            $adresse = "";
-//            $codePostal = "";
-//            $ville = "";
-//            $longitude = -1;
-//            $latitude = -1;
-//            $projection = "";
-//            $typeEquipement = "";
-//            $nombreEquipement = -1;
-//            $capaciteRencontre = -1;
-//            $capacitePhaseFinale = -1;
-//            $participants = -1;
-//            $licencies = -1;
-//            $lieuRencontrePossible = -1;
 
             # obtenir la date courante du système
             date_default_timezone_set('Europe/Paris');
             $dateCreation = date('Y-m-d', time());
             $dateModification = date('Y-m-d', time());
+            $dateTimeNow = date('Y-m-d_G:i:s', time());
 
             # obtenir l'objet PDO
             $bdd = $this->getPdo();
 
             if (!$bdd) {
-                //erreur de connexion!
-                die("\nPDO::errorInfo():\n");
+                //erreur de connexion
+                error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow, 3, "/tmp/optimouv.log");
+                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
             } else {
                 $idsEntite = [];
                 // obtenir les données pour chaque ligne
@@ -184,7 +177,6 @@ class Listes{
 
                     // obtenir la valeur pour chaque paramètre
                     $typeEntite = $donnéesLigne[0];
-                    fwrite($myfile, "typeEntite  : " . print_r($typeEntite , true) . "\n"); # FIXME
 
                     // obtenir les valeurs selon le type d'entité
                     if (strtolower($typeEntite) == "equipe") {
@@ -221,7 +213,6 @@ class Listes{
                         $stmt->bindParam(':lieu_rencontre_possible', $lieuRencontrePossible);
                         $stmt->bindParam(':date_creation', $dateCreation);
                         $stmt->bindParam(':date_modification', $dateModification);
-                        $stmt->execute();
 
                     }
                     elseif (strtolower($typeEntite) == "personne") {
@@ -254,8 +245,6 @@ class Listes{
                         $stmt->bindParam(':lieu_rencontre_possible', $lieuRencontrePossible);
                         $stmt->bindParam(':date_creation', $dateCreation);
                         $stmt->bindParam(':date_modification', $dateModification);
-                        $stmt->execute();
-
                     }
                     elseif ($typeEntite == "LIEU") {
                         $nom = $donnéesLigne[1];
@@ -278,7 +267,6 @@ class Listes{
                             ." :projection, :type_equipement, :nombre_equipement, :capacite_rencontre, :capacite_phase_finale, "
                             ." :lieu_rencontre_possible, :date_creation, :date_modification );";
 
-                        fwrite($myfile, "sql  : " . print_r($sql , true) . "\n"); # FIXME
                         $stmt = $bdd->prepare($sql);
                         $stmt->bindParam(':id_utilisateur', $idUtilisateur);
                         $stmt->bindParam(':type_entite', $typeEntite);
@@ -296,9 +284,14 @@ class Listes{
                         $stmt->bindParam(':lieu_rencontre_possible', $lieuRencontrePossible);
                         $stmt->bindParam(':date_creation', $dateCreation);
                         $stmt->bindParam(':date_modification', $dateModification);
-                        $stmt->execute();
 
                     }
+                    # executer la requete
+                    $stmt->execute();
+
+                    # afficher le statut de la requete executée
+                    error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+                        ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/tmp/optimouv.log");
 
                     # obtenir l'id de l"entité créée
                     $idEntite = $bdd->lastInsertId();
@@ -317,7 +310,6 @@ class Listes{
 
     # convertir la valeur du champ lieuRencontrePossible
     public function getBoolean($input){
-
         // convertir la valeur en boolean
         if (strtolower($input)  == "oui"){
             $input = 1;
@@ -335,11 +327,17 @@ class Listes{
         $dbuser = $this->database_user;
         $dbpwd = $this->database_password;
 
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
         try {
             # créer une objet PDO
             $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
         } catch (PDOException $e) {
-            die('Erreur : ' . $e->getMessage());
+            error_log("\n Service: Listes, Function: getPdo, datetime: ".$dateTimeNow
+                ."\n PDOException: ".print_r($e, true), 3, "/tmp/optimouv.log");
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
 
         return $bdd;
