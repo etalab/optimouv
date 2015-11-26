@@ -1,0 +1,85 @@
+{% extends '::BOLayout.html.twig' %}
+
+     {% block pagewrapper %}
+
+         <div id="page-wrapper">
+
+             <div class="row">
+                 <div class="col-lg-12">
+                     <h3 class="page-header">Créez votre groupe de participants </h3>
+                 </div>
+                 <!-- /.col-lg-12 -->
+             </div>
+             <!-- /.row -->
+
+             <div class="row" >
+
+
+                 <form id="demoform" action="{{ path('ffbb_homepage') }}" method="POST" class="panel-heading">
+                     <select multiple="multiple" size="10" name="duallistbox_demo1[]">
+                        <option	value="47000	AGEN">AGEN</option>
+                     </select>
+                     <br>
+                     <button type="submit" class="btn btn-default pull-right">Envoyer</button>
+                 </form>
+
+             </div>
+
+
+             {#<div class="row">#}
+                 {#<div class="col-lg-6">#}
+                     {#<div class="panel panel-red" style="resize:vertical; overflow-y:auto;">#}
+                         {#<div class="panel-heading">#}
+                             {#Liste des lieux#}
+                         {#</div>#}
+                         {#<div class="panel-body"  style="min-height: 150px; max-height: 190px">#}
+
+                             {#<ul class="connected list list-unstyled"#}
+                                 {#style=" padding-left:20px; list-style-image: url('{{ asset('bundles/ffbb/images/puce-mini.png') }}')">#}
+                                 {#<li><label data-value="94054 ORLY">ORLY</label></li>#}
+                                 {#<li><label data-value="56186 QUIBERON">QUIBERON</label></li>#}
+                                 {#<li><label data-value="83133 TANNERON">TANNERON</label></li>#}
+                                 {#<li><label data-value="49105 CONTIGNE">CONTIGNE</label></li>#}
+                                 {#<li><label data-value="57693 VANTOUX">VANTOUX</label></li>#}
+
+
+
+                             {#</ul>#}
+                         {#</div>#}
+
+                     {#</div>#}
+
+                 {#</div>#}
+
+
+             </div>
+
+
+
+
+
+
+
+             <!-- /.row -->
+         </div>
+
+
+         {% block javascripts %}
+             <!-- code interne dual list box -->
+             <script>
+                 var demo1 = $('select[name="duallistbox_demo1[]"]').bootstrapDualListbox();
+//                 $("#demoform").submit(function() {
+//                     alert($('[name="duallistbox_demo1[]"]').val());
+//                     return false;
+//                 });
+             </script>
+         {% endblock %}
+
+
+     {% endblock %}
+
+
+
+
+
+
