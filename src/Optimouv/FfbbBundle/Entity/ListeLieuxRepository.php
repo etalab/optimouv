@@ -28,7 +28,7 @@ class ListeLieuxRepository extends EntityRepository
 
     public function getEquipesPourListe($idListe){
         $query = $this->createQueryBuilder('l')
-            ->select('l.equipes')
+            ->select('l.lieux')
             ->where('l.id= :id')
             ->setParameter('id', $idListe)
             ->getQuery();
