@@ -15,15 +15,6 @@ class Trajet
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
-    /**
-     * @var integer
-     *
      * @ORM\Column(name="depart", type="integer")
      */
     private $depart;
@@ -32,6 +23,8 @@ class Trajet
      * @var integer
      *
      * @ORM\Column(name="destination", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
      */
     private $destination;
 
@@ -39,6 +32,8 @@ class Trajet
      * @var integer
      *
      * @ORM\Column(name="distance", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
      */
     private $distance;
 
@@ -56,23 +51,9 @@ class Trajet
      */
     private $dateCreation;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_modification", type="date")
-     */
-    private $dateModification;
 
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+
 
     /**
      * Set depart
@@ -194,28 +175,5 @@ class Trajet
         return $this->dateCreation;
     }
 
-    /**
-     * Set dateModification
-     *
-     * @param \DateTime $dateModification
-     *
-     * @return Trajet
-     */
-    public function setDateModification($dateModification)
-    {
-        $this->dateModification = $dateModification;
 
-        return $this;
-    }
-
-    /**
-     * Get dateModification
-     *
-     * @return \DateTime
-     */
-    public function getDateModification()
-    {
-        return $this->dateModification;
-    }
 }
-
