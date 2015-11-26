@@ -10,4 +10,17 @@ namespace Optimouv\FfbbBundle\Entity;
  */
 class EntiteRepository extends \Doctrine\ORM\EntityRepository
 {
+
+    public function getDetailsPourEntite($idEntite){
+        $query = $this->createQueryBuilder('e')
+            ->select('e.nom, e.codePostal')
+            ->where('e.id= :id')
+            ->setParameter('id', $idEntite)
+            ->getQuery();
+
+        $result = $query->getResult();
+
+        return $result;
+    }
+
 }
