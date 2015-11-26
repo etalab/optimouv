@@ -1,3 +1,7 @@
+// Fonction to controller si l'element exists ou pas
+jQuery.fn.exists = function(){return this.length>0;}
+
+
 function addEventHandlerImportListePartcipants(){
   // bouton pour importer une liste de participants
   $("#btn_import_liste_participants").click(function(){
@@ -94,13 +98,45 @@ function addEventHandlerImportListeLieux(){
 
 }
 
+function addEventHandlerSelectListeParticipants(){
+  $("#liste_partcipants").change(function(){
+
+    // obtenir l'id de la liste participants choisie
+    var idListeParticipants = $(this).val();
+    console.log("select liste participants: " + idListeParticipants);
+
+    // ajoter un bouton select s'il n'existe pas
+    if ($("#btn_select_liste_participants").exists() == false) {
+      var newButtonListeParticipants = $('<button id="btn_select_liste_participants" type="submit" class="btn btn-default  pull-right">Utiliser cette liste </button>');
+      $("#div_participants").append(newButtonListeParticipants);
+    }
 
 
+  });
+
+}
+
+function addEventHandlerSelectListeLieux(){
+  $("#liste_lieux").change(function(){
+
+    // obtenir l'id de la liste lieux choisie
+    var idListeLieux = $(this).val();
+    console.log("select liste lieux: " + idListeLieux);
+
+    // ajoter un bouton select s'il n'existe pas
+    if ($("#btn_select_liste_lieux").exists() == false) {
+      var newButtonListeLieux = $('<button id="btn_select_liste_lieux" type="submit" class="btn btn-default  pull-right">Utiliser cette liste </button>');
+      $("#div_lieux").append(newButtonListeLieux);
+    }
+
+  });
+}
 
 $(document).ready(function () {
 
   addEventHandlerImportListePartcipants();
   addEventHandlerImportListeLieux();
-
+  addEventHandlerSelectListeParticipants();
+  addEventHandlerSelectListeLieux();
 });
 
