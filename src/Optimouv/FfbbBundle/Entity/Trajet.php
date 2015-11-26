@@ -16,6 +16,8 @@ class Trajet
      * @var integer
      *
      * @ORM\Column(name="depart", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
      */
     private $depart;
 
@@ -32,8 +34,6 @@ class Trajet
      * @var integer
      *
      * @ORM\Column(name="distance", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
      */
     private $distance;
 
