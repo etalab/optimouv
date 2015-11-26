@@ -17,7 +17,7 @@ class ListeLieuxRepository extends EntityRepository
     public function getListes(){
 
         $query = $this->createQueryBuilder('l')
-            ->select('l.nom')
+            ->select('l.id, l.nom')
             ->getQuery();
 
         $result = $query->getResult();

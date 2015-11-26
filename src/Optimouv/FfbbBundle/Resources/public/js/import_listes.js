@@ -1,6 +1,6 @@
 function addEventHandlerImportListePartcipants(){
   // bouton pour importer une liste de participants
-  $("#btn_liste_participants").click(function(){
+  $("#btn_import_liste_participants").click(function(){
     console.log("upload listeParticipants");
 
     var data = new FormData();
@@ -25,7 +25,7 @@ function addEventHandlerImportListePartcipants(){
           $("#liste_partcipants").empty();
 
           $.each(data, function(index, value){
-            $("#liste_partcipants").append("<option value=" + value.nom + ">" + value.nom + "</option>");
+            $("#liste_partcipants").append("<option value=" + value.id + ">" + value.nom + "</option>");
           });
 
         }
@@ -48,7 +48,7 @@ function addEventHandlerImportListePartcipants(){
 
 function addEventHandlerImportListeLieux(){
   // bouton pour importer une liste de participants
-  $("#btn_liste_lieux").click(function(){
+  $("#btn_import_liste_lieux").click(function(){
     console.log("upload listeLieux");
 
     var data = new FormData();
@@ -73,7 +73,7 @@ function addEventHandlerImportListeLieux(){
           $("#liste_lieux").empty();
 
           $.each(data, function(index, value){
-            $("#liste_lieux").append("<option value=" + value.nom + ">" + value.nom + "</option>");
+            $("#liste_lieux").append("<option value=" + value.id + ">" + value.nom + "</option>");
           });
 
         }
