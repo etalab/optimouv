@@ -146,10 +146,6 @@ function addEventHandlerUseListeParticipants(idListeParticipants){
     //window.location.href = "select_liste_participants";
     $.redirect('select_liste_participants/'+idListeParticipants, {});
 
-
-
-
-
   });
 }
 

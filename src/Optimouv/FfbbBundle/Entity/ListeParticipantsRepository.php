@@ -23,5 +23,16 @@ class ListeParticipantsRepository extends EntityRepository
 
     }
 
+    public function getEquipesPourListe($idListe){
+        $query = $this->createQueryBuilder('l')
+            ->select('l.equipes')
+            ->where('l.id= :id')
+            ->setParameter('id', $idListe)
+            ->getQuery();
+
+        $result = $query->getResult();
+
+        return $result;
+    }
 
 }
