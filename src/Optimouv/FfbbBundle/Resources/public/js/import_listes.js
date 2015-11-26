@@ -105,11 +105,15 @@ function addEventHandlerSelectListeParticipants(){
     var idListeParticipants = $(this).val();
     console.log("select liste participants: " + idListeParticipants);
 
-    // ajoter un bouton select s'il n'existe pas
     if ($("#btn_select_liste_participants").exists() == false) {
+      // ajoter un bouton select s'il n'existe pas
       var newButtonListeParticipants = $('<button id="btn_select_liste_participants" type="submit" class="btn btn-default  pull-right">Utiliser cette liste </button>');
       $("#div_participants").append(newButtonListeParticipants);
+
     }
+    // ajouter un event handler
+    addEventHandlerUseListeParticipants(idListeParticipants);
+
 
 
   });
@@ -123,13 +127,40 @@ function addEventHandlerSelectListeLieux(){
     var idListeLieux = $(this).val();
     console.log("select liste lieux: " + idListeLieux);
 
-    // ajoter un bouton select s'il n'existe pas
     if ($("#btn_select_liste_lieux").exists() == false) {
+      // ajoter un bouton select s'il n'existe pas
       var newButtonListeLieux = $('<button id="btn_select_liste_lieux" type="submit" class="btn btn-default  pull-right">Utiliser cette liste </button>');
       $("#div_lieux").append(newButtonListeLieux);
+
+
     }
+    // ajouter un event handler
+    addEventHandlerUseListeLieux(idListeLieux);
 
   });
+}
+
+function addEventHandlerUseListeParticipants(idListeParticipants){
+  $("#btn_select_liste_participants").click(function(){
+    console.log("addEventHandlerUseListeParticipants: " + idListeParticipants);
+    //window.location.href = "select_liste_participants";
+    $.redirect('select_liste_participants/'+idListeParticipants, {});
+
+
+
+
+
+  });
+}
+
+function addEventHandlerUseListeLieux(idListeLieux){
+  $("#btn_select_liste_lieux").click(function(){
+    console.log("addEventHandlerUseListeLieux: " + idListeLieux);
+    //window.location.href = "select_liste_lieux";
+    $.redirect('select_liste_lieux/'+idListeLieux, {});
+
+  });
+
 }
 
 $(document).ready(function () {
