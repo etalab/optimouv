@@ -47,3 +47,12 @@ ffbb_creer_liste_participants:
 ffbb_creer_liste_lieux:
     path:     /creer_liste_lieux
     defaults: { _controller: FfbbBundle:Listes:creerListeLieux }
+
+ffbb_select_liste_participants:
+    path:     /select_liste_participants/{idListeParticipants}
+    defaults: { _controller: FfbbBundle:Groupe:afficherParticipants  }
+
+ffbb_select_liste_lieux:
+    path:     /select_liste_lieux/{idListeLieux}
+    defaults: { _controller: FfbbBundle:Groupe:afficherLieux  }
+
