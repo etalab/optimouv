@@ -39,7 +39,7 @@ class Listes{
 
         if (!$bdd) {
             //erreur de connexion
-            error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerListeParticipants, datetime: ".$dateTimeNow, 3, "/tmp/optimouv.log");
+//            error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerListeParticipants, datetime: ".$dateTimeNow, 3, "/var/log/apache2/optimouv.log");
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         } else {
             
@@ -66,8 +66,8 @@ class Listes{
             $stmt->execute();
 
             # afficher le statut de la requete executée
-            error_log("\n Service: Listes, Function: creerListeParticipants, datetime: ".$dateTimeNow
-                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/tmp/optimouv.log");
+//            error_log("\n Service: Listes, Function: creerListeParticipants, datetime: ".$dateTimeNow
+//                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/var/log/apache2/optimouv.log");
 
         }
 
@@ -90,7 +90,7 @@ class Listes{
 
         if (!$bdd) {
             //erreur de connexion
-            error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerListeLieux, datetime: ".$dateTimeNow, 3, "/tmp/optimouv.log");
+//            error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerListeLieux, datetime: ".$dateTimeNow, 3, "/var/log/apache2/optimouv.log");
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         } else {
             # récuperer la valeur des autres variables
@@ -116,8 +116,8 @@ class Listes{
             $stmt->execute();
 
             # afficher le statut de la requete executée
-            error_log("\n Service: Listes, Function: creerListeLieux, datetime: ".$dateTimeNow
-                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/tmp/optimouv.log");
+//            error_log("\n Service: Listes, Function: creerListeLieux, datetime: ".$dateTimeNow
+//                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/var/log/apache2/optimouv.log");
         }
 
         $retour = array(
@@ -167,7 +167,7 @@ class Listes{
 
             if (!$bdd) {
                 //erreur de connexion
-                error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow, 3, "/tmp/optimouv.log");
+//                error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow, 3, "/var/log/apache2/optimouv.log");
                 die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
             } else {
                 $idsEntite = [];
@@ -290,8 +290,8 @@ class Listes{
                     $stmt->execute();
 
                     # afficher le statut de la requete executée
-                    error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-                        ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/tmp/optimouv.log");
+//                    error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+//                        ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/var/log/apache2/optimouv.log");
 
                     # obtenir l'id de l"entité créée
                     $idEntite = $bdd->lastInsertId();
@@ -335,8 +335,8 @@ class Listes{
             # créer une objet PDO
             $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
         } catch (PDOException $e) {
-            error_log("\n Service: Listes, Function: getPdo, datetime: ".$dateTimeNow
-                ."\n PDOException: ".print_r($e, true), 3, "/tmp/optimouv.log");
+//            error_log("\n Service: Listes, Function: getPdo, datetime: ".$dateTimeNow
+//                ."\n PDOException: ".print_r($e, true), 3, "/var/log/apache2/optimouv.log");
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
 

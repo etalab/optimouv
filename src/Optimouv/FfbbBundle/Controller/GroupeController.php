@@ -32,8 +32,8 @@ class GroupeController extends Controller
             array_push($detailsEntites, $detailsEntite[0] );
         }
 
-        error_log("\n Controller: Groupe, Function: afficherParticipantsAction, datetime: ".$dateTimeNow
-            ."\n detailsEntites : ".print_r($detailsEntites, true), 3, "/tmp/optimouv.log");
+//        error_log("\n Controller: Groupe, Function: afficherParticipantsAction, datetime: ".$dateTimeNow
+//            ."\n detailsEntites : ".print_r($detailsEntites, true), 3, "/var/log/apache2/optimouv.log");
 
         $outputTableau = array("detailsEntites" => $detailsEntites );
 
@@ -61,8 +61,8 @@ class GroupeController extends Controller
             array_push($detailsEntites, $detailsEntite[0] );
         }
 
-        error_log("\n Controller: Groupe, Function: afficherParticipantsAction, datetime: ".$dateTimeNow
-            ."\n detailsEntites : ".print_r($detailsEntites, true), 3, "/tmp/optimouv.log");
+//        error_log("\n Controller: Groupe, Function: afficherParticipantsAction, datetime: ".$dateTimeNow
+//            ."\n detailsEntites : ".print_r($detailsEntites, true), 3, "/var/log/apache2/optimouv.log");
 
         $outputTableau = array("detailsEntites" => $detailsEntites );
 

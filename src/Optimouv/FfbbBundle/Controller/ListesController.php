@@ -28,9 +28,9 @@ class ListesController extends Controller
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
-        error_log("\n Controller: Listes, Function: indexAction, datetime: ".$dateTimeNow
-            ."\n listesParticipants: ".print_r($listesParticipants, true)
-            ."\n listesLieux: ".print_r($listesLieux, true), 3, "/tmp/optimouv.log");
+//        error_log("\n Controller: Listes, Function: indexAction, datetime: ".$dateTimeNow
+//            ."\n listesParticipants: ".print_r($listesParticipants, true)
+//            ."\n listesLieux: ".print_r($listesLieux, true), 3, "/var/log/apache2/optimouv.log");
 
 
         return $this->render('FfbbBundle:Listes:index.html.twig', $outputTableau);
