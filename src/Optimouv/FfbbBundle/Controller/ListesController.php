@@ -53,8 +53,6 @@ class ListesController extends Controller
         $listesParticipants = $em->getRepository('FfbbBundle:ListeParticipants')->getListes();
 
 
-
-
         return new JsonResponse($listesParticipants);
     }
 

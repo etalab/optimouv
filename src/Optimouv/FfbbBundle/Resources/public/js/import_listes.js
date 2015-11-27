@@ -114,8 +114,6 @@ function addEventHandlerSelectListeParticipants(){
     // ajouter un event handler
     addEventHandlerUseListeParticipants(idListeParticipants);
 
-
-
   });
 
 }
@@ -132,7 +130,6 @@ function addEventHandlerSelectListeLieux(){
       var newButtonListeLieux = $('<button id="btn_select_liste_lieux" type="submit" class="btn btn-default  pull-right">Utiliser cette liste </button>');
       $("#div_lieux").append(newButtonListeLieux);
 
-
     }
     // ajouter un event handler
     addEventHandlerUseListeLieux(idListeLieux);
@@ -143,7 +140,6 @@ function addEventHandlerSelectListeLieux(){
 function addEventHandlerUseListeParticipants(idListeParticipants){
   $("#btn_select_liste_participants").click(function(){
     console.log("addEventHandlerUseListeParticipants: " + idListeParticipants);
-    //window.location.href = "select_liste_participants";
     $.redirect('select_liste_participants/'+idListeParticipants, {});
 
   });
@@ -152,7 +148,6 @@ function addEventHandlerUseListeParticipants(idListeParticipants){
 function addEventHandlerUseListeLieux(idListeLieux){
   $("#btn_select_liste_lieux").click(function(){
     console.log("addEventHandlerUseListeLieux: " + idListeLieux);
-    //window.location.href = "select_liste_lieux";
     $.redirect('select_liste_lieux/'+idListeLieux, {});
 
   });

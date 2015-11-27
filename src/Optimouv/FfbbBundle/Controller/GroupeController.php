@@ -29,13 +29,15 @@ class GroupeController extends Controller
         $detailsEntites = [];
         for($i=0; $i<count($idParticipants); $i++){
             $detailsEntite = $em->getRepository('FfbbBundle:Entite')->getDetailsPourEntite($idParticipants[$i]);
-            array_push($detailsEntites,$detailsEntite );
+            array_push($detailsEntites, $detailsEntite[0] );
         }
 
         error_log("\n Controller: Groupe, Function: afficherParticipantsAction, datetime: ".$dateTimeNow
             ."\n detailsEntites : ".print_r($detailsEntites, true), 3, "/tmp/optimouv.log");
 
-        return $this->render('FfbbBundle:Groupe:indexUpdate.html.twig', $detailsEntites);
+        $outputTableau = array("detailsEntites" => $detailsEntites );
+
+        return $this->render('FfbbBundle:Groupe:indexUpdate.html.twig', $outputTableau);
     }
 
     public function afficherLieuxAction($idListeLieux)
@@ -56,14 +58,15 @@ class GroupeController extends Controller
         $detailsEntites = [];
         for($i=0; $i<count($idLieux); $i++){
             $detailsEntite = $em->getRepository('FfbbBundle:Entite')->getDetailsPourEntite($idLieux[$i]);
-            array_push($detailsEntites, $detailsEntite );
+            array_push($detailsEntites, $detailsEntite[0] );
         }
 
         error_log("\n Controller: Groupe, Function: afficherParticipantsAction, datetime: ".$dateTimeNow
             ."\n detailsEntites : ".print_r($detailsEntites, true), 3, "/tmp/optimouv.log");
 
+        $outputTableau = array("detailsEntites" => $detailsEntites );
 
-        return $this->render('FfbbBundle:Groupe:indexUpdate.html.twig', $detailsEntites);
+        return $this->render('FfbbBundle:Groupe:indexUpdate.html.twig', $outputTableau);
     }
 
 }
