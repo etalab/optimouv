@@ -912,6 +912,7 @@ order by Proximite limit 1;");
 
     public function creerGroupe($villes, $nomGroupe)
     {
+        error_log("creerGroupe [$nomGroupe]\n", 3, "optimouv.log");
 
 
         $dbname = $this->database_name;
@@ -937,28 +938,82 @@ order by Proximite limit 1;");
 
         for ($i = 0; $i < $nbrVilles; $i++) {
             $req = addslashes($villes[$i]);
-            $codePostal = substr($req, 0, 2);
+            $codePostal = substr($req, 0, 5);
             $nomVille = substr($req, 6);
 
             $char = array("-", "_", "'");
             $nomVille = str_replace($char, " ", $nomVille);
+            error_log("ville [$nomVille]\n", 3, "optimouv.log");
 
 
             //chercher l'id de la ville selon la table de reference
-
-            $reqID = $bdd->prepare("SELECT ville_id FROM villes_france_free where ville_nom_simple LIKE '$nomVille%' AND  ville_code_postal LIKE '$codePostal%';");
+            $query = "SELECT 1 as 'prio', ville_id FROM villes_france_free where ville_nom_simple = '$nomVille' AND  ville_code_postal = '$codePostal'
+                      UNION
+                      SELECT 3 as 'prio', ville_id FROM villes_france_free where ville_nom_simple = '$nomVille'
+                      UNION
+                      SELECT 2 as 'prio', ville_id FROM villes_france_free where ville_nom_simple LIKE '%$nomVille%' AND  ville_code_postal LIKE '%$codePostal%'";
+            $reqID = $bdd->prepare($query);
+            error_log($query."\n", 3, "optimouv.log");//XXXX
 
             $reqID->execute();
-            $idVille = $reqID->fetchColumn();
+            $result = $reqID->fetchAll(PDO::FETCH_ASSOC);
+            $count = count($result);
 
-            if($idVille){
-                array_push($idVilles, $idVille);
+            $ok = true;
+            $ideal = false;
 
+            // test si pas de ville
+            if ($count == 0) {
+                $ok = false;
+            } else {
+                foreach ($result as $line) {
+                    if ($line['prio'] == 1) {
+                        $ideal = $line['ville_id'];
+                        break;
+                    }
+                }
+
+                // si on n'a pas trouve prio 1 alors on cherche prio 2
+                if ($ideal === false) {
+                    foreach ($result as $line) {
+                        if ($line['prio'] == 2) {
+                            $ideal = $line['ville_id'];
+                            break;
+                        }
+                    }
+                }
             }
-            else{
-                error_log(print_R($idVilles, TRUE), 3, "optimouv.log");
-                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+
+/*
+            if ($codePostal == '13500') {
+                echo "<pre>result = ";
+                print_r($result);
+                var_dump($ideal);
+                echo "</pre>";
+                exit;
             }
+*/
+
+            // test si pas de ville idéale et plus de 1 ville approximative
+            if ($count >= 2 && $ideal === false) {
+                $ok = false;
+            }
+
+            // en cas d'erreur
+            if (!$ok) {
+                $line_num = $i + 2;
+
+                $msg = "Il y a une erreur avec cette ville [$nomVille] et le code postal [$codePostal] et N de la ligne $line_num : $count resultats\n";
+                error_log($msg, 3, "optimouv.log");
+                die($msg);
+            }
+
+            if ($ideal !== false)
+                $idVille = $ideal;
+            else
+                $idVille = $result[0]['ville_id'];
+
+             array_push($idVilles, $idVille);
 
 
         }
