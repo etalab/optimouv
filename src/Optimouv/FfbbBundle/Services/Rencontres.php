@@ -923,7 +923,6 @@ order by Proximite limit 1;");
             die('Erreur : ' . $e->getMessage());
         }
 
-
        /* $foreignKeyCheck = $bdd->prepare("SET FOREIGN_KEY_CHECKS = 0;");
         $foreignKeyCheck->execute();
 
@@ -949,13 +948,13 @@ order by Proximite limit 1;");
 
             $reqID->execute();
             $idVille = $reqID->fetchColumn();
+
             if($idVille){
                 array_push($idVilles, $idVille);
 
             }
             else{
-                error_log(print_R($idVilles, TRUE), 3, "error_log_optimouv.txt");
-
+                error_log(print_R($idVilles, TRUE), 3, "optimouv.log");
                 die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
             }
 

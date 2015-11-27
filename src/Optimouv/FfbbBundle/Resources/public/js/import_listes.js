@@ -140,7 +140,9 @@ function addEventHandlerSelectListeLieux(){
 function addEventHandlerUseListeParticipants(idListeParticipants){
   $("#btn_select_liste_participants").click(function(){
     console.log("addEventHandlerUseListeParticipants: " + idListeParticipants);
-    $.redirect('select_liste_participants/'+idListeParticipants, {});
+    //$.redirect('select_liste_participants/'+idListeParticipants, {});
+    //$.redirect('select_liste_participants', {"idListeParticipants" : idListeParticipants});
+    $.redirect('listes', {"idListeParticipants" : idListeParticipants});
 
   });
 }
@@ -148,7 +150,8 @@ function addEventHandlerUseListeParticipants(idListeParticipants){
 function addEventHandlerUseListeLieux(idListeLieux){
   $("#btn_select_liste_lieux").click(function(){
     console.log("addEventHandlerUseListeLieux: " + idListeLieux);
-    $.redirect('select_liste_lieux/'+idListeLieux, {});
+    //$.redirect('select_liste_lieux/'+idListeLieux, {});
+    $.redirect('/', {"idListeLieux" : idListeLieux});
 
   });
 

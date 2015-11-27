@@ -14,9 +14,10 @@
 
              <div class="row" >
                  <form id="demoform" action="{{ path('ffbb_homepage') }}" method="POST" class="panel-heading">
+                     <input type="text" name="nomGroupe" id="nomGroupe" placeholder="Donnez un nom à votre nouveau groupe" size="110">
                      <select multiple="multiple" size="10" name="duallistbox_demo1[]">
                          {% for detailEntites in detailsEntites %}
-                             <option value={{ detailEntites.codePostal }}> {{ detailEntites.ville }}</option>
+                             <option value="{{ detailEntites.codePostal }} {{ detailEntites.ville }}"> {{ detailEntites.ville }}</option>
                          {% endfor %}
                      </select>
                      <br>

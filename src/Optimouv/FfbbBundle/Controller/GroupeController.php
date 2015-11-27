@@ -3,27 +3,37 @@
 namespace Optimouv\FfbbBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 class GroupeController extends Controller
 {
     public function indexAction()
     {
         return $this->render('FfbbBundle:Groupe:index.html.twig');
+
     }
 
-    public function afficherParticipantsAction($idListeParticipants)
+//    public function afficherParticipantsAction($idListeParticipants)
+    public function afficherParticipantsAction()
     {
         # obtenir entity manager
         $em = $this->getDoctrine()->getManager();
+
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+        // obtenir l'id de la liste
+        $idListeParticipants = $_REQUEST["idListeParticipants"][0];
+
+//        error_log("\n Controller: Groupe, Function: afficherParticipantsAction, datetime: ".$dateTimeNow
+//            ."\n request : ".print_r($_REQUEST, true), 3, "/tmp/optimouv.log");
 
         # obtenir listes des lieux de rencontres
         $idParticipants = $em->getRepository('FfbbBundle:ListeParticipants')->getEquipesPourListe($idListeParticipants);
         $idParticipants = $idParticipants[0]["equipes"];
         $idParticipants = explode(",", $idParticipants);
 
-        # obtenir la date courante du système
-        date_default_timezone_set('Europe/Paris');
-        $dateTimeNow = date('Y-m-d_G:i:s', time());
 
         # obtenir les détails pour chaque entité
         $detailsEntites = [];
@@ -40,18 +50,21 @@ class GroupeController extends Controller
 
         }
 
-//        error_log("\n Controller: Groupe, Function: afficherParticipantsAction, datetime: ".$dateTimeNow
-//            ."\n detailsEntites : ".print_r($detailsEntites, true), 3, "/var/log/apache2/optimouv.log");
 
         $outputTableau = array("detailsEntites" => $detailsEntites );
+
 
         return $this->render('FfbbBundle:Groupe:indexUpdate.html.twig', $outputTableau);
     }
 
-    public function afficherLieuxAction($idListeLieux)
+//    public function afficherLieuxAction($idListeLieux)
+    public function afficherLieuxAction()
     {
         # obtenir entity manager
         $em = $this->getDoctrine()->getManager();
+
+        // obtenir l'id de la liste
+        $idListeLieux = $_REQUEST["idListeLieux"][0];
 
         # obtenir listes des lieux de rencontres
         $idLieux = $em->getRepository('FfbbBundle:ListeLieux')->getEquipesPourListe($idListeLieux);
