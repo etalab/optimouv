@@ -16,7 +16,7 @@
                  <form id="demoform" action="{{ path('ffbb_homepage') }}" method="POST" class="panel-heading">
                      <select multiple="multiple" size="10" name="duallistbox_demo1[]">
                          {% for detailEntites in detailsEntites %}
-                             <option value={{ detailEntites.codePostal }}> {{ detailEntites.nom }}</option>
+                             <option value={{ detailEntites.codePostal }}> {{ detailEntites.ville }}</option>
                          {% endfor %}
                      </select>
                      <br>
