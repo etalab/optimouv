@@ -18,9 +18,6 @@ class Version20151126103615 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE trajet MODIFY id INT NOT NULL');
-        $this->addSql('ALTER TABLE trajet DROP PRIMARY KEY');
-        $this->addSql('ALTER TABLE trajet DROP id');
         $this->addSql('ALTER TABLE trajet ADD PRIMARY KEY (destination, distance)');
     }
 
