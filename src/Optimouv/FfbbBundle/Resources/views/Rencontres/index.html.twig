@@ -243,33 +243,33 @@
                                                 <div class="tab-pane fade in active" id="Estimations">
 
                                                     <div class="list-group">
-                                                        <a href="#" class="list-group-item">
+                                                        <p    class="list-group-item">
                                                             <i class="fa  fa-thumb-tack fa-fw"
                                                                style="padding-right: 30px"></i> Le meilleur lieu de
                                                             rencontre
                                                             est <strong>{{ villeDepart }}</strong>
-                                                        </a>
-                                                        <a href="#" class="list-group-item">
+                                                        </p>
+                                                        <p  class="list-group-item">
                                                             <i class="fa fa-road fa-fw" style="padding-right: 30px"></i>
                                                             <strong>{{ distanceMin }}</strong> kilomètres au total
                                                             à parcourir pour l'ensemble du scénario
-                                                        </a>
-                                                        <a href="#" class="list-group-item">
+                                                        </p>
+                                                        <p  class="list-group-item">
                                                             <i class="fa  fa-credit-card fa-fw"
                                                                style="padding-right: 30px"></i>
                                                             <strong>{{ (distanceMin * 0.8)|round }}</strong>
                                                             € pour réaliser les trajets de l'ensemble du scénario en voiture ou covoiturage
 
-                                                        </a>
-                                                        <a href="#" class="list-group-item">
+                                                        </p>
+                                                        <p  class="list-group-item">
                                                             <i class="fa  fa-credit-card fa-fw"
                                                                style="padding-right: 30px"></i>
                                                             <strong>{{ (distanceMin * 1.31)|round }}</strong>
                                                             € pour réaliser les trajets de l'ensemble du scénario en minibus
 
-                                                        </a>
+                                                        </p>
 
-                                                        <a href="#" class="list-group-item">
+                                                        <p  class="list-group-item">
                                                             <i class="fa fa-automobile fa-fw"
                                                                style="padding-right: 30px"></i>
                                                             <strong>{{ (distanceMin *12*0.157)|round }}</strong>
@@ -278,8 +278,8 @@
                                                             joueurs en voiture individuelle
                                                             pour le scénario
 
-                                                        </a>
-                                                        <a href="#" class="list-group-item">
+                                                        </p>
+                                                        <p  class="list-group-item">
                                                             <i class="fa fa-automobile fa-fw"
                                                                style="padding-right: 30px"></i>
                                                             <strong>{{ (distanceMin *(12/4)*0.157)|round }}</strong>
@@ -287,9 +287,9 @@
                                                             CO2 d'émissions totales de GES pour une équipe de 12
                                                             joueurs en co-voiturage pour le scénario
 
-                                                        </a>
+                                                        </p>
 
-                                                        <a href="#" class="list-group-item">
+                                                        <p  class="list-group-item">
                                                             <i class="fa fa-bus fa-fw"
                                                                style="padding-right: 30px"></i>
                                                             <strong>{{ (distanceMin *(12/9)*0.185)|round }}</strong>
@@ -297,7 +297,7 @@
                                                             CO2 d'émissions totales de GES pour une équipe de 12
                                                             joueurs en minibus pour le scénario
 
-                                                        </a>
+                                                        </p>
 
                                                     </div>
 
@@ -348,6 +348,8 @@
                                                     </div>
                                                     <!-- /.table-responsive -->
                                                 </div>
+                                                <a href="{{ path('ffbb_details_calcul') }}" class="pull-left">Détails du calcul</a>
+
                                                 <button type="button" class="btn btn-default  pull-right">Exporter
                                                 </button>
 
@@ -481,32 +483,32 @@
 
 
                                                     <div class="list-group">
-                                                        <a href="#" class="list-group-item">
+                                                        <p  class="list-group-item">
                                                             <i class="fa  fa-thumb-tack fa-fw"
                                                                style="padding-right: 30px"></i> Le meilleur lieu de
                                                             rencontre
                                                             est <strong>{{ villeDepartEq }}</strong>
-                                                        </a>
-                                                        <a href="#" class="list-group-item">
+                                                        </p>
+                                                        <p  class="list-group-item">
                                                             <i class="fa fa-road fa-fw" style="padding-right: 30px"></i>
                                                             <strong>{{ distanceTotaleEq }}</strong> kilomètres au total
                                                             à parcourir pour l'ensemble du scénario
-                                                        </a>
-                                                        <a href="#" class="list-group-item">
+                                                        </p>
+                                                        <p  class="list-group-item">
                                                             <i class="fa  fa-credit-card fa-fw"
                                                                style="padding-right: 30px"></i>
                                                             <strong>{{ (distanceTotaleEq * 0.80)|round }}</strong>
                                                             € pour réaliser les trajets de l'ensemble du scénario en voiture ou covoiturage
 
-                                                        </a>
-                                                        <a href="#" class="list-group-item">
+                                                        </p>
+                                                        <p class="list-group-item">
                                                             <i class="fa  fa-credit-card fa-fw"
                                                                style="padding-right: 30px"></i>
                                                             <strong>{{ (distanceTotaleEq * 1.31)|round }}</strong>
                                                             € pour réaliser les trajets de l'ensemble du scénario en minibus
 
-                                                        </a>
-                                                        <a href="#" class="list-group-item">
+                                                        </p>
+                                                        <p  class="list-group-item">
                                                             <i class="fa fa-automobile fa-fw"
                                                                style="padding-right: 30px"></i>
                                                             <strong>{{ (distanceTotaleEq *12*0.157)|round }}</strong>
@@ -515,8 +517,8 @@
                                                             joueurs en voiture individuelle
                                                             pour le scénario
 
-                                                        </a>
-                                                        <a href="#" class="list-group-item">
+                                                        </p>
+                                                        <p  class="list-group-item">
                                                             <i class="fa fa-automobile fa-fw"
                                                                style="padding-right: 30px"></i>
                                                             <strong>{{ (distanceTotaleEq *(12/4)*0.157)|round }}</strong>
@@ -524,16 +526,16 @@
                                                             CO2 d'émissions totales de GES pour une équipe de 12
                                                             joueurs en co-voiturage pour le scénario
 
-                                                        </a>
+                                                        </p>
 
-                                                        <a href="#" class="list-group-item">
+                                                        <p  class="list-group-item">
                                                             <i class="fa fa-bus fa-fw"
                                                                style="padding-right: 30px"></i>
                                                             <strong>{{ (distanceTotaleEq *(12/9)*0.185)|round }}</strong>
                                                             Kg équivalent
                                                             CO2 d'émissions totales de GES pour une équipe de 12
                                                             joueurs en minibus pour le scénario
-                                                            </a>
+                                                            </p>
 
                                                     </div>
 
@@ -588,6 +590,8 @@
                                                     </div>
                                                     <!-- /.table-responsive -->
                                                 </div>
+                                                <a href="{{ path('ffbb_details_calcul') }}" class="pull-left">Détails du calcul</a>
+
                                                 <button type="button" class="btn btn-default  pull-right">Exporter
                                                 </button>
 

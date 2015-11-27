@@ -56,3 +56,8 @@ ffbb_select_liste_lieux:
     path:     /select_liste_lieux/{idListeLieux}
     defaults: { _controller: FfbbBundle:Groupe:afficherLieux  }
 
+ffbb_details_calcul:
+    path:     /details_calcul
+    defaults: { _controller: FfbbBundle:Rencontres:detailsCalcul }
+
+

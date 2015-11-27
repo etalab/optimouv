@@ -78,9 +78,10 @@
                         </div>
                         <div class="form-group">
                             {#<label>Text Input with Placeholder</label>#}
-                            <input name="valeurExclusion" id="valeurExclusion" type="number" class="form-control" placeholder="Exemple : '50 000' si je souhaite exclure les zones de plus de 50 000 habitants" min="0">
+                            <input name="valeurExclusion" id="valeurExclusion" type="number" onchange="showBtn()"
+                                   class="form-control" placeholder="Exemple : '50 000' si je souhaite exclure les zones de plus de 50 000 habitants" min="100">
                         </div>
-                        <button type="submit" class="btn btn-default  pull-right" >Lancer le calcul
+                        <button type="submit" class="btn btn-default  pull-right" id="bntLancerCalcul" style="visibility: hidden" >Lancer le calcul
                         </button>
                     </form>
 
@@ -233,34 +234,34 @@
                                                     <div class="tab-pane fade in active" id="Estimations">
 
                                                         <div class="list-group">
-                                                            <a href="#" class="list-group-item">
+                                                            <p class="list-group-item">
                                                                 <i class="fa  fa-thumb-tack fa-fw"
                                                                    style="padding-right: 30px"></i> Le meilleur lieu de
                                                                 rencontre
                                                                 est <strong>{{ villeDepart }}</strong>
-                                                            </a>
-                                                            <a href="#" class="list-group-item">
+                                                            </p>
+                                                            <p  class="list-group-item">
                                                                 <i class="fa fa-road fa-fw"
                                                                    style="padding-right: 30px"></i>
                                                                 <strong>{{ distanceMin }}</strong> kilomètres au total
                                                                 à parcourir pour l'ensemble du scénario
-                                                            </a>
-                                                            <a href="#" class="list-group-item">
+                                                            </p>
+                                                            <p  class="list-group-item">
                                                                 <i class="fa  fa-credit-card fa-fw"
                                                                    style="padding-right: 30px"></i>
                                                                 <strong>{{ (distanceMin * 0.80)|round }}</strong>
                                                                 € pour réaliser les trajets de l'ensemble du scénario en voiture ou covoiturage
 
-                                                            </a>
-                                                            <a href="#" class="list-group-item">
+                                                            </p>
+                                                            <p   class="list-group-item">
                                                                 <i class="fa  fa-credit-card fa-fw"
                                                                    style="padding-right: 30px"></i>
                                                                 <strong>{{ (distanceMin * 1.31)|round }}</strong>
                                                                 € pour réaliser les trajets de l'ensemble du scénario en minibus
 
-                                                            </a>
+                                                            </p>
 
-                                                            <a href="#" class="list-group-item">
+                                                            <p   class="list-group-item">
                                                                 <i class="fa fa-automobile fa-fw"
                                                                    style="padding-right: 30px"></i>
                                                                 <strong>{{ (distanceMin *12*0.157)|round }}</strong>
@@ -269,8 +270,8 @@
                                                                 joueurs en voiture individuelle
                                                                 pour le scénario
 
-                                                            </a>
-                                                            <a href="#" class="list-group-item">
+                                                            </p>
+                                                            <p   class="list-group-item">
                                                                 <i class="fa fa-automobile fa-fw"
                                                                    style="padding-right: 30px"></i>
                                                                 <strong>{{ (distanceMin *(12/4)*0.157)|round }}</strong>
@@ -278,9 +279,9 @@
                                                                 CO2 d'émissions totales de GES pour une équipe de 12
                                                                 joueurs en co-voiturage pour le scénario
 
-                                                            </a>
+                                                            </p>
 
-                                                            <a href="#" class="list-group-item">
+                                                            <p  class="list-group-item">
                                                                 <i class="fa fa-bus fa-fw"
                                                                    style="padding-right: 30px"></i>
                                                                 <strong>{{ (distanceMin *(12/9)*0.185)|round }}</strong>
@@ -288,7 +289,7 @@
                                                                 CO2 d'émissions totales de GES pour une équipe de 12
                                                                 joueurs en minibus pour le scénario
 
-                                                            </a>
+                                                            </p>
 
                                                         </div>
 
@@ -342,9 +343,8 @@
                                                         </div>
                                                         <!-- /.table-responsive -->
                                                     </div>
-
-                                                    <button type="button" class="btn btn-default  pull-right">Exporter
-                                                    </button>
+                                                    <a href="{{ path('ffbb_details_calcul') }}" class="pull-left">Détails du calcul</a>
+                                                    <button type="button" class="btn btn-default  pull-right">Exporter </button>
 
                                                 </div>
 
@@ -394,6 +394,12 @@
                 if (document.getElementById("Contrainte").checked == true) {
                     window.location.href = "{{ path('ffbb_exclusion') }}";
                 }
+            }
+
+            function showBtn(){
+
+
+                document.getElementById('bntLancerCalcul').style.visibility="visible";
             }
 
 
