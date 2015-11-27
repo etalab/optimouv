@@ -45,7 +45,8 @@ class Listes{
             
             # récuperer la valeur des autres variables
             $nomUtilisateur = "henz";
-            $nom = "liste_participants_".$nomUtilisateur."_".$dateTimeNow;
+//            $nom = "liste_participants_".$nomUtilisateur."_".$dateTimeNow;
+            $nom = "liste_participants_".$dateTimeNow;
             $idUtilisateur = 1;
 
             # construire la liste d'équipes
@@ -95,7 +96,8 @@ class Listes{
         } else {
             # récuperer la valeur des autres variables
             $nomUtilisateur = "henz";
-            $nom = "liste_terrains_neutres_".$nomUtilisateur."_".$dateTimeNow;
+//            $nom = "liste_terrains_neutres_".$nomUtilisateur."_".$dateTimeNow;
+            $nom = "liste_terrains_neutres_".$dateTimeNow;
             $idUtilisateur = 1;
 
             # construire la liste d'équipes
