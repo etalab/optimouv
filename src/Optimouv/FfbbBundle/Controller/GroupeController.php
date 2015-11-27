@@ -29,7 +29,15 @@ class GroupeController extends Controller
         $detailsEntites = [];
         for($i=0; $i<count($idParticipants); $i++){
             $detailsEntite = $em->getRepository('FfbbBundle:Entite')->getDetailsPourEntite($idParticipants[$i]);
-            array_push($detailsEntites, $detailsEntite[0] );
+            //TODO:rendre plus robuste le teste des lignes des fichiers
+            //tester si la ligne est vide
+            if($detailsEntite){
+                array_push($detailsEntites, $detailsEntite[0] );
+            }
+            else{
+                continue;
+            }
+
         }
 
 //        error_log("\n Controller: Groupe, Function: afficherParticipantsAction, datetime: ".$dateTimeNow
