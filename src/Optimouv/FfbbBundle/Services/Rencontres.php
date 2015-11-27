@@ -913,6 +913,7 @@ order by Proximite limit 1;");
     public function creerGroupe($villes, $nomGroupe)
     {
 
+
         $dbname = $this->database_name;
         $dbuser = $this->database_user;
         $dbpwd = $this->database_password;
