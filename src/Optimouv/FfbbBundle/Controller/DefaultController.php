@@ -23,7 +23,7 @@ class DefaultController extends Controller
         $coordonneesVille = $this->get('service_rencontres')->index($idGroupe);
 
 
-        $nomsVilles = $this->get('service_rencontres')->nomsVilles();
+        $nomsVilles = $this->get('service_rencontres')->nomsVilles($idGroupe);
 
 
          return $this->render('FfbbBundle:Default:index.html.twig', array(

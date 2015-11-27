@@ -745,8 +745,8 @@ order by Proximite limit 1;");
 
     }
 
-    //TODO: where id groupe!!
-    public function nomsVilles()
+
+    public function nomsVilles($idGroupe)
     {
 
         //params de connexion
@@ -762,7 +762,8 @@ order by Proximite limit 1;");
             die('Erreur : ' . $e->getMessage());
         }
 
-        $reqVilles = $bdd->prepare("SELECT equipes FROM  groupe ;");
+        $reqVilles = $bdd->prepare("SELECT equipes FROM  groupe where id = :idGroupe ;");
+        $reqVilles -> bindParam(':idGroupe', $idGroupe);
         $reqVilles->execute();
         $reqVilles = $reqVilles->fetchColumn();
         $reqVilles = explode(",", $reqVilles);
