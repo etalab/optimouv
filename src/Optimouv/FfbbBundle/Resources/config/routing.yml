@@ -3,9 +3,10 @@ ffbb_listes:
     defaults: { _controller: FfbbBundle:Listes:index }
 
 ffbb_table:
-    path:     /listes
+    path:     /listes-participants
 #    defaults: { _controller: FfbbBundle:Groupe:index }
     defaults: { _controller: FfbbBundle:Groupe:afficherParticipants }
+
 
 ffbb_homepage:
     path:     /villes
@@ -40,29 +41,29 @@ ffbb_terrain:
     path:     /terrain-neutre/{idGroupe}
     defaults: { _controller: FfbbBundle:Rencontres:terrainNeutre }
 
+ffbb_details_calcul:
+    path:     /details-calcul
+    defaults: { _controller: FfbbBundle:Rencontres:detailsCalcul }
+
 # routing ajouté pour la liste de participants et de lieux neutres
 
-
 ffbb_creer_liste_participants:
-    path:     /creer_liste_participants
+    path:     /creer-liste-participants
     defaults: { _controller: FfbbBundle:Listes:creerListeParticipants }
 
 ffbb_creer_liste_lieux:
-    path:     /creer_liste_lieux
+    path:     /creer-liste-lieux
     defaults: { _controller: FfbbBundle:Listes:creerListeLieux }
 
 ffbb_select_liste_participants:
 #    path:     /select_liste_participants/{idListeParticipants}
-    path:     /select_liste_participants
+    path:     /select-liste-participants
     defaults: { _controller: FfbbBundle:Groupe:afficherParticipants  }
 
-ffbb_select_liste_lieux:
-#    path:     /select_liste_lieux/{idListeLieux}
-    path:     /select_liste_lieux
-    defaults: { _controller: FfbbBundle:Groupe:afficherLieux  }
+#ffbb_select_liste_lieux:
+##    path:     /select_liste_lieux/{idListeLieux}
+#    path:     /select-liste-lieux
+#    defaults: { _controller: FfbbBundle:Groupe:afficherLieux  }
 
-ffbb_details_calcul:
-    path:     /details_calcul
-    defaults: { _controller: FfbbBundle:Rencontres:detailsCalcul }
 
 
