@@ -924,12 +924,12 @@ order by Proximite limit 1;");
         }
 
 
-        $foreignKeyCheck = $bdd->prepare("SET FOREIGN_KEY_CHECKS = 0;");
+       /* $foreignKeyCheck = $bdd->prepare("SET FOREIGN_KEY_CHECKS = 0;");
         $foreignKeyCheck->execute();
 
         $truncate = $bdd->prepare("truncate table groupe");
         $truncate->execute();
-
+*/
 
         $nbrVilles = count($villes);
         $idVilles = [];
