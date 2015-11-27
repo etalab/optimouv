@@ -7,7 +7,7 @@ ffbb_homepage:
     defaults: { _controller: FfbbBundle:Default:index }
 
 ffbb_rencontres:
-    path:     /rencontres
+    path:     /rencontres/{idGroupe}
     defaults: { _controller: FfbbBundle:Rencontres:index }
 
 ffbb_competitions:
@@ -19,11 +19,11 @@ ffbb_rapports:
     defaults: { _controller: FfbbBundle:Rapports:index }
 
 ffbb_barycentre:
-    path:     /barycentre
+    path:     /barycentre/{idGroupe}
     defaults: { _controller: FfbbBundle:Rencontres:barycentre }
 
 ffbb_exclusion:
-    path:     /exclusion
+    path:     /exclusion/{idGroupe}
     defaults: { _controller: FfbbBundle:Rencontres:exclusion }
 
 
@@ -32,7 +32,7 @@ ffbb_contact:
     defaults: { _controller: FfbbBundle:Rencontres:contact }
 
 ffbb_terrain:
-    path:     /terrain-neutre
+    path:     /terrain-neutre/{idGroupe}
     defaults: { _controller: FfbbBundle:Rencontres:terrainNeutre }
 
 ffbb_details_calcul:

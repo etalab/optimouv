@@ -28,7 +28,7 @@ class Rencontres
         $this->app_code = $app_code;
     }
 
-    public function index()
+    public function index($idGroupe)
     {
 
 
@@ -45,11 +45,13 @@ class Rencontres
             die('Erreur : ' . $e->getMessage());
         }
 
-
-        $reqVilles = $bdd->prepare("SELECT equipes FROM  groupe ;");
+//TODO:where idGroupe
+        $reqVilles = $bdd->prepare("SELECT equipes FROM  groupe WHERE id = $idGroupe;");
+        //$reqVilles->bindParam(':id', $idGroupe);
         $reqVilles->execute();
         $reqVilles = $reqVilles->fetchColumn();
         $reqVilles = explode(",", $reqVilles);
+
 
 
         $villes = [];
@@ -90,7 +92,7 @@ class Rencontres
     }
 
     //Calcul du meilleur lieu de rencontre
-    public function meilleurLieuRencontre()
+    public function meilleurLieuRencontre($idGroupe)
     {
         $app_id = $this->app_id;
         $app_code = $this->app_code;
@@ -106,7 +108,7 @@ class Rencontres
         }
 
         //on récupère le tableau des villes
-        $villes = $this->index();
+        $villes = $this->index($idGroupe);
         $T2 = []; //tableau interm�diaire qui contient les coordonnees des pts d arrivees
 
         $lesDistances = []; // la somme des distances
@@ -209,11 +211,11 @@ class Rencontres
     }
 
     //Calcul du barycentre
-    public function Barycentre()
+    public function Barycentre($idGroupe)
     {
 
         //on récupère le tableau des villes
-        $villes = $this->index();
+        $villes = $this->index($idGroupe);
 
 
         $length = count($villes);
@@ -236,7 +238,7 @@ class Rencontres
     }
 
     //Calcul exclusion géographique
-    public function Exclusion($valeurExclusion)
+    public function Exclusion($valeurExclusion, $idGroupe)
     {
         $dbname = $this->database_name;
         $dbuser = $this->database_user;
@@ -245,7 +247,7 @@ class Rencontres
         if($valeurExclusion){
 
             //on récupère le tableau des villes
-            $villes = $this->index();
+            $villes = $this->index($idGroupe);
 
 
             $length = count($villes);
@@ -294,7 +296,7 @@ order by Proximite limit 1;");
     }
 
     //Calcul du scénario équitable
-    public function scenarioEquitable()
+    public function scenarioEquitable($idGroupe)
     {
 
         $app_id = $this->app_id;
@@ -311,7 +313,7 @@ order by Proximite limit 1;");
         }
 
         //on récupère le tableau des villes
-        $villes = $this->index();
+        $villes = $this->index($idGroupe);
         $T2 = []; //tableau interm�diaire qui contient les coordonnees des pts d arrivees
 
         $lesDistances = []; // la somme des distances
@@ -479,14 +481,14 @@ order by Proximite limit 1;");
         return $retour;
     }
 
-    public function terrainNeutre()
+    public function terrainNeutre($idGroupe)
     {
 
         $app_id = $this->app_id;
         $app_code = $this->app_code;
 
 
-        $equipe = $this->index();
+        $equipe = $this->index($idGroupe);
 
         $terrainNeutre = ['48.74305%2C2.4014', '47.48569%2C-3.11922', '43.5732938%2C6.8188967', '47.724709%2C-0.5227929', '49.12878%2C6.22851'];
 
@@ -572,14 +574,14 @@ order by Proximite limit 1;");
         return $retour;
     }
 
-    public function terrainNeutreEquitable()
+    public function terrainNeutreEquitable($idGroupe)
     {
 
         $app_id = $this->app_id;
         $app_code = $this->app_code;
 
 //        $equipe = ['43.88953%2C-0.49893', '47.19126%2C-1.5698', '47.46317%2C-0.59261', '47.086%2C2.39315', '49.76019%2C4.71909', '43.70821%2C7.29597'];
-        $equipe = $this->index();
+        $equipe = $this->index($idGroupe);
 
         $terrainNeutre = ['48.74305%2C2.4014', '47.48569%2C-3.11922', '43.5732938%2C6.8188967', '47.724709%2C-0.5227929', '49.12878%2C6.22851'];
 
@@ -743,7 +745,7 @@ order by Proximite limit 1;");
 
     }
 
-    //TODO: verifier la recuperation des noms de villes!!
+    //TODO: where id groupe!!
     public function nomsVilles()
     {
 
@@ -907,7 +909,7 @@ order by Proximite limit 1;");
         return $mesVilles;
     }
 
-    public function creerGroupe($villes)
+    public function creerGroupe($villes, $nomGroupe)
     {
 
         $dbname = $this->database_name;
@@ -961,12 +963,19 @@ order by Proximite limit 1;");
         }
         $idVilles = implode(",", $idVilles);
         $dateCreation = date("Y-m-d");
+        //TODO: idUtilisateur sera dynamique selon la personne connectée
+        $idUtilisateur = 1;
 
 
-        $reqGroupe = $bdd->prepare("INSERT INTO  groupe (equipes, date_creation) VALUES ( :idVilles, :dateCreation);");
+        $reqGroupe = $bdd->prepare("INSERT INTO  groupe (id_utilisateur, nom, equipes, date_creation) VALUES ( :idUtilisateur, :nomGroupe, :idVilles, :dateCreation);");
+        $reqGroupe->bindParam(':idUtilisateur', $idUtilisateur);
+        $reqGroupe->bindParam(':nomGroupe', $nomGroupe);
         $reqGroupe->bindParam(':idVilles', $idVilles);
         $reqGroupe->bindParam(':dateCreation', $dateCreation);
         $reqGroupe->execute();
+        $idGroupe = $bdd->lastInsertId();
+        $this->index($idGroupe);
+        return $idGroupe;
 
 
     }

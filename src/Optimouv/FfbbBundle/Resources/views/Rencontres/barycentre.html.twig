@@ -6,6 +6,8 @@
         <div class="row">
             <div class="col-lg-12">
                 <h3 class="page-header">Choisissez un type de lieu </h3>
+
+
              </div>
             <!-- /.col-lg-12 -->
         </div>
@@ -71,7 +73,7 @@
                     <div class="panel-heading">
                         Ajouter des contraintes
                     </div>
-                    <form name="typeLieuxContrainte" style="padding-left:20px;" action="{{ path('ffbb_exclusion') }}" method="POST">
+                    <form name="typeLieuxContrainte" style="padding-left:20px;" action="{{ path('ffbb_exclusion', {'idGroupe':idGroupe}) }}" method="POST">
 
                         <div style="padding-top: 10px">
                             Saisissez ici le nombre d'habitants maximum des zones à exclure
@@ -374,25 +376,29 @@
         <!-- /#page-wrapper -->
         <script type="text/javascript" charset="UTF-8">
             function typeLieu() {
-                if (document.getElementById("meilleurLieuOption").checked == true) {
-                    window.location.href = "{{ path('ffbb_rencontres') }}";
+
+                var idGroupe = {{idGroupe}};
+                 if (document.getElementById("meilleurLieuOption").checked == true) {
+                    window.location.href = "{{ path('ffbb_rencontres', {'idGroupe':idGroupe}) }}";
                 }
                 else {
-                    window.location.href = "{{ path('ffbb_barycentre') }}";
+                    window.location.href = "{{ path('ffbb_barycentre', {'idGroupe':idGroupe}) }}";
                 }
 
             }
 
             function typeLieuxContrainte() {
+                var idGroupe = {{idGroupe}};
                 if (document.getElementById("Contrainte").checked == true) {
-                    window.location.href = "{{ path('ffbb_exclusion') }}";
+                    window.location.href = "{{ path('ffbb_exclusion', {'idGroupe':idGroupe}) }}";
                 }
 
             }
 
             function xxxx() {
+                var idGroupe = {{idGroupe}};
                 if (document.getElementById("Contrainte").checked == true) {
-                    window.location.href = "{{ path('ffbb_exclusion') }}";
+                    window.location.href = "{{ path('ffbb_exclusion', {'idGroupe':idGroupe}) }}";
                 }
             }
 

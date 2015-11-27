@@ -66,7 +66,7 @@
                         <div class="panel-heading">
                             Ajouter des contraintes
                         </div>
-                        <form name="typeLieuxContrainte" style="padding-left:20px;" action="{{ path('ffbb_exclusion') }}" method="POST">
+                        <form name="typeLieuxContrainte" style="padding-left:20px;" action="{{ path('ffbb_exclusion', {'idGroupe':idGroupe}) }}" method="POST">
 
                             <div style="padding-top: 10px">
                                 Saisissez ici le nombre d'habitants maximum des zones à exclure.
@@ -587,11 +587,12 @@
         <!-- /#page-wrapper -->
         <script type="text/javascript" charset="UTF-8">
             function typeLieu() {
+                var idGroupe = {{idGroupe}};
                 if (document.getElementById("meilleurLieuOption").checked == true) {
-                    window.location.href = "{{ path('ffbb_rencontres') }}";
+                    window.location.href = "{{ path('ffbb_rencontres', {'idGroupe':idGroupe}) }}";
                  }
                 else {
-                    window.location.href = "{{ path('ffbb_barycentre') }}";
+                    window.location.href = "{{ path('ffbb_barycentre', {'idGroupe':idGroupe}) }}";
 
                 }
 
