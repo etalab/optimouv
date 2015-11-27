@@ -7,11 +7,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RencontresController extends Controller
 {
-    public function indexAction()
+    public function indexAction($idGroupe)
     {
 
-        $retour = $this->get('service_rencontres')->meilleurLieuRencontre();
-        $retourEq = $this->get('service_rencontres')->scenarioEquitable();
+        $retour = $this->get('service_rencontres')->meilleurLieuRencontre($idGroupe);
+        $retourEq = $this->get('service_rencontres')->scenarioEquitable($idGroupe);
 
         //Donn�es du sc�nario optimal
         $villeDepart = $retour[0];
@@ -58,16 +58,17 @@ class RencontresController extends Controller
             'dureeTrajetEq' => $dureeTrajetEq,
             'coordonneesVilleEq' => $coordonneesVilleEq,
             'participantsEq' => $participantsEq,
+            'idGroupe' => $idGroupe,
 
         ));
     }
 
-    public function barycentreAction()
+    public function barycentreAction($idGroupe)
     {
 
 
         $participants = [];
-        $retour = $this->get('service_rencontres')->Barycentre();
+        $retour = $this->get('service_rencontres')->Barycentre($idGroupe);
 
         //Donn�es du sc�nario optimal
         $villeDepart = $retour[0];
@@ -95,6 +96,7 @@ class RencontresController extends Controller
             'dureeTrajet' => $dureeTrajet,
             'coordonneesVille' => $coordonneesVille,
             'participants' => $participants,
+            'idGroupe' => $idGroupe,
 
 
         ));
@@ -102,14 +104,14 @@ class RencontresController extends Controller
 
     }
 
-    public function exclusionAction()
+    public function exclusionAction($idGroupe)
     {
 
         //R�cup�ration de la valeur saisie par l'utilisateur
         $valeurExclusion = $_POST["valeurExclusion"];
 
         //R�cup�ration du r�sultat du calcul avec contrainte
-        $retour = $this->get('service_rencontres')->Exclusion($valeurExclusion);
+        $retour = $this->get('service_rencontres')->Exclusion($valeurExclusion, $idGroupe);
 
 
         //Donn�es du sc�nario optimal
@@ -126,7 +128,7 @@ class RencontresController extends Controller
 
 
         //R�cup�ration du r�sultat du calcul sans contrainte
-        $retourEq = $this->get('service_rencontres')->Barycentre();
+        $retourEq = $this->get('service_rencontres')->Barycentre($idGroupe);
 
         //Donn�es du sc�nario �quitable
 
@@ -162,6 +164,7 @@ class RencontresController extends Controller
             'coordonneesVilleEq' => $coordonneesVilleEq,
             'participantsEq' => $participantsEq,
             'valeurExclusion' => $valeurExclusion,
+            'idGroupe' => $idGroupe,
 
 
 
@@ -171,10 +174,10 @@ class RencontresController extends Controller
 
     }
 
-    public function terrainNeutreAction(){
+    public function terrainNeutreAction($idGroupe){
 
         //R�cup�ration du r�sultat du calcul du terrain neutre
-        $retour = $this->get('service_rencontres')->terrainNeutre();
+        $retour = $this->get('service_rencontres')->terrainNeutre($idGroupe);
         //Donn�es du sc�nario optimal
         $villeDepart = $retour[0];
         $longPtDep = $retour[1];
@@ -189,7 +192,7 @@ class RencontresController extends Controller
         }
 
         //R�cup�ration du r�sultat du calcul du terrain neutre Equitable
-        $retourEq = $this->get('service_rencontres')->terrainNeutreEquitable();
+        $retourEq = $this->get('service_rencontres')->terrainNeutreEquitable($idGroupe);
 
         //Donn�es du sc�nario �quitable
 
@@ -225,6 +228,7 @@ class RencontresController extends Controller
             'dureeTrajetEq' => $dureeTrajetEq,
             'coordonneesVilleEq' => $coordonneesVilleEq,
             'participantsEq' => $participantsEq,
+            'idGroupe' => $idGroupe,
 
 
         ));
