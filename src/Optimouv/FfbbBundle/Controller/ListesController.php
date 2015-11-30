@@ -13,11 +13,11 @@ class ListesController extends Controller
         # obtenir entity manager
         $em = $this->getDoctrine()->getManager();
 
-        # obtenir listes des lieux de rencontres
-        $listesLieux = $em->getRepository('FfbbBundle:ListeLieux')->getListes();
-
         # obtenir listes des participants
         $listesParticipants = $em->getRepository('FfbbBundle:ListeParticipants')->getListes();
+
+        # obtenir listes des lieux de rencontres
+        $listesLieux = $em->getRepository('FfbbBundle:ListeLieux')->getListes();
 
         $outputTableau =  array(
             "listesParticipants" => $listesParticipants,
