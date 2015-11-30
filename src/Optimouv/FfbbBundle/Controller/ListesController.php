@@ -19,11 +19,6 @@ class ListesController extends Controller
         # obtenir listes des lieux de rencontres
         $listesLieux = $em->getRepository('FfbbBundle:ListeLieux')->getListes();
 
-        $outputTableau =  array(
-            "listesParticipants" => $listesParticipants,
-            "listesLieux" => $listesLieux
-        );
-
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
@@ -33,7 +28,10 @@ class ListesController extends Controller
 //            ."\n listesLieux: ".print_r($listesLieux, true), 3, "/var/log/apache2/optimouv.log");
 
 
-        return $this->render('FfbbBundle:Listes:index.html.twig', $outputTableau);
+        return $this->render('FfbbBundle:Listes:index.html.twig', array(
+            "listesParticipants" => $listesParticipants,
+            "listesLieux" => $listesLieux
+        ));
 
     }
 
