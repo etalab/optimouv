@@ -28,6 +28,118 @@ class Listes{
         $this->app_code = $app_code;
     }
 
+    public function controlerEntites(){
+        # obtenir le nom du fichier uploadé
+        $nomFichierTemp = $_FILES["file-0"]["tmp_name"];
+
+        // Dès qu'un fichier a été reçu par le serveur
+        if (file_exists($nomFichierTemp) || is_uploaded_file($nomFichierTemp)) {
+
+            // lire le contenu du fichier
+            $file = new SplFileObject($nomFichierTemp, 'r');
+            $delimiter = ",";
+
+            // On lui indique que c'est du CSV
+            $file->setFlags(SplFileObject::READ_CSV);
+
+            // préciser le délimiteur et le caractère enclosure
+            $file->setCsvControl($delimiter);
+
+            // Obtient données des en-tetes
+            $donneesEntete = $file->fgetcsv();
+
+            # obtenir la date courante du système
+            date_default_timezone_set('Europe/Paris');
+            $dateCreation = date('Y-m-d', time());
+            $dateModification = date('Y-m-d', time());
+            $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+            # obtenir l'objet PDO
+            $bdd = $this->getPdo();
+
+            if (!$bdd) {
+                //erreur de connexion
+//                error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow, 3, "/var/log/apache2/optimouv.log");
+                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+            } else {
+                $idsEntite = [];
+                // obtenir les données pour chaque ligne
+                while (!$file->eof()) {
+                    $donnéesLigne = $file->fgetcsv();
+
+                    // tester s'il y a des données
+                    if($donnéesLigne != array(null)){
+                        // obtenir la valeur pour chaque paramètre
+                        $typeEntite = $donnéesLigne[0];
+
+                        // obtenir les valeurs selon le type d'entité
+                        if (strtolower($typeEntite) == "equipe") {
+                            $nom = $donnéesLigne[1];
+                            $codePostal = $donnéesLigne[2];
+                            $ville = $donnéesLigne[3];
+                            $participants = $donnéesLigne[4];
+                            $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
+                            $adresse = $donnéesLigne[6];
+                            $longitude = $donnéesLigne[7];
+                            $latitude = $donnéesLigne[8];
+                            $projection = $donnéesLigne[9];
+                            $licencies = $donnéesLigne[10];
+
+
+                        }
+                        elseif (strtolower($typeEntite) == "personne") {
+                            $nom = $donnéesLigne[1];
+                            $prenom = $donnéesLigne[2];
+                            $codePostal = $donnéesLigne[3];
+                            $ville = $donnéesLigne[4];
+                            $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
+                            $adresse = $donnéesLigne[6];
+                            $longitude = $donnéesLigne[7];
+                            $latitude = $donnéesLigne[8];
+                            $projection = $donnéesLigne[9];
+
+                        }
+                        elseif ($typeEntite == "LIEU") {
+                            $nom = $donnéesLigne[1];
+                            $codePostal = $donnéesLigne[2];
+                            $ville = $donnéesLigne[3];
+                            $lieuRencontrePossible = $this->getBoolean($donnéesLigne[4]);
+                            $adresse = $donnéesLigne[5];
+                            $longitude = $donnéesLigne[6];
+                            $latitude = $donnéesLigne[7];
+                            $projection = $donnéesLigne[8];
+                            $typeEquipement = $donnéesLigne[9];
+                            $nombreEquipement = $donnéesLigne[10];
+                            $capaciteRencontre = $this->getBoolean($donnéesLigne[11]);
+                            $capacitePhaseFinale = $this->getBoolean($donnéesLigne[12]);
+
+                        }
+
+                        # afficher le statut de la requete executée
+//                    error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+//                        ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/var/log/apache2/optimouv.log");
+
+
+                    }
+                }
+            }
+            $retour = array(
+                "success" => true,
+                "msg" => "Contrôle réussi "
+            );
+        }
+        else{
+            $retour = array(
+                "success" => false,
+                "msg" => "Erreur d'upload de fichier. Veuillez réessayer"
+            );
+        }
+
+        return $retour;
+
+    }
+
+
     public function creerListeParticipants($idsEntite){
         # obtenir l'objet PDO
         $bdd = $this->getPdo();
@@ -69,7 +181,6 @@ class Listes{
             # afficher le statut de la requete executée
 //            error_log("\n Service: Listes, Function: creerListeParticipants, datetime: ".$dateTimeNow
 //                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/var/log/apache2/optimouv.log");
-
         }
 
         $retour = array(
@@ -138,9 +249,6 @@ class Listes{
 
         // Dès qu'un fichier a été reçu par le serveur
         if (file_exists($nomFichierTemp) || is_uploaded_file($nomFichierTemp)) {
-
-            // détecte le type de fichier
-            # TODO
 
             // lire le contenu du fichier
             $file = new SplFileObject($nomFichierTemp, 'r');

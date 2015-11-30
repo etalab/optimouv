@@ -19,15 +19,6 @@ class ListesController extends Controller
         # obtenir listes des lieux de rencontres
         $listesLieux = $em->getRepository('FfbbBundle:ListeLieux')->getListes();
 
-        # obtenir la date courante du système
-        date_default_timezone_set('Europe/Paris');
-        $dateTimeNow = date('Y-m-d_G:i:s', time());
-
-//        error_log("\n Controller: Listes, Function: indexAction, datetime: ".$dateTimeNow
-//            ."\n listesParticipants: ".print_r($listesParticipants, true)
-//            ."\n listesLieux: ".print_r($listesLieux, true), 3, "/var/log/apache2/optimouv.log");
-
-
         return $this->render('FfbbBundle:Listes:index.html.twig', array(
             "listesParticipants" => $listesParticipants,
             "listesLieux" => $listesLieux
@@ -37,25 +28,57 @@ class ListesController extends Controller
 
     public function creerListeParticipantsAction()
     {
-        # créer des entités dans la table entite
-        $retourEntites = $this->get('service_listes')->creerEntites();
-        $idsEntite = $retourEntites["idsEntite"];
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
 
-        # créer une liste dans la table liste_participants
-        $retourListe = $this->get('service_listes')->creerListeParticipants($idsEntite);
+        # controler toutes le fichier uploadé
+        $statutUpload = $this->get('service_listes')->controlerEntites();
 
-        # obtenir entity manager
-        $em = $this->getDoctrine()->getManager();
+        error_log("\n Controller: Listes, Function: indexAction, datetime: ".$dateTimeNow
+            ."\n statutUpload: ".print_r($statutUpload, true), 3, "/tmp/optimouv.log");
 
-        # obtenir listes des participants
-        $listesParticipants = $em->getRepository('FfbbBundle:ListeParticipants')->getListes();
+        if($statutUpload["success"]){
+            # créer des entités dans la table entite
+            $retourEntites = $this->get('service_listes')->creerEntites();
+            $idsEntite = $retourEntites["idsEntite"];
+
+            # créer une liste dans la table liste_participants
+            $retourListe = $this->get('service_listes')->creerListeParticipants($idsEntite);
+
+            # obtenir entity manager
+            $em = $this->getDoctrine()->getManager();
+
+            # obtenir listes des participants
+            $listesParticipants = $em->getRepository('FfbbBundle:ListeParticipants')->getListes();
+
+//            return new JsonResponse($listesParticipants);
+            return new JsonResponse(array(
+                "success" => true,
+                "msg" => "Upload réussi",
+                "data" => $listesParticipants
+            ));
+
+        }
+        else{
+
+        }
 
 
-        return new JsonResponse($listesParticipants);
     }
 
     public function creerListeLieuxAction()
     {
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+        # controler toutes le fichier uploadé
+        $statutUpload = $this->get('service_listes')->controlerEntites();
+
+        error_log("\n Controller: Listes, Function: indexAction, datetime: ".$dateTimeNow
+            ."\n statutUpload: ".print_r($statutUpload, true), 3, "/var/log/apache2/optimouv.log");
+
         # créer des entités dans la table entite
         $retourEntites = $this->get('service_listes')->creerEntites();
         $idsEntite = $retourEntites["idsEntite"];

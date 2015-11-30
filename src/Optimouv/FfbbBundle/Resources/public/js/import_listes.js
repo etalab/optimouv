@@ -17,26 +17,32 @@ function addEventHandlerImportListePartcipants(){
       type: 'POST',
       data: data,
       contentType: false,
+      dataType : "json",
       processData: false,
       success: function(data, textStatus, jqXHR)
       {
-        if(typeof data.error === 'undefined')
+        if(typeof data.success)
         {
           // Success so call function to process the form
-          console.log('SUCCESS: ' + data);
+          console.log('SUCCESS: ' + data.msg);
 
           // supprimer les enfants de l'élement select liste_partcipants
           $("#liste_partcipants").empty();
 
-          $.each(data, function(index, value){
+          // rafraiher la liste de participants
+          $.each(data.data, function(index, value){
             $("#liste_partcipants").append("<option value=" + value.id + ">" + value.nom + "</option>");
           });
+
+          // mettre à jour le statut d'upload
+          $("#msg_upload_liste_participants").text(data.msg);
+          $("#collapse1").removeClass("collapse");
 
         }
         else
         {
           // Handle errors here
-          console.log('ERRORS: ' + data.error);
+          console.log('ERRORS: ' + data.msg);
         }
       },
       error: function(jqXHR, textStatus, errorThrown)
@@ -66,12 +72,14 @@ function addEventHandlerImportListeLieux(){
       data: data,
       contentType: false,
       processData: false,
+      dataType : "json",
       success: function(data, textStatus, jqXHR)
       {
         if(typeof data.error === 'undefined')
         {
           // Success so call function to process the form
           console.log('SUCCESS: ' + data);
+
 
           // supprimer les enfants de l'élement select liste_partcipants
           $("#liste_lieux").empty();
@@ -156,6 +164,8 @@ function addEventHandlerUseListeLieux(idListeLieux){
   });
 
 }
+
+
 
 $(document).ready(function () {
 
