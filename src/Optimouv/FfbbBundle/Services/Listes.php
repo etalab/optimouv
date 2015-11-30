@@ -185,15 +185,15 @@ class Listes{
                         // obtenir les valeurs selon le type d'entité
                         if (strtolower($typeEntite) == "equipe") {
                             $nom = $donnéesLigne[1];
-                            $adresse = $donnéesLigne[2];
-                            $codePostal = $donnéesLigne[3];
-                            $ville = $donnéesLigne[4];
-                            $longitude = $donnéesLigne[5];
-                            $latitude = $donnéesLigne[6];
-                            $projection = $donnéesLigne[7];
-                            $participants = $donnéesLigne[8];
-                            $licencies = $donnéesLigne[9];
-                            $lieuRencontrePossible = $this->getBoolean($donnéesLigne[10]);
+                            $codePostal = $donnéesLigne[2];
+                            $ville = $donnéesLigne[3];
+                            $participants = $donnéesLigne[4];
+                            $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
+                            $adresse = $donnéesLigne[6];
+                            $longitude = $donnéesLigne[7];
+                            $latitude = $donnéesLigne[8];
+                            $projection = $donnéesLigne[9];
+                            $licencies = $donnéesLigne[10];
 
                             $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, adresse, code_postal, ville, longitude, latitude,"
                                 ." projection, participants, "
@@ -222,13 +222,13 @@ class Listes{
                         elseif (strtolower($typeEntite) == "personne") {
                             $nom = $donnéesLigne[1];
                             $prenom = $donnéesLigne[2];
-                            $adresse = $donnéesLigne[3];
-                            $codePostal = $donnéesLigne[4];
-                            $ville = $donnéesLigne[5];
-                            $longitude = $donnéesLigne[6];
-                            $latitude = $donnéesLigne[7];
-                            $projection = $donnéesLigne[8];
-                            $lieuRencontrePossible = $this->getBoolean($donnéesLigne[9]);
+                            $codePostal = $donnéesLigne[3];
+                            $ville = $donnéesLigne[4];
+                            $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
+                            $adresse = $donnéesLigne[6];
+                            $longitude = $donnéesLigne[7];
+                            $latitude = $donnéesLigne[8];
+                            $projection = $donnéesLigne[9];
 
                             $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, prenom, adresse, code_postal, ville, longitude, latitude,"
                                 ." projection, lieu_rencontre_possible, date_creation, date_modification )"
@@ -252,17 +252,17 @@ class Listes{
                         }
                         elseif ($typeEntite == "LIEU") {
                             $nom = $donnéesLigne[1];
-                            $adresse = $donnéesLigne[2];
-                            $codePostal = $donnéesLigne[3];
-                            $ville = $donnéesLigne[4];
-                            $longitude = $donnéesLigne[5];
-                            $latitude = $donnéesLigne[6];
-                            $projection = $donnéesLigne[7];
-                            $typeEquipement = $donnéesLigne[8];
-                            $nombreEquipement = $donnéesLigne[9];
-                            $capaciteRencontre = $this->getBoolean($donnéesLigne[10]);
-                            $capacitePhaseFinale = $this->getBoolean($donnéesLigne[11]);
-                            $lieuRencontrePossible = $this->getBoolean($donnéesLigne[12]);
+                            $codePostal = $donnéesLigne[2];
+                            $ville = $donnéesLigne[3];
+                            $lieuRencontrePossible = $this->getBoolean($donnéesLigne[4]);
+                            $adresse = $donnéesLigne[5];
+                            $longitude = $donnéesLigne[6];
+                            $latitude = $donnéesLigne[7];
+                            $projection = $donnéesLigne[8];
+                            $typeEquipement = $donnéesLigne[9];
+                            $nombreEquipement = $donnéesLigne[10];
+                            $capaciteRencontre = $this->getBoolean($donnéesLigne[11]);
+                            $capacitePhaseFinale = $this->getBoolean($donnéesLigne[12]);
 
                             $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, adresse, code_postal, ville, longitude, latitude,"
                                 ." projection, type_equipement, nombre_equipement, capacite_rencontre, capacite_phase_finale, "
