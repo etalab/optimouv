@@ -315,7 +315,7 @@ class Listes{
     }
 
     # convertir la valeur du champ lieuRencontrePossible
-    public function getBoolean($input){
+    private function getBoolean($input){
         // convertir la valeur en boolean
         if (strtolower($input)  == "oui"){
             $input = 1;
@@ -327,7 +327,7 @@ class Listes{
     }
 
     # retourner un objet PDO qu'on peut utiliser dans d'autres fonctions
-    public function getPdo(){
+    private function getPdo(){
         # récupérer les parametres de connexion
         $dbname = $this->database_name;
         $dbuser = $this->database_user;
