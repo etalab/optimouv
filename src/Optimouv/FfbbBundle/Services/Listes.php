@@ -150,13 +150,25 @@ class Listes{
                                     $retour = array(
                                         "success" => false,
                                         "msg" => "Erreur csv ligne :".$nbrLigne."!"
-                                            ." Le champ '$participants' (colonne 5) doit avoir une valeur numérique!"
+                                            ." Le champ 'participants' (colonne 5) doit avoir une valeur numérique!"
                                             .implode(",", $donnéesLigne)
                                     );
                                     return $retour;
                                 }
-                                error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-                                    ."\n is_numeric participants: ".is_numeric($participants) , 3, "/tmp/optimouv.log");
+
+                                # controler le champ '$lieuRencontrePossible'
+                                # il faut que la valeur soit 'OUI' ou 'NON'
+                                if((strtolower($donnéesLigne[5]) != 'non') and (strtolower($donnéesLigne[5]) != 'oui')){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." Le champ 'lieu de rencontre possible' (colonne 6) doit avoir la valeur 'OUI' ou 'NON'!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                }
+
+
 
                                 # les champs optionnels
                                 $adresse = $donnéesLigne[6];
@@ -222,6 +234,19 @@ class Listes{
                                     return $retour;
                                 }
 
+                                # controler le champ '$lieuRencontrePossible'
+                                # il faut que la valeur soit 'OUI' ou 'NON'
+                                if((strtolower($donnéesLigne[5]) != 'non') and (strtolower($donnéesLigne[5]) != 'oui')){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." Le champ 'lieu de rencontre possible' (colonne 6) doit avoir la valeur 'OUI' ou 'NON'!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                }
+
+
                                 # les champs optionnels
                                 $adresse = $donnéesLigne[6];
                                 $longitude = $donnéesLigne[7];
@@ -274,6 +299,19 @@ class Listes{
                                     );
                                     return $retour;
                                 }
+
+                                # controler le champ 'lieu de rencontre possible'
+                                # il faut que la valeur soit 'OUI' ou 'NON'
+                                if((strtolower($donnéesLigne[4]) != 'non') and (strtolower($donnéesLigne[4]) != 'oui')){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." Le champ 'lieu de rencontre possible' (colonne 5) doit avoir la valeur 'OUI' ou 'NON'!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                }
+
 
                                 # les champs optionnels
                                 $adresse = $donnéesLigne[5];
