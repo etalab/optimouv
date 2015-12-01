@@ -156,7 +156,7 @@ class Listes{
                                     return $retour;
                                 }
 
-                                # controler le champ '$lieuRencontrePossible'
+                                # controler le champ 'lieu de rencontre possible'
                                 # il faut que la valeur soit 'OUI' ou 'NON'
                                 if((strtolower($donnéesLigne[5]) != 'non') and (strtolower($donnéesLigne[5]) != 'oui')){
                                     $retour = array(
@@ -168,6 +168,24 @@ class Listes{
                                     return $retour;
                                 }
 
+                                error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+                                    ."\n code postal: ".print_r($codePostal, true), 3, "/tmp/optimouv.log");
+                                error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+                                    ."\n code postal: ". gettype($codePostal), 3, "/tmp/optimouv.log");
+
+
+
+                                # controler le champ 'code postal'
+                                # il faut que la valeur contient 5 chiffres
+                                if(strlen($codePostal) != 5){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." Le champ 'code postal' (colonne 3) doit contenir 5 chiffres!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                }
 
 
                                 # les champs optionnels
@@ -246,6 +264,17 @@ class Listes{
                                     return $retour;
                                 }
 
+                                # controler le champ 'code postal'
+                                # il faut que la valeur contient 5 chiffres
+                                if(strlen($codePostal) != 5){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." Le champ 'code postal' (colonne 4) doit contenir 5 chiffres!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                }
 
                                 # les champs optionnels
                                 $adresse = $donnéesLigne[6];
@@ -312,7 +341,18 @@ class Listes{
                                     return $retour;
                                 }
 
-
+                                # controler le champ 'code postal'
+                                # il faut que la valeur contient 5 chiffres
+                                if(strlen($codePostal) != 5){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." Le champ 'code postal' (colonne 3) doit contenir 5 chiffres!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                }
+                                
                                 # les champs optionnels
                                 $adresse = $donnéesLigne[5];
                                 $longitude = $donnéesLigne[6];
