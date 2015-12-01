@@ -94,12 +94,60 @@ class Listes{
                                 $ville = $donnéesLigne[3];
                                 $participants = $donnéesLigne[4];
                                 $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
+
+                                # controler tous les champs obligatoires
+                                if(empty($nom)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." Le champ 'nom' (colonne 2) doit être rempli!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                }
+                                if(empty($codePostal)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." Le champ 'code postal' (colonne 3) doit être rempli!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                };
+                                if(empty($ville)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." Le champ 'ville' (colonne 4) doit être rempli!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                };
+                                if(empty($participants)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." Le champ 'participants' (colonne 5) doit être rempli!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                };
+                                # controler le champ 'lieu de rencontre possible'
+                                if( empty($donnéesLigne[5]) ){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." Le champ 'lieu de rencontre possible' (colonne 6) doit être rempli!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                }
+
                                 $adresse = $donnéesLigne[6];
                                 $longitude = $donnéesLigne[7];
                                 $latitude = $donnéesLigne[8];
                                 $projection = $donnéesLigne[9];
                                 $licencies = $donnéesLigne[10];
-
 
                             }
                             elseif (strtolower($typeEntite) == "personne") {
@@ -108,6 +156,55 @@ class Listes{
                                 $codePostal = $donnéesLigne[3];
                                 $ville = $donnéesLigne[4];
                                 $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
+
+                                # controler tous les champs obligatoires
+                                if(empty($nom)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." Le champ 'nom' (colonne 2) doit être rempli!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                }
+                                if(empty($prenom)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." Le champ 'prenom' (colonne 3) doit être rempli!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                }
+                                if(empty($codePostal)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." Le champ 'code postal' (colonne 4) doit être rempli!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                }
+                                if(empty($ville)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." Le champ 'ville' (colonne 5) doit être rempli!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                }
+                                # controler le champ 'lieu de rencontre possible'
+                                if( empty($donnéesLigne[5]) ){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." Le champ 'lieu de rencontre possible' (colonne 6) doit être rempli!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                }
+
                                 $adresse = $donnéesLigne[6];
                                 $longitude = $donnéesLigne[7];
                                 $latitude = $donnéesLigne[8];
@@ -119,6 +216,46 @@ class Listes{
                                 $codePostal = $donnéesLigne[2];
                                 $ville = $donnéesLigne[3];
                                 $lieuRencontrePossible = $this->getBoolean($donnéesLigne[4]);
+
+                                # controler tous les champs obligatoires
+                                if(empty($nom)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." Le champ 'nom' (colonne 2) doit être rempli!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                }
+                                if(empty($codePostal)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." Le champ 'code postal' (colonne 3) doit être rempli!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                }
+                                if(empty($ville)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." Le champ 'ville' (colonne 4) doit être rempli!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                }
+                                # controler le champ 'lieu de rencontre possible'
+                                if( empty($donnéesLigne[4]) ){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." Le champ 'lieu de rencontre possible' (colonne 5) doit être rempli!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                }
+
                                 $adresse = $donnéesLigne[5];
                                 $longitude = $donnéesLigne[6];
                                 $latitude = $donnéesLigne[7];
@@ -136,12 +273,11 @@ class Listes{
                                         ." Veuillez s'assurer que le type d'entité est parmi 'EQUIPE', 'PERSONNE' ou 'LIEU'!"
                                         .implode(",", $donnéesLigne)
                                 );
-
                                 return $retour;
                             }
 
-
                         }
+
                     }
                 }
                 $retour = array(
