@@ -12,6 +12,22 @@ ffbb_homepage:
     path:     /villes
     defaults: { _controller: FfbbBundle:Default:index }
 
+ffbb_villes_groupe:
+    path:     /villes/{idGroupe}
+    defaults: { _controller: FfbbBundle:Default:groupe }
+
+ffbb_supprimer_groupe:
+    path:    /supprimer-groupe/{idGroupe}
+    defaults: { _controller: FfbbBundle:Groupe:delete }
+
+ffbb_renommer_groupe:
+    path:    /renommer-groupe/{idGroupe}
+    defaults: { _controller: FfbbBundle:Groupe:renommer }
+
+ffbb_update_groupe:
+    path:    /update-groupe/{idGroupe}
+    defaults: { _controller: FfbbBundle:Groupe:renommerGroupe }
+
 ffbb_rencontres:
     path:     /rencontres/{idGroupe}
     defaults: { _controller: FfbbBundle:Rencontres:index }
@@ -56,14 +72,13 @@ ffbb_creer_liste_lieux:
     defaults: { _controller: FfbbBundle:Listes:creerListeLieux }
 
 ffbb_select_liste_participants:
-#    path:     /select_liste_participants/{idListeParticipants}
     path:     /select-liste-participants
     defaults: { _controller: FfbbBundle:Groupe:afficherParticipants  }
 
-#ffbb_select_liste_lieux:
-##    path:     /select_liste_lieux/{idListeLieux}
-#    path:     /select-liste-lieux
-#    defaults: { _controller: FfbbBundle:Groupe:afficherLieux  }
+ffbb_select_liste_participants2:
+    path:     /select-liste-participants
+    defaults: { _controller: FfbbBundle:Groupe:afficherParticipants  }
+    methods:  [GET]
 
 
 

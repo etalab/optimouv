@@ -112,6 +112,13 @@ class Groupe
      */
     private $dateModification;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_liste_participant", type="integer", nullable=false)
+     */
+    private $idListeParticipant;
+
 
 
     /**
@@ -434,5 +441,29 @@ class Groupe
     public function getEquipes()
     {
         return $this->equipes;
+    }
+
+    /**
+     * Set idListeParticipant
+     *
+     * @param integer $idListeParticipant
+     *
+     * @return Groupe
+     */
+    public function setIdListeParticipant($idListeParticipant)
+    {
+        $this->idListeParticipant = $idListeParticipant;
+
+        return $this;
+    }
+
+    /**
+     * Get idListeParticipant
+     *
+     * @return integer
+     */
+    public function getIdListeParticipant()
+    {
+        return $this->idListeParticipant;
     }
 }
