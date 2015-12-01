@@ -89,6 +89,7 @@ class Listes{
 
                             // obtenir les valeurs selon le type d'entité
                             if (strtolower($typeEntite) == "equipe") {
+                                # les champs obligatoires
                                 $nom = $donnéesLigne[1];
                                 $codePostal = $donnéesLigne[2];
                                 $ville = $donnéesLigne[3];
@@ -143,6 +144,21 @@ class Listes{
                                     return $retour;
                                 }
 
+                                # controler le champ 'participants'
+                                # il faut que la valeur soit une valeur numeric
+                                if(!is_numeric($participants)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." Le champ '$participants' (colonne 5) doit avoir une valeur numérique!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                }
+                                error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+                                    ."\n is_numeric participants: ".is_numeric($participants) , 3, "/tmp/optimouv.log");
+
+                                # les champs optionnels
                                 $adresse = $donnéesLigne[6];
                                 $longitude = $donnéesLigne[7];
                                 $latitude = $donnéesLigne[8];
@@ -151,6 +167,7 @@ class Listes{
 
                             }
                             elseif (strtolower($typeEntite) == "personne") {
+                                # les champs obligatoires
                                 $nom = $donnéesLigne[1];
                                 $prenom = $donnéesLigne[2];
                                 $codePostal = $donnéesLigne[3];
@@ -205,6 +222,7 @@ class Listes{
                                     return $retour;
                                 }
 
+                                # les champs optionnels
                                 $adresse = $donnéesLigne[6];
                                 $longitude = $donnéesLigne[7];
                                 $latitude = $donnéesLigne[8];
@@ -212,6 +230,7 @@ class Listes{
 
                             }
                             elseif ($typeEntite == "LIEU") {
+                                # les champs obligatoires
                                 $nom = $donnéesLigne[1];
                                 $codePostal = $donnéesLigne[2];
                                 $ville = $donnéesLigne[3];
@@ -256,6 +275,7 @@ class Listes{
                                     return $retour;
                                 }
 
+                                # les champs optionnels
                                 $adresse = $donnéesLigne[5];
                                 $longitude = $donnéesLigne[6];
                                 $latitude = $donnéesLigne[7];
