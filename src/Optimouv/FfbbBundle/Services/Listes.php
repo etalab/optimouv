@@ -29,104 +29,130 @@ class Listes{
     }
 
     public function controlerEntites(){
-        # obtenir le nom du fichier uploadé
-        $nomFichierTemp = $_FILES["file-0"]["tmp_name"];
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateCreation = date('Y-m-d', time());
+        $dateModification = date('Y-m-d', time());
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+        # obtenir le chemin d'upload du fichier
+        $cheminFichierTemp = $_FILES["file-0"]["tmp_name"];
+
+        # obtenir le type du fichier
+        $typeFichier = $_FILES["file-0"]["type"];
+
+        # obtenir le nom du fichier
+        $nomFichier = $_FILES["file-0"]["name"];
+
 
         // Dès qu'un fichier a été reçu par le serveur
-        if (file_exists($nomFichierTemp) || is_uploaded_file($nomFichierTemp)) {
+        if (file_exists($cheminFichierTemp) || is_uploaded_file($cheminFichierTemp)) {
 
-            // lire le contenu du fichier
-            $file = new SplFileObject($nomFichierTemp, 'r');
-            $delimiter = ",";
+            // Si le fichier n'est pas un fichier csv
+            if($typeFichier == "text/csv"){
+                // lire le contenu du fichier
+                $file = new SplFileObject($cheminFichierTemp, 'r');
+                $delimiter = ",";
 
-            // On lui indique que c'est du CSV
-            $file->setFlags(SplFileObject::READ_CSV);
+                // On lui indique que c'est du CSV
+                $file->setFlags(SplFileObject::READ_CSV);
 
-            // préciser le délimiteur et le caractère enclosure
-            $file->setCsvControl($delimiter);
+                # afficher le statut de la requete executée
+                error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+                    ."\n _FILES: ".print_r($_FILES, true), 3, "/tmp/optimouv.log");
 
-            // Obtient données des en-tetes
-            $donneesEntete = $file->fgetcsv();
 
-            # obtenir la date courante du système
-            date_default_timezone_set('Europe/Paris');
-            $dateCreation = date('Y-m-d', time());
-            $dateModification = date('Y-m-d', time());
-            $dateTimeNow = date('Y-m-d_G:i:s', time());
 
-            # obtenir l'objet PDO
-            $bdd = $this->getPdo();
+                // préciser le délimiteur et le caractère enclosure
+                $file->setCsvControl($delimiter);
 
-            if (!$bdd) {
-                //erreur de connexion
+                // Obtient données des en-tetes
+                $donneesEntete = $file->fgetcsv();
+
+
+                # obtenir l'objet PDO
+                $bdd = $this->getPdo();
+
+                if (!$bdd) {
+                    //erreur de connexion
 //                error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow, 3, "/var/log/apache2/optimouv.log");
-                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
-            } else {
-                $idsEntite = [];
-                // obtenir les données pour chaque ligne
-                while (!$file->eof()) {
-                    $donnéesLigne = $file->fgetcsv();
+                    die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+                } else {
+                    $idsEntite = [];
+                    // obtenir les données pour chaque ligne
+                    while (!$file->eof()) {
+                        $donnéesLigne = $file->fgetcsv();
 
-                    // tester s'il y a des données
-                    if($donnéesLigne != array(null)){
-                        // obtenir la valeur pour chaque paramètre
-                        $typeEntite = $donnéesLigne[0];
+                        // tester s'il y a des données
+                        if($donnéesLigne != array(null)){
+                            // obtenir la valeur pour chaque paramètre
+                            $typeEntite = $donnéesLigne[0];
 
-                        // obtenir les valeurs selon le type d'entité
-                        if (strtolower($typeEntite) == "equipe") {
-                            $nom = $donnéesLigne[1];
-                            $codePostal = $donnéesLigne[2];
-                            $ville = $donnéesLigne[3];
-                            $participants = $donnéesLigne[4];
-                            $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
-                            $adresse = $donnéesLigne[6];
-                            $longitude = $donnéesLigne[7];
-                            $latitude = $donnéesLigne[8];
-                            $projection = $donnéesLigne[9];
-                            $licencies = $donnéesLigne[10];
+                            // obtenir les valeurs selon le type d'entité
+                            if (strtolower($typeEntite) == "equipe") {
+                                $nom = $donnéesLigne[1];
+                                $codePostal = $donnéesLigne[2];
+                                $ville = $donnéesLigne[3];
+                                $participants = $donnéesLigne[4];
+                                $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
+                                $adresse = $donnéesLigne[6];
+                                $longitude = $donnéesLigne[7];
+                                $latitude = $donnéesLigne[8];
+                                $projection = $donnéesLigne[9];
+                                $licencies = $donnéesLigne[10];
+
+
+                            }
+                            elseif (strtolower($typeEntite) == "personne") {
+                                $nom = $donnéesLigne[1];
+                                $prenom = $donnéesLigne[2];
+                                $codePostal = $donnéesLigne[3];
+                                $ville = $donnéesLigne[4];
+                                $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
+                                $adresse = $donnéesLigne[6];
+                                $longitude = $donnéesLigne[7];
+                                $latitude = $donnéesLigne[8];
+                                $projection = $donnéesLigne[9];
+
+                            }
+                            elseif ($typeEntite == "LIEU") {
+                                $nom = $donnéesLigne[1];
+                                $codePostal = $donnéesLigne[2];
+                                $ville = $donnéesLigne[3];
+                                $lieuRencontrePossible = $this->getBoolean($donnéesLigne[4]);
+                                $adresse = $donnéesLigne[5];
+                                $longitude = $donnéesLigne[6];
+                                $latitude = $donnéesLigne[7];
+                                $projection = $donnéesLigne[8];
+                                $typeEquipement = $donnéesLigne[9];
+                                $nombreEquipement = $donnéesLigne[10];
+                                $capaciteRencontre = $this->getBoolean($donnéesLigne[11]);
+                                $capacitePhaseFinale = $this->getBoolean($donnéesLigne[12]);
+
+                            }
+
 
 
                         }
-                        elseif (strtolower($typeEntite) == "personne") {
-                            $nom = $donnéesLigne[1];
-                            $prenom = $donnéesLigne[2];
-                            $codePostal = $donnéesLigne[3];
-                            $ville = $donnéesLigne[4];
-                            $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
-                            $adresse = $donnéesLigne[6];
-                            $longitude = $donnéesLigne[7];
-                            $latitude = $donnéesLigne[8];
-                            $projection = $donnéesLigne[9];
-
-                        }
-                        elseif ($typeEntite == "LIEU") {
-                            $nom = $donnéesLigne[1];
-                            $codePostal = $donnéesLigne[2];
-                            $ville = $donnéesLigne[3];
-                            $lieuRencontrePossible = $this->getBoolean($donnéesLigne[4]);
-                            $adresse = $donnéesLigne[5];
-                            $longitude = $donnéesLigne[6];
-                            $latitude = $donnéesLigne[7];
-                            $projection = $donnéesLigne[8];
-                            $typeEquipement = $donnéesLigne[9];
-                            $nombreEquipement = $donnéesLigne[10];
-                            $capaciteRencontre = $this->getBoolean($donnéesLigne[11]);
-                            $capacitePhaseFinale = $this->getBoolean($donnéesLigne[12]);
-
-                        }
-
-                        # afficher le statut de la requete executée
-//                    error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-//                        ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/var/log/apache2/optimouv.log");
-
-
                     }
                 }
+                $retour = array(
+                    "success" => true,
+                    "msg" => "Contrôle réussi "
+                );
+
             }
-            $retour = array(
-                "success" => true,
-                "msg" => "Contrôle réussi "
-            );
+            else{
+                $retour = array(
+                    "success" => false,
+                    "msg" => "Veuillez vérifier que le type de fichier uploadé est bien csv.!"
+                            ."Nom de fichier: ".$nomFichier."!"
+                            ."Type de fichier: ".$typeFichier
+                );
+
+            }
+
+
         }
         else{
             $retour = array(

@@ -61,7 +61,10 @@ class ListesController extends Controller
 
         }
         else{
-
+            return new JsonResponse(array(
+                "success" => false,
+                "msg" => $statutUpload["msg"]
+            ));
         }
 
 

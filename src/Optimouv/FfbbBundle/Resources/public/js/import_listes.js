@@ -21,7 +21,7 @@ function addEventHandlerImportListePartcipants(){
       processData: false,
       success: function(data, textStatus, jqXHR)
       {
-        if(typeof data.success)
+        if(typeof data.success === 'undefined')
         {
           // Success so call function to process the form
           console.log('SUCCESS: ' + data.msg);
@@ -36,6 +36,8 @@ function addEventHandlerImportListePartcipants(){
 
           // mettre à jour le statut d'upload
           $("#msg_upload_liste_participants").text(data.msg);
+
+          // afficher le msg d'upload
           $("#collapse1").removeClass("collapse");
 
         }
@@ -43,6 +45,26 @@ function addEventHandlerImportListePartcipants(){
         {
           // Handle errors here
           console.log('ERRORS: ' + data.msg);
+
+          erreurMsg = data.msg;
+          console.log('erreurMsg : ' + erreurMsg );
+
+          // mettre à jour le statut d'upload
+          var erreurMsgSplit = erreurMsg.split('!');
+
+          // nettoyer ancien texte
+          $("#msg_upload_liste_participants").empty();
+
+          for (i = 0 ; i < erreurMsgSplit.length ; i ++ ){
+
+            var iterMsg = erreurMsgSplit[i] + '<br>';
+
+            $("#msg_upload_liste_participants").append(iterMsg);
+
+          }
+
+          // afficher le msg d'upload
+          $("#collapse1").removeClass("collapse");
         }
       },
       error: function(jqXHR, textStatus, errorThrown)
@@ -173,5 +195,6 @@ $(document).ready(function () {
   addEventHandlerImportListeLieux();
   addEventHandlerSelectListeParticipants();
   //addEventHandlerSelectListeLieux();
+
 });
 
