@@ -3,13 +3,12 @@
 namespace Optimouv\FfbbBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 class GroupeController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('FfbbBundle:Groupe:index.html.twig');
+        return $this->render('FfbbBundle:Groupe:index.html.twig'); // on utilise plus cette fn!!
 
     }
 
@@ -19,6 +18,10 @@ class GroupeController extends Controller
         # obtenir entity manager
         $em = $this->getDoctrine()->getManager();
 
+        //récupérer la liste des groupes pour un utilisateur
+        $tousLesGroupes = $this->getGroupe();
+
+
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
@@ -26,8 +29,7 @@ class GroupeController extends Controller
         // obtenir l'id de la liste
         $idListeParticipants = $_REQUEST["idListeParticipants"][0];
 
-//        error_log("\n Controller: Groupe, Function: afficherParticipantsAction, datetime: ".$dateTimeNow
-//            ."\n request : ".print_r($_REQUEST, true), 3, "/tmp/optimouv.log");
+
 
         # obtenir listes des lieux de rencontres
         $idParticipants = $em->getRepository('FfbbBundle:ListeParticipants')->getEquipesPourListe($idListeParticipants);
@@ -51,10 +53,13 @@ class GroupeController extends Controller
         }
 
 
-        $outputTableau = array("detailsEntites" => $detailsEntites );
 
+        return $this->render('FfbbBundle:Groupe:indexUpdate.html.twig', array(
+            'detailsEntites' => $detailsEntites,
+            'tousLesGroupes' => $tousLesGroupes,
+            'idListeParticipants' => $idListeParticipants
 
-        return $this->render('FfbbBundle:Groupe:indexUpdate.html.twig', $outputTableau);
+        ));
     }
 
 //    public function afficherLieuxAction($idListeLieux)
@@ -89,5 +94,86 @@ class GroupeController extends Controller
 
         return $this->render('FfbbBundle:Groupe:indexUpdate.html.twig', $outputTableau);
     }
+
+    public function getGroupe()
+    {
+
+        $idUtilisateur = 1; //TODO: à rendre dynamique lorsqu'on a plusieurs utilisateurs
+        $em = $this->getDoctrine()->getManager();
+
+        //récupérer la liste de groupes
+
+        $tousLesGroupes =  $em->getRepository('FfbbBundle:Groupe')->findByIdUtilisateur($idUtilisateur, array('id'=>'DESC'));
+
+       return $tousLesGroupes;
+    }
+
+    public function deleteAction($idGroupe)
+    {
+
+             $em = $this->getDoctrine()->getManager();
+             $entity = $em->getRepository('FfbbBundle:Groupe')->find($idGroupe);
+
+            if (!$entity) {
+                throw $this->createNotFoundException('Entité groupe introuvable.');
+            }
+
+
+            $em->remove($entity);
+            $em->flush();
+
+        //return $this->redirect($this->generateUrl('ffbb_select_liste_participants'));
+
+        return new JsonResponse(array(
+            "success" => true,
+            "msg" => "Groupe supprimé"
+        ));
+
+    }
+
+    public function renommerAction($idGroupe)
+    {
+
+        return $this->render('FfbbBundle:Groupe:renommer.html.twig', array(
+
+             'idGroupe' => $idGroupe,
+        ));
+
+    }
+
+    public function renommerGroupeAction($idGroupe)
+    {
+
+
+        $em = $this->getDoctrine()->getManager();
+
+
+        $entity = $em->getRepository('FfbbBundle:Groupe')->find($idGroupe);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Entité groupe non trouvée!');
+        }
+
+        $nomGroupe = $_POST["nomGroupe"];
+
+        $entity->setNom($nomGroupe);
+        $em->persist($entity);
+        $em->flush();
+
+        $idListeParticipants =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
+
+
+
+        return $this->redirect($this->generateUrl('ffbb_select_liste_participants2', array('idListeParticipants' => $idListeParticipants) ));
+
+
+       /* return $this->redirectToRoute('ffbb_select_liste_participants', [
+            'idListeParticipants' => $idListeParticipants
+        ]);
+       */
+
+    }
+
+
 
 }

@@ -12,13 +12,12 @@ class DefaultController extends Controller
 
         $villes = $_POST["duallistbox_demo1"];
         $nomGroupe = $_POST["nomGroupe"];
+        $idListeParticipants = $_POST["idListeParticipants"];
 
-     //  echo '<pre>',print_r($nomGroupe,1),'</pre>';
-     //    exit;
 
 
 //        $this->get('service_rencontres')->geocoderVilles($villes);
-        $idGroupe = $this->get('service_rencontres')->creerGroupe($villes, $nomGroupe);
+        $idGroupe = $this->get('service_rencontres')->creerGroupe($villes, $nomGroupe, $idListeParticipants);
 
         $coordonneesVille = $this->get('service_rencontres')->index($idGroupe);
 
@@ -34,5 +33,21 @@ class DefaultController extends Controller
         ));
     }
 
+    public function groupeAction($idGroupe)
+    {
+
+        $coordonneesVille = $this->get('service_rencontres')->index($idGroupe);
+
+
+        $nomsVilles = $this->get('service_rencontres')->nomsVilles($idGroupe);
+
+
+        return $this->render('FfbbBundle:Default:index.html.twig', array(
+
+            'coordonneesVille' => $coordonneesVille,
+            'nomsVilles' => $nomsVilles,
+            'idGroupe' => $idGroupe,
+        ));
+    }
 
 }
