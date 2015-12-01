@@ -78,6 +78,18 @@ class Listes{
                     $idsEntite = [];
                     // obtenir les données pour chaque ligne
                     $nbrLigne = 1;
+
+                    // récupérer toutes les codes postaux depuis la table villes france_free
+                    $sql = "SELECT distinct ville_code_postal  FROM villes_france_free;";
+                    $stmt = $bdd->prepare($sql);
+                    $stmt->execute();
+
+                    $codesPostaux = $stmt->fetchall(PDO::FETCH_COLUMN, 0);
+                    error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+                        ."\n code postal: ".print_r($codesPostaux, true), 3, "/tmp/optimouv.log");
+
+
+
                     while (!$file->eof()) {
                         $donnéesLigne = $file->fgetcsv();
                         $nbrLigne++;
@@ -168,12 +180,6 @@ class Listes{
                                     return $retour;
                                 }
 
-                                error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-                                    ."\n code postal: ".print_r($codePostal, true), 3, "/tmp/optimouv.log");
-                                error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-                                    ."\n code postal: ". gettype($codePostal), 3, "/tmp/optimouv.log");
-
-
 
                                 # controler le champ 'code postal'
                                 # il faut que la valeur contient 5 chiffres
@@ -187,6 +193,17 @@ class Listes{
                                     return $retour;
                                 }
 
+                                # controler le champ 'code postal'
+                                # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
+                                if(!in_array($codePostal,  $codesPostaux)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." La valeur du champ 'code postal' (colonne 3) n'est pas reconnue!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                }
 
                                 # les champs optionnels
                                 $adresse = $donnéesLigne[6];
@@ -276,6 +293,20 @@ class Listes{
                                     return $retour;
                                 }
 
+                                # controler le champ 'code postal'
+                                # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
+                                if(!in_array($codePostal,  $codesPostaux)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." La valeur du champ 'code postal' (colonne 4) n'est pas reconnue!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                }
+
+
+
                                 # les champs optionnels
                                 $adresse = $donnéesLigne[6];
                                 $longitude = $donnéesLigne[7];
@@ -352,7 +383,21 @@ class Listes{
                                     );
                                     return $retour;
                                 }
-                                
+
+                                # controler le champ 'code postal'
+                                # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
+                                if(!in_array($codePostal,  $codesPostaux)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." La valeur du champ 'code postal' (colonne 3) n'est pas reconnue!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                }
+
+
+
                                 # les champs optionnels
                                 $adresse = $donnéesLigne[5];
                                 $longitude = $donnéesLigne[6];
