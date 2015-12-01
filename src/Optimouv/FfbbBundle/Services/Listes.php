@@ -93,7 +93,6 @@ class Listes{
                     $stmt->execute();
                     $nomsVilles = $stmt->fetchall(PDO::FETCH_COLUMN, 0);
 
-                    
                     error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
                         ."\n nomsVilles: ".print_r($nomsVilles, true), 3, "/tmp/optimouv.log");
 
