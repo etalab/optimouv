@@ -61,14 +61,11 @@ class Listes{
                 error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
                     ."\n _FILES: ".print_r($_FILES, true), 3, "/tmp/optimouv.log");
 
-
-
                 // préciser le délimiteur et le caractère enclosure
                 $file->setCsvControl($delimiter);
 
                 // Obtient données des en-tetes
                 $donneesEntete = $file->fgetcsv();
-
 
                 # obtenir l'objet PDO
                 $bdd = $this->getPdo();
@@ -80,8 +77,10 @@ class Listes{
                 } else {
                     $idsEntite = [];
                     // obtenir les données pour chaque ligne
+                    $nbrLigne = 1;
                     while (!$file->eof()) {
                         $donnéesLigne = $file->fgetcsv();
+                        $nbrLigne++;
 
                         // tester s'il y a des données
                         if($donnéesLigne != array(null)){
@@ -128,9 +127,18 @@ class Listes{
                                 $nombreEquipement = $donnéesLigne[10];
                                 $capaciteRencontre = $this->getBoolean($donnéesLigne[11]);
                                 $capacitePhaseFinale = $this->getBoolean($donnéesLigne[12]);
-
                             }
+                            else{
+                                $retour = array(
+                                    "success" => false,
+                                    "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                        ." Le type d'entité n'est pas reconnu!"
+                                        ." Veuillez s'assurer que le type d'entité est parmi 'EQUIPE', 'PERSONNE' ou 'LIEU'!"
+                                        .implode(",", $donnéesLigne)
+                                );
 
+                                return $retour;
+                            }
 
 
                         }
