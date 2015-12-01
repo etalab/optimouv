@@ -2,7 +2,7 @@
 jQuery.fn.exists = function(){return this.length>0;}
 
 
-function addEventHandlerImportListePartcipants(){
+function addEventHandlerImportListeParticipants(){
   // bouton pour importer une liste de participants
   $("#btn_import_liste_participants").click(function(){
     console.log("upload listeParticipants");
@@ -21,7 +21,7 @@ function addEventHandlerImportListePartcipants(){
       processData: false,
       success: function(data, textStatus, jqXHR)
       {
-        if(typeof data.success === 'undefined')
+        if(data.success)
         {
           // Success so call function to process the form
           console.log('SUCCESS: ' + data.msg);
@@ -38,7 +38,7 @@ function addEventHandlerImportListePartcipants(){
           $("#msg_upload_liste_participants").text(data.msg);
 
           // afficher le msg d'upload
-          $("#collapse1").removeClass("collapse");
+          $("#collapse_statut_upload_participants").removeClass("collapse");
 
         }
         else
@@ -55,16 +55,14 @@ function addEventHandlerImportListePartcipants(){
           // nettoyer ancien texte
           $("#msg_upload_liste_participants").empty();
 
+          // mettre à jour le contenu du message d'erreur
           for (i = 0 ; i < erreurMsgSplit.length ; i ++ ){
-
             var iterMsg = erreurMsgSplit[i] + '<br>';
-
             $("#msg_upload_liste_participants").append(iterMsg);
-
           }
 
           // afficher le msg d'upload
-          $("#collapse1").removeClass("collapse");
+          $("#collapse_statut_upload_participants").removeClass("collapse");
         }
       },
       error: function(jqXHR, textStatus, errorThrown)
@@ -97,24 +95,53 @@ function addEventHandlerImportListeLieux(){
       dataType : "json",
       success: function(data, textStatus, jqXHR)
       {
-        if(typeof data.error === 'undefined')
+        console.log(data);
+
+        if(data.success)
         {
           // Success so call function to process the form
-          console.log('SUCCESS: ' + data);
+          console.log('SUCCESS: ' + data.msg);
 
 
           // supprimer les enfants de l'élement select liste_partcipants
           $("#liste_lieux").empty();
 
-          $.each(data, function(index, value){
+          $.each(data.data, function(index, value){
             $("#liste_lieux").append("<option value=" + value.id + ">" + value.nom + "</option>");
           });
+
+          // mettre à jour le statut d'upload
+          $("#msg_upload_liste_lieux").text(data.msg);
+
+          // afficher le msg d'upload
+          $("#collapse_statut_upload_lieux").removeClass("collapse");
 
         }
         else
         {
           // Handle errors here
-          console.log('ERRORS: ' + data.error);
+          console.log('ERRORS: ' + data.msg);
+
+          erreurMsg = data.msg;
+          console.log('erreurMsg : ' + erreurMsg );
+
+          // mettre à jour le statut d'upload
+          var erreurMsgSplit = erreurMsg.split('!');
+
+          // nettoyer ancien texte
+          $("#msg_upload_liste_lieux").empty();
+
+          // mettre à jour le contenu du message d'erreur
+          for (i = 0 ; i < erreurMsgSplit.length ; i ++ ){
+            var iterMsg = erreurMsgSplit[i] + '<br>';
+            $("#msg_upload_liste_lieux").append(iterMsg);
+          }
+
+          // afficher le msg d'upload
+          $("#collapse_statut_upload_lieux").removeClass("collapse");
+
+
+
         }
       },
       error: function(jqXHR, textStatus, errorThrown)
@@ -171,7 +198,6 @@ function addEventHandlerUseListeParticipants(idListeParticipants){
   $("#btn_select_liste_participants").click(function(){
     console.log("addEventHandlerUseListeParticipants: " + idListeParticipants);
     //$.redirect('select_liste_participants/'+idListeParticipants, {});
-    //$.redirect('select_liste_participants', {"idListeParticipants" : idListeParticipants});
     $.redirect('select-liste-participants', {"idListeParticipants" : idListeParticipants});
 
   });
@@ -191,7 +217,7 @@ function addEventHandlerUseListeLieux(idListeLieux){
 
 $(document).ready(function () {
 
-  addEventHandlerImportListePartcipants();
+  addEventHandlerImportListeParticipants();
   addEventHandlerImportListeLieux();
   addEventHandlerSelectListeParticipants();
   //addEventHandlerSelectListeLieux();

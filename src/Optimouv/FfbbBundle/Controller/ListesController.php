@@ -35,7 +35,7 @@ class ListesController extends Controller
         # controler toutes le fichier uploadé
         $statutUpload = $this->get('service_listes')->controlerEntites();
 
-        error_log("\n Controller: Listes, Function: indexAction, datetime: ".$dateTimeNow
+        error_log("\n Controller: Listes, Function: creerListeParticipantsAction, datetime: ".$dateTimeNow
             ."\n statutUpload: ".print_r($statutUpload, true), 3, "/tmp/optimouv.log");
 
         if($statutUpload["success"]){
@@ -52,7 +52,6 @@ class ListesController extends Controller
             # obtenir listes des participants
             $listesParticipants = $em->getRepository('FfbbBundle:ListeParticipants')->getListes();
 
-//            return new JsonResponse($listesParticipants);
             return new JsonResponse(array(
                 "success" => true,
                 "msg" => "Upload réussi",
@@ -79,23 +78,39 @@ class ListesController extends Controller
         # controler toutes le fichier uploadé
         $statutUpload = $this->get('service_listes')->controlerEntites();
 
-        error_log("\n Controller: Listes, Function: indexAction, datetime: ".$dateTimeNow
-            ."\n statutUpload: ".print_r($statutUpload, true), 3, "/var/log/apache2/optimouv.log");
+        error_log("\n Controller: Listes, Function: creerListeLieuxAction, datetime: ".$dateTimeNow
+            ."\n statutUpload: ".print_r($statutUpload, true), 3, "/tmp/optimouv.log");
 
-        # créer des entités dans la table entite
-        $retourEntites = $this->get('service_listes')->creerEntites();
-        $idsEntite = $retourEntites["idsEntite"];
+        if($statutUpload["success"]){
+            # créer des entités dans la table entite
+            $retourEntites = $this->get('service_listes')->creerEntites();
+            $idsEntite = $retourEntites["idsEntite"];
 
-        # créer une liste dans la table liste_participants
-        $retourListe = $this->get('service_listes')->creerListeLieux($idsEntite);
+            # créer une liste dans la table liste_participants
+            $retourListe = $this->get('service_listes')->creerListeLieux($idsEntite);
 
-        # obtenir entity manager
-        $em = $this->getDoctrine()->getManager();
+            # obtenir entity manager
+            $em = $this->getDoctrine()->getManager();
 
-        # obtenir listes des participants
-        $listesLieux = $em->getRepository('FfbbBundle:ListeLieux')->getListes();
+            # obtenir listes des participants
+            $listesLieux = $em->getRepository('FfbbBundle:ListeLieux')->getListes();
 
-        return new JsonResponse($listesLieux);
+            return new JsonResponse(array(
+                "success" => true,
+                "msg" => "Upload réussi",
+                "data" => $listesLieux
+            ));
+
+
+        }else{
+            return new JsonResponse(array(
+                "success" => false,
+                "msg" => $statutUpload["msg"]
+            ));
+        }
+
+
+
     }
 
 }
