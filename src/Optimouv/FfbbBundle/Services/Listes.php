@@ -240,6 +240,9 @@ class Listes{
                                     }
 
 
+                                    # corriger le code postal si un zéro est manquant dans le premier chiffre
+                                    $codePostal = $this->corrigerCodePostal($codePostal);
+
                                     # controler le champ 'code postal'
                                     # il faut que la valeur contient 5 chiffres
                                     if(strlen($codePostal) != 5){
@@ -366,6 +369,9 @@ class Listes{
                                         return $retour;
                                     }
 
+                                    # corriger le code postal si un zéro est manquant dans le premier chiffre
+                                    $codePostal = $this->corrigerCodePostal($codePostal);
+
                                     # controler le champ 'code postal'
                                     # il faut que la valeur contient 5 chiffres
                                     if(strlen($codePostal) != 5){
@@ -485,6 +491,9 @@ class Listes{
                                         );
                                         return $retour;
                                     }
+
+                                    # corriger le code postal si un zéro est manquant dans le premier chiffre
+                                    $codePostal = $this->corrigerCodePostal($codePostal);
 
                                     # controler le champ 'code postal'
                                     # il faut que la valeur contient 5 chiffres
@@ -741,6 +750,10 @@ class Listes{
                             $projection = $donnéesLigne[9];
                             $licencies = $donnéesLigne[10];
 
+                            # corriger le code postal si un zéro est manquant dans le premier chiffre
+                            $codePostal = $this->corrigerCodePostal($codePostal);
+
+
                             $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, adresse, code_postal, ville, longitude, latitude,"
                                 ." projection, participants, "
                                 ." licencies, lieu_rencontre_possible, date_creation, date_modification )"
@@ -776,6 +789,9 @@ class Listes{
                             $latitude = $donnéesLigne[8];
                             $projection = $donnéesLigne[9];
 
+                            # corriger le code postal si un zéro est manquant dans le premier chiffre
+                            $codePostal = $this->corrigerCodePostal($codePostal);
+
                             $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, prenom, adresse, code_postal, ville, longitude, latitude,"
                                 ." projection, lieu_rencontre_possible, date_creation, date_modification )"
                                 ."VALUES ( :id_utilisateur, :type_entite, :nom, :prenom, :adresse, :code_postal, :ville, :longitude, :latitude, "
@@ -809,6 +825,9 @@ class Listes{
                             $nombreEquipement = $donnéesLigne[10];
                             $capaciteRencontre = $this->getBoolean($donnéesLigne[11]);
                             $capacitePhaseFinale = $this->getBoolean($donnéesLigne[12]);
+
+                            # corriger le code postal si un zéro est manquant dans le premier chiffre
+                            $codePostal = $this->corrigerCodePostal($codePostal);
 
                             $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, adresse, code_postal, ville, longitude, latitude,"
                                 ." projection, type_equipement, nombre_equipement, capacite_rencontre, capacite_phase_finale, "
@@ -859,6 +878,18 @@ class Listes{
 
         return $retour;
     }
+
+    # corriger le code postal
+    private  function corrigerCodePostal($codePostal){
+        if( (strlen($codePostal) == 4) and (is_numeric( $codePostal)) ){
+            // corriger le code postal
+            $codePostal = substr_replace($codePostal, "0", 0, 0);
+
+        }
+        return $codePostal;
+
+    }
+
 
     # controler les données d'en-têtes
     private function controlerEntete($entete){
