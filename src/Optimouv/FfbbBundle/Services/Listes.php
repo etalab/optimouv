@@ -35,6 +35,10 @@ class Listes{
         $dateModification = date('Y-m-d', time());
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
+        # afficher le statut de la requete executée
+        error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+            ."\n _FILES: ".print_r($_FILES, true), 3, "/tmp/optimouv.log");
+
         # obtenir le chemin d'upload du fichier
         $cheminFichierTemp = $_FILES["file-0"]["tmp_name"];
 
@@ -44,7 +48,6 @@ class Listes{
         # obtenir le nom du fichier
         $nomFichier = $_FILES["file-0"]["name"];
 
-
         // Dès qu'un fichier a été reçu par le serveur
         if (file_exists($cheminFichierTemp) || is_uploaded_file($cheminFichierTemp)) {
 
@@ -52,20 +55,19 @@ class Listes{
             if($typeFichier == "text/csv"){
                 // lire le contenu du fichier
                 $file = new SplFileObject($cheminFichierTemp, 'r');
-                $delimiter = ",";
 
                 // On lui indique que c'est du CSV
                 $file->setFlags(SplFileObject::READ_CSV);
 
-                # afficher le statut de la requete executée
-                error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-                    ."\n _FILES: ".print_r($_FILES, true), 3, "/tmp/optimouv.log");
+                // auto-détecter le délimiteur
+                $this->autoSetDelimiter($file);
 
-                // préciser le délimiteur et le caractère enclosure
-                $file->setCsvControl($delimiter);
 
-                // Obtenir les données des en-tetes
-                $donneesEntete = $file->fgetcsv();
+                // controller les données d'en-tetes (si elles correspondent à ce que on attend
+//                $resultatBooleanControlEntete = $this->controlerEntete($donneesEntete);
+//                error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+//                    ."\n resultatBooleanControlEntete : ".print_r($resultatBooleanControlEntete , true), 3, "/tmp/optimouv.log");
+
 
                 // Controler les colonnes des en-têtes avec les formats fixés  TODO
                 // Fichier equipes, personnes, lieux
@@ -111,6 +113,8 @@ class Listes{
                         if($donnéesLigne != array(null)){
                             // obtenir la valeur pour chaque paramètre
                             $typeEntite = $donnéesLigne[0];
+                            error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+                                ."\n donnéesLigne : ".print_r($donnéesLigne , true), 3, "/tmp/optimouv.log");
 
                             // obtenir les valeurs selon le type d'entité
                             if (strtolower($typeEntite) == "equipe") {
@@ -488,7 +492,7 @@ class Listes{
             else{
                 $retour = array(
                     "success" => false,
-                    "msg" => "Veuillez vérifier que le type de fichier uploadé est bien csv.!"
+                    "msg" => "Veuillez convertir votre fichier au format csv et effectuer à nouveau l'import.!"
                             ."Nom de fichier: ".$nomFichier."!"
                             ."Type de fichier: ".$typeFichier
                 );
@@ -626,11 +630,8 @@ class Listes{
             // On lui indique que c'est du CSV
             $file->setFlags(SplFileObject::READ_CSV);
 
-            // préciser le délimiteur et le caractère enclosure
-            $file->setCsvControl($delimiter);
-
-            // Obtient données des en-tetes
-            $donneesEntete = $file->fgetcsv();
+            // auto-détecter le délimiteur
+            $this->autoSetDelimiter($file);
 
             // initialiser toutes les vars
             $idUtilisateur = 1;
@@ -790,6 +791,37 @@ class Listes{
 
         return $retour;
     }
+
+    # controler les données d'en-têtes
+    private function controlerEntete($entete){
+        $statut = false;
+
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+        error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+            ."\n entete: ".print_r($entete, true), 3, "/tmp/optimouv.log");
+
+
+        return $statut;
+
+    }
+
+    # détecter le délimiter
+    private function autoSetDelimiter($file){
+        // Obtenir les données des en-tetes
+        $donneesEntete = $file->fgetcsv($delimiter = ",");
+
+        // vérifier le délimiteur utilisé
+        if(count($donneesEntete) > 1){
+            $file->setCsvControl($delimiter=",");
+        }
+        else{
+            $file->setCsvControl($delimiter=";");
+        }
+
+    }
+
 
     # convertir la valeur du champ lieuRencontrePossible
     private function getBoolean($input){
