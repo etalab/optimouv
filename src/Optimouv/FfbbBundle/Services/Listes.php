@@ -126,6 +126,19 @@ class Listes{
                             $donnéesLigne = $file->fgetcsv();
                             $nbrLigne++;
 
+                            // controler le fichier vide (sans données)
+                            if($donnéesLigne == array(null) and $nbrLigne == 2){
+                                $retour = array(
+                                    "success" => false,
+                                    "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                        ." Il n'y a pas de données dans le fichier csv!"
+                                        ." Veuillez uploader un fichier csv qui contient des données!"
+                                        .implode(",", $donnéesLigne)
+                                );
+                                return $retour;
+                            }
+
+
                             // tester s'il y a des données
                             if($donnéesLigne != array(null)){
                                 // obtenir la valeur pour chaque paramètre
