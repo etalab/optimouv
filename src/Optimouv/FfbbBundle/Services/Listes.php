@@ -48,11 +48,22 @@ class Listes{
         # obtenir le nom du fichier
         $nomFichier = $_FILES["file-0"]["name"];
 
+        # obtenir l'extension du fichier
+        $extensionFichier = explode(".", $_FILES["file-0"]["name"]);
+        $extensionFichier = end($extensionFichier);
+
+        error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+            ."\n extensionFichier : ".print_r($extensionFichier , true), 3, "/tmp/optimouv.log");
+
         // Dès qu'un fichier a été reçu par le serveur
         if (file_exists($cheminFichierTemp) || is_uploaded_file($cheminFichierTemp)) {
 
+
+            # types détectés comme csv
+            $mimes = array('application/vnd.ms-excel','text/plain','text/csv','text/tsv');
+
             // Si le fichier n'est pas un fichier csv
-            if($typeFichier == "text/csv"){
+            if(in_array($typeFichier, $mimes) and ($extensionFichier == "csv") ){
                 // lire le contenu du fichier
                 $file = new SplFileObject($cheminFichierTemp, 'r');
 
@@ -113,8 +124,6 @@ class Listes{
                         if($donnéesLigne != array(null)){
                             // obtenir la valeur pour chaque paramètre
                             $typeEntite = $donnéesLigne[0];
-                            error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
-                                ."\n donnéesLigne : ".print_r($donnéesLigne , true), 3, "/tmp/optimouv.log");
 
                             // obtenir les valeurs selon le type d'entité
                             if (strtolower($typeEntite) == "equipe") {

@@ -39,6 +39,7 @@ class ListesController extends Controller
             ."\n statutUpload: ".print_r($statutUpload, true), 3, "/tmp/optimouv.log");
 
         if($statutUpload["success"]){
+
             # créer des entités dans la table entite
             $retourEntites = $this->get('service_listes')->creerEntites();
             $idsEntite = $retourEntites["idsEntite"];
