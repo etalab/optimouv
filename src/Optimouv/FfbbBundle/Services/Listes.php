@@ -28,6 +28,596 @@ class Listes{
         $this->app_code = $app_code;
     }
 
+    public function controlerEntites(){
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateCreation = date('Y-m-d', time());
+        $dateModification = date('Y-m-d', time());
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+        # afficher le statut de la requete executée
+        error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+            ."\n _FILES: ".print_r($_FILES, true), 3, "/tmp/optimouv.log");
+
+//        error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+//            ."\n _SERVER: ".print_r($_SERVER, true), 3, "/tmp/optimouv.log");
+
+        # controler si la taille limite du fichier à été atteinte
+        $tailleFichier = $_SERVER["CONTENT_LENGTH"];
+
+        # la taille dépasse 2M (limite du fichier par défaut de PHP) // TODO
+        # une erreur bizarre du parseur json ajax
+//        if($tailleFichier > 2097152){
+//            $retour = array(
+//                "success" => false,
+//                "msg" => "Le fichier uploadé a dépassé la limite autorisée.!"
+//                    ."Veuillez réduire la taille du fichier"
+//            );
+//            return $retour;
+//        }
+
+
+        # obtenir le chemin d'upload du fichier
+        $cheminFichierTemp = $_FILES["file-0"]["tmp_name"];
+
+        # obtenir le type du fichier
+        $typeFichier = $_FILES["file-0"]["type"];
+
+        # obtenir le nom du fichier
+        $nomFichier = $_FILES["file-0"]["name"];
+
+        # obtenir l'extension du fichier
+        $extensionFichier = explode(".", $_FILES["file-0"]["name"]);
+        $extensionFichier = end($extensionFichier);
+
+        // Dès qu'un fichier a été reçu par le serveur
+        if (file_exists($cheminFichierTemp) || is_uploaded_file($cheminFichierTemp)) {
+
+            # types détectés comme csv
+            $mimes = array('application/vnd.ms-excel','text/plain','text/csv','text/tsv');
+
+            // Si le fichier n'est pas un fichier csv
+            if(in_array($typeFichier, $mimes) and (strtolower($extensionFichier)  == "csv") ){
+                // lire le contenu du fichier
+                $file = new SplFileObject($cheminFichierTemp, 'r');
+
+                // On lui indique que c'est du CSV
+                $file->setFlags(SplFileObject::READ_CSV);
+
+                // auto-détecter le délimiteur
+                $this->autoSetDelimiter($file);
+
+                // retourner le curseur de l'objet file à la position initiale
+                $file->rewind();
+
+                // obtenir les données d'en-têtes
+                $donneesEntete = $file->fgetcsv();
+
+                // Controler les colonnes des en-têtes avec les formats fixés  TODO
+                // Fichier equipes, personnes, lieux
+                $resultatBooleanControlEntete = $this->controlerEntete($donneesEntete);
+
+                error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+                    ."\n resultatBooleanControlEntete : ".print_r($resultatBooleanControlEntete , true), 3, "/tmp/optimouv.log");
+                if(!$resultatBooleanControlEntete["success"]){
+                    $retour = array(
+                        "success" => false,
+                        "msg" => "Erreur csv ligne : 1!"
+                            .$resultatBooleanControlEntete["msg"]."!"
+                            .implode(",", $donneesEntete)
+                    );
+                    return $retour;
+                }
+                else{
+                    # obtenir l'objet PDO
+                    $bdd = $this->getPdo();
+
+                    if (!$bdd) {
+                        //erreur de connexion
+//                error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow, 3, "/var/log/apache2/optimouv.log");
+                        die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+                    } else {
+                        $idsEntite = [];
+                        // obtenir les données pour chaque ligne
+                        $nbrLigne = 1;
+
+//                    // récupérer tous les codes postaux depuis la table villes france_free
+//                    $sql = "SELECT distinct ville_code_postal  FROM villes_france_free;";
+//                    $stmt = $bdd->prepare($sql);
+//                    $stmt->execute();
+//                    $codesPostaux = $stmt->fetchall(PDO::FETCH_COLUMN, 0);
+//                    error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+//                        ."\n code postal: ".print_r($codesPostaux, true), 3, "/tmp/optimouv.log");
+
+//                    // récupérer tous les noms de ville depuis la table villes france_free
+//                    $sql = "SELECT distinct ville_nom  FROM villes_france_free;";
+//                    $stmt = $bdd->prepare($sql);
+//                    $stmt->execute();
+//                    $nomsVilles = $stmt->fetchall(PDO::FETCH_COLUMN, 0);
+
+
+//                    error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+//                        ."\n nomsVilles: ".print_r($nomsVilles, true), 3, "/tmp/optimouv.log");
+
+
+                        # tableau qui contient toutes les données (utilisé pour gérer les doublons)
+                        $toutesLignes = [];
+
+                        while (!$file->eof()) {
+                            $donnéesLigne = $file->fgetcsv();
+                            $nbrLigne++;
+
+                            # ajouter la ligne courante dans le répértoire des lignes
+                            array_push($toutesLignes, $donnéesLigne);
+
+
+                            // controler le fichier vide (sans données)
+                            if($donnéesLigne == array(null) and $nbrLigne == 2){
+                                $retour = array(
+                                    "success" => false,
+                                    "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                        ." Il n'y a pas de données dans le fichier csv!"
+                                        ." Veuillez uploader un fichier csv qui contient des données!"
+                                        .implode(",", $donnéesLigne)
+                                );
+                                return $retour;
+                            }
+
+                            // éliminer les lignes doublons
+
+
+
+                            // tester s'il y a des données
+                            if($donnéesLigne != array(null)){
+                                // obtenir la valeur pour chaque paramètre
+                                $typeEntite = $donnéesLigne[0];
+                                error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+                                    ."\n typeEntite : ".print_r($typeEntite , true), 3, "/tmp/optimouv.log");
+
+                                // obtenir les valeurs selon le type d'entité
+                                if (strtolower($typeEntite) == "equipe") {
+
+                                    # controler le nombre de colonnes
+                                    if(count($donnéesLigne) != 11){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." La ligne doit contenir 11 valeurs. Donné: ".count($donnéesLigne)." valeurs !"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
+
+                                    # les champs obligatoires
+                                    $nom = $donnéesLigne[1];
+                                    $codePostal = $donnéesLigne[2];
+                                    $ville = $donnéesLigne[3];
+                                    $participants = $donnéesLigne[4];
+                                    $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
+
+                                    # controler tous les champs obligatoires
+                                    if(empty($nom)){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Le champ 'nom' (colonne 2) doit être rempli!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
+                                    if(empty($codePostal)){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Le champ 'code postal' (colonne 3) doit être rempli!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    };
+                                    if(empty($ville)){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Le champ 'ville' (colonne 4) doit être rempli!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    };
+                                    if(empty($participants)){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Le champ 'participants' (colonne 5) doit être rempli!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    };
+                                    # controler le champ 'lieu de rencontre possible'
+                                    if( empty($donnéesLigne[5]) ){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Le champ 'lieu de rencontre possible' (colonne 6) doit être rempli!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
+
+                                    # controler le champ 'participants'
+                                    # il faut que la valeur soit une valeur numeric
+                                    if(!is_numeric($participants)){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Le champ 'participants' (colonne 5) doit avoir une valeur numérique!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
+
+                                    # controler le champ 'lieu de rencontre possible'
+                                    # il faut que la valeur soit 'OUI' ou 'NON'
+                                    if((strtolower($donnéesLigne[5]) != 'non') and (strtolower($donnéesLigne[5]) != 'oui')){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Le champ 'lieu de rencontre possible' (colonne 6) doit avoir la valeur 'OUI' ou 'NON'!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
+
+
+                                    # corriger le code postal si un zéro est manquant dans le premier chiffre
+                                    $codePostal = $this->corrigerCodePostal($codePostal);
+
+                                    # controler le champ 'code postal'
+                                    # il faut que la valeur contient 5 chiffres
+                                    if(strlen($codePostal) != 5){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Le champ 'code postal' (colonne 3) doit contenir 5 chiffres!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
+
+//                                # controler le champ 'code postal'
+//                                # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
+//                                if(!in_array($codePostal,  $codesPostaux)){
+//                                    $retour = array(
+//                                        "success" => false,
+//                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+//                                            ." La valeur du champ 'code postal' (colonne 3) n'est pas reconnue!"
+//                                            .implode(",", $donnéesLigne)
+//                                    );
+//                                    return $retour;
+//                                }
+//
+//                                # controler le champ 'ville'
+//                                # il faut que la valeur est incluse dans la liste des noms de ville de la table villes_france_free
+//                                if(!in_array($ville,  $nomsVilles)){
+//                                    $retour = array(
+//                                        "success" => false,
+//                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+//                                            ." La valeur du champ 'ville' (colonne 4) n'est pas reconnue!"
+//                                            .implode(",", $donnéesLigne)
+//                                    );
+//                                    return $retour;
+//                                }
+
+
+
+                                    # les champs optionnels
+                                    $adresse = $donnéesLigne[6];
+                                    $longitude = $donnéesLigne[7];
+                                    $latitude = $donnéesLigne[8];
+                                    $projection = $donnéesLigne[9];
+                                    $licencies = $donnéesLigne[10];
+
+                                }
+                                elseif (strtolower($typeEntite) == "personne") {
+
+                                    # controler le nombre de colonnes
+                                    if(count($donnéesLigne) != 10){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." La ligne doit contenir 10 valeurs. Donné: ".count($donnéesLigne)." valeurs !"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
+
+                                    # les champs obligatoires
+                                    $nom = $donnéesLigne[1];
+                                    $prenom = $donnéesLigne[2];
+                                    $codePostal = $donnéesLigne[3];
+                                    $ville = $donnéesLigne[4];
+                                    $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
+
+                                    # controler tous les champs obligatoires
+                                    if(empty($nom)){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Le champ 'nom' (colonne 2) doit être rempli!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
+                                    if(empty($prenom)){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Le champ 'prenom' (colonne 3) doit être rempli!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
+                                    if(empty($codePostal)){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Le champ 'code postal' (colonne 4) doit être rempli!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
+                                    if(empty($ville)){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Le champ 'ville' (colonne 5) doit être rempli!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
+                                    # controler le champ 'lieu de rencontre possible'
+                                    if( empty($donnéesLigne[5]) ){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Le champ 'lieu de rencontre possible' (colonne 6) doit être rempli!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
+
+                                    # controler le champ '$lieuRencontrePossible'
+                                    # il faut que la valeur soit 'OUI' ou 'NON'
+                                    if((strtolower($donnéesLigne[5]) != 'non') and (strtolower($donnéesLigne[5]) != 'oui')){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Le champ 'lieu de rencontre possible' (colonne 6) doit avoir la valeur 'OUI' ou 'NON'!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
+
+                                    # corriger le code postal si un zéro est manquant dans le premier chiffre
+                                    $codePostal = $this->corrigerCodePostal($codePostal);
+
+                                    # controler le champ 'code postal'
+                                    # il faut que la valeur contient 5 chiffres
+                                    if(strlen($codePostal) != 5){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Le champ 'code postal' (colonne 4) doit contenir 5 chiffres!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
+
+//                                # controler le champ 'code postal'
+//                                # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
+//                                if(!in_array($codePostal,  $codesPostaux)){
+//                                    $retour = array(
+//                                        "success" => false,
+//                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+//                                            ." La valeur du champ 'code postal' (colonne 4) n'est pas reconnue!"
+//                                            .implode(",", $donnéesLigne)
+//                                    );
+//                                    return $retour;
+//                                }
+//
+//                                # controler le champ 'ville'
+//                                # il faut que la valeur est incluse dans la liste des noms de ville de la table villes_france_free
+//                                if(!in_array($ville,  $nomsVilles)){
+//                                    $retour = array(
+//                                        "success" => false,
+//                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+//                                            ." La valeur du champ 'ville' (colonne 5) n'est pas reconnue!"
+//                                            .implode(",", $donnéesLigne)
+//                                    );
+//                                    return $retour;
+//                                }
+
+
+
+                                    # les champs optionnels
+                                    $adresse = $donnéesLigne[6];
+                                    $longitude = $donnéesLigne[7];
+                                    $latitude = $donnéesLigne[8];
+                                    $projection = $donnéesLigne[9];
+
+                                }
+                                elseif ($typeEntite == "LIEU") {
+                                    # les champs obligatoires
+                                    $nom = $donnéesLigne[1];
+                                    $codePostal = $donnéesLigne[2];
+                                    $ville = $donnéesLigne[3];
+
+
+                                    # controler le nombre de colonnes
+                                    if(count($donnéesLigne) != 13){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." La ligne doit contenir 13 valeurs. Donné: ".count($donnéesLigne)." valeurs !"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
+
+                                    $lieuRencontrePossible = $this->getBoolean($donnéesLigne[4]);
+
+                                    error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+                                        ."\n ville: ".print_r($ville, true), 3, "/tmp/optimouv.log");
+
+
+                                    # controler tous les champs obligatoires
+                                    if(empty($nom)){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Le champ 'nom' (colonne 2) doit être rempli!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
+                                    if(empty($codePostal)){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Le champ 'code postal' (colonne 3) doit être rempli!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
+                                    if(empty($ville)){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Le champ 'ville' (colonne 4) doit être rempli!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
+                                    # controler le champ 'lieu de rencontre possible'
+                                    if( empty($donnéesLigne[4]) ){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Le champ 'lieu de rencontre possible' (colonne 5) doit être rempli!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
+
+                                    # controler le champ 'lieu de rencontre possible'
+                                    # il faut que la valeur soit 'OUI' ou 'NON'
+                                    if((strtolower($donnéesLigne[4]) != 'non') and (strtolower($donnéesLigne[4]) != 'oui')){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Le champ 'lieu de rencontre possible' (colonne 5) doit avoir la valeur 'OUI' ou 'NON'!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
+
+                                    # corriger le code postal si un zéro est manquant dans le premier chiffre
+                                    $codePostal = $this->corrigerCodePostal($codePostal);
+
+                                    # controler le champ 'code postal'
+                                    # il faut que la valeur contient 5 chiffres
+                                    if(strlen($codePostal) != 5){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Le champ 'code postal' (colonne 3) doit contenir 5 chiffres!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
+
+//                                # controler le champ 'code postal'
+//                                # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
+//                                if(!in_array($codePostal,  $codesPostaux)){
+//                                    $retour = array(
+//                                        "success" => false,
+//                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+//                                            ." La valeur du champ 'code postal' (colonne 3) n'est pas reconnue!"
+//                                            .implode(",", $donnéesLigne)
+//                                    );
+//                                    return $retour;
+//                                }
+//
+//                                # il faut que la valeur est incluse dans la liste des noms de ville de la table villes_france_free
+//                                if(!in_array($ville,  $nomsVilles)){
+//                                    $retour = array(
+//                                        "success" => false,
+//                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+//                                            ." La valeur du champ 'ville' (colonne 4) n'est pas reconnue!"
+//                                            .implode(",", $donnéesLigne)
+//                                    );
+//                                    return $retour;
+//                                }
+
+                                    # les champs optionnels
+                                    $adresse = $donnéesLigne[5];
+                                    $longitude = $donnéesLigne[6];
+                                    $latitude = $donnéesLigne[7];
+                                    $projection = $donnéesLigne[8];
+                                    $typeEquipement = $donnéesLigne[9];
+                                    $nombreEquipement = $donnéesLigne[10];
+                                    $capaciteRencontre = $this->getBoolean($donnéesLigne[11]);
+                                    $capacitePhaseFinale = $this->getBoolean($donnéesLigne[12]);
+                                }
+                                else{
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." Le type d'entité n'est pas reconnu!"
+                                            ." Veuillez s'assurer que le type d'entité est parmi 'EQUIPE', 'PERSONNE' ou 'LIEU'!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                }
+
+                            }
+
+                        }
+                    }
+                    $retour = array(
+                        "success" => true,
+                        "msg" => "Contrôle réussi "
+                    );
+
+
+
+
+
+                }
+            }
+            else{
+                $retour = array(
+                    "success" => false,
+                    "msg" => "Veuillez convertir votre fichier au format csv et effectuer à nouveau l'import.!"
+                            ."Nom de fichier: ".$nomFichier."!"
+                            ."Type de fichier: ".$typeFichier
+                );
+
+            }
+
+
+        }
+        else{
+            $retour = array(
+                "success" => false,
+                "msg" => "Erreur d'upload de fichier. Veuillez réessayer"
+            );
+        }
+
+        return $retour;
+
+    }
+
+
     public function creerListeParticipants($idsEntite){
         # obtenir l'objet PDO
         $bdd = $this->getPdo();
@@ -69,7 +659,6 @@ class Listes{
             # afficher le statut de la requete executée
 //            error_log("\n Service: Listes, Function: creerListeParticipants, datetime: ".$dateTimeNow
 //                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/var/log/apache2/optimouv.log");
-
         }
 
         $retour = array(
@@ -139,9 +728,6 @@ class Listes{
         // Dès qu'un fichier a été reçu par le serveur
         if (file_exists($nomFichierTemp) || is_uploaded_file($nomFichierTemp)) {
 
-            // détecte le type de fichier
-            # TODO
-
             // lire le contenu du fichier
             $file = new SplFileObject($nomFichierTemp, 'r');
             $delimiter = ",";
@@ -149,11 +735,8 @@ class Listes{
             // On lui indique que c'est du CSV
             $file->setFlags(SplFileObject::READ_CSV);
 
-            // préciser le délimiteur et le caractère enclosure
-            $file->setCsvControl($delimiter);
-
-            // Obtient données des en-tetes
-            $donneesEntete = $file->fgetcsv();
+            // auto-détecter le délimiteur
+            $this->autoSetDelimiter($file);
 
             // initialiser toutes les vars
             $idUtilisateur = 1;
@@ -185,15 +768,19 @@ class Listes{
                         // obtenir les valeurs selon le type d'entité
                         if (strtolower($typeEntite) == "equipe") {
                             $nom = $donnéesLigne[1];
-                            $adresse = $donnéesLigne[2];
-                            $codePostal = $donnéesLigne[3];
-                            $ville = $donnéesLigne[4];
-                            $longitude = $donnéesLigne[5];
-                            $latitude = $donnéesLigne[6];
-                            $projection = $donnéesLigne[7];
-                            $participants = $donnéesLigne[8];
-                            $licencies = $donnéesLigne[9];
-                            $lieuRencontrePossible = $this->getBoolean($donnéesLigne[10]);
+                            $codePostal = $donnéesLigne[2];
+                            $ville = $donnéesLigne[3];
+                            $participants = $donnéesLigne[4];
+                            $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
+                            $adresse = $donnéesLigne[6];
+                            $longitude = $donnéesLigne[7];
+                            $latitude = $donnéesLigne[8];
+                            $projection = $donnéesLigne[9];
+                            $licencies = $donnéesLigne[10];
+
+                            # corriger le code postal si un zéro est manquant dans le premier chiffre
+                            $codePostal = $this->corrigerCodePostal($codePostal);
+
 
                             $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, adresse, code_postal, ville, longitude, latitude,"
                                 ." projection, participants, "
@@ -222,13 +809,16 @@ class Listes{
                         elseif (strtolower($typeEntite) == "personne") {
                             $nom = $donnéesLigne[1];
                             $prenom = $donnéesLigne[2];
-                            $adresse = $donnéesLigne[3];
-                            $codePostal = $donnéesLigne[4];
-                            $ville = $donnéesLigne[5];
-                            $longitude = $donnéesLigne[6];
-                            $latitude = $donnéesLigne[7];
-                            $projection = $donnéesLigne[8];
-                            $lieuRencontrePossible = $this->getBoolean($donnéesLigne[9]);
+                            $codePostal = $donnéesLigne[3];
+                            $ville = $donnéesLigne[4];
+                            $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
+                            $adresse = $donnéesLigne[6];
+                            $longitude = $donnéesLigne[7];
+                            $latitude = $donnéesLigne[8];
+                            $projection = $donnéesLigne[9];
+
+                            # corriger le code postal si un zéro est manquant dans le premier chiffre
+                            $codePostal = $this->corrigerCodePostal($codePostal);
 
                             $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, prenom, adresse, code_postal, ville, longitude, latitude,"
                                 ." projection, lieu_rencontre_possible, date_creation, date_modification )"
@@ -252,17 +842,20 @@ class Listes{
                         }
                         elseif ($typeEntite == "LIEU") {
                             $nom = $donnéesLigne[1];
-                            $adresse = $donnéesLigne[2];
-                            $codePostal = $donnéesLigne[3];
-                            $ville = $donnéesLigne[4];
-                            $longitude = $donnéesLigne[5];
-                            $latitude = $donnéesLigne[6];
-                            $projection = $donnéesLigne[7];
-                            $typeEquipement = $donnéesLigne[8];
-                            $nombreEquipement = $donnéesLigne[9];
-                            $capaciteRencontre = $this->getBoolean($donnéesLigne[10]);
-                            $capacitePhaseFinale = $this->getBoolean($donnéesLigne[11]);
-                            $lieuRencontrePossible = $this->getBoolean($donnéesLigne[12]);
+                            $codePostal = $donnéesLigne[2];
+                            $ville = $donnéesLigne[3];
+                            $lieuRencontrePossible = $this->getBoolean($donnéesLigne[4]);
+                            $adresse = $donnéesLigne[5];
+                            $longitude = $donnéesLigne[6];
+                            $latitude = $donnéesLigne[7];
+                            $projection = $donnéesLigne[8];
+                            $typeEquipement = $donnéesLigne[9];
+                            $nombreEquipement = $donnéesLigne[10];
+                            $capaciteRencontre = $this->getBoolean($donnéesLigne[11]);
+                            $capacitePhaseFinale = $this->getBoolean($donnéesLigne[12]);
+
+                            # corriger le code postal si un zéro est manquant dans le premier chiffre
+                            $codePostal = $this->corrigerCodePostal($codePostal);
 
                             $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, adresse, code_postal, ville, longitude, latitude,"
                                 ." projection, type_equipement, nombre_equipement, capacite_rencontre, capacite_phase_finale, "
@@ -314,8 +907,236 @@ class Listes{
         return $retour;
     }
 
+    # corriger le code postal
+    private  function corrigerCodePostal($codePostal){
+        if( (strlen($codePostal) == 4) and (is_numeric( $codePostal)) ){
+            // corriger le code postal
+            $codePostal = substr_replace($codePostal, "0", 0, 0);
+
+        }
+        return $codePostal;
+
+    }
+
+
+    # controler les données d'en-têtes
+    private function controlerEntete($entete){
+        $retour = array(
+            "success" => false,
+            "msg" => ""
+        );
+
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+        $genericMsg = "Veuillez utiliser les formats de fichier mis à disposition dans « Télécharger les formats de fichiers d’import ";
+
+        // tester le nombre de colonnes
+        // nombreColonnesEntetes (11 pour liste d'équipes, 10 pour liste de personnes, 13 pour liste de lieux)
+        $nombreColonnesEntetes = [11,10,13];
+        if(!in_array(count($entete), $nombreColonnesEntetes)){
+            $retour["msg"] = "Veuillez vérifier le nombre des en-têtes.!"
+                ."Une liste d'équipes contient 11 colonnes, une liste de personnes contient 10 colonnes et une liste de lieux contient 13 colonnes.!"
+                .$genericMsg;
+            return $retour;
+        }
+        else{
+            if($entete[0] != "TYPE D'ENTITE" ){
+                $retour["msg"] = "Veuillez vérifier que le nom de la colonne 1 de l'en-tête correspond au template donné (TYPE D'ENTITE).!"
+                    .$genericMsg;
+                return $retour;
+            }
+            if($entete[1] != "NOM" ){
+                $retour["msg"] = "Veuillez vérifier que le nom de la colonne 2 de l'en-tête correspond au template donné (NOM).!"
+                    .$genericMsg;
+                return $retour;
+            }
+
+            // pour la liste d'équipes
+            if(count($entete) == 11){
+                if($entete[2] != "CODE POSTAL" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 3 de l'en-tête correspond au template donné (CODE POSTAL).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[3] != "VILLE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 4 de l'en-tête correspond au template donné (VILLE).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[4] != "PARTICIPANTS" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 5 de l'en-tête correspond au template donné (PARTICIPANTS).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[5] != "LIEU DE RENCONTRE POSSIBLE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 6 de l'en-tête correspond au template donné (LIEU DE RENCONTRE POSSIBLE).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[6] != "ADRESSE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 7 de l'en-tête correspond au template donné (ADRESSE).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[7] != "LONGITUDE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 8 de l'en-tête correspond au template donné (LONGITUDE).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[8] != "LATITUDE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 9 de l'en-tête correspond au template donné (LATITUDE).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[9] != "SYSTEME DE PROJECTION GEOGRAPHIQUE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 10 de l'en-tête correspond au template donné (SYSTEME DE PROJECTION GEOGRAPHIQUE).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[10] != "LICENCIES" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 11 de l'en-tête correspond au template donné (LICENCIES).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                $retour["success"] = true;
+
+            }
+            // pour la liste de personnes
+            elseif(count($entete) == 10){
+                if($entete[2] != "PRENOM" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 3 de l'en-tête correspond au template donné (PRENOM).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[3] != "CODE POSTAL" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 4 de l'en-tête correspond au template donné (CODE POSTAL).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[4] != "VILLE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 5 de l'en-tête correspond au template donné (VILLE).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[5] != "LIEU DE RENCONTRE POSSIBLE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 6 de l'en-tête correspond au template donné (LIEU DE RENCONTRE POSSIBLE).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[6] != "ADRESSE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 7 de l'en-tête correspond au template donné (ADRESSE).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[7] != "LONGITUDE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 8 de l'en-tête correspond au template donné (LONGITUDE).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[8] != "LATITUDE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 9 de l'en-tête correspond au template donné (LATITUDE).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[9] != "SYSTEME DE PROJECTION GEOGRAPHIQUE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 10 de l'en-tête correspond au template donné (SYSTEME DE PROJECTION GEOGRAPHIQUE).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                $retour["success"] = true;
+
+            }
+            // pour la liste de lieux
+            elseif(count($entete) == 13){
+                if($entete[2] != "CODE POSTAL" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 3 de l'en-tête correspond au template donné (CODE POSTAL).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[3] != "VILLE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 4 de l'en-tête correspond au template donné (VILLE).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[4] != "LIEU DE RENCONTRE POSSIBLE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 5 de l'en-tête correspond au template donné (LIEU DE RENCONTRE POSSIBLE).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[5] != "ADRESSE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 6 de l'en-tête correspond au template donné (ADRESSE).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[6] != "LONGITUDE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 7 de l'en-tête correspond au template donné (LONGITUDE).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[7] != "LATITUDE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 8 de l'en-tête correspond au template donné (LATITUDE).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[8] != "SYSTEME DE PROJECTION GEOGRAPHIQUE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 9 de l'en-tête correspond au template donné (SYSTEME DE PROJECTION GEOGRAPHIQUE).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[9] != "TYPE D'EQUIPEMENT" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 10 de l'en-tête correspond au template donné (TYPE D'EQUIPEMENT).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[10] != "NOMBRE D'EQUIPEMENT" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 11 de l'en-tête correspond au template donné (NOMBRE D'EQUIPEMENT).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[11] != "CAPACITE RENCONTRE STANDARD" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 12 de l'en-tête correspond au template donné (CAPACITE RENCONTRE STANDARD).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                if($entete[12] != "CAPACITE PHASE FINALE / EQUIPEMENT HOMOLOGUE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 13 de l'en-tête correspond au template donné (CAPACITE PHASE FINALE / EQUIPEMENT HOMOLOGUE).!"
+                        .$genericMsg;
+                    return $retour;
+                }
+                $retour["success"] = true;
+
+            }
+        }
+
+
+
+        error_log("\n Service: Listes, Function: controlerEntete, datetime: ".$dateTimeNow
+            ."\n entete: ".print_r($entete, true), 3, "/tmp/optimouv.log");
+
+
+        return $retour;
+
+    }
+
+    # détecter le délimiter
+    private function autoSetDelimiter($file){
+        // Obtenir les données des en-tetes
+        $donneesEntete = $file->fgetcsv($delimiter = ",");
+
+        // vérifier le délimiteur utilisé
+        if(count($donneesEntete) > 1){
+            $file->setCsvControl($delimiter=",");
+        }
+        else{
+            $file->setCsvControl($delimiter=";");
+        }
+
+    }
+
+
     # convertir la valeur du champ lieuRencontrePossible
-    public function getBoolean($input){
+    private function getBoolean($input){
         // convertir la valeur en boolean
         if (strtolower($input)  == "oui"){
             $input = 1;
@@ -327,7 +1148,7 @@ class Listes{
     }
 
     # retourner un objet PDO qu'on peut utiliser dans d'autres fonctions
-    public function getPdo(){
+    private function getPdo(){
         # récupérer les parametres de connexion
         $dbname = $this->database_name;
         $dbuser = $this->database_user;

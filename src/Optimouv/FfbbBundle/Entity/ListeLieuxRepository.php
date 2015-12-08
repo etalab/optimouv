@@ -18,6 +18,7 @@ class ListeLieuxRepository extends EntityRepository
 
         $query = $this->createQueryBuilder('l')
             ->select('l.id, l.nom')
+            ->orderBy('l.id', 'desc')
             ->getQuery();
 
         $result = $query->getResult();
