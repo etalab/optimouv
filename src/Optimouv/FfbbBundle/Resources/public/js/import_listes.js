@@ -26,13 +26,38 @@ function addEventHandlerImportListeParticipants(){
           // Success so call function to process the form
           console.log('SUCCESS: ' + data.msg);
 
-          // supprimer les enfants de l'élement select liste_partcipants
-          $("#liste_partcipants").empty();
+          var nouvelElementId = data.data[0].id;
+          console.log('nouvelElementId: ' + nouvelElementId);
 
+          var nouvelElementNom = data.data[0].nom;
+          console.log('nouvelElementNom: ' + nouvelElementNom);
+
+          // construire une date avec le bon format
+          var nouvelElementDateCreation = nouvelElementNom.split("_");
+          nouvelElementDateCreation = nouvelElementDateCreation[nouvelElementDateCreation.length -2];
+          var nouvelElementJour = nouvelElementDateCreation.split("-")[2];
+          var nouvelElementMois = nouvelElementDateCreation.split("-")[1];
+          var nouvelElementAnnee = nouvelElementDateCreation.split("-")[0];
+
+          nouvelElementDateCreation = nouvelElementJour + "/" + nouvelElementMois + "/" + nouvelElementAnnee;
+          console.log('nouvelElementDateCreation: ' + nouvelElementDateCreation);
+
+          var nouvelleStr = '<tr id=' + nouvelElementId +'> <td>' + nouvelElementId + ' </td>';
+          nouvelleStr = nouvelleStr + '<td> '+ nouvelElementNom  + ' </td>';
+          nouvelleStr = nouvelleStr + '<td> '+ nouvelElementDateCreation  + ' </td>';
+          nouvelleStr = nouvelleStr + '<td> '+ '<a href="renommer-liste-participants/'+ nouvelElementId +'" class="btn btn-info"> Renommer</a> | ';
+          nouvelleStr = nouvelleStr + '<button type="submit" class="btn btn-info" onclick="deleteListeParticipants('+ nouvelElementId +')"> Supprimer</button>' + ' </td> </tr> ';
+          console.log('nouvelleStr: ' + nouvelleStr);
+
+          // ajouter un nouvel element dans
+          $("#listeParticipants").prepend(nouvelleStr);
+
+          // supprimer les enfants de l'élement select liste_partcipants
+          //$("#liste_partcipants").empty();
           // rafraiher la liste de participants
-          $.each(data.data, function(index, value){
-            $("#liste_partcipants").append("<option value=" + value.id + ">" + value.nom + "</option>");
-          });
+          //$.each(data.data, function(index, value){
+          //  $("#liste_partcipants").append("<option value=" + value.id + ">" + value.nom + "</option>");
+          //});
 
           // mettre à jour le statut d'upload
           $("#msg_upload_liste_participants").text(data.msg);
@@ -102,13 +127,37 @@ function addEventHandlerImportListeLieux(){
           // Success so call function to process the form
           console.log('SUCCESS: ' + data.msg);
 
+          var nouvelElementId = data.data[0].id;
+          console.log('nouvelElementId: ' + nouvelElementId);
+
+          var nouvelElementNom = data.data[0].nom;
+          console.log('nouvelElementNom: ' + nouvelElementNom);
+
+          // construire une date avec le bon format
+          var nouvelElementDateCreation = nouvelElementNom.split("_");
+          nouvelElementDateCreation = nouvelElementDateCreation[nouvelElementDateCreation.length -2];
+          var nouvelElementJour = nouvelElementDateCreation.split("-")[2];
+          var nouvelElementMois = nouvelElementDateCreation.split("-")[1];
+          var nouvelElementAnnee = nouvelElementDateCreation.split("-")[0];
+
+          nouvelElementDateCreation = nouvelElementJour + "/" + nouvelElementMois + "/" + nouvelElementAnnee;
+          console.log('nouvelElementDateCreation: ' + nouvelElementDateCreation);
+
+          var nouvelleStr = '<tr id=' + nouvelElementId +'> <td>' + nouvelElementId + ' </td>';
+          nouvelleStr = nouvelleStr + '<td> '+ nouvelElementNom  + ' </td>';
+          nouvelleStr = nouvelleStr + '<td> '+ nouvelElementDateCreation  + ' </td>';
+          nouvelleStr = nouvelleStr + '<td> '+ '<a href="renommer-liste-lieux/'+ nouvelElementId +'" class="btn btn-info"> Renommer</a> | ';
+          nouvelleStr = nouvelleStr + '<button type="submit" class="btn btn-info" onclick="deleteListeLieux('+ nouvelElementId +')"> Supprimer</button>' + ' </td> </tr> ';
+          console.log('nouvelleStr: ' + nouvelleStr);
+
+          // ajouter un nouvel element dans
+          $("#listeLieux").prepend(nouvelleStr);
 
           // supprimer les enfants de l'élement select liste_partcipants
-          $("#liste_lieux").empty();
-
-          $.each(data.data, function(index, value){
-            $("#liste_lieux").append("<option value=" + value.id + ">" + value.nom + "</option>");
-          });
+          //$("#liste_lieux").empty();
+          //$.each(data.data, function(index, value){
+          //  $("#liste_lieux").append("<option value=" + value.id + ">" + value.nom + "</option>");
+          //});
 
           // mettre à jour le statut d'upload
           $("#msg_upload_liste_lieux").text(data.msg);
@@ -219,7 +268,7 @@ $(document).ready(function () {
 
   addEventHandlerImportListeParticipants();
   addEventHandlerImportListeLieux();
-  addEventHandlerSelectListeParticipants();
+  //addEventHandlerSelectListeParticipants();
   //addEventHandlerSelectListeLieux();
 
 });
