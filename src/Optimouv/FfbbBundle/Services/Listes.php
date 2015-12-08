@@ -147,10 +147,6 @@ class Listes{
                             $donnéesLigne = $file->fgetcsv();
                             $nbrLigne++;
 
-                            # ajouter la ligne courante dans le répértoire des lignes
-                            array_push($toutesLignes, $donnéesLigne);
-
-
                             // controler le fichier vide (sans données)
                             if($donnéesLigne == array(null) and $nbrLigne == 2){
                                 $retour = array(
@@ -163,12 +159,26 @@ class Listes{
                                 return $retour;
                             }
 
-                            // éliminer les lignes doublons
-
-
-
                             // tester s'il y a des données
                             if($donnéesLigne != array(null)){
+
+                                # controler des doublons
+                                # ajouter la ligne courante dans le répértoire des lignes si ce n'est pas un doublon
+                                if(!in_array($donnéesLigne, $toutesLignes )){
+                                    array_push($toutesLignes, $donnéesLigne);
+                                }
+                                else{
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            ." Le fichier comporte des lignes en double.!"
+                                            ." Veuillez supprimer cette ligne et reuploader le fichier!"
+                                            .implode(",", $donnéesLigne)
+                                    );
+                                    return $retour;
+                                }
+
+
                                 // obtenir la valeur pour chaque paramètre
                                 $typeEntite = $donnéesLigne[0];
                                 error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
