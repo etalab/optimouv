@@ -243,6 +243,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
     public function choisirGroupeAction($idListe)
     {
 
+        if(!isset($idListe)){
+            die('Une erreur interne est survenue. Veuillez sélectionner une liste de participants. ');
+        }
         $tousLesGroupes = $this->getGroupe($idListe);
 
 

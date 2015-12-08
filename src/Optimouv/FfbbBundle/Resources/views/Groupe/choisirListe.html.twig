@@ -36,8 +36,9 @@
                                                                     <tbody >
                                                                     {% for participant in listeParticipants %}
                                                                         <tr>
-                                                                            <td><input type="radio" name="listeParticipants" id="participant~{{ participant.id }}" value="{{ participant.id }}" ></td>
-                                                                            <td>{{ participant.nom }} </td>
+                                                                            <td><input type="radio" name="listeParticipants" id="participant~{{ participant.id }}" value="{{ participant.id }}" >
+                                                                                {{ participant.nom }}
+                                                                            </td>
 
                                                                         </tr>
                                                                     {% endfor %}
@@ -67,8 +68,10 @@
                                                                     <tbody>
                                                                     {% for lieu in listeLieux %}
                                                                         <tr>
-                                                                            <td><input type="radio" name="listeLieux" id="participant~{{ lieu.id }}" value="{{ lieu.id }}" ></td>
-                                                                            <td>{{ lieu.nom }} </td>
+                                                                            <td><input type="radio" name="listeLieux" id="participant~{{ lieu.id }}" value="{{ lieu.id }}" >
+                                                                                {{ lieu.nom }}
+                                                                            </td>
+
 
                                                                         </tr>
                                                                     {% endfor %}
