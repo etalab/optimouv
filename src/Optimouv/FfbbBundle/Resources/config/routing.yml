@@ -75,10 +75,54 @@ ffbb_select_liste_participants:
     path:     /select-liste-participants
     defaults: { _controller: FfbbBundle:Groupe:afficherParticipants  }
 
-ffbb_select_liste_participants2:
-    path:     /select-liste-participants
-    defaults: { _controller: FfbbBundle:Groupe:afficherParticipants  }
-    methods:  [GET]
+ffbb_choisir_liste_participants:
+    path:     /choisir-liste-participants
+    defaults: { _controller: FfbbBundle:Groupe:choisirListeParticipants  }
 
+ffbb_nouveau_groupe:
+    path:     /nouvau-groupe
+    defaults: { _controller: FfbbBundle:Groupe:nouveauGroupe  }
 
+ffbb_choisir_groupe:
+    path:     /choisir-groupe/{idListe}
+    defaults: { _controller: FfbbBundle:Groupe:choisirGroupe  }
 
+ffbb_gerer_groupe:
+    path:     /gerer-groupe/{idListe}
+    defaults: { _controller: FfbbBundle:Groupe:gererGroupe  }
+
+ffbb_gerer_liste_participants:
+    path:     /gerer-liste-participants
+    defaults: { _controller: FfbbBundle:Listes:gererListes  }
+
+ffbb_supprimer_liste_participants:
+    path:    /supprimer-liste-participants/{idListeParticipants}
+    defaults: { _controller: FfbbBundle:Listes:delete }
+
+ffbb_supprimer_liste_lieux:
+    path:    /supprimer-liste-lieux/{idListeLieux}
+    defaults: { _controller: FfbbBundle:Listes:deleteLieux }
+
+ffbb_renommer_liste_participants:
+    path:    /renommer-liste-participants/{idListeParticipants}
+    defaults: { _controller: FfbbBundle:Listes:renommerListe }
+
+ffbb_update_liste_participants:
+    path:    /update-liste-participants/{idListeParticipants}
+    defaults: { _controller: FfbbBundle:Listes:renommerListeParticipants }
+
+ffbb_renommer_liste_lieux:
+    path:    /renommer-liste-lieux/{idListeLieux}
+    defaults: { _controller: FfbbBundle:Listes:renommerlieux }
+
+ffbb_update_liste_lieux:
+    path:    /update-liste-lieux/{idListeLieux}
+    defaults: { _controller: FfbbBundle:Listes:renommerListelieux }
+
+ffbb_entite:
+    path:    /entite/
+    defaults: { _controller: FfbbBundle:Entite:index }
+
+ffbb_creer_entite:
+    path:    /creer-entite/
+    defaults: { _controller: FfbbBundle:Entite:creerEntite }

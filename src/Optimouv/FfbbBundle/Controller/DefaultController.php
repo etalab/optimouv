@@ -13,11 +13,15 @@ class DefaultController extends Controller
         $villes = $_POST["duallistbox_demo1"];
         $nomGroupe = $_POST["nomGroupe"];
         $idListeParticipants = $_POST["idListeParticipants"];
+        $idListeLieux = null;
+        if(!empty($_POST["idListeLieux"])){
+            $idListeLieux = $_POST["idListeLieux"];
 
+        }
 
 
 //        $this->get('service_rencontres')->geocoderVilles($villes);
-        $idGroupe = $this->get('service_rencontres')->creerGroupe($villes, $nomGroupe, $idListeParticipants);
+        $idGroupe = $this->get('service_rencontres')->creerGroupe($villes, $nomGroupe, $idListeParticipants, $idListeLieux);
 
         $coordonneesVille = $this->get('service_rencontres')->index($idGroupe);
 

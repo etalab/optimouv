@@ -94,8 +94,14 @@ class Rencontres
     //Calcul du meilleur lieu de rencontre
     public function meilleurLieuRencontre($idGroupe)
     {
-        $app_id = $this->app_id;
-        $app_code = $this->app_code;
+
+        //Récupération de détail de la liste de lieux
+
+        $listeLieux = $this->getListeLieux($idGroupe);
+
+        $nomsTerrainsNeutres = $listeLieux[0];
+
+
         $dbname = $this->database_name;
         $dbuser = $this->database_user;
         $dbpwd = $this->database_password;
@@ -199,6 +205,8 @@ class Rencontres
         $retour[6] = $mesVilles;
         $retour[7] = $distVille;
         $retour[8] = $dureeVille;
+        $retour[9] = $nomsTerrainsNeutres;
+
 
 
 
@@ -490,7 +498,11 @@ order by Proximite limit 1;");
 
         $equipe = $this->index($idGroupe);
 
-        $terrainNeutre = ['48.74305%2C2.4014', '47.48569%2C-3.11922', '43.5732938%2C6.8188967', '47.724709%2C-0.5227929', '49.12878%2C6.22851'];
+        $listeLieux = $this->getListeLieux($idGroupe);
+        $terrainNeutre = $listeLieux[1];
+        $listeTerrain = $listeLieux[0];
+
+       // $terrainNeutre = ['48.74305%2C2.4014', '47.48569%2C-3.11922', '43.5732938%2C6.8188967', '47.724709%2C-0.5227929', '49.12878%2C6.22851'];
 
 
         $toutesLesDistances = [];
@@ -569,6 +581,8 @@ order by Proximite limit 1;");
         $retour[6] = $mesVilles;
         $retour[7] = $distanceTotale;
         $retour[8] = $dureeTotale;
+        $retour[9] = $listeTerrain;
+
 
 
         return $retour;
@@ -583,7 +597,10 @@ order by Proximite limit 1;");
 //        $equipe = ['43.88953%2C-0.49893', '47.19126%2C-1.5698', '47.46317%2C-0.59261', '47.086%2C2.39315', '49.76019%2C4.71909', '43.70821%2C7.29597'];
         $equipe = $this->index($idGroupe);
 
-        $terrainNeutre = ['48.74305%2C2.4014', '47.48569%2C-3.11922', '43.5732938%2C6.8188967', '47.724709%2C-0.5227929', '49.12878%2C6.22851'];
+        $listeLieux = $this->getListeLieux($idGroupe);
+        $terrainNeutre = $listeLieux[1];
+
+        // $terrainNeutre = ['48.74305%2C2.4014', '47.48569%2C-3.11922', '43.5732938%2C6.8188967', '47.724709%2C-0.5227929', '49.12878%2C6.22851'];
 
         $toutesLesDistances = [];
         $toutesLesDurees = [];
@@ -910,7 +927,7 @@ order by Proximite limit 1;");
         return $mesVilles;
     }
 
-    public function creerGroupe($villes, $nomGroupe, $idListeParticipants)
+    public function creerGroupe($villes, $nomGroupe, $idListeParticipants, $idListeLieux)
     {
         error_log("creerGroupe [$nomGroupe]\n", 3, "optimouv.log");
 
@@ -1023,11 +1040,12 @@ order by Proximite limit 1;");
         $idUtilisateur = 1;
 
 
-        $reqGroupe = $bdd->prepare("INSERT INTO  groupe (id_utilisateur, nom, equipes, date_creation, id_liste_participant) VALUES ( :idUtilisateur, :nomGroupe, :idVilles, :dateCreation, :idListeParticipants);");
+        $reqGroupe = $bdd->prepare("INSERT INTO  groupe (id_utilisateur, nom, equipes, date_creation,nb_participants, id_liste_participant, id_liste_lieux) VALUES ( :idUtilisateur, :nomGroupe, :idVilles, :dateCreation, :nbParticipants, :idListeParticipants, $idListeLieux);");
         $reqGroupe->bindParam(':idUtilisateur', $idUtilisateur);
         $reqGroupe->bindParam(':nomGroupe', $nomGroupe);
         $reqGroupe->bindParam(':idVilles', $idVilles);
         $reqGroupe->bindParam(':dateCreation', $dateCreation);
+        $reqGroupe->bindParam(':nbParticipants', $nbrVilles);
         $reqGroupe->bindParam(':idListeParticipants', $idListeParticipants);
         $reqGroupe->execute();
         $idGroupe = $bdd->lastInsertId();
@@ -1247,6 +1265,109 @@ order by Proximite limit 1;");
 
     }
 
+    public function getListeLieux($idGroupe)
+    {
+        $app_id = $this->app_id;
+        $app_code = $this->app_code;
+        $dbname = $this->database_name;
+        $dbuser = $this->database_user;
+        $dbpwd = $this->database_password;
+
+        try {
+            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
+
+        } catch (PDOException $e) {
+            die('Erreur : ' . $e->getMessage());
+        }
+
+        $reqLieux = $bdd->prepare("SELECT id_liste_lieux FROM  groupe WHERE id = :id;");
+        $reqLieux->bindParam(':id', $idGroupe);
+        $reqLieux->execute();
+        $reqLieux = $reqLieux->fetchColumn();
+
+        $idListeLieux = intval($reqLieux);
+
+
+        if(isset($reqLieux)){
+
+             $listeLieux = $bdd->prepare("SELECT lieux FROM  liste_lieux WHERE id = :id ;");
+             $listeLieux->bindParam(':id', $idListeLieux);
+             $listeLieux->execute();
+             $listeLieux = $listeLieux->fetchColumn();
+
+             //convertir la chaine en chaine
+            $listeLieux = explode(",", $listeLieux);
+
+
+            //récuprer les noms de villes de terrains neutres
+
+            //$nomsVilles = $bdd->prepare("SELECT ville FROM  entite WHERE find_in_set (id, :listeLieux)");
+
+            $nomsVilles = [];
+            $coordVilles = [];
+
+
+            for ($i = 0; $i < count($listeLieux); $i++) {
+                $stmt = $bdd->prepare("SELECT id, ville, code_postal, longitude, latitude FROM  entite WHERE id = $listeLieux[$i];");
+
+                //$stmt->bindParam(':id', $listeLieux[$i]);
+                $stmt->execute();
+                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+                    $idVille = $row['id'];
+                    $lat = $row['latitude'];
+                    $long = $row['longitude'];
+                    $ville = $row['ville'];
+                    $codePostal = $row['code_postal'];
+
+                     if($long && $lat){
+                         $coordVille =  $lat. '%2C' .$long ;
+                         array_push($nomsVilles, $ville);
+                         array_push($coordVilles, $coordVille);
+                     }
+                     else{
+
+
+
+                         $reqGeocode = 'http://geocoder.api.here.com/6.2/geocode.json?country=France&city=' . $ville . '&postalCode=' . $codePostal . '&app_id=' . $app_id . '&app_code=' . $app_code . '&gen=8';
+
+                         $reqGeocodeJson = file_get_contents($reqGeocode);
+
+                         $reqGeocodeArray = json_decode($reqGeocodeJson, true);
+
+                         $Latitude = $reqGeocodeArray['Response']['View'][0]['Result'][0]['Location']['DisplayPosition']['Latitude'];
+                         $Longitude = $reqGeocodeArray['Response']['View'][0]['Result'][0]['Location']['DisplayPosition']['Longitude'];
+
+                         $coordVille = $Latitude . '%2C' . $Longitude;
+
+                         $update = $bdd->prepare("UPDATE entite SET longitude = $Longitude, latitude= $Latitude WHERE id = $idVille");
+                         $update->execute();
+
+                         array_push($nomsVilles, $ville);
+                         array_push($coordVilles, $coordVille);
+
+
+                     }
+
+
+
+                }
+
+
+            }
+            $retour = [];
+
+            $retour[0] = $nomsVilles;
+            $retour[1] = $coordVilles;
+
+            return $retour;
+
+
+        }
+
+
+
+    }
 
 }
 

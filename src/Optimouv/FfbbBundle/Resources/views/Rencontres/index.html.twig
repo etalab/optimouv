@@ -70,13 +70,12 @@
                     <div class="panel-heading">
                         Lieux possibles
                     </div>
+                    {% if terrainsNeutres  is defined and terrainsNeutres is not null%}
                     <div class="panel-body" style="min-height: 150px; max-height: 190px">
                         <ul class="list-unstyled" style="padding-left:20px; list-style-image: url('{{ asset('bundles/ffbb/images/puce-mini.png') }}')">
-                            <li> ORLY</li>
-                            <li> QUIBERON</li>
-                            <li> TANNERON</li>
-                            <li> CONTIGNE</li>
-                            <LI> VANTOUX</LI>
+                            {% for terrainNeutre in terrainsNeutres %}
+                                <li> {{ terrainNeutre }}</li>
+                            {% endfor %}
                         </ul>
                     </div>
 
@@ -87,6 +86,11 @@
 
 
                 </form>
+                {% else %}
+
+                    <p style="padding-left: 15px; padding-top: 10px;"> Vous n'avez pas sélectionné de lieux supplémentaires pour votre recherche</p>
+
+                {% endif %}
 
             </div>
 
