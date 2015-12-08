@@ -164,6 +164,12 @@ class Entite
      */
     private $idDiscipline;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_ville_france", type="integer", nullable=false)
+     */
+    private $idVilleFrance;
 
 
     /**
@@ -654,5 +660,29 @@ class Entite
     public function getIdDiscipline()
     {
         return $this->idDiscipline;
+    }
+
+    /**
+     * Set idVilleFrance
+     *
+     * @param integer $idVilleFrance
+     *
+     * @return Entite
+     */
+    public function setIdVilleFrance($idVilleFrance)
+    {
+        $this->idVilleFrance = $idVilleFrance;
+
+        return $this;
+    }
+
+    /**
+     * Get idVilleFrance
+     *
+     * @return integer
+     */
+    public function getIdVilleFrance()
+    {
+        return $this->idVilleFrance;
     }
 }
