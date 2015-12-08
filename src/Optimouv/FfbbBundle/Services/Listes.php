@@ -39,6 +39,24 @@ class Listes{
         error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
             ."\n _FILES: ".print_r($_FILES, true), 3, "/tmp/optimouv.log");
 
+//        error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+//            ."\n _SERVER: ".print_r($_SERVER, true), 3, "/tmp/optimouv.log");
+
+        # controler si la taille limite du fichier à été atteinte
+        $tailleFichier = $_SERVER["CONTENT_LENGTH"];
+
+        # la taille dépasse 2M (limite du fichier par défaut de PHP) // TODO
+        # une erreur bizarre du parseur json ajax
+//        if($tailleFichier > 2097152){
+//            $retour = array(
+//                "success" => false,
+//                "msg" => "Le fichier uploadé a dépassé la limite autorisée.!"
+//                    ."Veuillez réduire la taille du fichier"
+//            );
+//            return $retour;
+//        }
+
+
         # obtenir le chemin d'upload du fichier
         $cheminFichierTemp = $_FILES["file-0"]["tmp_name"];
 
@@ -122,9 +140,16 @@ class Listes{
 //                        ."\n nomsVilles: ".print_r($nomsVilles, true), 3, "/tmp/optimouv.log");
 
 
+                        # tableau qui contient toutes les données (utilisé pour gérer les doublons)
+                        $toutesLignes = [];
+
                         while (!$file->eof()) {
                             $donnéesLigne = $file->fgetcsv();
                             $nbrLigne++;
+
+                            # ajouter la ligne courante dans le répértoire des lignes
+                            array_push($toutesLignes, $donnéesLigne);
+
 
                             // controler le fichier vide (sans données)
                             if($donnéesLigne == array(null) and $nbrLigne == 2){
@@ -137,6 +162,9 @@ class Listes{
                                 );
                                 return $retour;
                             }
+
+                            // éliminer les lignes doublons
+
 
 
                             // tester s'il y a des données
@@ -901,60 +929,74 @@ class Listes{
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
+        $genericMsg = "Veuillez utiliser les formats de fichier mis à disposition dans « Télécharger les formats de fichiers d’import ";
+
         // tester le nombre de colonnes
         // nombreColonnesEntetes (11 pour liste d'équipes, 10 pour liste de personnes, 13 pour liste de lieux)
         $nombreColonnesEntetes = [11,10,13];
         if(!in_array(count($entete), $nombreColonnesEntetes)){
             $retour["msg"] = "Veuillez vérifier le nombre des en-têtes.!"
-                ."Une liste d'équipes contient 11 colonnes, une liste de personnes contient 10 colonnes et une liste de lieux contient 13 colonnes.";
+                ."Une liste d'équipes contient 11 colonnes, une liste de personnes contient 10 colonnes et une liste de lieux contient 13 colonnes.!"
+                .$genericMsg;
             return $retour;
         }
         else{
             if($entete[0] != "TYPE D'ENTITE" ){
-                $retour["msg"] = "Veuillez vérifier que le nom de la colonne 1 de l'en-tête correspond au template donné (TYPE D'ENTITE).";
+                $retour["msg"] = "Veuillez vérifier que le nom de la colonne 1 de l'en-tête correspond au template donné (TYPE D'ENTITE).!"
+                    .$genericMsg;
                 return $retour;
             }
             if($entete[1] != "NOM" ){
-                $retour["msg"] = "Veuillez vérifier que le nom de la colonne 2 de l'en-tête correspond au template donné (NOM).";
+                $retour["msg"] = "Veuillez vérifier que le nom de la colonne 2 de l'en-tête correspond au template donné (NOM).!"
+                    .$genericMsg;
                 return $retour;
             }
 
             // pour la liste d'équipes
             if(count($entete) == 11){
                 if($entete[2] != "CODE POSTAL" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 3 de l'en-tête correspond au template donné (CODE POSTAL).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 3 de l'en-tête correspond au template donné (CODE POSTAL).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[3] != "VILLE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 4 de l'en-tête correspond au template donné (VILLE).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 4 de l'en-tête correspond au template donné (VILLE).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[4] != "PARTICIPANTS" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 5 de l'en-tête correspond au template donné (PARTICIPANTS).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 5 de l'en-tête correspond au template donné (PARTICIPANTS).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[5] != "LIEU DE RENCONTRE POSSIBLE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 6 de l'en-tête correspond au template donné (LIEU DE RENCONTRE POSSIBLE).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 6 de l'en-tête correspond au template donné (LIEU DE RENCONTRE POSSIBLE).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[6] != "ADRESSE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 7 de l'en-tête correspond au template donné (ADRESSE).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 7 de l'en-tête correspond au template donné (ADRESSE).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[7] != "LONGITUDE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 8 de l'en-tête correspond au template donné (LONGITUDE).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 8 de l'en-tête correspond au template donné (LONGITUDE).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[8] != "LATITUDE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 9 de l'en-tête correspond au template donné (LATITUDE).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 9 de l'en-tête correspond au template donné (LATITUDE).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[9] != "SYSTEME DE PROJECTION GEOGRAPHIQUE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 10 de l'en-tête correspond au template donné (SYSTEME DE PROJECTION GEOGRAPHIQUE).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 10 de l'en-tête correspond au template donné (SYSTEME DE PROJECTION GEOGRAPHIQUE).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[10] != "LICENCIES" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 11 de l'en-tête correspond au template donné (LICENCIES).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 11 de l'en-tête correspond au template donné (LICENCIES).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 $retour["success"] = true;
@@ -963,35 +1005,43 @@ class Listes{
             // pour la liste de personnes
             elseif(count($entete) == 10){
                 if($entete[2] != "PRENOM" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 3 de l'en-tête correspond au template donné (PRENOM).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 3 de l'en-tête correspond au template donné (PRENOM).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[3] != "CODE POSTAL" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 4 de l'en-tête correspond au template donné (CODE POSTAL).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 4 de l'en-tête correspond au template donné (CODE POSTAL).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[4] != "VILLE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 5 de l'en-tête correspond au template donné (VILLE).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 5 de l'en-tête correspond au template donné (VILLE).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[5] != "LIEU DE RENCONTRE POSSIBLE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 6 de l'en-tête correspond au template donné (LIEU DE RENCONTRE POSSIBLE).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 6 de l'en-tête correspond au template donné (LIEU DE RENCONTRE POSSIBLE).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[6] != "ADRESSE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 7 de l'en-tête correspond au template donné (ADRESSE).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 7 de l'en-tête correspond au template donné (ADRESSE).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[7] != "LONGITUDE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 8 de l'en-tête correspond au template donné (LONGITUDE).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 8 de l'en-tête correspond au template donné (LONGITUDE).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[8] != "LATITUDE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 9 de l'en-tête correspond au template donné (LATITUDE).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 9 de l'en-tête correspond au template donné (LATITUDE).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[9] != "SYSTEME DE PROJECTION GEOGRAPHIQUE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 10 de l'en-tête correspond au template donné (SYSTEME DE PROJECTION GEOGRAPHIQUE).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 10 de l'en-tête correspond au template donné (SYSTEME DE PROJECTION GEOGRAPHIQUE).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 $retour["success"] = true;
@@ -1000,47 +1050,58 @@ class Listes{
             // pour la liste de lieux
             elseif(count($entete) == 13){
                 if($entete[2] != "CODE POSTAL" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 3 de l'en-tête correspond au template donné (CODE POSTAL).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 3 de l'en-tête correspond au template donné (CODE POSTAL).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[3] != "VILLE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 4 de l'en-tête correspond au template donné (VILLE).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 4 de l'en-tête correspond au template donné (VILLE).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[4] != "LIEU DE RENCONTRE POSSIBLE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 5 de l'en-tête correspond au template donné (LIEU DE RENCONTRE POSSIBLE).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 5 de l'en-tête correspond au template donné (LIEU DE RENCONTRE POSSIBLE).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[5] != "ADRESSE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 6 de l'en-tête correspond au template donné (ADRESSE).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 6 de l'en-tête correspond au template donné (ADRESSE).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[6] != "LONGITUDE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 7 de l'en-tête correspond au template donné (LONGITUDE).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 7 de l'en-tête correspond au template donné (LONGITUDE).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[7] != "LATITUDE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 8 de l'en-tête correspond au template donné (LATITUDE).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 8 de l'en-tête correspond au template donné (LATITUDE).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[8] != "SYSTEME DE PROJECTION GEOGRAPHIQUE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 9 de l'en-tête correspond au template donné (SYSTEME DE PROJECTION GEOGRAPHIQUE).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 9 de l'en-tête correspond au template donné (SYSTEME DE PROJECTION GEOGRAPHIQUE).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[9] != "TYPE D'EQUIPEMENT" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 10 de l'en-tête correspond au template donné (TYPE D'EQUIPEMENT).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 10 de l'en-tête correspond au template donné (TYPE D'EQUIPEMENT).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[10] != "NOMBRE D'EQUIPEMENT" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 11 de l'en-tête correspond au template donné (NOMBRE D'EQUIPEMENT).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 11 de l'en-tête correspond au template donné (NOMBRE D'EQUIPEMENT).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[11] != "CAPACITE RENCONTRE STANDARD" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 12 de l'en-tête correspond au template donné (CAPACITE RENCONTRE STANDARD).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 12 de l'en-tête correspond au template donné (CAPACITE RENCONTRE STANDARD).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 if($entete[12] != "CAPACITE PHASE FINALE / EQUIPEMENT HOMOLOGUE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 13 de l'en-tête correspond au template donné (CAPACITE PHASE FINALE / EQUIPEMENT HOMOLOGUE).";
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 13 de l'en-tête correspond au template donné (CAPACITE PHASE FINALE / EQUIPEMENT HOMOLOGUE).!"
+                        .$genericMsg;
                     return $retour;
                 }
                 $retour["success"] = true;
