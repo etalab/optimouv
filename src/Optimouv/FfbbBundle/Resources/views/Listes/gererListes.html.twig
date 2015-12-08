@@ -1,0 +1,247 @@
+{% extends '::BOLayout.html.twig' %}
+
+     {% block pagewrapper %}
+
+         <div id="page-wrapper">
+
+             <h3>Liste de participants</h3>
+             <div class="row">
+                 <div class="col-lg-12">
+                     <div class="panel panel-default">
+                         <div class="panel-heading">
+                             Importez vos listes de participants
+                         </div>
+                         <div class="panel-body">
+                         <form role="form">
+                            {#  !! A venir rentrer dynamiquement le nom du groupe
+                             <div class="form-group">
+                                 <label>Text Input with Placeholder</label>
+                                 <input class="form-control" placeholder="Enter text">
+                             </div>
+                             #}
+                             <div class="form-group">
+                                  <input id="input_liste_participants" type="file" class="btn pull-left">
+                             </div>
+                             <button id="btn_import_liste_participants" type="submit" class="btn btn-default  pull-left">Importer une nouvelle liste de participants</button>
+
+                         </form>
+                             </div>
+
+                         </div>
+                     </div>
+             </div>
+               <div class="row">
+                 <div class="col-lg-12">
+                     <div class="panel panel-default">
+                         <div class="panel-heading">
+                             Gérez vos listes de participants
+                         </div>
+                         <!-- /.panel-heading -->
+                         <div class="panel-body">
+                             <div class="dataTable_wrapper">
+                                 <table class="table table-striped table-bordered table-hover" id="example">
+                                     <thead>
+                                     <tr>
+                                         <th>ID </th>
+                                         <th>Nom</th>
+                                          <th>Date de création</th>
+                                         <th>Action</th>
+                                      </tr>
+                                     </thead>
+                                     <tbody id="listeGroupes">
+                                     {% for listeParticipants in listesParticipants %}
+                                         <tr id="{{ listeParticipants.id }}">
+
+                                             <td> {{ listeParticipants.id }}</td>
+                                             <td> {{ listeParticipants.nom }}</td>
+                                             <td> {{ listeParticipants.dateCreation|date('d/m/Y') }}</td>
+                                             <td>
+                                                 <a href="{{ path('ffbb_renommer_liste_participants', {'idListeParticipants': listeParticipants.id}) }}" class="btn btn-info">Renommer</a> |
+                                                 <button type="submit" class="btn btn-info" onclick="deleteListeParticipants({{ listeParticipants.id }})">Supprimer</button>
+
+                                             </td>
+
+                                         </tr>
+
+
+                                     {% endfor %}
+
+                                     </tbody>
+                                 </table>
+                              </div>
+                             <!-- /.table-responsive -->
+
+                         </div>
+                         <!-- /.panel-body -->
+                     </div>
+                     <!-- /.panel -->
+                 </div>
+                 <!-- /.col-lg-12 -->
+             </div>
+
+             <h3>Liste des lieux</h3>
+
+             <div class="row">
+                 <div class="col-lg-12">
+                     <div class="panel panel-default">
+                         <div class="panel-heading">
+                             Importez vos listes de lieux
+                         </div>
+                         <div class="panel-body">
+                             <form role="form">
+                                 {#  !! A venir rentrer dynamiquement le nom du groupe
+                                  <div class="form-group">
+                                      <label>Text Input with Placeholder</label>
+                                      <input class="form-control" placeholder="Enter text">
+                                  </div>
+                                  #}
+                                 <div class="form-group">
+                                     <input id="input_liste_lieux" type="file" class="btn pull-left">
+                                 </div>
+                                 <button id="btn_import_liste_lieux" type="submit" class="btn btn-default  pull-left">Importer une nouvelle liste de lieux </button>
+
+
+
+                             </form>
+                         </div>
+
+                     </div>
+                 </div>
+             </div>
+
+             <div class="row">
+                 <div class="col-lg-12">
+                     <div class="panel panel-default">
+                         <div class="panel-heading">
+                             Gérez vos listes de participants
+                         </div>
+                         <!-- /.panel-heading -->
+                         <div class="panel-body">
+                             <div class="dataTable_wrapper">
+                                 <table class="table table-striped table-bordered table-hover" id="listeLieux">
+                                     <thead>
+                                     <tr>
+                                         <th>ID </th>
+                                         <th>Nom</th>
+                                         <th>Date de création</th>
+                                         <th>Action</th>
+                                     </tr>
+                                     </thead>
+                                     <tbody id="listeLieux">
+                                     {% for listeLieux in listesLieux %}
+                                         <tr id="{{ listeLieux.id }}">
+
+                                             <td> {{ listeLieux.id }}</td>
+                                             <td> {{ listeLieux.nom }}</td>
+                                             <td> {{ listeLieux.dateCreation|date('d/m/Y') }}</td>
+                                             <td>
+                                                 <a href="{{ path('ffbb_renommer_liste_lieux', {'idListeLieux': listeLieux.id}) }}" class="btn btn-info">Renommer</a> |
+                                                 <button type="submit" class="btn btn-info" onclick="deleteListeLieux({{ listeLieux.id }})">Supprimer</button>
+
+                                             </td>
+
+                                         </tr>
+
+
+                                     {% endfor %}
+
+                                     </tbody>
+                                 </table>
+                             </div>
+                             <!-- /.table-responsive -->
+
+                         </div>
+                         <!-- /.panel-body -->
+                     </div>
+                     <!-- /.panel -->
+                 </div>
+                 <!-- /.col-lg-12 -->
+             </div>
+
+
+         </div>
+
+
+         {% block javascripts %}
+             <!-- code interne dual list box -->
+             <script type="text/javascript" charset="UTF-8">
+
+                 //supprimer une liste de participants
+                 function deleteListeLieux(idListeLieux){
+                     $.ajax({
+                         url: 'supprimer-liste-lieux/' +idListeLieux,
+                         type: 'GET',
+                         data: null,
+                         contentType: false,
+                         dataType : "json",
+                         processData: false,
+                         success: function(data, textStatus, jqXHR)
+                         {
+                             console.log(data);
+                              if(typeof data.success)
+                             {
+                                 deletedGroupDiv = '#' + idListeLieux;
+
+                                 $(deletedGroupDiv).remove();
+
+
+                             }
+                             else
+                             {
+                                 // Handle errors here
+
+                             }
+                         },
+                         error: function(jqXHR, textStatus, errorThrown)
+                         {
+                             // Handle errors here
+
+                         }
+                     });
+                 }
+
+                 //supprimer liste de lieux
+
+                 function deleteListeParticipants(idListeParticipants){
+                     $.ajax({
+                         url: 'supprimer-liste-participants/' +idListeParticipants,
+                         type: 'GET',
+                         data: null,
+                         contentType: false,
+                         dataType : "json",
+                         processData: false,
+                         success: function(data, textStatus, jqXHR)
+                         {
+                             console.log(data);
+                             if(typeof data.success)
+                             {
+                                 deletedGroupDiv = '#' + idListeParticipants;
+
+                                 $(deletedGroupDiv).remove();
+
+
+                             }
+                             else
+                             {
+                                 // Handle errors here
+
+                             }
+                         },
+                         error: function(jqXHR, textStatus, errorThrown)
+                         {
+                             // Handle errors here
+
+                         }
+                     });
+                 }
+             </script>
+         {% endblock %}
+
+
+     {% endblock %}
+
+
+
+
+
+

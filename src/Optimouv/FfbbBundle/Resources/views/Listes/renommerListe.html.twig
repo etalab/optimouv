@@ -1,0 +1,78 @@
+{% extends '::BOLayout.html.twig' %}
+
+     {% block pagewrapper %}
+
+         <div id="page-wrapper">
+
+             <div class="row">
+                 <div class="col-lg-12">
+                     <h3 class="page-header">Renommer votre liste de participants </h3>
+                 </div>
+                 <!-- /.col-lg-12 -->
+             </div>
+             <!-- /.row -->
+
+              <div class="row">
+                   <div class="col-lg-12">
+                        <div class="panel panel-default">
+                             <div class="panel-heading">
+                               </div>
+                             <div class="panel-body">
+                                  <div class="row">
+                                       <div class="col-lg-6">
+                                            <form role="form" action="{{ path('ffbb_update_liste_participants', {'idListeParticipants': idListeParticipants}) }}" method="post">
+
+                                                 <div class="form-group">
+                                                      <label>Nom de la liste de participants</label>
+                                                      <input class="form-control" name="nomListeParticipants" id="nomListeParticipants" placeholder="Rentrez le nouveau nom">
+                                                 </div>
+                                                <div class="row">
+                                                    <div class="col-lg-6"> <button type="submit" class="btn btn-default">Enregistrer</button> </div>
+                                                    <div class="col-lg-6"> <a href="{{ path('ffbb_gerer_liste_participants') }}" class="pull-right">Retour à la liste</a></div>
+                                                </div>
+                                             </form>
+                                       </div>
+                                       <!-- /.col-lg-6 (nested) -->
+
+                                       <!-- /.col-lg-6 (nested) -->
+                                  </div>
+                                  <!-- /.row (nested) -->
+                             </div>
+                             <!-- /.panel-body -->
+                        </div>
+                        <!-- /.panel -->
+                   </div>
+                   <!-- /.col-lg-12 -->
+              </div>
+
+
+
+
+
+             </div>
+
+
+
+
+
+
+
+
+
+
+
+         {% block javascripts %}
+             <!-- code interne dual list box -->
+             <script>
+
+             </script>
+         {% endblock %}
+
+
+     {% endblock %}
+
+
+
+
+
+
