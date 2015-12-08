@@ -51,8 +51,11 @@
 
                                      </tbody>
                                  </table>
-                                 <a href="{{ path('ffbb_choisir_groupe', {'idListe': idListe}) }}" data-toggle="tab" class="btn btn-default">Retour à la liste de groupes</a>
-                              </div>
+                                 <form action="{{ path('ffbb_choisir_groupe', {'idListe': idListe}) }}" method="post">
+
+                                     <button type="submit" class="btn btn-default">Retour à la liste de groupes</button>
+                                 </form>
+                               </div>
                              <!-- /.table-responsive -->
 
                          </div>
