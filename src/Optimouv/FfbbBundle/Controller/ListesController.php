@@ -99,7 +99,7 @@ class ListesController extends Controller
 
             return new JsonResponse(array(
                 "success" => true,
-                "msg" => "Upload réussi",
+                "msg" => "Votre liste a été correctement importée",
                 "data" => $listesLieux
             ));
 
