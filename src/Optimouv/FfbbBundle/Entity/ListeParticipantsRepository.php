@@ -14,7 +14,7 @@ class ListeParticipantsRepository extends EntityRepository
     public function getListes(){
 
         $query = $this->createQueryBuilder('l')
-            ->select('l.id, l.nom')
+            ->select('l.id, l.nom, l.dateCreation')
             ->orderBy('l.id', 'desc')
             ->getQuery();
 
