@@ -143,14 +143,14 @@ class Entite
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date_creation", type="date", nullable=false)
+     * @ORM\Column(name="date_creation", type="datetime", nullable=false)
      */
     private $dateCreation;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date_modification", type="date", nullable=false)
+     * @ORM\Column(name="date_modification", type="datetime", nullable=true)
      */
     private $dateModification;
 

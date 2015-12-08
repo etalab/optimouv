@@ -2,9 +2,11 @@
 
 namespace Optimouv\FfbbBundle\Controller;
 
+use Composer\DependencyResolver\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-class GroupeController extends Controller
+
+ class GroupeController extends Controller
 {
     public function indexAction()
     {
@@ -95,15 +97,14 @@ class GroupeController extends Controller
         return $this->render('FfbbBundle:Groupe:indexUpdate.html.twig', $outputTableau);
     }
 
-    public function getGroupe()
+    public function getGroupe($idListe)
     {
 
-        $idUtilisateur = 1; //TODO: à rendre dynamique lorsqu'on a plusieurs utilisateurs
-        $em = $this->getDoctrine()->getManager();
+         $em = $this->getDoctrine()->getManager();
 
         //récupérer la liste de groupes
 
-        $tousLesGroupes =  $em->getRepository('FfbbBundle:Groupe')->findByIdUtilisateur($idUtilisateur, array('id'=>'DESC'));
+        $tousLesGroupes =  $em->getRepository('FfbbBundle:Groupe')->getGroupList($idListe);
 
        return $tousLesGroupes;
     }
@@ -160,17 +161,106 @@ class GroupeController extends Controller
         $em->persist($entity);
         $em->flush();
 
-        $idListeParticipants =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
+        //TODO: A verifier !!!
+       // $idListeParticipants =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
 
 
-
-        return $this->redirect($this->generateUrl('ffbb_select_liste_participants2', array('idListeParticipants' => $idListeParticipants) ));
+        return $this->redirect($this->generateUrl('ffbb_gerer_groupe'));
 
 
        /* return $this->redirectToRoute('ffbb_select_liste_participants', [
             'idListeParticipants' => $idListeParticipants
         ]);
        */
+
+    }
+
+    public function choisirListeParticipantsAction()
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        //TODO:rendre dynamique l-id utilisateur
+        $idUtilisateur = 1;
+        $listeParticipants = $em->getRepository('FfbbBundle:ListeParticipants')
+                                ->findByIdUtilisateur(
+                                    array('idUtilisateur'=>$idUtilisateur),
+                                    array('id'=>'DESC'));
+
+        $listeLieux =  $em->getRepository('FfbbBundle:ListeLieux')
+                                 ->findByIdUtilisateur(
+                                      array('idUtilisateur'=>$idUtilisateur),
+                                      array('id'=>'DESC'));
+
+
+        return $this->render('FfbbBundle:Groupe:choisirListe.html.twig', array(
+            'listeParticipants'=>$listeParticipants,
+            'listeLieux' => $listeLieux,
+        ));
+
+    }
+
+    public function nouveauGroupeAction()
+    {
+
+        $idListeParticipants = $_POST['listeParticipants'];
+
+
+
+        $em = $this->getDoctrine()->getManager();
+
+        $participants = $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListeParticipants)->getEquipes();
+
+
+        //$participants de string a array
+
+        $participants = explode(",", $participants);
+
+        $detailsEntite = $em->getRepository('FfbbBundle:Entite')->getEntities($participants);
+
+
+
+        if(!empty( $_POST['listeLieux'])){
+            $idListeLieux = $_POST['listeLieux'];
+
+            return $this->render('FfbbBundle:Groupe:nouveauGroupe.html.twig', [
+                'idListeParticipants' => $idListeParticipants,
+                'idListeLieux' => $idListeLieux,
+                'entites' => $detailsEntite,
+
+            ]);
+        }
+        else{
+            return $this->render('FfbbBundle:Groupe:nouveauGroupe.html.twig', [
+                'idListeParticipants' => $idListeParticipants,
+                 'entites' => $detailsEntite,
+
+            ]);
+        }
+
+
+    }
+
+    public function choisirGroupeAction($idListe)
+    {
+
+        $tousLesGroupes = $this->getGroupe($idListe);
+
+
+        return $this->render('FfbbBundle:Groupe:choisirGroupe.html.twig', [
+            'tousLesGroupes' => $tousLesGroupes,
+            'idListe' => $idListe,
+        ]);
+
+    }
+
+    public function gererGroupeAction($idListe)
+    {
+
+        $tousLesGroupes = $this->getGroupe($idListe);
+        return $this->render('FfbbBundle:Groupe:gererGroupe.html.twig', [
+            'tousLesGroupes' => $tousLesGroupes,
+            'idListe' => $idListe,
+        ]);
 
     }
 

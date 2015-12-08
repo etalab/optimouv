@@ -36,4 +36,21 @@ class ListeParticipantsRepository extends EntityRepository
         return $result;
     }
 
+    public function ajoutEntiteListe($idListeParticipant, $ajoutEntiteListe)
+    {
+        $query = $this->createQueryBuilder('G')
+            ->update('FfbbBundle:ListeParticipants', 'u')
+            ->set('u.equipes', '?1')
+            ->where('u.id = ?2')
+            ->setParameter(1, $ajoutEntiteListe)
+            ->setParameter(2, $idListeParticipant)
+            ->getQuery();
+
+        $result = $query->execute();
+
+        return $result;
+
+
+
+    }
 }

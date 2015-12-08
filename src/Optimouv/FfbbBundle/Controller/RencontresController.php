@@ -20,6 +20,7 @@ class RencontresController extends Controller
         $distanceMin = $retour[3];
         $dureeTrajet = $retour[4];
         $coordonneesVille = $retour[5];
+        $terrainsNeutres = $retour[9];
         foreach($retour[6] as $key => $value ){
 
             $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key]);
@@ -59,6 +60,7 @@ class RencontresController extends Controller
             'coordonneesVilleEq' => $coordonneesVilleEq,
             'participantsEq' => $participantsEq,
             'idGroupe' => $idGroupe,
+            'terrainsNeutres' => $terrainsNeutres,
 
         ));
     }
@@ -202,6 +204,8 @@ class RencontresController extends Controller
         $distanceTotaleEq = $retourEq[3];
         $dureeTrajetEq = $retourEq[4];
         $coordonneesVilleEq = $retourEq[5];
+        $listeTerrain = $retour[9];
+
 
         foreach($retourEq[6] as $key => $value ){
 
@@ -218,6 +222,8 @@ class RencontresController extends Controller
             'dureeTrajet' => $dureeTrajet,
             'coordonneesVille' => $coordonneesVille,
             'participants' => $participants,
+            'listeTerrain' => $listeTerrain,
+
 
 
             //donn�es sc�nario sans contrainte

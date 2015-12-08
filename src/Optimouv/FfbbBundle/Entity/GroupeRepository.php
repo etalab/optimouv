@@ -10,4 +10,34 @@ namespace Optimouv\FfbbBundle\Entity;
  */
 class GroupeRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function ajoutEntiteGroupe($idGroupe, $idEntite)
+    {
+        $query = $this->createQueryBuilder('G')
+                ->update('FfbbBundle:Groupe', 'u')
+                ->set('u.equipes', '?1')
+                ->where('u.id = ?2')
+                ->setParameter(1, $idEntite)
+                ->setParameter(2, $idGroupe)
+                ->getQuery();
+
+        $result = $query->execute();
+
+        return $result;
+
+    }
+
+    public function getGroupList($idListe){
+        $query = $this->createQueryBuilder('e')
+            ->select('e')
+            ->where('e.idListeParticipant= :id')
+            ->setParameter('id', $idListe)
+            ->orderBy('e.id', 'DESC')
+            ->getQuery();
+
+        $result = $query->getResult();
+
+        return $result;
+    }
+
+
 }

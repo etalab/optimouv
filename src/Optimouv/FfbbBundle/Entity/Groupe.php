@@ -119,6 +119,12 @@ class Groupe
      */
     private $idListeParticipant;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_liste_lieux", type="integer", nullable=true)
+     */
+    private $idListeLieux;
 
 
     /**
@@ -465,5 +471,29 @@ class Groupe
     public function getIdListeParticipant()
     {
         return $this->idListeParticipant;
+    }
+
+    /**
+     * Set idListeLieux
+     *
+     * @param integer $idListeLieux
+     *
+     * @return Groupe
+     */
+    public function setIdListeLieux($idListeLieux)
+    {
+        $this->idListeLieux = $idListeLieux;
+
+        return $this;
+    }
+
+    /**
+     * Get idListeLieux
+     *
+     * @return integer
+     */
+    public function getIdListeLieux()
+    {
+        return $this->idListeLieux;
     }
 }

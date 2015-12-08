@@ -41,11 +41,10 @@
                         </div>
                         <div class="panel-body">
                             <ul class="list-unstyled" style="padding-left:20px; list-style-image: url('{{ asset('bundles/ffbb/images/puce-mini.png') }}')">
-                                <li> ORLY</li>
-                                <li> QUIBERON</li>
-                                <li> TANNERON</li>
-                                <li> CONTIGNE</li>
-                                <LI> VANTOUX</LI>
+                                {% for terrain in listeTerrain %}
+                                    <li> {{ terrain|upper }}</li>
+                                {% endfor %}
+
                              </ul>
                         </div>
 

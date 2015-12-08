@@ -5,9 +5,9 @@
       bootstrap2Compatible: false,
       filterTextClear: 'Tout Voir',
       filterPlaceHolder: 'Rechercher',
-      moveSelectedLabel: 'DÈplacer la sÈlection',
-      moveAllLabel: 'Tout dÈplacer',
-      removeSelectedLabel: 'Enlever la sÈlection',
+      moveSelectedLabel: 'D√©placer la s√©lection',
+      moveAllLabel: 'Tout d√©placer',
+      removeSelectedLabel: 'Enlever la s√©lection',
       removeAllLabel: 'Tout supprimer',
       moveOnSelect: true,                                                                 // true/false (forced true on androids, see the comment later)
       preserveSelectionOnMove: false,                                                     // 'all' / 'moved' / false
@@ -18,8 +18,8 @@
       showFilterInputs: true,                                                             // whether to show filter inputs
       nonSelectedFilter: '',                                                              // string, filter the non selected options
       selectedFilter: '',                                                                 // string, filter the selected options
-      infoText: 'Voir tout {0}',                                                        // text when all options are visible / false for no info text
-      infoTextFiltered: '<span class="label label-warning">FiltrÈ</span> {0} sur {1}', // when not all of the options are visible due to the filter
+      infoText: '{0} √©l√©ments',                                                        // text when all options are visible / false for no info text
+      infoTextFiltered: '<span class="label label-warning">Filtr√©</span> {0} sur {1}', // when not all of the options are visible due to the filter
       infoTextEmpty: 'Liste vide',                                                        // when there are no options present in the list
       filterOnValues: false                                                               // filter by selector's values, boolean
     },
@@ -312,10 +312,7 @@
         '<div class="bootstrap-duallistbox-container">' +
         ' <div class="box1">' +
         '   <label></label>' +
-        '   <span class="info-container">' +
-        '     <span class="info"></span>' +
-        '     <button type="button" class="btn clear1 pull-right"></button>' +
-        '   </span>' +
+
         '   <input class="filter" type="text">' +
         '   <div class="btn-group buttons">' +
         '     <button type="button" class="btn moveall">' +
@@ -327,13 +324,15 @@
         '     </button>' +
         '   </div>' +
         '   <select multiple="multiple"></select>' +
+        '   <span class="info-container">' +
+        '     <span class="info"></span>' +
+        '     <button type="button" class="btn clear1 pull-right"></button>' +
+        '   </span>' +
+
         ' </div>' +
         ' <div class="box2">' +
         '   <label></label>' +
-        '   <span class="info-container">' +
-        '     <span class="info"></span>' +
-        '     <button type="button" class="btn clear2 pull-right"></button>' +
-        '   </span>' +
+
         '   <input class="filter" type="text">' +
         '   <div class="btn-group buttons">' +
         '     <button type="button" class="btn remove">' +
@@ -345,6 +344,10 @@
         '     </button>' +
         '   </div>' +
         '   <select multiple="multiple"></select>' +
+        '   <span class="info-container">' +
+        '     <span class="info"></span>' +
+        '     <button type="button" class="btn clear2 pull-right"></button>' +
+        '   </span>' +
         ' </div>' +
         '</div>')
         .insertBefore(this.element);
