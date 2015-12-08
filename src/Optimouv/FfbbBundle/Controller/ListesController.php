@@ -38,6 +38,7 @@ class ListesController extends Controller
         error_log("\n Controller: Listes, Function: creerListeParticipantsAction, datetime: ".$dateTimeNow
             ."\n statutUpload: ".print_r($statutUpload, true), 3, "/tmp/optimouv.log");
 
+
         if($statutUpload["success"]){
 
             # créer des entités dans la table entite
@@ -55,7 +56,7 @@ class ListesController extends Controller
 
             return new JsonResponse(array(
                 "success" => true,
-                "msg" => "Upload réussi",
+                "msg" => "Votre liste a été correctement importée",
                 "data" => $listesParticipants
             ));
 
