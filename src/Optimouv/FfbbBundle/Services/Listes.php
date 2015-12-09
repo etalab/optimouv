@@ -780,11 +780,12 @@ class Listes{
 
 
                                 $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, adresse, code_postal, ville, longitude, latitude,"
-                                    ." projection, participants, id_ville_france "
-                                    ." licencies, lieu_rencontre_possible, date_creation, date_modification )"
+                                    ." projection, participants, "
+                                    ." licencies, lieu_rencontre_possible, date_creation, date_modification, id_ville_france  )"
                                     ."VALUES ( :id_utilisateur, :type_entite, :nom, :adresse, :code_postal, :ville, :longitude, :latitude, "
                                     ." :projection, :participants, "
                                     .":licencies, :lieu_rencontre_possible, :date_creation, :date_modification, :id_ville_france );";
+
 
                                 $stmt = $bdd->prepare($sql);
                                 $stmt->bindParam(':id_utilisateur', $idUtilisateur);
@@ -830,6 +831,7 @@ class Listes{
                                     ." projection, lieu_rencontre_possible, date_creation, date_modification,  id_ville_france)"
                                     ."VALUES ( :id_utilisateur, :type_entite, :nom, :prenom, :adresse, :code_postal, :ville, :longitude, :latitude, "
                                     ." :projection, :lieu_rencontre_possible, :date_creation, :date_modification, :id_ville_france );";
+
 
                                 $stmt = $bdd->prepare($sql);
                                 $stmt->bindParam(':id_utilisateur', $idUtilisateur);
