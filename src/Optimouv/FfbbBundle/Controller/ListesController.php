@@ -136,10 +136,26 @@ class ListesController extends Controller
 
 
         }else{
-            return new JsonResponse(array(
-                "success" => false,
-                "msg" => $statutUpload["msg"]
-            ));
+
+            # convertir str au tableau
+            if(!is_array($statutUpload["msg"])  ){
+                return new JsonResponse(array(
+                    "success" => false,
+                    "msg" => array($statutUpload["msg"])
+                ));
+
+            }
+            else{
+                return new JsonResponse(array(
+                    "success" => false,
+                    "msg" => $statutUpload["msg"]
+                ));
+
+            }
+
+
+
+
         }
 
 
