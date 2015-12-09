@@ -27,6 +27,7 @@
                                  <input id="input_liste_participants" type="file" class="btn pull-left">
                              </div>
                              <button id="btn_import_liste_participants" type="submit" class="btn btn-default  pull-left">Importer une nouvelle liste de participants</button>
+                             <a href="{{ path('ffbb_choisir_liste_participants') }}" class="btn btn-default pull-right" >Retour à la liste</a>
                          </div>
 
                          <div id="panel_statut_upload_liste_participants">
@@ -60,7 +61,7 @@
                                  <table class="table table-striped table-bordered table-hover" id="tableListeParticipants">
                                      <thead>
                                      <tr>
-                                         <th>ID </th>
+                                         <th>Ientifiant </th>
                                          <th>Nom</th>
                                           <th>Date de création</th>
                                          <th>Action</th>
@@ -119,6 +120,8 @@
                                  <input id="input_liste_lieux" type="file" class="btn pull-left">
                              </div>
                              <button id="btn_import_liste_lieux" type="submit" class="btn btn-default  pull-left">Importer une nouvelle liste de lieux </button>
+                             <a href="{{ path('ffbb_choisir_liste_participants') }}" class="btn btn-default pull-right" >Retour à la liste</a>
+
                          </div>
 
 
@@ -153,7 +156,7 @@
                                  <table class="table table-striped table-bordered table-hover" id="tableListeLieux">
                                      <thead>
                                      <tr>
-                                         <th>ID </th>
+                                         <th>Ientifiant </th>
                                          <th>Nom</th>
                                          <th>Date de création</th>
                                          <th>Action</th>
@@ -189,12 +192,7 @@
                  </div>
                  <!-- /.col-lg-12 -->
              </div>
-             <div id="retourListePar ticipant" style="  width: 190px; position: fixed; left: 90%; top: 200px; ">
 
-                 <a href="{{ path('ffbb_choisir_liste_participants') }}" class="btn btn-default">Retour à la liste</a>
-
-
-             </div>
 
          </div>
 
@@ -288,21 +286,7 @@
             });
         });
 
-                 $(function() {
-                    var offset = $("#retourListeParticipant").offset();
-                    var topPadding = 15;
-                    $(window).scroll(function() {
-                        if ($(window).scrollTop() > offset.top) {
-                            $("#retourListeParticipant").stop().animate({
-                                marginTop: $(window).scrollTop() - offset.top + topPadding
-                            });
-                        } else {
-                            $("#retourListeParticipant").stop().animate({
-                                marginTop: 0
-                            });
-                        };
-                    });
-                });
+
     </script>
  {% endblock %}
 
