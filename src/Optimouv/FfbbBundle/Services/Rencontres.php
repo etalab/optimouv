@@ -929,6 +929,9 @@ order by Proximite limit 1;");
 
     public function creerGroupe($villes, $nomGroupe, $idListeParticipants, $idListeLieux)
     {
+
+
+
         error_log("creerGroupe [$nomGroupe]\n", 3, "optimouv.log");
 
 
@@ -1040,16 +1043,19 @@ order by Proximite limit 1;");
         $idUtilisateur = 1;
 
 
-        $reqGroupe = $bdd->prepare("INSERT INTO  groupe (id_utilisateur, nom, equipes, date_creation,nb_participants, id_liste_participant, id_liste_lieux) VALUES ( :idUtilisateur, :nomGroupe, :idVilles, :dateCreation, :nbParticipants, :idListeParticipants, $idListeLieux);");
+        $reqGroupe = $bdd->prepare("INSERT INTO  groupe (id_utilisateur, nom, equipes, date_creation,nb_participants, id_liste_participant, id_liste_lieux) VALUES ( :idUtilisateur, :nomGroupe, :idVilles, :dateCreation, :nbParticipants, :idListeParticipants, :idListeLieux);");
         $reqGroupe->bindParam(':idUtilisateur', $idUtilisateur);
         $reqGroupe->bindParam(':nomGroupe', $nomGroupe);
         $reqGroupe->bindParam(':idVilles', $idVilles);
         $reqGroupe->bindParam(':dateCreation', $dateCreation);
         $reqGroupe->bindParam(':nbParticipants', $nbrVilles);
         $reqGroupe->bindParam(':idListeParticipants', $idListeParticipants);
+        $reqGroupe->bindParam(':idListeLieux', $idListeLieux);
         $reqGroupe->execute();
         $idGroupe = $bdd->lastInsertId();
         $this->index($idGroupe);
+
+
         return $idGroupe;
 
 
