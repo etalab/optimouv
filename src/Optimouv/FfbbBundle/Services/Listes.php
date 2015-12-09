@@ -96,7 +96,6 @@ class Listes{
                 // Controler les colonnes des en-têtes avec les formats fixés  TODO
                 // Fichier equipes, personnes, lieux
                 $resultatBooleanControlEntete = $this->controlerEntete($donneesEntete);
-
                 error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
                     ."\n resultatBooleanControlEntete : ".print_r($resultatBooleanControlEntete , true), 3, "/tmp/optimouv.log");
                 if(!$resultatBooleanControlEntete["success"]){
@@ -120,25 +119,6 @@ class Listes{
                         $idsEntite = [];
                         // obtenir les données pour chaque ligne
                         $nbrLigne = 1;
-
-//                    // récupérer tous les codes postaux depuis la table villes france_free
-//                    $sql = "SELECT distinct ville_code_postal  FROM villes_france_free;";
-//                    $stmt = $bdd->prepare($sql);
-//                    $stmt->execute();
-//                    $codesPostaux = $stmt->fetchall(PDO::FETCH_COLUMN, 0);
-//                    error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-//                        ."\n code postal: ".print_r($codesPostaux, true), 3, "/tmp/optimouv.log");
-
-//                    // récupérer tous les noms de ville depuis la table villes france_free
-//                    $sql = "SELECT distinct ville_nom  FROM villes_france_free;";
-//                    $stmt = $bdd->prepare($sql);
-//                    $stmt->execute();
-//                    $nomsVilles = $stmt->fetchall(PDO::FETCH_COLUMN, 0);
-
-
-//                    error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-//                        ."\n nomsVilles: ".print_r($nomsVilles, true), 3, "/tmp/optimouv.log");
-
 
                         # tableau qui contient toutes les données (utilisé pour gérer les doublons)
                         $toutesLignes = [];
@@ -293,30 +273,23 @@ class Listes{
                                         return $retour;
                                     }
 
-//                                # controler le champ 'code postal'
-//                                # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
-//                                if(!in_array($codePostal,  $codesPostaux)){
-//                                    $retour = array(
-//                                        "success" => false,
-//                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
-//                                            ." La valeur du champ 'code postal' (colonne 3) n'est pas reconnue!"
-//                                            .implode(",", $donnéesLigne)
-//                                    );
-//                                    return $retour;
-//                                }
-//
-//                                # controler le champ 'ville'
-//                                # il faut que la valeur est incluse dans la liste des noms de ville de la table villes_france_free
-//                                if(!in_array($ville,  $nomsVilles)){
-//                                    $retour = array(
-//                                        "success" => false,
-//                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
-//                                            ." La valeur du champ 'ville' (colonne 4) n'est pas reconnue!"
-//                                            .implode(",", $donnéesLigne)
-//                                    );
-//                                    return $retour;
-//                                }
 
+                                    # controler le code postal et la ville
+                                    # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
+                                    $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
+
+                                    error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+                                        ."\n statutControlCodePostalVille : ".print_r($statutControlCodePostalVille , true), 3, "/tmp/optimouv.log");
+
+                                    if(!$statutControlCodePostalVille["success"]){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Les valeurs du couple 'code postal' (colonne 3) et 'ville' (colonne 4) ne sont pas reconnues!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
 
 
                                     # les champs optionnels
@@ -422,31 +395,22 @@ class Listes{
                                         return $retour;
                                     }
 
-//                                # controler le champ 'code postal'
-//                                # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
-//                                if(!in_array($codePostal,  $codesPostaux)){
-//                                    $retour = array(
-//                                        "success" => false,
-//                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
-//                                            ." La valeur du champ 'code postal' (colonne 4) n'est pas reconnue!"
-//                                            .implode(",", $donnéesLigne)
-//                                    );
-//                                    return $retour;
-//                                }
-//
-//                                # controler le champ 'ville'
-//                                # il faut que la valeur est incluse dans la liste des noms de ville de la table villes_france_free
-//                                if(!in_array($ville,  $nomsVilles)){
-//                                    $retour = array(
-//                                        "success" => false,
-//                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
-//                                            ." La valeur du champ 'ville' (colonne 5) n'est pas reconnue!"
-//                                            .implode(",", $donnéesLigne)
-//                                    );
-//                                    return $retour;
-//                                }
+                                    # controler le code postal et la ville
+                                    # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
+                                    $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
 
+                                    error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+                                        ."\n statutControlCodePostalVille : ".print_r($statutControlCodePostalVille , true), 3, "/tmp/optimouv.log");
 
+                                    if(!$statutControlCodePostalVille["success"]){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Les valeurs du couple 'code postal' (colonne 4) et 'ville' (colonne 5) ne sont pas reconnues!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
 
                                     # les champs optionnels
                                     $adresse = $donnéesLigne[6];
@@ -545,28 +509,22 @@ class Listes{
                                         return $retour;
                                     }
 
-//                                # controler le champ 'code postal'
-//                                # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
-//                                if(!in_array($codePostal,  $codesPostaux)){
-//                                    $retour = array(
-//                                        "success" => false,
-//                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
-//                                            ." La valeur du champ 'code postal' (colonne 3) n'est pas reconnue!"
-//                                            .implode(",", $donnéesLigne)
-//                                    );
-//                                    return $retour;
-//                                }
-//
-//                                # il faut que la valeur est incluse dans la liste des noms de ville de la table villes_france_free
-//                                if(!in_array($ville,  $nomsVilles)){
-//                                    $retour = array(
-//                                        "success" => false,
-//                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
-//                                            ." La valeur du champ 'ville' (colonne 4) n'est pas reconnue!"
-//                                            .implode(",", $donnéesLigne)
-//                                    );
-//                                    return $retour;
-//                                }
+                                    # controler le code postal et la ville
+                                    # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
+                                    $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
+
+                                    error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+                                        ."\n statutControlCodePostalVille : ".print_r($statutControlCodePostalVille , true), 3, "/tmp/optimouv.log");
+
+                                    if(!$statutControlCodePostalVille["success"]){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Les valeurs du couple 'code postal' (colonne 3) et 'ville' (colonne 4) ne sont pas reconnues!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
 
                                     # les champs optionnels
                                     $adresse = $donnéesLigne[5];
@@ -598,10 +556,6 @@ class Listes{
                         "msg" => "Contrôle réussi "
                     );
 
-
-
-
-
                 }
             }
             else{
@@ -611,7 +565,6 @@ class Listes{
                             ."Nom de fichier: ".$nomFichier."!"
                             ."Type de fichier: ".$typeFichier
                 );
-
             }
 
 
@@ -629,102 +582,123 @@ class Listes{
 
 
     public function creerListeParticipants($idsEntite){
-        # obtenir l'objet PDO
-        $bdd = $this->getPdo();
 
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
         $dateCreation = date('Y-m-d', time());
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
-        if (!$bdd) {
-            //erreur de connexion
+        try {
+            # obtenir l'objet PDO
+            $bdd = $this->getPdo();
+
+            if (!$bdd) {
+                //erreur de connexion
 //            error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerListeParticipants, datetime: ".$dateTimeNow, 3, "/var/log/apache2/optimouv.log");
-            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
-        } else {
-            
-            # récuperer la valeur des autres variables
-            $nomUtilisateur = "henz";
+                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+            } else {
+
+                # récuperer la valeur des autres variables
+                $nomUtilisateur = "henz";
 //            $nom = "liste_participants_".$nomUtilisateur."_".$dateTimeNow;
-            $nom = "liste_participants_".$dateTimeNow;
-            $idUtilisateur = 1;
+                $nom = "liste_participants_".$dateTimeNow;
+                $idUtilisateur = 1;
 
-            # construire la liste d'équipes
-            $equipes = "";
-            for ($i=0; $i<count($idsEntite); $i++){
-                $equipes .= $idsEntite[$i].",";
-            }
-            // supprimer la dernière virgule
-            $equipes = rtrim($equipes, ",");
+                # construire la liste d'équipes
+                $equipes = "";
+                for ($i=0; $i<count($idsEntite); $i++){
+                    $equipes .= $idsEntite[$i].",";
+                }
+                // supprimer la dernière virgule
+                $equipes = rtrim($equipes, ",");
 
-            # insérer dans la base de données
-            $sql = "INSERT INTO  liste_participants (nom, id_utilisateur, date_creation, equipes) VALUES ( :nom, :idUtilisateur, :dateCreation, :equipes);";
-            $stmt = $bdd->prepare($sql);
-            $stmt->bindParam(':nom', $nom);
-            $stmt->bindParam(':idUtilisateur', $idUtilisateur);
-            $stmt->bindParam(':dateCreation', $dateCreation);
-            $stmt->bindParam(':equipes', $equipes);
-            $stmt->execute();
+                # insérer dans la base de données
+                $sql = "INSERT INTO  liste_participants (nom, id_utilisateur, date_creation, equipes) VALUES ( :nom, :idUtilisateur, :dateCreation, :equipes);";
+                $stmt = $bdd->prepare($sql);
+                $stmt->bindParam(':nom', $nom);
+                $stmt->bindParam(':idUtilisateur', $idUtilisateur);
+                $stmt->bindParam(':dateCreation', $dateCreation);
+                $stmt->bindParam(':equipes', $equipes);
+                $stmt->execute();
 
-            # afficher le statut de la requete executée
+                # afficher le statut de la requete executée
 //            error_log("\n Service: Listes, Function: creerListeParticipants, datetime: ".$dateTimeNow
 //                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/var/log/apache2/optimouv.log");
-        }
+            }
 
-        $retour = array(
+            $retour = array(
                 "success" => true,
                 "data" => "",
-        );
+            );
+
+
+
+        } catch (PDOException $e) {
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
+
+
+
 
         return $retour;
     }
 
     public function creerListeLieux($idsEntite){
-        # obtenir l'objet PDO
-        $bdd = $this->getPdo();
 
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
         $dateCreation = date('Y-m-d', time());
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
-        if (!$bdd) {
-            //erreur de connexion
+        try {
+            # obtenir l'objet PDO
+            $bdd = $this->getPdo();
+
+            if (!$bdd) {
+                //erreur de connexion
 //            error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerListeLieux, datetime: ".$dateTimeNow, 3, "/var/log/apache2/optimouv.log");
-            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
-        } else {
-            # récuperer la valeur des autres variables
-            $nomUtilisateur = "henz";
+                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+            } else {
+                # récuperer la valeur des autres variables
+                $nomUtilisateur = "henz";
 //            $nom = "liste_terrains_neutres_".$nomUtilisateur."_".$dateTimeNow;
-            $nom = "liste_terrains_neutres_".$dateTimeNow;
-            $idUtilisateur = 1;
+                $nom = "liste_terrains_neutres_".$dateTimeNow;
+                $idUtilisateur = 1;
 
-            # construire la liste d'équipes
-            $lieux = "";
-            for ($i=0; $i<count($idsEntite); $i++){
-                $lieux .= $idsEntite[$i].",";
-            }
-            // supprimer la dernière virgule
-            $lieux = rtrim($lieux, ",");
+                # construire la liste d'équipes
+                $lieux = "";
+                for ($i=0; $i<count($idsEntite); $i++){
+                    $lieux .= $idsEntite[$i].",";
+                }
+                // supprimer la dernière virgule
+                $lieux = rtrim($lieux, ",");
 
-            # insérer dans la base de données
-            $sql = "INSERT INTO  liste_lieux (nom, id_utilisateur, date_creation, lieux) VALUES ( :nom, :idUtilisateur, :dateCreation, :lieux);";
-            $stmt = $bdd->prepare($sql);
-            $stmt->bindParam(':nom', $nom);
-            $stmt->bindParam(':idUtilisateur', $idUtilisateur);
-            $stmt->bindParam(':dateCreation', $dateCreation);
-            $stmt->bindParam(':lieux', $lieux);
-            $stmt->execute();
+                # insérer dans la base de données
+                $sql = "INSERT INTO  liste_lieux (nom, id_utilisateur, date_creation, lieux) VALUES ( :nom, :idUtilisateur, :dateCreation, :lieux);";
+                $stmt = $bdd->prepare($sql);
+                $stmt->bindParam(':nom', $nom);
+                $stmt->bindParam(':idUtilisateur', $idUtilisateur);
+                $stmt->bindParam(':dateCreation', $dateCreation);
+                $stmt->bindParam(':lieux', $lieux);
+                $stmt->execute();
 
-            # afficher le statut de la requete executée
+                # afficher le statut de la requete executée
 //            error_log("\n Service: Listes, Function: creerListeLieux, datetime: ".$dateTimeNow
 //                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/var/log/apache2/optimouv.log");
+            }
+
+            $retour = array(
+                "success" => true,
+                "data" => "",
+            );
+
+
+        } catch (PDOException $e) {
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
 
-        $retour = array(
-            "success" => true,
-            "data" => "",
-        );
+
+
 
         return $retour;
     }
@@ -732,190 +706,327 @@ class Listes{
 
     public function creerEntites()
     {
-        # obtenir le nom du fichier uploadé
-        $nomFichierTemp = $_FILES["file-0"]["tmp_name"];
 
-        // Dès qu'un fichier a été reçu par le serveur
-        if (file_exists($nomFichierTemp) || is_uploaded_file($nomFichierTemp)) {
+        try {
 
-            // lire le contenu du fichier
-            $file = new SplFileObject($nomFichierTemp, 'r');
-            $delimiter = ",";
+            # obtenir le nom du fichier uploadé
+            $nomFichierTemp = $_FILES["file-0"]["tmp_name"];
 
-            // On lui indique que c'est du CSV
-            $file->setFlags(SplFileObject::READ_CSV);
+            // Dès qu'un fichier a été reçu par le serveur
+            if (file_exists($nomFichierTemp) || is_uploaded_file($nomFichierTemp)) {
 
-            // auto-détecter le délimiteur
-            $this->autoSetDelimiter($file);
+                // lire le contenu du fichier
+                $file = new SplFileObject($nomFichierTemp, 'r');
+                $delimiter = ",";
 
-            // initialiser toutes les vars
-            $idUtilisateur = 1;
+                // On lui indique que c'est du CSV
+                $file->setFlags(SplFileObject::READ_CSV);
 
-            # obtenir la date courante du système
-            date_default_timezone_set('Europe/Paris');
-            $dateCreation = date('Y-m-d', time());
-            $dateModification = date('Y-m-d', time());
-            $dateTimeNow = date('Y-m-d_G:i:s', time());
+                // auto-détecter le délimiteur
+                $this->autoSetDelimiter($file);
 
-            # obtenir l'objet PDO
-            $bdd = $this->getPdo();
+                // initialiser toutes les vars
+                $idUtilisateur = 1;
 
-            if (!$bdd) {
-                //erreur de connexion
+                # obtenir la date courante du système
+                date_default_timezone_set('Europe/Paris');
+                $dateCreation = date('Y-m-d', time());
+                $dateModification = date('Y-m-d', time());
+                $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+
+                # obtenir l'objet PDO
+                $bdd = $this->getPdo();
+
+                if (!$bdd) {
+                    //erreur de connexion
 //                error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow, 3, "/var/log/apache2/optimouv.log");
-                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
-            } else {
-                $idsEntite = [];
-                // obtenir les données pour chaque ligne
-                while (!$file->eof()) {
-                    $donnéesLigne = $file->fgetcsv();
+                    die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+                } else {
+                    $idsEntite = [];
+                    // obtenir les données pour chaque ligne
+                    while (!$file->eof()) {
+                        $donnéesLigne = $file->fgetcsv();
 
-                    // tester s'il y a des données
-                    if($donnéesLigne != array(null)){
-                        // obtenir la valeur pour chaque paramètre
-                        $typeEntite = $donnéesLigne[0];
+                        // tester s'il y a des données
+                        if($donnéesLigne != array(null)){
+                            // obtenir la valeur pour chaque paramètre
+                            $typeEntite = $donnéesLigne[0];
 
-                        // obtenir les valeurs selon le type d'entité
-                        if (strtolower($typeEntite) == "equipe") {
-                            $nom = $donnéesLigne[1];
-                            $codePostal = $donnéesLigne[2];
-                            $ville = $donnéesLigne[3];
-                            $participants = $donnéesLigne[4];
-                            $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
-                            $adresse = $donnéesLigne[6];
-                            $longitude = $donnéesLigne[7];
-                            $latitude = $donnéesLigne[8];
-                            $projection = $donnéesLigne[9];
-                            $licencies = $donnéesLigne[10];
+                            // obtenir les valeurs selon le type d'entité
+                            if (strtolower($typeEntite) == "equipe") {
+                                $nom = $donnéesLigne[1];
+                                $codePostal = $donnéesLigne[2];
+                                $ville = $donnéesLigne[3];
+                                $participants = $donnéesLigne[4];
+                                $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
+                                $adresse = $donnéesLigne[6];
+                                $longitude = $donnéesLigne[7];
+                                $latitude = $donnéesLigne[8];
+                                $projection = $donnéesLigne[9];
+                                $licencies = $donnéesLigne[10];
 
-                            # corriger le code postal si un zéro est manquant dans le premier chiffre
-                            $codePostal = $this->corrigerCodePostal($codePostal);
+                                # corriger le code postal si un zéro est manquant dans le premier chiffre
+                                $codePostal = $this->corrigerCodePostal($codePostal);
 
 
-                            $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, adresse, code_postal, ville, longitude, latitude,"
-                                ." projection, participants, "
-                                ." licencies, lieu_rencontre_possible, date_creation, date_modification )"
-                                ."VALUES ( :id_utilisateur, :type_entite, :nom, :adresse, :code_postal, :ville, :longitude, :latitude, "
-                                ." :projection, :participants, "
-                                .":licencies, :lieu_rencontre_possible, :date_creation, :date_modification );";
+                                # controler le code postal et la ville
+                                # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
+                                $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
+                                $idVilleFrance = $statutControlCodePostalVille["idVille"];
 
-                            $stmt = $bdd->prepare($sql);
-                            $stmt->bindParam(':id_utilisateur', $idUtilisateur);
-                            $stmt->bindParam(':type_entite', $typeEntite);
-                            $stmt->bindParam(':nom', $nom);
-                            $stmt->bindParam(':adresse', $adresse);
-                            $stmt->bindParam(':code_postal', $codePostal);
-                            $stmt->bindParam(':ville', $ville);
-                            $stmt->bindParam(':longitude', $longitude);
-                            $stmt->bindParam(':latitude', $latitude);
-                            $stmt->bindParam(':projection', $projection);
-                            $stmt->bindParam(':participants', $participants);
-                            $stmt->bindParam(':licencies', $licencies);
-                            $stmt->bindParam(':lieu_rencontre_possible', $lieuRencontrePossible);
-                            $stmt->bindParam(':date_creation', $dateCreation);
-                            $stmt->bindParam(':date_modification', $dateModification);
+                                error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+                                    ."\n idVilleFrance : ".print_r($idVilleFrance , true), 3, "/tmp/optimouv.log");
+
+
+                                $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, adresse, code_postal, ville, longitude, latitude,"
+                                    ." projection, participants, "
+                                    ." licencies, lieu_rencontre_possible, date_creation, date_modification, id_ville_france  )"
+                                    ."VALUES ( :id_utilisateur, :type_entite, :nom, :adresse, :code_postal, :ville, :longitude, :latitude, "
+                                    ." :projection, :participants, "
+                                    .":licencies, :lieu_rencontre_possible, :date_creation, :date_modification, :id_ville_france );";
+
+
+                                $stmt = $bdd->prepare($sql);
+                                $stmt->bindParam(':id_utilisateur', $idUtilisateur);
+                                $stmt->bindParam(':type_entite', $typeEntite);
+                                $stmt->bindParam(':nom', $nom);
+                                $stmt->bindParam(':adresse', $adresse);
+                                $stmt->bindParam(':code_postal', $codePostal);
+                                $stmt->bindParam(':ville', $ville);
+                                $stmt->bindParam(':longitude', $longitude);
+                                $stmt->bindParam(':latitude', $latitude);
+                                $stmt->bindParam(':projection', $projection);
+                                $stmt->bindParam(':participants', $participants);
+                                $stmt->bindParam(':licencies', $licencies);
+                                $stmt->bindParam(':lieu_rencontre_possible', $lieuRencontrePossible);
+                                $stmt->bindParam(':date_creation', $dateCreation);
+                                $stmt->bindParam(':date_modification', $dateModification);
+                                $stmt->bindParam(':id_ville_france', $idVilleFrance);
+
+                            }
+                            elseif (strtolower($typeEntite) == "personne") {
+                                $nom = $donnéesLigne[1];
+                                $prenom = $donnéesLigne[2];
+                                $codePostal = $donnéesLigne[3];
+                                $ville = $donnéesLigne[4];
+                                $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
+                                $adresse = $donnéesLigne[6];
+                                $longitude = $donnéesLigne[7];
+                                $latitude = $donnéesLigne[8];
+                                $projection = $donnéesLigne[9];
+
+                                # corriger le code postal si un zéro est manquant dans le premier chiffre
+                                $codePostal = $this->corrigerCodePostal($codePostal);
+
+                                # controler le code postal et la ville
+                                # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
+                                $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
+                                $idVilleFrance = $statutControlCodePostalVille["idVille"];
+
+                                error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+                                    ."\n idVilleFrance : ".print_r($idVilleFrance , true), 3, "/tmp/optimouv.log");
+
+                                $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, prenom, adresse, code_postal, ville, longitude, latitude,"
+                                    ." projection, lieu_rencontre_possible, date_creation, date_modification,  id_ville_france)"
+                                    ."VALUES ( :id_utilisateur, :type_entite, :nom, :prenom, :adresse, :code_postal, :ville, :longitude, :latitude, "
+                                    ." :projection, :lieu_rencontre_possible, :date_creation, :date_modification, :id_ville_france );";
+
+
+                                $stmt = $bdd->prepare($sql);
+                                $stmt->bindParam(':id_utilisateur', $idUtilisateur);
+                                $stmt->bindParam(':type_entite', $typeEntite);
+                                $stmt->bindParam(':nom', $nom);
+                                $stmt->bindParam(':prenom', $prenom);
+                                $stmt->bindParam(':adresse', $adresse);
+                                $stmt->bindParam(':code_postal', $codePostal);
+                                $stmt->bindParam(':ville', $ville);
+                                $stmt->bindParam(':longitude', $longitude);
+                                $stmt->bindParam(':latitude', $latitude);
+                                $stmt->bindParam(':projection', $projection);
+                                $stmt->bindParam(':lieu_rencontre_possible', $lieuRencontrePossible);
+                                $stmt->bindParam(':date_creation', $dateCreation);
+                                $stmt->bindParam(':date_modification', $dateModification);
+                                $stmt->bindParam(':id_ville_france', $idVilleFrance);
+                            }
+                            elseif ($typeEntite == "LIEU") {
+                                $nom = $donnéesLigne[1];
+                                $codePostal = $donnéesLigne[2];
+                                $ville = $donnéesLigne[3];
+                                $lieuRencontrePossible = $this->getBoolean($donnéesLigne[4]);
+                                $adresse = $donnéesLigne[5];
+                                $longitude = $donnéesLigne[6];
+                                $latitude = $donnéesLigne[7];
+                                $projection = $donnéesLigne[8];
+                                $typeEquipement = $donnéesLigne[9];
+                                $nombreEquipement = $donnéesLigne[10];
+                                $capaciteRencontre = $this->getBoolean($donnéesLigne[11]);
+                                $capacitePhaseFinale = $this->getBoolean($donnéesLigne[12]);
+
+                                # corriger le code postal si un zéro est manquant dans le premier chiffre
+                                $codePostal = $this->corrigerCodePostal($codePostal);
+
+                                # controler le code postal et la ville
+                                # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
+                                $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
+                                $idVilleFrance = $statutControlCodePostalVille["idVille"];
+
+                                error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+                                    ."\n idVilleFrance : ".print_r($idVilleFrance , true), 3, "/tmp/optimouv.log");
+
+
+
+                                # corriger le code postal si un zéro est manquant dans le premier chiffre
+                                $codePostal = $this->corrigerCodePostal($codePostal);
+
+                                $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, adresse, code_postal, ville, longitude, latitude,"
+                                    ." projection, type_equipement, nombre_equipement, capacite_rencontre, capacite_phase_finale, "
+                                    ." lieu_rencontre_possible, date_creation, date_modification, id_ville_france )"
+                                    ."VALUES ( :id_utilisateur, :type_entite, :nom, :adresse, :code_postal, :ville, :longitude, :latitude, "
+                                    ." :projection, :type_equipement, :nombre_equipement, :capacite_rencontre, :capacite_phase_finale, "
+                                    ." :lieu_rencontre_possible, :date_creation, :date_modification, :id_ville_france );";
+
+                                $stmt = $bdd->prepare($sql);
+                                $stmt->bindParam(':id_utilisateur', $idUtilisateur);
+                                $stmt->bindParam(':type_entite', $typeEntite);
+                                $stmt->bindParam(':nom', $nom);
+                                $stmt->bindParam(':adresse', $adresse);
+                                $stmt->bindParam(':code_postal', $codePostal);
+                                $stmt->bindParam(':ville', $ville);
+                                $stmt->bindParam(':longitude', $longitude);
+                                $stmt->bindParam(':latitude', $latitude);
+                                $stmt->bindParam(':projection', $projection);
+                                $stmt->bindParam(':type_equipement', $typeEquipement);
+                                $stmt->bindParam(':nombre_equipement', $nombreEquipement);
+                                $stmt->bindParam(':capacite_rencontre', $capaciteRencontre);
+                                $stmt->bindParam(':capacite_phase_finale', $capacitePhaseFinale);
+                                $stmt->bindParam(':lieu_rencontre_possible', $lieuRencontrePossible);
+                                $stmt->bindParam(':date_creation', $dateCreation);
+                                $stmt->bindParam(':date_modification', $dateModification);
+                                $stmt->bindParam(':id_ville_france', $idVilleFrance);
+
+                            }
+                            # executer la requete
+                            $stmt->execute();
+
+                            # afficher le statut de la requete executée
+                            error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+                                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/tmp/optimouv.log");
+
+                            # obtenir l'id de l"entité créée
+                            $idEntite = $bdd->lastInsertId();
+                            array_push($idsEntite, $idEntite);
 
                         }
-                        elseif (strtolower($typeEntite) == "personne") {
-                            $nom = $donnéesLigne[1];
-                            $prenom = $donnéesLigne[2];
-                            $codePostal = $donnéesLigne[3];
-                            $ville = $donnéesLigne[4];
-                            $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
-                            $adresse = $donnéesLigne[6];
-                            $longitude = $donnéesLigne[7];
-                            $latitude = $donnéesLigne[8];
-                            $projection = $donnéesLigne[9];
-
-                            # corriger le code postal si un zéro est manquant dans le premier chiffre
-                            $codePostal = $this->corrigerCodePostal($codePostal);
-
-                            $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, prenom, adresse, code_postal, ville, longitude, latitude,"
-                                ." projection, lieu_rencontre_possible, date_creation, date_modification )"
-                                ."VALUES ( :id_utilisateur, :type_entite, :nom, :prenom, :adresse, :code_postal, :ville, :longitude, :latitude, "
-                                ." :projection, :lieu_rencontre_possible, :date_creation, :date_modification );";
-
-                            $stmt = $bdd->prepare($sql);
-                            $stmt->bindParam(':id_utilisateur', $idUtilisateur);
-                            $stmt->bindParam(':type_entite', $typeEntite);
-                            $stmt->bindParam(':nom', $nom);
-                            $stmt->bindParam(':prenom', $prenom);
-                            $stmt->bindParam(':adresse', $adresse);
-                            $stmt->bindParam(':code_postal', $codePostal);
-                            $stmt->bindParam(':ville', $ville);
-                            $stmt->bindParam(':longitude', $longitude);
-                            $stmt->bindParam(':latitude', $latitude);
-                            $stmt->bindParam(':projection', $projection);
-                            $stmt->bindParam(':lieu_rencontre_possible', $lieuRencontrePossible);
-                            $stmt->bindParam(':date_creation', $dateCreation);
-                            $stmt->bindParam(':date_modification', $dateModification);
-                        }
-                        elseif ($typeEntite == "LIEU") {
-                            $nom = $donnéesLigne[1];
-                            $codePostal = $donnéesLigne[2];
-                            $ville = $donnéesLigne[3];
-                            $lieuRencontrePossible = $this->getBoolean($donnéesLigne[4]);
-                            $adresse = $donnéesLigne[5];
-                            $longitude = $donnéesLigne[6];
-                            $latitude = $donnéesLigne[7];
-                            $projection = $donnéesLigne[8];
-                            $typeEquipement = $donnéesLigne[9];
-                            $nombreEquipement = $donnéesLigne[10];
-                            $capaciteRencontre = $this->getBoolean($donnéesLigne[11]);
-                            $capacitePhaseFinale = $this->getBoolean($donnéesLigne[12]);
-
-                            # corriger le code postal si un zéro est manquant dans le premier chiffre
-                            $codePostal = $this->corrigerCodePostal($codePostal);
-
-                            $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, adresse, code_postal, ville, longitude, latitude,"
-                                ." projection, type_equipement, nombre_equipement, capacite_rencontre, capacite_phase_finale, "
-                                ." lieu_rencontre_possible, date_creation, date_modification )"
-                                ."VALUES ( :id_utilisateur, :type_entite, :nom, :adresse, :code_postal, :ville, :longitude, :latitude, "
-                                ." :projection, :type_equipement, :nombre_equipement, :capacite_rencontre, :capacite_phase_finale, "
-                                ." :lieu_rencontre_possible, :date_creation, :date_modification );";
-
-                            $stmt = $bdd->prepare($sql);
-                            $stmt->bindParam(':id_utilisateur', $idUtilisateur);
-                            $stmt->bindParam(':type_entite', $typeEntite);
-                            $stmt->bindParam(':nom', $nom);
-                            $stmt->bindParam(':adresse', $adresse);
-                            $stmt->bindParam(':code_postal', $codePostal);
-                            $stmt->bindParam(':ville', $ville);
-                            $stmt->bindParam(':longitude', $longitude);
-                            $stmt->bindParam(':latitude', $latitude);
-                            $stmt->bindParam(':projection', $projection);
-                            $stmt->bindParam(':type_equipement', $typeEquipement);
-                            $stmt->bindParam(':nombre_equipement', $nombreEquipement);
-                            $stmt->bindParam(':capacite_rencontre', $capaciteRencontre);
-                            $stmt->bindParam(':capacite_phase_finale', $capacitePhaseFinale);
-                            $stmt->bindParam(':lieu_rencontre_possible', $lieuRencontrePossible);
-                            $stmt->bindParam(':date_creation', $dateCreation);
-                            $stmt->bindParam(':date_modification', $dateModification);
-
-                        }
-                        # executer la requete
-                        $stmt->execute();
-
-                        # afficher le statut de la requete executée
-//                    error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-//                        ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/var/log/apache2/optimouv.log");
-
-                        # obtenir l'id de l"entité créée
-                        $idEntite = $bdd->lastInsertId();
-                        array_push($idsEntite, $idEntite);
-
                     }
                 }
             }
-        }
 
-        $retour = array(
+            $retour = array(
                 "success" => true,
                 "idsEntite" => $idsEntite
-        );
+            );
+
+
+        } catch (PDOException $e) {
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
+
+
+
 
         return $retour;
     }
+
+
+    # controller le code postal et le nom de ville
+    private function verifierExistenceCodePostalNomVille($codePostal, $nomVille){
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+//        error_log("\n Service: Listes, Function: verifierExistenceCodePostalNomVille, datetime: ".$dateTimeNow
+//            ."\n $codePostal Info: ".print_r($codePostal, true), 3, "/tmp/optimouv.log");
+//        error_log("\n Service: Listes, Function: verifierExistenceCodePostalNomVille, datetime: ".$dateTimeNow
+//            ."\n $nomVille Info: ".print_r($nomVille, true), 3, "/tmp/optimouv.log");
+
+        try {
+            $char = array("-", "_", "'");
+            $nomVille = str_replace($char, " ", $nomVille);
+
+            $bdd = $this->getPdo();
+
+            //chercher l'id de la ville selon la table de reference
+            $query = "SELECT 1 as 'prio', ville_id FROM villes_france_free where ville_nom_simple = '$nomVille' AND  ville_code_postal = '$codePostal'
+                  UNION
+                  SELECT 3 as 'prio', ville_id FROM villes_france_free where ville_nom_simple = '$nomVille'
+                  UNION
+                  SELECT 2 as 'prio', ville_id FROM villes_france_free where ville_nom_simple LIKE '%$nomVille%' AND  ville_code_postal LIKE '%$codePostal%'";
+            $reqID = $bdd->prepare($query);
+
+            $reqID->execute();
+            $result = $reqID->fetchAll(PDO::FETCH_ASSOC);
+            $count = count($result);
+
+            $ok = true;
+            $ideal = false;
+
+            // test si pas de ville
+            if ($count == 0) {
+                $ok = false;
+            } else {
+                foreach ($result as $line) {
+                    if ($line['prio'] == 1) {
+                        $ideal = $line['ville_id'];
+                        break;
+                    }
+                }
+
+                // si on n'a pas trouve prio 1 alors on cherche prio 2
+                if ($ideal === false) {
+                    foreach ($result as $line) {
+                        if ($line['prio'] == 2) {
+                            $ideal = $line['ville_id'];
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // test si pas de ville idéale et plus de 1 ville approximative
+            if ($count >= 2 && $ideal === false) {
+                $ok = false;
+            }
+
+            // en cas d'erreur
+            if (!$ok) {
+                $msg = "Il y a une erreur avec cette ville [$nomVille] et le code postal [$codePostal]";
+                $retour = array(
+                    "success" => false,
+                    "msg" => $msg,
+                );
+                return $retour;
+            }
+
+            if ($ideal !== false)
+                $idVille = $ideal;
+            else
+                $idVille = $result[0]['ville_id'];
+
+            $retour = array(
+                "success" => true,
+                "msg" => "",
+                "idVille" => $idVille
+            );
+
+        } catch (PDOException $e) {
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
+
+        return $retour;
+
+
+    }
+
 
     # corriger le code postal
     private  function corrigerCodePostal($codePostal){
