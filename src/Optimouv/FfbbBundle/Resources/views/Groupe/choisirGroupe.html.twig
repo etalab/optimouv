@@ -22,7 +22,7 @@
                          <div class="panel-body">
                              <div class="dataTable_wrapper">
 
-                                         <table class="table table-striped table-bordered table-hover" id="example">
+                                         <table class="table table-striped table-bordered table-hover" id="tableChoisirGroupe">
                                              <thead>
                                              <tr>
                                                  <th>ID </th>
@@ -69,14 +69,20 @@
          </div>
 
 
-         {% block javascripts %}
-
-         {% endblock %}
-
 
      {% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
 
+    <script type="text/javascript" charset="UTF-8">
+        $(document).ready(function() {
+            $('#tableChoisirGroupe').DataTable({
+            responsive: true
+            });
+        });
+</script>
+{% endblock %}
 
 
 

@@ -4,6 +4,8 @@
 
          <div id="page-wrapper">
 
+
+
              <h3>Liste de participants</h3>
              <div class="row">
                  <div class="col-lg-12">
@@ -187,88 +189,122 @@
                  </div>
                  <!-- /.col-lg-12 -->
              </div>
+             <div id="retourListePar ticipant" style="  width: 190px; position: fixed; left: 90%; top: 200px; ">
 
+                 <a href="{{ path('ffbb_choisir_liste_participants') }}" class="btn btn-default">Retour à la liste</a>
+
+
+             </div>
 
          </div>
 
 
-         {% block javascripts %}
-             <!-- code interne dual list box -->
-             <script type="text/javascript" charset="UTF-8">
-
-                 //supprimer une liste de participants
-                 function deleteListeLieux(idListeLieux){
-                     $.ajax({
-                         url: 'supprimer-liste-lieux/' +idListeLieux,
-                         type: 'GET',
-                         data: null,
-                         contentType: false,
-                         dataType : "json",
-                         processData: false,
-                         success: function(data, textStatus, jqXHR)
-                         {
-                             console.log(data);
-                              if(typeof data.success)
-                             {
-                                 deletedGroupDiv = '#' + idListeLieux;
-
-                                 $(deletedGroupDiv).remove();
-
-
-                             }
-                             else
-                             {
-                                 // Handle errors here
-
-                             }
-                         },
-                         error: function(jqXHR, textStatus, errorThrown)
-                         {
-                             // Handle errors here
-
-                         }
-                     });
-                 }
-
-                 //supprimer liste de lieux
-
-                 function deleteListeParticipants(idListeParticipants){
-                     $.ajax({
-                         url: 'supprimer-liste-participants/' +idListeParticipants,
-                         type: 'GET',
-                         data: null,
-                         contentType: false,
-                         dataType : "json",
-                         processData: false,
-                         success: function(data, textStatus, jqXHR)
-                         {
-                             console.log(data);
-                             if(typeof data.success)
-                             {
-                                 deletedGroupDiv = '#' + idListeParticipants;
-
-                                 $(deletedGroupDiv).remove();
-
-
-                             }
-                             else
-                             {
-                                 // Handle errors here
-
-                             }
-                         },
-                         error: function(jqXHR, textStatus, errorThrown)
-                         {
-                             // Handle errors here
-
-                         }
-                     });
-                 }
-             </script>
-         {% endblock %}
-
 
      {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <!-- code interne dual list box -->
+    <script type="text/javascript" charset="UTF-8">
+
+        //supprimer une liste de participants
+        function deleteListeLieux(idListeLieux){
+            $.ajax({
+                url: 'supprimer-liste-lieux/' +idListeLieux,
+                type: 'GET',
+                data: null,
+                contentType: false,
+                dataType : "json",
+                processData: false,
+                success: function(data, textStatus, jqXHR)
+                {
+                    console.log(data);
+                    if(typeof data.success)
+                    {
+                        deletedGroupDiv = '#' + idListeLieux;
+
+                        $(deletedGroupDiv).remove();
+
+
+                    }
+                    else
+                    {
+                        // Handle errors here
+
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown)
+                {
+                    // Handle errors here
+
+                }
+            });
+        }
+
+        //supprimer liste de lieux
+
+        function deleteListeParticipants(idListeParticipants){
+            $.ajax({
+                url: 'supprimer-liste-participants/' +idListeParticipants,
+                type: 'GET',
+                data: null,
+                contentType: false,
+                dataType : "json",
+                processData: false,
+                success: function(data, textStatus, jqXHR)
+                {
+                    console.log(data);
+                    if(typeof data.success)
+                    {
+                        deletedGroupDiv = '#' + idListeParticipants;
+
+                        $(deletedGroupDiv).remove();
+
+
+                    }
+                    else
+                    {
+                        // Handle errors here
+
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown)
+                {
+                    // Handle errors here
+
+                }
+            });
+        }
+
+
+        $(document).ready(function() {
+            $('#tableListeParticipants').DataTable({
+                responsive: true
+            });
+        });
+
+        $(document).ready(function() {
+            $('#tableListeLieux').DataTable({
+                responsive: true
+            });
+        });
+
+                 $(function() {
+                    var offset = $("#retourListeParticipant").offset();
+                    var topPadding = 15;
+                    $(window).scroll(function() {
+                        if ($(window).scrollTop() > offset.top) {
+                            $("#retourListeParticipant").stop().animate({
+                                marginTop: $(window).scrollTop() - offset.top + topPadding
+                            });
+                        } else {
+                            $("#retourListeParticipant").stop().animate({
+                                marginTop: 0
+                            });
+                        };
+                    });
+                });
+    </script>
+ {% endblock %}
 
 
 

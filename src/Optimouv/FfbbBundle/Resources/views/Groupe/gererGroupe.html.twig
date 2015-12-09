@@ -13,7 +13,7 @@
                          <!-- /.panel-heading -->
                          <div class="panel-body">
                              <div class="dataTable_wrapper">
-                                 <table class="table table-striped table-bordered table-hover" id="example">
+                                 <table class="table table-striped table-bordered table-hover" id="tableGererGroupe">
                                      <thead>
                                      <tr>
                                          <th>ID </th>
@@ -69,49 +69,57 @@
          </div>
 
 
-         {% block javascripts %}
-             <!-- code interne dual list box -->
-             <script type="text/javascript" charset="UTF-8">
 
-
-                 function deleteGroupe(idGroupe){
-                     $.ajax({
-                         url: 'supprimer-groupe/' +idGroupe,
-                         type: 'GET',
-                         data: null,
-                         contentType: false,
-                         dataType : "json",
-                         processData: false,
-                         success: function(data, textStatus, jqXHR)
-                         {
-                             console.log(data);
-                              if(typeof data.success)
-                             {
-                                 deletedGroupDiv = '#' + idGroupe;
-
-                                 $(deletedGroupDiv).remove();
-
-
-                             }
-                             else
-                             {
-                                 // Handle errors here
-
-                             }
-                         },
-                         error: function(jqXHR, textStatus, errorThrown)
-                         {
-                             // Handle errors here
-
-                         }
-                     });
-                 }
-
-             </script>
-         {% endblock %}
 
 
      {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <!-- code interne dual list box -->
+    <script type="text/javascript" charset="UTF-8">
+
+
+        function deleteGroupe(idGroupe){
+            $.ajax({
+                url: 'supprimer-groupe/' +idGroupe,
+                type: 'GET',
+                data: null,
+                contentType: false,
+                dataType : "json",
+                processData: false,
+                success: function(data, textStatus, jqXHR)
+                {
+                    console.log(data);
+                    if(typeof data.success)
+                    {
+                        deletedGroupDiv = '#' + idGroupe;
+
+                        $(deletedGroupDiv).remove();
+
+
+                    }
+                    else
+                    {
+                        // Handle errors here
+
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown)
+                {
+                    // Handle errors here
+
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            $('#tableGererGroupe').DataTable({
+                responsive: true
+            });
+        });
+
+    </script>
+{% endblock %}
 
 
 
