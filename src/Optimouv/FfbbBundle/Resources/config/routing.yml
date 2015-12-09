@@ -1,5 +1,10 @@
-ffbb_listes:
+ffbb_choisir_liste_participants:
+    #path:     /choisir-liste-participants
     path:     /
+    defaults: { _controller: FfbbBundle:Groupe:choisirListeParticipants  }
+
+ffbb_listes:
+    path:     /liste-old
     defaults: { _controller: FfbbBundle:Listes:index }
 
 ffbb_table:
@@ -75,9 +80,6 @@ ffbb_select_liste_participants:
     path:     /select-liste-participants
     defaults: { _controller: FfbbBundle:Groupe:afficherParticipants  }
 
-ffbb_choisir_liste_participants:
-    path:     /choisir-liste-participants
-    defaults: { _controller: FfbbBundle:Groupe:choisirListeParticipants  }
 
 ffbb_nouveau_groupe:
     path:     /nouvau-groupe

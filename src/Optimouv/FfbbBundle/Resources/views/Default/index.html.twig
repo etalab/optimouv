@@ -191,27 +191,26 @@
 
              </div>
          </div>
-         {% block javascript %}
-             <!-- /#page-wrapper -->
-             <script type="text/javascript" charset="UTF-8">
-                 function typeLieu() {
-
-                     var idGroupe = {{ idGroupe }};
-                       if (document.getElementById("meilleurLieuOption").checked == true) {
-                         window.location.href = "{{ path('ffbb_rencontres', {'idGroupe':idGroupe}) }}";
-
-                      }
-                     else {
-                         window.location.href = "{{ path('ffbb_barycentre', {'idGroupe':idGroupe})}}";
-
-                     }
-
-                 }
-             </script>
-         {% endblock %}
-
 
      {% endblock %}
+ {% block javascript %}
+     <!-- /#page-wrapper -->
+     <script type="text/javascript" charset="UTF-8">
+         function typeLieu() {
+
+             var idGroupe = {{ idGroupe }};
+             if (document.getElementById("meilleurLieuOption").checked == true) {
+                 window.location.href = "{{ path('ffbb_rencontres', {'idGroupe':idGroupe}) }}";
+
+             }
+             else {
+                 window.location.href = "{{ path('ffbb_barycentre', {'idGroupe':idGroupe})}}";
+
+             }
+
+         }
+     </script>
+ {% endblock %}
 
 
 
