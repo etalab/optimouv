@@ -125,42 +125,36 @@
 
          </div>
 
-
-
-
-
-         {% block javascripts %}
-
-             <script  language="javascript">
-
-                 function changementType() {
-                     var type = document.getElementById("typeLieu").value;
-                      if (type == "Personne") {
-                         document.getElementById("divPrenom").style.display = "block";
-                         document.getElementById("nbrLicencies").style.display = "none";
-                         document.getElementById("capacitePhasefinale").style.display = "none";
-                         document.getElementById("capaciteRencontreStandard").style.display = "none";
-                         document.getElementById("nbrEquipement").style.display = "none";
-                         document.getElementById("typeEquipement").style.display = "none";
-                         document.getElementById("nbrParticipants").style.display = "none";
-
-
-                      } else if (type == "Lieu"){
-                          document.getElementById("divPrenom").style.display = "none";
-                          document.getElementById("nbrParticipants").style.display = "none";
-                          document.getElementById("nbrLicencies").style.display = "none";
-                     }
-                     else {
-                          document.getElementById("divPrenom").style.display = "none";
-                      }
-                 }
-
-             </script>
-
-         {% endblock %}
-
-
      {% endblock %}
+   {% block javascripts %}
+
+       <script  language="javascript">
+
+           function changementType() {
+               var type = document.getElementById("typeLieu").value;
+               if (type == "Personne") {
+                   document.getElementById("divPrenom").style.display = "block";
+                   document.getElementById("nbrLicencies").style.display = "none";
+                   document.getElementById("capacitePhasefinale").style.display = "none";
+                   document.getElementById("capaciteRencontreStandard").style.display = "none";
+                   document.getElementById("nbrEquipement").style.display = "none";
+                   document.getElementById("typeEquipement").style.display = "none";
+                   document.getElementById("nbrParticipants").style.display = "none";
+
+
+               } else if (type == "Lieu"){
+                   document.getElementById("divPrenom").style.display = "none";
+                   document.getElementById("nbrParticipants").style.display = "none";
+                   document.getElementById("nbrLicencies").style.display = "none";
+               }
+               else {
+                   document.getElementById("divPrenom").style.display = "none";
+               }
+           }
+
+       </script>
+
+   {% endblock %}
 
 
 
