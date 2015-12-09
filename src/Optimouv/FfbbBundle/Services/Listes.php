@@ -273,34 +273,23 @@ class Listes{
                                         return $retour;
                                     }
 
-//                                    # controler le champ 'code postal'
-//                                    # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
-//                                    $codePostalExiste = $this->codePostalExiste($codePostal);
-//
-//                                    if(!$codePostalExiste){
-//                                        $retour = array(
-//                                            "success" => false,
-//                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
-//                                                ." La valeur du champ 'code postal' (colonne 3) n'est pas reconnue!"
-//                                                .implode(",", $donnéesLigne)
-//                                        );
-//                                        return $retour;
-//                                    }
-//
 
+                                    # controler le code postal et la ville
+                                    # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
+                                    $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
 
-//                                # controler le champ 'ville'
-//                                # il faut que la valeur est incluse dans la liste des noms de ville de la table villes_france_free
-//                                if(!in_array($ville,  $nomsVilles)){
-//                                    $retour = array(
-//                                        "success" => false,
-//                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
-//                                            ." La valeur du champ 'ville' (colonne 4) n'est pas reconnue!"
-//                                            .implode(",", $donnéesLigne)
-//                                    );
-//                                    return $retour;
-//                                }
+                                    error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+                                        ."\n statutControlCodePostalVille : ".print_r($statutControlCodePostalVille , true), 3, "/tmp/optimouv.log");
 
+                                    if(!$statutControlCodePostalVille["success"]){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Les valeurs du couple 'code postal' (colonne 3) et 'ville' (colonne 4) ne sont pas reconnues!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
 
 
                                     # les champs optionnels
@@ -406,30 +395,22 @@ class Listes{
                                         return $retour;
                                     }
 
-                                # controler le champ 'code postal'
-//                                if(!in_array($codePostal,  $codesPostaux)){
-//                                    $retour = array(
-//                                        "success" => false,
-//                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
-//                                            ." La valeur du champ 'code postal' (colonne 4) n'est pas reconnue!"
-//                                            .implode(",", $donnéesLigne)
-//                                    );
-//                                    return $retour;
-//                                }
-//
-//                                # controler le champ 'ville'
-//                                # il faut que la valeur est incluse dans la liste des noms de ville de la table villes_france_free
-//                                if(!in_array($ville,  $nomsVilles)){
-//                                    $retour = array(
-//                                        "success" => false,
-//                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
-//                                            ." La valeur du champ 'ville' (colonne 5) n'est pas reconnue!"
-//                                            .implode(",", $donnéesLigne)
-//                                    );
-//                                    return $retour;
-//                                }
+                                    # controler le code postal et la ville
+                                    # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
+                                    $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
 
+                                    error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+                                        ."\n statutControlCodePostalVille : ".print_r($statutControlCodePostalVille , true), 3, "/tmp/optimouv.log");
 
+                                    if(!$statutControlCodePostalVille["success"]){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Les valeurs du couple 'code postal' (colonne 4) et 'ville' (colonne 5) ne sont pas reconnues!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
 
                                     # les champs optionnels
                                     $adresse = $donnéesLigne[6];
@@ -528,28 +509,22 @@ class Listes{
                                         return $retour;
                                     }
 
-//                                # controler le champ 'code postal'
-//                                # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
-//                                if(!in_array($codePostal,  $codesPostaux)){
-//                                    $retour = array(
-//                                        "success" => false,
-//                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
-//                                            ." La valeur du champ 'code postal' (colonne 3) n'est pas reconnue!"
-//                                            .implode(",", $donnéesLigne)
-//                                    );
-//                                    return $retour;
-//                                }
-//
-//                                # il faut que la valeur est incluse dans la liste des noms de ville de la table villes_france_free
-//                                if(!in_array($ville,  $nomsVilles)){
-//                                    $retour = array(
-//                                        "success" => false,
-//                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
-//                                            ." La valeur du champ 'ville' (colonne 4) n'est pas reconnue!"
-//                                            .implode(",", $donnéesLigne)
-//                                    );
-//                                    return $retour;
-//                                }
+                                    # controler le code postal et la ville
+                                    # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
+                                    $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
+
+                                    error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+                                        ."\n statutControlCodePostalVille : ".print_r($statutControlCodePostalVille , true), 3, "/tmp/optimouv.log");
+
+                                    if(!$statutControlCodePostalVille["success"]){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                                ." Les valeurs du couple 'code postal' (colonne 3) et 'ville' (colonne 4) ne sont pas reconnues!"
+                                                .implode(",", $donnéesLigne)
+                                        );
+                                        return $retour;
+                                    }
 
                                     # les champs optionnels
                                     $adresse = $donnéesLigne[5];
@@ -669,8 +644,6 @@ class Listes{
     }
 
     public function creerListeLieux($idsEntite){
-        # obtenir l'objet PDO
-        $bdd = $this->getPdo();
 
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
@@ -678,7 +651,8 @@ class Listes{
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
         try {
-
+            # obtenir l'objet PDO
+            $bdd = $this->getPdo();
 
             if (!$bdd) {
                 //erreur de connexion
@@ -759,12 +733,6 @@ class Listes{
                 $dateCreation = date('Y-m-d', time());
                 $dateModification = date('Y-m-d', time());
                 $dateTimeNow = date('Y-m-d_G:i:s', time());
-
-
-//            try {
-//            } catch (PDOException $e) {
-//                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
-//            }
 
 
                 # obtenir l'objet PDO
@@ -941,10 +909,10 @@ class Listes{
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
-        error_log("\n Service: Listes, Function: verifierExistenceCodePostalNomVille, datetime: ".$dateTimeNow
-            ."\n $codePostal Info: ".print_r($codePostal, true), 3, "/var/log/apache2/optimouv.log");
-        error_log("\n Service: Listes, Function: verifierExistenceCodePostalNomVille, datetime: ".$dateTimeNow
-            ."\n $nomVille Info: ".print_r($nomVille, true), 3, "/var/log/apache2/optimouv.log");
+//        error_log("\n Service: Listes, Function: verifierExistenceCodePostalNomVille, datetime: ".$dateTimeNow
+//            ."\n $codePostal Info: ".print_r($codePostal, true), 3, "/tmp/optimouv.log");
+//        error_log("\n Service: Listes, Function: verifierExistenceCodePostalNomVille, datetime: ".$dateTimeNow
+//            ."\n $nomVille Info: ".print_r($nomVille, true), 3, "/tmp/optimouv.log");
 
         try {
             $char = array("-", "_", "'");
