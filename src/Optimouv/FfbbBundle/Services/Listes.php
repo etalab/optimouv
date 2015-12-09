@@ -801,7 +801,7 @@ class Listes{
                                 $stmt->bindParam(':lieu_rencontre_possible', $lieuRencontrePossible);
                                 $stmt->bindParam(':date_creation', $dateCreation);
                                 $stmt->bindParam(':date_modification', $dateModification);
-                                $stmt->bindParam(':id_ville_france', $idVille);
+                                $stmt->bindParam(':id_ville_france', $idVilleFrance);
 
                             }
                             elseif (strtolower($typeEntite) == "personne") {
