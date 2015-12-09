@@ -13,6 +13,8 @@
                          <!-- /.panel-heading -->
                          <div class="panel-body">
                              <div class="dataTable_wrapper">
+                                 {% set basePath =  app.request.getBasePath() %}
+
                                  <table class="table table-striped table-bordered table-hover" id="tableGererGroupe">
                                      <thead>
                                      <tr>
@@ -82,7 +84,7 @@
 
         function deleteGroupe(idGroupe){
             $.ajax({
-                url: '/Optimouv/web/supprimer-groupe/' +idGroupe,
+                url: '/supprimer-groupe/' +idGroupe,
                 type: 'GET',
                 data: null,
                 contentType: false,
