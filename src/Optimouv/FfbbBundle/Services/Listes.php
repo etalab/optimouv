@@ -9,6 +9,7 @@ namespace Optimouv\FfbbBundle\Services;
 
 use SplFileObject;
 use PDO;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 class Listes{
 
@@ -93,7 +94,7 @@ class Listes{
                 // obtenir les données d'en-têtes
                 $donneesEntete = $file->fgetcsv();
 
-                // Controler les colonnes des en-têtes avec les formats fixés  TODO
+                // Controler les colonnes des en-têtes avec les formats fixés
                 // Fichier equipes, personnes, lieux
                 $resultatBooleanControlEntete = $this->controlerEntete($donneesEntete);
                 error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
@@ -108,6 +109,10 @@ class Listes{
                     return $retour;
                 }
                 else{
+                    # tableau qui contient toutes les lignes erronées
+                    $lignesErronees = [];
+                    $maxLignesErronees = 10;
+
                     # obtenir l'objet PDO
                     $bdd = $this->getPdo();
 
@@ -123,9 +128,15 @@ class Listes{
                         # tableau qui contient toutes les données (utilisé pour gérer les doublons)
                         $toutesLignes = [];
 
+
                         while (!$file->eof()) {
                             $donnéesLigne = $file->fgetcsv();
                             $nbrLigne++;
+
+                            # controler si on a atteint le max nombre des erreurs
+                            if(count($lignesErronees) == $maxLignesErronees){
+                                break;
+                            }
 
                             // controler le fichier vide (sans données)
                             if($donnéesLigne == array(null) and $nbrLigne == 2){
@@ -136,7 +147,8 @@ class Listes{
                                         ." Veuillez uploader un fichier csv qui contient des données!"
                                         .implode(",", $donnéesLigne)
                                 );
-                                return $retour;
+                                array_push($lignesErronees, $retour["msg"]);
+                                continue;
                             }
 
                             // tester s'il y a des données
@@ -155,7 +167,8 @@ class Listes{
                                             ." Veuillez supprimer cette ligne et reuploader le fichier!"
                                             .implode(",", $donnéesLigne)
                                     );
-                                    return $retour;
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
                                 }
 
 
@@ -175,7 +188,8 @@ class Listes{
                                                 ." La ligne doit contenir 11 valeurs. Donné: ".count($donnéesLigne)." valeurs !"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
 
                                     # les champs obligatoires
@@ -193,7 +207,8 @@ class Listes{
                                                 ." Le champ 'nom' (colonne 2) doit être rempli!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
                                     if(empty($codePostal)){
                                         $retour = array(
@@ -202,7 +217,8 @@ class Listes{
                                                 ." Le champ 'code postal' (colonne 3) doit être rempli!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     };
                                     if(empty($ville)){
                                         $retour = array(
@@ -211,7 +227,8 @@ class Listes{
                                                 ." Le champ 'ville' (colonne 4) doit être rempli!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     };
                                     if(empty($participants)){
                                         $retour = array(
@@ -220,7 +237,8 @@ class Listes{
                                                 ." Le champ 'participants' (colonne 5) doit être rempli!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     };
                                     # controler le champ 'lieu de rencontre possible'
                                     if( empty($donnéesLigne[5]) ){
@@ -230,7 +248,8 @@ class Listes{
                                                 ." Le champ 'lieu de rencontre possible' (colonne 6) doit être rempli!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
 
                                     # controler le champ 'participants'
@@ -242,7 +261,8 @@ class Listes{
                                                 ." Le champ 'participants' (colonne 5) doit avoir une valeur numérique!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
 
                                     # controler le champ 'lieu de rencontre possible'
@@ -254,7 +274,8 @@ class Listes{
                                                 ." Le champ 'lieu de rencontre possible' (colonne 6) doit avoir la valeur 'OUI' ou 'NON'!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
 
 
@@ -270,9 +291,9 @@ class Listes{
                                                 ." Le champ 'code postal' (colonne 3) doit contenir 5 chiffres!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
-
 
                                     # controler le code postal et la ville
                                     # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
@@ -288,7 +309,8 @@ class Listes{
                                                 ." Les valeurs du couple 'code postal' (colonne 3) et 'ville' (colonne 4) ne sont pas reconnues!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
 
 
@@ -310,7 +332,8 @@ class Listes{
                                                 ." La ligne doit contenir 10 valeurs. Donné: ".count($donnéesLigne)." valeurs !"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
 
                                     # les champs obligatoires
@@ -328,7 +351,8 @@ class Listes{
                                                 ." Le champ 'nom' (colonne 2) doit être rempli!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
                                     if(empty($prenom)){
                                         $retour = array(
@@ -337,7 +361,8 @@ class Listes{
                                                 ." Le champ 'prenom' (colonne 3) doit être rempli!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
                                     if(empty($codePostal)){
                                         $retour = array(
@@ -346,7 +371,8 @@ class Listes{
                                                 ." Le champ 'code postal' (colonne 4) doit être rempli!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
                                     if(empty($ville)){
                                         $retour = array(
@@ -355,7 +381,8 @@ class Listes{
                                                 ." Le champ 'ville' (colonne 5) doit être rempli!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
                                     # controler le champ 'lieu de rencontre possible'
                                     if( empty($donnéesLigne[5]) ){
@@ -365,7 +392,8 @@ class Listes{
                                                 ." Le champ 'lieu de rencontre possible' (colonne 6) doit être rempli!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
 
                                     # controler le champ '$lieuRencontrePossible'
@@ -377,7 +405,8 @@ class Listes{
                                                 ." Le champ 'lieu de rencontre possible' (colonne 6) doit avoir la valeur 'OUI' ou 'NON'!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
 
                                     # corriger le code postal si un zéro est manquant dans le premier chiffre
@@ -392,7 +421,8 @@ class Listes{
                                                 ." Le champ 'code postal' (colonne 4) doit contenir 5 chiffres!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
 
                                     # controler le code postal et la ville
@@ -409,7 +439,8 @@ class Listes{
                                                 ." Les valeurs du couple 'code postal' (colonne 4) et 'ville' (colonne 5) ne sont pas reconnues!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
 
                                     # les champs optionnels
@@ -425,7 +456,6 @@ class Listes{
                                     $codePostal = $donnéesLigne[2];
                                     $ville = $donnéesLigne[3];
 
-
                                     # controler le nombre de colonnes
                                     if(count($donnéesLigne) != 13){
                                         $retour = array(
@@ -434,7 +464,8 @@ class Listes{
                                                 ." La ligne doit contenir 13 valeurs. Donné: ".count($donnéesLigne)." valeurs !"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
 
                                     $lieuRencontrePossible = $this->getBoolean($donnéesLigne[4]);
@@ -451,7 +482,8 @@ class Listes{
                                                 ." Le champ 'nom' (colonne 2) doit être rempli!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
                                     if(empty($codePostal)){
                                         $retour = array(
@@ -460,7 +492,8 @@ class Listes{
                                                 ." Le champ 'code postal' (colonne 3) doit être rempli!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
                                     if(empty($ville)){
                                         $retour = array(
@@ -469,7 +502,8 @@ class Listes{
                                                 ." Le champ 'ville' (colonne 4) doit être rempli!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
                                     # controler le champ 'lieu de rencontre possible'
                                     if( empty($donnéesLigne[4]) ){
@@ -479,7 +513,8 @@ class Listes{
                                                 ." Le champ 'lieu de rencontre possible' (colonne 5) doit être rempli!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
 
                                     # controler le champ 'lieu de rencontre possible'
@@ -491,7 +526,8 @@ class Listes{
                                                 ." Le champ 'lieu de rencontre possible' (colonne 5) doit avoir la valeur 'OUI' ou 'NON'!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
 
                                     # corriger le code postal si un zéro est manquant dans le premier chiffre
@@ -506,7 +542,8 @@ class Listes{
                                                 ." Le champ 'code postal' (colonne 3) doit contenir 5 chiffres!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
 
                                     # controler le code postal et la ville
@@ -523,7 +560,8 @@ class Listes{
                                                 ." Les valeurs du couple 'code postal' (colonne 3) et 'ville' (colonne 4) ne sont pas reconnues!"
                                                 .implode(",", $donnéesLigne)
                                         );
-                                        return $retour;
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
                                     }
 
                                     # les champs optionnels
@@ -544,17 +582,29 @@ class Listes{
                                             ." Veuillez s'assurer que le type d'entité est parmi 'EQUIPE', 'PERSONNE' ou 'LIEU'!"
                                             .implode(",", $donnéesLigne)
                                     );
-                                    return $retour;
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
                                 }
 
                             }
 
                         }
+
                     }
-                    $retour = array(
-                        "success" => true,
-                        "msg" => "Contrôle réussi "
-                    );
+
+                    if(count($lignesErronees) > 0){
+                        $retour = array(
+                            "success" => false,
+                            "msg" => $lignesErronees
+                        );
+                    }else{
+                        $retour = array(
+                            "success" => true,
+                            "msg" => "Contrôle réussi "
+                        );
+                    }
+
+
 
                 }
             }
@@ -691,16 +741,36 @@ class Listes{
                 "success" => true,
                 "data" => "",
             );
-
-
         } catch (PDOException $e) {
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
 
+        return $retour;
+    }
+
+    public function visualiserFichierUpload(){
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+        $donneesVisualisation = ["test", "test2"];
+
+        try {
+            # obtenir le chemin d'upload du fichier
+            $cheminFichierTemp = $_FILES["file-0"]["tmp_name"];
 
 
+
+            $retour = array(
+                "success" => true,
+                "data" => $donneesVisualisation,
+            );
+        } catch (Exception $e) {
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
 
         return $retour;
+
     }
 
 
@@ -1056,7 +1126,7 @@ class Listes{
         // nombreColonnesEntetes (11 pour liste d'équipes, 10 pour liste de personnes, 13 pour liste de lieux)
         $nombreColonnesEntetes = [11,10,13];
         if(!in_array(count($entete), $nombreColonnesEntetes)){
-            $retour["msg"] = "Veuillez vérifier le nombre des en-têtes.!"
+            $retour["msg"] = "Veuillez vérifier le nombre des colonnes.!"
                 ."Une liste d'équipes contient 11 colonnes, une liste de personnes contient 10 colonnes et une liste de lieux contient 13 colonnes.!"
                 .$genericMsg;
             return $retour;
@@ -1284,7 +1354,7 @@ class Listes{
             $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
         } catch (PDOException $e) {
 //            error_log("\n Service: Listes, Function: getPdo, datetime: ".$dateTimeNow
-//                ."\n PDOException: ".print_r($e, true), 3, "/var/log/apache2/optimouv.log");
+//                ."\n PDOException: ".print_r($e, true), 3, "/tmp/optimouv.log");
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
 
