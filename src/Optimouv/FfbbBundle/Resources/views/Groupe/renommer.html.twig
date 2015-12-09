@@ -26,10 +26,11 @@
                                                       <label>Nom du groupe</label>
                                                       <input class="form-control" name="nomGroupe" id="nomGroupe" placeholder="Rentrez le nouveau nom">
                                                  </div>
+                                                <input type="hidden" name="idListe" id="idListe" value="{{ idListe }}">
 
                                                 <div class="row">
                                                     <div class="col-lg-6"> <button type="submit" class="btn btn-default">Enregistrer</button> </div>
-                                                    <div class="col-lg-6"> <a href="{{ path('ffbb_gerer_groupe') }}" class="pull-right">Retour à la liste</a></div>
+                                                    <div class="col-lg-6"> <a href="{{ path('ffbb_gerer_groupe', {'idListe': idListe}) }}" class="pull-right">Retour à la liste</a></div>
                                                 </div>
                                              </form>
                                        </div>

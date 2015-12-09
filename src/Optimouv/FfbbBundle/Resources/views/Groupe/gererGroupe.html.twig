@@ -33,7 +33,8 @@
                                              <td> {{ groupe.nbParticipants }}</td>
                                              <td> {{ groupe.dateCreation|date('d/m/Y') }}</td>
                                              <td>
-                                                 <a href="{{ path('ffbb_renommer_groupe', {'idGroupe': groupe.id}) }}" class="btn btn-info">Renommer</a> |
+                                                 <a href="{{ path('ffbb_renommer_groupe',{'idGroupe': groupe.id}) }}" class="btn btn-info">Renommer</a> |
+
                                                  <button type="button" class="btn btn-info" onclick="deleteGroupe({{ groupe.id }})">Supprimer</button> |
                                                  <input type="hidden" id="idGroupe" name="idGroupe" value="{{ groupe.id }}">
 
@@ -81,7 +82,7 @@
 
         function deleteGroupe(idGroupe){
             $.ajax({
-                url: 'supprimer-groupe/' +idGroupe,
+                url: '/Optimouv/web/supprimer-groupe/' +idGroupe,
                 type: 'GET',
                 data: null,
                 contentType: false,
