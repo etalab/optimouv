@@ -94,6 +94,8 @@ class Listes{
                 // obtenir les données d'en-têtes
                 $donneesEntete = $file->fgetcsv();
 
+
+
                 // Controler les colonnes des en-têtes avec les formats fixés
                 // Fichier equipes, personnes, lieux
                 $resultatBooleanControlEntete = $this->controlerEntete($donneesEntete);
@@ -102,9 +104,8 @@ class Listes{
                 if(!$resultatBooleanControlEntete["success"]){
                     $retour = array(
                         "success" => false,
-                        "msg" => "Erreur csv ligne : 1!"
-                            .$resultatBooleanControlEntete["msg"]."!"
-                            .implode(",", $donneesEntete)
+                        "msg" => "Erreur ligne : 1!"
+                            .$resultatBooleanControlEntete["msg"]
                     );
                     return $retour;
                 }
@@ -142,10 +143,9 @@ class Listes{
                             if($donnéesLigne == array(null) and $nbrLigne == 2){
                                 $retour = array(
                                     "success" => false,
-                                    "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                    "msg" => "Erreur ligne :".$nbrLigne."!"
                                         ." Il n'y a pas de données dans le fichier csv!"
-                                        ." Veuillez uploader un fichier csv qui contient des données!"
-                                        .implode(",", $donnéesLigne)
+                                        ." Veuillez uploader un fichier csv qui contient des données"
                                 );
                                 array_push($lignesErronees, $retour["msg"]);
                                 continue;
@@ -162,10 +162,9 @@ class Listes{
                                 else{
                                     $retour = array(
                                         "success" => false,
-                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
                                             ." Le fichier comporte des lignes en double.!"
-                                            ." Veuillez supprimer cette ligne et reuploader le fichier!"
-                                            .implode(",", $donnéesLigne)
+                                            ." Veuillez supprimer cette ligne et effectuer à nouveau l’import"
                                     );
                                     array_push($lignesErronees, $retour["msg"]);
                                     continue;
@@ -177,6 +176,11 @@ class Listes{
                                 error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
                                     ."\n typeEntite : ".print_r($typeEntite , true), 3, "/tmp/optimouv.log");
 
+
+                                // msg d'erreur générique
+                                $genericMsg = "Veuillez corriger les champs indiqués et effectuer à nouveau l’import";
+
+
                                 // obtenir les valeurs selon le type d'entité
                                 if (strtolower($typeEntite) == "equipe") {
 
@@ -184,9 +188,8 @@ class Listes{
                                     if(count($donnéesLigne) != 11){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
-                                                ." La ligne doit contenir 11 valeurs. Donné: ".count($donnéesLigne)." valeurs !"
-                                                .implode(",", $donnéesLigne)
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
+                                                ." La ligne doit contenir 11 valeurs. Donné: ".count($donnéesLigne)." valeurs"
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -203,9 +206,9 @@ class Listes{
                                     if(empty($nom)){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
                                                 ." Le champ 'nom' (colonne 2) doit être rempli!"
-                                                .implode(",", $donnéesLigne)
+                                                .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -213,9 +216,9 @@ class Listes{
                                     if(empty($codePostal)){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
                                                 ." Le champ 'code postal' (colonne 3) doit être rempli!"
-                                                .implode(",", $donnéesLigne)
+                                                .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -223,9 +226,9 @@ class Listes{
                                     if(empty($ville)){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
                                                 ." Le champ 'ville' (colonne 4) doit être rempli!"
-                                                .implode(",", $donnéesLigne)
+                                                .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -233,9 +236,9 @@ class Listes{
                                     if(empty($participants)){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
                                                 ." Le champ 'participants' (colonne 5) doit être rempli!"
-                                                .implode(",", $donnéesLigne)
+                                                .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -244,9 +247,9 @@ class Listes{
                                     if( empty($donnéesLigne[5]) ){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
                                                 ." Le champ 'lieu de rencontre possible' (colonne 6) doit être rempli!"
-                                                .implode(",", $donnéesLigne)
+                                                .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -257,9 +260,9 @@ class Listes{
                                     if(!is_numeric($participants)){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
                                                 ." Le champ 'participants' (colonne 5) doit avoir une valeur numérique!"
-                                                .implode(",", $donnéesLigne)
+                                                .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -270,9 +273,9 @@ class Listes{
                                     if((strtolower($donnéesLigne[5]) != 'non') and (strtolower($donnéesLigne[5]) != 'oui')){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
                                                 ." Le champ 'lieu de rencontre possible' (colonne 6) doit avoir la valeur 'OUI' ou 'NON'!"
-                                                .implode(",", $donnéesLigne)
+                                                .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -287,9 +290,9 @@ class Listes{
                                     if(strlen($codePostal) != 5){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
                                                 ." Le champ 'code postal' (colonne 3) doit contenir 5 chiffres!"
-                                                .implode(",", $donnéesLigne)
+                                                .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -305,9 +308,8 @@ class Listes{
                                     if(!$statutControlCodePostalVille["success"]){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
-                                                ." Les valeurs du couple 'code postal' (colonne 3) et 'ville' (colonne 4) ne sont pas reconnues!"
-                                                .implode(",", $donnéesLigne)
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
+                                                ." Veuillez corriger le code postal (colonne 3) et la ville (colonne 4) et effectuer à nouveau l'import "
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -328,9 +330,8 @@ class Listes{
                                     if(count($donnéesLigne) != 10){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
-                                                ." La ligne doit contenir 10 valeurs. Donné: ".count($donnéesLigne)." valeurs !"
-                                                .implode(",", $donnéesLigne)
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
+                                                ." La ligne doit contenir 10 valeurs. Donné: ".count($donnéesLigne)." valeurs"
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -347,9 +348,9 @@ class Listes{
                                     if(empty($nom)){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
                                                 ." Le champ 'nom' (colonne 2) doit être rempli!"
-                                                .implode(",", $donnéesLigne)
+                                                .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -357,9 +358,9 @@ class Listes{
                                     if(empty($prenom)){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
                                                 ." Le champ 'prenom' (colonne 3) doit être rempli!"
-                                                .implode(",", $donnéesLigne)
+                                                .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -367,9 +368,9 @@ class Listes{
                                     if(empty($codePostal)){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
                                                 ." Le champ 'code postal' (colonne 4) doit être rempli!"
-                                                .implode(",", $donnéesLigne)
+                                                .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -377,9 +378,9 @@ class Listes{
                                     if(empty($ville)){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
                                                 ." Le champ 'ville' (colonne 5) doit être rempli!"
-                                                .implode(",", $donnéesLigne)
+                                                .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -388,9 +389,9 @@ class Listes{
                                     if( empty($donnéesLigne[5]) ){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
                                                 ." Le champ 'lieu de rencontre possible' (colonne 6) doit être rempli!"
-                                                .implode(",", $donnéesLigne)
+                                                .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -401,9 +402,9 @@ class Listes{
                                     if((strtolower($donnéesLigne[5]) != 'non') and (strtolower($donnéesLigne[5]) != 'oui')){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
                                                 ." Le champ 'lieu de rencontre possible' (colonne 6) doit avoir la valeur 'OUI' ou 'NON'!"
-                                                .implode(",", $donnéesLigne)
+                                                .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -417,9 +418,9 @@ class Listes{
                                     if(strlen($codePostal) != 5){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
                                                 ." Le champ 'code postal' (colonne 4) doit contenir 5 chiffres!"
-                                                .implode(",", $donnéesLigne)
+                                                .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -435,9 +436,9 @@ class Listes{
                                     if(!$statutControlCodePostalVille["success"]){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
                                                 ." Les valeurs du couple 'code postal' (colonne 4) et 'ville' (colonne 5) ne sont pas reconnues!"
-                                                .implode(",", $donnéesLigne)
+                                                .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -460,9 +461,8 @@ class Listes{
                                     if(count($donnéesLigne) != 13){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
-                                                ." La ligne doit contenir 13 valeurs. Donné: ".count($donnéesLigne)." valeurs !"
-                                                .implode(",", $donnéesLigne)
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
+                                                ." La ligne doit contenir 13 valeurs. Donné: ".count($donnéesLigne)." valeurs"
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -478,9 +478,9 @@ class Listes{
                                     if(empty($nom)){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
                                                 ." Le champ 'nom' (colonne 2) doit être rempli!"
-                                                .implode(",", $donnéesLigne)
+                                                .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -488,9 +488,9 @@ class Listes{
                                     if(empty($codePostal)){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
                                                 ." Le champ 'code postal' (colonne 3) doit être rempli!"
-                                                .implode(",", $donnéesLigne)
+                                                .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -498,9 +498,9 @@ class Listes{
                                     if(empty($ville)){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
                                                 ." Le champ 'ville' (colonne 4) doit être rempli!"
-                                                .implode(",", $donnéesLigne)
+                                                .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -509,9 +509,9 @@ class Listes{
                                     if( empty($donnéesLigne[4]) ){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
                                                 ." Le champ 'lieu de rencontre possible' (colonne 5) doit être rempli!"
-                                                .implode(",", $donnéesLigne)
+                                                .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -522,9 +522,9 @@ class Listes{
                                     if((strtolower($donnéesLigne[4]) != 'non') and (strtolower($donnéesLigne[4]) != 'oui')){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
                                                 ." Le champ 'lieu de rencontre possible' (colonne 5) doit avoir la valeur 'OUI' ou 'NON'!"
-                                                .implode(",", $donnéesLigne)
+                                                .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -538,9 +538,9 @@ class Listes{
                                     if(strlen($codePostal) != 5){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
                                                 ." Le champ 'code postal' (colonne 3) doit contenir 5 chiffres!"
-                                                .implode(",", $donnéesLigne)
+                                                .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -556,9 +556,9 @@ class Listes{
                                     if(!$statutControlCodePostalVille["success"]){
                                         $retour = array(
                                             "success" => false,
-                                            "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
                                                 ." Les valeurs du couple 'code postal' (colonne 3) et 'ville' (colonne 4) ne sont pas reconnues!"
-                                                .implode(",", $donnéesLigne)
+                                                .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -577,10 +577,10 @@ class Listes{
                                 else{
                                     $retour = array(
                                         "success" => false,
-                                        "msg" => "Erreur csv ligne :".$nbrLigne."!"
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
                                             ." Le type d'entité n'est pas reconnu!"
                                             ." Veuillez s'assurer que le type d'entité est parmi 'EQUIPE', 'PERSONNE' ou 'LIEU'!"
-                                            .implode(",", $donnéesLigne)
+                                            .$genericMsg
                                     );
                                     array_push($lignesErronees, $retour["msg"]);
                                     continue;
@@ -611,9 +611,9 @@ class Listes{
             else{
                 $retour = array(
                     "success" => false,
-                    "msg" => "Veuillez convertir votre fichier au format csv et effectuer à nouveau l'import.!"
-                            ."Nom de fichier: ".$nomFichier."!"
-                            ."Type de fichier: ".$typeFichier
+                    "msg" => "Veuillez convertir votre fichier au format csv et effectuer à nouveau l'import."
+//                            ."Nom de fichier: ".$nomFichier."!"
+//                            ."Type de fichier: ".$typeFichier
                 );
             }
 
@@ -710,9 +710,9 @@ class Listes{
                 die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
             } else {
                 # récuperer la valeur des autres variables
-                $nomUtilisateur = "henz";
+                $nomUtilisateur = "henz"; # todo
 //            $nom = "liste_terrains_neutres_".$nomUtilisateur."_".$dateTimeNow;
-                $nom = "liste_terrains_neutres_".$dateTimeNow;
+                $nom = "liste_lieux_".$dateTimeNow;
                 $idUtilisateur = 1;
 
                 # construire la liste d'équipes
@@ -1120,7 +1120,7 @@ class Listes{
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
-        $genericMsg = "Veuillez utiliser les formats de fichier mis à disposition dans « Télécharger les formats de fichiers d’import ";
+        $genericMsg = "Veuillez utiliser les formats de fichier mis à disposition dans Télécharger les formats de fichiers d’import ";
 
         // tester le nombre de colonnes
         // nombreColonnesEntetes (11 pour liste d'équipes, 10 pour liste de personnes, 13 pour liste de lieux)

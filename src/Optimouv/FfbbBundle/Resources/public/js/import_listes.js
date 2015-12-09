@@ -374,13 +374,18 @@ function addEventHandlerVisualisationParticipants(){
 
 }
 
+function hideStatutChargement(){
+  $("#statut_chargement_lieux").hide();
+  $("#statut_chargement_participants").hide();
+}
+
 
 $(document).ready(function () {
 
   addEventHandlerImportListeParticipants();
   addEventHandlerImportListeLieux();
   addEventHandlerVisualisationParticipants();
-
+  hideStatutChargement();
   //addEventHandlerSelectListeParticipants();
   //addEventHandlerSelectListeLieux();
 
