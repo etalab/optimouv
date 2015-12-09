@@ -38,7 +38,6 @@ class ListesController extends Controller
         error_log("\n Controller: Listes, Function: creerListeParticipantsAction, datetime: ".$dateTimeNow
             ."\n statutUpload: ".print_r($statutUpload, true), 3, "/tmp/optimouv.log");
 
-
         if($statutUpload["success"]){
 
             # créer des entités dans la table entite
@@ -62,14 +61,46 @@ class ListesController extends Controller
 
         }
         else{
-            return new JsonResponse(array(
-                "success" => false,
-                "msg" => $statutUpload["msg"]
-            ));
-        }
 
+            # convertir str au tableau
+            if(!is_array($statutUpload["msg"])  ){
+                return new JsonResponse(array(
+                    "success" => false,
+                    "msg" => array($statutUpload["msg"])
+                ));
+
+            }
+            else{
+                return new JsonResponse(array(
+                    "success" => false,
+                    "msg" => $statutUpload["msg"]
+                ));
+
+            }
+
+
+        }
+    }
+
+    public function visualiserListeParticipantsAction(){
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+        # obtenir des lignes pour previsualisation
+        $retourVisualiser = $this->get('service_listes')->visualiserFichierUpload();
+
+        error_log("\n Controller: Listes, Function: visualiserListeParticipantsAction, datetime: ".$dateTimeNow
+            ."\n retourVisualiser: ".print_r($retourVisualiser, true), 3, "/tmp/optimouv.log");
+
+        return new JsonResponse(array(
+            "success" => true,
+            "msg" => "success visualiser",
+            "data" => "test data"
+        ));
 
     }
+
 
     public function creerListeLieuxAction()
     {
