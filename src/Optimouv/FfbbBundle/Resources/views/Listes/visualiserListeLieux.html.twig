@@ -45,10 +45,25 @@
                                             <td> {{ detailsEntite.nom }}</td>
                                             <td> {{ detailsEntite.codePostal }}</td>
                                             <td> {{ detailsEntite.ville }}</td>
-                                            <td> {{ detailsEntite.lieuRencontrePossible }}</td>
+                                            {% if detailsEntite.lieuRencontrePossible  %}
+                                                <td> OUI </td>
+                                            {% else %}
+                                                <td> NON </td>
+                                            {% endif %}
                                             <td> {{ detailsEntite.adresse }}</td>
-                                            <td> {{ detailsEntite.longitude }}</td>
-                                            <td> {{ detailsEntite.latitude }}</td>
+
+                                            {% if detailsEntite.longitude  %}
+                                                <td> {{ detailsEntite.longitude   }} </td>
+                                            {% else %}
+                                                <td> </td>
+                                            {% endif %}
+
+                                            {% if detailsEntite.latitude  %}
+                                                <td> {{ detailsEntite.latitude   }} </td>
+                                            {% else %}
+                                                <td> </td>
+                                            {% endif %}
+
                                             <td> {{ detailsEntite.projection }}</td>
                                             <td> {{ detailsEntite.typeEquipement }}</td>
                                             <td> {{ detailsEntite.nombreEquipement }}</td>
