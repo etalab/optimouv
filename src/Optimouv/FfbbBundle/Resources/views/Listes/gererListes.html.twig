@@ -76,7 +76,8 @@
                                              <td> {{ listeParticipants.dateCreation|date('d/m/Y') }}</td>
                                              <td>
                                                  <a href="{{ path('ffbb_renommer_liste_participants', {'idListeParticipants': listeParticipants.id}) }}" class="btn btn-info">Renommer</a> |
-                                                 <button type="submit" class="btn btn-info" onclick="deleteListeParticipants({{ listeParticipants.id }})">Supprimer</button>
+                                                 <button type="submit" class="btn btn-info" onclick="deleteListeParticipants({{ listeParticipants.id }})">Supprimer</button> |
+                                                 <a href="{{ path('ffbb_visualiser_liste_participants', {'idListeParticipants': listeParticipants.id}) }}" class="btn btn-info">Visualiser</a>
 
                                              </td>
 
@@ -171,7 +172,8 @@
                                              <td> {{ listeLieux.dateCreation|date('d/m/Y') }}</td>
                                              <td>
                                                  <a href="{{ path('ffbb_renommer_liste_lieux', {'idListeLieux': listeLieux.id}) }}" class="btn btn-info">Renommer</a> |
-                                                 <button type="submit" class="btn btn-info" onclick="deleteListeLieux({{ listeLieux.id }})">Supprimer</button>
+                                                 <button type="submit" class="btn btn-info" onclick="deleteListeLieux({{ listeLieux.id }})">Supprimer</button> |
+                                                 <a href="{{ path('ffbb_visualiser_liste_lieux', {'idListeLieux': listeLieux.id}) }}" class="btn btn-info">Visualiser</a>
 
                                              </td>
 
