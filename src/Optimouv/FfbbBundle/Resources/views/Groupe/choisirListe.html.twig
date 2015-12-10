@@ -102,7 +102,7 @@
                                       <div class="col-lg-6">
                                           <div class="row" style="padding-right: 15px"> <a href="{{ path('ffbb_gerer_liste_participants') }}" class="btn btn-default  pull-right">Importer et gérer mes listes</a> </div>
                                           <br> <br>
-                                          <div class="row" style="padding-right: 15px"> <a href="{{ asset('bundles/ffbb/telechargement/OPTIMOUV-fichiers-import.zip') }}" class="pull-right" style="font-size: small">Télécharger les formats de fichiers d'import</a> </div>
+                                          <div class="row" style="padding-right: 15px"> <a href="{{ asset('bundles/ffbb/telechargement/OPTIMOUV_fichiers_import.zip') }}" class="pull-right" style="font-size: small">Télécharger les formats de fichiers d'import</a> </div>
 
 
                                       </div>
@@ -117,28 +117,24 @@
                    </div>
                    <!-- /.col-lg-12 -->
               </div>
-
-
-
-
-
              </div>
-
-
-
-
-
-
-
      {% endblock %}
-    {% block javascripts %}
-        <!-- code interne dual list box -->
-        <script>
+{% block javascripts %}
+    <!-- code interne dual list box -->
+    <script>
 
-            function getCheckedRadioValue() {
-                //   var elements = document.getElementsByName(listeParticipants);
-                var elements = document.forms.liste.listeParticipants;
-                for (var i=0, len=elements.length; i<len; ++i){
+        function getCheckedRadioValue() {
+            //   var elements = document.getElementsByName(listeParticipants);
+            var elements = document.forms.liste.listeParticipants;
+            if (elements.length == undefined){
+                var idListe  = elements.value;
+                idListe = parseInt(idListe);
+                var url = "choisir-groupe";
+                var chemin = url + "/" + idListe;
+                window.location.href = chemin;
+            } else {
+                len = elements.length;
+                for (var i=0; i<len; ++i){
 
                     if (elements[i].checked){
                         var idListe  = elements[i].value;
@@ -149,16 +145,14 @@
                         //alert(chemin);
                     }
                 }
-
-
-
-
-
-
             }
 
-        </script>
-    {% endblock %}
+
+        }
+
+    </script>
+{% endblock %}
+
 
 
 
