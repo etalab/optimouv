@@ -10,10 +10,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class EntiteController extends Controller
 {
-    public function indexAction()
+    public function indexAction($idGroupe)
     {
 
-        $idGroupe = $_POST['idGroupe'];
 
         return $this->render('FfbbBundle:Entite:creer.html.twig', [
             'idGroupe' => $idGroupe,

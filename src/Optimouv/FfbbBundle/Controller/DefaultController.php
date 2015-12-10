@@ -11,6 +11,7 @@ class DefaultController extends Controller
 
 
         $villes = $_POST["duallistbox_demo1"];
+
         $nomGroupe = $_POST["nomGroupe"];
         $idListeParticipants = $_POST["idListeParticipants"];
         $idListeLieux = null;

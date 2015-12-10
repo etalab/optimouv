@@ -27,7 +27,7 @@
                      {% endif %}
                        <select multiple="multiple" size="10" name="duallistbox_demo1[]">
                          {% for entite in entites %}
-                             <option value="{{ entite.codePostal }} {{ entite.ville }}"> {{ entite.codePostal }} | {{ entite.nom }} |  {{ entite.ville }} </option>
+                              <option value="{{ entite.id }}"> {{ entite.codePostal }} | {{ entite.nom }} |  {{ entite.ville }} </option>
                          {% endfor %}
                      </select>
 
