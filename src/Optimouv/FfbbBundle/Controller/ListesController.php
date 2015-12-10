@@ -82,24 +82,38 @@ class ListesController extends Controller
         }
     }
 
-    public function visualiserListeParticipantsAction(){
+    public function visualiserListeParticipantsAction($idListeParticipants){
+
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
-        # obtenir des lignes pour previsualisation
-        $retourVisualiser = $this->get('service_listes')->visualiserFichierUpload();
 
 //        error_log("\n Controller: Listes, Function: visualiserListeParticipantsAction, datetime: ".$dateTimeNow
 //            ."\n retourVisualiser: ".print_r($retourVisualiser, true), 3, "/tmp/optimouv.log");
 
-        return new JsonResponse(array(
-            "success" => true,
-            "msg" => "success visualiser",
-            "data" => "test data"
+        return $this->render('FfbbBundle:Listes:visualiserListeParticipants.html.twig', array(
+
+            'idListeParticipants' => $idListeParticipants,
         ));
 
     }
+
+
+    public function visualiserListeLieuxAction($idListeLieux){
+
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+
+        return $this->render('FfbbBundle:Listes:visualiserListeLieux.html.twig', array(
+
+            'idListeLieux' => $idListeLieux,
+        ));
+
+    }
+
 
 
     public function creerListeLieuxAction()
