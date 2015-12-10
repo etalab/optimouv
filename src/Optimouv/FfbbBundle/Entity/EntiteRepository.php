@@ -27,23 +27,18 @@ class EntiteRepository extends \Doctrine\ORM\EntityRepository
     {
 
         $query = $this->createQueryBuilder('e')
-            ->select('e.codePostal, e.ville', 'e.nom')
+            ->select('e.id, e.codePostal, e.ville', 'e.nom')
             ->where('e.id IN (:id)')
             ->setParameter('id', array_values($participants))
             ->orderBy('e.id','DESC')
             ->getQuery();
 
         $result = $query->getResult();
-       // echo '<pre>',print_r($result,1),'</pre>';exit;
-         //exit;
+
 
         return $result;
 
     }
 
 
-    /*
-     * $stmt = $bdd->prepare("SELECT longitude, latitude FROM  villes WHERE  find_in_set (id, :reqVilles) ;");
-        $stmt->bindParam(':reqVilles', $reqVilles);
-     */
 }
