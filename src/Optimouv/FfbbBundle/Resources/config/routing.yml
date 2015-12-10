@@ -136,3 +136,7 @@ ffbb_visualiser_liste_participants:
 ffbb_visualiser_liste_lieux:
     path:     /visualiser-liste-lieux/{idListeLieux}
     defaults: { _controller: FfbbBundle:Listes:visualiserListeLieux }
+
+ffbb_visualiser_groupe:
+    path:     /visualiser-groupe/{idGroupe}
+    defaults: { _controller: FfbbBundle:Groupe:visualiserGroupe }
