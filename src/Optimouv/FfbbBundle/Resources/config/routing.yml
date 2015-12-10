@@ -122,7 +122,7 @@ ffbb_update_liste_lieux:
     defaults: { _controller: FfbbBundle:Listes:renommerListelieux }
 
 ffbb_entite:
-    path:    /entite/
+    path:    /entite/{idGroupe}
     defaults: { _controller: FfbbBundle:Entite:index }
 
 ffbb_creer_entite:
