@@ -45,8 +45,11 @@ function addEventHandlerImportListeParticipants(){
           var nouvelleStr = '<tr id=' + nouvelElementId +'> <td>' + nouvelElementId + ' </td>';
           nouvelleStr = nouvelleStr + '<td> '+ nouvelElementNom  + ' </td>';
           nouvelleStr = nouvelleStr + '<td> '+ nouvelElementDateCreation  + ' </td>';
-          nouvelleStr = nouvelleStr + '<td> '+ '<a href="renommer-liste-participants/'+ nouvelElementId +'" class="btn btn-info"> Renommer</a> | ';
-          nouvelleStr = nouvelleStr + '<button type="submit" class="btn btn-info" onclick="deleteListeParticipants('+ nouvelElementId +')"> Supprimer</button>' + ' </td> </tr> ';
+          nouvelleStr = nouvelleStr + '<td> ';
+          nouvelleStr = nouvelleStr + '   <a href="renommer-liste-participants/'+ nouvelElementId +'" class="btn btn-info"> Renommer</a> | ';
+          nouvelleStr = nouvelleStr + '   <button type="submit" class="btn btn-info" onclick="deleteListeParticipants('+ nouvelElementId +')"> Supprimer</button> |';
+          nouvelleStr = nouvelleStr + '   <a href="visualiser-liste-participants/'+ nouvelElementId +'" class="btn btn-info"> Visualiser</a> ';
+          nouvelleStr = nouvelleStr + '</td> </tr> ';
           console.log('nouvelleStr: ' + nouvelleStr);
 
           // ajouter un nouvel element dans
@@ -156,8 +159,11 @@ function addEventHandlerImportListeLieux(){
           var nouvelleStr = '<tr id=' + nouvelElementId +'> <td>' + nouvelElementId + ' </td>';
           nouvelleStr = nouvelleStr + '<td> '+ nouvelElementNom  + ' </td>';
           nouvelleStr = nouvelleStr + '<td> '+ nouvelElementDateCreation  + ' </td>';
-          nouvelleStr = nouvelleStr + '<td> '+ '<a href="renommer-liste-lieux/'+ nouvelElementId +'" class="btn btn-info"> Renommer</a> | ';
-          nouvelleStr = nouvelleStr + '<button type="submit" class="btn btn-info" onclick="deleteListeLieux('+ nouvelElementId +')"> Supprimer</button>' + ' </td> </tr> ';
+          nouvelleStr = nouvelleStr + '<td> ';
+          nouvelleStr = nouvelleStr + '   <a href="renommer-liste-lieux/'+ nouvelElementId +'" class="btn btn-info"> Renommer</a> | ';
+          nouvelleStr = nouvelleStr + '   <button type="submit" class="btn btn-info" onclick="deleteListeLieux('+ nouvelElementId +')"> Supprimer</button> |'
+          nouvelleStr = nouvelleStr + '   <a href="visualiser-liste-lieux/'+ nouvelElementId +'" class="btn btn-info"> Visualiser</a> ';
+          nouvelleStr = nouvelleStr + ' </td> </tr> ';
           console.log('nouvelleStr: ' + nouvelleStr);
 
           // ajouter un nouvel element dans
@@ -202,10 +208,6 @@ function addEventHandlerImportListeLieux(){
             // ajouter une escape pour chaque erreur
             $("#msg_upload_liste_lieux").append('<br>');
           }
-
-
-
-
 
 
         }
@@ -279,100 +281,6 @@ function addEventHandlerUseListeLieux(idListeLieux){
 
 }
 
-function addEventHandlerVisualisationParticipants(){
-  $("#input_liste_participants").change(function(){
-
-    var data = new FormData();
-    $.each($('#input_liste_participants')[0].files, function(i, file) {
-      data.append('file-'+i, file);
-    });
-
-    console.log("visualize this file: " + $(this).val());
-
-    $.ajax({
-      url: 'visualiser-liste-participants',
-      type: 'POST',
-      data: data,
-      contentType: false,
-      dataType : "json",
-      processData: false,
-      success: function(data, textStatus, jqXHR)
-      {
-        if(data.success)
-        {
-          // Success so call function to process the form
-          console.log('SUCCESS: ' + data.msg);
-
-          //var nouvelElementId = data.data[0].id;
-          //console.log('nouvelElementId: ' + nouvelElementId);
-          //
-          //var nouvelElementNom = data.data[0].nom;
-          //console.log('nouvelElementNom: ' + nouvelElementNom);
-          //
-          //// construire une date avec le bon format
-          //var nouvelElementDateCreation = nouvelElementNom.split("_");
-          //nouvelElementDateCreation = nouvelElementDateCreation[nouvelElementDateCreation.length -2];
-          //var nouvelElementJour = nouvelElementDateCreation.split("-")[2];
-          //var nouvelElementMois = nouvelElementDateCreation.split("-")[1];
-          //var nouvelElementAnnee = nouvelElementDateCreation.split("-")[0];
-          //
-          //nouvelElementDateCreation = nouvelElementJour + "/" + nouvelElementMois + "/" + nouvelElementAnnee;
-          //console.log('nouvelElementDateCreation: ' + nouvelElementDateCreation);
-          //
-          //// ajouter un nouvel element dans
-          //$("#listeParticipants").prepend(nouvelleStr);
-          //
-          //// supprimer les enfants de l'élement select liste_partcipants
-          ////$("#liste_partcipants").empty();
-          //// rafraiher la liste de participants
-          ////$.each(data.data, function(index, value){
-          ////  $("#liste_partcipants").append("<option value=" + value.id + ">" + value.nom + "</option>");
-          ////});
-          //
-          //// mettre à jour le statut d'upload
-          //$("#msg_upload_liste_participants").text(data.msg);
-          //
-          //// afficher le msg d'upload
-          //$("#collapse_statut_upload_participants").removeClass("collapse");
-
-        }
-        else
-        {
-          //// Handle errors here
-          //console.log('ERRORS: ' + data.msg);
-          //
-          //erreurMsg = data.msg;
-          //console.log('erreurMsg : ' + erreurMsg );
-          //
-          //// mettre à jour le statut d'upload
-          //var erreurMsgSplit = erreurMsg.split('!');
-          //
-          //// nettoyer ancien texte
-          //$("#msg_upload_liste_participants").empty();
-          //
-          //// mettre à jour le contenu du message d'erreur
-          //for (i = 0 ; i < erreurMsgSplit.length ; i ++ ){
-          //  var iterMsg = erreurMsgSplit[i] + '<br>';
-          //  $("#msg_upload_liste_participants").append(iterMsg);
-          //}
-          //
-          //// afficher le msg d'upload
-          //$("#collapse_statut_upload_participants").removeClass("collapse");
-        }
-      },
-      error: function(jqXHR, textStatus, errorThrown)
-      {
-        // Handle errors here
-        console.log('ERRORS: ' + textStatus);
-      }
-    });
-
-
-
-
-  });
-
-}
 
 function hideStatutChargement(){
   $("#statut_chargement_lieux").hide();
@@ -384,7 +292,6 @@ $(document).ready(function () {
 
   addEventHandlerImportListeParticipants();
   addEventHandlerImportListeLieux();
-  addEventHandlerVisualisationParticipants();
   hideStatutChargement();
   //addEventHandlerSelectListeParticipants();
   //addEventHandlerSelectListeLieux();

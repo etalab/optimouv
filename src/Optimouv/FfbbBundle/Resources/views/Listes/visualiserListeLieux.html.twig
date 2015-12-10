@@ -1,0 +1,97 @@
+{% extends '::BOLayout.html.twig' %}
+
+{% block pagewrapper %}
+
+    <div id="page-wrapper">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="page-header">Liste de lieux </h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Vos lieux
+                    </div>
+
+                    <div class="panel-body">
+                        <div class="dataTable_wrapper">
+                            <div class="span3">
+                                <table class="table table-striped table-hover table-bordered table-fixed" >
+                                    <thead>
+                                    <tr>
+                                        <th>Nom</th>
+                                        <th>Code Postal</th>
+                                        <th>Ville</th>
+                                        <th>Lieu de Rencontre Possible</th>
+                                        <th>Adresse</th>
+                                        <th>Longitude</th>
+                                        <th>Latitude</th>
+                                        <th>Système de Projection Géographique</th>
+                                        <th>Type d'équipement</th>
+                                        <th>Nombre d'équipement</th>
+                                        <th>Capacité de Rencontre Standard </th>
+                                        <th>Capacité de Phase Finale</th>
+                                    </tr>
+                                    </thead>
+
+
+                                    <tbody>
+                                    {% for detailsEntite in detailsEntites %}
+                                        <tr id="{{ detailsEntite.id }}">
+                                            <td> {{ detailsEntite.nom }}</td>
+                                            <td> {{ detailsEntite.codePostal }}</td>
+                                            <td> {{ detailsEntite.ville }}</td>
+                                            <td> {{ detailsEntite.lieuRencontrePossible }}</td>
+                                            <td> {{ detailsEntite.adresse }}</td>
+                                            <td> {{ detailsEntite.longitude }}</td>
+                                            <td> {{ detailsEntite.latitude }}</td>
+                                            <td> {{ detailsEntite.projection }}</td>
+                                            <td> {{ detailsEntite.typeEquipement }}</td>
+                                            <td> {{ detailsEntite.nombreEquipement }}</td>
+                                            <td> {{ detailsEntite.capaciteRencontre }}</td>
+                                            <td> {{ detailsEntite.capacitePhaseFinale }}</td>
+                                        </tr>
+                                    {% endfor %}
+
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                        <!-- /.table-responsive -->
+
+
+                        <div class="row">
+                            <div class="col-lg-12"> <a href="{{ path('ffbb_gerer_liste_participants') }}" class="pull-right btn btn-default ">Retour à la liste</a></div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+
+
+{% endblock %}
+{% block javascripts %}
+    <!-- code interne dual list box -->
+    <script>
+
+    </script>
+{% endblock %}
+
+
+
+
+
+
