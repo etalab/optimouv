@@ -748,30 +748,6 @@ class Listes{
         return $retour;
     }
 
-    public function visualiserFichierUpload(){
-        # obtenir la date courante du système
-        date_default_timezone_set('Europe/Paris');
-        $dateTimeNow = date('Y-m-d_G:i:s', time());
-
-        $donneesVisualisation = ["test", "test2"];
-
-        try {
-            # obtenir le chemin d'upload du fichier
-            $cheminFichierTemp = $_FILES["file-0"]["tmp_name"];
-
-
-
-            $retour = array(
-                "success" => true,
-                "data" => $donneesVisualisation,
-            );
-        } catch (Exception $e) {
-            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
-        }
-
-        return $retour;
-
-    }
 
 
     public function creerEntites()
