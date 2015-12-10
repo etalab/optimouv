@@ -27,7 +27,7 @@
                                      </thead>
                                      <tbody id="listeGroupes">
                                      {% for groupe in tousLesGroupes %}
-                                          <form action="{{ path('ffbb_entite') }}" method="post">
+
                                          <tr id="{{ groupe.id }}">
 
                                              <td> {{ groupe.id }}</td>
@@ -38,9 +38,8 @@
                                                  <a href="{{ path('ffbb_renommer_groupe',{'idGroupe': groupe.id}) }}" class="btn btn-info">Renommer</a> |
 
                                                  <button type="button" class="btn btn-info" onclick="deleteGroupe({{ groupe.id }})">Supprimer</button> |
-                                                 <input type="hidden" id="idGroupe" name="idGroupe" value="{{ groupe.id }}">
 
-                                                    <button type="submit" class="btn btn-info">Ajouter entité</button> |
+                                                    <a href="{{ path('ffbb_entite',{'idGroupe': groupe.id}) }}" class="btn btn-info">Ajouter entité</a> |
 
                                                  <a href="{{ path('ffbb_villes_groupe', {'idGroupe': groupe.id}) }}" class="btn btn-info">Lancer</a>
 
@@ -49,7 +48,6 @@
 
                                          </tr>
 
-                                          </form>
                                      {% endfor %}
 
                                      </tbody>
