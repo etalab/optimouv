@@ -130,5 +130,9 @@ ffbb_creer_entite:
     defaults: { _controller: FfbbBundle:Entite:creerEntite }
 
 ffbb_visualiser_liste_participants:
-    path:     /visualiser-liste-participants
+    path:     /visualiser-liste-participants/{idListeParticipants}
     defaults: { _controller: FfbbBundle:Listes:visualiserListeParticipants }
+
+ffbb_visualiser_liste_lieux:
+    path:     /visualiser-liste-lieux/{idListeLieux}
+    defaults: { _controller: FfbbBundle:Listes:visualiserListeLieux }
