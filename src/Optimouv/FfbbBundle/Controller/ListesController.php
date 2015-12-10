@@ -88,13 +88,32 @@ class ListesController extends Controller
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
+        # obtenir entity manager
+        $em = $this->getDoctrine()->getManager();
+
+        # obtenir les participants pour cette liste de participants
+        $participants = $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListeParticipants)->getEquipes();
+
+        //$participants de string a array
+        $participants = explode(",", $participants);
+
+        # obtenir tout info pour chaque participant
+        $detailsEntites = $em->getRepository('FfbbBundle:Entite')->getEntities($participants);
+
+        # obtenir le type de la liste (equipes ou personnes)
+        $typeListe = $detailsEntites[0]["typeEntite"];
 
 //        error_log("\n Controller: Listes, Function: visualiserListeParticipantsAction, datetime: ".$dateTimeNow
-//            ."\n retourVisualiser: ".print_r($retourVisualiser, true), 3, "/tmp/optimouv.log");
+//            ."\n detailsEntite : ".print_r($detailsEntites, true), 3, "/tmp/optimouv.log");
+//        error_log("\n Controller: Listes, Function: visualiserListeParticipantsAction, datetime: ".$dateTimeNow
+//            ."\n typeListe : ".print_r($typeListe, true), 3, "/tmp/optimouv.log");
+
 
         return $this->render('FfbbBundle:Listes:visualiserListeParticipants.html.twig', array(
-
             'idListeParticipants' => $idListeParticipants,
+            'detailsEntites' => $detailsEntites,
+            'typeListe' => $typeListe,
+
         ));
 
     }
@@ -106,10 +125,25 @@ class ListesController extends Controller
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
+        # obtenir entity manager
+        $em = $this->getDoctrine()->getManager();
+
+        # obtenir les participants pour cette liste de participants
+        $lieux = $em->getRepository('FfbbBundle:ListeLieux')->findOneById($idListeLieux)->getLieux();
+
+        //$lieux de string a array
+        $lieux = explode(",", $lieux);
+
+
+        # obtenir tout info pour chaque participant
+        $detailsEntites = $em->getRepository('FfbbBundle:Entite')->getEntities($lieux);
+
+
 
         return $this->render('FfbbBundle:Listes:visualiserListeLieux.html.twig', array(
 
             'idListeLieux' => $idListeLieux,
+            'detailsEntites' => $detailsEntites,
         ));
 
     }
