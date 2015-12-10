@@ -35,8 +35,8 @@ class ListesController extends Controller
         # controler toutes le fichier uploadé
         $statutUpload = $this->get('service_listes')->controlerEntites();
 
-        error_log("\n Controller: Listes, Function: creerListeParticipantsAction, datetime: ".$dateTimeNow
-            ."\n statutUpload: ".print_r($statutUpload, true), 3, "/tmp/optimouv.log");
+//        error_log("\n Controller: Listes, Function: creerListeParticipantsAction, datetime: ".$dateTimeNow
+//            ."\n statutUpload: ".print_r($statutUpload, true), 3, "/tmp/optimouv.log");
 
         if($statutUpload["success"]){
 
@@ -90,8 +90,8 @@ class ListesController extends Controller
         # obtenir des lignes pour previsualisation
         $retourVisualiser = $this->get('service_listes')->visualiserFichierUpload();
 
-        error_log("\n Controller: Listes, Function: visualiserListeParticipantsAction, datetime: ".$dateTimeNow
-            ."\n retourVisualiser: ".print_r($retourVisualiser, true), 3, "/tmp/optimouv.log");
+//        error_log("\n Controller: Listes, Function: visualiserListeParticipantsAction, datetime: ".$dateTimeNow
+//            ."\n retourVisualiser: ".print_r($retourVisualiser, true), 3, "/tmp/optimouv.log");
 
         return new JsonResponse(array(
             "success" => true,
@@ -111,8 +111,8 @@ class ListesController extends Controller
         # controler toutes le fichier uploadé
         $statutUpload = $this->get('service_listes')->controlerEntites();
 
-        error_log("\n Controller: Listes, Function: creerListeLieuxAction, datetime: ".$dateTimeNow
-            ."\n statutUpload: ".print_r($statutUpload, true), 3, "/tmp/optimouv.log");
+//        error_log("\n Controller: Listes, Function: creerListeLieuxAction, datetime: ".$dateTimeNow
+//            ."\n statutUpload: ".print_r($statutUpload, true), 3, "/tmp/optimouv.log");
 
         if($statutUpload["success"]){
             # créer des entités dans la table entite

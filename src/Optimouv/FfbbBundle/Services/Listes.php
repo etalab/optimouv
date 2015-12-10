@@ -37,8 +37,8 @@ class Listes{
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
         # afficher le statut de la requete executée
-        error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
-            ."\n _FILES: ".print_r($_FILES, true), 3, "/tmp/optimouv.log");
+//        error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+//            ."\n _FILES: ".print_r($_FILES, true), 3, "/tmp/optimouv.log");
 
 //        error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
 //            ."\n _SERVER: ".print_r($_SERVER, true), 3, "/tmp/optimouv.log");
@@ -99,8 +99,8 @@ class Listes{
                 // Controler les colonnes des en-têtes avec les formats fixés
                 // Fichier equipes, personnes, lieux
                 $resultatBooleanControlEntete = $this->controlerEntete($donneesEntete);
-                error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
-                    ."\n resultatBooleanControlEntete : ".print_r($resultatBooleanControlEntete , true), 3, "/tmp/optimouv.log");
+//                error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+//                    ."\n resultatBooleanControlEntete : ".print_r($resultatBooleanControlEntete , true), 3, "/tmp/optimouv.log");
                 if(!$resultatBooleanControlEntete["success"]){
                     $retour = array(
                         "success" => false,
@@ -173,8 +173,8 @@ class Listes{
 
                                 // obtenir la valeur pour chaque paramètre
                                 $typeEntite = $donnéesLigne[0];
-                                error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
-                                    ."\n typeEntite : ".print_r($typeEntite , true), 3, "/tmp/optimouv.log");
+//                                error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+//                                    ."\n typeEntite : ".print_r($typeEntite , true), 3, "/tmp/optimouv.log");
 
 
                                 // msg d'erreur générique
@@ -302,8 +302,8 @@ class Listes{
                                     # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
                                     $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
 
-                                    error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
-                                        ."\n statutControlCodePostalVille : ".print_r($statutControlCodePostalVille , true), 3, "/tmp/optimouv.log");
+//                                    error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+//                                        ."\n statutControlCodePostalVille : ".print_r($statutControlCodePostalVille , true), 3, "/tmp/optimouv.log");
 
                                     if(!$statutControlCodePostalVille["success"]){
                                         $retour = array(
@@ -430,8 +430,8 @@ class Listes{
                                     # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
                                     $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
 
-                                    error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
-                                        ."\n statutControlCodePostalVille : ".print_r($statutControlCodePostalVille , true), 3, "/tmp/optimouv.log");
+//                                    error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+//                                        ."\n statutControlCodePostalVille : ".print_r($statutControlCodePostalVille , true), 3, "/tmp/optimouv.log");
 
                                     if(!$statutControlCodePostalVille["success"]){
                                         $retour = array(
@@ -470,8 +470,8 @@ class Listes{
 
                                     $lieuRencontrePossible = $this->getBoolean($donnéesLigne[4]);
 
-                                    error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-                                        ."\n ville: ".print_r($ville, true), 3, "/tmp/optimouv.log");
+//                                    error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+//                                        ."\n ville: ".print_r($ville, true), 3, "/tmp/optimouv.log");
 
 
                                     # controler tous les champs obligatoires
@@ -550,8 +550,8 @@ class Listes{
                                     # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
                                     $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
 
-                                    error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
-                                        ."\n statutControlCodePostalVille : ".print_r($statutControlCodePostalVille , true), 3, "/tmp/optimouv.log");
+//                                    error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+//                                        ."\n statutControlCodePostalVille : ".print_r($statutControlCodePostalVille , true), 3, "/tmp/optimouv.log");
 
                                     if(!$statutControlCodePostalVille["success"]){
                                         $retour = array(
@@ -845,8 +845,8 @@ class Listes{
                                 $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
                                 $idVilleFrance = $statutControlCodePostalVille["idVille"];
 
-                                error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-                                    ."\n idVilleFrance : ".print_r($idVilleFrance , true), 3, "/tmp/optimouv.log");
+//                                error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+//                                    ."\n idVilleFrance : ".print_r($idVilleFrance , true), 3, "/tmp/optimouv.log");
 
 
                                 $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, adresse, code_postal, ville, longitude, latitude,"
@@ -894,8 +894,8 @@ class Listes{
                                 $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
                                 $idVilleFrance = $statutControlCodePostalVille["idVille"];
 
-                                error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-                                    ."\n idVilleFrance : ".print_r($idVilleFrance , true), 3, "/tmp/optimouv.log");
+//                                error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+//                                    ."\n idVilleFrance : ".print_r($idVilleFrance , true), 3, "/tmp/optimouv.log");
 
                                 $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, prenom, adresse, code_postal, ville, longitude, latitude,"
                                     ." projection, lieu_rencontre_possible, date_creation, date_modification,  id_ville_france)"
@@ -941,8 +941,8 @@ class Listes{
                                 $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
                                 $idVilleFrance = $statutControlCodePostalVille["idVille"];
 
-                                error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-                                    ."\n idVilleFrance : ".print_r($idVilleFrance , true), 3, "/tmp/optimouv.log");
+//                                error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+//                                    ."\n idVilleFrance : ".print_r($idVilleFrance , true), 3, "/tmp/optimouv.log");
 
 
 
@@ -980,8 +980,8 @@ class Listes{
                             $stmt->execute();
 
                             # afficher le statut de la requete executée
-                            error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-                                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/tmp/optimouv.log");
+//                            error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+//                                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/tmp/optimouv.log");
 
                             # obtenir l'id de l"entité créée
                             $idEntite = $bdd->lastInsertId();
@@ -1302,8 +1302,8 @@ class Listes{
 
 
 
-        error_log("\n Service: Listes, Function: controlerEntete, datetime: ".$dateTimeNow
-            ."\n entete: ".print_r($entete, true), 3, "/tmp/optimouv.log");
+//        error_log("\n Service: Listes, Function: controlerEntete, datetime: ".$dateTimeNow
+//            ."\n entete: ".print_r($entete, true), 3, "/tmp/optimouv.log");
 
 
         return $retour;
