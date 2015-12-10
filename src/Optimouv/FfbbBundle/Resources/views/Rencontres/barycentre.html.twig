@@ -372,47 +372,48 @@
             <!-- /.col-lg-12 -->
         </div>
     </div>
+    {% block javascript %}
+        <!-- /#page-wrapper -->
+        <script type="text/javascript" charset="UTF-8">
+            function typeLieu() {
+
+                var idGroupe = {{idGroupe}};
+                if (document.getElementById("meilleurLieuOption").checked == true) {
+                    window.location.href = "{{ path('ffbb_rencontres', {'idGroupe':idGroupe}) }}";
+                }
+                else {
+                    window.location.href = "{{ path('ffbb_barycentre', {'idGroupe':idGroupe}) }}";
+                }
+
+            }
+
+            function typeLieuxContrainte() {
+                var idGroupe = {{idGroupe}};
+                if (document.getElementById("Contrainte").checked == true) {
+                    window.location.href = "{{ path('ffbb_exclusion', {'idGroupe':idGroupe}) }}";
+                }
+
+            }
+
+            function xxxx() {
+                var idGroupe = {{idGroupe}};
+                if (document.getElementById("Contrainte").checked == true) {
+                    window.location.href = "{{ path('ffbb_exclusion', {'idGroupe':idGroupe}) }}";
+                }
+            }
+
+            function showBtn(){
+
+
+                document.getElementById('bntLancerCalcul').style.visibility="visible";
+            }
+
+
+        </script>
+    {% endblock %}
 
 {% endblock %}
-{% block javascript %}
-    <!-- /#page-wrapper -->
-    <script type="text/javascript" charset="UTF-8">
-        function typeLieu() {
 
-            var idGroupe = {{idGroupe}};
-            if (document.getElementById("meilleurLieuOption").checked == true) {
-                window.location.href = "{{ path('ffbb_rencontres', {'idGroupe':idGroupe}) }}";
-            }
-            else {
-                window.location.href = "{{ path('ffbb_barycentre', {'idGroupe':idGroupe}) }}";
-            }
-
-        }
-
-        function typeLieuxContrainte() {
-            var idGroupe = {{idGroupe}};
-            if (document.getElementById("Contrainte").checked == true) {
-                window.location.href = "{{ path('ffbb_exclusion', {'idGroupe':idGroupe}) }}";
-            }
-
-        }
-
-        function xxxx() {
-            var idGroupe = {{idGroupe}};
-            if (document.getElementById("Contrainte").checked == true) {
-                window.location.href = "{{ path('ffbb_exclusion', {'idGroupe':idGroupe}) }}";
-            }
-        }
-
-        function showBtn(){
-
-
-            document.getElementById('bntLancerCalcul').style.visibility="visible";
-        }
-
-
-    </script>
-{% endblock %}
 
 
 

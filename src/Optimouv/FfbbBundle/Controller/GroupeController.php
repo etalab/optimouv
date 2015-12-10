@@ -135,9 +135,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
     public function renommerAction($idGroupe)
     {
 
+        $em = $this->getDoctrine()->getManager();
+        $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
+
+
         return $this->render('FfbbBundle:Groupe:renommer.html.twig', array(
 
              'idGroupe' => $idGroupe,
+             'idListe' => $idListe,
         ));
 
     }
@@ -156,6 +161,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
         }
 
         $nomGroupe = $_POST["nomGroupe"];
+        $idListe = $_POST["idListe"];
 
         $entity->setNom($nomGroupe);
         $em->persist($entity);
@@ -165,7 +171,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
        // $idListeParticipants =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
 
 
-        return $this->redirect($this->generateUrl('ffbb_gerer_groupe'));
+        return $this->redirect($this->generateUrl('ffbb_gerer_groupe', array('idListe' => $idListe)));
 
 
        /* return $this->redirectToRoute('ffbb_select_liste_participants', [
