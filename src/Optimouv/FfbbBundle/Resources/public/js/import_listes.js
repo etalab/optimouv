@@ -45,8 +45,11 @@ function addEventHandlerImportListeParticipants(){
           var nouvelleStr = '<tr id=' + nouvelElementId +'> <td>' + nouvelElementId + ' </td>';
           nouvelleStr = nouvelleStr + '<td> '+ nouvelElementNom  + ' </td>';
           nouvelleStr = nouvelleStr + '<td> '+ nouvelElementDateCreation  + ' </td>';
-          nouvelleStr = nouvelleStr + '<td> '+ '<a href="renommer-liste-participants/'+ nouvelElementId +'" class="btn btn-info"> Renommer</a> | ';
-          nouvelleStr = nouvelleStr + '<button type="submit" class="btn btn-info" onclick="deleteListeParticipants('+ nouvelElementId +')"> Supprimer</button>' + ' </td> </tr> ';
+          nouvelleStr = nouvelleStr + '<td> ';
+          nouvelleStr = nouvelleStr + '   <a href="renommer-liste-participants/'+ nouvelElementId +'" class="btn btn-info"> Renommer</a> | ';
+          nouvelleStr = nouvelleStr + '   <button type="submit" class="btn btn-info" onclick="deleteListeParticipants('+ nouvelElementId +')"> Supprimer</button> |';
+          nouvelleStr = nouvelleStr + '   <a href="visualiser-liste-participants/'+ nouvelElementId +'" class="btn btn-info"> Visualiser</a> ';
+          nouvelleStr = nouvelleStr + '</td> </tr> ';
           console.log('nouvelleStr: ' + nouvelleStr);
 
           // ajouter un nouvel element dans
@@ -156,8 +159,11 @@ function addEventHandlerImportListeLieux(){
           var nouvelleStr = '<tr id=' + nouvelElementId +'> <td>' + nouvelElementId + ' </td>';
           nouvelleStr = nouvelleStr + '<td> '+ nouvelElementNom  + ' </td>';
           nouvelleStr = nouvelleStr + '<td> '+ nouvelElementDateCreation  + ' </td>';
-          nouvelleStr = nouvelleStr + '<td> '+ '<a href="renommer-liste-lieux/'+ nouvelElementId +'" class="btn btn-info"> Renommer</a> | ';
-          nouvelleStr = nouvelleStr + '<button type="submit" class="btn btn-info" onclick="deleteListeLieux('+ nouvelElementId +')"> Supprimer</button>' + ' </td> </tr> ';
+          nouvelleStr = nouvelleStr + '<td> ';
+          nouvelleStr = nouvelleStr + '   <a href="renommer-liste-lieux/'+ nouvelElementId +'" class="btn btn-info"> Renommer</a> | ';
+          nouvelleStr = nouvelleStr + '   <button type="submit" class="btn btn-info" onclick="deleteListeLieux('+ nouvelElementId +')"> Supprimer</button> |'
+          nouvelleStr = nouvelleStr + '   <a href="visualiser-liste-lieux/'+ nouvelElementId +'" class="btn btn-info"> Visualiser</a> ';
+          nouvelleStr = nouvelleStr + ' </td> </tr> ';
           console.log('nouvelleStr: ' + nouvelleStr);
 
           // ajouter un nouvel element dans
