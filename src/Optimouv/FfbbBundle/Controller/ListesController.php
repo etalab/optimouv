@@ -202,8 +202,7 @@ class ListesController extends Controller
 
         }
 
-
-
+        
     }
 
 
@@ -305,8 +304,6 @@ class ListesController extends Controller
         # supprimer les groupes associés
         $groupes = $em->getRepository('FfbbBundle:Groupe')->getGroupesParIdListeLIeux($idListeLieux);
 
-        error_log("\n Controller: Listes, Function: deleteAction, datetime: ".$dateTimeNow
-            ."\n groupes : ".print_r($groupes, true), 3, "/tmp/optimouv.log");
 
         $groupeIds = [];
         # construire une liste des ids de groupes
