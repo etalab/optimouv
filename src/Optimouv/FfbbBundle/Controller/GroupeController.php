@@ -273,6 +273,37 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
     }
 
+    public function visualiserGroupeAction($idGroupe)
+    {
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+        # obtenir entity manager
+        $em = $this->getDoctrine()->getManager();
+
+        # obtenir les participants pour cette liste de participants
+        $participants = $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getEquipes();
+
+        //$participants de string a array
+        $participants = explode(",", $participants);
+
+        # obtenir tout info pour chaque participant
+        $detailsEntites = $em->getRepository('FfbbBundle:Entite')->getEntities($participants);
+
+//        error_log("\n Controller: Listes, Function: visualiserListeParticipantsAction, datetime: ".$dateTimeNow
+//            ."\n detailsEntite : ".print_r($detailsEntites, true), 3, "/tmp/optimouv.log");
+//        error_log("\n Controller: Listes, Function: visualiserListeParticipantsAction, datetime: ".$dateTimeNow
+//            ."\n idGroupe : ".print_r($idGroupe, true), 3, "/tmp/optimouv.log");
+
+
+        return $this->render('FfbbBundle:Groupe:visualiserGroupe.html.twig', array(
+
+            'idGroupe' => $idGroupe,
+            'detailsEntites' => $detailsEntites,
+        ));
+    }
+
 
 
 }

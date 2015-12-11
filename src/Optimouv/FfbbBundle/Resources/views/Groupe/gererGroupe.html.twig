@@ -36,12 +36,10 @@
                                              <td> {{ groupe.dateCreation|date('d/m/Y') }}</td>
                                              <td>
                                                  <a href="{{ path('ffbb_renommer_groupe',{'idGroupe': groupe.id}) }}" class="btn btn-info">Renommer</a> |
-
                                                  <button type="button" class="btn btn-info" onclick="deleteGroupe({{ groupe.id }})">Supprimer</button> |
-
-                                                    <a href="{{ path('ffbb_entite',{'idGroupe': groupe.id}) }}" class="btn btn-info">Ajouter entité</a> |
-
-                                                 <a href="{{ path('ffbb_villes_groupe', {'idGroupe': groupe.id}) }}" class="btn btn-info">Lancer</a>
+                                                 <a href="{{ path('ffbb_entite',{'idGroupe': groupe.id}) }}" class="btn btn-info">Ajouter entité</a> |
+                                                 <a href="{{ path('ffbb_villes_groupe', {'idGroupe': groupe.id}) }}" class="btn btn-info">Lancer</a> |
+                                                 <a href="{{ path('ffbb_visualiser_groupe', {'idGroupe': groupe.id}) }}" class="btn btn-info">Visualiser</a>
 
 
                                              </td>
