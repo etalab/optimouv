@@ -530,6 +530,19 @@ order by Proximite limit 1;");
 
         $barycentreVille = $result;
 
+        if(!$barycentreVille){
+
+            $stmt1 = $bdd->prepare("SELECT ville_nom, ville_code_postal,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
+from villes_france_free
+order by Proximite limit 1;");
+
+            $stmt1->execute();
+            $barycentreVille = $stmt1->fetchColumn();
+
+        }
+
+
+
      //   $start = $coord;
 
 //        $retourRoutingMatrixUnStart = $this->routingMatrixUnStart($start, $villes);
