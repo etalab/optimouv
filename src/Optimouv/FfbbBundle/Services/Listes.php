@@ -1103,7 +1103,6 @@ class Listes{
         $nombreColonnesEntetes = [11,10,13];
         if(!in_array(count($entete), $nombreColonnesEntetes)){
             $retour["msg"] = "Veuillez vérifier le nombre des colonnes.!"
-                ."Une liste d'équipes contient 11 colonnes, une liste de personnes contient 10 colonnes et une liste de lieux contient 13 colonnes.!"
                 .$genericMsg;
             return $retour;
         }
