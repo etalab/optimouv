@@ -22,7 +22,7 @@
                          <label style="font-weight: bold" >Type d'entité *</label>
                          <select class="form-control" name="typeLieu" id="typeLieu" onchange="changementType();">
                              <option value="Equipe">Equipe</option>
-                             <option value="Lieu">Lieu</option>
+                             {# <option value="Lieu">Lieu</option>#}
                              <option value="Personne">Personne</option>
 
                          </select>
@@ -142,11 +142,13 @@
                    document.getElementById("nbrParticipants").style.display = "none";
 
 
-               } else if (type == "Lieu"){
+               }
+
+               /*else if (type == "Lieu"){
                    document.getElementById("divPrenom").style.display = "none";
                    document.getElementById("nbrParticipants").style.display = "none";
                    document.getElementById("nbrLicencies").style.display = "none";
-               }
+               }*/
                else {
                    document.getElementById("divPrenom").style.display = "none";
                }
