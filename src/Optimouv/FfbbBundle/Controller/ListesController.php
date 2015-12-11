@@ -104,8 +104,6 @@ class ListesController extends Controller
         $typeListe = $detailsEntites[0]["typeEntite"];
 
 //        error_log("\n Controller: Listes, Function: visualiserListeParticipantsAction, datetime: ".$dateTimeNow
-//            ."\n detailsEntite : ".print_r($detailsEntites, true), 3, "/tmp/optimouv.log");
-//        error_log("\n Controller: Listes, Function: visualiserListeParticipantsAction, datetime: ".$dateTimeNow
 //            ."\n typeListe : ".print_r($typeListe, true), 3, "/tmp/optimouv.log");
 
 
@@ -205,7 +203,6 @@ class ListesController extends Controller
         }
 
 
-
     }
 
 
@@ -220,7 +217,6 @@ class ListesController extends Controller
         $listesParticipants =  $em->getRepository('FfbbBundle:ListeParticipants')->findByIdUtilisateur($idUtilisateur, array('id'=>'DESC'));
 
         $listesLieux =  $em->getRepository('FfbbBundle:ListeLieux')->findByIdUtilisateur($idUtilisateur, array('id'=>'DESC'));
-
 
 
         return $this->render('FfbbBundle:Listes:gererListes.html.twig', [
@@ -246,17 +242,33 @@ class ListesController extends Controller
             throw $this->createNotFoundException('Entité groupe introuvable.');
         }
 
-
         # supprimer la liste de participants
         $em->remove($entity);
         $em->flush();
 
 
-        # supprimer les entités
+        # supprimer les entités associées
         $em->getRepository('FfbbBundle:Entite')->deleteEntities($equipes);
 
+        # obtenir tous les groupes
+        $groupes = $em->getRepository('FfbbBundle:Groupe')->getGroupesParIdListeParticipants($idListeParticipants);
 
-        //return $this->redirect($this->generateUrl('ffbb_select_liste_participants'));
+
+        $groupeIds = [];
+        # construire une liste des ids de groupes
+        for($i=0; $i<count($groupes); $i++){
+            array_push($groupeIds, $groupes[$i]["id"]);
+        }
+
+        if(count($groupeIds)>0){
+            # supprimer les groupes associés
+            $groupes = $em->getRepository('FfbbBundle:Groupe')->deleteGroupes($groupeIds);
+
+        }
+
+//        error_log("\n Controller: Listes, Function: deleteAction, datetime: ".$dateTimeNow
+//            ."\n groupeIds : ".print_r($groupeIds, true), 3, "/tmp/optimouv.log");
+
 
         return new JsonResponse(array(
             "success" => true,
@@ -267,6 +279,9 @@ class ListesController extends Controller
 
     public function deleteLieuxAction($idListeLieux)
     {
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
 
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('FfbbBundle:ListeLieux')->find($idListeLieux);
@@ -282,11 +297,28 @@ class ListesController extends Controller
         $em->remove($entity);
         $em->flush();
 
-        # supprimer les entités
+        # supprimer les entités associées
         $em->getRepository('FfbbBundle:Entite')->deleteEntities($lieux);
 
 
-        //return $this->redirect($this->generateUrl('ffbb_select_liste_participants'));
+        # supprimer les groupes associés
+        $groupes = $em->getRepository('FfbbBundle:Groupe')->getGroupesParIdListeLIeux($idListeLieux);
+
+
+        $groupeIds = [];
+        # construire une liste des ids de groupes
+        for($i=0; $i<count($groupes); $i++){
+            array_push($groupeIds, $groupes[$i]["id"]);
+        }
+
+        if(count($groupeIds)>0){
+            # supprimer les groupes associés
+            $groupes = $em->getRepository('FfbbBundle:Groupe')->deleteGroupes($groupeIds);
+
+        }
+
+
+
 
         return new JsonResponse(array(
             "success" => true,

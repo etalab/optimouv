@@ -39,5 +39,49 @@ class GroupeRepository extends \Doctrine\ORM\EntityRepository
         return $result;
     }
 
+    public function getGroupesParIdListeParticipants($idListeParticipants){
+        $query = $this->createQueryBuilder('g')
+            ->select('g.id')
+            ->where('g.idListeParticipant= :idListeParticipant')
+            ->setParameter('idListeParticipant', $idListeParticipants)
+            ->orderBy('g.id', 'DESC')
+            ->getQuery();
+
+
+        $result = $query->getResult();
+
+        return $result;
+    }
+
+
+    public function getGroupesParIdListeLIeux($idListeLieux){
+        $query = $this->createQueryBuilder('g')
+            ->select('g.id')
+            ->where('g.idListeLieux= :idListeLieux')
+            ->setParameter('idListeLieux', $idListeLieux)
+            ->orderBy('g.id', 'DESC')
+            ->getQuery();
+
+        $result = $query->getResult();
+
+        return $result;
+    }
+
+
+    public function deleteGroupes($ids)
+    {
+        $query = $this->createQueryBuilder('e')
+            ->delete()
+            ->where('e.id IN (:id)')
+            ->setParameter('id', array_values($ids))
+            ->getQuery();
+
+        $result = $query->getResult();
+
+
+        return $result;
+
+    }
+
 
 }
