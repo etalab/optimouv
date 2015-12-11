@@ -45,7 +45,6 @@ class Rencontres
             die('Erreur : ' . $e->getMessage());
         }
 
-//TODO:where idGroupe
         $reqVilles = $bdd->prepare("SELECT equipes FROM  groupe WHERE id = $idGroupe;");
         //$reqVilles->bindParam(':id', $idGroupe);
         $reqVilles->execute();
@@ -53,42 +52,52 @@ class Rencontres
         $reqVilles = explode(",", $reqVilles);
 
 
-
         $villes = [];
 
 
         for ($i = 0; $i < count($reqVilles); $i++) {
-            $stmt = $bdd->prepare("SELECT id FROM  villes WHERE id = :id;");
+            $stmt = $bdd->prepare("SELECT id, longitude, latitude, id_ville_france FROM  entite WHERE id = :id;");
             $stmt->bindParam(':id', $reqVilles[$i]);
             $stmt->execute();
-            $row = $stmt->fetchColumn();
-            if (empty($row)) {
-                $idVille = $reqVilles[$i];
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $idEntite = $row['id'];
+            $longitude = $row['longitude'];
+            $latitude = $row['latitude'];
+            $idVille = $row['id_ville_france'];
 
-                $this->geocoderUneVille($idVille);
+            if (empty($longitude) && empty($latitude)) {
+
+               $retour = $this->geocoderUneVille($idVille);
+
+                $longitude = $retour[1];
+                $latitude = $retour[0];
+
+                $date = new \DateTime();
+                $dateModification = $date->format('Y-m-d');
+
+                $update = $bdd->prepare("UPDATE entite SET longitude = :Longitude, latitude= :Latitude, date_modification = :dateModification WHERE id = :idEntite");
+
+                $update->bindParam(':idEntite', $idEntite);
+                $update->bindParam(':Longitude', $longitude);
+                $update->bindParam(':Latitude', $latitude);
+                $update->bindParam(':dateModification', $dateModification);
+                $update->execute();
+
+                $coordonnee = $latitude . "%2C" . $longitude;
+                array_push($villes, $coordonnee);
+
+            }
+            else{
+                $coordonnee = $latitude . "%2C" . $longitude;
+                array_push($villes, $coordonnee);
 
             }
 
-        }
-        $reqVilles = implode(",", $reqVilles);
 
-        //select in : une seule req pour recuperer long + latt
-
-        $stmt = $bdd->prepare("SELECT longitude, latitude FROM  villes WHERE  find_in_set (id, :reqVilles) ;");
-        $stmt->bindParam(':reqVilles', $reqVilles);
-
-        $stmt->execute();
-
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $latitude = $row['latitude'];
-            $longitude = $row['longitude'];
-
-            $coordonnee = $latitude . "%2C" . $longitude;
-            array_push($villes, $coordonnee);
 
         }
 
-         return $villes;
+          return $villes;
     }
 
     //Calcul du meilleur lieu de rencontre
@@ -136,8 +145,9 @@ class Rencontres
 
 
              $Coordonnes = explode("%2C", $start);
-            $lanX = $Coordonnes[0];
-            $lanY = $Coordonnes[1];
+            $lanY  = $Coordonnes[0];
+            $lanX = $Coordonnes[1];
+
 
             $resultat = $this->calculRoute($lanX, $lanY, $T2);
 
@@ -179,12 +189,10 @@ class Rencontres
         $lanX = $coordVille[0];
         $latY = $coordVille[1];
 
-        $stmt1 = $bdd->prepare("SELECT ville_nom,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
-                                    from villes_france_free
-                                    order by Proximite limit 1;");
+        $stmt1 = $bdd->prepare("SELECT ville from entite where longitude = $latY AND latitude = $lanX;");
         $stmt1->execute();
-        $result = $stmt1->fetch(PDO::FETCH_ASSOC);
-        $villeDepart = $result['ville_nom'];
+        $villeDepart = $stmt1->fetchColumn();
+
 
         $mesVillesXY = $coordonneesVilles[$key];
         //Récupérer les noms de villes de destination
@@ -222,6 +230,10 @@ class Rencontres
     public function Barycentre($idGroupe)
     {
 
+        $dbname = $this->database_name;
+        $dbuser = $this->database_user;
+        $dbpwd = $this->database_password;
+
         //on récupère le tableau des villes
         $villes = $this->index($idGroupe);
 
@@ -238,7 +250,51 @@ class Rencontres
 
         $lanX = $lan / $length;
         $latY = $lat / $length;
-        $coord = $lanX . '%2C' . $latY;
+
+
+
+
+        try {
+            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
+
+        } catch (PDOException $e) {
+            die('Erreur : ' . $e->getMessage());
+        }
+
+        $stmt1 = $bdd->prepare("SELECT ville_nom, ville_longitude_deg, ville_latitude_deg, ville_code_postal,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
+                                from villes_france_free
+                                order by Proximite limit 1;");
+        $stmt1->execute();
+        $result = $stmt1->fetch(PDO::FETCH_ASSOC);
+
+        $latY  = $result['ville_latitude_deg'];
+        $lanX = $result['ville_longitude_deg'];
+        $ville = $result['ville_nom'];
+        $codePostal = $result['ville_code_postal'];
+        $nom = 'Barycentre_Groupe_'.$idGroupe;
+        //recuperer la date du jour
+        $date = new \DateTime();
+        $dateCreation = $date->format('Y-m-d');
+
+        //vérifier si le barycentre existe deja
+        $barycentre = $bdd->prepare("SELECT id from entite where longitude = $lanX AND latitude = $latY");
+        $barycentre->execute();
+        $res = $barycentre->fetchColumn();
+
+        if(!$res){
+            $insert = $bdd->prepare("INSERT INTO  entite (nom, ville, code_postal, longitude, latitude, date_creation) VALUES ( :nom, :ville, :codePostal, :Longitude,:Latitude, :dateCreation );");
+            $insert -> bindParam(':nom', $nom);
+            $insert -> bindParam(':ville', $ville);
+            $insert -> bindParam(':codePostal', $codePostal);
+            $insert -> bindParam(':Longitude', $lanX);
+            $insert -> bindParam(':Latitude', $latY);
+            $insert -> bindParam(':dateCreation', $dateCreation);
+
+            $insert->execute();
+        }
+
+
+        $coord = $lanX . '%2C' . $latY; // pour appel la fn routing matrix
 
         $retour = $this->routingMatrix($coord, $villes);
 //        $retour = $this->calculRoute($lanX,$latY, $villes);
@@ -290,7 +346,32 @@ order by Proximite limit 1;");
 
             $lanX = $result['ville_latitude_deg'];
             $latY = $result['ville_longitude_deg'];
-            $coord = $lanX . '%2C' . $latY;
+            $coord = $latY. '%2C' .$lanX ;
+
+
+            //vérifier si le barycentre existe deja
+            $barycentre = $bdd->prepare("SELECT id from entite where longitude = $latY AND latitude = $lanX");
+            $barycentre->execute();
+            $res = $barycentre->fetchColumn();
+
+            $nom = 'Barycentre_Groupe_'.$idGroupe;
+            //recuperer la date du jour
+            $date = new \DateTime();
+            $dateCreation = $date->format('Y-m-d');
+
+            if(!$res){
+                $insert = $bdd->prepare("INSERT INTO  entite (nom, ville, code_postal, longitude, latitude, date_creation) VALUES ( :nom, :ville, :codePostal, :Longitude,:Latitude, :dateCreation );");
+                $insert -> bindParam(':nom', $nom);
+                $insert -> bindParam(':ville', $ville);
+                $insert -> bindParam(':codePostal', $codePostal);
+                $insert -> bindParam(':Longitude', $latY);
+                $insert -> bindParam(':Latitude', $lanX);
+                $insert -> bindParam(':dateCreation', $dateCreation);
+
+                $insert->execute();
+            }
+
+
             $retour = $this->routingMatrix($coord, $villes);
         }
         else{
@@ -344,8 +425,8 @@ order by Proximite limit 1;");
 
 
             $Coordonnes = explode("%2C", $start);
-            $lanX = $Coordonnes[0];
-            $lanY = $Coordonnes[1];
+            $lanY  = $Coordonnes[0];
+            $lanX = $Coordonnes[1];
 
             $resultat = $this->calculRoute($lanX, $lanY, $T2);
 
@@ -439,17 +520,15 @@ order by Proximite limit 1;");
             die('Erreur : ' . $e->getMessage());
         }
 
-        $stmt1 = $bdd->prepare("SELECT ville_nom, ville_longitude_deg, ville_latitude_deg,ville_code_postal, ville_population_2012,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
-from villes_france_free
-order by Proximite limit 1;");
+        //////////////////////
+        $stmt1 = $bdd->prepare("SELECT ville from entite where longitude=:longitude and latitude = :latitude ;");
+
+        $stmt1 -> bindParam(':longitude', $lanX);
+        $stmt1 -> bindParam(':latitude', $latY);
         $stmt1->execute();
-        $result = $stmt1->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt1->fetchColumn();
 
-        $lanX = $result['ville_latitude_deg'];
-        $latY = $result['ville_longitude_deg'];
-        $coord = $lanX . '%2C' . $latY;
-
-        $barycentreVille = $result['ville_nom'];
+        $barycentreVille = $result;
 
      //   $start = $coord;
 
@@ -469,9 +548,7 @@ order by Proximite limit 1;");
         //somme des durées
         $duree = array_sum($dureeTotale);
 
-        $coord = explode('%2C', $coord);
-        $lanX = $coord[0];
-        $latY = $coord[1];
+
 
         $retour = [];
 
@@ -512,8 +589,8 @@ order by Proximite limit 1;");
             $start = $terrainNeutre[$i];
 
             $start = explode('%2C', $start);
-            $lanX = $start[0];
-            $latY = $start[1];
+            $latY  = $start[0];
+            $lanX = $start[1];
 
 
             $calculRoute = $this->calculRoute($lanX, $latY, $equipe);
@@ -615,8 +692,8 @@ order by Proximite limit 1;");
 //            $dureeTotale = $retourRoutingMatrixUnStart[1];
 
             $start = explode('%2C', $start);
-            $lanX = $start[0];
-            $latY = $start[1];
+            $latY = $start[0];
+            $lanX = $start[1];
 
 
             $calculRoute = $this->calculRoute($lanX, $latY, $equipe);
@@ -788,8 +865,8 @@ order by Proximite limit 1;");
         $villes = [];
 
         for ($i = 0; $i < count($reqVilles); $i++) {
-            $stmt = $bdd->prepare("SELECT ville_nom FROM  villes_france_free WHERE ville_id = :ville_id ;");
-            $stmt -> bindParam(':ville_id', $reqVilles[$i]);
+            $stmt = $bdd->prepare("SELECT ville FROM  entite WHERE id = :idEntite ;");
+            $stmt -> bindParam(':idEntite', $reqVilles[$i]);
             $stmt->execute();
             $nomVille = $stmt->fetchColumn();
             array_push($villes, $nomVille);
@@ -914,12 +991,10 @@ order by Proximite limit 1;");
 
             $maVille = $coor_array['Response']['View'][0]['Result'][0]['Location']['Address']['City'];
 */
-            $stmt1 = $bdd->prepare("SELECT ville_nom,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
-                                    from villes_france_free
-                                    order by Proximite limit 1;");
+            $stmt1 = $bdd->prepare("SELECT ville from entite where longitude = $latY AND latitude = $lanX;");
             $stmt1->execute();
-            $result = $stmt1->fetch(PDO::FETCH_ASSOC);
-            $maVille = $result['ville_nom'];
+            $maVille = $stmt1->fetchColumn();
+
 
             //Ramener tous les noms des villes
             array_push($mesVilles, $maVille);
@@ -929,11 +1004,6 @@ order by Proximite limit 1;");
 
     public function creerGroupe($villes, $nomGroupe, $idListeParticipants, $idListeLieux)
     {
-
-
-
-        error_log("creerGroupe [$nomGroupe]\n", 3, "optimouv.log");
-
 
         $dbname = $this->database_name;
         $dbuser = $this->database_user;
@@ -946,107 +1016,20 @@ order by Proximite limit 1;");
             die('Erreur : ' . $e->getMessage());
         }
 
-       /* $foreignKeyCheck = $bdd->prepare("SET FOREIGN_KEY_CHECKS = 0;");
-        $foreignKeyCheck->execute();
-
-        $truncate = $bdd->prepare("truncate table groupe");
-        $truncate->execute();
-*/
-
         $nbrVilles = count($villes);
-        $idVilles = [];
-
-        for ($i = 0; $i < $nbrVilles; $i++) {
-            $req = addslashes($villes[$i]);
-            $codePostal = substr($req, 0, 5);
-            $nomVille = substr($req, 6);
-
-            $char = array("-", "_", "'");
-            $nomVille = str_replace($char, " ", $nomVille);
-            error_log("ville [$nomVille]\n", 3, "optimouv.log");
+        $villes = implode(",", $villes);
 
 
-            //chercher l'id de la ville selon la table de reference
-            $query = "SELECT 1 as 'prio', ville_id FROM villes_france_free where ville_nom_simple = '$nomVille' AND  ville_code_postal = '$codePostal'
-                      UNION
-                      SELECT 3 as 'prio', ville_id FROM villes_france_free where ville_nom_simple = '$nomVille'
-                      UNION
-                      SELECT 2 as 'prio', ville_id FROM villes_france_free where ville_nom_simple LIKE '%$nomVille%' AND  ville_code_postal LIKE '%$codePostal%'";
-            $reqID = $bdd->prepare($query);
-            error_log($query."\n", 3, "optimouv.log");//XXXX
-
-            $reqID->execute();
-            $result = $reqID->fetchAll(PDO::FETCH_ASSOC);
-            $count = count($result);
-
-            $ok = true;
-            $ideal = false;
-
-            // test si pas de ville
-            if ($count == 0) {
-                $ok = false;
-            } else {
-                foreach ($result as $line) {
-                    if ($line['prio'] == 1) {
-                        $ideal = $line['ville_id'];
-                        break;
-                    }
-                }
-
-                // si on n'a pas trouve prio 1 alors on cherche prio 2
-                if ($ideal === false) {
-                    foreach ($result as $line) {
-                        if ($line['prio'] == 2) {
-                            $ideal = $line['ville_id'];
-                            break;
-                        }
-                    }
-                }
-            }
-
-/*
-            if ($codePostal == '13500') {
-                echo "<pre>result = ";
-                print_r($result);
-                var_dump($ideal);
-                echo "</pre>";
-                exit;
-            }
-*/
-
-            // test si pas de ville idéale et plus de 1 ville approximative
-            if ($count >= 2 && $ideal === false) {
-                $ok = false;
-            }
-
-            // en cas d'erreur
-            if (!$ok) {
-                $line_num = $i + 2;
-
-                $msg = "Il y a une erreur avec cette ville [$nomVille] et le code postal [$codePostal] et N de la ligne $line_num : $count resultats\n";
-                error_log($msg, 3, "optimouv.log");
-                die($msg);
-            }
-
-            if ($ideal !== false)
-                $idVille = $ideal;
-            else
-                $idVille = $result[0]['ville_id'];
-
-             array_push($idVilles, $idVille);
-
-
-        }
-        $idVilles = implode(",", $idVilles);
         $dateCreation = date("Y-m-d");
         //TODO: idUtilisateur sera dynamique selon la personne connectée
         $idUtilisateur = 1;
 
 
-        $reqGroupe = $bdd->prepare("INSERT INTO  groupe (id_utilisateur, nom, equipes, date_creation,nb_participants, id_liste_participant, id_liste_lieux) VALUES ( :idUtilisateur, :nomGroupe, :idVilles, :dateCreation, :nbParticipants, :idListeParticipants, :idListeLieux);");
+        $reqGroupe = $bdd->prepare("INSERT INTO  groupe (id_utilisateur, nom, equipes, date_creation,nb_participants, id_liste_participant, id_liste_lieux)
+                            VALUES ( :idUtilisateur, :nomGroupe, :equipes, :dateCreation, :nbParticipants, :idListeParticipants, :idListeLieux);");
         $reqGroupe->bindParam(':idUtilisateur', $idUtilisateur);
         $reqGroupe->bindParam(':nomGroupe', $nomGroupe);
-        $reqGroupe->bindParam(':idVilles', $idVilles);
+        $reqGroupe->bindParam(':equipes', $villes);
         $reqGroupe->bindParam(':dateCreation', $dateCreation);
         $reqGroupe->bindParam(':nbParticipants', $nbrVilles);
         $reqGroupe->bindParam(':idListeParticipants', $idListeParticipants);
@@ -1118,6 +1101,7 @@ order by Proximite limit 1;");
         $Longitude = $row['ville_longitude_deg'];
 
 
+        /*
         $date = new \DateTime();
         $dateCreation = $date->format('Y-m-d');
 
@@ -1135,10 +1119,19 @@ order by Proximite limit 1;");
             return false;
         }
 
+        */
+
+        $retour = [];
+        $retour[0]=$Latitude;
+        $retour[1]=$Longitude;
+
+        return $retour;
+
     }
 
     public function calculRoute($lanX, $latY, $villes)
     {
+
 
 
         $app_id = $this->app_id;
@@ -1155,19 +1148,15 @@ order by Proximite limit 1;");
             die('Erreur : ' . $e->getMessage());
         }
 
-        $stmt1 = $bdd->prepare("SELECT ville_id, ville_nom, ville_longitude_deg, ville_latitude_deg,ville_code_postal, ville_population_2012,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
-from villes_france_free
-order by Proximite limit 1;");
+        $stmt1 = $bdd->prepare("SELECT id from entite where longitude= :longitude and latitude = :latitude ;");
+        $stmt1 -> bindParam(':longitude', $lanX);
+        $stmt1 -> bindParam(':latitude', $latY);
         $stmt1->execute();
         $result = $stmt1->fetch(PDO::FETCH_ASSOC);
 
-        //Recuperation des infos concernant point de depart
-        $idStart = $result['ville_id'];
-        $lanX = $result['ville_latitude_deg'];
-        $latY = $result['ville_longitude_deg'];
-        $coordStart = $lanX . '%2C' . $latY;
-        //$barycentreVille = $result['ville_nom'];
+        $idStart = $result['id'];
 
+        $coordStart =  $latY. '%2C' .$lanX ;
 
         $distanceTotale = [];
         $dureeTotale = [];
@@ -1180,14 +1169,15 @@ order by Proximite limit 1;");
 
             $coordVille = explode('%2C', $maVille);
 
+
             try {
 
-                $X = $coordVille[0];
-                $Y = $coordVille[1];
+                $Y = $coordVille[0];
+                $X = $coordVille[1];
 
                 //recuperer l id de la ville
 
-                $reqID = $bdd->prepare("SELECT id FROM villes where latitude = :X AND longitude = :Y;");
+                $reqID = $bdd->prepare("SELECT id FROM entite where longitude = :X AND  latitude= :Y;");
                 $reqID->bindParam(':X', $X);
                 $reqID->bindParam(':Y', $Y);
                 $reqID->execute();

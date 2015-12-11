@@ -12,6 +12,7 @@
 
                              <div class="panel-heading">
                                  <h4> La liste que vous avez selectionnée ne contient pas de groupe. Veuillez sélectionner une nouvelle liste.</h4>
+                                 <a href="{{ path('ffbb_choisir_liste_participants') }}" class="btn btn-default">Retour à la liste</a>
                              </div>
                          {% else %}
 
@@ -53,8 +54,10 @@
                                          </table>
                                  <form action="{{ path('ffbb_gerer_groupe', {'idListe': idListe}) }}" method="post">
 
-                                     <button type="submit" class="btn btn-default">Gérer des groupes</button>
+                                     <button type="submit" class="btn btn-default">Gérer mes groupes</button>
+
                                  </form>
+                                 <a href="{{ path('ffbb_choisir_liste_participants') }}" class="btn btn-info">Retour</a>
                              </div>
                              <!-- /.table-responsive -->
 

@@ -210,8 +210,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
         $idListeParticipants = $_POST['listeParticipants'];
 
-
-
         $em = $this->getDoctrine()->getManager();
 
         $participants = $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListeParticipants)->getEquipes();
@@ -222,7 +220,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
         $participants = explode(",", $participants);
 
         $detailsEntite = $em->getRepository('FfbbBundle:Entite')->getEntities($participants);
-
 
 
         if(!empty( $_POST['listeLieux'])){
