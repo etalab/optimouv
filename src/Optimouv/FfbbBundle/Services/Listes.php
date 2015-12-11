@@ -986,7 +986,7 @@ class Listes{
 
 
     # controller le code postal et le nom de ville
-    private function verifierExistenceCodePostalNomVille($codePostal, $nomVille){
+    public function verifierExistenceCodePostalNomVille($codePostal, $nomVille){
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 

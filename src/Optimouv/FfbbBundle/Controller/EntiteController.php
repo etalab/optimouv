@@ -58,7 +58,11 @@ class EntiteController extends Controller
 
         $dateCreation = new \DateTime('11/22/2015'); //this returns the current date time
 
+        //récupérer ville_id de la table villefrance
 
+        $villeId = $this->get('service_listes')->verifierExistenceCodePostalNomVille($codePostal, $ville);
+
+        $villeId = $villeId['idVille'];
 
 
         $em = $this->getDoctrine()->getManager();
@@ -88,7 +92,8 @@ class EntiteController extends Controller
                 ->setParticipants($nbrParticipants)
                 ->setLicencies($nbrLicencies)
                 ->setLieuRencontrePossible($lieuRencontrePossible)
-                ->setDateCreation($dateCreation);
+                ->setDateCreation($dateCreation)
+                ->setIdVilleFrance($villeId);
         $em->persist($entity);
         $em->flush();
         $idEntite = $entity->getId();
@@ -111,7 +116,7 @@ class EntiteController extends Controller
         $ajoutListe = $em->getRepository('FfbbBundle:ListeParticipants')->ajoutEntiteListe($idListeParticipant, $ajoutEntiteListe);
 
         if($ajout && $ajoutListe){
-            return $this->redirect($this->generateUrl('ffbb_gerer_groupe'));
+            return $this->redirect($this->generateUrl('ffbb_gerer_groupe', array('idListe' => $idListeParticipant)));
 
 
         }
