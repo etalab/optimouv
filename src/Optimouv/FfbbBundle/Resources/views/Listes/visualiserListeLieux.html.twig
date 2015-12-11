@@ -20,7 +20,7 @@
                     <div class="panel-body">
                         <div class="dataTable_wrapper">
                             <div class="span3">
-                                <table class="table table-striped table-hover table-bordered table-fixed" >
+                                <table class="table table-striped table-hover table-bordered table-fixed" id="tableEntitesListeLieux" >
                                     <thead>
                                     <tr>
                                         <th>Nom</th>
@@ -99,8 +99,16 @@
 
 {% endblock %}
 {% block javascripts %}
+    {{ parent() }}
     <!-- code interne dual list box -->
     <script>
+
+        $(document).ready(function() {
+            $('#tableEntitesListeLieux').DataTable({
+                responsive: true
+            });
+        });
+
 
     </script>
 {% endblock %}
