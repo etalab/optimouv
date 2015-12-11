@@ -20,7 +20,7 @@
                                               border-right: 1px solid #eee;
                                               border-bottom: 1px solid #eee;
                                               border-radius: 5px; text-indent:10px;
-                                              margin-bottom: 10px !important;" required>
+                                              margin-bottom: 10px !important;" required x-moz-errormessage="Veuillez donner un nom à votre groupe" >
                       <input type="hidden" name="idListeParticipants" value="{{ idListeParticipants }}">
                      {% if idListeLieux is defined %}
                          <input type="hidden" name="idListeLieux" value="{{ idListeLieux }}">
@@ -50,12 +50,6 @@
              <!-- code interne dual list box -->
              <script type="text/javascript" charset="UTF-8">
                  var demo1 = $('select[name="duallistbox_demo1[]"]').bootstrapDualListbox();
-                 var nomGroupe = document.getElementById("nomGroupe");
-                // nomGroupe.setCustomValidity("Veuillez donner un nom à votre groupe");
-
-
-
-
 
              </script>
          {% endblock %}

@@ -36,7 +36,7 @@
                                                                     <tbody >
                                                                     {% for participant in listeParticipants %}
                                                                         <tr>
-                                                                            <td><input type="radio" name="listeParticipants" id="participant~{{ participant.id }}" value="{{ participant.id }}" >
+                                                                            <td><input type="radio" name="listeParticipants" id="participant~{{ participant.id }}" value="{{ participant.id }}" required>
                                                                                 {{ participant.nom }}
                                                                             </td>
 
@@ -126,12 +126,16 @@
         function getCheckedRadioValue() {
             //   var elements = document.getElementsByName(listeParticipants);
             var elements = document.forms.liste.listeParticipants;
+            var elementsLieux = document.forms.liste.listeLieux;
             if (elements.length == undefined){
                 var idListe  = elements.value;
                 idListe = parseInt(idListe);
                 var url = "choisir-groupe";
                 var chemin = url + "/" + idListe;
                 window.location.href = chemin;
+                elements.checked = false;
+                elementsLieux.checked = false;
+
             } else {
                 len = elements.length;
                 for (var i=0; i<len; ++i){
@@ -142,6 +146,8 @@
                         var url = "choisir-groupe";
                         var chemin = url + "/" + idListe;
                         window.location.href = chemin;
+                        elements.checked = false;
+                        elementsLieux.checked = false;
                         //alert(chemin);
                     }
                 }
