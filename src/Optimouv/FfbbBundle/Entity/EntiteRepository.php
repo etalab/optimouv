@@ -41,5 +41,22 @@ class EntiteRepository extends \Doctrine\ORM\EntityRepository
 
     }
 
+    public function deleteEntities($ids)
+    {
+        $query = $this->createQueryBuilder('e')
+            ->delete()
+            ->where('e.id IN (:id)')
+            ->setParameter('id', array_values($ids))
+            ->getQuery();
+
+        $result = $query->getResult();
+
+
+        return $result;
+
+    }
+
+
+
 
 }

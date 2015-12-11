@@ -159,8 +159,6 @@ class ListesController extends Controller
         # controler toutes le fichier uploadé
         $statutUpload = $this->get('service_listes')->controlerEntites();
 
-//        error_log("\n Controller: Listes, Function: creerListeLieuxAction, datetime: ".$dateTimeNow
-//            ."\n statutUpload: ".print_r($statutUpload, true), 3, "/tmp/optimouv.log");
 
         if($statutUpload["success"]){
             # créer des entités dans la table entite
@@ -233,17 +231,30 @@ class ListesController extends Controller
 
     public function deleteAction($idListeParticipants)
     {
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
 
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('FfbbBundle:ListeParticipants')->find($idListeParticipants);
+        $equipes = $em->getRepository('FfbbBundle:ListeParticipants')->find($idListeParticipants)->getEquipes();
+
+        # convertir equipes en tableau
+        $equipes = explode(',', $equipes);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entité groupe introuvable.');
         }
 
 
+        # supprimer la liste de participants
         $em->remove($entity);
         $em->flush();
+
+
+        # supprimer les entités
+        $em->getRepository('FfbbBundle:Entite')->deleteEntities($equipes);
+
 
         //return $this->redirect($this->generateUrl('ffbb_select_liste_participants'));
 
@@ -259,14 +270,21 @@ class ListesController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('FfbbBundle:ListeLieux')->find($idListeLieux);
+        $lieux = $em->getRepository('FfbbBundle:ListeLieux')->find($idListeLieux)->getLieux();
 
         if (!$entity) {
             throw $this->createNotFoundException('Entité groupe introuvable.');
         }
 
+        # convertir equipes en tableau
+        $lieux = explode(',', $lieux);
 
         $em->remove($entity);
         $em->flush();
+
+        # supprimer les entités
+        $em->getRepository('FfbbBundle:Entite')->deleteEntities($lieux);
+
 
         //return $this->redirect($this->generateUrl('ffbb_select_liste_participants'));
 
