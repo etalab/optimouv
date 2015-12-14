@@ -66,7 +66,14 @@
 
                                             <td> {{ detailsEntite.projection }}</td>
                                             <td> {{ detailsEntite.typeEquipement }}</td>
-                                            <td> {{ detailsEntite.nombreEquipement }}</td>
+
+                                            {% if detailsEntite.nombreEquipement %}
+                                                <td> {{ detailsEntite.nombreEquipement }} </td>
+                                            {% else %}
+                                                <td> </td>
+                                            {% endif %}
+
+
                                             <td> {{ detailsEntite.capaciteRencontre }}</td>
                                             <td> {{ detailsEntite.capacitePhaseFinale }}</td>
                                         </tr>
