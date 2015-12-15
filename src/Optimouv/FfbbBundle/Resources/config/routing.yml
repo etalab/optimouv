@@ -140,3 +140,11 @@ ffbb_visualiser_liste_lieux:
 ffbb_visualiser_groupe:
     path:     /visualiser-groupe/{idGroupe}
     defaults: { _controller: FfbbBundle:Groupe:visualiserGroupe }
+
+ffbb_accueil:
+    path:     /accueil
+    defaults: { _controller: FfbbBundle:Accueil:index }
+
+ffbb_accueil_connect:
+    path:     /accueil-connect
+    defaults: { _controller: FfbbBundle:Accueil:connect }
