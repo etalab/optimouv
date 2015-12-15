@@ -67,7 +67,9 @@
             <!-- /.container-fluid -->
             <div class="navbar-header">
 
-                <a class="navbar-brand" href="{{ path('ffbb_choisir_liste_participants') }}">OPTIMOUV</a>
+                <a class="navbar-brand" href="{{ path('ffbb_accueil_connect') }}">
+                    <img src="{{ asset('bundles/ffbb/accueil/img/Logo-Optimouv.jpg') }}"  width="60%" />
+                </a>
 
             </div>
             <div style="position: relative; float: right;">
@@ -89,16 +91,16 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="{{ path('ffbb_choisir_liste_participants') }}">Accueil</a>
+                    <a class="navbar-brand" href="{{ path('ffbb_accueil_connect') }}">Accueil</a>
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
-                        <li><a href="{{ path('ffbb_choisir_liste_participants') }}">Optimisation des poules</a></li>
+                        <li><a href="{{ path('ffbb_accueil_connect') }}">Optimisation des poules</a></li>
                         <li style="background-color:#A4BD10;"><a href="{{ path('ffbb_choisir_liste_participants') }}">Meilleur lieu de
                                 rencontre</a></li>
-                        <li><a href="{{ path('ffbb_choisir_liste_participants') }}">Rapports</a></li>
+                        <li><a href="{{ path('ffbb_accueil_connect') }}">Rapports</a></li>
 
                     </ul>
 
