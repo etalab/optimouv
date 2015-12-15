@@ -1,0 +1,96 @@
+{% extends '::accueilLayout.html.twig' %}
+
+{% block content %}
+    <div class="content-section-b">
+
+        <div class="container">
+            <div class="row" style="min-height: 300px">
+                <h2 class="section-heading" style="text-align: center">Comment ça marche ?</h2>
+
+                <div class="col-lg-3">
+                    <div style="text-align: center;">
+                        <img src="{{ asset('bundles/ffbb/accueil/img/users5.png') }}" alt="utilisateurs optimouv" width="30%" height="30%"/>
+                    </div>
+                    <div style="background-image: url({{ asset('bundles/ffbb/accueil/img/arrow-right.png') }})">
+                        <h5>1. Je choisis mes équipes et mes lieux </h5>
+                    </div>
+
+                </div>
+                <div class="col-lg-3">
+                    <div style="text-align: center;">
+                        <img src="{{ asset('bundles/ffbb/accueil/img/book195.png') }}" alt="organisation competitions" width="30%" height="30%"/>
+                    </div>
+                    <div>
+                        <h5>2. J'obtiens des scénarios d'organisation de mes compétitions</h5>
+                    </div>
+
+                </div>
+                <div class="col-lg-3">
+                    <div style="text-align: center;">
+                        <img src="{{ asset('bundles/ffbb/accueil/img/map32.png') }}" alt="meilleur lieu de rencontre" width="30%" height="30%"/>
+                    </div>
+                    <div>
+                        <h5>3. J'obtiens les meilleurs lieux de rencontres</h5>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div style="text-align: center;">
+                        <img src="{{ asset('bundles/ffbb/accueil/img/road39.png') }}" alt="organisation competitions" width="30%" height="30%"/>
+                    </div>
+                    <div>
+                        <h5>4. Je réduis le nombre de kilomètres parcourus</h5>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- /.content-section-a -->
+
+    <div class="content-section-a">
+
+        <div class="container">
+
+            <div class="row">
+                <div class="col-lg-9 ">
+                    <p style="text-align: justify; text-indent: 5px">
+                        OptiMouv est une solution innovante pour réduire les gaz à effets de serre générés à l’occasion
+                        des
+                        déplacements du mouvement sportif.</p>
+                    <p style="text-align: justify; text-indent: 5px">
+                        Elle combine géolocalisation d’équipes, de personnes et de lieux, organisation des poules et
+                        calcul
+                        d’itinéraires pour optimiser le nombre de kilomètre parcouru 
+                        lors des pratiques sportives ou dans le cadre du fonctionnement du mouvement sportif.</p>
+                    <p style="text-align: justify; text-indent: 5px">
+                        OptiMouv permet de réduire d'au moins 15% les déplacements des rencontres sportives sans en
+                        réduire
+                        le nombre. 
+
+                    </p>
+                    <div>
+                        <button type="button" class="btn btn-default"><h5>En savoir plus</h5></button>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div>
+                        <button type="button" class="btn btn-danger"><h2>Se connecter</h2></button>
+                    </div>
+                    <br>
+                    <div>
+                        <button type="button" class="btn btn-success"><h2>Créer un compte</h2></button>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- /.content-section-b -->
+{% endblock %}
