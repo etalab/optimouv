@@ -1,12 +1,12 @@
 {% extends '::accueilLayout.html.twig' %}
 
 {% block content %}
-    <div class="content-section-b">
+    <div class="content-section-b" style="background-color: #FFFFFF">
 
-        <div class="container">
+
             <div class="row" style="min-height: 300px">
 
-                <div class="col-lg-3" style="background-color: #01a2bb; border-radius: 5px; ">
+                 <div   style="position:relative; float:left; background-color: #01a2bb; border-radius: 5px; width: 30%">
 
                     <div style="text-align: center; padding-top:10px">
                         <img src="{{ asset('bundles/ffbb/accueil/img/trophy36.png') }}" alt="utilisateurs optimouv"
@@ -18,8 +18,8 @@
 
 
                 </div>
-                <div class="col-lg-1"></div>
-                <div class="col-lg-3" style="background-color: #babe11; border-radius: 5px;">
+
+                 <div  style="position:relative; float:left;background-color: #babe11; border-radius: 5px; width: 30%; margin-left: 5%">
                     <a href="{{ path('ffbb_choisir_liste_participants') }}" style="text-decoration: none;">
                         <div style="text-align: center; padding-top:10px">
                             <img src="{{ asset('bundles/ffbb/accueil/img/pin66.png') }}"
@@ -30,8 +30,10 @@
                         </div>
                     </a>
                 </div>
-                <div class="col-lg-1"></div>
-                <div class="col-lg-3" style="background-color: #f07800; border-radius: 5px;">
+
+
+
+                <div style="position:relative; float:right;background-color: #f07800; border-radius: 5px; width: 30%">
                     <div style="text-align: center; padding-top:10px">
                         <img src="{{ asset('bundles/ffbb/accueil/img/chart42.png') }}" alt="Rapports" width="20%"
                              height="20%"/>
@@ -40,11 +42,9 @@
                         <h3>Rapports </h3>
                     </div>
                 </div>
-                <div class="col-lg-1"></div>
 
             </div>
 
-        </div>
         <!-- /.container -->
 
     </div>
