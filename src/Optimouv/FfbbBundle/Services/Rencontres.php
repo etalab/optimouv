@@ -1317,6 +1317,7 @@ order by Proximite limit 1;");
 
 
             for ($i = 0; $i < count($listeLieux); $i++) {
+                //
                 $stmt = $bdd->prepare("SELECT id, ville, code_postal, longitude, latitude FROM  entite WHERE id = $listeLieux[$i];");
 
                 //$stmt->bindParam(':id', $listeLieux[$i]);
@@ -1329,33 +1330,20 @@ order by Proximite limit 1;");
                     $ville = $row['ville'];
                     $codePostal = $row['code_postal'];
 
+                     // récupérer lat et lon s'il y en a
                      if($long && $lat){
                          $coordVille =  $lat. '%2C' .$long ;
                          array_push($nomsVilles, $ville);
                          array_push($coordVilles, $coordVille);
                      }
+                     // sinon il faut interroger le serveur HERE
                      else{
 
                          $v = urlencode($ville);
                          $reqGeocode = 'http://geocoder.api.here.com/6.2/geocode.json?country=France&city=' . $v . '&postalCode=' . $codePostal . '&app_id=' . $app_id . '&app_code=' . $app_code . '&gen=8';
 
-                         $curl = curl_init($reqGeocode);
-                         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                         curl_setopt($curl, CURLOPT_FAILONERROR, true);
+                         $reqGeocodeArray = getReponseCurl($reqGeocode);
 
-                         $curl_response = curl_exec($curl);
-
-                         if ($curl_response === false) {
-                             $info = curl_getinfo($curl);
-                             $errorInfo = curl_error($curl);
-                             curl_close($curl);
-                             error_log(print_R($errorInfo, TRUE), 3, "error_log_optimouv.txt");
-
-                             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
-
-                         }
-                         curl_close($curl);
-                         $reqGeocodeArray = json_decode($curl_response, true);
 
 
                          if (isset($reqGeocodeArray->response->status) && $reqGeocodeArray->response->status == 'ERROR') {
@@ -1366,9 +1354,9 @@ order by Proximite limit 1;");
 //                         $reqGeocodeJson = file_get_contents($reqGeocode); //FIXME : à remplacer par appels curl
 //                         $reqGeocodeArray = json_decode($reqGeocodeJson, true);
 
-                         # détecter si la réponse est vide
+                         // détecter si la réponse est vide
                          if($reqGeocodeArray['Response']['View'] ==  []){
-                             die('Erreur interne, cette ville ne se trouve pas en France: ' .$ville );
+                             die('Erreur interne, l\'API HERE ne reconnait pas cette ville: ' .$ville );
                          }
 
 
@@ -1406,6 +1394,30 @@ order by Proximite limit 1;");
 
     }
 
+
+    private function getReponseCurl($url){
+
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_FAILONERROR, true);
+
+        $curl_response = curl_exec($curl);
+
+        if ($curl_response === false) {
+            $errorInfo = curl_error($curl);
+            curl_close($curl);
+            error_log(print_R($errorInfo, TRUE), 3, "error_log_optimouv.txt");
+
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+
+        }
+        curl_close($curl);
+
+
+        $reqGeocodeArray = json_decode($curl_response, true);
+
+
+        return $reqGeocodeArray;
+    }
+
 }
-
-
