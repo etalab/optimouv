@@ -667,7 +667,7 @@ order by Proximite limit 1;");
 //        $villeDepart = $this->mesVilles($coord);
         $coor_url = 'http://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox=' . $lanX . '%2C' . $latY . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=' . $app_id . '&app_code=' . $app_code;
 
-        $coor_json = file_get_contents($coor_url);
+        $coor_json = file_get_contents($coor_url); // FIXME : à nettoyer
 
         $coor_array = json_decode($coor_json, true);
 
@@ -766,7 +766,7 @@ order by Proximite limit 1;");
 //        $villeDepart = $this->mesVilles($coord);
         $coor_url = 'http://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox=' . $lanX . '%2C' . $latY . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=' . $app_id . '&app_code=' . $app_code;
 
-        $coor_json = file_get_contents($coor_url);
+        $coor_json = file_get_contents($coor_url); // FIXME : à nettoyer
 
         $coor_array = json_decode($coor_json, true);
 
@@ -838,7 +838,7 @@ order by Proximite limit 1;");
 
             $reqGeocode = 'http://geocoder.api.here.com/6.2/geocode.json?country=France&city=' . $nomVille . '&postalCode=' . $codePostal . '&app_id=' . $app_id . '&app_code=' . $app_code . '&gen=8';
 
-            $reqGeocodeJson = file_get_contents($reqGeocode);
+            $reqGeocodeJson = file_get_contents($reqGeocode); // FIXME : à nettoyer
 
             $reqGeocodeArray = json_decode($reqGeocodeJson, true);
 
@@ -1330,6 +1330,7 @@ order by Proximite limit 1;");
 
 
             for ($i = 0; $i < count($listeLieux); $i++) {
+                //
                 $stmt = $bdd->prepare("SELECT id, ville, code_postal, longitude, latitude FROM  entite WHERE id = $listeLieux[$i];");
 
                 //$stmt->bindParam(':id', $listeLieux[$i]);
@@ -1342,20 +1343,35 @@ order by Proximite limit 1;");
                     $ville = $row['ville'];
                     $codePostal = $row['code_postal'];
 
+                     // récupérer lat et lon s'il y en a
                      if($long && $lat){
                          $coordVille =  $lat. '%2C' .$long ;
                          array_push($nomsVilles, $ville);
                          array_push($coordVilles, $coordVille);
                      }
+                     // sinon il faut interroger le serveur HERE
                      else{
 
+                         $v = urlencode($ville);
+                         $reqGeocode = 'http://geocoder.api.here.com/6.2/geocode.json?country=France&city=' . $v . '&postalCode=' . $codePostal . '&app_id=' . $app_id . '&app_code=' . $app_code . '&gen=8';
+
+                         $reqGeocodeArray = getReponseCurl($reqGeocode);
 
 
-                         $reqGeocode = 'http://geocoder.api.here.com/6.2/geocode.json?country=France&city=' . $ville . '&postalCode=' . $codePostal . '&app_id=' . $app_id . '&app_code=' . $app_code . '&gen=8';
 
-                         $reqGeocodeJson = file_get_contents($reqGeocode);
+                         if (isset($reqGeocodeArray->response->status) && $reqGeocodeArray->response->status == 'ERROR') {
+                             die('Erreur: ' . $reqGeocodeArray->response->errormessage);
+                         }
 
-                         $reqGeocodeArray = json_decode($reqGeocodeJson, true);
+
+//                         $reqGeocodeJson = file_get_contents($reqGeocode); //FIXME : à remplacer par appels curl
+//                         $reqGeocodeArray = json_decode($reqGeocodeJson, true);
+
+                         // détecter si la réponse est vide
+                         if($reqGeocodeArray['Response']['View'] ==  []){
+                             die('Erreur interne, l\'API HERE ne reconnait pas cette ville: ' .$ville );
+                         }
+
 
                          $Latitude = $reqGeocodeArray['Response']['View'][0]['Result'][0]['Location']['DisplayPosition']['Latitude'];
                          $Longitude = $reqGeocodeArray['Response']['View'][0]['Result'][0]['Location']['DisplayPosition']['Longitude'];
@@ -1391,6 +1407,30 @@ order by Proximite limit 1;");
 
     }
 
+
+    private function getReponseCurl($url){
+
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_FAILONERROR, true);
+
+        $curl_response = curl_exec($curl);
+
+        if ($curl_response === false) {
+            $errorInfo = curl_error($curl);
+            curl_close($curl);
+            error_log(print_R($errorInfo, TRUE), 3, "error_log_optimouv.txt");
+
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+
+        }
+        curl_close($curl);
+
+
+        $reqGeocodeArray = json_decode($curl_response, true);
+
+
+        return $reqGeocodeArray;
+    }
+
 }
-
-
