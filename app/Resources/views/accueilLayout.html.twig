@@ -46,13 +46,13 @@
                 <!-- Navigation -->
                 <nav class="navbar navbar-default  topnav" role="navigation">
                     <div class="row">
-                        <div class="col-lg-4">
+                        <div style="position:relative; float:left; width: 30%">
                             <img src="{{ asset('bundles/ffbb/accueil/img/ffbb-logo.jpg') }}">
                         </div>
-                        <div class="col-lg-4">
+                        <div style="position:relative; float:left; width: 30%; text-align: center; margin-left: 5%" >
                             <img src="{{ asset('bundles/ffbb/accueil/img/Logo-Optimouv.jpg') }}" alt="optimouv"/>
                         </div>
-                        <div class="col-lg-4">
+                        <div  style="position:relative; float:right; width: 30%; ">
                             <img src="{{ asset('bundles/ffbb/accueil/img/cop-ministere.png') }}" alt="cop21" style="float: right"/>
                         </div>
 
@@ -90,27 +90,27 @@
             <!-- Footer -->
             <footer>
                 {% block footer %}
-                    <div class="container">
+                    <div >
                         <div class="row">
-                            <div class="col-lg-4">
-                                <img src="{{ asset('bundles/ffbb/accueil/img/CNOSF_LOGO_INSTITUTIONNEL.jpg') }}" width="65" height="65" alt="CNOSF"/>
-                                <img src="{{ asset('bundles/ffbb/accueil/img/Ademe-info-energie.png') }}" width="65" height="65" alt="Ademe"/>
-                                <img src="{{ asset('bundles/ffbb/accueil/img/WWF_logo.png') }}" width="65" height="65" alt="CNOSF"/>
+                            <div style="position:relative; float:left; width: 30%">
+                                <div style="text-indent: 20px; padding-bottom: 10px">Partenaires</div>
+                                <div>
+                                    <img src="{{ asset('bundles/ffbb/accueil/img/CNOSF_LOGO_INSTITUTIONNEL.jpg') }}" width="65" height="65" alt="CNOSF"/>
+                                    <img src="{{ asset('bundles/ffbb/accueil/img/Ademe-info-energie.png') }}" width="65" height="65" alt="Ademe"/>
+                                    <img src="{{ asset('bundles/ffbb/accueil/img/WWF_logo.png') }}" width="65" height="65" alt="CNOSF"/>
+
+                                </div>
+
                             </div>
-                            <div class="col-lg-4">
+                            <div  style="position:relative; float:left; width: 30%; margin-left:5%; text-align: center">
                                 <h5>Mentions légales</h5>
                             </div>
-                            <div class="col-lg-4">
+                            <div style="position:relative; float:left; width: 30%; margin-left:5%; text-align: center">
                                 <h5>Contact</h5>
                             </div>
 
                         </div>
-                        <div class="row">
-                            <p class="copyright text-muted small" style="text-align: center">Copyright &copy; Optimouv 2015. All
-                                Rights
-                                Reserved</p>
 
-                        </div>
                     </div>
                 {% endblock %}
             </footer>

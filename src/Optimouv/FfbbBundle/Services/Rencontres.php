@@ -45,19 +45,25 @@ class Rencontres
             die('Erreur : ' . $e->getMessage());
         }
 
-        $reqVilles = $bdd->prepare("SELECT equipes FROM  groupe WHERE id = $idGroupe;");
-        //$reqVilles->bindParam(':id', $idGroupe);
+
+        $reqVilles = $bdd->prepare("SELECT equipes FROM  groupe WHERE id = :id ;");
+        $reqVilles->bindParam(':id', $idGroupe);
         $reqVilles->execute();
         $reqVilles = $reqVilles->fetchColumn();
         $reqVilles = explode(",", $reqVilles);
 
 
         $villes = [];
+        $villesPasRencontre = [];
 
+        $lieuRencontrePossible = 1;
 
         for ($i = 0; $i < count($reqVilles); $i++) {
-            $stmt = $bdd->prepare("SELECT id, longitude, latitude, id_ville_france FROM  entite WHERE id = :id;");
+
+            //on teste si toutes les entites sont géocoder
+            $stmt = $bdd->prepare("SELECT id, longitude, latitude, id_ville_france FROM  entite WHERE id = :id ");
             $stmt->bindParam(':id', $reqVilles[$i]);
+            $stmt->bindParam(':lieuRencontre', $lieuRencontrePossible);
             $stmt->execute();
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             $idEntite = $row['id'];
@@ -83,15 +89,22 @@ class Rencontres
                 $update->bindParam(':dateModification', $dateModification);
                 $update->execute();
 
-                $coordonnee = $latitude . "%2C" . $longitude;
-                array_push($villes, $coordonnee);
-
             }
-            else{
-                $coordonnee = $latitude . "%2C" . $longitude;
-                array_push($villes, $coordonnee);
 
-            }
+            //on récupère les xy des entites par categorie
+            $stmt = $bdd->prepare("SELECT id, longitude, latitude FROM  entite WHERE id = :id AND lieu_rencontre_possible = :lieuRencontre");
+            $stmt->bindParam(':id', $reqVilles[$i]);
+            $stmt->bindParam(':lieuRencontre', $lieuRencontrePossible);
+            $stmt->execute();
+
+            $res = $stmt->fetchAll();
+
+            print_r($res);
+            die;
+
+
+
+
 
 
 
