@@ -43,9 +43,10 @@ class ListesController extends Controller
             # créer des entités dans la table entite
             $retourEntites = $this->get('service_listes')->creerEntites();
             $idsEntite = $retourEntites["idsEntite"];
+            $nomFichier = $retourEntites["nomFichier"];
 
             # créer une liste dans la table liste_participants
-            $retourListe = $this->get('service_listes')->creerListeParticipants($idsEntite);
+            $retourListe = $this->get('service_listes')->creerListeParticipants($idsEntite, $nomFichier);
 
             # obtenir entity manager
             $em = $this->getDoctrine()->getManager();
@@ -56,7 +57,8 @@ class ListesController extends Controller
             return new JsonResponse(array(
                 "success" => true,
                 "msg" => "Votre liste a été correctement importée",
-                "data" => $listesParticipants
+                "data" => $listesParticipants,
+                "dateCreation" =>  $retourListe["data"]["dateCreation"]
             ));
 
         }
@@ -162,9 +164,10 @@ class ListesController extends Controller
             # créer des entités dans la table entite
             $retourEntites = $this->get('service_listes')->creerEntites();
             $idsEntite = $retourEntites["idsEntite"];
+            $nomFichier = $retourEntites["nomFichier"];
 
             # créer une liste dans la table liste_participants
-            $retourListe = $this->get('service_listes')->creerListeLieux($idsEntite);
+            $retourListe = $this->get('service_listes')->creerListeLieux($idsEntite, $nomFichier);
 
             # obtenir entity manager
             $em = $this->getDoctrine()->getManager();
@@ -175,7 +178,8 @@ class ListesController extends Controller
             return new JsonResponse(array(
                 "success" => true,
                 "msg" => "Votre liste a été correctement importée",
-                "data" => $listesLieux
+                "data" => $listesLieux,
+                "dateCreation" =>  $retourListe["data"]["dateCreation"]
             ));
 
 
