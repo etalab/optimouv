@@ -237,7 +237,7 @@ class Listes{
                                         $retour = array(
                                             "success" => false,
                                             "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'participants' (colonne 5) doit être rempli!"
+                                                ." Le champ 'nombre de participants' (colonne 5) doit être rempli!"
                                                 .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
@@ -261,7 +261,7 @@ class Listes{
                                         $retour = array(
                                             "success" => false,
                                             "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'participants' (colonne 5) doit avoir une valeur numérique!"
+                                                ." Le champ 'nombre de participants' (colonne 5) doit avoir une valeur numérique!"
                                                 .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
