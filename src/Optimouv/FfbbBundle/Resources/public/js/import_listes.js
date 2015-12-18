@@ -223,64 +223,6 @@ function addEventHandlerImportListeLieux(){
 
 }
 
-function addEventHandlerSelectListeParticipants(){
-  $("#liste_partcipants").change(function(){
-
-    // obtenir l'id de la liste participants choisie
-    var idListeParticipants = $(this).val();
-    console.log("select liste participants: " + idListeParticipants);
-
-    if ($("#btn_select_liste_participants").exists() == false) {
-      // ajoter un bouton select s'il n'existe pas
-      var newButtonListeParticipants = $('<button id="btn_select_liste_participants" type="submit" class="btn btn-default  pull-right">Utiliser cette liste </button>');
-      $("#div_participants").append(newButtonListeParticipants);
-
-    }
-    // ajouter un event handler
-    addEventHandlerUseListeParticipants(idListeParticipants);
-
-  });
-
-}
-
-function addEventHandlerSelectListeLieux(){
-  $("#liste_lieux").change(function(){
-
-    // obtenir l'id de la liste lieux choisie
-    var idListeLieux = $(this).val();
-    console.log("select liste lieux: " + idListeLieux);
-
-    if ($("#btn_select_liste_lieux").exists() == false) {
-      // ajoter un bouton select s'il n'existe pas
-      var newButtonListeLieux = $('<button id="btn_select_liste_lieux" type="submit" class="btn btn-default  pull-right">Utiliser cette liste </button>');
-      $("#div_lieux").append(newButtonListeLieux);
-
-    }
-    // ajouter un event handler
-    addEventHandlerUseListeLieux(idListeLieux);
-
-  });
-}
-
-function addEventHandlerUseListeParticipants(idListeParticipants){
-  $("#btn_select_liste_participants").click(function(){
-    console.log("addEventHandlerUseListeParticipants: " + idListeParticipants);
-    //$.redirect('select_liste_participants/'+idListeParticipants, {});
-    $.redirect('select-liste-participants', {"idListeParticipants" : idListeParticipants});
-
-  });
-}
-
-function addEventHandlerUseListeLieux(idListeLieux){
-  $("#btn_select_liste_lieux").click(function(){
-    console.log("addEventHandlerUseListeLieux: " + idListeLieux);
-    //$.redirect('select_liste_lieux/'+idListeLieux, {});
-    $.redirect('/', {"idListeLieux" : idListeLieux});
-
-  });
-
-}
-
 
 function hideStatutChargement(){
   $("#statut_chargement_lieux").hide();
@@ -293,9 +235,6 @@ $(document).ready(function () {
   addEventHandlerImportListeParticipants();
   addEventHandlerImportListeLieux();
   hideStatutChargement();
-  //addEventHandlerSelectListeParticipants();
-  //addEventHandlerSelectListeLieux();
-
 
 });
 
