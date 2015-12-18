@@ -1025,7 +1025,8 @@ order by Proximite limit 1;");
 
                         // détecter si la réponse est vide
                         if ($reqGeocodeArray['Response']['View'] == []) {
-                            die('Erreur interne, l\'API HERE ne reconnait pas cette ville: ' . $ville);
+                            die("Erreur interne, l\'API HERE ne reconnait pas cette ville: " . $ville.
+                                ".\r Veuillez assurer que tous les lieux se trouvent en France Métropolitaine");
                         }
 
                         $Latitude = $reqGeocodeArray['Response']['View'][0]['Result'][0]['Location']['DisplayPosition']['Latitude'];
