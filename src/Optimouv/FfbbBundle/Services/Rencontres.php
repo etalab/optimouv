@@ -641,7 +641,7 @@ order by Proximite limit 1;");
 
         $coor_url = 'http://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox=' . $lanX . '%2C' . $latY . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=' . $app_id . '&app_code=' . $app_code;
 
-        $coor_array = getReponseCurl($coor_url);
+        $coor_array = $this->getReponseCurl($coor_url);
 
         if (isset($coor_array->response->status) && $coor_array->response->status == 'ERROR') {
             die('Erreur: ' . $coor_array->response->errormessage);
@@ -731,7 +731,7 @@ order by Proximite limit 1;");
 
         $coor_url = 'http://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox=' . $lanX . '%2C' . $latY . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=' . $app_id . '&app_code=' . $app_code;
 
-        $coor_array = getReponseCurl($coor_url);
+        $coor_array = $this->getReponseCurl($coor_url);
 
         if (isset($coor_array->response->status) && $coor_array->response->status == 'ERROR') {
             die('Erreur: ' . $coor_array->response->errormessage);
@@ -919,7 +919,7 @@ order by Proximite limit 1;");
                 } else {
                     $reqRoute = 'http://route.api.here.com/routing/7.2/calculateroute.json?waypoint0=' . $coordStart . '&waypoint1=' . $villes[$i] . '&mode=fastest%3Bcar%3Btraffic%3Adisabled&app_id=' . $app_id . '&app_code=' . $app_code;
 
-                    $decoded = getReponseCurl($reqRoute);
+                    $decoded = $this->getReponseCurl($reqRoute);
 
 
                     if (isset($decoded->response->status) && $decoded->response->status == 'ERROR') {
@@ -1016,7 +1016,7 @@ order by Proximite limit 1;");
                         $v = urlencode($ville);
                         $reqGeocode = 'http://geocoder.api.here.com/6.2/geocode.json?country=France&city=' . $v . '&postalCode=' . $codePostal . '&app_id=' . $app_id . '&app_code=' . $app_code . '&gen=8';
 
-                        $reqGeocodeArray = getReponseCurl($reqGeocode);
+                        $reqGeocodeArray = $this->getReponseCurl($reqGeocode);
 
 
                         if (isset($reqGeocodeArray->response->status) && $reqGeocodeArray->response->status == 'ERROR') {
