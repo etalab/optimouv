@@ -631,7 +631,7 @@ class Listes{
     }
 
 
-    public function creerListeParticipants($idsEntite){
+    public function creerListeParticipants($idsEntite, $nomFichier){
 
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
@@ -649,10 +649,10 @@ class Listes{
             } else {
 
                 # récuperer la valeur des autres variables
-                $nomUtilisateur = "henz";
-//            $nom = "liste_participants_".$nomUtilisateur."_".$dateTimeNow;
-                $nom = "liste_participants_".$dateTimeNow;
-                $idUtilisateur = 1;
+//                $nom = "liste_participants_".$dateTimeNow;
+                $nom = $nomFichier;
+
+                $idUtilisateur = 1; # TODO à rendre dynamique
 
                 # construire la liste d'équipes
                 $equipes = "";
@@ -678,7 +678,7 @@ class Listes{
 
             $retour = array(
                 "success" => true,
-                "data" => "",
+                "data" => array("dateCreation" => $dateCreation),
             );
 
 
@@ -693,7 +693,7 @@ class Listes{
         return $retour;
     }
 
-    public function creerListeLieux($idsEntite){
+    public function creerListeLieux($idsEntite, $nomFichier){
 
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
@@ -710,10 +710,9 @@ class Listes{
                 die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
             } else {
                 # récuperer la valeur des autres variables
-                $nomUtilisateur = "henz"; # todo
-//            $nom = "liste_terrains_neutres_".$nomUtilisateur."_".$dateTimeNow;
-                $nom = "liste_lieux_".$dateTimeNow;
-                $idUtilisateur = 1;
+//                $nom = "liste_lieux_".$dateTimeNow;
+                $nom = $nomFichier;
+                $idUtilisateur = 1; # TODO à rendre dynamique
 
                 # construire la liste d'équipes
                 $lieux = "";
@@ -739,7 +738,7 @@ class Listes{
 
             $retour = array(
                 "success" => true,
-                "data" => "",
+                "data" => array("dateCreation" => $dateCreation),
             );
         } catch (PDOException $e) {
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
@@ -752,17 +751,29 @@ class Listes{
 
     public function creerEntites()
     {
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
 
         try {
 
+            # obtenir le chemin temporaire du fichier uploadé
+            $cheminFichierTemp = $_FILES["file-0"]["tmp_name"];
+
             # obtenir le nom du fichier uploadé
-            $nomFichierTemp = $_FILES["file-0"]["tmp_name"];
+            $nomFichier = $_FILES["file-0"]["name"];
+
+            # enlever l'extension du nom de fichier
+            $nomFichier = str_replace(".csv", "" , $nomFichier);
+
+//            error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+//                ."\n filename : ".print_r($_FILES["file-0"], true), 3, "/tmp/optimouv.log");
+
 
             // Dès qu'un fichier a été reçu par le serveur
-            if (file_exists($nomFichierTemp) || is_uploaded_file($nomFichierTemp)) {
+            if (file_exists($cheminFichierTemp) || is_uploaded_file($cheminFichierTemp)) {
 
                 // lire le contenu du fichier
-                $file = new SplFileObject($nomFichierTemp, 'r');
+                $file = new SplFileObject($cheminFichierTemp, 'r');
                 $delimiter = ",";
 
                 // On lui indique que c'est du CSV
@@ -970,7 +981,8 @@ class Listes{
 
             $retour = array(
                 "success" => true,
-                "idsEntite" => $idsEntite
+                "idsEntite" => $idsEntite,
+                "nomFichier" => $nomFichier
             );
 
 

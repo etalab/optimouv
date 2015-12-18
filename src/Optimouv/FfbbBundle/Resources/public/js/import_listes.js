@@ -32,9 +32,10 @@ function addEventHandlerImportListeParticipants(){
           var nouvelElementNom = data.data[0].nom;
           console.log('nouvelElementNom: ' + nouvelElementNom);
 
+          console.log('dateCreation: ' + data.dateCreation);
+
           // construire une date avec le bon format
-          var nouvelElementDateCreation = nouvelElementNom.split("_");
-          nouvelElementDateCreation = nouvelElementDateCreation[nouvelElementDateCreation.length -2];
+          var nouvelElementDateCreation = data.dateCreation;
           var nouvelElementJour = nouvelElementDateCreation.split("-")[2];
           var nouvelElementMois = nouvelElementDateCreation.split("-")[1];
           var nouvelElementAnnee = nouvelElementDateCreation.split("-")[0];
@@ -42,6 +43,7 @@ function addEventHandlerImportListeParticipants(){
           nouvelElementDateCreation = nouvelElementJour + "/" + nouvelElementMois + "/" + nouvelElementAnnee;
           console.log('nouvelElementDateCreation: ' + nouvelElementDateCreation);
 
+          // mettre à jour les boutons
           var nouvelleStr = '<tr id=' + nouvelElementId +'> <td>' + nouvelElementId + ' </td>';
           nouvelleStr = nouvelleStr + '<td> '+ nouvelElementNom  + ' </td>';
           nouvelleStr = nouvelleStr + '<td> '+ nouvelElementDateCreation  + ' </td>';
@@ -52,7 +54,7 @@ function addEventHandlerImportListeParticipants(){
           nouvelleStr = nouvelleStr + '</td> </tr> ';
           console.log('nouvelleStr: ' + nouvelleStr);
 
-          // ajouter un nouvel element dans
+          // ajouter un nouvel element dans la liste de participants
           $("#listeParticipants").prepend(nouvelleStr);
 
           // supprimer les enfants de l'élement select liste_partcipants
@@ -146,9 +148,10 @@ function addEventHandlerImportListeLieux(){
           var nouvelElementNom = data.data[0].nom;
           console.log('nouvelElementNom: ' + nouvelElementNom);
 
+          console.log('dateCreation: ' + data.dateCreation);
+
           // construire une date avec le bon format
-          var nouvelElementDateCreation = nouvelElementNom.split("_");
-          nouvelElementDateCreation = nouvelElementDateCreation[nouvelElementDateCreation.length -2];
+          var nouvelElementDateCreation = data.dateCreation;
           var nouvelElementJour = nouvelElementDateCreation.split("-")[2];
           var nouvelElementMois = nouvelElementDateCreation.split("-")[1];
           var nouvelElementAnnee = nouvelElementDateCreation.split("-")[0];
@@ -156,6 +159,7 @@ function addEventHandlerImportListeLieux(){
           nouvelElementDateCreation = nouvelElementJour + "/" + nouvelElementMois + "/" + nouvelElementAnnee;
           console.log('nouvelElementDateCreation: ' + nouvelElementDateCreation);
 
+          // mettre à jour les boutons
           var nouvelleStr = '<tr id=' + nouvelElementId +'> <td>' + nouvelElementId + ' </td>';
           nouvelleStr = nouvelleStr + '<td> '+ nouvelElementNom  + ' </td>';
           nouvelleStr = nouvelleStr + '<td> '+ nouvelElementDateCreation  + ' </td>';
@@ -166,7 +170,7 @@ function addEventHandlerImportListeLieux(){
           nouvelleStr = nouvelleStr + ' </td> </tr> ';
           console.log('nouvelleStr: ' + nouvelleStr);
 
-          // ajouter un nouvel element dans
+          // ajouter un nouvel element dans la liste de lieux
           $("#listeLieux").prepend(nouvelleStr);
 
           // supprimer les enfants de l'élement select liste_partcipants
@@ -223,64 +227,6 @@ function addEventHandlerImportListeLieux(){
 
 }
 
-function addEventHandlerSelectListeParticipants(){
-  $("#liste_partcipants").change(function(){
-
-    // obtenir l'id de la liste participants choisie
-    var idListeParticipants = $(this).val();
-    console.log("select liste participants: " + idListeParticipants);
-
-    if ($("#btn_select_liste_participants").exists() == false) {
-      // ajoter un bouton select s'il n'existe pas
-      var newButtonListeParticipants = $('<button id="btn_select_liste_participants" type="submit" class="btn btn-default  pull-right">Utiliser cette liste </button>');
-      $("#div_participants").append(newButtonListeParticipants);
-
-    }
-    // ajouter un event handler
-    addEventHandlerUseListeParticipants(idListeParticipants);
-
-  });
-
-}
-
-function addEventHandlerSelectListeLieux(){
-  $("#liste_lieux").change(function(){
-
-    // obtenir l'id de la liste lieux choisie
-    var idListeLieux = $(this).val();
-    console.log("select liste lieux: " + idListeLieux);
-
-    if ($("#btn_select_liste_lieux").exists() == false) {
-      // ajoter un bouton select s'il n'existe pas
-      var newButtonListeLieux = $('<button id="btn_select_liste_lieux" type="submit" class="btn btn-default  pull-right">Utiliser cette liste </button>');
-      $("#div_lieux").append(newButtonListeLieux);
-
-    }
-    // ajouter un event handler
-    addEventHandlerUseListeLieux(idListeLieux);
-
-  });
-}
-
-function addEventHandlerUseListeParticipants(idListeParticipants){
-  $("#btn_select_liste_participants").click(function(){
-    console.log("addEventHandlerUseListeParticipants: " + idListeParticipants);
-    //$.redirect('select_liste_participants/'+idListeParticipants, {});
-    $.redirect('select-liste-participants', {"idListeParticipants" : idListeParticipants});
-
-  });
-}
-
-function addEventHandlerUseListeLieux(idListeLieux){
-  $("#btn_select_liste_lieux").click(function(){
-    console.log("addEventHandlerUseListeLieux: " + idListeLieux);
-    //$.redirect('select_liste_lieux/'+idListeLieux, {});
-    $.redirect('/', {"idListeLieux" : idListeLieux});
-
-  });
-
-}
-
 
 function hideStatutChargement(){
   $("#statut_chargement_lieux").hide();
@@ -293,9 +239,6 @@ $(document).ready(function () {
   addEventHandlerImportListeParticipants();
   addEventHandlerImportListeLieux();
   hideStatutChargement();
-  //addEventHandlerSelectListeParticipants();
-  //addEventHandlerSelectListeLieux();
-
 
 });
 
