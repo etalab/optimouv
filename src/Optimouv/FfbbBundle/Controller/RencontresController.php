@@ -68,7 +68,6 @@ class RencontresController extends Controller
     public function barycentreAction($idGroupe)
     {
 
-
         $participants = [];
         $retour = $this->get('service_rencontres')->Barycentre($idGroupe);
 
@@ -85,9 +84,6 @@ class RencontresController extends Controller
             $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key]);
         }
 
-
-
-//        echo '<pre>',print_r($participants,1),'</pre>';exit;
         return $this->render('FfbbBundle:Rencontres:barycentre.html.twig', array(
 
             //Donn�es du sc�nario optimal

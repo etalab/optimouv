@@ -28,10 +28,8 @@ class Rencontres
         $this->app_code = $app_code;
     }
 
-    public function index($idGroupe)
+    public function connexion()
     {
-
-
         //params de connexion
 
         $dbname = $this->database_name;
@@ -45,6 +43,12 @@ class Rencontres
             die('Erreur : ' . $e->getMessage());
         }
 
+        return $bdd;
+    }
+
+    public function index($idGroupe)
+    {
+        $bdd= $this->connexion();
 
         $reqVilles = $bdd->prepare("SELECT equipes FROM  groupe WHERE id = :id ;");
         $reqVilles->bindParam(':id', $idGroupe);
@@ -108,7 +112,6 @@ class Rencontres
 
             array_push($villes, $coordonne);
 
-
         }
 
         //$villesPasRencontre va contenir toutes les entites qui ne peuvent pas accepter des matchs
@@ -140,23 +143,13 @@ class Rencontres
     public function meilleurLieuRencontre($idGroupe)
     {
 
+        $bdd= $this->connexion();
+
         //Récupération de détail de la liste de lieux
 
         $listeLieux = $this->getListeLieux($idGroupe);
 
         $nomsTerrainsNeutres = $listeLieux[0];
-
-
-        $dbname = $this->database_name;
-        $dbuser = $this->database_user;
-        $dbpwd = $this->database_password;
-
-        try {
-            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
-
-        } catch (PDOException $e) {
-            die('Erreur : ' . $e->getMessage());
-        }
 
         //on récupère le tableau des villes
         $retourIndex = $this->index($idGroupe);
@@ -165,7 +158,6 @@ class Rencontres
         $villesPasRencontre = $retourIndex[1];
 
         //        $result = array_merge($villes, $villesPasRencontre);
-
 
         $T2 = []; //tableau interm�diaire qui contient les coordonnees des pts d arrivees
 
@@ -232,7 +224,9 @@ class Rencontres
         $lanX = $coordVille[0];
         $latY = $coordVille[1];
 
-        $stmt1 = $bdd->prepare("SELECT ville from entite where longitude = $latY AND latitude = $lanX;");
+        $stmt1 = $bdd->prepare("SELECT ville from entite where longitude = :longitude AND latitude = :latitude");
+        $stmt1->bindParam(':longitude', $latY);
+        $stmt1->bindParam(':latitude', $lanX);
         $stmt1->execute();
         $villeDepart = $stmt1->fetchColumn();
 
@@ -265,9 +259,7 @@ class Rencontres
     public function Barycentre($idGroupe)
     {
 
-        $dbname = $this->database_name;
-        $dbuser = $this->database_user;
-        $dbpwd = $this->database_password;
+        $bdd= $this->connexion();
 
         //on récupère le tableau des villes
         $villes = $this->index($idGroupe);
@@ -287,14 +279,6 @@ class Rencontres
         $lanX = $lan / $length;
         $latY = $lat / $length;
 
-
-        try {
-            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
-
-        } catch (PDOException $e) {
-            die('Erreur : ' . $e->getMessage());
-        }
-
         $stmt1 = $bdd->prepare("SELECT ville_nom, ville_longitude_deg, ville_latitude_deg, ville_code_postal,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
                                 from villes_france_free
                                 order by Proximite limit 1;");
@@ -311,7 +295,9 @@ class Rencontres
         $dateCreation = $date->format('Y-m-d');
 
         //vérifier si le barycentre existe deja
-        $barycentre = $bdd->prepare("SELECT id from entite where longitude = $lanX AND latitude = $latY");
+        $barycentre = $bdd->prepare("SELECT id from entite where longitude = :longitude AND latitude = :latitude");
+        $barycentre->bindParam(':longitude', $lanX);
+        $barycentre->bindParam(':latitude', $latY);
         $barycentre->execute();
         $res = $barycentre->fetchColumn();
 
@@ -327,20 +313,16 @@ class Rencontres
             $insert->execute();
         }
 
-
         $coord = $lanX . '%2C' . $latY; // pour appel la fn routing matrix
 
         $retour = $this->routingMatrix($coord, $villes);
-//        $retour = $this->calculRoute($lanX,$latY, $villes);
         return $retour;
     }
 
     //Calcul exclusion géographique
     public function Exclusion($valeurExclusion, $idGroupe)
     {
-        $dbname = $this->database_name;
-        $dbuser = $this->database_user;
-        $dbpwd = $this->database_password;
+        $bdd= $this->connexion();
 
         if ($valeurExclusion) {
 
@@ -348,7 +330,6 @@ class Rencontres
             $villes = $this->index($idGroupe);
 
             $villes = array_merge($villes[0], $villes[1]);
-
 
             $length = count($villes);
             $lan = $lat = null;
@@ -361,15 +342,7 @@ class Rencontres
             // Somme des X & Somme des Y
             $lanX = $lan / $length;
             $latY = $lat / $length;
-            //  $coord = $lanX . '%2C' . $latY;
 
-
-            try {
-                $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
-
-            } catch (PDOException $e) {
-                die('Erreur : ' . $e->getMessage());
-            }
 
             $stmt1 = $bdd->prepare("SELECT ville_longitude_deg, ville_latitude_deg,ville_code_postal, ville_population_2012,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
 from villes_france_free
@@ -386,7 +359,9 @@ order by Proximite limit 1;");
 
 
             //vérifier si le barycentre existe deja
-            $barycentre = $bdd->prepare("SELECT id from entite where longitude = $latY AND latitude = $lanX");
+            $barycentre = $bdd->prepare("SELECT id from entite where longitude = :longitude AND latitude = :latitude");
+            $barycentre->bindParam(':longitude', $latY);
+            $barycentre->bindParam(':latitude',  $lanX);
             $barycentre->execute();
             $res = $barycentre->fetchColumn();
 
@@ -422,20 +397,7 @@ order by Proximite limit 1;");
     //Calcul du scénario équitable
     public function scenarioEquitable($idGroupe)
     {
-
-        $app_id = $this->app_id;
-        $app_code = $this->app_code;
-        $dbname = $this->database_name;
-        $dbuser = $this->database_user;
-        $dbpwd = $this->database_password;
-
-        try {
-            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
-
-        } catch (PDOException $e) {
-            die('Erreur : ' . $e->getMessage());
-        }
-
+        $bdd= $this->connexion();
         //on récupère le tableau des villes
         $retourIndex = $this->index($idGroupe);
 
@@ -549,21 +511,12 @@ order by Proximite limit 1;");
     public function routingMatrix($coord, $villes)
     {
 
-        $dbname = $this->database_name;
-        $dbuser = $this->database_user;
-        $dbpwd = $this->database_password;
-
+        $bdd= $this->connexion();
 
         $coord = explode('%2C', $coord);
         $lanX = $coord[0];
         $latY = $coord[1];
 
-        try {
-            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
-
-        } catch (PDOException $e) {
-            die('Erreur : ' . $e->getMessage());
-        }
 
         //////////////////////
         $stmt1 = $bdd->prepare("SELECT ville from entite where longitude=:longitude and latitude = :latitude ;");
@@ -656,7 +609,6 @@ order by Proximite limit 1;");
         $tousLesCalculs[0] = $toutesLesDistances;
         $tousLesCalculs[1] = $toutesLesDurees;
 
-
         $sommesDistances = [];
         for ($j = 0; $j < count($tousLesCalculs[0]); $j++) {
             $sommeDistance = array_sum($tousLesCalculs[0][$j]);
@@ -673,10 +625,8 @@ order by Proximite limit 1;");
         $lanX = $coord[0];
         $latY = $coord[1];
 
-
         $distanceTotal = $tousLesCalculs[0][$key];
         $dureeTotale = $tousLesCalculs[1][$key];
-
 
         //somme des distances
         $distance = array_sum($distanceTotal) / 1000;
@@ -688,12 +638,14 @@ order by Proximite limit 1;");
 
         //Récupérer les noms de villes de destination
         $mesVilles = $this->mesVilles($equipe);
-//        $villeDepart = $this->mesVilles($coord);
+
         $coor_url = 'http://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox=' . $lanX . '%2C' . $latY . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=' . $app_id . '&app_code=' . $app_code;
 
-        $coor_json = file_get_contents($coor_url); // FIXME : à nettoyer
+        $coor_array = getReponseCurl($coor_url);
 
-        $coor_array = json_decode($coor_json, true);
+        if (isset($coor_array->response->status) && $coor_array->response->status == 'ERROR') {
+            die('Erreur: ' . $coor_array->response->errormessage);
+        }
 
         $maVille = $coor_array['Response']['View'][0]['Result'][0]['Location']['Address']['City'];
 
@@ -718,8 +670,6 @@ order by Proximite limit 1;");
 
         $app_id = $this->app_id;
         $app_code = $this->app_code;
-
-//        $equipe = $this->index($idGroupe);
 
         $equipe = $this->index($idGroupe);
         $equipe = array_merge($equipe[0], $equipe[1]);
@@ -778,12 +728,14 @@ order by Proximite limit 1;");
 
         //Récupérer les noms de villes de destination
         $mesVilles = $this->mesVilles($equipe);
-//        $villeDepart = $this->mesVilles($coord);
+
         $coor_url = 'http://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox=' . $lanX . '%2C' . $latY . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=' . $app_id . '&app_code=' . $app_code;
 
-        $coor_json = file_get_contents($coor_url); // FIXME : à nettoyer
+        $coor_array = getReponseCurl($coor_url);
 
-        $coor_array = json_decode($coor_json, true);
+        if (isset($coor_array->response->status) && $coor_array->response->status == 'ERROR') {
+            die('Erreur: ' . $coor_array->response->errormessage);
+        }
 
         $maVille = $coor_array['Response']['View'][0]['Result'][0]['Location']['Address']['City'];
         $retour = [];
@@ -807,16 +759,7 @@ order by Proximite limit 1;");
 
         //params de connexion
 
-        $dbname = $this->database_name;
-        $dbuser = $this->database_user;
-        $dbpwd = $this->database_password;
-
-        try {
-            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
-
-        } catch (PDOException $e) {
-            die('Erreur : ' . $e->getMessage());
-        }
+        $bdd= $this->connexion();
 
         $reqVilles = $bdd->prepare("SELECT equipes FROM  groupe where id = :idGroupe ;");
         $reqVilles->bindParam(':idGroupe', $idGroupe);
@@ -835,7 +778,6 @@ order by Proximite limit 1;");
 
         }
 
-
         return $villes;
 
 
@@ -844,20 +786,7 @@ order by Proximite limit 1;");
     public function mesVilles($villes)
     {
 
-
-        $app_id = $this->app_id;
-        $app_code = $this->app_code;
-
-        $dbname = $this->database_name;
-        $dbuser = $this->database_user;
-        $dbpwd = $this->database_password;
-
-        try {
-            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
-
-        } catch (PDOException $e) {
-            die('Erreur : ' . $e->getMessage());
-        }
+        $bdd= $this->connexion();
 
         $mesVilles = [];
         //geocoder inversement les villes pour ramener les noms de villes
@@ -866,18 +795,12 @@ order by Proximite limit 1;");
             $start = explode('%2C', $villes[$l]);
             $lanX = $start[0];
             $latY = $start[1];
-            /*   $coor_url = 'http://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox=' . $villes[$l] . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=' . $app_id . '&app_code=' . $app_code;
 
-               $coor_json = file_get_contents($coor_url);
-
-               $coor_array = json_decode($coor_json, true);
-
-               $maVille = $coor_array['Response']['View'][0]['Result'][0]['Location']['Address']['City'];
-   */
-            $stmt1 = $bdd->prepare("SELECT ville from entite where longitude = $latY AND latitude = $lanX;");
+            $stmt1 = $bdd->prepare("SELECT ville from entite where longitude = :longitude AND latitude = :latitude");
+            $stmt1->bindParam(':longitude', $latY);
+            $stmt1->bindParam(':latitude', $lanX);
             $stmt1->execute();
             $maVille = $stmt1->fetchColumn();
-
 
             //Ramener tous les noms des villes
             array_push($mesVilles, $maVille);
@@ -888,16 +811,7 @@ order by Proximite limit 1;");
     public function creerGroupe($villes, $nomGroupe, $idListeParticipants, $idListeLieux)
     {
 
-        $dbname = $this->database_name;
-        $dbuser = $this->database_user;
-        $dbpwd = $this->database_password;
-
-        try {
-            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
-
-        } catch (PDOException $e) {
-            die('Erreur : ' . $e->getMessage());
-        }
+        $bdd= $this->connexion();
 
         $nbrVilles = count($villes);
         $villes = implode(",", $villes);
@@ -921,27 +835,14 @@ order by Proximite limit 1;");
         $idGroupe = $bdd->lastInsertId();
         $this->index($idGroupe);
 
-
         return $idGroupe;
-
 
     }
 
     public function geocoderUneVille($idVille)
     {
 
-
-
-        $dbname = $this->database_name;
-        $dbuser = $this->database_user;
-        $dbpwd = $this->database_password;
-
-        try {
-            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
-
-        } catch (PDOException $e) {
-            die('Erreur : ' . $e->getMessage());
-        }
+        $bdd= $this->connexion();
 
         $reqVille = $bdd->prepare("SELECT ville_latitude_deg, ville_longitude_deg FROM villes_france_free where ville_id = :idVille;");
         $reqVille->bindParam(':idVille', $idVille);
@@ -961,20 +862,10 @@ order by Proximite limit 1;");
     public function calculRoute($lanX, $latY, $villes)
     {
 
-
         $app_id = $this->app_id;
         $app_code = $this->app_code;
 
-        $dbname = $this->database_name;
-        $dbuser = $this->database_user;
-        $dbpwd = $this->database_password;
-
-        try {
-            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
-
-        } catch (PDOException $e) {
-            die('Erreur : ' . $e->getMessage());
-        }
+        $bdd= $this->connexion();
 
         $stmt1 = $bdd->prepare("SELECT id from entite where longitude= :longitude and latitude = :latitude ;");
         $stmt1->bindParam(':longitude', $lanX);
@@ -992,11 +883,9 @@ order by Proximite limit 1;");
         //parcourir tout le tableau des villes
         for ($i = 0; $i < count($villes); $i++) {
 
-
             $maVille = $villes[$i];
 
             $coordVille = explode('%2C', $maVille);
-
 
             try {
 
@@ -1030,22 +919,9 @@ order by Proximite limit 1;");
                 } else {
                     $reqRoute = 'http://route.api.here.com/routing/7.2/calculateroute.json?waypoint0=' . $coordStart . '&waypoint1=' . $villes[$i] . '&mode=fastest%3Bcar%3Btraffic%3Adisabled&app_id=' . $app_id . '&app_code=' . $app_code;
 
-                    $curl = curl_init($reqRoute);
-                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($curl, CURLOPT_FAILONERROR, true);
+                    $decoded = getReponseCurl($reqRoute);
 
-                    $curl_response = curl_exec($curl);
 
-                    if ($curl_response === false) {
-                        $info = curl_getinfo($curl);
-                        curl_close($curl);
-                        error_log(print_R($info, TRUE), 3, "error_log_optimouv.txt");
-
-                        die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
-
-                    }
-                    curl_close($curl);
-                    $decoded = json_decode($curl_response, true);
                     if (isset($decoded->response->status) && $decoded->response->status == 'ERROR') {
                         die('Erreur: ' . $decoded->response->errormessage);
                     }
@@ -1077,13 +953,11 @@ order by Proximite limit 1;");
                 echo 'Exception reçue : ', $e->getMessage(), "\n";
             }
 
-
         }
 
         $retour = [];
         $retour[0] = $distanceTotale;
         $retour[1] = $dureeTotale;
-
 
         return $retour;
 
@@ -1093,16 +967,8 @@ order by Proximite limit 1;");
     {
         $app_id = $this->app_id;
         $app_code = $this->app_code;
-        $dbname = $this->database_name;
-        $dbuser = $this->database_user;
-        $dbpwd = $this->database_password;
 
-        try {
-            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
-
-        } catch (PDOException $e) {
-            die('Erreur : ' . $e->getMessage());
-        }
+        $bdd= $this->connexion();
 
         $reqLieux = $bdd->prepare("SELECT id_liste_lieux FROM  groupe WHERE id = :id;");
         $reqLieux->bindParam(':id', $idGroupe);
@@ -1110,7 +976,6 @@ order by Proximite limit 1;");
         $reqLieux = $reqLieux->fetchColumn();
 
         $idListeLieux = intval($reqLieux);
-
 
         if (isset($reqLieux)) {
 
@@ -1123,19 +988,14 @@ order by Proximite limit 1;");
             $listeLieux = explode(",", $listeLieux);
 
 
-            //récuprer les noms de villes de terrains neutres
-
-            //$nomsVilles = $bdd->prepare("SELECT ville FROM  entite WHERE find_in_set (id, :listeLieux)");
-
             $nomsVilles = [];
             $coordVilles = [];
 
 
             for ($i = 0; $i < count($listeLieux); $i++) {
                 //
-                $stmt = $bdd->prepare("SELECT id, ville, code_postal, longitude, latitude FROM  entite WHERE id = $listeLieux[$i];");
-
-                //$stmt->bindParam(':id', $listeLieux[$i]);
+                $stmt = $bdd->prepare("SELECT id, ville, code_postal, longitude, latitude FROM  entite WHERE id = :id");
+                $stmt->bindParam(':id', $listeLieux[$i]);
                 $stmt->execute();
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
@@ -1163,27 +1023,24 @@ order by Proximite limit 1;");
                             die('Erreur: ' . $reqGeocodeArray->response->errormessage);
                         }
 
-
-//                         $reqGeocodeJson = file_get_contents($reqGeocode); //FIXME : à remplacer par appels curl
-//                         $reqGeocodeArray = json_decode($reqGeocodeJson, true);
-
                         // détecter si la réponse est vide
                         if ($reqGeocodeArray['Response']['View'] == []) {
                             die('Erreur interne, l\'API HERE ne reconnait pas cette ville: ' . $ville);
                         }
-
 
                         $Latitude = $reqGeocodeArray['Response']['View'][0]['Result'][0]['Location']['DisplayPosition']['Latitude'];
                         $Longitude = $reqGeocodeArray['Response']['View'][0]['Result'][0]['Location']['DisplayPosition']['Longitude'];
 
                         $coordVille = $Latitude . '%2C' . $Longitude;
 
-                        $update = $bdd->prepare("UPDATE entite SET longitude = $Longitude, latitude= $Latitude WHERE id = $idVille");
+                        $update = $bdd->prepare("UPDATE entite SET longitude = :longitude, latitude= :latitude WHERE id = :id");
+                        $update->bindParam(':longitude', $Longitude);
+                        $update->bindParam(':latitude', $Latitude);
+                        $update->bindParam(':id', $idVille);
                         $update->execute();
 
                         array_push($nomsVilles, $ville);
                         array_push($coordVilles, $coordVille);
-
 
                     }
 
