@@ -237,7 +237,7 @@ class Listes{
                                         $retour = array(
                                             "success" => false,
                                             "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'participants' (colonne 5) doit être rempli!"
+                                                ." Le champ 'nombre de participants' (colonne 5) doit être rempli!"
                                                 .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
@@ -261,7 +261,7 @@ class Listes{
                                         $retour = array(
                                             "success" => false,
                                             "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'participants' (colonne 5) doit avoir une valeur numérique!"
+                                                ." Le champ 'nombre de participants' (colonne 5) doit avoir une valeur numérique!"
                                                 .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
@@ -1130,8 +1130,8 @@ class Listes{
                         .$genericMsg;
                     return $retour;
                 }
-                if($entete[4] != "PARTICIPANTS" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 5 de l'en-tête correspond au template donné (PARTICIPANTS).!"
+                if($entete[4] != "NOMBRE DE PARTICIPANTS" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 5 de l'en-tête correspond au template donné (NOMBRE DE PARTICIPANTS).!"
                         .$genericMsg;
                     return $retour;
                 }
@@ -1160,8 +1160,8 @@ class Listes{
                         .$genericMsg;
                     return $retour;
                 }
-                if($entete[10] != "LICENCIES" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 11 de l'en-tête correspond au template donné (LICENCIES).!"
+                if($entete[10] != "NOMBRE DE LICENCIES" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 11 de l'en-tête correspond au template donné (NOMBRE DE LICENCIES).!"
                         .$genericMsg;
                     return $retour;
                 }
