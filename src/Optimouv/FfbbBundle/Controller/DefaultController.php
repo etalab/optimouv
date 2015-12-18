@@ -21,11 +21,11 @@ class DefaultController extends Controller
         }
 
 
-//        $this->get('service_rencontres')->geocoderVilles($villes);
         $idGroupe = $this->get('service_rencontres')->creerGroupe($villes, $nomGroupe, $idListeParticipants, $idListeLieux);
 
         $coordonneesVille = $this->get('service_rencontres')->index($idGroupe);
 
+        $coordonneesVille = array_merge($coordonneesVille[0], $coordonneesVille[1]);
 
         $nomsVilles = $this->get('service_rencontres')->nomsVilles($idGroupe);
 
@@ -42,6 +42,7 @@ class DefaultController extends Controller
     {
 
         $coordonneesVille = $this->get('service_rencontres')->index($idGroupe);
+        $coordonneesVille = array_merge($coordonneesVille[0], $coordonneesVille[1]);
 
 
         $nomsVilles = $this->get('service_rencontres')->nomsVilles($idGroupe);
