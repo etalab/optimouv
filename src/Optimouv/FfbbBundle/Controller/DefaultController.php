@@ -9,7 +9,6 @@ class DefaultController extends Controller
     public function indexAction()
     {
 
-
         $villes = $_POST["duallistbox_demo1"];
 
         $nomGroupe = $_POST["nomGroupe"];
@@ -20,7 +19,6 @@ class DefaultController extends Controller
 
         }
 
-
         $idGroupe = $this->get('service_rencontres')->creerGroupe($villes, $nomGroupe, $idListeParticipants, $idListeLieux);
 
         $coordonneesVille = $this->get('service_rencontres')->index($idGroupe);
@@ -28,7 +26,6 @@ class DefaultController extends Controller
         $coordonneesVille = array_merge($coordonneesVille[0], $coordonneesVille[1]);
 
         $nomsVilles = $this->get('service_rencontres')->nomsVilles($idGroupe);
-
 
          return $this->render('FfbbBundle:Default:index.html.twig', array(
 
