@@ -261,26 +261,9 @@ class Rencontres
 
         $bdd= $this->connexion();
 
-        // obtenir la liste de participants
-        $stmt1 = $bdd->prepare("SELECT equipes from groupe where id= :id");
-        $stmt1->bindParam(':id', $idGroupe);
-        $stmt1->execute();
-        $idParticipants = $stmt1->fetchColumn();
-
-        $idParticipants = explode(",", $idParticipants);
-        error_log("\n Service: Rencontres, Function: Barycentre "
-            ."\n idParticipants : ".print_r($idParticipants, true), 3, "/tmp/optimouv.log");
-
-        // obtenir le nombre de participants pour la première équipe
-        $stmt1 = $bdd->prepare("SELECT participants from entite where id= :id");
-        $stmt1->bindParam(':id', $idParticipants[0]);
-        $stmt1->execute();
-        $nbrParticipants = $stmt1->fetchColumn();
-
-        error_log("\n Service: Rencontres, Function: Barycentre "
-            ."\n nbrParticipants : ".print_r($nbrParticipants, true), 3, "/tmp/optimouv.log");
-
-
+        # obtenir le nombre de participants pour cette groupe
+        $nbrParticipants = $this->getParticipantsPourGroupe($idGroupe);
+        
         //on récupère le tableau des villes
         $villes = $this->index($idGroupe);
 
@@ -1090,6 +1073,32 @@ order by Proximite limit 1;");
 
 
     }
+
+
+    private function getParticipantsPourGroupe($idGroupe){
+
+        $bdd= $this->connexion();
+
+        // obtenir la liste de participants
+        $stmt1 = $bdd->prepare("SELECT equipes from groupe where id= :id");
+        $stmt1->bindParam(':id', $idGroupe);
+        $stmt1->execute();
+        $idParticipants = $stmt1->fetchColumn();
+
+        $idParticipants = explode(",", $idParticipants);
+//        error_log("\n Service: Rencontres, Function: Barycentre "
+//            ."\n idParticipants : ".print_r($idParticipants, true), 3, "/tmp/optimouv.log");
+
+        // obtenir le nombre de participants pour la première équipe
+        $stmt1 = $bdd->prepare("SELECT participants from entite where id= :id");
+        $stmt1->bindParam(':id', $idParticipants[0]);
+        $stmt1->execute();
+        $nbrParticipants = $stmt1->fetchColumn();
+
+        return $nbrParticipants;
+    }
+
+
 
     private function getReponseCurl($url)
     {
