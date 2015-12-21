@@ -197,6 +197,7 @@ class RencontresController extends Controller
         $distanceMin = $retour[3];
         $dureeTrajet = $retour[4];
         $coordonneesVille = $retour[5];
+        $nbrParticipants = $retour["nbrParticipants"];
 
         foreach($retour[6] as $key => $value ){
 
@@ -233,6 +234,7 @@ class RencontresController extends Controller
             'coordonneesVille' => $coordonneesVille,
             'participants' => $participants,
             'listeTerrain' => $listeTerrain,
+            'nbrParticipants' => $nbrParticipants,
 
 
 

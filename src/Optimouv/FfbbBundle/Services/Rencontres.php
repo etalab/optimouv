@@ -606,6 +606,8 @@ order by Proximite limit 1;");
         $app_id = $this->app_id;
         $app_code = $this->app_code;
 
+        # obtenir le nombre de participants pour cette groupe
+        $nbrParticipants = $this->getParticipantsPourGroupe($idGroupe);
 
         $equipe = $this->index($idGroupe);
         $equipe = array_merge($equipe[0], $equipe[1]);
@@ -690,6 +692,9 @@ order by Proximite limit 1;");
         $retour[7] = $distanceTotale;
         $retour[8] = $dureeTotale;
         $retour[9] = $listeTerrain;
+
+        # ajouter le nombre de participants dans les résultats
+        $retour["nbrParticipants"] = $nbrParticipants;
 
         return $retour;
     }
