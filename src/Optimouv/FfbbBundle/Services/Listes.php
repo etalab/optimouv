@@ -873,6 +873,9 @@ class Listes{
                                 $latitude = $donnéesLigne[8];
                                 $projection = $donnéesLigne[9];
 
+                                # nombre de participants par défaut pour personne
+                                $participants = 1;
+
                                 # corriger le code postal si un zéro est manquant dans le premier chiffre
                                 $codePostal = $this->corrigerCodePostal($codePostal);
 
@@ -885,10 +888,12 @@ class Listes{
 //                                    ."\n idVilleFrance : ".print_r($idVilleFrance , true), 3, "/tmp/optimouv.log");
 
                                 $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, prenom, adresse, code_postal, ville, longitude, latitude,"
-                                    ." projection, lieu_rencontre_possible, date_creation, date_modification,  id_ville_france)"
+                                    ." projection, participants, lieu_rencontre_possible, date_creation, date_modification,  id_ville_france )"
                                     ."VALUES ( :id_utilisateur, :type_entite, :nom, :prenom, :adresse, :code_postal, :ville, :longitude, :latitude, "
-                                    ." :projection, :lieu_rencontre_possible, :date_creation, :date_modification, :id_ville_france );";
+                                    ." :projection, :participants, :lieu_rencontre_possible, :date_creation, :date_modification, :id_ville_france );";
 
+//                                error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+//                                    ."\n sql : ".print_r($sql , true), 3, "/tmp/optimouv.log");
 
                                 $stmt = $bdd->prepare($sql);
                                 $stmt->bindParam(':id_utilisateur', $idUtilisateur);
@@ -901,6 +906,7 @@ class Listes{
                                 $stmt->bindParam(':longitude', $longitude);
                                 $stmt->bindParam(':latitude', $latitude);
                                 $stmt->bindParam(':projection', $projection);
+                                $stmt->bindParam(':participants', $participants);
                                 $stmt->bindParam(':lieu_rencontre_possible', $lieuRencontrePossible);
                                 $stmt->bindParam(':date_creation', $dateCreation);
                                 $stmt->bindParam(':date_modification', $dateModification);
@@ -928,8 +934,6 @@ class Listes{
                                 $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
                                 $idVilleFrance = $statutControlCodePostalVille["idVille"];
 
-//                                error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-//                                    ."\n idVilleFrance : ".print_r($idVilleFrance , true), 3, "/tmp/optimouv.log");
 
 
 
@@ -967,8 +971,8 @@ class Listes{
                             $stmt->execute();
 
                             # afficher le statut de la requete executée
-//                            error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-//                                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/tmp/optimouv.log");
+                            error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+                                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/tmp/optimouv.log");
 
                             # obtenir l'id de l"entité créée
                             $idEntite = $bdd->lastInsertId();
