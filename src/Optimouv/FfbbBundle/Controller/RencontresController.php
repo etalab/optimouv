@@ -13,6 +13,9 @@ class RencontresController extends Controller
         $retour = $this->get('service_rencontres')->meilleurLieuRencontre($idGroupe);
         $retourEq = $this->get('service_rencontres')->scenarioEquitable($idGroupe);
 
+//        error_log("\n Controller: Rencontres, Function: indexAction "
+//            ."\n retour : ".print_r($retour, true), 3, "/tmp/optimouv.log");
+
         //Donn�es du sc�nario optimal
         $villeDepart = $retour[0];
         $longPtDep = $retour[1];
@@ -21,6 +24,8 @@ class RencontresController extends Controller
         $dureeTrajet = $retour[4];
         $coordonneesVille = $retour[5];
         $terrainsNeutres = $retour[9];
+        $nbrParticipants = $retour["nbrParticipants"];
+
         foreach($retour[6] as $key => $value ){
 
             $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key]);
@@ -50,6 +55,7 @@ class RencontresController extends Controller
             'dureeTrajet' => $dureeTrajet,
             'coordonneesVille' => $coordonneesVille,
             'participants' => $participants,
+            'nbrParticipants' => $nbrParticipants,
 
             //donn�es sc�nario �quitable
             'villeDepartEq' => $villeDepartEq,
@@ -114,8 +120,6 @@ class RencontresController extends Controller
         //R�cup�ration du r�sultat du calcul avec contrainte
         $retour = $this->get('service_rencontres')->Exclusion($valeurExclusion, $idGroupe);
 
-//        error_log("\n Controller: Rencontres, Function: barycentreAction "
-//            ."\n retour : ".print_r($retour, true), 3, "/tmp/optimouv.log");
 
 
         //Donn�es du sc�nario optimal

@@ -276,9 +276,9 @@
                                                         <p  class="list-group-item">
                                                             <img src="{{ asset('bundles/ffbb/images/icons/car-icon.png') }}" width="20px" height="20px"/>
                                                             <i  style="padding-right: 10px"></i>
-                                                            <strong>{{ (distanceMin *12*0.157)|round }}</strong>
+                                                            <strong>{{ (distanceMin *nbrParticipants*0.157)|round }}</strong>
                                                             Kg équivalent
-                                                            CO2 d'émissions totales de GES pour une équipe de 12
+                                                            CO2 d'émissions totales de GES pour une équipe de {{ nbrParticipants }}
                                                             joueurs en voiture individuelle
                                                             pour le scénario
 
@@ -286,9 +286,9 @@
                                                         <p  class="list-group-item">
                                                             <img src="{{ asset('bundles/ffbb/images/icons/covoiturage-icon.png') }}" width="20px" height="20px"/>
                                                             <i  style="padding-right: 10px"></i>
-                                                            <strong>{{ (distanceMin *(12/4)*0.157)|round }}</strong>
+                                                            <strong>{{ (distanceMin *(nbrParticipants/4)*0.157)|round }}</strong>
                                                             Kg équivalent
-                                                            CO2 d'émissions totales de GES pour une équipe de 12
+                                                            CO2 d'émissions totales de GES pour une équipe de {{ nbrParticipants }}
                                                             joueurs en co-voiturage pour le scénario
 
                                                         </p>
@@ -296,9 +296,9 @@
                                                         <p  class="list-group-item">
                                                             <img src="{{ asset('bundles/ffbb/images/icons/bus-icon.png') }}" width="20px" height="15px"/>
                                                             <i  style="padding-right: 10px"></i>
-                                                            <strong>{{ (distanceMin *(12/9)*0.185)|round }}</strong>
+                                                            <strong>{{ (distanceMin *(nbrParticipants/9)*0.185)|round }}</strong>
                                                             Kg équivalent
-                                                            CO2 d'émissions totales de GES pour une équipe de 12
+                                                            CO2 d'émissions totales de GES pour une équipe de {{ nbrParticipants }}
                                                             joueurs en minibus pour le scénario
 
                                                         </p>
@@ -339,9 +339,9 @@
                                                                     <td style="text-align:right"> {{ participant.duree|date('H:i')}}</td>
                                                                     <td style="text-align:right"> {{ (participant.distance // 1000 * 0.80)|round }}</td>
                                                                     <td style="text-align:right"> {{ (participant.distance // 1000 * 1.31)|round }}</td>
-                                                                    <td style="text-align:right"> {{ (participant.distance //1000 *12*0.157)|round }}</td>
-                                                                    <td style="text-align:right"> {{ (participant.distance //1000 *(12/4)*0.157)|round }} </td>
-                                                                    <td style="text-align:right"> {{ (participant.distance //1000 *(12/9)*0.185)|round }} </td>
+                                                                    <td style="text-align:right"> {{ (participant.distance //1000 *nbrParticipants*0.157)|round }}</td>
+                                                                    <td style="text-align:right"> {{ (participant.distance //1000 *(nbrParticipants/4)*0.157)|round }} </td>
+                                                                    <td style="text-align:right"> {{ (participant.distance //1000 *(nbrParticipants/9)*0.185)|round }} </td>
                                                                 </tr>
 
 
@@ -515,9 +515,9 @@
                                                         <p  class="list-group-item">
                                                             <img src="{{ asset('bundles/ffbb/images/icons/car-icon.png') }}" width="20px" height="20px"/>
                                                             <i  style="padding-right: 10px"></i>
-                                                            <strong>{{ (distanceTotaleEq *12*0.157)|round }}</strong>
+                                                            <strong>{{ (distanceTotaleEq *nbrParticipants*0.157)|round }}</strong>
                                                             Kg équivalent
-                                                            CO2 d'émissions totales de GES pour une équipe de 12
+                                                            CO2 d'émissions totales de GES pour une équipe de {{ nbrParticipants }}
                                                             joueurs en voiture individuelle
                                                             pour le scénario
 
@@ -525,9 +525,9 @@
                                                         <p  class="list-group-item">
                                                             <img src="{{ asset('bundles/ffbb/images/icons/covoiturage-icon.png') }}" width="20px" height="20px"/>
                                                             <i  style="padding-right: 10px"></i>
-                                                            <strong>{{ (distanceTotaleEq *(12/4)*0.157)|round }}</strong>
+                                                            <strong>{{ (distanceTotaleEq *(nbrParticipants/4)*0.157)|round }}</strong>
                                                             Kg équivalent
-                                                            CO2 d'émissions totales de GES pour une équipe de 12
+                                                            CO2 d'émissions totales de GES pour une équipe de {{ nbrParticipants }}
                                                             joueurs en co-voiturage pour le scénario
 
                                                         </p>
@@ -535,9 +535,9 @@
                                                         <p  class="list-group-item">
                                                             <img src="{{ asset('bundles/ffbb/images/icons/bus-icon.png') }}" width="20px" height="15px"/>
                                                             <i  style="padding-right: 10px"></i>
-                                                            <strong>{{ (distanceTotaleEq *(12/9)*0.185)|round }}</strong>
+                                                            <strong>{{ (distanceTotaleEq *(nbrParticipants/9)*0.185)|round }}</strong>
                                                             Kg équivalent
-                                                            CO2 d'émissions totales de GES pour une équipe de 12
+                                                            CO2 d'émissions totales de GES pour une équipe de {{ nbrParticipants }}
                                                             joueurs en minibus pour le scénario
                                                             </p>
 
@@ -580,9 +580,9 @@
                                                                     <td style="text-align:right"> {{ participantEq.dureeEq|date('H:i')}}</td>
                                                                     <td style="text-align:right"> {{ (participantEq.distanceEq // 1000 *  0.80)|round }}</td>
                                                                     <td style="text-align:right"> {{ (participantEq.distanceEq // 1000 *  1.31)|round }}</td>
-                                                                    <td style="text-align:right"> {{ (participantEq.distanceEq //1000 *12*0.157)|round }}</td>
-                                                                    <td style="text-align:right"> {{ (participantEq.distanceEq //1000 *(12/4)*0.157)|round }} </td>
-                                                                    <td style="text-align:right"> {{ (participantEq.distanceEq //1000 *(12/9)*0.185)|round }} </td>
+                                                                    <td style="text-align:right"> {{ (participantEq.distanceEq //1000 *nbrParticipants*0.157)|round }}</td>
+                                                                    <td style="text-align:right"> {{ (participantEq.distanceEq //1000 *(nbrParticipants/4)*0.157)|round }} </td>
+                                                                    <td style="text-align:right"> {{ (participantEq.distanceEq //1000 *(nbrParticipants/9)*0.185)|round }} </td>
 
                                                                 </tr>
 

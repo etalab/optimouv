@@ -145,6 +145,9 @@ class Rencontres
 
         $bdd= $this->connexion();
 
+        # obtenir le nombre de participants pour cette groupe
+        $nbrParticipants = $this->getParticipantsPourGroupe($idGroupe);
+
         //Récupération de détail de la liste de lieux
 
         $listeLieux = $this->getListeLieux($idGroupe);
@@ -251,6 +254,9 @@ class Rencontres
         $retour[7] = $distVille;
         $retour[8] = $dureeVille;
         $retour[9] = $nomsTerrainsNeutres;
+
+        # ajouter le nombre de participants dans les résultats
+        $retour["nbrParticipants"] = $nbrParticipants;
 
         return $retour;
     }
