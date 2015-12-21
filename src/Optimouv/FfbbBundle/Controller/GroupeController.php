@@ -289,8 +289,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
         $detailsEntites = $em->getRepository('FfbbBundle:Entite')->getEntities($participants);
 
 //        error_log("\n Controller: Listes, Function: visualiserListeParticipantsAction, datetime: ".$dateTimeNow
-//            ."\n detailsEntite : ".print_r($detailsEntites, true), 3, "/tmp/optimouv.log");
-//        error_log("\n Controller: Listes, Function: visualiserListeParticipantsAction, datetime: ".$dateTimeNow
 //            ."\n idGroupe : ".print_r($idGroupe, true), 3, "/tmp/optimouv.log");
 
 

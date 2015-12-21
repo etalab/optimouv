@@ -261,8 +261,29 @@ class Rencontres
 
         $bdd= $this->connexion();
 
+        // obtenir la liste de participants
+        $stmt1 = $bdd->prepare("SELECT equipes from groupe where id= :id");
+        $stmt1->bindParam(':id', $idGroupe);
+        $stmt1->execute();
+        $idParticipants = $stmt1->fetchColumn();
+
+        $idParticipants = explode(",", $idParticipants);
+        error_log("\n Service: Rencontres, Function: Barycentre "
+            ."\n idParticipants : ".print_r($idParticipants, true), 3, "/tmp/optimouv.log");
+
+        // obtenir le nombre de participants pour la première équipe
+        $stmt1 = $bdd->prepare("SELECT participants from entite where id= :id");
+        $stmt1->bindParam(':id', $idParticipants[0]);
+        $stmt1->execute();
+        $nbrParticipants = $stmt1->fetchColumn();
+
+        error_log("\n Service: Rencontres, Function: Barycentre "
+            ."\n nbrParticipants : ".print_r($nbrParticipants, true), 3, "/tmp/optimouv.log");
+
+
         //on récupère le tableau des villes
         $villes = $this->index($idGroupe);
+
 
         $villes = array_merge($villes[0], $villes[1]);
 
@@ -316,6 +337,13 @@ class Rencontres
         $coord = $lanX . '%2C' . $latY; // pour appel la fn routing matrix
 
         $retour = $this->routingMatrix($coord, $villes);
+
+        # ajouter le nombre de participants dans les résultats
+        $retour["nbrParticipants"] = $nbrParticipants;
+
+//        error_log("\n Service: Rencontres, Function: Barycentre "
+//            ."\n retour : ".print_r($retour, true), 3, "/tmp/optimouv.log");
+
         return $retour;
     }
 

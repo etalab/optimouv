@@ -71,6 +71,9 @@ class RencontresController extends Controller
         $participants = [];
         $retour = $this->get('service_rencontres')->Barycentre($idGroupe);
 
+//        error_log("\n Controller: Rencontres, Function: barycentreAction "
+//            ."\n retour : ".print_r($retour, true), 3, "/tmp/optimouv.log");
+
         //Donn�es du sc�nario optimal
         $villeDepart = $retour[0];
         $longPtDep = $retour[1];
@@ -78,6 +81,7 @@ class RencontresController extends Controller
         $distanceMin = $retour[3];
         $dureeTrajet = $retour[4];
         $coordonneesVille = $retour[5];
+        $nbrParticipants = $retour["nbrParticipants"];
 
         foreach($retour[6] as $key => $value ){
 
@@ -95,6 +99,7 @@ class RencontresController extends Controller
             'coordonneesVille' => $coordonneesVille,
             'participants' => $participants,
             'idGroupe' => $idGroupe,
+            'nbrParticipants' => $nbrParticipants
 
 
         ));
