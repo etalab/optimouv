@@ -343,9 +343,6 @@ class Rencontres
         # obtenir le nombre de participants pour cette groupe
         $nbrParticipants = $this->getParticipantsPourGroupe($idGroupe);
 
-//        error_log("\n Service: Rencontres, Function: Exclusion "
-//            ."\n nbrParticipants : ".print_r($nbrParticipants, true), 3, "/tmp/optimouv.log");
-
 
         if ($valeurExclusion) {
 
@@ -1102,19 +1099,41 @@ order by Proximite limit 1;");
 
         $bdd= $this->connexion();
 
-        // obtenir la liste de participants
-        $stmt1 = $bdd->prepare("SELECT equipes from groupe where id= :id");
-        $stmt1->bindParam(':id', $idGroupe);
-        $stmt1->execute();
-        $idParticipants = $stmt1->fetchColumn();
+        if(!$bdd){
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
 
-        $idParticipants = explode(",", $idParticipants);
 
-        // obtenir le nombre de participants pour la première équipe
-        $stmt1 = $bdd->prepare("SELECT participants from entite where id= :id");
-        $stmt1->bindParam(':id', $idParticipants[0]);
-        $stmt1->execute();
-        $nbrParticipants = $stmt1->fetchColumn();
+        try {
+            // obtenir la liste de participants
+            $stmt1 = $bdd->prepare("SELECT equipes from groupe where id= :id");
+            $stmt1->bindParam(':id', $idGroupe);
+            $stmt1->execute();
+            $idParticipants = $stmt1->fetchColumn();
+
+            $idParticipants = explode(",", $idParticipants);
+
+            // obtenir le nombre de participants pour toutes les équipes
+            $nbrParticipants = 0;
+
+            for($i=0; $i<count($idParticipants); $i++){
+                $stmt1 = $bdd->prepare("SELECT participants from entite where id = :id");
+                $stmt1->bindParam(':id', $idParticipants[$i]);
+
+                $stmt1->execute();
+                $nbrParticipantsTemp = $stmt1->fetchColumn();
+
+                $nbrParticipants += $nbrParticipantsTemp;
+//                error_log("\n Service: Rencontres, Function: getParticipantsPourGroupe "
+//                    ."\n nbrParticipants : ".print_r($nbrParticipants, true), 3, "/tmp/optimouv.log");
+            }
+
+
+        } catch (Exception $e) {
+            die('Erreur : ' . $e->getMessage());
+            error_log(print_r($e, TRUE), 3, "error_log_optimouv.txt");
+        }
+
 
         return $nbrParticipants;
     }
