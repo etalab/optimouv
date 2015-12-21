@@ -518,12 +518,12 @@ class Listes{
                                     }
 
                                     # controler le champ 'lieu de rencontre possible'
-                                    # il faut que la valeur soit 'OUI' ou 'NON'
-                                    if((strtolower($donnéesLigne[4]) != 'non') and (strtolower($donnéesLigne[4]) != 'oui')){
+                                    # il faut que la valeur soit 'OUI'
+                                    if((strtolower($donnéesLigne[4]) != 'oui')){
                                         $retour = array(
                                             "success" => false,
                                             "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'lieu de rencontre possible' (colonne 5) doit avoir la valeur 'OUI' ou 'NON'!"
+                                                ." Le champ 'lieu de rencontre possible' (colonne 5) doit avoir la valeur 'OUI' pour la liste de lieux !"
                                                 .$genericMsg
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
