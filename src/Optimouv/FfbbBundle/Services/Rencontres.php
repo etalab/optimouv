@@ -263,7 +263,7 @@ class Rencontres
 
         # obtenir le nombre de participants pour cette groupe
         $nbrParticipants = $this->getParticipantsPourGroupe($idGroupe);
-        
+
         //on récupère le tableau des villes
         $villes = $this->index($idGroupe);
 
@@ -324,8 +324,6 @@ class Rencontres
         # ajouter le nombre de participants dans les résultats
         $retour["nbrParticipants"] = $nbrParticipants;
 
-//        error_log("\n Service: Rencontres, Function: Barycentre "
-//            ."\n retour : ".print_r($retour, true), 3, "/tmp/optimouv.log");
 
         return $retour;
     }
@@ -334,6 +332,14 @@ class Rencontres
     public function Exclusion($valeurExclusion, $idGroupe)
     {
         $bdd= $this->connexion();
+
+
+        # obtenir le nombre de participants pour cette groupe
+        $nbrParticipants = $this->getParticipantsPourGroupe($idGroupe);
+
+//        error_log("\n Service: Rencontres, Function: Exclusion "
+//            ."\n nbrParticipants : ".print_r($nbrParticipants, true), 3, "/tmp/optimouv.log");
+
 
         if ($valeurExclusion) {
 
@@ -395,6 +401,12 @@ order by Proximite limit 1;");
 
 
             $retour = $this->routingMatrix($coord, $villes);
+
+            # ajouter le nombre de participants dans les résultats
+            $retour["nbrParticipants"] = $nbrParticipants;
+
+
+
         } else {
 
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
@@ -1086,8 +1098,6 @@ order by Proximite limit 1;");
         $idParticipants = $stmt1->fetchColumn();
 
         $idParticipants = explode(",", $idParticipants);
-//        error_log("\n Service: Rencontres, Function: Barycentre "
-//            ."\n idParticipants : ".print_r($idParticipants, true), 3, "/tmp/optimouv.log");
 
         // obtenir le nombre de participants pour la première équipe
         $stmt1 = $bdd->prepare("SELECT participants from entite where id= :id");
