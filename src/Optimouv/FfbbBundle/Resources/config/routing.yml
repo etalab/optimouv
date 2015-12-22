@@ -3,46 +3,41 @@ ffbb_accueil:
     defaults: { _controller: FfbbBundle:Accueil:index }
 
 ffbb_accueil_connect:
-    #path:     /accueil-connect
     path:     /admin/dashboard
     defaults: { _controller: FfbbBundle:Accueil:connect }
 
 ffbb_choisir_liste_participants:
-    path:     /admin/choisir-liste-participants
+    path:     /admin/rencontre/choisir-liste-participants
     defaults: { _controller: FfbbBundle:Groupe:choisirListeParticipants  }
 
-ffbb_listes:
-    path:     /liste-old
-    defaults: { _controller: FfbbBundle:Listes:index }
-
 ffbb_table:
-    path:     /admin/listes-participants
+    path:     /admin/rencontre/listes-participants
 #    defaults: { _controller: FfbbBundle:Groupe:index }
     defaults: { _controller: FfbbBundle:Groupe:afficherParticipants }
 
 
 ffbb_homepage:
-    path:     /admin/villes
+    path:     /admin/rencontre/villes
     defaults: { _controller: FfbbBundle:Default:index }
 
 ffbb_villes_groupe:
-    path:     /admin/villes/{idGroupe}
+    path:     /admin/rencontre/villes/{idGroupe}
     defaults: { _controller: FfbbBundle:Default:groupe }
 
 ffbb_supprimer_groupe:
-    path:    /admin/supprimer-groupe/{idGroupe}
+    path:    /admin/rencontre/supprimer-groupe/{idGroupe}
     defaults: { _controller: FfbbBundle:Groupe:delete }
 
 ffbb_renommer_groupe:
-    path:    /admin/renommer-groupe/{idGroupe}
+    path:    /admin/rencontre/renommer-groupe/{idGroupe}
     defaults: { _controller: FfbbBundle:Groupe:renommer }
 
 ffbb_update_groupe:
-    path:    /admin/update-groupe/{idGroupe}
+    path:    /admin/rencontre/update-groupe/{idGroupe}
     defaults: { _controller: FfbbBundle:Groupe:renommerGroupe }
 
 ffbb_rencontres:
-    path:     /admin/rencontres/{idGroupe}
+    path:     /admin/rencontre/rencontres/{idGroupe}
     defaults: { _controller: FfbbBundle:Rencontres:index }
 
 ffbb_competitions:
@@ -54,11 +49,11 @@ ffbb_rapports:
     defaults: { _controller: FfbbBundle:Rapports:index }
 
 ffbb_barycentre:
-    path:     /admin/barycentre/{idGroupe}
+    path:     /admin/rencontre/barycentre/{idGroupe}
     defaults: { _controller: FfbbBundle:Rencontres:barycentre }
 
 ffbb_exclusion:
-    path:     /admin/exclusion/{idGroupe}
+    path:     /admin/rencontre/exclusion/{idGroupe}
     defaults: { _controller: FfbbBundle:Rencontres:exclusion }
 
 
@@ -67,85 +62,85 @@ ffbb_contact:
     defaults: { _controller: FfbbBundle:Rencontres:contact }
 
 ffbb_terrain:
-    path:     /admin/terrain-neutre/{idGroupe}
+    path:     /admin/rencontre/terrain-neutre/{idGroupe}
     defaults: { _controller: FfbbBundle:Rencontres:terrainNeutre }
 
 ffbb_details_calcul:
-    path:     /admin/details-calcul
+    path:     /admin/rencontre/details-calcul
     defaults: { _controller: FfbbBundle:Rencontres:detailsCalcul }
 
 # routing ajouté pour la liste de participants et de lieux neutres
 
 ffbb_creer_liste_participants:
-    path:     /admin/creer-liste-participants
+    path:     /admin/rencontre/creer-liste-participants
     defaults: { _controller: FfbbBundle:Listes:creerListeParticipants }
 
 ffbb_creer_liste_lieux:
-    path:     /admin/creer-liste-lieux
+    path:     /admin/rencontre/creer-liste-lieux
     defaults: { _controller: FfbbBundle:Listes:creerListeLieux }
 
 ffbb_select_liste_participants:
-    path:     /admin/select-liste-participants
+    path:     /admin/rencontre/select-liste-participants
     defaults: { _controller: FfbbBundle:Groupe:afficherParticipants  }
 
 
 ffbb_nouveau_groupe:
-    path:     /admin/nouvau-groupe
+    path:     /admin/rencontre/nouvau-groupe
     defaults: { _controller: FfbbBundle:Groupe:nouveauGroupe  }
 
 ffbb_choisir_groupe:
-    path:     /admin/choisir-groupe/{idListe}
+    path:     /admin/rencontre/choisir-groupe/{idListe}
     defaults: { _controller: FfbbBundle:Groupe:choisirGroupe  }
 
 ffbb_gerer_groupe:
-    path:     /admin/gerer-groupe/{idListe}
+    path:     /admin/rencontre/gerer-groupe/{idListe}
     defaults: { _controller: FfbbBundle:Groupe:gererGroupe  }
 
 ffbb_gerer_liste_participants:
-    path:     /admin/gerer-liste-participants
+    path:     /admin/rencontre/gerer-liste-participants
     defaults: { _controller: FfbbBundle:Listes:gererListes  }
 
 ffbb_supprimer_liste_participants:
-    path:    /admin/supprimer-liste-participants/{idListeParticipants}
+    path:    /admin/rencontre/supprimer-liste-participants/{idListeParticipants}
     defaults: { _controller: FfbbBundle:Listes:delete }
 
 ffbb_supprimer_liste_lieux:
-    path:    /admin/supprimer-liste-lieux/{idListeLieux}
+    path:    /admin/rencontre/supprimer-liste-lieux/{idListeLieux}
     defaults: { _controller: FfbbBundle:Listes:deleteLieux }
 
 ffbb_renommer_liste_participants:
-    path:    /admin/renommer-liste-participants/{idListeParticipants}
+    path:    /admin/rencontre/renommer-liste-participants/{idListeParticipants}
     defaults: { _controller: FfbbBundle:Listes:renommerListe }
 
 ffbb_update_liste_participants:
-    path:    /admin/update-liste-participants/{idListeParticipants}
+    path:    /admin/rencontre/update-liste-participants/{idListeParticipants}
     defaults: { _controller: FfbbBundle:Listes:renommerListeParticipants }
 
 ffbb_renommer_liste_lieux:
-    path:    /admin/renommer-liste-lieux/{idListeLieux}
+    path:    /admin/rencontre/renommer-liste-lieux/{idListeLieux}
     defaults: { _controller: FfbbBundle:Listes:renommerlieux }
 
 ffbb_update_liste_lieux:
-    path:    /admin/update-liste-lieux/{idListeLieux}
+    path:    /admin/rencontre/update-liste-lieux/{idListeLieux}
     defaults: { _controller: FfbbBundle:Listes:renommerListelieux }
 
 ffbb_entite:
-    path:    /admin/entite/{idGroupe}
+    path:    /admin/rencontre/entite/{idGroupe}
     defaults: { _controller: FfbbBundle:Entite:index }
 
 ffbb_creer_entite:
-    path:    /admin/creer-entite/
+    path:    /admin/rencontre/creer-entite/
     defaults: { _controller: FfbbBundle:Entite:creerEntite }
 
 ffbb_visualiser_liste_participants:
-    path:     /admin/visualiser-liste-participants/{idListeParticipants}
+    path:     /admin/rencontre/visualiser-liste-participants/{idListeParticipants}
     defaults: { _controller: FfbbBundle:Listes:visualiserListeParticipants }
 
 ffbb_visualiser_liste_lieux:
-    path:     /admin/visualiser-liste-lieux/{idListeLieux}
+    path:     /admin/rencontre/visualiser-liste-lieux/{idListeLieux}
     defaults: { _controller: FfbbBundle:Listes:visualiserListeLieux }
 
 ffbb_visualiser_groupe:
-    path:     /admin/visualiser-groupe/{idGroupe}
+    path:     /admin/rencontre/visualiser-groupe/{idGroupe}
     defaults: { _controller: FfbbBundle:Groupe:visualiserGroupe }
 
