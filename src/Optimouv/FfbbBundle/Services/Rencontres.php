@@ -145,6 +145,9 @@ class Rencontres
 
         $bdd= $this->connexion();
 
+        # obtenir le nombre de participants pour cette groupe
+        $nbrParticipants = $this->getParticipantsPourGroupe($idGroupe);
+
         //Récupération de détail de la liste de lieux
 
         $listeLieux = $this->getListeLieux($idGroupe);
@@ -252,6 +255,9 @@ class Rencontres
         $retour[8] = $dureeVille;
         $retour[9] = $nomsTerrainsNeutres;
 
+        # ajouter le nombre de participants dans les résultats
+        $retour["nbrParticipants"] = $nbrParticipants;
+
         return $retour;
     }
 
@@ -261,8 +267,12 @@ class Rencontres
 
         $bdd= $this->connexion();
 
+        # obtenir le nombre de participants pour cette groupe
+        $nbrParticipants = $this->getParticipantsPourGroupe($idGroupe);
+
         //on récupère le tableau des villes
         $villes = $this->index($idGroupe);
+
 
         $villes = array_merge($villes[0], $villes[1]);
 
@@ -316,6 +326,11 @@ class Rencontres
         $coord = $lanX . '%2C' . $latY; // pour appel la fn routing matrix
 
         $retour = $this->routingMatrix($coord, $villes);
+
+        # ajouter le nombre de participants dans les résultats
+        $retour["nbrParticipants"] = $nbrParticipants;
+
+
         return $retour;
     }
 
@@ -323,6 +338,11 @@ class Rencontres
     public function Exclusion($valeurExclusion, $idGroupe)
     {
         $bdd= $this->connexion();
+
+
+        # obtenir le nombre de participants pour cette groupe
+        $nbrParticipants = $this->getParticipantsPourGroupe($idGroupe);
+
 
         if ($valeurExclusion) {
 
@@ -384,6 +404,12 @@ order by Proximite limit 1;");
 
 
             $retour = $this->routingMatrix($coord, $villes);
+
+            # ajouter le nombre de participants dans les résultats
+            $retour["nbrParticipants"] = $nbrParticipants;
+
+
+
         } else {
 
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
@@ -577,6 +603,8 @@ order by Proximite limit 1;");
         $app_id = $this->app_id;
         $app_code = $this->app_code;
 
+        # obtenir le nombre de participants pour cette groupe
+        $nbrParticipants = $this->getParticipantsPourGroupe($idGroupe);
 
         $equipe = $this->index($idGroupe);
         $equipe = array_merge($equipe[0], $equipe[1]);
@@ -661,6 +689,9 @@ order by Proximite limit 1;");
         $retour[7] = $distanceTotale;
         $retour[8] = $dureeTotale;
         $retour[9] = $listeTerrain;
+
+        # ajouter le nombre de participants dans les résultats
+        $retour["nbrParticipants"] = $nbrParticipants;
 
         return $retour;
     }
@@ -1025,7 +1056,8 @@ order by Proximite limit 1;");
 
                         // détecter si la réponse est vide
                         if ($reqGeocodeArray['Response']['View'] == []) {
-                            die('Erreur interne, l\'API HERE ne reconnait pas cette ville: ' . $ville);
+                            die("Erreur interne, l\'API HERE ne reconnait pas cette ville: " . $ville.
+                                ".\r Veuillez assurer que tous les lieux se trouvent en France Métropolitaine");
                         }
 
                         $Latitude = $reqGeocodeArray['Response']['View'][0]['Result'][0]['Location']['DisplayPosition']['Latitude'];
@@ -1061,6 +1093,52 @@ order by Proximite limit 1;");
 
 
     }
+
+
+    private function getParticipantsPourGroupe($idGroupe){
+
+        $bdd= $this->connexion();
+
+        if(!$bdd){
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
+
+
+        try {
+            // obtenir la liste de participants
+            $stmt1 = $bdd->prepare("SELECT equipes from groupe where id= :id");
+            $stmt1->bindParam(':id', $idGroupe);
+            $stmt1->execute();
+            $idParticipants = $stmt1->fetchColumn();
+
+            $idParticipants = explode(",", $idParticipants);
+
+            // obtenir le nombre de participants pour toutes les équipes
+            $nbrParticipants = 0;
+
+            for($i=0; $i<count($idParticipants); $i++){
+                $stmt1 = $bdd->prepare("SELECT participants from entite where id = :id");
+                $stmt1->bindParam(':id', $idParticipants[$i]);
+
+                $stmt1->execute();
+                $nbrParticipantsTemp = $stmt1->fetchColumn();
+
+                $nbrParticipants += $nbrParticipantsTemp;
+//                error_log("\n Service: Rencontres, Function: getParticipantsPourGroupe "
+//                    ."\n nbrParticipants : ".print_r($nbrParticipants, true), 3, "/tmp/optimouv.log");
+            }
+
+
+        } catch (Exception $e) {
+            die('Erreur : ' . $e->getMessage());
+            error_log(print_r($e, TRUE), 3, "error_log_optimouv.txt");
+        }
+
+
+        return $nbrParticipants;
+    }
+
+
 
     private function getReponseCurl($url)
     {

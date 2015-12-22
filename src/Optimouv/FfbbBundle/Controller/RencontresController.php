@@ -13,6 +13,9 @@ class RencontresController extends Controller
         $retour = $this->get('service_rencontres')->meilleurLieuRencontre($idGroupe);
         $retourEq = $this->get('service_rencontres')->scenarioEquitable($idGroupe);
 
+//        error_log("\n Controller: Rencontres, Function: indexAction "
+//            ."\n retour : ".print_r($retour, true), 3, "/tmp/optimouv.log");
+
         //Donn�es du sc�nario optimal
         $villeDepart = $retour[0];
         $longPtDep = $retour[1];
@@ -21,6 +24,8 @@ class RencontresController extends Controller
         $dureeTrajet = $retour[4];
         $coordonneesVille = $retour[5];
         $terrainsNeutres = $retour[9];
+        $nbrParticipants = $retour["nbrParticipants"];
+
         foreach($retour[6] as $key => $value ){
 
             $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key]);
@@ -50,6 +55,7 @@ class RencontresController extends Controller
             'dureeTrajet' => $dureeTrajet,
             'coordonneesVille' => $coordonneesVille,
             'participants' => $participants,
+            'nbrParticipants' => $nbrParticipants,
 
             //donn�es sc�nario �quitable
             'villeDepartEq' => $villeDepartEq,
@@ -71,6 +77,7 @@ class RencontresController extends Controller
         $participants = [];
         $retour = $this->get('service_rencontres')->Barycentre($idGroupe);
 
+
         //Donn�es du sc�nario optimal
         $villeDepart = $retour[0];
         $longPtDep = $retour[1];
@@ -78,6 +85,7 @@ class RencontresController extends Controller
         $distanceMin = $retour[3];
         $dureeTrajet = $retour[4];
         $coordonneesVille = $retour[5];
+        $nbrParticipants = $retour["nbrParticipants"];
 
         foreach($retour[6] as $key => $value ){
 
@@ -95,6 +103,7 @@ class RencontresController extends Controller
             'coordonneesVille' => $coordonneesVille,
             'participants' => $participants,
             'idGroupe' => $idGroupe,
+            'nbrParticipants' => $nbrParticipants
 
 
         ));
@@ -112,6 +121,7 @@ class RencontresController extends Controller
         $retour = $this->get('service_rencontres')->Exclusion($valeurExclusion, $idGroupe);
 
 
+
         //Donn�es du sc�nario optimal
         $villeDepart = $retour[0];
         $longPtDep = $retour[1];
@@ -119,6 +129,8 @@ class RencontresController extends Controller
         $distanceMin = $retour[3];
         $dureeTrajet = $retour[4];
         $coordonneesVille = $retour[5];
+        $nbrParticipants = $retour["nbrParticipants"];
+
         foreach($retour[6] as $key => $value ){
 
             $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key]);
@@ -136,6 +148,7 @@ class RencontresController extends Controller
         $distanceTotaleEq = $retourEq[3];
         $dureeTrajetEq = $retourEq[4];
         $coordonneesVilleEq = $retourEq[5];
+
         foreach($retourEq[6] as $key => $value ){
 
             $participantsEq[]= array('villeEq' => $value, 'distanceEq' => $retourEq[7][$key], 'dureeEq' => $retourEq[8][$key]);
@@ -152,6 +165,7 @@ class RencontresController extends Controller
             'dureeTrajet' => $dureeTrajet,
             'coordonneesVille' => $coordonneesVille,
             'participants' => $participants,
+            'nbrParticipants' => $nbrParticipants,
 
             //donn�es sc�nario sans contrainte
             'villeDepartEq' => $villeDepartEq,
@@ -183,6 +197,7 @@ class RencontresController extends Controller
         $distanceMin = $retour[3];
         $dureeTrajet = $retour[4];
         $coordonneesVille = $retour[5];
+        $nbrParticipants = $retour["nbrParticipants"];
 
         foreach($retour[6] as $key => $value ){
 
@@ -219,6 +234,7 @@ class RencontresController extends Controller
             'coordonneesVille' => $coordonneesVille,
             'participants' => $participants,
             'listeTerrain' => $listeTerrain,
+            'nbrParticipants' => $nbrParticipants,
 
 
 
