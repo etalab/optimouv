@@ -13,7 +13,7 @@ function addEventHandlerImportListeParticipants(){
     });
 
     $.ajax({
-      url: 'admin/rencontre/creer-liste-participants',
+      url: '/admin/rencontre/creer-liste-participants',
       type: 'POST',
       data: data,
       contentType: false,
@@ -127,7 +127,7 @@ function addEventHandlerImportListeLieux(){
     });
 
     $.ajax({
-      url: 'admin/rencontre/creer-liste-lieux',
+      url: '/admin/rencontre/creer-liste-lieux',
       type: 'POST',
       data: data,
       contentType: false,
