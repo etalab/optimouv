@@ -15,12 +15,6 @@ ffbb_rapports:
     defaults: { _controller: FfbbBundle:Rapports:index }
 
 
-
-# chemins inutilisés
-ffbb_competitions:
-    path:     /admin/competitions
-    defaults: { _controller: FfbbBundle:Competitions:index }
-
 # chemin pour l'optimisation de poules
 #ffbb_optimisation_index:
 
