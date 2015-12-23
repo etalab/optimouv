@@ -8,7 +8,6 @@ class RapportsController extends Controller
 {
     public function indexAction()
     {
-//       $x = $this->get('service_rencontres')->myFunction();
         return $this->render('FfbbBundle:Rapports:index.html.twig');
     }
 }
