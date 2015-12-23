@@ -59,12 +59,13 @@ class Rencontres
 
         $villes = [];
         $villesPasRencontre = [];
+        $identites = [];
 
         $lieuRencontrePossible = 1;
 
         for ($i = 0; $i < count($reqVilles); $i++) {
 
-            //on teste si toutes les entites sont géocoder
+            //on teste si toutes les entites sont géocodées
             $stmt = $bdd->prepare("SELECT id, longitude, latitude, id_ville_france FROM  entite WHERE id = :id ");
             $stmt->bindParam(':id', $reqVilles[$i]);
             $stmt->execute();
@@ -73,6 +74,7 @@ class Rencontres
             $longitude = $row['longitude'];
             $latitude = $row['latitude'];
             $idVille = $row['id_ville_france'];
+            array_push($identites, $idEntite);
 
             if (empty($longitude) && empty($latitude)) {
 
@@ -135,6 +137,7 @@ class Rencontres
 
         $retour[0] = $villes;
         $retour[1] = $villesPasRencontre;
+        $retour[2] = $identites;
 
         return $retour;
     }
@@ -242,6 +245,10 @@ class Rencontres
         $distVille = $lesDistances[$key];
         $dureeVille = $lesDurees[$key];
 
+
+        //récupérer le nombre de participant pour chaque entité
+        $nbrParticipants = $this->getNombreParticipants($mesVillesXY);
+
         $retour = [];
 
         $retour[0] = $villeDepart;
@@ -254,6 +261,7 @@ class Rencontres
         $retour[7] = $distVille;
         $retour[8] = $dureeVille;
         $retour[9] = $nomsTerrainsNeutres;
+        $retour[10] = $nbrParticipants;
 
         # ajouter le nombre de participants dans les résultats
         $retour["nbrParticipants"] = $nbrParticipants;
@@ -267,13 +275,8 @@ class Rencontres
 
         $bdd= $this->connexion();
 
-        # obtenir le nombre de participants pour cette groupe
-        $nbrParticipants = $this->getParticipantsPourGroupe($idGroupe);
-
         //on récupère le tableau des villes
         $villes = $this->index($idGroupe);
-
-
         $villes = array_merge($villes[0], $villes[1]);
 
         $length = count($villes);
@@ -288,6 +291,7 @@ class Rencontres
 
         $lanX = $lan / $length;
         $latY = $lat / $length;
+
 
         $stmt1 = $bdd->prepare("SELECT ville_nom, ville_longitude_deg, ville_latitude_deg, ville_code_postal,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
                                 from villes_france_free
@@ -311,6 +315,7 @@ class Rencontres
         $barycentre->execute();
         $res = $barycentre->fetchColumn();
 
+
         if (!$res) {
             $insert = $bdd->prepare("INSERT INTO  entite (nom, ville, code_postal, longitude, latitude, date_creation) VALUES ( :nom, :ville, :codePostal, :Longitude,:Latitude, :dateCreation );");
             $insert->bindParam(':nom', $nom);
@@ -328,8 +333,10 @@ class Rencontres
         $retour = $this->routingMatrix($coord, $villes);
 
         # ajouter le nombre de participants dans les résultats
-        $retour["nbrParticipants"] = $nbrParticipants;
+        $retour["nbrParticipantsTotal"] = $this->getTotalNombreParticipants($retour[9]);
 
+//        error_log("\n Controller: Rencontres, Function: barycentreAction "
+//            ."\n retour : ".print_r($retour, true), 3, "/tmp/optimouv.log");
 
         return $retour;
     }
@@ -580,6 +587,10 @@ order by Proximite limit 1;");
         //somme des durées
         $duree = array_sum($dureeTotale);
 
+        //récupérer le nombre de participant pour chaque entité
+
+        $nbrParticipants = $this->getNombreParticipants($villes);
+
 
         $retour = [];
 
@@ -592,6 +603,7 @@ order by Proximite limit 1;");
         $retour[6] = $mesVilles;
         $retour[7] = $distanceTotale;
         $retour[8] = $dureeTotale;
+        $retour[9] = $nbrParticipants;
 
 
         return $retour;
@@ -1090,9 +1102,8 @@ order by Proximite limit 1;");
 
 
         }
-
-
     }
+
 
 
     private function getParticipantsPourGroupe($idGroupe){
@@ -1135,7 +1146,10 @@ order by Proximite limit 1;");
         }
 
 
-        return $nbrParticipants;
+//        return $nbrParticipants;
+        return array(
+            "nbrParticipantsTotal" => $nbrParticipants
+        );
     }
 
 
@@ -1164,6 +1178,49 @@ order by Proximite limit 1;");
 
 
         return $reqGeocodeArray;
+    }
+
+    private function getNombreParticipants($villes)
+    {
+
+        $bdd= $this->connexion();
+        $count = count($villes);
+
+        $nbrParticipants = [];
+
+        for($i=0; $i<$count; $i++){
+
+            $coord = $villes[$i];
+
+            $coord = explode('%2C', $coord);
+            $lanX = $coord[0];
+            $latY = $coord[1];
+
+
+             $stmt1 = $bdd->prepare("SELECT participants from entite where longitude=:longitude and latitude = :latitude ;");
+
+            $stmt1->bindParam(':longitude', $latY);
+            $stmt1->bindParam(':latitude', $lanX);
+            $stmt1->execute();
+            $result = $stmt1->fetchColumn();
+
+            array_push($nbrParticipants, $result);
+
+
+        }
+        return $nbrParticipants;
+    }
+
+    private function getTotalNombreParticipants($nbrParticipants){
+
+        $totalNombreParticipants = 0;
+
+        for($i=0; $i<count($nbrParticipants); $i++){
+            $totalNombreParticipants += $nbrParticipants[$i];
+        }
+
+        return $totalNombreParticipants;
+
     }
 
 }

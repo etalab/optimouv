@@ -13,8 +13,6 @@ class RencontresController extends Controller
         $retour = $this->get('service_rencontres')->meilleurLieuRencontre($idGroupe);
         $retourEq = $this->get('service_rencontres')->scenarioEquitable($idGroupe);
 
-//        error_log("\n Controller: Rencontres, Function: indexAction "
-//            ."\n retour : ".print_r($retour, true), 3, "/tmp/optimouv.log");
 
         //Donn�es du sc�nario optimal
         $villeDepart = $retour[0];
@@ -85,12 +83,17 @@ class RencontresController extends Controller
         $distanceMin = $retour[3];
         $dureeTrajet = $retour[4];
         $coordonneesVille = $retour[5];
-        $nbrParticipants = $retour["nbrParticipants"];
+        $nbrParticipantsTotal = $retour["nbrParticipantsTotal"];
 
         foreach($retour[6] as $key => $value ){
-
-            $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key]);
+            $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key], 'nbrParticipants' => $retour[9][$key]);
         }
+
+
+//        error_log("\n Controller: Rencontres, Function: barycentreAction "
+//            ."\n retour : ".print_r($retour, true), 3, "/tmp/optimouv.log");
+//        error_log("\n Controller: Rencontres, Function: barycentreAction "
+//            ."\n participants : ".print_r($participants, true), 3, "/tmp/optimouv.log");
 
         return $this->render('FfbbBundle:Rencontres:barycentre.html.twig', array(
 
@@ -103,7 +106,7 @@ class RencontresController extends Controller
             'coordonneesVille' => $coordonneesVille,
             'participants' => $participants,
             'idGroupe' => $idGroupe,
-            'nbrParticipants' => $nbrParticipants
+            'nbrParticipantsTotal' => $nbrParticipantsTotal
 
 
         ));
