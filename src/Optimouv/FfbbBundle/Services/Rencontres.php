@@ -347,10 +347,6 @@ class Rencontres
         $bdd= $this->connexion();
 
 
-        # obtenir le nombre de participants pour cette groupe
-        $nbrParticipants = $this->getParticipantsPourGroupe($idGroupe);
-
-
         if ($valeurExclusion) {
 
             //on récupère le tableau des villes
@@ -413,8 +409,7 @@ order by Proximite limit 1;");
             $retour = $this->routingMatrix($coord, $villes);
 
             # ajouter le nombre de participants dans les résultats
-            $retour["nbrParticipants"] = $nbrParticipants;
-
+            $retour["nbrParticipantsTotal"] = $this->getTotalNombreParticipants($retour[9]);
 
 
         } else {
