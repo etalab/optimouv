@@ -97,10 +97,23 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
-                        <li><a href="{{ path('ffbb_accueil_connect') }}">Optimisation des poules</a></li>
-                        <li style="background-color:#A4BD10;"><a href="{{ path('ffbb_choisir_liste_participants') }}">Meilleur lieu de
-                                rencontre</a></li>
-                        <li><a href="{{ path('ffbb_accueil_connect') }}">Rapports</a></li>
+
+                        <li ><a href="{{ path('ffbb_accueil_connect') }}">Optimisation des poules</a></li>
+
+                        {% if app.request.attributes.get('_route') == 'ffbb_rapports' %}
+                            <li><a href="{{ path('ffbb_choisir_liste_participants') }}">
+                                    Meilleur lieu de rencontre</a>
+                            </li>
+                            <li><a style="background-color:#A4BD10;" href="{{ path('ffbb_rapports') }}">Rapports</a></li>
+                        {% else%}
+                            <li style="background-color:#A4BD10;"><a href="{{ path('ffbb_choisir_liste_participants') }}">
+                                Meilleur lieu de rencontre</a>
+                            </li>
+                            <li><a href="{{ path('ffbb_rapports') }}">Rapports</a></li>
+
+                        {% endif %}
+
+
 
                     </ul>
 

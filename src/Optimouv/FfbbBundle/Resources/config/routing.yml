@@ -22,6 +22,7 @@ ffbb_competitions:
     defaults: { _controller: FfbbBundle:Competitions:index }
 
 # chemin pour l'optimisation de poules
+#ffbb_optimisation_index:
 
 
 # chemins pour le meilleur lieu de rencontre
