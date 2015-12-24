@@ -248,6 +248,7 @@ class Rencontres
 
         $retour = [];
 
+
         $retour[0] = $villeDepart;
         $retour[1] = $lanX;
         $retour[2] = $latY;
@@ -685,6 +686,10 @@ order by Proximite limit 1;");
 
         $maVille = $coor_array['Response']['View'][0]['Result'][0]['Location']['Address']['City'];
 
+
+        //récupérer le nombre de participant pour chaque entité
+        $nbrParticipants = $this->getNombreParticipants($equipe);
+
         $retour = [];
 
         $retour[0] = $maVille;
@@ -697,9 +702,10 @@ order by Proximite limit 1;");
         $retour[7] = $distanceTotale;
         $retour[8] = $dureeTotale;
         $retour[9] = $listeTerrain;
+        $retour[10] = $nbrParticipants;
 
         # ajouter le nombre de participants dans les résultats
-        $retour["nbrParticipants"] = $nbrParticipants;
+        $retour["nbrParticipantsTotal"] = $this->getTotalNombreParticipants($nbrParticipants);
 
         return $retour;
     }
@@ -777,6 +783,10 @@ order by Proximite limit 1;");
         }
 
         $maVille = $coor_array['Response']['View'][0]['Result'][0]['Location']['Address']['City'];
+
+        //récupérer le nombre de participant pour chaque entité
+        $nbrParticipants = $this->getNombreParticipants($equipe);
+
         $retour = [];
 
         $retour[0] = $maVille;
@@ -788,6 +798,7 @@ order by Proximite limit 1;");
         $retour[6] = $mesVilles;
         $retour[7] = $distanceTotal;
         $retour[8] = $dureeTotale;
+        $retour[9] = $nbrParticipants;
 
 
         return $retour;

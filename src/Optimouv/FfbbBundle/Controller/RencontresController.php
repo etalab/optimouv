@@ -197,11 +197,11 @@ class RencontresController extends Controller
         $distanceMin = $retour[3];
         $dureeTrajet = $retour[4];
         $coordonneesVille = $retour[5];
-        $nbrParticipants = $retour["nbrParticipants"];
+        $nbrParticipantsTotal = $retour["nbrParticipantsTotal"];
 
         foreach($retour[6] as $key => $value ){
 
-            $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key]);
+            $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key], 'nbrParticipants' => $retour[10][$key]);
         }
 
         //R�cup�ration du r�sultat du calcul du terrain neutre Equitable
@@ -220,7 +220,7 @@ class RencontresController extends Controller
 
         foreach($retourEq[6] as $key => $value ){
 
-            $participantsEq[]= array('villeEq' => $value, 'distanceEq' => $retourEq[7][$key], 'dureeEq' => $retourEq[8][$key]);
+            $participantsEq[]= array('villeEq' => $value, 'distanceEq' => $retourEq[7][$key], 'dureeEq' => $retourEq[8][$key], 'nbrParticipants' => $retourEq[9][$key]);
         }
 
         return $this->render('FfbbBundle:Rencontres:terrainNeutre.html.twig', array(
@@ -234,8 +234,7 @@ class RencontresController extends Controller
             'coordonneesVille' => $coordonneesVille,
             'participants' => $participants,
             'listeTerrain' => $listeTerrain,
-            'nbrParticipants' => $nbrParticipants,
-
+            'nbrParticipantsTotal' => $nbrParticipantsTotal,
 
 
             //donn�es sc�nario sans contrainte
