@@ -27,6 +27,7 @@ class RencontresController extends Controller
         $coordonneesVille = $retour[5];
         $terrainsNeutres = $retour[9];
         $nbrParticipantsTotal = $retour["nbrParticipantsTotal"];
+        $distanceTotale = $retour["distanceTotale"];
 
         foreach($retour[6] as $key => $value ){
 
@@ -38,9 +39,11 @@ class RencontresController extends Controller
         $villeDepartEq = $retourEq[0];
         $longPtDepEq = $retourEq[1];
         $latPtDepEq = $retourEq[2];
-        $distanceTotaleEq = $retourEq[3];
+        $distanceMinEq = $retourEq[3];
         $dureeTrajetEq = $retourEq[4];
         $coordonneesVilleEq = $retourEq[5];
+        $distanceTotaleEq = $retourEq["distanceTotale"];
+
         foreach($retourEq[6] as $key => $value ){
 
             $participantsEq[]= array('villeEq' => $value, 'distanceEq' => $retourEq[7][$key], 'dureeEq' => $retourEq[8][$key], 'nbrParticipants' => $retourEq[9][$key]);
@@ -58,17 +61,19 @@ class RencontresController extends Controller
             'coordonneesVille' => $coordonneesVille,
             'participants' => $participants,
             'nbrParticipantsTotal' => $nbrParticipantsTotal,
+            'distanceTotale' => $distanceTotale,
 
             //donn�es sc�nario �quitable
             'villeDepartEq' => $villeDepartEq,
             'longPtDepEq' => $longPtDepEq,
             'latPtDepEq' => $latPtDepEq,
-            'distanceTotaleEq' => $distanceTotaleEq,
+            'distanceMinEq' => $distanceMinEq,
             'dureeTrajetEq' => $dureeTrajetEq,
             'coordonneesVilleEq' => $coordonneesVilleEq,
             'participantsEq' => $participantsEq,
             'idGroupe' => $idGroupe,
             'terrainsNeutres' => $terrainsNeutres,
+            'distanceTotaleEq' => $distanceTotaleEq,
 
         ));
     }

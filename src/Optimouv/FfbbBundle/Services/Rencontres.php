@@ -248,7 +248,6 @@ class Rencontres
 
         $retour = [];
 
-
         $retour[0] = $villeDepart;
         $retour[1] = $lanX;
         $retour[2] = $latY;
@@ -261,8 +260,15 @@ class Rencontres
         $retour[9] = $nomsTerrainsNeutres;
         $retour[10] = $nbrParticipants;
 
+        // obtenir la distance totale pour toutes équipes
+        $distanceTotale = $this->getDistanceTotale($distVille, $nbrParticipants);
+
+        # ajouter le nombre de participants dans les résultats
+        $retour["distanceTotale"] = $distanceTotale;
+
         # ajouter le nombre de participants dans les résultats
         $retour["nbrParticipantsTotal"] = $this->getTotalNombreParticipants($nbrParticipants);
+
 
         return $retour;
     }
@@ -366,9 +372,9 @@ class Rencontres
 
 
             $stmt1 = $bdd->prepare("SELECT ville_longitude_deg, ville_latitude_deg,ville_code_postal, ville_population_2012,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
-from villes_france_free
-where ville_population_2012 < :valeurExclusion
-order by Proximite limit 1;");
+                          from villes_france_free
+                          where ville_population_2012 < :valeurExclusion
+                          order by Proximite limit 1;");
             $stmt1->bindParam(':valeurExclusion', $valeurExclusion);
 
             $stmt1->execute();
@@ -518,6 +524,7 @@ order by Proximite limit 1;");
         $distVille = $lesDistances[$key];
         $dureeVille = $lesDurees[$key];
 
+
         //récupérer le nombre de participant pour chaque entité
         $nbrParticipants = $this->getNombreParticipants($mesVillesXY);
 
@@ -534,6 +541,12 @@ order by Proximite limit 1;");
         $retour[8] = $dureeVille;
         $retour[9] = $nbrParticipants;
 
+
+        // obtenir la distance totale pour toutes équipes
+        $distanceTotale = $this->getDistanceTotale($distVille, $nbrParticipants);
+
+        # ajouter le nombre de participants dans les résultats
+        $retour["distanceTotale"] = $distanceTotale;
 
         return $retour;
     }
