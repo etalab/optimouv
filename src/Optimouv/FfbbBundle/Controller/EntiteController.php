@@ -24,10 +24,9 @@ class EntiteController extends Controller
 
         $idGroupe = $_POST['idGroupe'];
 
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $idUtilisateur = $user->getId();
 
-
-        //TODO: rendre dynamique $idUtilisateur
-        $idUtilisateur = 1;
         $typeEntite = $_POST['typeLieu'];
         $nom = $_POST['nom'];
         $prenom = $_POST['prenom'];

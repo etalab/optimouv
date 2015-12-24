@@ -18,8 +18,10 @@ class DefaultController extends Controller
             $idListeLieux = $_POST["idListeLieux"];
 
         }
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $idUtilisateur = $user->getId();
 
-        $idGroupe = $this->get('service_rencontres')->creerGroupe($villes, $nomGroupe, $idListeParticipants, $idListeLieux);
+        $idGroupe = $this->get('service_rencontres')->creerGroupe($villes, $nomGroupe, $idListeParticipants, $idListeLieux, $idUtilisateur);
 
         $coordonneesVille = $this->get('service_rencontres')->index($idGroupe);
 
