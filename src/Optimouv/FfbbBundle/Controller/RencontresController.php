@@ -88,6 +88,7 @@ class RencontresController extends Controller
         $dureeTrajet = $retour[4];
         $coordonneesVille = $retour[5];
         $nbrParticipantsTotal = $retour["nbrParticipantsTotal"];
+        $distanceTotale = $retour[10];
 
         foreach($retour[6] as $key => $value ){
             $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key], 'nbrParticipants' => $retour[9][$key]);
@@ -105,7 +106,8 @@ class RencontresController extends Controller
             'coordonneesVille' => $coordonneesVille,
             'participants' => $participants,
             'idGroupe' => $idGroupe,
-            'nbrParticipantsTotal' => $nbrParticipantsTotal
+            'nbrParticipantsTotal' => $nbrParticipantsTotal,
+            'distanceTotale' => $distanceTotale
 
 
         ));

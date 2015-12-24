@@ -560,9 +560,10 @@ order by Proximite limit 1;");
 
         if (!$barycentreVille) {
 
-            $stmt1 = $bdd->prepare("SELECT ville_nom, ville_code_postal,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
-from villes_france_free
-order by Proximite limit 1;");
+            $stmt1 = $bdd->prepare("SELECT ville_nom, ville_code_postal,
+                        (6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
+                        from villes_france_free
+                        order by Proximite limit 1;");
 
             $stmt1->execute();
             $barycentreVille = $stmt1->fetchColumn();
@@ -571,22 +572,24 @@ order by Proximite limit 1;");
 
          $calculRoute = $this->calculRoute($lanX, $latY, $villes);
 
-        $distanceTotale = $calculRoute[0];
-        $dureeTotale = $calculRoute[1];
+        $distanceEquipe = $calculRoute[0];
+        $dureeEquipe = $calculRoute[1];
 
         //Récupérer les noms de villes de destination
         $mesVilles = $this->mesVilles($villes);
 
         //somme des distances
-        $distance = array_sum($distanceTotale) / 1000;
+        $distance = array_sum($distanceEquipe) / 1000;
         $distance = round($distance, 0);
 
         //somme des durées
-        $duree = array_sum($dureeTotale);
+        $duree = array_sum($dureeEquipe);
 
         //récupérer le nombre de participant pour chaque entité
-
         $nbrParticipants = $this->getNombreParticipants($villes);
+
+        // obtenir la distance totale pour toutes équipes
+        $distanceTotale = $this->getDistanceTotale($distanceEquipe, $nbrParticipants);
 
 
         $retour = [];
@@ -598,9 +601,10 @@ order by Proximite limit 1;");
         $retour[4] = $duree;
         $retour[5] = $villes;
         $retour[6] = $mesVilles;
-        $retour[7] = $distanceTotale;
-        $retour[8] = $dureeTotale;
+        $retour[7] = $distanceEquipe;
+        $retour[8] = $dureeEquipe;
         $retour[9] = $nbrParticipants;
+        $retour[10] = $distanceTotale;
 
 
         return $retour;
@@ -1108,6 +1112,28 @@ order by Proximite limit 1;");
     }
 
 
+    private function getDistanceTotale($distanceEquipe, $nbrParticipants){
+
+        # controler si les tableaux ont la même taille
+        if(count($distanceEquipe) != count($nbrParticipants)){
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
+
+        $distanceTotale = 0;
+
+        for($i=0; $i<count($distanceEquipe); $i++){
+
+            $distanceTotale += $distanceEquipe[$i]/1000 * $nbrParticipants[$i];
+
+        }
+
+        # arrondir le chiffre
+        $distanceTotale = round($distanceTotale);
+
+        return $distanceTotale;
+
+
+    }
 
     private function getParticipantsPourGroupe($idGroupe){
 
