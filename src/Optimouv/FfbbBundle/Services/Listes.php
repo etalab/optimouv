@@ -631,7 +631,7 @@ class Listes{
     }
 
 
-    public function creerListeParticipants($idsEntite, $nomFichier){
+    public function creerListeParticipants($idsEntite, $nomFichier, $idUtilisateur){
 
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
@@ -651,8 +651,6 @@ class Listes{
                 # récuperer la valeur des autres variables
 //                $nom = "liste_participants_".$dateTimeNow;
                 $nom = $nomFichier;
-
-                $idUtilisateur = 1; # TODO à rendre dynamique
 
                 # construire la liste d'équipes
                 $equipes = "";
@@ -693,7 +691,7 @@ class Listes{
         return $retour;
     }
 
-    public function creerListeLieux($idsEntite, $nomFichier){
+    public function creerListeLieux($idsEntite, $nomFichier, $idUtilisateur){
 
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
@@ -712,7 +710,6 @@ class Listes{
                 # récuperer la valeur des autres variables
 //                $nom = "liste_lieux_".$dateTimeNow;
                 $nom = $nomFichier;
-                $idUtilisateur = 1; # TODO à rendre dynamique
 
                 # construire la liste d'équipes
                 $lieux = "";
@@ -749,7 +746,7 @@ class Listes{
 
 
 
-    public function creerEntites()
+    public function creerEntites($idUtilisateur)
     {
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
@@ -783,7 +780,6 @@ class Listes{
                 $this->autoSetDelimiter($file);
 
                 // initialiser toutes les vars
-                $idUtilisateur = 1;
 
                 # obtenir la date courante du système
                 date_default_timezone_set('Europe/Paris');

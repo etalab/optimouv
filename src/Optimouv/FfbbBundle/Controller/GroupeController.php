@@ -185,8 +185,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
     {
 
         $em = $this->getDoctrine()->getManager();
-        //TODO:rendre dynamique l-id utilisateur
-        $idUtilisateur = 1;
+        //récupérer idUtilisateur
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $idUtilisateur = $user->getId();
         $listeParticipants = $em->getRepository('FfbbBundle:ListeParticipants')
                                 ->findByIdUtilisateur(
                                     array('idUtilisateur'=>$idUtilisateur),

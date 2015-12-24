@@ -839,7 +839,7 @@ order by Proximite limit 1;");
         return $mesVilles;
     }
 
-    public function creerGroupe($villes, $nomGroupe, $idListeParticipants, $idListeLieux)
+    public function creerGroupe($villes, $nomGroupe, $idListeParticipants, $idListeLieux, $idUtilisateur)
     {
 
         $bdd= $this->connexion();
@@ -847,11 +847,7 @@ order by Proximite limit 1;");
         $nbrVilles = count($villes);
         $villes = implode(",", $villes);
 
-
         $dateCreation = date("Y-m-d");
-        //TODO: idUtilisateur sera dynamique selon la personne connectée
-        $idUtilisateur = 1;
-
 
         $reqGroupe = $bdd->prepare("INSERT INTO  groupe (id_utilisateur, nom, equipes, date_creation,nb_participants, id_liste_participant, id_liste_lieux)
                             VALUES ( :idUtilisateur, :nomGroupe, :equipes, :dateCreation, :nbParticipants, :idListeParticipants, :idListeLieux);");

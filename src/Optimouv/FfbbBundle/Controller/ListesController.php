@@ -38,15 +38,21 @@ class ListesController extends Controller
 //        error_log("\n Controller: Listes, Function: creerListeParticipantsAction, datetime: ".$dateTimeNow
 //            ."\n statutUpload: ".print_r($statutUpload, true), 3, "/tmp/optimouv.log");
 
+
+        # récupérer idUtilisateur
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $idUtilisateur = $user->getId();
+
         if($statutUpload["success"]){
 
             # créer des entités dans la table entite
-            $retourEntites = $this->get('service_listes')->creerEntites();
+            $retourEntites = $this->get('service_listes')->creerEntites($idUtilisateur);
             $idsEntite = $retourEntites["idsEntite"];
             $nomFichier = $retourEntites["nomFichier"];
 
+
             # créer une liste dans la table liste_participants
-            $retourListe = $this->get('service_listes')->creerListeParticipants($idsEntite, $nomFichier);
+            $retourListe = $this->get('service_listes')->creerListeParticipants($idsEntite, $nomFichier, $idUtilisateur);
 
             # obtenir entity manager
             $em = $this->getDoctrine()->getManager();
@@ -159,15 +165,19 @@ class ListesController extends Controller
         # controler toutes le fichier uploadé
         $statutUpload = $this->get('service_listes')->controlerEntites();
 
+        # récupérer idUtilisateur
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $idUtilisateur = $user->getId();
 
         if($statutUpload["success"]){
             # créer des entités dans la table entite
-            $retourEntites = $this->get('service_listes')->creerEntites();
+            $retourEntites = $this->get('service_listes')->creerEntites($idUtilisateur);
             $idsEntite = $retourEntites["idsEntite"];
             $nomFichier = $retourEntites["nomFichier"];
 
+
             # créer une liste dans la table liste_participants
-            $retourListe = $this->get('service_listes')->creerListeLieux($idsEntite, $nomFichier);
+            $retourListe = $this->get('service_listes')->creerListeLieux($idsEntite, $nomFichier, $idUtilisateur);
 
             # obtenir entity manager
             $em = $this->getDoctrine()->getManager();
@@ -212,8 +222,9 @@ class ListesController extends Controller
 
     public function gererListesAction()
     {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $idUtilisateur = $user->getId();
 
-        $idUtilisateur = 1; //TODO: à rendre dynamique lorsqu'on a plusieurs utilisateurs
         $em = $this->getDoctrine()->getManager();
 
         //récupérer la liste de groupes
