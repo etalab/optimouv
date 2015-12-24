@@ -679,11 +679,11 @@ class Rencontres
         $lanX = $coord[0];
         $latY = $coord[1];
 
-        $distanceTotal = $tousLesCalculs[0][$key];
+        $distanceVilles = $tousLesCalculs[0][$key];
         $dureeTotale = $tousLesCalculs[1][$key];
 
         //somme des distances
-        $distance = array_sum($distanceTotal) / 1000;
+        $distance = array_sum($distanceVilles) / 1000;
         $distance = round($distance, 0);
 
         //somme des durées
@@ -716,10 +716,17 @@ class Rencontres
         $retour[4] = $duree;
         $retour[5] = $equipe;
         $retour[6] = $mesVilles;
-        $retour[7] = $distanceTotale;
+        $retour[7] = $distanceVilles;
         $retour[8] = $dureeTotale;
         $retour[9] = $listeTerrain;
         $retour[10] = $nbrParticipants;
+
+
+        // obtenir la distance totale pour toutes équipes
+        $distanceTotale = $this->getDistanceTotale($distanceVilles, $nbrParticipants);
+
+        # ajouter le nombre de participants dans les résultats
+        $retour["distanceTotale"] = $distanceTotale;
 
         # ajouter le nombre de participants dans les résultats
         $retour["nbrParticipantsTotal"] = $this->getTotalNombreParticipants($nbrParticipants);
@@ -774,11 +781,11 @@ class Rencontres
         $key = array_search($distanceEquitable, $distancesMax);
 
         $coord = $terrainNeutre[$key];
-        $distanceTotal = $tousLesCalculs[0][$key];
+        $distanceVilles = $tousLesCalculs[0][$key];
         $dureeTotale = $tousLesCalculs[1][$key];
 
         //somme des distances
-        $distance = array_sum($distanceTotal) / 1000;
+        $distance = array_sum($distanceVilles) / 1000;
         $distance = round($distance, 0);
 
         //somme des durées
@@ -804,6 +811,7 @@ class Rencontres
         //récupérer le nombre de participant pour chaque entité
         $nbrParticipants = $this->getNombreParticipants($equipe);
 
+
         $retour = [];
 
         $retour[0] = $maVille;
@@ -813,9 +821,15 @@ class Rencontres
         $retour[4] = $duree;
         $retour[5] = $equipe;
         $retour[6] = $mesVilles;
-        $retour[7] = $distanceTotal;
+        $retour[7] = $distanceVilles;
         $retour[8] = $dureeTotale;
         $retour[9] = $nbrParticipants;
+
+        // obtenir la distance totale pour toutes équipes
+        $distanceTotale = $this->getDistanceTotale($distanceVilles, $nbrParticipants);
+
+        # ajouter le nombre de participants dans les résultats
+        $retour["distanceTotale"] = $distanceTotale;
 
 
         return $retour;
