@@ -148,9 +148,6 @@ class Rencontres
 
         $bdd= $this->connexion();
 
-        # obtenir le nombre de participants pour cette groupe
-        $nbrParticipants = $this->getParticipantsPourGroupe($idGroupe);
-
         //Récupération de détail de la liste de lieux
 
         $listeLieux = $this->getListeLieux($idGroupe);
@@ -264,7 +261,7 @@ class Rencontres
         $retour[10] = $nbrParticipants;
 
         # ajouter le nombre de participants dans les résultats
-        $retour["nbrParticipants"] = $nbrParticipants;
+        $retour["nbrParticipantsTotal"] = $this->getTotalNombreParticipants($nbrParticipants);
 
         return $retour;
     }
@@ -520,6 +517,9 @@ order by Proximite limit 1;");
         $distVille = $lesDistances[$key];
         $dureeVille = $lesDurees[$key];
 
+        //récupérer le nombre de participant pour chaque entité
+        $nbrParticipants = $this->getNombreParticipants($mesVillesXY);
+
         $retour = [];
 
         $retour[0] = $villeDepart;
@@ -531,6 +531,7 @@ order by Proximite limit 1;");
         $retour[6] = $mesVilles;
         $retour[7] = $distVille;
         $retour[8] = $dureeVille;
+        $retour[9] = $nbrParticipants;
 
 
         return $retour;

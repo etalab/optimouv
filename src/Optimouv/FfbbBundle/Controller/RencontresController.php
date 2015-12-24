@@ -14,6 +14,10 @@ class RencontresController extends Controller
         $retourEq = $this->get('service_rencontres')->scenarioEquitable($idGroupe);
 
 
+//        error_log("\n Controller: Rencontres, Function: indexAction "
+//            ."\n retour : ".print_r($retour, true), 3, "/tmp/optimouv.log");
+
+
         //Donn�es du sc�nario optimal
         $villeDepart = $retour[0];
         $longPtDep = $retour[1];
@@ -22,11 +26,11 @@ class RencontresController extends Controller
         $dureeTrajet = $retour[4];
         $coordonneesVille = $retour[5];
         $terrainsNeutres = $retour[9];
-        $nbrParticipants = $retour["nbrParticipants"];
+        $nbrParticipantsTotal = $retour["nbrParticipantsTotal"];
 
         foreach($retour[6] as $key => $value ){
 
-            $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key]);
+            $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key], 'nbrParticipants' => $retour[10][$key]);
         }
 
         //Donn�es du sc�nario �quitable
@@ -39,7 +43,7 @@ class RencontresController extends Controller
         $coordonneesVilleEq = $retourEq[5];
         foreach($retourEq[6] as $key => $value ){
 
-            $participantsEq[]= array('villeEq' => $value, 'distanceEq' => $retourEq[7][$key], 'dureeEq' => $retourEq[8][$key]);
+            $participantsEq[]= array('villeEq' => $value, 'distanceEq' => $retourEq[7][$key], 'dureeEq' => $retourEq[8][$key], 'nbrParticipants' => $retourEq[9][$key]);
         }
 
 
@@ -53,7 +57,7 @@ class RencontresController extends Controller
             'dureeTrajet' => $dureeTrajet,
             'coordonneesVille' => $coordonneesVille,
             'participants' => $participants,
-            'nbrParticipants' => $nbrParticipants,
+            'nbrParticipantsTotal' => $nbrParticipantsTotal,
 
             //donn�es sc�nario �quitable
             'villeDepartEq' => $villeDepartEq,
@@ -151,10 +155,6 @@ class RencontresController extends Controller
             $participantsEq[]= array('villeEq' => $value, 'distanceEq' => $retourEq[7][$key], 'dureeEq' => $retourEq[8][$key], 'nbrParticipants' => $retourEq[9][$key] );
         }
 
-
-
-        //        error_log("\n Controller: Rencontres, Function: barycentreAction "
-//            ."\n retour : ".print_r($retour, true), 3, "/tmp/optimouv.log");
 
         return $this->render('FfbbBundle:Rencontres:exclusion.html.twig', array(
             //Donn�es du sc�nario avec contrainte
