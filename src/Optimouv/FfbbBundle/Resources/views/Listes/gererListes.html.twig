@@ -6,9 +6,18 @@
 
 
 
-             <h3>Liste de participants</h3>
+
              <div class="row">
+                 <div class="bs-example">
+                     <ul class="breadcrumb">
+                         <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
+                         <li><a href="{{ path('ffbb_choisir_liste_participants') }}">Choix de listes</a></li>
+                         <li class="active">Gestion de listes</li>
+                     </ul>
+                 </div>
                  <div class="col-lg-12">
+                     <h3>Gérez vos listes de participants</h3>
+
                      <div class="panel panel-default">
                          <div class="panel-heading">
                              Importez vos listes de participants
@@ -27,7 +36,7 @@
                                  <input id="input_liste_participants" type="file" class="btn pull-left">
                              </div>
                              <button id="btn_import_liste_participants" type="submit" class="btn btn-default  pull-left">Importer une nouvelle liste de participants</button>
-                             <a href="{{ path('ffbb_choisir_liste_participants') }}" class="btn btn-default pull-right" >Retour à la liste</a>
+                             <a href="{{ path('ffbb_choisir_liste_participants') }}" class="btn btn-default pull-right" >Retour</a>
                          </div>
 
                          <div id="panel_statut_upload_liste_participants">
@@ -99,7 +108,7 @@
                  <!-- /.col-lg-12 -->
              </div>
 
-             <h3>Liste des lieux</h3>
+             <h3>Gérez vos listes de lieux</h3>
 
              <div class="row">
                  <div class="col-lg-12">
@@ -121,7 +130,7 @@
                                  <input id="input_liste_lieux" type="file" class="btn pull-left">
                              </div>
                              <button id="btn_import_liste_lieux" type="submit" class="btn btn-default  pull-left">Importer une nouvelle liste de lieux </button>
-                             <a href="{{ path('ffbb_choisir_liste_participants') }}" class="btn btn-default pull-right" >Retour à la liste</a>
+                             <a href="{{ path('ffbb_choisir_liste_participants') }}" class="btn btn-default pull-right" >Retour</a>
 
                          </div>
 

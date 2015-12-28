@@ -5,6 +5,15 @@
          <div id="page-wrapper">
 
              <div class="row">
+                 <div class="bs-example">
+                     <ul class="breadcrumb">
+                         <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
+                         <li><a href="{{ path('ffbb_choisir_liste_participants') }}">Choix de listes</a></li>
+                         <li><a href="{{ path('ffbb_choisir_groupe', {'idListe': idListe}) }}">Choix de groupes</a></li>
+                         <li><a href="{{ path('ffbb_gerer_groupe', {'idListe': idListe}) }}">Gestion de groupes</a></li>
+                         <li class="active">Renommage du groupe</li>
+                     </ul>
+                 </div>
                  <div class="col-lg-12">
                      <h3 class="page-header">Renommez votre groupe de participants </h3>
                  </div>

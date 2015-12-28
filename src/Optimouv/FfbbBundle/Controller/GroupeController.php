@@ -289,14 +289,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
         # obtenir tout info pour chaque participant
         $detailsEntites = $em->getRepository('FfbbBundle:Entite')->getEntities($participants);
 
-//        error_log("\n Controller: Listes, Function: visualiserListeParticipantsAction, datetime: ".$dateTimeNow
-//            ."\n idGroupe : ".print_r($idGroupe, true), 3, "/tmp/optimouv.log");
+
+        # récupérer idListe pour le breadcrump
+        $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
 
 
         return $this->render('FfbbBundle:Groupe:visualiserGroupe.html.twig', array(
 
             'idGroupe' => $idGroupe,
             'detailsEntites' => $detailsEntites,
+            'idListe' => $idListe,
         ));
     }
 

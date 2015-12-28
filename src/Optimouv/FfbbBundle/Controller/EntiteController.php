@@ -13,9 +13,15 @@ class EntiteController extends Controller
     public function indexAction($idGroupe)
     {
 
+        # obtenir entity manager
+        $em = $this->getDoctrine()->getManager();
+
+        # récupérer idListe pour le breadcrump
+        $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
 
         return $this->render('FfbbBundle:Entite:creer.html.twig', [
             'idGroupe' => $idGroupe,
+            'idListe' => $idListe,
         ]);
     }
 
