@@ -8,6 +8,8 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
+        # obtenir entity manager
+        $em = $this->getDoctrine()->getManager();
 
         $villes = $_POST["duallistbox_demo1"];
 
@@ -29,16 +31,22 @@ class DefaultController extends Controller
 
         $nomsVilles = $this->get('service_rencontres')->nomsVilles($idGroupe);
 
+        # récupérer idListe pour le breadcrump
+        $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
+
          return $this->render('FfbbBundle:Default:index.html.twig', array(
 
             'coordonneesVille' => $coordonneesVille,
             'nomsVilles' => $nomsVilles,
              'idGroupe' => $idGroupe,
+             'idListe' => $idListe,
         ));
     }
 
     public function groupeAction($idGroupe)
     {
+        # obtenir entity manager
+        $em = $this->getDoctrine()->getManager();
 
         $coordonneesVille = $this->get('service_rencontres')->index($idGroupe);
         $coordonneesVille = array_merge($coordonneesVille[0], $coordonneesVille[1]);
@@ -46,12 +54,16 @@ class DefaultController extends Controller
 
         $nomsVilles = $this->get('service_rencontres')->nomsVilles($idGroupe);
 
+        # récupérer idListe pour le breadcrump
+        $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
 
         return $this->render('FfbbBundle:Default:index.html.twig', array(
 
             'coordonneesVille' => $coordonneesVille,
             'nomsVilles' => $nomsVilles,
             'idGroupe' => $idGroupe,
+            'idListe' => $idListe,
+
         ));
     }
 
