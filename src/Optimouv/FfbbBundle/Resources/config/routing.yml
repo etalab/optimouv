@@ -6,6 +6,20 @@ ffbb_accueil_connect:
     path:     /admin/dashboard
     defaults: { _controller: FfbbBundle:Accueil:connect }
 
+ffbb_contact:
+    path:     /contact
+    defaults: { _controller: FfbbBundle:Rencontres:contact }
+
+ffbb_rapports:
+    path:     /admin/rapports
+    defaults: { _controller: FfbbBundle:Rapports:index }
+
+
+# chemin pour l'optimisation de poules
+#ffbb_optimisation_index:
+
+
+# chemins pour le meilleur lieu de rencontre
 ffbb_choisir_liste_participants:
     path:     /admin/rencontre/choisir-liste-participants
     defaults: { _controller: FfbbBundle:Groupe:choisirListeParticipants  }
@@ -14,7 +28,6 @@ ffbb_table:
     path:     /admin/rencontre/listes-participants
 #    defaults: { _controller: FfbbBundle:Groupe:index }
     defaults: { _controller: FfbbBundle:Groupe:afficherParticipants }
-
 
 ffbb_homepage:
     path:     /admin/rencontre/villes
@@ -40,14 +53,6 @@ ffbb_rencontres:
     path:     /admin/rencontre/rencontres/{idGroupe}
     defaults: { _controller: FfbbBundle:Rencontres:index }
 
-ffbb_competitions:
-    path:     /admin/competitions
-    defaults: { _controller: FfbbBundle:Competitions:index }
-
-ffbb_rapports:
-    path:     /admin/rapports
-    defaults: { _controller: FfbbBundle:Rapports:index }
-
 ffbb_barycentre:
     path:     /admin/rencontre/barycentre/{idGroupe}
     defaults: { _controller: FfbbBundle:Rencontres:barycentre }
@@ -56,11 +61,6 @@ ffbb_exclusion:
     path:     /admin/rencontre/exclusion/{idGroupe}
     defaults: { _controller: FfbbBundle:Rencontres:exclusion }
 
-
-ffbb_contact:
-    path:     /contact
-    defaults: { _controller: FfbbBundle:Rencontres:contact }
-
 ffbb_terrain:
     path:     /admin/rencontre/terrain-neutre/{idGroupe}
     defaults: { _controller: FfbbBundle:Rencontres:terrainNeutre }
@@ -68,8 +68,6 @@ ffbb_terrain:
 ffbb_details_calcul:
     path:     /admin/rencontre/details-calcul
     defaults: { _controller: FfbbBundle:Rencontres:detailsCalcul }
-
-# routing ajouté pour la liste de participants et de lieux neutres
 
 ffbb_creer_liste_participants:
     path:     /admin/rencontre/creer-liste-participants
@@ -83,7 +81,6 @@ ffbb_select_liste_participants:
     path:     /admin/rencontre/select-liste-participants
     defaults: { _controller: FfbbBundle:Groupe:afficherParticipants  }
 
-
 ffbb_nouveau_groupe:
     path:     /admin/rencontre/nouvau-groupe
     defaults: { _controller: FfbbBundle:Groupe:nouveauGroupe  }
@@ -95,7 +92,6 @@ ffbb_choisir_groupe:
 ffbb_gerer_groupe:
     path:     /admin/rencontre/gerer-groupe/{idListe}
     defaults: { _controller: FfbbBundle:Groupe:gererGroupe  }
-
 ffbb_gerer_liste_participants:
     path:     /admin/rencontre/gerer-liste-participants
     defaults: { _controller: FfbbBundle:Listes:gererListes  }
@@ -143,4 +139,3 @@ ffbb_visualiser_liste_lieux:
 ffbb_visualiser_groupe:
     path:     /admin/rencontre/visualiser-groupe/{idGroupe}
     defaults: { _controller: FfbbBundle:Groupe:visualiserGroupe }
-

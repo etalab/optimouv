@@ -155,16 +155,18 @@
 
 
 {% endblock %}
+
+
 {% block javascripts %}
     {{ parent() }}
-<!-- code interne dual list box -->
-<script>
+
+    <script>
     $(document).ready(function() {
         $('#tableEntitesListeParticipants').DataTable({
             responsive: true
         });
     });
-</script>
+    </script>
 {% endblock %}
 
 
