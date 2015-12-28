@@ -268,16 +268,16 @@
                                                             </a>
                                                             <p class="list-group-item">
                                                                 <img src="{{ asset('bundles/ffbb/images/icons/car-icon.png') }}" width="20px" height="20px"/>
-                                                                <i style="padding-right: 10px"></i> <strong>{{ (distanceMin *nbrParticipants*0.157)|round }}</strong>
-                                                                KG eq CO2 d'émissions totales de GES pour {{ nbrParticipants }}
+                                                                <i style="padding-right: 10px"></i> <strong>{{ (distanceTotale * 0.157)|round }}</strong>
+                                                                KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}
                                                                 joueurs en voiture individuelle
                                                                 pour le scénario
 
                                                             </p>
                                                             <p  class="list-group-item">
                                                                 <img src="{{ asset('bundles/ffbb/images/icons/covoiturage-icon.png') }}" width="20px" height="20px"/>
-                                                                <i style="padding-right: 10px"></i> <strong>{{ (distanceMin *(nbrParticipants/4)*0.157)|round }}</strong>
-                                                                KG eq CO2 d'émissions totales de GES pour {{ nbrParticipants }}
+                                                                <i style="padding-right: 10px"></i> <strong>{{ (distanceTotale/4 * 0.157)|round }}</strong>
+                                                                KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}
                                                                 joueurs en co-voiturage pour le scénario
 
                                                             </p>
@@ -285,8 +285,8 @@
                                                             <p   class="list-group-item">
                                                                 <img src="{{ asset('bundles/ffbb/images/icons/bus-icon.png') }}" width="20px" height="15px"/>
                                                                 <i style="padding-right: 10px"></i>
-                                                                <strong>{{ (distanceMin *(nbrParticipants/9)*0.185)|round }}</strong>
-                                                                KG eq CO2 d'émissions totales de GES pour {{ nbrParticipants }}
+                                                                <strong>{{ (distanceTotale/9 * 0.185)|round }}</strong>
+                                                                KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}
                                                                 joueurs en minibus pour le scénario
 
                                                             </p>
@@ -503,16 +503,16 @@
 
                                                             <p  class="list-group-item">
                                                                 <img src="{{ asset('bundles/ffbb/images/icons/car-icon.png') }}" width="20px" height="20px"/>
-                                                                <i  style="padding-right: 10px"></i> <strong>{{ (distanceTotaleEq * nbrParticipants *0.157)|round }}</strong>
-                                                                KG eq CO2 d'émissions totales de GES pour {{ nbrParticipants }}
+                                                                <i  style="padding-right: 10px"></i> <strong>{{ (distanceTotaleEq * 0.157)|round }}</strong>
+                                                                KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}
                                                                 joueurs en voiture individuelle
                                                                 pour le scénario
 
                                                             </p>
                                                             <p   class="list-group-item">
                                                                 <img src="{{ asset('bundles/ffbb/images/icons/covoiturage-icon.png') }}" width="20px" height="20px"/>
-                                                                <i  style="padding-right: 10px"></i> <strong>{{ (distanceTotaleEq *(nbrParticipants/4)*0.157)|round }}</strong>
-                                                                KG eq CO2 d'émissions totales de GES pour {{ nbrParticipants }}
+                                                                <i  style="padding-right: 10px"></i> <strong>{{ (distanceTotaleEq /4 * 0.157)|round }}</strong>
+                                                                KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}
                                                                 joueurs en co-voiturage pour le scénario
 
                                                             </p>
@@ -520,8 +520,8 @@
                                                             <p   class="list-group-item">
                                                                 <img src="{{ asset('bundles/ffbb/images/icons/bus-icon.png') }}" width="20px" height="15px"/>
                                                                 <i  style="padding-right: 10px"></i>
-                                                                <strong>{{ (distanceTotaleEq *(nbrParticipants/9)*0.185)|round }}</strong>
-                                                                KG eq CO2 d'émissions totales de GES pour {{ nbrParticipants }}
+                                                                <strong>{{ (distanceTotaleEq /9 * 0.185)|round }}</strong>
+                                                                KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}
                                                                 joueurs en minibus pour le scénario
 
                                                             </p>
