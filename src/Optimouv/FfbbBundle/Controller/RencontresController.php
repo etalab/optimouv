@@ -47,6 +47,11 @@ class RencontresController extends Controller
             $participantsEq[]= array('villeEq' => $value, 'distanceEq' => $retourEq[7][$key], 'dureeEq' => $retourEq[8][$key], 'nbrParticipants' => $retourEq[9][$key]);
         }
 
+        # obtenir entity manager
+        $em = $this->getDoctrine()->getManager();
+
+        # récupérer idListe pour le breadcrump
+        $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
 
 
         return $this->render('FfbbBundle:Rencontres:index.html.twig', array(
@@ -73,6 +78,7 @@ class RencontresController extends Controller
             'idGroupe' => $idGroupe,
             'terrainsNeutres' => $terrainsNeutres,
             'distanceTotaleEq' => $distanceTotaleEq,
+            'idListe' => $idListe,
 
         ));
     }
@@ -98,6 +104,11 @@ class RencontresController extends Controller
             $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key], 'nbrParticipants' => $retour[9][$key]);
         }
 
+        # obtenir entity manager
+        $em = $this->getDoctrine()->getManager();
+
+        # récupérer idListe pour le breadcrump
+        $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
 
         return $this->render('FfbbBundle:Rencontres:barycentre.html.twig', array(
 
@@ -111,7 +122,8 @@ class RencontresController extends Controller
             'participants' => $participants,
             'idGroupe' => $idGroupe,
             'nbrParticipantsTotal' => $nbrParticipantsTotal,
-            'distanceTotale' => $distanceTotale
+            'distanceTotale' => $distanceTotale,
+            'idListe' => $idListe,
 
 
         ));
@@ -164,6 +176,12 @@ class RencontresController extends Controller
         }
 
 
+        # obtenir entity manager
+        $em = $this->getDoctrine()->getManager();
+
+        # récupérer idListe pour le breadcrump
+        $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
+
         return $this->render('FfbbBundle:Rencontres:exclusion.html.twig', array(
             //Donn�es du sc�nario avec contrainte
             'villeDepart' => $villeDepart,
@@ -187,7 +205,7 @@ class RencontresController extends Controller
             'valeurExclusion' => $valeurExclusion,
             'idGroupe' => $idGroupe,
             'distanceTotaleEq' => $distanceTotaleEq,
-
+            'idListe' => $idListe,
 
 
 
@@ -235,12 +253,11 @@ class RencontresController extends Controller
             $participantsEq[]= array('villeEq' => $value, 'distanceEq' => $retourEq[7][$key], 'dureeEq' => $retourEq[8][$key], 'nbrParticipants' => $retourEq[9][$key]);
         }
 
-//        error_log("\n Controller: Rencontres, Function: indexAction "
-//            ."\n participants : ".print_r($participants, true), 3, "/tmp/optimouv.log");
-//        error_log("\n Controller: Rencontres, Function: indexAction "
-//            ."\n participantsEq : ".print_r($participantsEq, true), 3, "/tmp/optimouv.log");
+        # obtenir entity manager
+        $em = $this->getDoctrine()->getManager();
 
-
+        # récupérer idListe pour le breadcrump
+        $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
 
         return $this->render('FfbbBundle:Rencontres:terrainNeutre.html.twig', array(
 
@@ -267,6 +284,7 @@ class RencontresController extends Controller
             'participantsEq' => $participantsEq,
             'idGroupe' => $idGroupe,
             'distanceTotaleEq' => $distanceTotaleEq,
+            'idListe' => $idListe,
 
 
         ));

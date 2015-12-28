@@ -8,6 +8,16 @@
         <div id="page-wrapper">
 
             <div class="row">
+                <div class="bs-example">
+                    <ul class="breadcrumb">
+                        <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
+                        <li><a href="{{ path('ffbb_choisir_liste_participants') }}">Choix de listes</a></li>
+                        <li><a href="{{ path('ffbb_choisir_groupe', {'idListe': idListe}) }}">Choix de groupes</a></li>
+                        <li><a href="{{ path('ffbb_villes_groupe', {'idGroupe': idGroupe}) }}">Participants</a></li>
+
+                        <li class="active">Terrains Neutres</li>
+                    </ul>
+                </div>
                 <div class="col-lg-12">
                     <h3 class="page-header">Choisissez un type de lieu </h3>
                 </div>
