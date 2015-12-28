@@ -33,7 +33,7 @@
                                                             <div class="table-responsive">
                                                                 <table class="table table-hover">
 
-                                                                    <tbody >
+                                                                    <tbody id="tableListeParticipants" >
                                                                     {% for participant in listeParticipants %}
                                                                         <tr>
                                                                             <td><input type="radio" name="listeParticipants" id="participant~{{ participant.id }}" value="{{ participant.id }}" required>
@@ -152,9 +152,13 @@
                     }
                 }
             }
-
-
         }
+
+        // séléctionner la dernière liste de participants uploadée par l'utilisateur
+        $(document).ready(function () {
+            $("#tableListeParticipants").children("tr:first").find("td:first").find('input:radio').prop("checked", true);
+        });
+        
 
     </script>
 {% endblock %}
