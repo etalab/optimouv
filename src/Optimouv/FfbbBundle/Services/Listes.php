@@ -94,8 +94,6 @@ class Listes{
                 // obtenir les données d'en-têtes
                 $donneesEntete = $file->fgetcsv();
 
-
-
                 // Controler les colonnes des en-têtes avec les formats fixés
                 // Fichier equipes, personnes, lieux
                 $resultatBooleanControlEntete = $this->controlerEntete($donneesEntete);
@@ -117,18 +115,20 @@ class Listes{
                     # obtenir l'objet PDO
                     $bdd = $this->getPdo();
 
+                    # tableau qui contient toutes les données (utilisé pour gérer les doublons)
+                    $toutesLignes = [];
+
+                    // msg d'erreur générique
+                    $genericMsg = "Veuillez corriger les champs indiqués et effectuer à nouveau l’import";
+
                     if (!$bdd) {
                         //erreur de connexion
-//                error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow, 3, "/var/log/apache2/optimouv.log");
+//                        error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow, 3, "/var/log/apache2/optimouv.log");
                         die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
                     } else {
                         $idsEntite = [];
                         // obtenir les données pour chaque ligne
                         $nbrLigne = 1;
-
-                        # tableau qui contient toutes les données (utilisé pour gérer les doublons)
-                        $toutesLignes = [];
-
 
                         while (!$file->eof()) {
                             $donnéesLigne = $file->fgetcsv();
@@ -154,32 +154,25 @@ class Listes{
                             // tester s'il y a des données
                             if($donnéesLigne != array(null)){
 
-                                # controler des doublons
-                                # ajouter la ligne courante dans le répértoire des lignes si ce n'est pas un doublon
-                                if(!in_array($donnéesLigne, $toutesLignes )){
-                                    array_push($toutesLignes, $donnéesLigne);
-                                }
-                                else{
-                                    $retour = array(
-                                        "success" => false,
-                                        "msg" => "Erreur ligne :".$nbrLigne."!"
-                                            ." Le fichier comporte des lignes en double.!"
-                                            ." Veuillez supprimer cette ligne et effectuer à nouveau l’import"
-                                    );
-                                    array_push($lignesErronees, $retour["msg"]);
-                                    continue;
-                                }
+//                                # controler des doublons # FIXME
+//                                # ajouter la ligne courante dans le répértoire des lignes si ce n'est pas un doublon
+//                                if(!in_array($donnéesLigne, $toutesLignes )){
+//                                    array_push($toutesLignes, $donnéesLigne);
+//                                }
+//                                else{
+//                                    $retour = array(
+//                                        "success" => false,
+//                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+//                                            ." Le fichier comporte des lignes en double.!"
+//                                            ." Veuillez supprimer cette ligne et effectuer à nouveau l’import"
+//                                    );
+//                                    array_push($lignesErronees, $retour["msg"]);
+//                                    continue;
+//                                }
 
 
                                 // obtenir la valeur pour chaque paramètre
                                 $typeEntite = $donnéesLigne[0];
-//                                error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
-//                                    ."\n typeEntite : ".print_r($typeEntite , true), 3, "/tmp/optimouv.log");
-
-
-                                // msg d'erreur générique
-                                $genericMsg = "Veuillez corriger les champs indiqués et effectuer à nouveau l’import";
-
 
                                 // obtenir les valeurs selon le type d'entité
                                 if (strtolower($typeEntite) == "equipe") {
@@ -314,7 +307,6 @@ class Listes{
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
                                     }
-
 
                                     # les champs optionnels
                                     $adresse = $donnéesLigne[6];
@@ -585,6 +577,29 @@ class Listes{
                                     array_push($lignesErronees, $retour["msg"]);
                                     continue;
                                 }
+
+                                # controler les doublons pour tous les types
+                                # ajouter la ligne courante dans le répértoire des lignes si ce n'est pas un doublon
+                                $donneesLigneEquipe = [$nom, $codePostal, $ville];
+
+                                if(!in_array($donneesLigneEquipe, $toutesLignes )){
+                                    array_push($toutesLignes, $donneesLigneEquipe);
+                                }
+                                else{
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Le fichier comporte des lignes en double.!"
+                                            ." Veuillez supprimer cette ligne et effectuer à nouveau l’import"
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                }
+
+
+
+
+
 
                             }
 
