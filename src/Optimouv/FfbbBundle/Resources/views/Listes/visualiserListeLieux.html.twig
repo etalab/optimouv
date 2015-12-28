@@ -26,7 +26,7 @@
                                         <th>Nom</th>
                                         <th>Code Postal</th>
                                         <th>Ville</th>
-                                        <th>Lieu de Rencontre Possible</th>
+                                        {#<th>Lieu de Rencontre Possible</th>#}
                                         <th>Adresse</th>
                                         <th>Longitude</th>
                                         <th>Latitude</th>
@@ -45,11 +45,11 @@
                                             <td> {{ detailsEntite.nom }}</td>
                                             <td> {{ detailsEntite.codePostal }}</td>
                                             <td> {{ detailsEntite.ville }}</td>
-                                            {% if detailsEntite.lieuRencontrePossible  %}
-                                                <td> OUI </td>
-                                            {% else %}
-                                                <td> NON </td>
-                                            {% endif %}
+                                            {#{% if detailsEntite.lieuRencontrePossible  %}#}
+                                                {#<td> OUI </td>#}
+                                            {#{% else %}#}
+                                                {#<td> NON </td>#}
+                                            {#{% endif %}#}
                                             <td> {{ detailsEntite.adresse }}</td>
 
                                             {% if detailsEntite.longitude  %}
