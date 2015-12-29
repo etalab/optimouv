@@ -52,7 +52,8 @@ class RencontresController extends Controller
 
         # récupérer idListe pour le breadcrump
         $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
-
+        $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
+        $nomGroupe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getNom();
 
         return $this->render('FfbbBundle:Rencontres:index.html.twig', array(
 
@@ -79,6 +80,8 @@ class RencontresController extends Controller
             'terrainsNeutres' => $terrainsNeutres,
             'distanceTotaleEq' => $distanceTotaleEq,
             'idListe' => $idListe,
+            'nomListe' => $nomListe,
+            'nomGroupe' => $nomGroupe,
 
         ));
     }
@@ -110,6 +113,10 @@ class RencontresController extends Controller
         # récupérer idListe pour le breadcrump
         $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
 
+        # récupérer idListe pour le breadcrump
+        $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
+        $nomGroupe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getNom();
+
         return $this->render('FfbbBundle:Rencontres:barycentre.html.twig', array(
 
             //Donn�es du sc�nario optimal
@@ -124,7 +131,8 @@ class RencontresController extends Controller
             'nbrParticipantsTotal' => $nbrParticipantsTotal,
             'distanceTotale' => $distanceTotale,
             'idListe' => $idListe,
-
+            'nomListe' => $nomListe,
+            'nomGroupe' => $nomGroupe,
 
         ));
 
@@ -181,6 +189,9 @@ class RencontresController extends Controller
 
         # récupérer idListe pour le breadcrump
         $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
+        # récupérer idListe pour le breadcrump
+        $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
+        $nomGroupe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getNom();
 
         return $this->render('FfbbBundle:Rencontres:exclusion.html.twig', array(
             //Donn�es du sc�nario avec contrainte
@@ -206,6 +217,8 @@ class RencontresController extends Controller
             'idGroupe' => $idGroupe,
             'distanceTotaleEq' => $distanceTotaleEq,
             'idListe' => $idListe,
+            'nomListe' => $nomListe,
+            'nomGroupe' => $nomGroupe,
 
 
 
@@ -258,6 +271,8 @@ class RencontresController extends Controller
 
         # récupérer idListe pour le breadcrump
         $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
+        $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
+        $nomGroupe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getNom();
 
         return $this->render('FfbbBundle:Rencontres:terrainNeutre.html.twig', array(
 
@@ -285,6 +300,8 @@ class RencontresController extends Controller
             'idGroupe' => $idGroupe,
             'distanceTotaleEq' => $distanceTotaleEq,
             'idListe' => $idListe,
+            'nomListe' => $nomListe,
+            'nomGroupe' => $nomGroupe,
 
 
         ));
