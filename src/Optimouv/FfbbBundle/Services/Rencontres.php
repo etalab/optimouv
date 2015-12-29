@@ -579,14 +579,17 @@ class Rencontres
 
 
         //////////////////////
-        $stmt1 = $bdd->prepare("SELECT ville from entite where longitude=:longitude and latitude = :latitude ;");
+        $stmt1 = $bdd->prepare("SELECT ville, code_postal from entite where longitude=:longitude and latitude = :latitude ;");
 
         $stmt1->bindParam(':longitude', $lanX);
         $stmt1->bindParam(':latitude', $latY);
         $stmt1->execute();
-        $result = $stmt1->fetchColumn();
+        $result = $stmt1->fetch(PDO::FETCH_ASSOC);
+        $codePostal = $result['code_postal'];
+        $nomVille = $result['ville'];
 
-        $barycentreVille = $result;
+        $barycentreVille = $nomVille."|".$codePostal;
+
 
         if (!$barycentreVille) {
 
@@ -596,7 +599,11 @@ class Rencontres
                         order by Proximite limit 1;");
 
             $stmt1->execute();
-            $barycentreVille = $stmt1->fetchColumn();
+            $barycentreVille = $stmt1->fetch(PDO::FETCH_ASSOC);
+            $codePostal = $result['ville_code_postal'];
+            $nomVille = $result['ville_nom'];
+
+            $barycentreVille = $nomVille."|".$codePostal;
 
         }
 
@@ -876,11 +883,16 @@ class Rencontres
         $villes = [];
 
         for ($i = 0; $i < count($reqVilles); $i++) {
-            $stmt = $bdd->prepare("SELECT ville FROM  entite WHERE id = :idEntite ;");
+            $stmt = $bdd->prepare("SELECT ville, code_postal FROM  entite WHERE id = :idEntite ;");
             $stmt->bindParam(':idEntite', $reqVilles[$i]);
             $stmt->execute();
-            $nomVille = $stmt->fetchColumn();
-            array_push($villes, $nomVille);
+            $maVille = $stmt->fetch(PDO::FETCH_ASSOC);
+            $codePostal = $maVille['code_postal'];
+            $nomVille = $maVille['ville'];
+
+            $maVille = $codePostal."|".$nomVille;
+
+            array_push($villes, $maVille);
 
         }
 
@@ -902,11 +914,15 @@ class Rencontres
             $lanX = $start[0];
             $latY = $start[1];
 
-            $stmt1 = $bdd->prepare("SELECT ville from entite where longitude = :longitude AND latitude = :latitude");
+            $stmt1 = $bdd->prepare("SELECT code_postal, ville from entite where longitude = :longitude AND latitude = :latitude");
             $stmt1->bindParam(':longitude', $latY);
             $stmt1->bindParam(':latitude', $lanX);
             $stmt1->execute();
-            $maVille = $stmt1->fetchColumn();
+            $maVille = $stmt1->fetch(PDO::FETCH_ASSOC);
+            $codePostal = $maVille['code_postal'];
+            $nomVille = $maVille['ville'];
+
+            $maVille = $codePostal."|".$nomVille;
 
             //Ramener tous les noms des villes
             array_push($mesVilles, $maVille);

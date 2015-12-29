@@ -336,7 +336,7 @@
 
                                                                 {% for participant in participants %}
                                                                     <tr>
-                                                                        <td><strong> {{ participant.ville }}</strong>
+                                                                        <td><strong> {{ participant.ville|slice(6) }}</strong>
                                                                         </td>
                                                                         <td style="text-align:right"> {{ participant.distance // 1000 }}</td>
                                                                         <td style="text-align:right"> {{ participant.duree|date('H:i')}}</td>
