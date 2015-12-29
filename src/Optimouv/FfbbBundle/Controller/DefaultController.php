@@ -34,12 +34,14 @@ class DefaultController extends Controller
         # récupérer idListe pour le breadcrump
         $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
 
+
          return $this->render('FfbbBundle:Default:index.html.twig', array(
 
             'coordonneesVille' => $coordonneesVille,
             'nomsVilles' => $nomsVilles,
              'idGroupe' => $idGroupe,
              'idListe' => $idListe,
+
         ));
     }
 
@@ -56,6 +58,8 @@ class DefaultController extends Controller
 
         # récupérer idListe pour le breadcrump
         $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
+        $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
+        $nomGroupe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getNom();
 
         return $this->render('FfbbBundle:Default:index.html.twig', array(
 
@@ -63,6 +67,8 @@ class DefaultController extends Controller
             'nomsVilles' => $nomsVilles,
             'idGroupe' => $idGroupe,
             'idListe' => $idListe,
+            'nomListe' => $nomListe,
+            'nomGroupe' => $nomGroupe,
 
         ));
     }

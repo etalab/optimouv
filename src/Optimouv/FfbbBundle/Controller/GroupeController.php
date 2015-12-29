@@ -54,8 +54,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
         }
 
-
-
         return $this->render('FfbbBundle:Groupe:indexUpdate.html.twig', array(
             'detailsEntites' => $detailsEntites,
             'tousLesGroupes' => $tousLesGroupes,
@@ -88,9 +86,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
             $detailsEntite = $em->getRepository('FfbbBundle:Entite')->getDetailsPourEntite($idLieux[$i]);
             array_push($detailsEntites, $detailsEntite[0] );
         }
-
-//        error_log("\n Controller: Groupe, Function: afficherParticipantsAction, datetime: ".$dateTimeNow
-//            ."\n detailsEntites : ".print_r($detailsEntites, true), 3, "/var/log/apache2/optimouv.log");
 
         $outputTableau = array("detailsEntites" => $detailsEntites );
 
@@ -138,11 +133,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
         $em = $this->getDoctrine()->getManager();
         $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
 
+        # récupérer idListe pour le breadcrump
+        $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
+        $nomGroupe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getNom();
 
         return $this->render('FfbbBundle:Groupe:renommer.html.twig', array(
 
              'idGroupe' => $idGroupe,
              'idListe' => $idListe,
+             'nomListe' => $nomListe,
+             'nomGroupe' => $nomGroupe,
         ));
 
     }
@@ -222,6 +222,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
         $detailsEntite = $em->getRepository('FfbbBundle:Entite')->getEntities($participants);
 
+        # récupérer idListe pour le breadcrump
+        $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListeParticipants)->getNom();
 
         if(!empty( $_POST['listeLieux'])){
             $idListeLieux = $_POST['listeLieux'];
@@ -230,6 +232,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
                 'idListeParticipants' => $idListeParticipants,
                 'idListeLieux' => $idListeLieux,
                 'entites' => $detailsEntite,
+                'nomListe' => $nomListe,
 
             ]);
         }
@@ -237,7 +240,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
             return $this->render('FfbbBundle:Groupe:nouveauGroupe.html.twig', [
                 'idListeParticipants' => $idListeParticipants,
                  'entites' => $detailsEntite,
-
+                 'nomListe' => $nomListe,
             ]);
         }
 
@@ -247,15 +250,22 @@ use Symfony\Component\HttpFoundation\JsonResponse;
     public function choisirGroupeAction($idListe)
     {
 
+        # obtenir entity manager
+        $em = $this->getDoctrine()->getManager();
+
         if(!isset($idListe)){
             die('Une erreur interne est survenue. Veuillez sélectionner une liste de participants. ');
         }
         $tousLesGroupes = $this->getGroupe($idListe);
 
+        # récupérer idListe pour le breadcrump
+        $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
+
 
         return $this->render('FfbbBundle:Groupe:choisirGroupe.html.twig', [
             'tousLesGroupes' => $tousLesGroupes,
             'idListe' => $idListe,
+            'nomListe' => $nomListe,
         ]);
 
     }
@@ -263,10 +273,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
     public function gererGroupeAction($idListe)
     {
 
+        # obtenir entity manager
+        $em = $this->getDoctrine()->getManager();
+
+        # récupérer idListe pour le breadcrump
+        $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
         $tousLesGroupes = $this->getGroupe($idListe);
         return $this->render('FfbbBundle:Groupe:gererGroupe.html.twig', [
             'tousLesGroupes' => $tousLesGroupes,
             'idListe' => $idListe,
+            'nomListe' => $nomListe,
         ]);
 
     }
@@ -293,12 +309,18 @@ use Symfony\Component\HttpFoundation\JsonResponse;
         # récupérer idListe pour le breadcrump
         $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
 
+        # récupérer idListe pour le breadcrump
+        $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
+        $nomGroupe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getNom();
+
 
         return $this->render('FfbbBundle:Groupe:visualiserGroupe.html.twig', array(
 
             'idGroupe' => $idGroupe,
             'detailsEntites' => $detailsEntites,
             'idListe' => $idListe,
+            'nomListe' => $nomListe,
+            'nomGroupe' => $nomGroupe,
         ));
     }
 

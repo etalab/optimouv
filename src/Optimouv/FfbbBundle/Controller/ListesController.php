@@ -111,14 +111,15 @@ class ListesController extends Controller
         # obtenir le type de la liste (equipes ou personnes)
         $typeListe = $detailsEntites[0]["typeEntite"];
 
-//        error_log("\n Controller: Listes, Function: visualiserListeParticipantsAction, datetime: ".$dateTimeNow
-//            ."\n typeListe : ".print_r($typeListe, true), 3, "/tmp/optimouv.log");
 
+        # récupérer idListe pour le breadcrump
+        $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListeParticipants)->getNom();
 
         return $this->render('FfbbBundle:Listes:visualiserListeParticipants.html.twig', array(
             'idListeParticipants' => $idListeParticipants,
             'detailsEntites' => $detailsEntites,
             'typeListe' => $typeListe,
+            'nomListe' =>$nomListe,
 
         ));
 
@@ -144,12 +145,14 @@ class ListesController extends Controller
         # obtenir tout info pour chaque participant
         $detailsEntites = $em->getRepository('FfbbBundle:Entite')->getEntities($lieux);
 
-
+         # récupérer idListe pour le breadcrump
+        $nomListeLieux =  $em->getRepository('FfbbBundle:ListeLieux')->findOneById($idListeLieux)->getNom();
 
         return $this->render('FfbbBundle:Listes:visualiserListeLieux.html.twig', array(
 
             'idListeLieux' => $idListeLieux,
             'detailsEntites' => $detailsEntites,
+            'nomListeLieux' => $nomListeLieux,
         ));
 
     }
@@ -210,9 +213,6 @@ class ListesController extends Controller
                 ));
 
             }
-
-
-
 
         }
 
@@ -281,10 +281,6 @@ class ListesController extends Controller
 
         }
 
-//        error_log("\n Controller: Listes, Function: deleteAction, datetime: ".$dateTimeNow
-//            ."\n groupeIds : ".print_r($groupeIds, true), 3, "/tmp/optimouv.log");
-
-
         return new JsonResponse(array(
             "success" => true,
             "msg" => "Groupe supprimé"
@@ -345,9 +341,16 @@ class ListesController extends Controller
     public function renommerListeAction($idListeParticipants)
     {
 
+        # obtenir entity manager
+        $em = $this->getDoctrine()->getManager();
+
+        # récupérer idListe pour le breadcrump
+        $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListeParticipants)->getNom();
+
         return $this->render('FfbbBundle:Listes:renommerListe.html.twig', array(
 
             'idListeParticipants' => $idListeParticipants,
+            'nomListe' => $nomListe,
         ));
 
     }
@@ -372,14 +375,7 @@ class ListesController extends Controller
         $em->persist($entity);
         $em->flush();
 
-
         return $this->redirect($this->generateUrl('ffbb_gerer_liste_participants' ));
-
-
-        /* return $this->redirectToRoute('ffbb_select_liste_participants', [
-             'idListeParticipants' => $idListeParticipants
-         ]);
-        */
 
     }
 
@@ -387,9 +383,14 @@ class ListesController extends Controller
     public function renommerLieuxAction($idListeLieux)
     {
 
+        $em = $this->getDoctrine()->getManager();
+        # récupérer idListe pour le breadcrump
+        $nomListeLieux =  $em->getRepository('FfbbBundle:ListeLieux')->findOneById($idListeLieux)->getNom();
+
         return $this->render('FfbbBundle:Listes:renommerLieu.html.twig', array(
 
             'idListeLieux' => $idListeLieux,
+            'nomListeLieux' => $nomListeLieux,
         ));
 
     }

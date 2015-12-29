@@ -19,9 +19,15 @@ class EntiteController extends Controller
         # récupérer idListe pour le breadcrump
         $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
 
+        # récupérer idListe pour le breadcrump
+        $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
+        $nomGroupe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getNom();
+
         return $this->render('FfbbBundle:Entite:creer.html.twig', [
             'idGroupe' => $idGroupe,
             'idListe' => $idListe,
+            'nomListe' => $nomListe,
+            'nomGroupe' => $nomGroupe,
         ]);
     }
 
