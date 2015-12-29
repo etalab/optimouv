@@ -292,7 +292,7 @@
 
                                                                 {% for participant in participants %}
                                                                     <tr>
-                                                                        <td><strong> {{ participant.ville}}</strong></td>
+                                                                        <td><strong> {{ participant.ville|slice(6)}}</strong></td>
                                                                         <td style="text-align:right"> {{ participant.distance //1000}}</td>
                                                                         <td style="text-align:right"> {{ participant.duree|date('H:i') }}</td>
                                                                         <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants * 0.80)|round }}</td>
@@ -526,7 +526,7 @@
 
                                                                 {% for participantEq in participantsEq %}
                                                                     <tr>
-                                                                        <td><strong> {{ participantEq.villeEq}}</strong></td>
+                                                                        <td><strong> {{ participantEq.villeEq|slice(6)}}</strong></td>
                                                                         <td style="text-align:right"> {{ participantEq.distanceEq //1000}}</td>
                                                                         <td style="text-align:right"> {{ participantEq.dureeEq|date('H:i') }}</td>
                                                                         <td style="text-align:right"> {{ (participantEq.distanceEq / 1000 * participantEq.nbrParticipants  * 0.80)|round }}</td>
