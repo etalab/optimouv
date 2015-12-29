@@ -29,7 +29,7 @@ class Listes{
         $this->app_code = $app_code;
     }
 
-    public function controlerEntites(){
+    public function controlerEntites($typeEntiteAttendu){
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
         $dateCreation = date('Y-m-d', time());
@@ -173,6 +173,40 @@ class Listes{
 
                                 // obtenir la valeur pour chaque paramètre
                                 $typeEntite = $donnéesLigne[0];
+
+
+                                // controler si le type d'entité attendu correspond au type donné dans le fichier
+                                if($typeEntiteAttendu == "participants"){
+                                    if(!in_array(strtolower($typeEntite), ["equipe", "personne"])){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
+                                                ." Le type d'entité donné: $typeEntite ne correspond pas au type attendu (EQUIPE, PERSONNE)  "
+                                        );
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
+
+                                    }
+                                }
+                                elseif($typeEntiteAttendu == "lieux") {
+                                    if (strtolower($typeEntite) != "lieu") {
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur ligne :" . $nbrLigne . "!"
+                                                . " Le type d'entité donné: $typeEntite ne correspond pas au type attendu (LIEU)  "
+                                        );
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
+
+                                    }
+                                }
+                                else{
+                                    error_log("service: listes, function: controlerEntites", 3, "error_log_optimouv.txt");
+                                    die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+
+                                }
+
+
 
                                 // obtenir les valeurs selon le type d'entité
                                 if (strtolower($typeEntite) == "equipe") {
