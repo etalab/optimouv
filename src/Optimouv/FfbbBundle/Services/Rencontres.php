@@ -18,14 +18,16 @@ class Rencontres
     private $database_password;
     private $app_id;
     private $app_code;
+    private $error_log_path;
 
-    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code)
+    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path)
     {
         $this->database_name = $database_name;
         $this->database_user = $database_user;
         $this->database_password = $database_password;
         $this->app_id = $app_id;
         $this->app_code = $app_code;
+        $this->error_log_path = $error_log_path;
     }
 
     public function connexion()
@@ -467,7 +469,7 @@ class Rencontres
 
         } else {
 
-            error_log("service: rencontres, function: Exclusion ", 3, "error_log_optimouv.txt");
+            error_log("service: rencontres, function: Exclusion ", 3, $this->error_log_path);
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
 
@@ -1239,10 +1241,7 @@ class Rencontres
 
         # controler si les tableaux ont la même taille
         if(count($distanceEquipe) != count($nbrParticipants)){
-//            error_log("\n service: rencontres, function: getDistanceTotale, nbrParticipants: ".print_r($nbrParticipants, true)."\n" , 3, "error_log_optimouv.txt");
-//            error_log("\n service: rencontres, function: getDistanceTotale, distanceEquipe: ".print_r($distanceEquipe, true)."\n" , 3, "error_log_optimouv.txt");
-
-            error_log("service: rencontres, function: getDistanceTotale ", 3, "error_log_optimouv.txt");
+            error_log("service: rencontres, function: getDistanceTotale ", 3, $this->error_log_path);
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
 
@@ -1267,7 +1266,7 @@ class Rencontres
         $bdd= $this->connexion();
 
         if(!$bdd){
-            error_log("service: rencontres, function: getParticipantsPourGroupe ", 3, "error_log_optimouv.txt");
+            error_log("service: rencontres, function: getParticipantsPourGroupe ", 3, $this->error_log_path);
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
 
@@ -1296,7 +1295,7 @@ class Rencontres
 
 
         } catch (Exception $e) {
-            error_log(print_r($e, TRUE), 3, "error_log_optimouv.txt");
+            error_log(print_r($e, TRUE), 3, $this->error_log_path);
             die('Erreur : ' . $e->getMessage());
         }
 
@@ -1320,9 +1319,9 @@ class Rencontres
         if ($curl_response === false) {
             $errorInfo = curl_error($curl);
             curl_close($curl);
-            error_log(print_R($errorInfo, TRUE), 3, "error_log_optimouv.txt");
+            error_log(print_R($errorInfo, TRUE), 3, $this->error_log_path);
 
-            error_log("\n service: rencontres, function: getReponseCurl ", 3, "error_log_optimouv.txt");
+            error_log("\n service: rencontres, function: getReponseCurl ", 3, $this->error_log_path);
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
 
         }

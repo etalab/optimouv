@@ -19,14 +19,16 @@ class Listes{
     private $database_password;
     private $app_id;
     private $app_code;
+    private $error_log_path;
 
-    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code)
+    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path)
     {
         $this->database_name = $database_name;
         $this->database_user = $database_user;
         $this->database_password = $database_password;
         $this->app_id = $app_id;
         $this->app_code = $app_code;
+        $this->error_log_path = $error_log_path;
     }
 
     public function controlerEntites($typeEntiteAttendu){
@@ -38,7 +40,7 @@ class Listes{
 
         # afficher le statut de la requete executée
 //        error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
-//            ."\n _SERVER: ".print_r($_SERVER, true), 3, "error_log_optimouv.txt");
+//            ."\n _SERVER: ".print_r($_SERVER, true), 3, $this->error_log_path);
 
         # controler si la taille limite du fichier à été atteinte
         $tailleFichier = $_SERVER["CONTENT_LENGTH"];
@@ -118,7 +120,7 @@ class Listes{
 
                     if (!$bdd) {
                         //erreur de connexion
-                        error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow, 3, "error_log_optimouv.txt");
+                        error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow, 3, $this->error_log_path);
                         die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
                     } else {
                         $idsEntite = [];
@@ -196,7 +198,7 @@ class Listes{
                                     }
                                 }
                                 else{
-                                    error_log("service: listes, function: controlerEntites", 3, "error_log_optimouv.txt");
+                                    error_log("service: listes, function: controlerEntites", 3, $this->error_log_path);
                                     die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
 
                                 }
@@ -676,7 +678,7 @@ class Listes{
 
             if (!$bdd) {
                 //erreur de connexion
-                error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerListeParticipants, datetime: ".$dateTimeNow, 3, "error_log_optimouv.txt");
+                error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerListeParticipants, datetime: ".$dateTimeNow, 3, $this->error_log_path);
                 die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
             } else {
 
@@ -702,7 +704,7 @@ class Listes{
 
                 # afficher le statut de la requete executée
                 error_log("\n Service: Listes, Function: creerListeParticipants, datetime: ".$dateTimeNow
-                    ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "error_log_optimouv.txt");
+                    ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, $this->error_log_path);
             }
 
             $retour = array(
@@ -713,6 +715,8 @@ class Listes{
 
 
         } catch (PDOException $e) {
+            error_log("\n erreur PDO, Service: Listes, Function: creerListeParticipants, datetime: ".$dateTimeNow."\n"
+                ."erreur: ".print_r($e, true), 3, $this->error_log_path);
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
 
@@ -735,7 +739,7 @@ class Listes{
 
             if (!$bdd) {
                 //erreur de connexion
-                error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerListeLieux, datetime: ".$dateTimeNow, 3, "error_log_optimouv.txt");
+                error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerListeLieux, datetime: ".$dateTimeNow, 3, $this->error_log_path);
                 die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
             } else {
                 # récuperer la valeur des autres variables
@@ -759,8 +763,8 @@ class Listes{
                 $stmt->execute();
 
                 # afficher le statut de la requete executée
-//            error_log("\n Service: Listes, Function: creerListeLieux, datetime: ".$dateTimeNow
-//                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "error_log_optimouv.txt");
+//                error_log("\n Service: Listes, Function: creerListeLieux, datetime: ".$dateTimeNow
+//                    ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, $this->error_log_path);
             }
 
             $retour = array(
@@ -768,6 +772,8 @@ class Listes{
                 "data" => array("dateCreation" => $dateCreation),
             );
         } catch (PDOException $e) {
+            error_log("\n erreur PDO, Service: Listes, Function: creerListeLieux, datetime: ".$dateTimeNow."\n"
+                ."erreur: ".print_r($e, true), 3, $this->error_log_path);
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
 
@@ -820,7 +826,7 @@ class Listes{
 
                 if (!$bdd) {
                     //erreur de connexion
-                    error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow, 3, "error_log_optimouv.txt");
+                    error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow, 3, $this->error_log_path);
                     die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
                 } else {
                     $idsEntite = [];
@@ -986,7 +992,7 @@ class Listes{
 
                             # afficher le statut de la requete executée
                             error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-                                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "error_log_optimouv.txt");
+                                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, $this->error_log_path);
 
                             # obtenir l'id de l"entité créée
                             $idEntite = $bdd->lastInsertId();
@@ -1005,6 +1011,8 @@ class Listes{
 
 
         } catch (PDOException $e) {
+            error_log("\n erreur PDO, Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow."\n"
+                ."erreur: ".print_r($e, true), 3, $this->error_log_path);
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
 
@@ -1090,6 +1098,8 @@ class Listes{
             );
 
         } catch (PDOException $e) {
+            error_log("\n erreur PDO, Service: Listes, Function: verifierExistenceCodePostalNomVille, datetime: ".$dateTimeNow."\n"
+                ."erreur: ".print_r($e, true), 3, $this->error_log_path);
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
 
@@ -1350,7 +1360,7 @@ class Listes{
             $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
         } catch (PDOException $e) {
             error_log("\n Service: Listes, Function: getPdo, datetime: ".$dateTimeNow
-                ."\n PDOException: ".print_r($e, true), 3, "error_log_optimouv.txt");
+                ."\n PDOException: ".print_r($e, true), 3, $this->error_log_path);
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
 

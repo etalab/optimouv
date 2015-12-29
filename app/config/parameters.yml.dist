@@ -21,5 +21,5 @@ parameters:
     app_id: tObeTMHIXTfmuTUvyDBa
     app_code: 6ST2s3g8BkS7B0Uft0kPeg
     #chemin errorlog
-    errorLog: error_log_optimouv.txt
+    error_log_path: error_log_optimouv.txt
 
