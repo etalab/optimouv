@@ -705,7 +705,7 @@ class Rencontres
 
         $app_id = $this->app_id;
         $app_code = $this->app_code;
-
+        $bdd= $this->connexion();
         # obtenir le nombre de participants pour cette groupe
         $nbrParticipants = $this->getParticipantsPourGroupe($idGroupe);
 
@@ -777,15 +777,25 @@ class Rencontres
         //Récupérer les noms de villes de destination
         $mesVilles = $this->mesVilles($equipe);
 
-        $coor_url = 'http://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox=' . $lanX . '%2C' . $latY . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=' . $app_id . '&app_code=' . $app_code;
+//        $coor_url = 'http://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox=' . $lanX . '%2C' . $latY . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=' . $app_id . '&app_code=' . $app_code;
+//
+//        $coor_array = $this->getReponseCurl($coor_url);
+//
+//        if (isset($coor_array->response->status) && $coor_array->response->status == 'ERROR') {
+//            die('Erreur: ' . $coor_array->response->errormessage);
+//        }
+//
+//        $maVille = $coor_array['Response']['View'][0]['Result'][0]['Location']['Address']['City'];
 
-        $coor_array = $this->getReponseCurl($coor_url);
+        $stmt1 = $bdd->prepare("SELECT code_postal, ville from entite where longitude = :longitude AND latitude = :latitude");
+        $stmt1->bindParam(':longitude', $latY);
+        $stmt1->bindParam(':latitude', $lanX);
+        $stmt1->execute();
+        $maVille = $stmt1->fetch(PDO::FETCH_ASSOC);
+        $codePostal = $maVille['code_postal'];
+        $nomVille = $maVille['ville'];
 
-        if (isset($coor_array->response->status) && $coor_array->response->status == 'ERROR') {
-            die('Erreur: ' . $coor_array->response->errormessage);
-        }
-
-        $maVille = $coor_array['Response']['View'][0]['Result'][0]['Location']['Address']['City'];
+        $maVille = $codePostal." | ".$nomVille;
 
 
         //récupérer le nombre de participant pour chaque entité
