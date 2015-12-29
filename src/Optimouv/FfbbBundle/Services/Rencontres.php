@@ -157,6 +157,11 @@ class Rencontres
         //on récupère le tableau des villes
         $retourIndex = $this->index($idGroupe);
 
+        # récupérer l'ids de toutes les entités
+        $idsEntites = $retourIndex[2];
+
+
+
         $villes = $retourIndex[0];
         $villesPasRencontre = $retourIndex[1];
 
@@ -244,7 +249,7 @@ class Rencontres
 
 
         //récupérer le nombre de participant pour chaque entité
-        $nbrParticipants = $this->getNombreParticipants($mesVillesXY);
+        $nbrParticipants = $this->getNombreParticipants($idsEntites);
 
         $retour = [];
 
@@ -281,6 +286,11 @@ class Rencontres
 
         //on récupère le tableau des villes
         $villes = $this->index($idGroupe);
+
+        # récupérer l'ids de toutes les entités
+        $idsEntites = $villes[2];
+
+
         $villes = array_merge($villes[0], $villes[1]);
 
         $length = count($villes);
@@ -334,13 +344,13 @@ class Rencontres
 
         $coord = $lanX . '%2C' . $latY; // pour appel la fn routing matrix
 
-        $retour = $this->routingMatrix($coord, $villes);
+        $retour = $this->routingMatrix($coord, $villes, $idsEntites);
 
         # ajouter le nombre de participants dans les résultats
         $retour["nbrParticipantsTotal"] = $this->getTotalNombreParticipants($retour[9]);
 
 //        error_log("\n Controller: Rencontres, Function: barycentreAction "
-//            ."\n retour : ".print_r($retour, true), 3, "/tmp/optimouv.log");
+//            ."\n idsEntites : ".print_r($idsEntites, true), 3, "/tmp/optimouv.log");
 
         return $retour;
     }
@@ -355,6 +365,9 @@ class Rencontres
 
             //on récupère le tableau des villes
             $villes = $this->index($idGroupe);
+
+            # récupérer l'ids de toutes les entités
+            $idsEntites = $villes[2];
 
             $villes = array_merge($villes[0], $villes[1]);
 
@@ -410,7 +423,7 @@ class Rencontres
             }
 
 
-            $retour = $this->routingMatrix($coord, $villes);
+            $retour = $this->routingMatrix($coord, $villes, $idsEntites);
 
             # ajouter le nombre de participants dans les résultats
             $retour["nbrParticipantsTotal"] = $this->getTotalNombreParticipants($retour[9]);
@@ -418,6 +431,7 @@ class Rencontres
 
         } else {
 
+            error_log("service: rencontres, function: Exclusion ", 3, "error_log_optimouv.txt");
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
 
@@ -432,6 +446,9 @@ class Rencontres
         $bdd= $this->connexion();
         //on récupère le tableau des villes
         $retourIndex = $this->index($idGroupe);
+
+        # récupérer l'ids de toutes les entités
+        $idsEntites = $retourIndex[2];
 
         $villes = $retourIndex[0];
         $villesPasRencontre = $retourIndex[1];
@@ -526,7 +543,7 @@ class Rencontres
 
 
         //récupérer le nombre de participant pour chaque entité
-        $nbrParticipants = $this->getNombreParticipants($mesVillesXY);
+        $nbrParticipants = $this->getNombreParticipants($idsEntites);
 
         $retour = [];
 
@@ -551,7 +568,7 @@ class Rencontres
         return $retour;
     }
 
-    public function routingMatrix($coord, $villes)
+    public function routingMatrix($coord, $villes, $idsEntites)
     {
 
         $bdd= $this->connexion();
@@ -599,7 +616,7 @@ class Rencontres
         $duree = array_sum($dureeEquipe);
 
         //récupérer le nombre de participant pour chaque entité
-        $nbrParticipants = $this->getNombreParticipants($villes);
+        $nbrParticipants = $this->getNombreParticipants($idsEntites);
 
         // obtenir la distance totale pour toutes équipes
         $distanceTotale = $this->getDistanceTotale($distanceEquipe, $nbrParticipants);
@@ -633,6 +650,10 @@ class Rencontres
         $nbrParticipants = $this->getParticipantsPourGroupe($idGroupe);
 
         $equipe = $this->index($idGroupe);
+
+        # récupérer l'ids de toutes les entités
+        $idsEntites = $equipe[2];
+
         $equipe = array_merge($equipe[0], $equipe[1]);
 
         $listeLieux = $this->getListeLieux($idGroupe);
@@ -705,7 +726,7 @@ class Rencontres
 
 
         //récupérer le nombre de participant pour chaque entité
-        $nbrParticipants = $this->getNombreParticipants($equipe);
+        $nbrParticipants = $this->getNombreParticipants($idsEntites);
 
         $retour = [];
 
@@ -741,6 +762,10 @@ class Rencontres
         $app_code = $this->app_code;
 
         $equipe = $this->index($idGroupe);
+
+        # récupérer l'ids de toutes les entités
+        $idsEntites = $equipe[2];
+
         $equipe = array_merge($equipe[0], $equipe[1]);
 
         $listeLieux = $this->getListeLieux($idGroupe);
@@ -809,7 +834,7 @@ class Rencontres
         $maVille = $coor_array['Response']['View'][0]['Result'][0]['Location']['Address']['City'];
 
         //récupérer le nombre de participant pour chaque entité
-        $nbrParticipants = $this->getNombreParticipants($equipe);
+        $nbrParticipants = $this->getNombreParticipants($idsEntites);
 
 
         $retour = [];
@@ -1143,6 +1168,7 @@ class Rencontres
 
         # controler si les tableaux ont la même taille
         if(count($distanceEquipe) != count($nbrParticipants)){
+            error_log("service: rencontres, function: getDistanceTotale ", 3, "error_log_optimouv.txt");
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
 
@@ -1167,6 +1193,7 @@ class Rencontres
         $bdd= $this->connexion();
 
         if(!$bdd){
+            error_log("service: rencontres, function: getParticipantsPourGroupe ", 3, "error_log_optimouv.txt");
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
 
@@ -1197,8 +1224,8 @@ class Rencontres
 
 
         } catch (Exception $e) {
-            die('Erreur : ' . $e->getMessage());
             error_log(print_r($e, TRUE), 3, "error_log_optimouv.txt");
+            die('Erreur : ' . $e->getMessage());
         }
 
 
@@ -1219,11 +1246,14 @@ class Rencontres
 
         $curl_response = curl_exec($curl);
 
+        error_log("\n url: $url\n", 3, "error_log_optimouv.txt");
+
         if ($curl_response === false) {
             $errorInfo = curl_error($curl);
             curl_close($curl);
             error_log(print_R($errorInfo, TRUE), 3, "error_log_optimouv.txt");
 
+            error_log("\n service: rencontres, function: getReponseCurl ", 3, "error_log_optimouv.txt");
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
 
         }
@@ -1236,27 +1266,21 @@ class Rencontres
         return $reqGeocodeArray;
     }
 
-    private function getNombreParticipants($villes)
+    private function getNombreParticipants($idsEntites)
     {
 
         $bdd= $this->connexion();
-        $count = count($villes);
+        $count = count($idsEntites);
 
         $nbrParticipants = [];
 
         for($i=0; $i<$count; $i++){
 
-            $coord = $villes[$i];
+            $id = $idsEntites[$i];
 
-            $coord = explode('%2C', $coord);
-            $lanX = $coord[0];
-            $latY = $coord[1];
+             $stmt1 = $bdd->prepare("SELECT participants from entite where id=:id ;");
 
-
-             $stmt1 = $bdd->prepare("SELECT participants from entite where longitude=:longitude and latitude = :latitude ;");
-
-            $stmt1->bindParam(':longitude', $latY);
-            $stmt1->bindParam(':latitude', $lanX);
+            $stmt1->bindParam(':id', $id);
             $stmt1->execute();
             $result = $stmt1->fetchColumn();
 
