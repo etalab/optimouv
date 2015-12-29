@@ -165,13 +165,10 @@ class Rencontres
         # récupérer l'ids de toutes les entités
         $idsEntites = $retourIndex[2];
         $idsEntitesPasRencontre = $retourIndex[3];
-        $idsEntitesMerge = array_merge($idsEntites, $idsEntitesPasRencontre );
 
 
         $villes = $retourIndex[0];
         $villesPasRencontre = $retourIndex[1];
-
-        //        $result = array_merge($villes, $villesPasRencontre);
 
         $T2 = []; //tableau interm�diaire qui contient les coordonnees des pts d arrivees
 
@@ -185,13 +182,26 @@ class Rencontres
         $coordonneesDest = []; //tableau qui contient toutes les coordonn�es vers les destinations d un point de d�part
         $sommeDistances = [];
         $sommeDurees = [];
+
+        $idEntitesCombination = []; // tableau de toutes les combinations des ids de participants
+
         $longueurTab = count($villes);
         for ($i = 0; $i < $longueurTab; ++$i) {
-            $start = $villes[0];
 
+            # enlever le premier élément pour la ville
+            $start = $villes[0];
             unset($villes[0]);
             $villesRencontre = array_values($villes);
+
+
+            # enlever le premier élément pour le nombre de participants
+            $startIdEntite = $idsEntites[0];
+            unset($idsEntites[0]);
+            $idsEntitesRencontre = array_values($idsEntites);
+
+
             $T2 = array_merge($villesRencontre, $villesPasRencontre);
+            $idEntitesTemp = array_merge($idsEntitesRencontre, $idsEntitesPasRencontre);
 
             $Coordonnes = explode("%2C", $start);
             $lanY = $Coordonnes[0];
@@ -207,17 +217,22 @@ class Rencontres
             $sommeDureeDep = array_sum($dureeDest);
 
             //on groupe les résultats de tous les cas possibles!
-
             array_push($lesDistances, $distanceDest);
             array_push($lesDurees, $dureeDest);
             array_push($coordonneesVilles, $coordonneesDest);
             array_push($lesPtsDeparts, $start);
             array_push($sommeDistances, $sommeDistanceDep);
             array_push($sommeDurees, $sommeDureeDep);
+            array_push($idEntitesCombination, $idEntitesTemp);
 
 
             array_push($villesRencontre, $start);
             $villes = $villesRencontre;
+            array_push($idsEntitesRencontre, $startIdEntite);
+            $idsEntites = $idsEntitesRencontre;
+
+
+
         }//fin parcourir longuerTab
 
         //Min Somme des distances
@@ -249,14 +264,17 @@ class Rencontres
         //Récupérer les noms de villes de destination
         $mesVilles = $this->mesVilles($mesVillesXY);
 
+
         //distance ville
         $distVille = $lesDistances[$key];
         $dureeVille = $lesDurees[$key];
 
+        // obtenir les ids choisis selon la clé donnée
+        $idsEntitesChoisis = $idEntitesCombination[$key];
 
 
         //récupérer le nombre de participant pour chaque entité
-        $nbrParticipants = $this->getNombreParticipants($idsEntites);
+        $nbrParticipants = $this->getNombreParticipants($idsEntitesChoisis);
 
 
         $retour = [];
@@ -275,6 +293,7 @@ class Rencontres
 
 
 
+//        error_log("\n service: rencontres, function: meilleurLieu, nbrParticipants: ".print_r($nbrParticipants, true)."\n" , 3, "error_log_optimouv.txt");
 
 
         // obtenir la distance totale pour toutes équipes
@@ -466,6 +485,7 @@ class Rencontres
 
         # récupérer l'ids de toutes les entités
         $idsEntites = $retourIndex[2];
+        $idsEntitesPasRencontre = $retourIndex[3];
 
         $villes = $retourIndex[0];
         $villesPasRencontre = $retourIndex[1];
@@ -483,16 +503,22 @@ class Rencontres
         $sommeDistances = [];
         $sommeDurees = [];
         $distancesMax = [];//tableau qui contient toutes les distances maxi
+        $idEntitesCombination = []; // tableau de toutes les combinations des ids de participants
+
+
         $longueurTab = count($villes);
         for ($i = 0; $i < $longueurTab; ++$i) {
             $start = $villes[0];
 
-//            unset($villes[0]);
-//            $T2 = array_values($villes);
-
             unset($villes[0]);
             $villesRencontre = array_values($villes);
             $T2 = array_merge($villesRencontre, $villesPasRencontre);
+
+            # enlever le premier élément pour le nombre de participants
+            $startIdEntite = $idsEntites[0];
+            unset($idsEntites[0]);
+            $idsEntitesRencontre = array_values($idsEntites);
+            $idEntitesTemp = array_merge($idsEntitesRencontre, $idsEntitesPasRencontre);
 
 
             $Coordonnes = explode("%2C", $start);
@@ -517,12 +543,13 @@ class Rencontres
             array_push($sommeDistances, $sommeDistanceDep);
             array_push($sommeDurees, $sommeDureeDep);
             array_push($distancesMax, $distanceMax);
+            array_push($idEntitesCombination, $idEntitesTemp);
 
 
-//            array_push($T2, $start);
-//            $villes = $T2;
             array_push($villesRencontre, $start);
             $villes = $villesRencontre;
+            array_push($idsEntitesRencontre, $startIdEntite);
+            $idsEntites = $idsEntitesRencontre;
         }//fin parcourir longuerTab
 
         //Min des distances Max
@@ -558,9 +585,11 @@ class Rencontres
         $distVille = $lesDistances[$key];
         $dureeVille = $lesDurees[$key];
 
+        // obtenir les ids choisis selon la clé donnée
+        $idsEntitesChoisis = $idEntitesCombination[$key];
 
         //récupérer le nombre de participant pour chaque entité
-        $nbrParticipants = $this->getNombreParticipants($idsEntites);
+        $nbrParticipants = $this->getNombreParticipants($idsEntitesChoisis);
 
         $retour = [];
 
