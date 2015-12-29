@@ -253,11 +253,15 @@ class Rencontres
         $lanX = $coordVille[0];
         $latY = $coordVille[1];
 
-        $stmt1 = $bdd->prepare("SELECT ville from entite where longitude = :longitude AND latitude = :latitude");
+        $stmt1 = $bdd->prepare("SELECT ville, code_postal from entite where longitude = :longitude AND latitude = :latitude");
         $stmt1->bindParam(':longitude', $latY);
         $stmt1->bindParam(':latitude', $lanX);
         $stmt1->execute();
-        $villeDepart = $stmt1->fetchColumn();
+        $maVille = $stmt1->fetch(PDO::FETCH_ASSOC);
+        $codePostal = $maVille['code_postal'];
+        $nomVille = $maVille['ville'];
+
+        $villeDepart = $codePostal." | ".$nomVille;
 
 
         $mesVillesXY = $coordonneesVilles[$key];
@@ -570,12 +574,14 @@ class Rencontres
         $lanX = $coordVille[0];
         $latY = $coordVille[1];
 
-        $stmt1 = $bdd->prepare("SELECT ville_nom,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
+        $stmt1 = $bdd->prepare("SELECT ville_code_postal,ville_nom,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
                                     from villes_france_free
                                     order by Proximite limit 1;");
         $stmt1->execute();
         $result = $stmt1->fetch(PDO::FETCH_ASSOC);
-        $villeDepart = $result['ville_nom'];
+        $nomVille = $result['ville_nom'];
+        $codePostal = $result['ville_code_postal'];
+        $villeDepart = $codePostal." | ".$nomVille;
 
         $mesVillesXY = $coordonneesVilles[$key];
         //Récupérer les noms de villes de destination
@@ -634,7 +640,7 @@ class Rencontres
         $codePostal = $result['code_postal'];
         $nomVille = $result['ville'];
 
-        $barycentreVille = $nomVille."|".$codePostal;
+        $barycentreVille = $codePostal." | ".$nomVille;
 
 
         if (!$barycentreVille) {
@@ -649,7 +655,7 @@ class Rencontres
             $codePostal = $result['ville_code_postal'];
             $nomVille = $result['ville_nom'];
 
-            $barycentreVille = $nomVille."|".$codePostal;
+            $barycentreVille = $nomVille." | ".$codePostal;
 
         }
 
@@ -942,7 +948,7 @@ class Rencontres
             $codePostal = $maVille['code_postal'];
             $nomVille = $maVille['ville'];
 
-            $maVille = $codePostal."|".$nomVille;
+            $maVille = $codePostal." | ".$nomVille;
 
             array_push($villes, $maVille);
 
@@ -974,7 +980,7 @@ class Rencontres
             $codePostal = $maVille['code_postal'];
             $nomVille = $maVille['ville'];
 
-            $maVille = $codePostal."|".$nomVille;
+            $maVille = $codePostal." | ".$nomVille;
 
             //Ramener tous les noms des villes
             array_push($mesVilles, $maVille);
