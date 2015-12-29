@@ -60,6 +60,7 @@ class Rencontres
         $villes = [];
         $villesPasRencontre = [];
         $identites = [];
+        $identitesPasRencontre = [];
 
         $lieuRencontrePossible = 1;
 
@@ -74,7 +75,6 @@ class Rencontres
             $longitude = $row['longitude'];
             $latitude = $row['latitude'];
             $idVille = $row['id_ville_france'];
-            array_push($identites, $idEntite);
 
             if (empty($longitude) && empty($latitude)) {
 
@@ -109,6 +109,8 @@ class Rencontres
 
             $lat = $res['latitude'];
             $long = $res['longitude'];
+            $idEntite = $res['id'];
+            array_push($identites, $idEntite);
 
             $coordonne = $lat . "%2C" . $long;
 
@@ -126,6 +128,8 @@ class Rencontres
 
             $lat = $res['latitude'];
             $long = $res['longitude'];
+            $idEntite = $res['id'];
+            array_push($identitesPasRencontre, $idEntite);
 
             $coordonne = $lat . "%2C" . $long;
 
@@ -138,6 +142,7 @@ class Rencontres
         $retour[0] = $villes;
         $retour[1] = $villesPasRencontre;
         $retour[2] = $identites;
+        $retour[3] = $identitesPasRencontre;
 
         return $retour;
     }
@@ -159,7 +164,8 @@ class Rencontres
 
         # récupérer l'ids de toutes les entités
         $idsEntites = $retourIndex[2];
-
+        $idsEntitesPasRencontre = $retourIndex[3];
+        $idsEntitesMerge = array_merge($idsEntites, $idsEntitesPasRencontre );
 
 
         $villes = $retourIndex[0];
@@ -248,8 +254,10 @@ class Rencontres
         $dureeVille = $lesDurees[$key];
 
 
+
         //récupérer le nombre de participant pour chaque entité
         $nbrParticipants = $this->getNombreParticipants($idsEntites);
+
 
         $retour = [];
 
@@ -265,8 +273,13 @@ class Rencontres
         $retour[9] = $nomsTerrainsNeutres;
         $retour[10] = $nbrParticipants;
 
+
+
+
+
         // obtenir la distance totale pour toutes équipes
         $distanceTotale = $this->getDistanceTotale($distVille, $nbrParticipants);
+
 
         # ajouter le nombre de participants dans les résultats
         $retour["distanceTotale"] = $distanceTotale;
@@ -289,7 +302,8 @@ class Rencontres
 
         # récupérer l'ids de toutes les entités
         $idsEntites = $villes[2];
-
+        $idsEntitesPasRencontre = $villes[3];
+        $idsEntitesMerge = array_merge($idsEntites,$idsEntitesPasRencontre );
 
         $villes = array_merge($villes[0], $villes[1]);
 
@@ -344,13 +358,15 @@ class Rencontres
 
         $coord = $lanX . '%2C' . $latY; // pour appel la fn routing matrix
 
-        $retour = $this->routingMatrix($coord, $villes, $idsEntites);
+
+        $retour = $this->routingMatrix($coord, $villes, $idsEntitesMerge);
+
+
+
 
         # ajouter le nombre de participants dans les résultats
         $retour["nbrParticipantsTotal"] = $this->getTotalNombreParticipants($retour[9]);
 
-//        error_log("\n Controller: Rencontres, Function: barycentreAction "
-//            ."\n idsEntites : ".print_r($idsEntites, true), 3, "/tmp/optimouv.log");
 
         return $retour;
     }
@@ -360,7 +376,6 @@ class Rencontres
     {
         $bdd= $this->connexion();
 
-
         if ($valeurExclusion) {
 
             //on récupère le tableau des villes
@@ -368,6 +383,8 @@ class Rencontres
 
             # récupérer l'ids de toutes les entités
             $idsEntites = $villes[2];
+            $idsEntitesPasRencontre = $villes[3];
+            $idsEntitesMerge = array_merge($idsEntites,$idsEntitesPasRencontre );
 
             $villes = array_merge($villes[0], $villes[1]);
 
@@ -423,7 +440,7 @@ class Rencontres
             }
 
 
-            $retour = $this->routingMatrix($coord, $villes, $idsEntites);
+            $retour = $this->routingMatrix($coord, $villes, $idsEntitesMerge);
 
             # ajouter le nombre de participants dans les résultats
             $retour["nbrParticipantsTotal"] = $this->getTotalNombreParticipants($retour[9]);
@@ -625,6 +642,7 @@ class Rencontres
         //récupérer le nombre de participant pour chaque entité
         $nbrParticipants = $this->getNombreParticipants($idsEntites);
 
+
         // obtenir la distance totale pour toutes équipes
         $distanceTotale = $this->getDistanceTotale($distanceEquipe, $nbrParticipants);
 
@@ -660,6 +678,9 @@ class Rencontres
 
         # récupérer l'ids de toutes les entités
         $idsEntites = $equipe[2];
+        $idsEntitesPasRencontre = $equipe[3];
+        $idsEntitesMerge = array_merge($idsEntites,$idsEntitesPasRencontre );
+
 
         $equipe = array_merge($equipe[0], $equipe[1]);
 
@@ -733,7 +754,7 @@ class Rencontres
 
 
         //récupérer le nombre de participant pour chaque entité
-        $nbrParticipants = $this->getNombreParticipants($idsEntites);
+        $nbrParticipants = $this->getNombreParticipants($idsEntitesMerge);
 
         $retour = [];
 
@@ -772,6 +793,8 @@ class Rencontres
 
         # récupérer l'ids de toutes les entités
         $idsEntites = $equipe[2];
+        $idsEntitesPasRencontre = $equipe[3];
+        $idsEntitesMerge = array_merge($idsEntites,$idsEntitesPasRencontre );
 
         $equipe = array_merge($equipe[0], $equipe[1]);
 
@@ -841,7 +864,7 @@ class Rencontres
         $maVille = $coor_array['Response']['View'][0]['Result'][0]['Location']['Address']['City'];
 
         //récupérer le nombre de participant pour chaque entité
-        $nbrParticipants = $this->getNombreParticipants($idsEntites);
+        $nbrParticipants = $this->getNombreParticipants($idsEntitesMerge);
 
 
         $retour = [];
@@ -1184,6 +1207,9 @@ class Rencontres
 
         # controler si les tableaux ont la même taille
         if(count($distanceEquipe) != count($nbrParticipants)){
+//            error_log("\n service: rencontres, function: getDistanceTotale, nbrParticipants: ".print_r($nbrParticipants, true)."\n" , 3, "error_log_optimouv.txt");
+//            error_log("\n service: rencontres, function: getDistanceTotale, distanceEquipe: ".print_r($distanceEquipe, true)."\n" , 3, "error_log_optimouv.txt");
+
             error_log("service: rencontres, function: getDistanceTotale ", 3, "error_log_optimouv.txt");
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
@@ -1261,8 +1287,6 @@ class Rencontres
         curl_setopt($curl, CURLOPT_FAILONERROR, true);
 
         $curl_response = curl_exec($curl);
-
-        error_log("\n url: $url\n", 3, "error_log_optimouv.txt");
 
         if ($curl_response === false) {
             $errorInfo = curl_error($curl);
