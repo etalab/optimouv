@@ -703,8 +703,6 @@ class Rencontres
     public function terrainNeutre($idGroupe)
     {
 
-        $app_id = $this->app_id;
-        $app_code = $this->app_code;
         $bdd= $this->connexion();
         # obtenir le nombre de participants pour cette groupe
         $nbrParticipants = $this->getParticipantsPourGroupe($idGroupe);
@@ -777,16 +775,6 @@ class Rencontres
         //Récupérer les noms de villes de destination
         $mesVilles = $this->mesVilles($equipe);
 
-//        $coor_url = 'http://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox=' . $lanX . '%2C' . $latY . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=' . $app_id . '&app_code=' . $app_code;
-//
-//        $coor_array = $this->getReponseCurl($coor_url);
-//
-//        if (isset($coor_array->response->status) && $coor_array->response->status == 'ERROR') {
-//            die('Erreur: ' . $coor_array->response->errormessage);
-//        }
-//
-//        $maVille = $coor_array['Response']['View'][0]['Result'][0]['Location']['Address']['City'];
-
         $stmt1 = $bdd->prepare("SELECT code_postal, ville from entite where longitude = :longitude AND latitude = :latitude");
         $stmt1->bindParam(':longitude', $latY);
         $stmt1->bindParam(':latitude', $lanX);
@@ -831,8 +819,6 @@ class Rencontres
     public function terrainNeutreEquitable($idGroupe)
     {
 
-        $app_id = $this->app_id;
-        $app_code = $this->app_code;
         $bdd= $this->connexion();
 
         $equipe = $this->index($idGroupe);
@@ -898,16 +884,6 @@ class Rencontres
 
         //Récupérer les noms de villes de destination
         $mesVilles = $this->mesVilles($equipe);
-
-//        $coor_url = 'http://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox=' . $lanX . '%2C' . $latY . '&mode=retrieveAddresses&maxresults=1&gen=8&app_id=' . $app_id . '&app_code=' . $app_code;
-//
-//        $coor_array = $this->getReponseCurl($coor_url);
-//
-//        if (isset($coor_array->response->status) && $coor_array->response->status == 'ERROR') {
-//            die('Erreur: ' . $coor_array->response->errormessage);
-//        }
-//
-//        $maVille = $coor_array['Response']['View'][0]['Result'][0]['Location']['Address']['City'];
 
         $stmt1 = $bdd->prepare("SELECT code_postal, ville from entite where longitude = :longitude AND latitude = :latitude");
         $stmt1->bindParam(':longitude', $latY);
@@ -1199,18 +1175,20 @@ class Rencontres
                     $idVille = $row['id'];
                     $lat = $row['latitude'];
                     $long = $row['longitude'];
-                    $ville = $row['ville'];
+                    $nomVille = $row['ville'];
                     $codePostal = $row['code_postal'];
+
 
                     // récupérer lat et lon s'il y en a
                     if ($long && $lat) {
                         $coordVille = $lat . '%2C' . $long;
+                        $ville =  $codePostal." | ".$nomVille;
                         array_push($nomsVilles, $ville);
                         array_push($coordVilles, $coordVille);
                     } // sinon il faut interroger le serveur HERE
                     else {
 
-                        $v = urlencode($ville);
+                        $v = urlencode($nomVille);
                         $reqGeocode = 'http://geocoder.api.here.com/6.2/geocode.json?country=France&city=' . $v . '&postalCode=' . $codePostal . '&app_id=' . $app_id . '&app_code=' . $app_code . '&gen=8';
 
                         $reqGeocodeArray = $this->getReponseCurl($reqGeocode);
@@ -1222,7 +1200,7 @@ class Rencontres
 
                         // détecter si la réponse est vide
                         if ($reqGeocodeArray['Response']['View'] == []) {
-                            die("Erreur interne, l\'API HERE ne reconnait pas cette ville: " . $ville.
+                            die("Erreur interne, l\'API HERE ne reconnait pas cette ville: " . $nomVille.
                                 ".\r Veuillez assurer que tous les lieux se trouvent en France Métropolitaine");
                         }
 
@@ -1236,7 +1214,7 @@ class Rencontres
                         $update->bindParam(':latitude', $Latitude);
                         $update->bindParam(':id', $idVille);
                         $update->execute();
-
+                        $ville =  $codePostal." | ".$nomVille;
                         array_push($nomsVilles, $ville);
                         array_push($coordVilles, $coordVille);
 
