@@ -38,10 +38,7 @@ class Listes{
 
         # afficher le statut de la requete executée
 //        error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
-//            ."\n _FILES: ".print_r($_FILES, true), 3, "/tmp/optimouv.log");
-
-//        error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
-//            ."\n _SERVER: ".print_r($_SERVER, true), 3, "/tmp/optimouv.log");
+//            ."\n _SERVER: ".print_r($_SERVER, true), 3, "error_log_optimouv.txt");
 
         # controler si la taille limite du fichier à été atteinte
         $tailleFichier = $_SERVER["CONTENT_LENGTH"];
@@ -97,8 +94,6 @@ class Listes{
                 // Controler les colonnes des en-têtes avec les formats fixés
                 // Fichier equipes, personnes, lieux
                 $resultatBooleanControlEntete = $this->controlerEntete($donneesEntete);
-//                error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
-//                    ."\n resultatBooleanControlEntete : ".print_r($resultatBooleanControlEntete , true), 3, "/tmp/optimouv.log");
                 if(!$resultatBooleanControlEntete["success"]){
                     $retour = array(
                         "success" => false,
@@ -123,7 +118,7 @@ class Listes{
 
                     if (!$bdd) {
                         //erreur de connexion
-//                        error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow, 3, "/var/log/apache2/optimouv.log");
+                        error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow, 3, "error_log_optimouv.txt");
                         die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
                     } else {
                         $idsEntite = [];
@@ -329,9 +324,6 @@ class Listes{
                                     # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
                                     $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
 
-//                                    error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
-//                                        ."\n statutControlCodePostalVille : ".print_r($statutControlCodePostalVille , true), 3, "/tmp/optimouv.log");
-
                                     if(!$statutControlCodePostalVille["success"]){
                                         $retour = array(
                                             "success" => false,
@@ -456,9 +448,6 @@ class Listes{
                                     # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
                                     $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
 
-//                                    error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
-//                                        ."\n statutControlCodePostalVille : ".print_r($statutControlCodePostalVille , true), 3, "/tmp/optimouv.log");
-
                                     if(!$statutControlCodePostalVille["success"]){
                                         $retour = array(
                                             "success" => false,
@@ -495,9 +484,6 @@ class Listes{
                                     }
 
                                     $lieuRencontrePossible = $this->getBoolean($donnéesLigne[4]);
-
-//                                    error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-//                                        ."\n ville: ".print_r($ville, true), 3, "/tmp/optimouv.log");
 
 
                                     # controler tous les champs obligatoires
@@ -575,9 +561,6 @@ class Listes{
                                     # controler le code postal et la ville
                                     # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
                                     $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
-
-//                                    error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
-//                                        ."\n statutControlCodePostalVille : ".print_r($statutControlCodePostalVille , true), 3, "/tmp/optimouv.log");
 
                                     if(!$statutControlCodePostalVille["success"]){
                                         $retour = array(
@@ -693,12 +676,11 @@ class Listes{
 
             if (!$bdd) {
                 //erreur de connexion
-//            error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerListeParticipants, datetime: ".$dateTimeNow, 3, "/var/log/apache2/optimouv.log");
+                error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerListeParticipants, datetime: ".$dateTimeNow, 3, "error_log_optimouv.txt");
                 die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
             } else {
 
                 # récuperer la valeur des autres variables
-//                $nom = "liste_participants_".$dateTimeNow;
                 $nom = $nomFichier;
 
                 # construire la liste d'équipes
@@ -719,8 +701,8 @@ class Listes{
                 $stmt->execute();
 
                 # afficher le statut de la requete executée
-//            error_log("\n Service: Listes, Function: creerListeParticipants, datetime: ".$dateTimeNow
-//                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/var/log/apache2/optimouv.log");
+                error_log("\n Service: Listes, Function: creerListeParticipants, datetime: ".$dateTimeNow
+                    ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "error_log_optimouv.txt");
             }
 
             $retour = array(
@@ -753,11 +735,10 @@ class Listes{
 
             if (!$bdd) {
                 //erreur de connexion
-//            error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerListeLieux, datetime: ".$dateTimeNow, 3, "/var/log/apache2/optimouv.log");
+                error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerListeLieux, datetime: ".$dateTimeNow, 3, "error_log_optimouv.txt");
                 die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
             } else {
                 # récuperer la valeur des autres variables
-//                $nom = "liste_lieux_".$dateTimeNow;
                 $nom = $nomFichier;
 
                 # construire la liste d'équipes
@@ -779,7 +760,7 @@ class Listes{
 
                 # afficher le statut de la requete executée
 //            error_log("\n Service: Listes, Function: creerListeLieux, datetime: ".$dateTimeNow
-//                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/var/log/apache2/optimouv.log");
+//                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "error_log_optimouv.txt");
             }
 
             $retour = array(
@@ -811,9 +792,6 @@ class Listes{
             # enlever l'extension du nom de fichier
             $nomFichier = str_replace(".csv", "" , $nomFichier);
 
-//            error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-//                ."\n filename : ".print_r($_FILES["file-0"], true), 3, "/tmp/optimouv.log");
-
 
             // Dès qu'un fichier a été reçu par le serveur
             if (file_exists($cheminFichierTemp) || is_uploaded_file($cheminFichierTemp)) {
@@ -842,7 +820,7 @@ class Listes{
 
                 if (!$bdd) {
                     //erreur de connexion
-//                error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow, 3, "/var/log/apache2/optimouv.log");
+                    error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow, 3, "error_log_optimouv.txt");
                     die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
                 } else {
                     $idsEntite = [];
@@ -876,9 +854,6 @@ class Listes{
                                 # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
                                 $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
                                 $idVilleFrance = $statutControlCodePostalVille["idVille"];
-
-//                                error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-//                                    ."\n idVilleFrance : ".print_r($idVilleFrance , true), 3, "/tmp/optimouv.log");
 
 
                                 $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, adresse, code_postal, ville, longitude, latitude,"
@@ -929,16 +904,10 @@ class Listes{
                                 $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
                                 $idVilleFrance = $statutControlCodePostalVille["idVille"];
 
-//                                error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-//                                    ."\n idVilleFrance : ".print_r($idVilleFrance , true), 3, "/tmp/optimouv.log");
-
                                 $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, prenom, adresse, code_postal, ville, longitude, latitude,"
                                     ." projection, participants, lieu_rencontre_possible, date_creation, date_modification,  id_ville_france )"
                                     ."VALUES ( :id_utilisateur, :type_entite, :nom, :prenom, :adresse, :code_postal, :ville, :longitude, :latitude, "
                                     ." :projection, :participants, :lieu_rencontre_possible, :date_creation, :date_modification, :id_ville_france );";
-
-//                                error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-//                                    ."\n sql : ".print_r($sql , true), 3, "/tmp/optimouv.log");
 
                                 $stmt = $bdd->prepare($sql);
                                 $stmt->bindParam(':id_utilisateur', $idUtilisateur);
@@ -1050,11 +1019,6 @@ class Listes{
     public function verifierExistenceCodePostalNomVille($codePostal, $nomVille){
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
-
-//        error_log("\n Service: Listes, Function: verifierExistenceCodePostalNomVille, datetime: ".$dateTimeNow
-//            ."\n $codePostal Info: ".print_r($codePostal, true), 3, "/tmp/optimouv.log");
-//        error_log("\n Service: Listes, Function: verifierExistenceCodePostalNomVille, datetime: ".$dateTimeNow
-//            ."\n $nomVille Info: ".print_r($nomVille, true), 3, "/tmp/optimouv.log");
 
         try {
             $char = array("-", "_", "'");
@@ -1338,10 +1302,6 @@ class Listes{
 
 
 
-//        error_log("\n Service: Listes, Function: controlerEntete, datetime: ".$dateTimeNow
-//            ."\n entete: ".print_r($entete, true), 3, "/tmp/optimouv.log");
-
-
         return $retour;
 
     }
@@ -1389,8 +1349,8 @@ class Listes{
             # créer une objet PDO
             $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
         } catch (PDOException $e) {
-//            error_log("\n Service: Listes, Function: getPdo, datetime: ".$dateTimeNow
-//                ."\n PDOException: ".print_r($e, true), 3, "/tmp/optimouv.log");
+            error_log("\n Service: Listes, Function: getPdo, datetime: ".$dateTimeNow
+                ."\n PDOException: ".print_r($e, true), 3, "error_log_optimouv.txt");
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
 
