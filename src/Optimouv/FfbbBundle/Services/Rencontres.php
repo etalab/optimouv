@@ -1182,6 +1182,7 @@ class Rencontres
                     // récupérer lat et lon s'il y en a
                     if ($long && $lat) {
                         $coordVille = $lat . '%2C' . $long;
+                        //ramner le nom de la ville concatiner avec le code postal
                         $ville =  $codePostal." | ".$nomVille;
                         array_push($nomsVilles, $ville);
                         array_push($coordVilles, $coordVille);
@@ -1214,6 +1215,7 @@ class Rencontres
                         $update->bindParam(':latitude', $Latitude);
                         $update->bindParam(':id', $idVille);
                         $update->execute();
+                        //ramner le nom de la ville concatiner avec le code postal
                         $ville =  $codePostal." | ".$nomVille;
                         array_push($nomsVilles, $ville);
                         array_push($coordVilles, $coordVille);
