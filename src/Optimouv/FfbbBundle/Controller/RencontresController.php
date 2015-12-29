@@ -92,7 +92,6 @@ class RencontresController extends Controller
         $participants = [];
         $retour = $this->get('service_rencontres')->Barycentre($idGroupe);
 
-
         //Donn�es du sc�nario optimal
         $villeDepart = $retour[0];
         $longPtDep = $retour[1];

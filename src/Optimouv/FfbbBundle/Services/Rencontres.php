@@ -314,6 +314,7 @@ class Rencontres
     public function Barycentre($idGroupe)
     {
 
+
         $bdd= $this->connexion();
 
         //on récupère le tableau des villes
@@ -379,7 +380,6 @@ class Rencontres
 
 
         $retour = $this->routingMatrix($coord, $villes, $idsEntitesMerge);
-
 
 
 
