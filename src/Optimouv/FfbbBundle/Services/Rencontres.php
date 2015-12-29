@@ -296,10 +296,6 @@ class Rencontres
         $retour[10] = $nbrParticipants;
 
 
-
-//        error_log("\n service: rencontres, function: meilleurLieu, nbrParticipants: ".print_r($nbrParticipants, true)."\n" , 3, "error_log_optimouv.txt");
-
-
         // obtenir la distance totale pour toutes équipes
         $distanceTotale = $this->getDistanceTotale($distVille, $nbrParticipants);
 
@@ -1296,8 +1292,6 @@ class Rencontres
                 $nbrParticipantsTemp = $stmt1->fetchColumn();
 
                 $nbrParticipants += $nbrParticipantsTemp;
-//                error_log("\n Service: Rencontres, Function: getParticipantsPourGroupe "
-//                    ."\n nbrParticipants : ".print_r($nbrParticipants, true), 3, "/tmp/optimouv.log");
             }
 
 
@@ -1307,7 +1301,6 @@ class Rencontres
         }
 
 
-//        return $nbrParticipants;
         return array(
             "nbrParticipantsTotal" => $nbrParticipants
         );
