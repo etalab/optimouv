@@ -33,7 +33,7 @@ class ListesController extends Controller
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
         # controler toutes le fichier uploadé
-        $statutUpload = $this->get('service_listes')->controlerEntites();
+        $statutUpload = $this->get('service_listes')->controlerEntites("participants");
 
 //        error_log("\n Controller: Listes, Function: creerListeParticipantsAction, datetime: ".$dateTimeNow
 //            ."\n statutUpload: ".print_r($statutUpload, true), 3, "/tmp/optimouv.log");
@@ -166,7 +166,7 @@ class ListesController extends Controller
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
         # controler toutes le fichier uploadé
-        $statutUpload = $this->get('service_listes')->controlerEntites();
+        $statutUpload = $this->get('service_listes')->controlerEntites("lieux");
 
         # récupérer idUtilisateur
         $user = $this->get('security.token_storage')->getToken()->getUser();
