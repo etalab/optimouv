@@ -35,10 +35,6 @@ class ListesController extends Controller
         # controler toutes le fichier uploadé
         $statutUpload = $this->get('service_listes')->controlerEntites("participants");
 
-//        error_log("\n Controller: Listes, Function: creerListeParticipantsAction, datetime: ".$dateTimeNow
-//            ."\n statutUpload: ".print_r($statutUpload, true), 3, "/tmp/optimouv.log");
-
-
         # récupérer idUtilisateur
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $idUtilisateur = $user->getId();
