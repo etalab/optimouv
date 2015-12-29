@@ -1017,7 +1017,7 @@ class Listes{
 
                             # afficher le statut de la requete executée
                             error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-                                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "/tmp/optimouv.log");
+                                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, "error_log_optimouv.txt");
 
                             # obtenir l'id de l"entité créée
                             $idEntite = $bdd->lastInsertId();
