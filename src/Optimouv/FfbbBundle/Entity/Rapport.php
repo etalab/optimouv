@@ -29,11 +29,15 @@ class Rapport
     private $nom;
 
     /**
-     * @var integer
+     * @var \Optimouv\FfbbBundle\Entity\Groupe
      *
-     * @ORM\Column(name="id_groupe", type="integer")
+     * @ORM\ManyToOne(targetEntity="Optimouv\FfbbBundle\Entity\Groupe")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_groupe", referencedColumnName="id")
+     * })
      */
     private $idGroupe;
+
 
     /**
      * @var string
