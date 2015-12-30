@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Scenario
  *
- * @ORM\Table(name="scenario", indexes={@ORM\Index(name="id_groupe_idx", columns={"id_groupe"})})
+ * @ORM\Table(name="scenario", indexes={@ORM\Index(name="id_rapport_idx", columns={"id_rapport"})})
  * @ORM\Entity(repositoryClass="ScenarioRepository")
  */
 class Scenario
@@ -45,16 +45,46 @@ class Scenario
     /**
      * @var float
      *
-     * @ORM\Column(name="co2", type="float", precision=10, scale=0, nullable=false)
+     * @ORM\Column(name="co2_voiture", type="float", precision=10, scale=0, nullable=false)
      */
-    private $co2;
+    private $co2Voiture;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="cout", type="float", precision=10, scale=0, nullable=false)
+     * @ORM\Column(name="co2_covoiturage", type="float", precision=10, scale=0, nullable=false)
      */
-    private $cout;
+    private $co2Covoiturage;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="co2_minibus", type="float", precision=10, scale=0, nullable=false)
+     */
+    private $co2Minibus;
+
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="cout_voiture", type="float", precision=10, scale=0, nullable=false)
+     */
+    private $coutVoiture;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="cout_covoiturage", type="float", precision=10, scale=0, nullable=false)
+     */
+    private $coutCovoiturage;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="cout_minibus", type="float", precision=10, scale=0, nullable=false)
+     */
+    private $coutMinibus;
+
 
     /**
      * @var \DateTime
@@ -71,14 +101,14 @@ class Scenario
     private $dateModification;
 
     /**
-     * @var \Optimouv\FfbbBundle\Entity\Groupe
+     * @var \Optimouv\FfbbBundle\Entity\Rapport
      *
-     * @ORM\ManyToOne(targetEntity="Optimouv\FfbbBundle\Entity\Groupe")
+     * @ORM\ManyToOne(targetEntity="Optimouv\FfbbBundle\Entity\Rapport")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_groupe", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="id_rapport", referencedColumnName="id")
      * })
      */
-    private $idGroupe;
+    private $idRapport;
 
 
 
@@ -165,52 +195,155 @@ class Scenario
     }
 
     /**
-     * Set co2
+     * Set co2Voiture
      *
-     * @param float $co2
+     * @param float $co2Voiture
      *
      * @return Scenario
      */
-    public function setCo2($co2)
+    public function setCo2Voiture($co2Voiture)
     {
-        $this->co2 = $co2;
+        $this->co2Voiture = $co2Voiture;
 
         return $this;
     }
 
     /**
-     * Get co2
+     * Get co2Covoiture
      *
      * @return float
      */
-    public function getCo2()
+    public function getCo2Voiture()
     {
-        return $this->co2;
+        return $this->co2Voiture;
     }
 
     /**
-     * Set cout
+     * Set co2Covoiturage
      *
-     * @param float $cout
+     * @param float $co2Covoiturage
      *
      * @return Scenario
      */
-    public function setCout($cout)
+    public function setCo2Voiturage($co2Covoiturage)
     {
-        $this->cout = $cout;
+        $this->co2Covoiturage = $co2Covoiturage;
 
         return $this;
     }
 
     /**
-     * Get cout
+     * Get co2Covoiturage
      *
      * @return float
      */
-    public function getCout()
+    public function getCo2Voiturage()
     {
-        return $this->cout;
+        return $this->co2Covoiturage;
     }
+
+    /**
+     * Set co2Minibus
+     *
+     * @param float $co2Minibus
+     *
+     * @return Scenario
+     */
+    public function setCo2Minibus($co2Minibus)
+    {
+        $this->co2Minibus = $co2Minibus;
+
+        return $this;
+    }
+
+    /**
+     * Get co2Minibus
+     *
+     * @return float
+     */
+    public function getCo2Minibus()
+    {
+        return $this->co2Minibus;
+    }
+
+
+
+    /**
+     * Set coutVoiture
+     *
+     * @param float $coutVoiture
+     *
+     * @return Scenario
+     */
+    public function setCoutVoiture($coutVoiture)
+    {
+        $this->coutVoiture = $coutVoiture;
+
+        return $this;
+    }
+
+    /**
+     * Get coutVoiture
+     *
+     * @return float
+     */
+    public function getCoutVoiture()
+    {
+        return $this->coutVoiture;
+    }
+
+
+    /**
+     * Set coutCovoiturage
+     *
+     * @param float $coutCovoiturage
+     *
+     * @return Scenario
+     */
+    public function setCoutCovoiturage($coutCovoiturage)
+    {
+        $this->coutCovoiturage = $coutCovoiturage;
+
+        return $this;
+    }
+
+    /**
+     * Get coutCovoiturage
+     *
+     * @return float
+     */
+    public function getCoutCovoiturage()
+    {
+        return $this->coutCovoiturage;
+    }
+
+
+    /**
+     * Set coutMinibus
+     *
+     * @param float $coutMinibus
+     *
+     * @return Scenario
+     */
+    public function setCoutMinibus($coutMinibus)
+    {
+        $this->coutMinibus = $coutMinibus;
+
+        return $this;
+    }
+
+    /**
+     * Get coutMinibus
+     *
+     * @return float
+     */
+    public function getCoutMinibus()
+    {
+        return $this->coutMinibus;
+    }
+
+
+
 
     /**
      * Set dateCreation
@@ -261,26 +394,26 @@ class Scenario
     }
 
     /**
-     * Set idGroupe
+     * Set idRapport
      *
-     * @param \Optimouv\FfbbBundle\Entity\Groupe $idGroupe
+     * @param \Optimouv\FfbbBundle\Entity\Rapport $idRapport
      *
      * @return Scenario
      */
-    public function setIdGroupe(\Optimouv\FfbbBundle\Entity\Groupe $idGroupe = null)
+    public function setIdRapport(\Optimouv\FfbbBundle\Entity\Rapport $idRapport = null)
     {
-        $this->idGroupe = $idGroupe;
+        $this->idRapport = $idRapport;
 
         return $this;
     }
 
     /**
-     * Get idGroupe
+     * Get idRapport
      *
-     * @return \Optimouv\FfbbBundle\Entity\Groupe
+     * @return \Optimouv\FfbbBundle\Entity\Rapport
      */
-    public function getIdGroupe()
+    public function getIdRapport()
     {
-        return $this->idGroupe;
+        return $this->idRapport;
     }
 }
