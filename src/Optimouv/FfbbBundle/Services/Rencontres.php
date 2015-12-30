@@ -1261,7 +1261,7 @@ class Rencontres
             $stmt->execute();
 
             # obtenir le résultat
-            $resultat = $stmt->fetchColumn(PDO::FETCH_ASSOC);
+            $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             # insérer dans la table rapport si le rapport est nouveau
             if(!$resultat){
