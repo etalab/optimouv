@@ -121,7 +121,7 @@ class RencontresController extends Controller
 
         # créer un scénario barycentre
         if($idRapport != -1){
-            $this->get('service_rencontres')->creerScenario($idRapport, $distanceMin, $dureeTrajet);
+            $this->get('service_rencontres')->creerScenario($idRapport, "optimal",  $distanceMin, $dureeTrajet);
         }
 
 
@@ -202,6 +202,15 @@ class RencontresController extends Controller
         # récupérer idListe pour le breadcrump
         $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
         $nomGroupe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getNom();
+
+        # créer un rapport exclusion
+        $idRapport = $this->get('service_rencontres')->creerRapport($idGroupe, "exclusion", $valeurExclusion);
+
+        # créer un scénario barycentre
+        if($idRapport != -1){
+            $this->get('service_rencontres')->creerScenario($idRapport, "optimal",  $distanceMin, $dureeTrajet);
+            $this->get('service_rencontres')->creerScenario($idRapport, "equitable",  $distanceMinEq, $dureeTrajetEq);
+        }
 
         return $this->render('FfbbBundle:Rencontres:exclusion.html.twig', array(
             //Donn�es du sc�nario avec contrainte

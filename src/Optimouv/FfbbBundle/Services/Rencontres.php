@@ -1252,16 +1252,22 @@ class Rencontres
 
         # controler si le rapport est déjà dans la table rapport
         try {
-            $sql = "SELECT id FROM rapport WHERE id_groupe = :id_groupe and type_action = :type_action";
+            $sql = "SELECT id FROM rapport WHERE id_groupe = :id_groupe and type_action = :type_action and valeur_exclusion = :valeur_exclusion " ;
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':id_groupe', $idGroupe);
             $stmt->bindParam(':type_action', $typeAction);
+            $stmt->bindParam(':valeur_exclusion', $valeurExclusion);
 
             # executer la requete
             $stmt->execute();
 
             # obtenir le résultat
             $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+//            error_log("\n Service: Rencontres, Function: creerRapport, datetime: ".$dateTimeNow
+//                    ."\n sql: ".print_r($sql, true), 3, $this->error_log_path);
+//            error_log("\n Service: Rencontres, Function: creerRapport, datetime: ".$dateTimeNow
+//                ."\n valeurExclusion: ".print_r($valeurExclusion, true), 3, $this->error_log_path);
 
             # insérer dans la table rapport si le rapport est nouveau
             if(!$resultat){
@@ -1304,7 +1310,7 @@ class Rencontres
 
     }
 
-    public function creerScenario($idRapport, $distanceKm, $duree){
+    public function creerScenario($idRapport, $typeScenario, $distanceKm, $duree){
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
@@ -1318,7 +1324,7 @@ class Rencontres
         }
 
         try {
-                $nom = "scenario_rapport_".$idRapport;
+                $nom = "scenario_".$typeScenario."_rapport_".$idRapport;
 
                 $sql = "INSERT INTO scenario (id_rapport, nom, kilometres, duree, date_creation, date_modification)
                           VALUES (:id_rapport, :nom, :kilometres, :duree, :date_creation, :date_modification)";
