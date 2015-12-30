@@ -53,12 +53,6 @@ class Rapport
      */
     private $valeurExclusion;
 
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id_utilisateur", type="integer", nullable=false)
-     */
-    private $idUtilisateur;
 
     /**
      * @var \DateTime
@@ -173,33 +167,6 @@ class Rapport
     {
         return $this->valeurExclusion;
     }
-
-    /**
-     * Set idUtilisateur
-     *
-     * @param integer $idUtilisateur
-     *
-     * @return Rapport
-     */
-    public function setIdUtilisateur($idUtilisateur)
-    {
-        $this->idUtilisateur = $idUtilisateur;
-
-        return $this;
-    }
-
-    /**
-     * Get idUtilisateur
-     *
-     * @return integer
-     */
-    public function getIdUtilisateur()
-    {
-        return $this->idUtilisateur;
-    }
-
-
-
 
 
     /**
