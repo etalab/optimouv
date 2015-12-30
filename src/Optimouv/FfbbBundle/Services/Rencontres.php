@@ -1349,7 +1349,7 @@ class Rencontres
 
 
         return $idScenario;
-        
+
     }
 
 
