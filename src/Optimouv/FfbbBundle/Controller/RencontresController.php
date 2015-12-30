@@ -55,6 +55,16 @@ class RencontresController extends Controller
         $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
         $nomGroupe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getNom();
 
+
+        # créer un rapport exclusion
+        $idRapport = $this->get('service_rencontres')->creerRapport($idGroupe, "meilleurLieu", -1);
+
+        # créer un scénario barycentre
+        if($idRapport != -1){
+            $this->get('service_rencontres')->creerScenario($idRapport, "optimal",  $distanceMin, $dureeTrajet);
+            $this->get('service_rencontres')->creerScenario($idRapport, "equitable",  $distanceMinEq, $dureeTrajetEq);
+        }
+
         return $this->render('FfbbBundle:Rencontres:index.html.twig', array(
 
             //Donn�es du sc�nario optimal
@@ -293,6 +303,16 @@ class RencontresController extends Controller
         $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
         $nomGroupe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getNom();
 
+
+
+        # créer un rapport exclusion
+        $idRapport = $this->get('service_rencontres')->creerRapport($idGroupe, "terrainNeutre", -1);
+
+        # créer un scénario barycentre
+        if($idRapport != -1){
+            $this->get('service_rencontres')->creerScenario($idRapport, "optimal",  $distanceMin, $dureeTrajet);
+            $this->get('service_rencontres')->creerScenario($idRapport, "equitable",  $distanceMinEq, $dureeTrajetEq);
+        }
         return $this->render('FfbbBundle:Rencontres:terrainNeutre.html.twig', array(
 
             //Donn�es du sc�nario optimal
