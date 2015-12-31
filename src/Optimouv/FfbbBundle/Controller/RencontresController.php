@@ -162,13 +162,18 @@ class RencontresController extends Controller
     public function exclusionAction($idGroupe)
     {
 
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+        # récupérer chemin fichier log du fichier parameters.yml
+        $this->error_log_path = $this->container->getParameter("error_log_path");
+
         //R�cup�ration de la valeur saisie par l'utilisateur
         $valeurExclusion = $_POST["valeurExclusion"];
 
         //R�cup�ration du r�sultat du calcul avec contrainte
         $retour = $this->get('service_rencontres')->Exclusion($valeurExclusion, $idGroupe);
-
-
 
         //Donn�es du sc�nario optimal
         $villeDepart = $retour[0];

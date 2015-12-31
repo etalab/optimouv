@@ -32,6 +32,7 @@ class RapportsController extends Controller
         # récupérer tous les rapports de tous les groupes
         $infoRapports = $em->getRepository('FfbbBundle:Rapport')->getRapportsParIdGroupe($idGroupes);
 
+
 //        error_log("\n Controller: Listes, Function: indexAction, datetime: ".$dateTimeNow
 //            ."\n infoRapports: ".print_r($infoRapports, true), 3, $this->error_log_path);
 
