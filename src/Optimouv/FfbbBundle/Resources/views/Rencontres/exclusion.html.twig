@@ -122,50 +122,6 @@
                                                      style="width: 100%; height: 500px; background: grey"></div>
                                                 <script type="text/javascript" charset="UTF-8">
 
-
-                                                    /**
-                                                     * Adds markers to the map highlighting the locations of the captials of
-                                                     * France, Italy, Germany, Spain and the United Kingdom.
-                                                     *
-                                                     * @param  {H.Map} map      A HERE Map instance within the application
-                                                     */
-                                                    function addMarkersToMap(map) {
-
-                                                        var incrment = 1;
-                                                        //tracer dynamiquement les points de villes
-                                                        {% for coordonneeVille in coordonneesVille %}
-                                                        var coordonneeVille = '{{ coordonneeVille }}';
-
-                                                        var xy = coordonneeVille.split("%2C");
-                                                        var x = xy[0];
-                                                        var y = xy[1];
-
-                                                        var marker = 'marker' + incrment;
-                                                        window[marker] = new H.map.Marker({
-                                                            lat: parseFloat(x),
-                                                            lng: parseFloat(y)
-                                                        });
-                                                        map.addObject(window[marker]);
-
-                                                        var incrment = incrment + 1
-
-                                                        {% endfor %}
-
-
-                                                    }
-                                                    /**
-                                                     * Markeur principal
-                                                     */
-
-                                                    // Create a marker icon from an image URL:
-                                                    var icon = new H.map.Icon('{{ asset('bundles/ffbb/images/depart.png') }}');
-
-                                                    // Create a marker using the previously instantiated icon:
-                                                    var markerPrincipal = new H.map.Marker({
-                                                        lng : '{{ longPtDep }}',
-                                                        lat : '{{ latPtDep }}'
-                                                    }, {icon: icon});
-
                                                     /**
                                                      *
                                                      * Changer la langue de la carte
@@ -190,6 +146,54 @@
                                                      */
 
                                                     /**
+                                                     * Markeur principal
+                                                     */
+
+                                                    // Create a marker icon from an image URL:
+                                                    var icon = new H.map.Icon('{{ asset('bundles/ffbb/images/depart.png') }}');
+
+                                                    // Create a marker using the previously instantiated icon:
+                                                    var markerPrincipal = new H.map.Marker({
+                                                        lng: '{{ longPtDep }}',
+                                                        lat: '{{ latPtDep }}'
+                                                    }, {icon: icon});
+
+
+
+                                                    //construction des points de differentes villes
+                                                    function addMarkersAndSetViewBounds() {
+                                                        var incrment = 1;
+                                                        var points = [markerPrincipal];
+                                                        //tracer dynamiquement les points de villes
+                                                        {% for coordonneeVille in coordonneesVille %}
+                                                        var coordonneeVille = '{{ coordonneeVille }}';
+
+                                                        var xy = coordonneeVille.split("%2C");
+                                                        var x = xy[0];
+                                                        var y = xy[1];
+
+                                                        var marker = 'marker' + incrment;
+                                                        window[marker] = new H.map.Marker({
+                                                            lat: parseFloat(x),
+                                                            lng: parseFloat(y)
+                                                        });
+
+                                                        points.push(window[marker]);
+
+                                                        var incrment = incrment + 1;
+
+                                                        {% endfor %}
+                                                        group = new H.map.Group();
+                                                        // add markers to the group
+                                                        group.addObjects(points);
+                                                        map.addObject(group);
+                                                        // get geo bounding box for the group and set it to the map
+                                                        map.setViewBounds(group.getBounds());
+                                                    }
+
+
+
+                                                    /**
                                                      * Boilerplate map initialization code starts below:
                                                      */
 
@@ -206,23 +210,19 @@
                                                     var map = new H.Map(document.getElementById('map'),
                                                             defaultLayers.normal.map, {
                                                                 center: {lat: 48.8567, lng: 2.3508},
-                                                                zoom: 5.5
+                                                                zoom: 4
                                                             });
 
-
                                                     var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-
                                                     // Create the default UI components
                                                     //    var ui = H.ui.UI.createDefault(map, defaultLayers);
                                                     var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
 
-
+                                                    // Now use the map as required...
                                                     // Add the marker to the map:
-                                                    map.addObject(markerPrincipal);
-
-                                                    addMarkersToMap(map);
+//                                                    map.addObject(markerPrincipal);
+                                                    addMarkersAndSetViewBounds(map);
                                                     switchMapLanguage(map, platform);
-
 
                                                 </script>
                                                 <!-- Nav tabs -->
@@ -371,43 +371,11 @@
                                                      style="width: 100%; height: 500px; background: grey"></div>
                                                 <script type="text/javascript" charset="UTF-8">
 
-                                                    function addMarkersToMap(map) {
 
-                                                        var incrmentEq = 1;
-                                                        //tracer dynamiquement les points de villes
-                                                        {% for coordonneeVilleEq in coordonneesVilleEq %}
-                                                        var coordonneeVilleEq = '{{ coordonneeVilleEq }}';
-
-                                                        var xy = coordonneeVilleEq.split("%2C");
-                                                        var x = xy[0];
-                                                        var y = xy[1];
-
-                                                        var markerEq = 'marker' + incrmentEq;
-                                                        window[markerEq] = new H.map.Marker({
-                                                            lat: parseFloat(x),
-                                                            lng: parseFloat(y)
-                                                        });
-                                                        map.addObject(window[markerEq]);
-
-                                                        var incrmentEq = incrmentEq + 1
-
-                                                        {% endfor %}
-
-
-                                                    }
                                                     /**
-                                                     * Markeur principal
+                                                     *
+                                                     * Changer la langue de la carte
                                                      */
-
-                                                    // Create a marker icon from an image URL:
-                                                    var icon = new H.map.Icon('{{ asset('bundles/ffbb/images/depart.png') }}');
-
-                                                    // Create a marker using the previously instantiated icon:
-                                                    var markerPrincipalEq = new H.map.Marker({
-                                                        lng : '{{ longPtDepEq }}',
-                                                        lat : '{{ latPtDepEq }}'
-                                                    }, {icon: icon});
-                                                    // Changer la langue de la carte
                                                     function switchMapLanguage(map, platform) {
                                                         var mapTileService = platform.getMapTileService({
                                                                     type: 'base'
@@ -423,7 +391,57 @@
 
 
                                                     }
-                                                    // Fin fn changer langue
+                                                    /*
+                                                     Fin fn changer langue
+                                                     */
+                                                    /**
+                                                     * Markeur principal
+                                                     */
+
+                                                    // Create a marker icon from an image URL:
+                                                    var icon = new H.map.Icon('{{ asset('bundles/ffbb/images/depart.png') }}');
+
+                                                    // Create a marker using the previously instantiated icon:
+                                                    var markerPrincipalEq = new H.map.Marker({
+                                                        lng: '{{ longPtDepEq }}',
+                                                        lat: '{{ latPtDepEq }}'
+                                                    }, {icon: icon});
+
+
+                                                    //construction des points de differentes villes
+
+                                                    function addMarkersAndSetViewBounds() {
+                                                        var incrmentEq = 1;
+                                                        var points = [markerPrincipalEq];
+                                                        //tracer dynamiquement les points de villes
+                                                        {% for coordonneeVilleEq in coordonneesVilleEq %}
+                                                        var coordonneeVilleEq = '{{ coordonneeVilleEq }}';
+
+                                                        var xy = coordonneeVilleEq.split("%2C");
+                                                        var x = xy[0];
+                                                        var y = xy[1];
+
+                                                        var markerEq = 'marker' + incrmentEq;
+                                                        window[markerEq] = new H.map.Marker({
+                                                            lat: parseFloat(x),
+                                                            lng: parseFloat(y)
+                                                        });
+
+                                                        points.push(window[markerEq]);
+
+                                                        var incrmentEq = incrmentEq + 1;
+
+                                                        {% endfor %}
+                                                        group = new H.map.Group();
+                                                        // add markers to the group
+                                                        group.addObjects(points);
+                                                        map.addObject(group);
+                                                        // get geo bounding box for the group and set it to the map
+                                                        map.setViewBounds(group.getBounds());
+                                                    }
+
+
+
                                                     /**
                                                      * Boilerplate map initialization code starts below:
                                                      */
@@ -441,21 +459,19 @@
                                                     var map = new H.Map(document.getElementById('mapEquitable'),
                                                             defaultLayers.normal.map, {
                                                                 center: {lat: 48.8567, lng: 2.3508},
-                                                                zoom: 5.5
+                                                                zoom: 4
                                                             });
 
-
                                                     var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-
                                                     // Create the default UI components
                                                     //    var ui = H.ui.UI.createDefault(map, defaultLayers);
                                                     var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
 
+                                                    // Now use the map as required...
                                                     // Add the marker to the map:
-                                                    map.addObject(markerPrincipalEq);
-                                                    addMarkersToMap(map);
+//                                                    map.addObject(markerPrincipalEq);
+                                                    addMarkersAndSetViewBounds(map);
                                                     switchMapLanguage(map, platform);
-
 
                                                 </script>
 
