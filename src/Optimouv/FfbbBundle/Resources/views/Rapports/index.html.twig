@@ -26,6 +26,7 @@
                                     <tr>
                                         <th>Identifiant du rapport</th>
                                         <th>Nom du rapport</th>
+                                        <th>Type du rapport</th>
                                         <th>Date de création</th>
                                         <th>Action</th>
 
@@ -40,6 +41,7 @@
 
                                             <td> {{ infoRapport.id }} </td>
                                             <td> {{ infoRapport.nom }} </td>
+                                            <td> {{ infoRapport.typeAction }} </td>
                                             <td> {{ infoRapport.dateCreation.date|date('d/m/Y') }} </td>
                                             <td>
                                                 <button type="submit" class="btn btn-info">Rejouer</button> |
