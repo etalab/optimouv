@@ -1237,6 +1237,128 @@ class Rencontres
     }
 
 
+    public function creerRapport($idGroupe, $typeAction, $valeurExclusion){
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+        # obtenir l'objet PDO
+        $pdo = $this->connexion();
+
+        if(!$pdo){
+            error_log("\n erreur récupération de l'objet PDO, Service: Rencontres, Function: creerRapport, datetime: ".$dateTimeNow, 3, $this->error_log_path);
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
+
+        # controler si le rapport est déjà dans la table rapport
+        try {
+            $sql = "SELECT id FROM rapport WHERE id_groupe = :id_groupe and type_action = :type_action and valeur_exclusion = :valeur_exclusion " ;
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':id_groupe', $idGroupe);
+            $stmt->bindParam(':type_action', $typeAction);
+            $stmt->bindParam(':valeur_exclusion', $valeurExclusion);
+
+            # executer la requete
+            $stmt->execute();
+
+            # obtenir le résultat
+            $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+//            error_log("\n Service: Rencontres, Function: creerRapport, datetime: ".$dateTimeNow
+//                    ."\n sql: ".print_r($sql, true), 3, $this->error_log_path);
+//            error_log("\n Service: Rencontres, Function: creerRapport, datetime: ".$dateTimeNow
+//                ."\n valeurExclusion: ".print_r($valeurExclusion, true), 3, $this->error_log_path);
+
+            # insérer dans la table rapport si le rapport est nouveau
+            if(!$resultat){
+
+                $nom = "rapport_groupe_".$idGroupe."_action_".$typeAction;
+
+
+                $sql = "INSERT INTO rapport (nom, id_groupe, type_action, valeur_exclusion, date_creation)
+                          VALUES (:nom, :id_groupe, :type_action, :valeur_exclusion, :date_creation)";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindParam(':nom', $nom);
+                $stmt->bindParam(':id_groupe', $idGroupe);
+                $stmt->bindParam(':type_action', $typeAction);
+                $stmt->bindParam(':valeur_exclusion', $valeurExclusion);
+                $stmt->bindParam(':date_creation', $dateTimeNow);
+
+                # executer la requete
+                $stmt->execute();
+
+                # afficher le statut de la requete executée
+//                error_log("\n Service: Rencontres, Function: creerRapport, datetime: ".$dateTimeNow
+//                    ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, $this->error_log_path);
+
+                # obtenir l'id de l"entité créée
+                $idRapport = $pdo->lastInsertId();
+            }
+            else{
+                $idRapport = -1; # l'id rapport si on ne fait pas l'insertion
+            }
+
+        } catch (PDOException $e) {
+            error_log("\n Service: Rencontres, Function: creerRapport, datetime: ".$dateTimeNow
+                ."\n PDOException: ".print_r($e, true), 3, $this->error_log_path);
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
+
+
+        return $idRapport;
+
+
+    }
+
+    public function creerScenario($idRapport, $typeScenario, $distanceKm, $duree){
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+        # obtenir l'objet PDO
+        $pdo = $this->connexion();
+
+        if(!$pdo){
+            error_log("\n erreur récupération de l'objet PDO, Service: Rencontres, Function: creerScenario, datetime: ".$dateTimeNow, 3, $this->error_log_path);
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
+
+        try {
+                $nom = "scenario_".$typeScenario."_rapport_".$idRapport;
+
+                $sql = "INSERT INTO scenario (id_rapport, nom, kilometres, duree, date_creation, date_modification)
+                          VALUES (:id_rapport, :nom, :kilometres, :duree, :date_creation, :date_modification)";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindParam(':id_rapport', $idRapport);
+                $stmt->bindParam(':nom', $nom);
+                $stmt->bindParam(':kilometres', $distanceKm);
+                $stmt->bindParam(':duree', $duree);
+                $stmt->bindParam(':date_creation', $dateTimeNow);
+                $stmt->bindParam(':date_modification', $dateTimeNow);
+
+                # executer la requete
+                $stmt->execute();
+
+                # afficher le statut de la requete executée
+//                error_log("\n Service: Rencontres, Function: creerRapport, datetime: ".$dateTimeNow
+//                    ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, $this->error_log_path);
+
+                # obtenir l'id de l"entité créée
+                $idScenario = $pdo->lastInsertId();
+
+        } catch (PDOException $e) {
+            error_log("\n Service: Rencontres, Function: creerScenario, datetime: ".$dateTimeNow
+                ."\n PDOException: ".print_r($e, true), 3, $this->error_log_path);
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
+
+
+
+        return $idScenario;
+
+    }
+
+
     private function getDistanceTotale($distanceEquipe, $nbrParticipants){
 
         # controler si les tableaux ont la même taille

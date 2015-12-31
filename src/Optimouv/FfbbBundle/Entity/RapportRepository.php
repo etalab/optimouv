@@ -10,4 +10,16 @@ namespace Optimouv\FfbbBundle\Entity;
  */
 class RapportRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getRapportsParIdGroupe($idGroupes){
+        $query = $this->createQueryBuilder('r')
+            ->select('r.id, r.nom, identity(r.idGroupe) as idGroupe, r.typeAction, r.valeurExclusion, r.dateCreation')
+            ->where('r.idGroupe IN (:idGroupe)')
+            ->setParameter('idGroupe', array_values($idGroupes))
+            ->orderBy('r.id', 'DESC')
+            ->getQuery();
+        $result = $query->getResult();
+
+        return $result;
+    }
+
 }

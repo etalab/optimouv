@@ -39,6 +39,18 @@ class GroupeRepository extends \Doctrine\ORM\EntityRepository
         return $result;
     }
 
+    public function getGroupesParIdUtilisateur($idUtilisateur){
+        $query = $this->createQueryBuilder('g')
+            ->select('g.id')
+            ->where('g.idUtilisateur= :idUtilisateur')
+            ->setParameter('idUtilisateur', $idUtilisateur)
+            ->orderBy('g.id', 'DESC')
+            ->getQuery();
+        $result = $query->getResult();
+
+        return $result;
+    }
+
     public function getGroupesParIdListeParticipants($idListeParticipants){
         $query = $this->createQueryBuilder('g')
             ->select('g.id')

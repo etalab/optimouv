@@ -34,13 +34,24 @@
 
 
                                     <tbody>
-                                        <td> 1</td>
-                                        <td> test</td>
-                                        <td> test date</td>
-                                        <td>
-                                            <button type="submit" class="btn btn-info">Rejouer</button> |
-                                            <button type="submit" class="btn btn-info">Exporter</button>
-                                        </td>
+
+                                    {%  for infoRapport in infoRapports %}
+                                        <tr id="{{ infoRapport.id }}">
+
+                                            <td> {{ infoRapport.id }} </td>
+                                            <td> {{ infoRapport.nom }} </td>
+                                            <td> {{ infoRapport.dateCreation.date|date('d/m/Y') }} </td>
+                                            <td>
+                                                <button type="submit" class="btn btn-info">Rejouer</button> |
+                                                <button type="submit" class="btn btn-info">Exporter</button>
+                                            </td>
+
+                                        </tr>
+
+
+                                    {%  endfor %}
+
+
 
 
                                     </tbody>

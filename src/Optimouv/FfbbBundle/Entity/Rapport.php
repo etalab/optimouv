@@ -53,6 +53,7 @@ class Rapport
      */
     private $valeurExclusion;
 
+
     /**
      * @var \DateTime
      *
@@ -166,6 +167,7 @@ class Rapport
     {
         return $this->valeurExclusion;
     }
+
 
     /**
      * Set dateCreation
