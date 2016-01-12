@@ -94,8 +94,9 @@ class ListeParticipantsRepository extends EntityRepository
         $query = $this->createQueryBuilder('e')
             ->select('e.id, e.nom, e.dateCreation')
             ->where('e.idUtilisateur = ?1')
-            ->andWhere('e.rencontre is NULL')
+            ->andWhere('e.rencontre = ?2')
             ->setParameter(1, $idUtilisateur)
+            ->setParameter(2, 1)
             ->orderBy('e.id', 'desc')
             ->getQuery();
 
