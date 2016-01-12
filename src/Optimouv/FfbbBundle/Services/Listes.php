@@ -96,6 +96,7 @@ class Listes{
                 // Controler les colonnes des en-têtes avec les formats fixés
                 // Fichier equipes, personnes, lieux
                 $resultatBooleanControlEntete = $this->controlerEntete($donneesEntete);
+
                 if(!$resultatBooleanControlEntete["success"]){
                     $retour = array(
                         "success" => false,
@@ -209,7 +210,7 @@ class Listes{
                                 if (strtolower($typeEntite) == "equipe") {
 
                                     # controler le nombre de colonnes
-                                    if(count($donnéesLigne) != 11){
+                                    if(count($donnéesLigne) != 11 && count($donnéesLigne) != 12){
                                         $retour = array(
                                             "success" => false,
                                             "msg" => "Erreur ligne :".$nbrLigne."!"
@@ -342,6 +343,14 @@ class Listes{
                                     $latitude = $donnéesLigne[8];
                                     $projection = $donnéesLigne[9];
                                     $licencies = $donnéesLigne[10];
+
+                                    //test si on traite une equipe qui appartient à une poule
+
+                                    if(count($donnéesLigne) == 12){
+
+                                        $poule = $donnéesLigne[11];
+
+                                    }
 
                                 }
                                 elseif (strtolower($typeEntite) == "personne") {
@@ -665,7 +674,7 @@ class Listes{
     }
 
 
-    public function creerListeParticipants($idsEntite, $nomFichier, $idUtilisateur){
+    public function creerListeParticipants($idsEntite, $nomFichier, $idUtilisateur, $rencontre){
 
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
@@ -694,12 +703,13 @@ class Listes{
                 $equipes = rtrim($equipes, ",");
 
                 # insérer dans la base de données
-                $sql = "INSERT INTO  liste_participants (nom, id_utilisateur, date_creation, equipes) VALUES ( :nom, :idUtilisateur, :dateCreation, :equipes);";
+                $sql = "INSERT INTO  liste_participants (nom, id_utilisateur, date_creation, equipes, rencontre) VALUES ( :nom, :idUtilisateur, :dateCreation, :equipes, :rencontre);";
                 $stmt = $bdd->prepare($sql);
                 $stmt->bindParam(':nom', $nom);
                 $stmt->bindParam(':idUtilisateur', $idUtilisateur);
                 $stmt->bindParam(':dateCreation', $dateCreation);
                 $stmt->bindParam(':equipes', $equipes);
+                $stmt->bindParam(':rencontre', $rencontre);
                 $stmt->execute();
 
                 # afficher le statut de la requete executée
@@ -851,6 +861,7 @@ class Listes{
                                 $latitude = $donnéesLigne[8];
                                 $projection = $donnéesLigne[9];
                                 $licencies = $donnéesLigne[10];
+                                $poule = $donnéesLigne[11];
 
                                 # corriger le code postal si un zéro est manquant dans le premier chiffre
                                 $codePostal = $this->corrigerCodePostal($codePostal);
@@ -861,31 +872,63 @@ class Listes{
                                 $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
                                 $idVilleFrance = $statutControlCodePostalVille["idVille"];
 
-
-                                $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, adresse, code_postal, ville, longitude, latitude,"
-                                    ." projection, participants, "
-                                    ." licencies, lieu_rencontre_possible, date_creation, date_modification, id_ville_france  )"
-                                    ."VALUES ( :id_utilisateur, :type_entite, :nom, :adresse, :code_postal, :ville, :longitude, :latitude, "
-                                    ." :projection, :participants, "
-                                    .":licencies, :lieu_rencontre_possible, :date_creation, :date_modification, :id_ville_france );";
+                                //on gère le cas où on a des poules
+                                if($poule){
+                                    //champs rencontre pour specifier si l equipe appartient à une poule ou bien dediee pour les rencontres
 
 
-                                $stmt = $bdd->prepare($sql);
-                                $stmt->bindParam(':id_utilisateur', $idUtilisateur);
-                                $stmt->bindParam(':type_entite', $typeEntite);
-                                $stmt->bindParam(':nom', $nom);
-                                $stmt->bindParam(':adresse', $adresse);
-                                $stmt->bindParam(':code_postal', $codePostal);
-                                $stmt->bindParam(':ville', $ville);
-                                $stmt->bindParam(':longitude', $longitude);
-                                $stmt->bindParam(':latitude', $latitude);
-                                $stmt->bindParam(':projection', $projection);
-                                $stmt->bindParam(':participants', $participants);
-                                $stmt->bindParam(':licencies', $licencies);
-                                $stmt->bindParam(':lieu_rencontre_possible', $lieuRencontrePossible);
-                                $stmt->bindParam(':date_creation', $dateCreation);
-                                $stmt->bindParam(':date_modification', $dateModification);
-                                $stmt->bindParam(':id_ville_france', $idVilleFrance);
+                                    $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, adresse, code_postal, ville, longitude, latitude,"
+                                        ." projection, participants, "
+                                        ." licencies, lieu_rencontre_possible, date_creation, date_modification, id_ville_france, poule )"
+                                        ."VALUES ( :id_utilisateur, :type_entite, :nom, :adresse, :code_postal, :ville, :longitude, :latitude, "
+                                        ." :projection, :participants, "
+                                        .":licencies, :lieu_rencontre_possible, :date_creation, :date_modification, :id_ville_france, :poule);";
+
+
+                                    $stmt = $bdd->prepare($sql);
+                                    $stmt->bindParam(':id_utilisateur', $idUtilisateur);
+                                    $stmt->bindParam(':type_entite', $typeEntite);
+                                    $stmt->bindParam(':nom', $nom);
+                                    $stmt->bindParam(':adresse', $adresse);
+                                    $stmt->bindParam(':code_postal', $codePostal);
+                                    $stmt->bindParam(':ville', $ville);
+                                    $stmt->bindParam(':longitude', $longitude);
+                                    $stmt->bindParam(':latitude', $latitude);
+                                    $stmt->bindParam(':projection', $projection);
+                                    $stmt->bindParam(':participants', $participants);
+                                    $stmt->bindParam(':licencies', $licencies);
+                                    $stmt->bindParam(':lieu_rencontre_possible', $lieuRencontrePossible);
+                                    $stmt->bindParam(':date_creation', $dateCreation);
+                                    $stmt->bindParam(':date_modification', $dateModification);
+                                    $stmt->bindParam(':id_ville_france', $idVilleFrance);
+                                    $stmt->bindParam(':poule', $poule);
+                                }
+                                else{
+                                    $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, adresse, code_postal, ville, longitude, latitude,"
+                                        ." projection, participants, "
+                                        ." licencies, lieu_rencontre_possible, date_creation, date_modification, id_ville_france  )"
+                                        ."VALUES ( :id_utilisateur, :type_entite, :nom, :adresse, :code_postal, :ville, :longitude, :latitude, "
+                                        ." :projection, :participants, "
+                                        .":licencies, :lieu_rencontre_possible, :date_creation, :date_modification, :id_ville_france );";
+
+
+                                    $stmt = $bdd->prepare($sql);
+                                    $stmt->bindParam(':id_utilisateur', $idUtilisateur);
+                                    $stmt->bindParam(':type_entite', $typeEntite);
+                                    $stmt->bindParam(':nom', $nom);
+                                    $stmt->bindParam(':adresse', $adresse);
+                                    $stmt->bindParam(':code_postal', $codePostal);
+                                    $stmt->bindParam(':ville', $ville);
+                                    $stmt->bindParam(':longitude', $longitude);
+                                    $stmt->bindParam(':latitude', $latitude);
+                                    $stmt->bindParam(':projection', $projection);
+                                    $stmt->bindParam(':participants', $participants);
+                                    $stmt->bindParam(':licencies', $licencies);
+                                    $stmt->bindParam(':lieu_rencontre_possible', $lieuRencontrePossible);
+                                    $stmt->bindParam(':date_creation', $dateCreation);
+                                    $stmt->bindParam(':date_modification', $dateModification);
+                                    $stmt->bindParam(':id_ville_france', $idVilleFrance);
+                                }
 
                             }
                             elseif (strtolower($typeEntite) == "personne") {
@@ -1135,7 +1178,7 @@ class Listes{
 
         // tester le nombre de colonnes
         // nombreColonnesEntetes (11 pour liste d'équipes, 10 pour liste de personnes, 13 pour liste de lieux)
-        $nombreColonnesEntetes = [11,10,13];
+        $nombreColonnesEntetes = [11,10,13,12];
         if(!in_array(count($entete), $nombreColonnesEntetes)){
             $retour["msg"] = "Veuillez vérifier le nombre des colonnes.!"
                 .$genericMsg;
@@ -1154,7 +1197,7 @@ class Listes{
             }
 
             // pour la liste d'équipes
-            if(count($entete) == 11){
+            if(count($entete) == 11 || count($entete) == 12){
                 if($entete[2] != "CODE POSTAL" ){
                     $retour["msg"] = "Veuillez vérifier que le nom de la colonne 3 de l'en-tête correspond au template donné (CODE POSTAL).!"
                         .$genericMsg;

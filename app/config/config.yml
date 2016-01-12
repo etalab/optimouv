@@ -93,3 +93,28 @@ fos_user:
     db_driver: orm
     firewall_name: main
     user_class: Optimouv\AdminBundle\Entity\User
+
+old_sound_rabbit_mq:
+       connections:
+           default:
+               host:     'localhost'
+               port:     5672
+               user:     'guest'
+               password: 'guest'
+               vhost:    '/'
+               lazy:     false
+       producers:
+               rencontre:
+                   connection: default
+                   exchange_options:
+                       name: 'rencontre_exchange'
+                       type: topic
+       consumers:
+               rencontre:
+                   connection: default
+                   exchange_options:
+                       name: 'rencontre_exchange'
+                       type: topic
+                   queue_options:
+                       name: 'rencontre_queue'
+                   callback: service_calcul_rencontre

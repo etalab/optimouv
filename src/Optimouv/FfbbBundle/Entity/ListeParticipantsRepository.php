@@ -1,6 +1,7 @@
 <?php
 
 namespace Optimouv\FfbbBundle\Entity;
+
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -11,20 +12,37 @@ use Doctrine\ORM\EntityRepository;
  */
 class ListeParticipantsRepository extends EntityRepository
 {
-    public function getListes(){
+    public function getListes($rencontre)
+    {
 
-        $query = $this->createQueryBuilder('l')
-            ->select('l.id, l.nom, l.dateCreation')
-            ->orderBy('l.id', 'desc')
-            ->getQuery();
+        if ($rencontre == 0) {
+            $query = $this->createQueryBuilder('l')
+                ->select('l.id, l.nom, l.dateCreation')
+                ->where('l.rencontre = ?1')
+                ->orderBy('l.id', 'desc')
+                ->setParameter(1, $rencontre)
+                ->getQuery();
 
-        $result = $query->getResult();
+            $result = $query->getResult();
+        } else {
+
+            $query = $this->createQueryBuilder('l')
+                ->select('l.id, l.nom, l.dateCreation')
+                ->where('l.rencontre != ?1')
+                ->orderBy('l.id', 'desc')
+                ->setParameter(1, $rencontre)
+                ->getQuery();
+
+            $result = $query->getResult();
+        }
+
 
         return $result;
 
     }
 
-    public function getEquipesPourListe($idListe){
+    public function getEquipesPourListe($idListe)
+    {
         $query = $this->createQueryBuilder('l')
             ->select('l.equipes')
             ->where('l.id= :id')
@@ -50,7 +68,41 @@ class ListeParticipantsRepository extends EntityRepository
 
         return $result;
 
+    }
 
+    public function getListesEquipes($idUtilisateur, $rencontre)
+    {
+
+        $query = $this->createQueryBuilder('e')
+            ->select('e.id, e.nom, e.dateCreation')
+            ->where('e.idUtilisateur = ?1')
+            ->andWhere('e.rencontre = ?2')
+            ->setParameter(1, $idUtilisateur)
+            ->setParameter(2, $rencontre)
+            ->orderBy('e.id', 'desc')
+            ->getQuery();
+
+        $result = $query->getResult();
+
+        return $result;
+
+    }
+
+    public function getListesParticipants($idUtilisateur)
+    {
+
+        $query = $this->createQueryBuilder('e')
+            ->select('e.id, e.nom, e.dateCreation')
+            ->where('e.idUtilisateur = ?1')
+            ->andWhere('e.rencontre is NULL')
+            ->setParameter(1, $idUtilisateur)
+            ->orderBy('e.id', 'desc')
+            ->getQuery();
+
+        $result = $query->getResult();
+
+
+        return $result;
 
     }
 }

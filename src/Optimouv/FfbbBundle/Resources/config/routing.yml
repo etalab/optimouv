@@ -139,3 +139,84 @@ ffbb_visualiser_liste_lieux:
 ffbb_visualiser_groupe:
     path:     /admin/rencontre/visualiser-groupe/{idGroupe}
     defaults: { _controller: FfbbBundle:Groupe:visualiserGroupe }
+
+#Gestion des poules
+ffbb_poules_choisir_liste:
+    path:     /admin/poules/choisir-liste-equipes
+    defaults: { _controller: FfbbBundle:Poules:choisirListeEquipes }
+
+ffbb_poules_gerer_liste:
+    path:     /admin/poules/gerer-liste-equipes
+    defaults: { _controller: FfbbBundle:Poules:gererListeEquipes }
+
+ffbb_poules_criteres:
+    path:     /admin/poules/criteres
+    defaults: { _controller: FfbbBundle:Poules:criteres }
+
+ffbb_creer_liste_equipes:
+    path:     /admin/poules/creer-liste-equipes
+    defaults: { _controller: FfbbBundle:Poules:creerListeEquipes }
+
+ffbb_supprimer_liste_equipes:
+    path:    /admin/poules/supprimer-liste-participants/{idListeParticipants}
+    defaults: { _controller: FfbbBundle:Listes:delete }
+
+ffbb_renommer_liste_equipes:
+    path:    /admin/poules/renommer-liste-equipes/{idListeParticipants}
+    defaults: { _controller: FfbbBundle:Poules:renommerListe }
+
+ffbb_update_liste_equipes:
+    path:    /admin/poules/update-liste-equipes/{idListeParticipants}
+    defaults: { _controller: FfbbBundle:Poules:renommerListeEquipes }
+
+ffbb_visualiser_liste_equipes:
+    path:     /admin/poules/visualiser-liste-equipes/{idListeParticipants}
+    defaults: { _controller: FfbbBundle:Poules:visualiserListeEquipes }
+
+ffbb_poule_nouveau_groupe:
+    path:     /admin/poules/nouvau-groupe
+    defaults: { _controller: FfbbBundle:Poules:nouveauGroupe  }
+
+ffbb_poule_choisir_groupe:
+    path:     /admin/poules/choisir-groupe/{idListe}
+    defaults: { _controller: FfbbBundle:Poules:choisirGroupe  }
+
+ffbb_poule_creer_groupe:
+    path:     /admin/poules/creer-groupe/{idListe}
+    defaults: { _controller: FfbbBundle:Poules:creerGroupe  }
+
+ffbb_poules_gerer_groupe:
+    path:     /admin/poules/gerer-groupe/{idListe}
+    defaults: { _controller: FfbbBundle:Poules:gererGroupe  }
+
+ffbb_poules_supprimer_groupe:
+    path:    /admin/poules/supprimer-groupe/{idGroupe}
+    defaults: { _controller: FfbbBundle:Groupe:delete }
+
+ffbb_poules_renommer_groupe:
+    path:    /admin/poules/renommer-groupe/{idGroupe}
+    defaults: { _controller: FfbbBundle:Poules:renommer }
+
+ffbb_poules_update_groupe:
+    path:    /admin/poules/update-groupe/{idGroupe}
+    defaults: { _controller: FfbbBundle:Poules:renommerGroupe }
+
+ffbb_poules_visualiser_groupe:
+    path:     /admin/poules/visualiser-groupe/{idGroupe}
+    defaults: { _controller: FfbbBundle:Poules:visualiserGroupe }
+
+ffbb_poules_entite:
+    path:    /admin/poules/entite/{idGroupe}
+    defaults: { _controller: FfbbBundle:Poules:entite }
+
+ffbb_poules_creer_entite:
+    path:    /admin/poules/creer-entite/
+    defaults: { _controller: FfbbBundle:Poules:creerEntite }
+
+ffbb_poules_lancer_groupe:
+    path:    /admin/poules/lancer-groupe/{idGroupe}
+    defaults: { _controller: FfbbBundle:Poules:lancerGroupe }
+
+ffbb_rmq:
+    path:    /rmq
+    defaults: { _controller: FfbbBundle:Default:rmq }

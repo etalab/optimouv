@@ -1,0 +1,177 @@
+{% extends '::BOLayout.html.twig' %}
+
+     {% block pagewrapper %}
+
+         <div id="page-wrapper">
+
+             <div class="row">
+                 <div class="bs-example">
+                     <ul class="breadcrumb">
+                         <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
+                         <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Choix d'équipes</a></li>
+                         <li><a href="{{ path('ffbb_poule_choisir_groupe', {'idListe': idListe}) }}">Choix de la liste d'équipes</a></li>
+                         <li><a href="{{ path('ffbb_poules_gerer_groupe', {'idListe': idListe}) }}">Gestion de groupes</a></li>
+                         <li class="active">Ajout d'entités</li>
+                     </ul>
+                 </div>
+                 <div class="col-lg-12">
+                     <h3 class="page-header">Ajouter une entité </h3>
+                     <h4>{{ nomListe }} | {{ nomGroupe }}</h4>
+                     <hr>
+                 </div>
+                 <!-- /.col-lg-12 -->
+             </div>
+             <!-- /.row -->
+
+             <div class="row" >
+                 <div class="col-lg-6">
+                 <form role="form" action="{{ path('ffbb_poules_creer_entite') }}" method="post">
+
+                       <input type="hidden" name="idGroupe" value="{{ idGroupe }}">
+
+                       <div class="form-group">
+                         <label style="font-weight: bold" >Type d'entité *</label>
+                         <select class="form-control" name="typeLieu" id="typeLieu" onchange="changementType();">
+                             <option value="Equipe">Equipe</option>
+                         </select>
+                     </div>
+                     <div class="form-group">
+                         <label style="font-weight: bold"  >Nom *</label>
+                         <input class="form-control"   name="nom" required>
+                     </div>
+                     <div class="form-group"  id="divPrenom"  style="display: none">
+                         <label style="font-weight: bold">Prénom</label>
+                         <input class="form-control"  name="prenom" >
+                     </div>
+                     <div class="form-group">
+                         <label>Adresse</label>
+                         <input class="form-control"   name="adresse">
+                     </div>
+                     <div class="form-group">
+                         <label style="font-weight: bold">Code postal *</label>
+                         <input class="form-control"   name="codePostal" required>
+                     </div>
+                     <div class="form-group">
+                         <label style="font-weight: bold">Ville *</label>
+                         <input class="form-control"   name="ville" required>
+                     </div>
+
+                     <div class="form-group">
+                         <label>Longitude</label>
+                         <input class="form-control" placeholder="0,113982" name="longitude">
+                     </div>
+                     <div class="form-group">
+                         <label>Latitude</label>
+                         <input class="form-control" placeholder="47,9999992" name="latitude">
+                     </div>
+                     <div class="form-group">
+                         <label>Système de projection géographique</label>
+                         <input class="form-control"  name="projection">
+                     </div>
+                     <div class="form-group" id="typeEquipement">
+                         <label>Type d'équipement</label>
+                         <input class="form-control" placeholder="Enter text" name="typeEquipement">
+                     </div>
+                     <div class="form-group" id="nbrEquipement">
+                         <label>Nombre d'équipement</label>
+                         <input type="number" min="0" class="form-control"   name="nbrEquipement">
+                     </div>
+
+                     <div class="form-group" id="capaciteRencontreStandard">
+                         <label>Capacité rencontre standard</label>
+                         <label class="radio-inline">
+                             <input type="radio" name="capaciteRencontreStandard" id="capaciteRencontreStandard1" value="Oui" checked>Oui
+                         </label>
+                         <label class="radio-inline">
+                             <input type="radio" name="capaciteRencontreStandard" id="capaciteRencontreStandard2" value="Non">Non
+                         </label>
+
+                     </div>
+                     <div class="form-group" id="capacitePhasefinale">
+                         <label>Capacité phase finale</label>
+                         <label class="radio-inline">
+                             <input type="radio" name="capacitePhasefinale" id="capacitePhasefinale1" value="1" checked>Oui
+                         </label>
+                         <label class="radio-inline">
+                             <input type="radio" name="capacitePhasefinale" id="capacitePhasefinale2" value="2">Non
+                         </label>
+
+                     </div>
+                     <div class="form-group" id="nbrParticipants">
+                         <label style="font-weight: bold">Nombre de participants *</label>
+                         <input type="number" min="0" class="form-control"  name="nbrParticipants" required value="1">
+                     </div>
+                     <div class="form-group" id="nbrLicencies">
+                         <label>Nombre de licenciés</label>
+                         <input type="number" min="0" class="form-control"  name="nbrLicencies">
+                     </div>
+
+                     <div class="form-group">
+                         <label style="font-weight: bold">Lieu de rencontre possible *</label>
+                         <label class="radio-inline">
+                             <input type="radio" name="lieuRencontrePossible" id="lieuRencontrePossible1" value="1" checked required>Oui
+                         </label>
+                         <label class="radio-inline">
+                             <input type="radio" name="lieuRencontrePossible" id="lieuRencontrePossible2" value="2">Non
+                         </label>
+
+                     </div>
+                     <div class="form-group" id="nbrParticipants">
+                         <label style="font-weight: bold">Poule</label>
+                         <input type="text" maxlength="1" class="form-control"  name="poule" >
+                     </div>
+
+
+                     <button type="submit" class="btn btn-default">Enregistrer</button>
+                     <button type="reset" class="btn btn-default">Vider les champs</button>
+                 </form>
+
+                 </div>
+
+
+             </div>
+
+
+
+
+
+         </div>
+
+     {% endblock %}
+   {% block javascripts %}
+
+       <script  language="javascript">
+
+           function changementType() {
+               var type = document.getElementById("typeLieu").value;
+               if (type == "Personne") {
+                   document.getElementById("divPrenom").style.display = "block";
+                   document.getElementById("nbrLicencies").style.display = "none";
+                   document.getElementById("capacitePhasefinale").style.display = "none";
+                   document.getElementById("capaciteRencontreStandard").style.display = "none";
+                   document.getElementById("nbrEquipement").style.display = "none";
+                   document.getElementById("typeEquipement").style.display = "none";
+                   document.getElementById("nbrParticipants").style.display = "none";
+
+
+               }
+
+               /*else if (type == "Lieu"){
+                   document.getElementById("divPrenom").style.display = "none";
+                   document.getElementById("nbrParticipants").style.display = "none";
+                   document.getElementById("nbrLicencies").style.display = "none";
+               }*/
+               else {
+                   document.getElementById("divPrenom").style.display = "none";
+               }
+           }
+
+       </script>
+
+   {% endblock %}
+
+
+
+
+
+

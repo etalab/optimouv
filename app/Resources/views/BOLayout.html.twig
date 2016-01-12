@@ -46,9 +46,9 @@
         <script src="{{ asset('bundles/ffbb/js/jquery.bootstrap-duallistbox.js') }}"></script>
         <script src="{{ asset('bundles/ffbb/js/run_prettify.min.js') }}"></script>
         <script src="{{ asset('bundles/ffbb/js/import_listes.js') }}"></script>
+        <script src="{{ asset('bundles/ffbb/js/import_listes_equipes.js') }}"></script>
         <script src="{{ asset('bundles/ffbb/js/jquery.redirect.js') }}"></script>
         <script src="{{ asset('bundles/ffbb/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
-
 
         {#<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/bs-3.3.5/jq-2.1.4,dt-1.10.8/datatables.min.css"/>#}
 
@@ -68,19 +68,20 @@
             <div class="navbar-header">
 
                 <a class="navbar-brand" href="{{ path('ffbb_accueil_connect') }}">
-                    <img src="{{ asset('bundles/ffbb/accueil/img/Logo-Optimouv.jpg') }}"  width="60%" />
+                    <img src="{{ asset('bundles/ffbb/accueil/img/Logo-Optimouv.jpg') }}" width="60%"/>
                 </a>
 
             </div>
-            <div style="position: relative; float: right;">
-                <img src="{{ asset('bundles/ffbb/images/logo-IT4PME.png') }}" width="68px" height="40px" />
-            </div>
-             <!-- /.navbar-header -->
+            {#<div style="position: relative; float: right;">#}
+            {#<img src="{{ asset('bundles/ffbb/images/logo-IT4PME.png') }}" width="68px" height="40px" />#}
+            {#</div>#}
+            <!-- /.navbar-header -->
 
 
         </nav>
 
-        <nav class="navbar navbar-default" style="background-color:#CECECE !important;">
+        {#<nav class="navbar navbar-default" style="background-color:#CECECE !important;">#}
+        <nav class=" navbar-default" style="background-color:#CECECE !important;">
             <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
@@ -95,24 +96,39 @@
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
                     <ul class="nav navbar-nav">
 
-                        <li ><a href="{{ path('ffbb_accueil_connect') }}">Optimisation des poules</a></li>
+                        {% set url = app.request.requestUri %}
+                        {% set poule = "poule" %}
+                         {% if poule in url %}
+                            <li><a style="background-color:#40BAC3;" href="{{ path('ffbb_poules_choisir_liste') }}">Optimisation
+                                    des poules</a></li>
 
-                        {% if app.request.attributes.get('_route') == 'ffbb_rapports' %}
                             <li><a href="{{ path('ffbb_choisir_liste_participants') }}">
-                                    Meilleur lieu de rencontre</a>
+                                    Meilleur lieu de rencontre</a></li>
+                            <li><a href="{{ path('ffbb_rapports') }}">Rapports</a></li>
+
+                        {% elseif  app.request.attributes.get('_route') == 'ffbb_rapports' %}
+
+                            <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Optimisation des poules</a></li>
+
+                            <li><a href="{{ path('ffbb_choisir_liste_participants') }}">
+                                    Meilleur lieu de rencontre</a></li>
+                            <li><a style="background-color:#EE7700;" href="{{ path('ffbb_rapports') }}">Rapports</a>
                             </li>
-                            <li><a style="background-color:#A4BD10;" href="{{ path('ffbb_rapports') }}">Rapports</a></li>
-                        {% else%}
-                            <li style="background-color:#A4BD10;"><a href="{{ path('ffbb_choisir_liste_participants') }}">
-                                Meilleur lieu de rencontre</a>
-                            </li>
-                            {#<li><a href="{{ path('ffbb_rapports') }}">Rapports</a></li>#}
+
+                        {% else %}
+
+                            <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Optimisation des poules</a></li>
+                            <li><a style="background-color:#A4BD10;"
+                                   href="{{ path('ffbb_choisir_liste_participants') }}">
+                                    Meilleur lieu de rencontre</a></li>
+                            <li><a href="{{ path('ffbb_rapports') }}">Rapports</a></li>
+
+
 
                         {% endif %}
-
 
 
                     </ul>
@@ -251,24 +267,24 @@
     {#<script src="{{ asset('bundles/ffbb/js/jquery.sortable.js') }}"></script>#}
 
     <script type="text/javascript">
-        $(document).ready(function () {
-            $(function () {
-                $('.sortable').sortable();
-                $('.handles').sortable({
-                    handle: 'span'
-                });
-                $('.connected').sortable({
-                    connectWith: '.connected'
-                });
-                $('.exclude').sortable({
-                    items: ':not(.disabled)'
-                });
-            });
+        //        $(document).ready(function () {
+        //            $(function () {
+        //                $('.sortable').sortable();
+        //                $('.handles').sortable({
+        //                    handle: 'span'
+        //                });
+        //                $('.connected').sortable({
+        //                    connectWith: '.connected'
+        //                });
+        //                $('.exclude').sortable({
+        //                    items: ':not(.disabled)'
+        //                });
+        //            });
+        //
+        //
+        //        });
 
-
-        });
-
-        function loadListItems(){
+        function loadListItems() {
 
             var items = [];
 
@@ -279,7 +295,6 @@
                 var itemOrder = $(this).find('label').data().value;
 
                 items.push(itemOrder);
-
 
 
             });
@@ -294,7 +309,7 @@
             document.getElementById("inputListItems").value = items;
         }
 
-     </script>
+    </script>
 
 
 

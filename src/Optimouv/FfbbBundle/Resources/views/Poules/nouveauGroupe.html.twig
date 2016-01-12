@@ -1,0 +1,67 @@
+{% extends '::BOLayout.html.twig' %}
+
+     {% block pagewrapper %}
+
+         <div id="page-wrapper">
+
+             <div class="row">
+                 <div class="bs-example">
+                     <ul class="breadcrumb">
+                         <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
+                         <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Choix de la liste d'équipes</a></li>
+                         <li class="active">Nouveau groupe</li>
+                     </ul>
+                 </div>
+                 <div class="col-lg-12">
+                     <h3 class="page-header">Constituez votre groupe</h3>
+                     <h4> {{ nomListe }}</h4>
+                 </div>
+                 <!-- /.col-lg-12 -->
+             </div>
+             <!-- /.row -->
+
+             <div class="row" >
+                 <form id="demoform" action="{{ path('ffbb_poule_creer_groupe', {'idListe': idListeParticipants}) }}" method="POST" class="panel-heading">
+                     <input type="text" name="nomGroupe" id="nomGroupe" placeholder="Donnez un nom à votre nouveau groupe" style=" width: 100%;
+                                              border-top: 1px solid #ccc;
+                                              border-left: 1px solid #ccc;
+                                              border-right: 1px solid #eee;
+                                              border-bottom: 1px solid #eee;
+                                              border-radius: 5px; text-indent:10px;
+                                              margin-bottom: 10px !important;" required x-moz-errormessage="Veuillez donner un nom à votre groupe" >
+                      <input type="hidden" name="idListeParticipants" value="{{ idListeParticipants }}">
+
+                       <select multiple="multiple" size="10" name="duallistbox_demo1[]">
+                         {% for entite in entites %}
+                              <option value="{{ entite.id }}"> {{ entite.codePostal }} | {{ entite.nom }} |  {{ entite.ville }} </option>
+                         {% endfor %}
+                     </select>
+
+                     <br>
+                     <button type="submit" class="btn btn-primary pull-right">Lancer</button>
+                 </form>
+
+             </div>
+             <!-- /.row -->
+
+
+         </div>
+
+
+
+
+     {% endblock %}
+
+         {% block javascripts %}
+             <!-- code interne dual list box -->
+             <script type="text/javascript" charset="UTF-8">
+                 var demo1 = $('select[name="duallistbox_demo1[]"]').bootstrapDualListbox();
+
+             </script>
+         {% endblock %}
+
+
+
+
+
+

@@ -9,213 +9,351 @@
                  <div class="bs-example">
                      <ul class="breadcrumb">
                          <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
-                         <li><a href="{{ path('ffbb_choisir_liste_participants') }}">Choix de listes</a></li>
-                         <li><a href="{{ path('ffbb_choisir_groupe', {'idListe': idListe}) }}">Choix de groupes</a></li>
+                         <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Choix de la liste d'équipes</a></li>
+                         <li><a href="{{ path('ffbb_poule_choisir_groupe', {'idListe': idListe}) }}">Choix de groupes</a></li>
                          <li class="active">Participants</li>
                      </ul>
                  </div>
 
                  <div class="col-lg-12">
-                     <h3 class="page-header">Obtenez le meilleur lieu de rencontre </h3>
+                     <h3 class="page-header">Sélectionnez vos critères et contraintes </h3>
                      <h4>{{ nomListe }} | {{ nomGroupe }}</h4>
-                 </div>
+                  </div>
                  <!-- /.col-lg-12 -->
              </div>
              <!-- /.row -->
              <div class="row">
-                 <div class="col-lg-6">
-                     <div class="panel panel-red"  style="resize:vertical; overflow-y:auto;">
-                         <div class="panel-heading">
-                             Participants
-                         </div>
-                         <div class="panel-body" style="min-height: 150px; max-height: 190px">
-                             <ul class="list-unstyled" style="padding-left:20px; list-style-image: url('{{ asset('bundles/ffbb/images/puce-mini.png') }}')">
-                                 {% for nomVille in nomsVilles %}
-                                 <li>{{ nomVille }}</li>
-                                 {% endfor %}
-                             </ul>
-                         </div>
+                 {#(* Saisie obligatoire)#}
 
+                 <!-- Type de rencontre bloc -->
+                 <div class="col-lg-3">
+
+
+                     <div class="panel panel-default">
+                         <div class="panel-heading">
+                             Type de rencontre*
+                         </div>
+                         <!-- /.panel-heading -->
+                         <div class="panel-body">
+
+                             <div class="form-group">
+                                 <div class="radio">
+                                     <label>
+                                         <input type="radio" name="typeRencontre" id="typeRencontre1"
+                                                value="typeRencontre1" checked onclick="typeAllerRetour();">Match aller retour
+                                     </label>
+                                 </div>
+                                 <div class="radio">
+                                     <label>
+                                         <input type="radio" name="typeRencontre" id="typeRencontre2"
+                                                value="typeRencontre2" onclick="typeAller();">Match aller simple
+                                     </label>
+                                 </div>
+                                 <div class="radio">
+                                     <label>
+                                         <input type="radio" name="typeRencontre" id="typeRencontre3"
+                                                value="typeRencontre3" onclick="typePlateau();">Plateau
+                                     </label>
+                                 </div>
+                             </div>
+
+                         </div>
+                         <!-- /.panel-body -->
                      </div>
                  </div>
-                 <!-- /.col-lg-4 -->
+                 <!-- /. Type de rencontre bloc -->
 
-                 <div class="col-lg-6">
-                     <div class="panel panel-primary">
+
+                 <!-- Nombre de journées bloc -->
+                 <div class="col-lg-3" id="nbrJournee" style="display: none">
+                     <div class="panel panel-default">
                          <div class="panel-heading">
-                             Type de lieu
+                             Nombre de journées*
                          </div>
-                         {#{{ dump(meilleurLieuOption.value) }}#}
-                         <form name="typeLieux" style="padding-left:20px;">
+                         <!-- /.panel-heading -->
+                         <div class="panel-body">
+                             <div class="form-group">
+                                 <input type="number" min="1" class="form-control">
 
-                             <div class="radio">
-                                 <label>
-                                     <input type="radio" name="optionsRadios" id="meilleurLieuOption" value="option1">
-                                     Lieux définis
-                                 </label>
-                             </div>
-                             <div class="radio">
-                                 <label>
-                                     <input type="radio" name="optionsRadios" id="BarycentreOption" value="option2">
-                                     Barycentre
-                                 </label>
                              </div>
 
+                         </div>
+                         <!-- /.panel-body -->
+                     </div>
+                 </div>
+                 <!-- /. Nombre de journées bloc -->
 
-                             <button type="button" class="btn btn-default  pull-right" onclick="typeLieu()">Lancer le
-                                 calcul
-                                 sans contrainte
-                             </button>
+                 <!-- Nombre de rencontres par journée bloc -->
+                 <div class="col-lg-3" id="nbrRencontre" style="display: none">
+                     <div class="panel panel-default">
+                         <div class="panel-heading">
+                             Nombre de rencontres par journée
+                         </div>
+                         <!-- /.panel-heading -->
+                         <div class="panel-body">
+                             <div class="form-group">
+                                 <input type="number" min="0" class="form-control">
+                             </div>
+
+                         </div>
+                         <!-- /.panel-body -->
+                     </div>
+                 </div>
+
+                 <!-- /. Nombre de rencontres par journée bloc -->
+
+                 <!-- Ajouter une contrainte bloc -->
+                 <div class="col-lg-3" id="ajoutContrainte" style="display: none">
+                     <div class="panel panel-default">
+                         <div class="panel-heading">
+                             Ajouter une contrainte
+                         </div>
+                         <!-- /.panel-heading -->
+                         <div class="panel-body">
+                             <div class="form-group">
+                                 <label class="checkbox-inline">
+                                     <input type="checkbox">Toutes les équipes doivent accueillir au moins une fois
+                                 </label>
+
+                             </div>
+
+                         </div>
+                         <!-- /.panel-body -->
+                     </div>
+                 </div>
+                 <!-- /. Ajouter une contrainte bloc -->
 
 
+             </div>
+             <!-- /.row -->
+
+             <div class="row">
+                 <!-- Nombre de poules bloc -->
+                 <div class="col-lg-3">
+                     <div class="panel panel-default">
+                         <div class="panel-heading">
+                             Nombre de poules*
+                         </div>
+                         <!-- /.panel-heading -->
+                         <div class="panel-body">
+
+                             <div class="form-group">
+                                 <input type="number" min="1" class="form-control" required>
+                             </div>
+
+                         </div>
+                         <!-- /.panel-body -->
+                     </div>
+                 </div>
+                 <!-- /. Ajouter une contrainte bloc -->
+
+             </div>
+             <div class="row">
+                 <div class="panel panel-default">
+                     <div class="panel-heading">
+                        <span id="contrainteInterdiction" style="cursor:pointer"> Ajouter des contraintes d'interdiction </span>
+                     </div>
+                     <!-- /.panel-heading -->
+                     <div class="panel-body" id="contrainteInterdictionBody" style="display: none">
+
+                         <form action="">
+                             <p>
+                                 {#<span>Add more</span>#}
+
+                                 <input type="text" value="Interdiction 1">
+                                 <select class="removeDuplication">
+                                     <option value="Amiens">Amiens</option>
+                                     <option value="Tours">Tours</option>
+                                     <option value="Angers">Angers</option>
+                                     <option value="Rouen">Rouen</option>
+                                 </select>
+                                 <select>
+                                     <option value="Amiens">Amiens</option>
+                                     <option value="Tours">Tours</option>
+                                     <option value="Angers">Angers</option>
+                                     <option value="Rouen">Rouen</option>
+                                 </select>
+                             </p>
                          </form>
 
                      </div>
+                     <!-- /.panel-body -->
                  </div>
 
-
-                 <!-- /.col-lg-6 -->
-
              </div>
-             <!-- /.row -->
 
              <div class="row">
-                 <div class="col-lg-12">
-                     <div class="panel panel-default">
-                         <div class="panel-heading">
-                             Vos participants
-                         </div>
-                         <!-- .panel-heading -->
-                         <div id="collapseOne" class="panel-collapse collapse in">
-                             <div class="panel-body"> <!-- premier scÃ©nario -->
-                                 <div id="map"
-                                      style="width: 100%; height: 600px; background: grey"></div>
-                                 <script type="text/javascript" charset="UTF-8">
-
-                                     /**
-                                      *
-                                      * Changer la langue de la carte
-                                      */
-                                     function switchMapLanguage(map, platform) {
-                                         var mapTileService = platform.getMapTileService({
-                                                     type: 'base'
-                                                 }),
-                                                 frenchMapLayer = mapTileService.createTileLayer(
-                                                         'maptile',
-                                                         'normal.day',
-                                                         256,
-                                                         'png8',
-                                                         {lg: 'fre'}
-                                                 );
-                                         map.setBaseLayer(frenchMapLayer);
-
-
-                                     }
-                                     /*
-                                      Fin fn changer langue
-                                      */
-
-                                     function addMarkersAndSetViewBounds() {
-                                         var incrment = 1;
-                                         var points = [];
-                                         //tracer dynamiquement les points de villes
-                                         {% for coordonneeVille in coordonneesVille %}
-                                         var coordonneeVille = '{{ coordonneeVille }}';
-
-                                         var xy = coordonneeVille.split("%2C");
-                                         var x = xy[0];
-                                         var y = xy[1];
-
-                                         var marker = 'marker' + incrment;
-                                         window[marker] = new H.map.Marker({
-                                             lat: parseFloat(x),
-                                             lng: parseFloat(y)
-                                         });
-
-                                         points.push(window[marker]);
-
-                                         var incrment = incrment + 1;
-
-                                         {% endfor %}
-                                         group = new H.map.Group();
-                                         // add markers to the group
-                                         group.addObjects(points);
-                                         map.addObject(group);
-                                         // get geo bounding box for the group and set it to the map
-                                         map.setViewBounds(group.getBounds());
-                                     }
-
-
-
-                                     /**
-                                      * Boilerplate map initialization code starts below:
-                                      */
-
-                                     //Step 1: initialize communication with the platform
-                                     var platform = new H.service.Platform({
-                                         app_id: '{{ app_id }}',
-                                         app_code: '{{ app_code }}',
-                                         useCIT: true,
-                                         useHTTPS: true
-                                     });
-                                     var defaultLayers = platform.createDefaultLayers();
-
-                                     //Step 2: initialize a map - this map is centered over Europe
-                                     var map = new H.Map(document.getElementById('map'),
-                                             defaultLayers.normal.map, {
-                                                 center: {lat: 48.8567, lng: 2.3508},
-                                                 zoom: 4
-                                             });
-
-                                     var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-                                     // Create the default UI components
-                                     //    var ui = H.ui.UI.createDefault(map, defaultLayers);
-                                     var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
-
-                                     // Now use the map as required...
-                                     addMarkersAndSetViewBounds(map);
-                                     switchMapLanguage(map, platform);
-
-                                 </script>
-
-
-                             </div>
-                         </div>
-                         <!-- .panel-body -->
+                 <div class="panel panel-default">
+                     <div class="panel-heading">
+                         <span id="contrainteRepartition" style="cursor:pointer"> Ajouter des contraintes de répartition homogène</span>
                      </div>
-                     <!-- /.panel -->
+                     <!-- /.panel-heading -->
+                     <div class="panel-body" id="contrainteRepartitionBody" style="display: none">
+                         <div class="panel-body">
+                             <div class="table-responsive">
+                                 <table class="table table-striped table-bordered table-hover">
+                                     <thead>
+                                     <tr>
+                                         <th><strong>Equipe</strong></th>
+                                         <th><strong>Catégorie</strong></th>
+                                     </tr>
+                                     </thead>
+                                     <tbody>
+                                     <tr>
+                                         <td>Amiens</td>
+                                         <td>
+                                             <select class="form-control">
+                                                 <option value="Aucun">Aucun</option>
+                                                 <option value="Espoir">Espoir</option>
+                                                 <option value="Descendant">Descendant</option>
+                                                 <option value="Rouen">Promu</option>
+                                                 <option value="Rouen">Equie de niveau A</option>
+                                                 <option value="Rouen">Equie de niveau B</option>
+                                                 <option value="Rouen">Equie de niveau C</option>
+                                                 <option value="Rouen">Tête de série 1</option>
+                                                 <option value="Rouen">Tête de série 2</option>
+                                             </select>
+                                         </td>
+                                     </tr>
+                                     <tr>
+                                         <td>Nantes</td>
+                                         <td>
+                                             <select class="form-control">
+                                                 <option value="Aucun">Aucun</option>
+                                                 <option value="Espoir">Espoir</option>
+                                                 <option value="Descendant">Descendant</option>
+                                                 <option value="Rouen">Promu</option>
+                                                 <option value="Rouen">Equie de niveau A</option>
+                                                 <option value="Rouen">Equie de niveau B</option>
+                                                 <option value="Rouen">Equie de niveau C</option>
+                                                 <option value="Rouen">Tête de série 1</option>
+                                                 <option value="Rouen">Tête de série 2</option>
+                                             </select>
+                                         </td>
+                                     </tr>
+                                     <tr>
+                                         <td>Angers</td>
+                                         <td>
+                                             <select class="form-control">
+                                                 <option value="Aucun">Aucun</option>
+                                                 <option value="Espoir">Espoir</option>
+                                                 <option value="Descendant">Descendant</option>
+                                                 <option value="Rouen">Promu</option>
+                                                 <option value="Rouen">Equie de niveau A</option>
+                                                 <option value="Rouen">Equie de niveau B</option>
+                                                 <option value="Rouen">Equie de niveau C</option>
+                                                 <option value="Rouen">Tête de série 1</option>
+                                                 <option value="Rouen">Tête de série 2</option>
+                                             </select>
+                                         </td>
+                                     </tr>
+                                     <tr>
+                                         <td>Rouen</td>
+                                         <td>
+                                             <select class="form-control">
+                                                 <option value="Aucun">Aucun</option>
+                                                 <option value="Espoir">Espoir</option>
+                                                 <option value="Descendant">Descendant</option>
+                                                 <option value="Rouen">Promu</option>
+                                                 <option value="Rouen">Equie de niveau A</option>
+                                                 <option value="Rouen">Equie de niveau B</option>
+                                                 <option value="Rouen">Equie de niveau C</option>
+                                                 <option value="Rouen">Tête de série 1</option>
+                                                 <option value="Rouen">Tête de série 2</option>
+                                             </select>
+                                         </td>
+                                     </tr>
+                                     <tr>
+                                         <td>Paris</td>
+                                         <td>
+                                             <select class="form-control">
+                                                 <option value="Aucun">Aucun</option>
+                                                 <option value="Espoir">Espoir</option>
+                                                 <option value="Descendant">Descendant</option>
+                                                 <option value="Rouen">Promu</option>
+                                                 <option value="Rouen">Equie de niveau A</option>
+                                                 <option value="Rouen">Equie de niveau B</option>
+                                                 <option value="Rouen">Equie de niveau C</option>
+                                                 <option value="Rouen">Tête de série 1</option>
+                                                 <option value="Rouen">Tête de série 2</option>
+                                             </select>
+                                         </td>
+                                     </tr>
+                                     </tbody>
+                                 </table>
+                             </div>
+                             <!-- /.table-responsive -->
+                         </div>
+                         <!-- /.panel-body -->
+
+                     </div>
+                     <!-- /.panel-body -->
                  </div>
-                 <!-- /.col-lg-12 -->
-             </div>
-
-             <div>
-
 
              </div>
+             <div class="row">
+                 <button type="submit" class="btn btn-primary pull-right"> Lancer le calcul</button>
+                 </div>
+
          </div>
+
          {% block javascript %}
-             <!-- /#page-wrapper -->
-             <script type="text/javascript" charset="UTF-8">
-                 function typeLieu() {
 
-                     var idGroupe = {{ idGroupe }};
-                     if (document.getElementById("meilleurLieuOption").checked == true) {
-                         window.location.href = "{{ path('ffbb_rencontres', {'idGroupe':idGroupe}) }}";
+             {{ parent() }}
 
-                     }
-                     else {
-                         window.location.href = "{{ path('ffbb_barycentre', {'idGroupe':idGroupe})}}";
+             <script language="javascript">
 
+                 function typePlateau() {
+
+                     var plateau = document.getElementById("typeRencontre3").checked;
+
+                     if (plateau) {
+
+
+                         document.getElementById("nbrJournee").style.display = "block";
+                         document.getElementById("nbrRencontre").style.display = "block";
+                         document.getElementById("ajoutContrainte").style.display = "block";
                      }
 
                  }
+
+                 function typeAllerRetour() {
+
+                     var allerRetour = document.getElementById("typeRencontre1").checked;
+                     if (aller) {
+                         document.getElementById("nbrJournee").style.display = "none";
+                         document.getElementById("nbrRencontre").style.display = "none";
+                         document.getElementById("ajoutContrainte").style.display = "none";
+                     }
+
+                 }
+
+                 function typeAller() {
+
+                     var aller = document.getElementById("typeRencontre2").checked;
+
+                     if (aller) {
+                         document.getElementById("nbrJournee").style.display = "none";
+                         document.getElementById("nbrRencontre").style.display = "none";
+                         document.getElementById("ajoutContrainte").style.display = "none";
+
+                     }
+                 }
+
+                 $(document).ready(function(){
+                     $("#contrainteInterdiction").click(function(){
+                         $("#contrainteInterdictionBody").toggle();
+                     });
+                 });
+
+                 $(document).ready(function(){
+                     $("#contrainteRepartition").click(function(){
+                         $("#contrainteRepartitionBody").toggle();
+                     });
+                 });
              </script>
+
          {% endblock %}
+
      {% endblock %}
-
-
-
-
-
-
 

@@ -45,16 +45,16 @@ class ListesController extends Controller
             $retourEntites = $this->get('service_listes')->creerEntites($idUtilisateur);
             $idsEntite = $retourEntites["idsEntite"];
             $nomFichier = $retourEntites["nomFichier"];
-
+            $rencontre = 1;
 
             # créer une liste dans la table liste_participants
-            $retourListe = $this->get('service_listes')->creerListeParticipants($idsEntite, $nomFichier, $idUtilisateur);
+            $retourListe = $this->get('service_listes')->creerListeParticipants($idsEntite, $nomFichier, $idUtilisateur, $rencontre);
 
             # obtenir entity manager
             $em = $this->getDoctrine()->getManager();
 
             # obtenir listes des participants
-            $listesParticipants = $em->getRepository('FfbbBundle:ListeParticipants')->getListes();
+            $listesParticipants = $em->getRepository('FfbbBundle:ListeParticipants')->getListes($rencontre);
 
             return new JsonResponse(array(
                 "success" => true,
@@ -225,7 +225,7 @@ class ListesController extends Controller
 
         //récupérer la liste de groupes
 
-        $listesParticipants =  $em->getRepository('FfbbBundle:ListeParticipants')->findByIdUtilisateur($idUtilisateur, array('id'=>'DESC'));
+        $listesParticipants =  $em->getRepository('FfbbBundle:ListeParticipants')->getListesParticipants($idUtilisateur);
 
         $listesLieux =  $em->getRepository('FfbbBundle:ListeLieux')->findByIdUtilisateur($idUtilisateur, array('id'=>'DESC'));
 

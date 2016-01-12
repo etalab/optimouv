@@ -188,10 +188,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
         //récupérer idUtilisateur
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $idUtilisateur = $user->getId();
-        $listeParticipants = $em->getRepository('FfbbBundle:ListeParticipants')
-                                ->findByIdUtilisateur(
-                                    array('idUtilisateur'=>$idUtilisateur),
-                                    array('id'=>'DESC'));
+        //on ne ramène que les listes de rencontres
+        $listeParticipants =  $em->getRepository('FfbbBundle:ListeParticipants')->getListesParticipants($idUtilisateur);
 
         $listeLieux =  $em->getRepository('FfbbBundle:ListeLieux')
                                  ->findByIdUtilisateur(

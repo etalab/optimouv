@@ -165,6 +165,14 @@ class Entite
     private $idDiscipline;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="poule", type="string", length=1, nullable=true)
+     */
+    private $poule;
+
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="id_ville_france", type="integer", nullable=false)
@@ -684,5 +692,53 @@ class Entite
     public function getIdVilleFrance()
     {
         return $this->idVilleFrance;
+    }
+
+    /**
+     * Set poule
+     *
+     * @param string $poule
+     *
+     * @return Entite
+     */
+    public function setPoule($poule)
+    {
+        $this->poule = $poule;
+
+        return $this;
+    }
+
+    /**
+     * Get poule
+     *
+     * @return string
+     */
+    public function getPoule()
+    {
+        return $this->poule;
+    }
+
+    /**
+     * Set rencontre
+     *
+     * @param boolean $rencontre
+     *
+     * @return Entite
+     */
+    public function setRencontre($rencontre)
+    {
+        $this->rencontre = $rencontre;
+
+        return $this;
+    }
+
+    /**
+     * Get rencontre
+     *
+     * @return boolean
+     */
+    public function getRencontre()
+    {
+        return $this->rencontre;
     }
 }

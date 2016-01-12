@@ -11,3 +11,7 @@ services:
     service_listes:
             class: Optimouv\FfbbBundle\Services\Listes
             arguments: ["%database_name%", "%database_user%", "%database_password%", "%app_id%", "%app_code%", "%error_log_path%"]
+
+    service_calcul_rencontre:
+                class: Optimouv\FfbbBundle\Services\CalculRencontre
+               # arguments: ["%database_name%", "%database_user%", "%database_password%", "%app_id%", "%app_code%", "%error_log_path%"]

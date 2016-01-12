@@ -49,6 +49,13 @@ class ListeParticipants
      */
     private $equipes;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="rencontre", type="boolean", nullable=true)
+     */
+    private $rencontre;
+
 
     /**
      * Get id

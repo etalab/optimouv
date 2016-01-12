@@ -28,7 +28,7 @@ class EntiteRepository extends \Doctrine\ORM\EntityRepository
         $query = $this->createQueryBuilder('e')
             ->select('e.id', 'e.codePostal, e.ville', 'e.nom', 'e.typeEntite', 'e.prenom', 'e.adresse', 'e.longitude'
                 , 'e.latitude', 'e.projection', 'e.typeEquipement', 'e.nombreEquipement', 'e.capaciteRencontre'
-                , 'e.capacitePhaseFinale', 'e.participants', 'e.licencies', 'e.lieuRencontrePossible', 'e.idVilleFrance')
+                , 'e.capacitePhaseFinale', 'e.participants', 'e.licencies', 'e.lieuRencontrePossible', 'e.idVilleFrance', 'e.poule')
             ->where('e.id IN (:id)')
             ->setParameter('id', array_values($participants))
             ->orderBy('e.id','DESC')

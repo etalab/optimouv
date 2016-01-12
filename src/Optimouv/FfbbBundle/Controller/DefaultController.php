@@ -78,4 +78,16 @@ class DefaultController extends Controller
         ));
     }
 
+
+    public function rmqAction()
+    {
+
+        $name = "Ouss";
+
+        $this
+            ->get('old_sound_rabbit_mq.hello_world_producer')
+            ->publish($name);
+
+    }
+
 }

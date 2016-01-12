@@ -8,8 +8,8 @@
                   <div class="bs-example">
                       <ul class="breadcrumb">
                           <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
-                          <li><a href="{{ path('ffbb_choisir_liste_participants') }}">Choix de listes</a></li>
-                          <li><a href="{{ path('ffbb_choisir_groupe', {'idListe': idListe}) }}">Choix de groupes</a></li>
+                          <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Choix de la liste d'équipes</a></li>
+                          <li><a href="{{ path('ffbb_poule_choisir_groupe', {'idListe': idListe}) }}">Choix de groupes</a></li>
                           <li class="active">Gestion de groupes</li>
                       </ul>
                   </div>
@@ -22,6 +22,7 @@
                          <!-- /.panel-heading -->
                          <div class="panel-body">
                              <div class="dataTable_wrapper">
+
                                  <table class="table table-striped table-bordered table-hover" id="tableGererGroupe">
                                      <thead>
                                      <tr>
@@ -42,11 +43,11 @@
                                              <td> {{ groupe.nbParticipants }}</td>
                                              <td> {{ groupe.dateCreation|date('d/m/Y') }}</td>
                                              <td>
-                                                 <a href="{{ path('ffbb_renommer_groupe',{'idGroupe': groupe.id}) }}" class="btn btn-info">Renommer</a> |
+                                                 <a href="{{ path('ffbb_poules_renommer_groupe',{'idGroupe': groupe.id}) }}" class="btn btn-info">Renommer</a> |
                                                  <button type="button" class="btn btn-info" onclick="deleteGroupe({{ groupe.id }})">Supprimer</button> |
-                                                 <a href="{{ path('ffbb_entite',{'idGroupe': groupe.id}) }}" class="btn btn-info">Ajouter entité</a> |
-                                                 <a href="{{ path('ffbb_villes_groupe', {'idGroupe': groupe.id}) }}" class="btn btn-info">Lancer</a> |
-                                                 <a href="{{ path('ffbb_visualiser_groupe', {'idGroupe': groupe.id}) }}" class="btn btn-info">Visualiser</a>
+                                                 <a href="{{ path('ffbb_poules_entite',{'idGroupe': groupe.id}) }}" class="btn btn-info">Ajouter entité</a> |
+                                                 <a href="{{ path('ffbb_poules_lancer_groupe', {'idGroupe': groupe.id}) }}" class="btn btn-info">Lancer</a> |
+                                                 <a href="{{ path('ffbb_poules_visualiser_groupe', {'idGroupe': groupe.id}) }}" class="btn btn-info">Visualiser</a>
 
 
                                              </td>
@@ -59,7 +60,7 @@
                                  </table>
                                  <form action="{{ path('ffbb_choisir_groupe', {'idListe': idListe}) }}" method="post">
 
-                                     <button type="submit" class="btn btn-default">Retour à la liste de groupes</button>
+                                     <button type="submit" class="btn btn-primary">Retour à la liste de groupes</button>
                                  </form>
                                </div>
                              <!-- /.table-responsive -->
@@ -87,7 +88,7 @@
 
         function deleteGroupe(idGroupe){
             $.ajax({
-                url: '/admin/rencontre/supprimer-groupe/' +idGroupe,
+                url: '/admin/poules/supprimer-groupe/' +idGroupe,
                 type: 'GET',
                 data: null,
                 contentType: false,
