@@ -56,6 +56,9 @@ class Listes{
 //            return $retour;
 //        }
 
+        // PHP setting pour détecter la fin de ligne correctement pour Windows, Linux et Mac
+        ini_set('auto_detect_line_endings', TRUE);
+
 
         # obtenir le chemin d'upload du fichier
         $cheminFichierTemp = $_FILES["file-0"]["tmp_name"];
@@ -796,6 +799,9 @@ class Listes{
     {
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+        // PHP setting pour détecter la fin de ligne correctement pour Windows, Linux et Mac
+        ini_set('auto_detect_line_endings', TRUE);
 
         try {
 

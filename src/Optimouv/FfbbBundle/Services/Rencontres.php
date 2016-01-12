@@ -620,6 +620,10 @@ class Rencontres
 
     public function routingMatrix($coord, $villes, $idsEntites)
     {
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
 
         $bdd= $this->connexion();
 
@@ -656,6 +660,7 @@ class Rencontres
             $barycentreVille = $nomVille." | ".$codePostal;
 
         }
+
 
          $calculRoute = $this->calculRoute($lanX, $latY, $villes);
 
@@ -1032,6 +1037,9 @@ class Rencontres
 
     public function calculRoute($lanX, $latY, $villes)
     {
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
 
         $app_id = $this->app_id;
         $app_code = $this->app_code;
@@ -1045,6 +1053,11 @@ class Rencontres
         $result = $stmt1->fetch(PDO::FETCH_ASSOC);
 
         $idStart = $result['id'];
+
+
+
+
+
 
         $coordStart = $latY . '%2C' . $lanX;
 
@@ -1080,6 +1093,7 @@ class Rencontres
                 $req->execute();
                 $res = $req->fetch(PDO::FETCH_ASSOC);
 
+
                 if ($res) {
 
                     $distance = $res['distance'];
@@ -1089,6 +1103,8 @@ class Rencontres
 
                 } else {
                     $reqRoute = 'http://route.api.here.com/routing/7.2/calculateroute.json?waypoint0=' . $coordStart . '&waypoint1=' . $villes[$i] . '&mode=fastest%3Bcar%3Btraffic%3Adisabled&app_id=' . $app_id . '&app_code=' . $app_code;
+//                    error_log("\n Service: Rencontres, Function: calculRoute, datetime: ".$dateTimeNow
+//                        ."\n reqRoute: ".print_r($reqRoute, true), 3, $this->error_log_path);
 
                     $decoded = $this->getReponseCurl($reqRoute);
 
