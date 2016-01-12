@@ -867,7 +867,8 @@ class Listes{
                                 $latitude = $donnéesLigne[8];
                                 $projection = $donnéesLigne[9];
                                 $licencies = $donnéesLigne[10];
-                                $poule = $donnéesLigne[11];
+
+
 
                                 # corriger le code postal si un zéro est manquant dans le premier chiffre
                                 $codePostal = $this->corrigerCodePostal($codePostal);
@@ -878,8 +879,10 @@ class Listes{
                                 $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
                                 $idVilleFrance = $statutControlCodePostalVille["idVille"];
 
-                                //on gère le cas où on a des poules
-                                if($poule){
+
+                                // vérifier le nombre de valeurs dans le fichier
+                                if (count($donnéesLigne) == 12){
+                                    $poule = $donnéesLigne[11];
                                     //champs rencontre pour specifier si l equipe appartient à une poule ou bien dediee pour les rencontres
 
 
