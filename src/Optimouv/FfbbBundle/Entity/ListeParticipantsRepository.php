@@ -12,30 +12,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class ListeParticipantsRepository extends EntityRepository
 {
-    public function getListes($rencontre)
+    public function getListes()
     {
 
-        if ($rencontre == 0) {
             $query = $this->createQueryBuilder('l')
                 ->select('l.id, l.nom, l.dateCreation')
-                ->where('l.rencontre = ?1')
                 ->orderBy('l.id', 'desc')
-                ->setParameter(1, $rencontre)
                 ->getQuery();
 
             $result = $query->getResult();
-        } else {
-
-            $query = $this->createQueryBuilder('l')
-                ->select('l.id, l.nom, l.dateCreation')
-                ->where('l.rencontre != ?1')
-                ->orderBy('l.id', 'desc')
-                ->setParameter(1, $rencontre)
-                ->getQuery();
-
-            $result = $query->getResult();
-        }
-
 
         return $result;
 

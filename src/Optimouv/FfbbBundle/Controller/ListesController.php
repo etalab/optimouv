@@ -54,8 +54,9 @@ class ListesController extends Controller
             $em = $this->getDoctrine()->getManager();
 
             # obtenir listes des participants
-            $listesParticipants = $em->getRepository('FfbbBundle:ListeParticipants')->getListes($rencontre);
+            $listesParticipants = $em->getRepository('FfbbBundle:ListeParticipants')->getListes();
 
+            
             return new JsonResponse(array(
                 "success" => true,
                 "msg" => "Votre liste a été correctement importée",
