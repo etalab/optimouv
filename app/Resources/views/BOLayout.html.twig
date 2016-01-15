@@ -102,29 +102,34 @@
                         {% set url = app.request.requestUri %}
                         {% set poule = "poule" %}
                          {% if poule in url %}
-                            <li><a style="background-color:#40BAC3;" href="{{ path('ffbb_poules_choisir_liste') }}">Optimisation
-                                    des poules</a></li>
+                            <!-- <li><a style="background-color:#40BAC3;" href="{{ path('ffbb_poules_choisir_liste') }}">Optimisation des poules</a></li> -->
+                            <li><a style="background-color:#40BAC3;" href="#">Optimisation des poules</a></li>
 
                             <li><a href="{{ path('ffbb_choisir_liste_participants') }}">
                                     Meilleur lieu de rencontre</a></li>
-                            <li><a href="{{ path('ffbb_rapports') }}">Rapports</a></li>
+                            <!-- <li><a href="{{ path('ffbb_rapports') }}">Rapports</a></li> -->
+                            <li><a href="#">Rapports</a></li>
 
                         {% elseif  app.request.attributes.get('_route') == 'ffbb_rapports' %}
 
-                            <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Optimisation des poules</a></li>
+                            <!-- <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Optimisation des poules</a></li> -->
+                            <li><a href="#">Optimisation des poules</a></li>
 
                             <li><a href="{{ path('ffbb_choisir_liste_participants') }}">
                                     Meilleur lieu de rencontre</a></li>
-                            <li><a style="background-color:#EE7700;" href="{{ path('ffbb_rapports') }}">Rapports</a>
+                            <!-- <li><a style="background-color:#EE7700;" href="{{ path('ffbb_rapports') }}">Rapports</a> -->
+                            <li><a style="background-color:#EE7700;" href="#">Rapports</a>
                             </li>
 
                         {% else %}
 
-                            <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Optimisation des poules</a></li>
+                            <!-- <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Optimisation des poules</a></li> -->
+                            <li><a href="#">Optimisation des poules</a></li>
                             <li><a style="background-color:#A4BD10;"
                                    href="{{ path('ffbb_choisir_liste_participants') }}">
                                     Meilleur lieu de rencontre</a></li>
-                            <li><a href="{{ path('ffbb_rapports') }}">Rapports</a></li>
+                            <!-- <li><a href="{{ path('ffbb_rapports') }}">Rapports</a></li> -->
+                            <li><a href="#">Rapports</a></li>
 
 
 
