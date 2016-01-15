@@ -10,4 +10,17 @@ namespace Optimouv\FfbbBundle\Entity;
  */
 class ScenarioRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getDetailsCalcul($idTache)
+    {
+
+        $query = $this->createQueryBuilder('t')
+            ->select('t.detailsCalcul')
+            ->where('t.idRapport = :id')
+            ->setParameter('id', $idTache)
+            ->getQuery();
+        $result = $query->getResult();
+
+        return $result;
+
+    }
 }

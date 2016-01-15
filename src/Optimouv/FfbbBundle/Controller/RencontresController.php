@@ -10,11 +10,32 @@ class RencontresController extends Controller
     public function indexAction($idGroupe)
     {
 
-        $retour = $this->get('service_rencontres')->meilleurLieuRencontre($idGroupe);
-        $retourEq = $this->get('service_rencontres')->scenarioEquitable($idGroupe);
+        # obtenir entity manager
+        $em = $this->getDoctrine()->getManager();
+
+        /////////////////////////////////
+        /************Optimal********/
+        ///////////////////////////////
+
+//        $retour = $this->get('service_rencontres')->meilleurLieuRencontre($idGroupe);
+
+        $participants = [];
+        $typeAction = "meilleurLieu";
+        $idTache = $this->get('service_rencontres')->Producer($idGroupe, $typeAction);
+
+        $this->get('old_sound_rabbit_mq.rencontre_producer')->publish($idTache);
+
+        do {
+            sleep(5);
+            $statutTache = $em->getRepository('FfbbBundle:Rapport')->getStatut($idTache);
+
+        } while ($statutTache == 2);
 
 
+        $retour = $em->getRepository('FfbbBundle:Scenario')->getDetailsCalcul($idTache);
 
+        $retour = $retour[0]["detailsCalcul"];
+        $retour = json_decode($retour, true);
 
         //Donn�es du sc�nario optimal
         $villeDepart = $retour[0];
@@ -32,7 +53,31 @@ class RencontresController extends Controller
             $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key], 'nbrParticipants' => $retour[10][$key]);
         }
 
+        /////////////////////////////////
+        /************Equitable********/
+        ///////////////////////////////
+
+
+
         //Donn�es du sc�nario �quitable
+        //$retourEq = $this->get('service_rencontres')->scenarioEquitable($idGroupe);
+
+        $typeAction = "meilleurLieuEq";
+        $idTache = $this->get('service_rencontres')->Producer($idGroupe, $typeAction);
+
+        $this->get('old_sound_rabbit_mq.rencontre_producer')->publish($idTache);
+
+        do {
+            sleep(2);
+            $statutTache = $em->getRepository('FfbbBundle:Rapport')->getStatut($idTache);
+
+        } while ($statutTache == 2);
+
+
+        $retourEq = $em->getRepository('FfbbBundle:Scenario')->getDetailsCalcul($idTache);
+
+        $retourEq = $retourEq[0]["detailsCalcul"];
+        $retourEq = json_decode($retourEq, true);
 
         $villeDepartEq = $retourEq[0];
         $longPtDepEq = $retourEq[1];
@@ -46,9 +91,6 @@ class RencontresController extends Controller
 
             $participantsEq[]= array('villeEq' => $value, 'distanceEq' => $retourEq[7][$key], 'dureeEq' => $retourEq[8][$key], 'nbrParticipants' => $retourEq[9][$key]);
         }
-
-        # obtenir entity manager
-        $em = $this->getDoctrine()->getManager();
 
         # récupérer idListe pour le breadcrump
         $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
@@ -64,6 +106,9 @@ class RencontresController extends Controller
             $this->get('service_rencontres')->creerScenario($idRapport, "optimal",  $distanceMin, $dureeTrajet);
             $this->get('service_rencontres')->creerScenario($idRapport, "equitable",  $distanceMinEq, $dureeTrajetEq);
         }
+
+        //envoie de mail de notification pour la fin des calculs
+        $this->sendMailAction();
 
         return $this->render('FfbbBundle:Rencontres:index.html.twig', array(
 
@@ -99,8 +144,31 @@ class RencontresController extends Controller
     public function barycentreAction($idGroupe)
     {
 
+        # obtenir entity manager
+        $em = $this->getDoctrine()->getManager();
+
+
         $participants = [];
-        $retour = $this->get('service_rencontres')->Barycentre($idGroupe);
+        $typeAction = "barycentre";
+        $idTache = $this->get('service_rencontres')->Producer($idGroupe, $typeAction);
+
+        $this->get('old_sound_rabbit_mq.rencontre_producer')->publish($idTache);
+
+        do {
+            sleep(5);
+            $statutTache = $em->getRepository('FfbbBundle:Rapport')->getStatut($idTache);
+
+        } while ($statutTache == 2);
+
+
+            $retour = $em->getRepository('FfbbBundle:Scenario')->getDetailsCalcul($idTache);
+
+        $retour = $retour[0]["detailsCalcul"];
+        $retour = json_decode($retour, true);
+
+
+//        $retour = $this->get('service_rencontres')->Barycentre($idGroupe);
+
 
         //Donn�es du sc�nario optimal
         $villeDepart = $retour[0];
@@ -116,8 +184,6 @@ class RencontresController extends Controller
             $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key], 'nbrParticipants' => $retour[9][$key]);
         }
 
-        # obtenir entity manager
-        $em = $this->getDoctrine()->getManager();
 
         # récupérer idListe pour le breadcrump
         $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
@@ -135,6 +201,8 @@ class RencontresController extends Controller
         }
 
 
+        //envoie de mail de notification pour la fin des calculs
+        $this->sendMailAction();
 
 
         return $this->render('FfbbBundle:Rencontres:barycentre.html.twig', array(
@@ -162,6 +230,10 @@ class RencontresController extends Controller
     public function exclusionAction($idGroupe)
     {
 
+
+        # obtenir entity manager
+        $em = $this->getDoctrine()->getManager();
+
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
@@ -173,7 +245,24 @@ class RencontresController extends Controller
         $valeurExclusion = $_POST["valeurExclusion"];
 
         //R�cup�ration du r�sultat du calcul avec contrainte
-        $retour = $this->get('service_rencontres')->Exclusion($valeurExclusion, $idGroupe);
+       // $retour = $this->get('service_rencontres')->Exclusion($valeurExclusion, $idGroupe);
+        $participants = [];
+
+        $idTache = $this->get('service_rencontres')->producerExclusion($idGroupe, $valeurExclusion);
+
+        $this->get('old_sound_rabbit_mq.rencontre_producer')->publish($idTache);
+
+        do {
+            sleep(2);
+            $statutTache = $em->getRepository('FfbbBundle:Rapport')->getStatut($idTache);
+
+        } while ($statutTache == 2);
+
+
+        $retour = $em->getRepository('FfbbBundle:Scenario')->getDetailsCalcul($idTache);
+
+        $retour = $retour[0]["detailsCalcul"];
+        $retour = json_decode($retour, true);
 
         //Donn�es du sc�nario optimal
         $villeDepart = $retour[0];
@@ -189,9 +278,31 @@ class RencontresController extends Controller
             $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key], 'nbrParticipants' => $retour[9][$key]);
         }
 
+        /////////////////////////////////
+        /************Barycentre********/
+        ///////////////////////////////
+
+        $typeAction = "barycentre";
+        $idTache = $this->get('service_rencontres')->Producer($idGroupe, $typeAction);
+
+        $this->get('old_sound_rabbit_mq.rencontre_producer')->publish($idTache);
+
+        do {
+            sleep(2);
+            $statutTache = $em->getRepository('FfbbBundle:Rapport')->getStatut($idTache);
+
+        } while ($statutTache == 2);
+
+
+        $retourEq = $em->getRepository('FfbbBundle:Scenario')->getDetailsCalcul($idTache);
+
+        $retourEq = $retourEq[0]["detailsCalcul"];
+        $retourEq = json_decode($retourEq, true);
+
+
 
         //R�cup�ration du r�sultat du calcul sans contrainte
-        $retourEq = $this->get('service_rencontres')->Barycentre($idGroupe);
+       // $retourEq = $this->get('service_rencontres')->Barycentre($idGroupe);
 
         //Donn�es du sc�nario �quitable
 
@@ -208,10 +319,6 @@ class RencontresController extends Controller
             $participantsEq[]= array('villeEq' => $value, 'distanceEq' => $retourEq[7][$key], 'dureeEq' => $retourEq[8][$key], 'nbrParticipants' => $retourEq[9][$key] );
         }
 
-
-        # obtenir entity manager
-        $em = $this->getDoctrine()->getManager();
-
         # récupérer idListe pour le breadcrump
         $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
         # récupérer idListe pour le breadcrump
@@ -226,6 +333,9 @@ class RencontresController extends Controller
             $this->get('service_rencontres')->creerScenario($idRapport, "optimal",  $distanceMin, $dureeTrajet);
             $this->get('service_rencontres')->creerScenario($idRapport, "equitable",  $distanceMinEq, $dureeTrajetEq);
         }
+
+        //envoie de mail de notification pour la fin des calculs
+        $this->sendMailAction();
 
         return $this->render('FfbbBundle:Rencontres:exclusion.html.twig', array(
             //Donn�es du sc�nario avec contrainte
@@ -263,8 +373,35 @@ class RencontresController extends Controller
 
     public function terrainNeutreAction($idGroupe){
 
+
+        # obtenir entity manager
+        $em = $this->getDoctrine()->getManager();
+        /////////////////////////////////
+        /************Optimal********/
+        ///////////////////////////////
+
+
+        $participants = [];
+        $typeAction = "terrainNeutre";
+        $idTache = $this->get('service_rencontres')->Producer($idGroupe, $typeAction);
+
+        $this->get('old_sound_rabbit_mq.rencontre_producer')->publish($idTache);
+
+        do {
+            sleep(5);
+            $statutTache = $em->getRepository('FfbbBundle:Rapport')->getStatut($idTache);
+
+        } while ($statutTache == 2);
+
+
+        $retour = $em->getRepository('FfbbBundle:Scenario')->getDetailsCalcul($idTache);
+
+        $retour = $retour[0]["detailsCalcul"];
+        $retour = json_decode($retour, true);
+
         //R�cup�ration du r�sultat du calcul du terrain neutre
-        $retour = $this->get('service_rencontres')->terrainNeutre($idGroupe);
+        //$retour = $this->get('service_rencontres')->terrainNeutre($idGroupe);
+
         //Donn�es du sc�nario optimal
         $villeDepart = $retour[0];
         $longPtDep = $retour[1];
@@ -280,8 +417,35 @@ class RencontresController extends Controller
             $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key], 'nbrParticipants' => $retour[10][$key]);
         }
 
+
+        /////////////////////////////////
+        /************Equitable********/
+        ///////////////////////////////
+
+
+
+        //Donn�es du sc�nario �quitable
+
+        $typeAction = "terrainNeutreEq";
+        $idTache = $this->get('service_rencontres')->Producer($idGroupe, $typeAction);
+
+        $this->get('old_sound_rabbit_mq.rencontre_producer')->publish($idTache);
+
+        do {
+            sleep(2);
+            $statutTache = $em->getRepository('FfbbBundle:Rapport')->getStatut($idTache);
+
+        } while ($statutTache == 2);
+
+
+        $retourEq = $em->getRepository('FfbbBundle:Scenario')->getDetailsCalcul($idTache);
+
+        $retourEq = $retourEq[0]["detailsCalcul"];
+        $retourEq = json_decode($retourEq, true);
+
+
         //R�cup�ration du r�sultat du calcul du terrain neutre Equitable
-        $retourEq = $this->get('service_rencontres')->terrainNeutreEquitable($idGroupe);
+       // $retourEq = $this->get('service_rencontres')->terrainNeutreEquitable($idGroupe);
 
         //Donn�es du sc�nario �quitable
 
@@ -300,9 +464,6 @@ class RencontresController extends Controller
             $participantsEq[]= array('villeEq' => $value, 'distanceEq' => $retourEq[7][$key], 'dureeEq' => $retourEq[8][$key], 'nbrParticipants' => $retourEq[9][$key]);
         }
 
-        # obtenir entity manager
-        $em = $this->getDoctrine()->getManager();
-
         # récupérer idListe pour le breadcrump
         $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
         $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
@@ -318,6 +479,10 @@ class RencontresController extends Controller
             $this->get('service_rencontres')->creerScenario($idRapport, "optimal",  $distanceMin, $dureeTrajet);
             $this->get('service_rencontres')->creerScenario($idRapport, "equitable",  $distanceMinEq, $dureeTrajetEq);
         }
+
+        //envoie de mail de notification pour la fin des calculs
+        $this->sendMailAction();
+
         return $this->render('FfbbBundle:Rencontres:terrainNeutre.html.twig', array(
 
             //Donn�es du sc�nario optimal
@@ -349,6 +514,26 @@ class RencontresController extends Controller
 
 
         ));
+
+    }
+
+    public function sendMailAction()
+    {
+
+        $email = $this->getUser()->getEmail();
+        $username =  $this->getUser()->getUsername();
+        $body = $this->renderView('FfbbBundle:Mails:confirmationCalcul.html.twig', array('username' => $username));
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject('Calcul terminé')
+            ->setFrom('vtc.ouss@gmail.com')
+            ->setTo($email)
+//            ->setCc('g.oussema@gmail.com')
+            ->setBody($body)
+        ;
+        $this->get('mailer')->send($message);
+
+        return true;
 
     }
     public function detailsCalculAction()

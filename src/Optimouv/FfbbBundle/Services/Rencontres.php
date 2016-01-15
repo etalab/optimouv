@@ -13,12 +13,12 @@ use Symfony\Component\Validator\Constraints\NotNull;
 class Rencontres
 {
 
-    private $database_name;
-    private $database_user;
-    private $database_password;
-    private $app_id;
-    private $app_code;
-    private $error_log_path;
+    public $database_name;
+    public $database_user;
+    public $database_password;
+    public $app_id;
+    public $app_code;
+    public $error_log_path;
 
     public function __construct($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path)
     {
@@ -80,7 +80,7 @@ class Rencontres
 
             if (empty($longitude) && empty($latitude)) {
 
-                $retour = $this->geocoderUneVille($idVille);
+                $retour = Rencontres::geocoderUneVille($idVille);
 
                 $longitude = $retour[1];
                 $latitude = $retour[0];
@@ -157,12 +157,12 @@ class Rencontres
 
         //Récupération de détail de la liste de lieux
 
-        $listeLieux = $this->getListeLieux($idGroupe);
+        $listeLieux = Rencontres::getListeLieux($idGroupe);
 
         $nomsTerrainsNeutres = $listeLieux[0];
 
         //on récupère le tableau des villes
-        $retourIndex = $this->index($idGroupe);
+        $retourIndex = Rencontres::index($idGroupe);
 
         # récupérer l'ids de toutes les entités
         $idsEntites = $retourIndex[2];
@@ -210,7 +210,7 @@ class Rencontres
             $lanX = $Coordonnes[1];
 
 
-            $resultat = $this->calculRoute($lanX, $lanY, $T2);
+            $resultat = Rencontres::calculRoute($lanX, $lanY, $T2);
 
             $distanceDest = $resultat[0];
             $dureeDest = $resultat[1];
@@ -268,7 +268,7 @@ class Rencontres
 
         $mesVillesXY = $coordonneesVilles[$key];
         //Récupérer les noms de villes de destination
-        $mesVilles = $this->mesVilles($mesVillesXY);
+        $mesVilles = Rencontres::mesVilles($mesVillesXY);
 
 
         //distance ville
@@ -280,7 +280,7 @@ class Rencontres
 
 
         //récupérer le nombre de participant pour chaque entité
-        $nbrParticipants = $this->getNombreParticipants($idsEntitesChoisis);
+        $nbrParticipants = Rencontres::getNombreParticipants($idsEntitesChoisis);
 
 
         $retour = [];
@@ -299,14 +299,14 @@ class Rencontres
 
 
         // obtenir la distance totale pour toutes équipes
-        $distanceTotale = $this->getDistanceTotale($distVille, $nbrParticipants);
+        $distanceTotale = Rencontres::getDistanceTotale($distVille, $nbrParticipants);
 
 
         # ajouter le nombre de participants dans les résultats
         $retour["distanceTotale"] = $distanceTotale;
 
         # ajouter le nombre de participants dans les résultats
-        $retour["nbrParticipantsTotal"] = $this->getTotalNombreParticipants($nbrParticipants);
+        $retour["nbrParticipantsTotal"] = Rencontres::getTotalNombreParticipants($nbrParticipants);
 
 
         return $retour;
@@ -316,11 +316,16 @@ class Rencontres
     public function Barycentre($idGroupe)
     {
 
-
         $bdd= $this->connexion();
 
+        //recuperer la date du jour
+        $date = new \DateTime();
+        $dateCreation = $date->format('Y-m-d');
+
+
         //on récupère le tableau des villes
-        $villes = $this->index($idGroupe);
+//        $villes = $this->index($idGroupe);
+        $villes = Rencontres::index($idGroupe);
 
         # récupérer l'ids de toutes les entités
         $idsEntites = $villes[2];
@@ -354,9 +359,7 @@ class Rencontres
         $ville = $result['ville_nom'];
         $codePostal = $result['ville_code_postal'];
         $nom = 'Barycentre_Groupe_' . $idGroupe;
-        //recuperer la date du jour
-        $date = new \DateTime();
-        $dateCreation = $date->format('Y-m-d');
+
 
         //vérifier si le barycentre existe deja
         $barycentre = $bdd->prepare("SELECT id from entite where longitude = :longitude AND latitude = :latitude");
@@ -381,12 +384,12 @@ class Rencontres
         $coord = $lanX . '%2C' . $latY; // pour appel la fn routing matrix
 
 
-        $retour = $this->routingMatrix($coord, $villes, $idsEntitesMerge);
+        $retour =  Rencontres::routingMatrix($coord, $villes, $idsEntitesMerge);
 
 
 
         # ajouter le nombre de participants dans les résultats
-        $retour["nbrParticipantsTotal"] = $this->getTotalNombreParticipants($retour[9]);
+        $retour["nbrParticipantsTotal"] =  Rencontres::getTotalNombreParticipants($retour[9]);
 
 
         return $retour;
@@ -400,7 +403,7 @@ class Rencontres
         if ($valeurExclusion) {
 
             //on récupère le tableau des villes
-            $villes = $this->index($idGroupe);
+            $villes = Rencontres::index($idGroupe);
 
             # récupérer l'ids de toutes les entités
             $idsEntites = $villes[2];
@@ -461,10 +464,10 @@ class Rencontres
             }
 
 
-            $retour = $this->routingMatrix($coord, $villes, $idsEntitesMerge);
+            $retour = Rencontres::routingMatrix($coord, $villes, $idsEntitesMerge);
 
             # ajouter le nombre de participants dans les résultats
-            $retour["nbrParticipantsTotal"] = $this->getTotalNombreParticipants($retour[9]);
+            $retour["nbrParticipantsTotal"] = Rencontres::getTotalNombreParticipants($retour[9]);
 
 
         } else {
@@ -483,7 +486,7 @@ class Rencontres
     {
         $bdd= $this->connexion();
         //on récupère le tableau des villes
-        $retourIndex = $this->index($idGroupe);
+        $retourIndex = Rencontres::index($idGroupe);
 
         # récupérer l'ids de toutes les entités
         $idsEntites = $retourIndex[2];
@@ -527,7 +530,7 @@ class Rencontres
             $lanY = $Coordonnes[0];
             $lanX = $Coordonnes[1];
 
-            $resultat = $this->calculRoute($lanX, $lanY, $T2);
+            $resultat = Rencontres::calculRoute($lanX, $lanY, $T2);
 
             $distanceDest = $resultat[0];
             $dureeDest = $resultat[1];
@@ -583,7 +586,7 @@ class Rencontres
 
         $mesVillesXY = $coordonneesVilles[$key];
         //Récupérer les noms de villes de destination
-        $mesVilles = $this->mesVilles($mesVillesXY);
+        $mesVilles = Rencontres::mesVilles($mesVillesXY);
 
         //distance ville
         $distVille = $lesDistances[$key];
@@ -593,7 +596,7 @@ class Rencontres
         $idsEntitesChoisis = $idEntitesCombination[$key];
 
         //récupérer le nombre de participant pour chaque entité
-        $nbrParticipants = $this->getNombreParticipants($idsEntitesChoisis);
+        $nbrParticipants = Rencontres::getNombreParticipants($idsEntitesChoisis);
 
         $retour = [];
 
@@ -610,7 +613,7 @@ class Rencontres
 
 
         // obtenir la distance totale pour toutes équipes
-        $distanceTotale = $this->getDistanceTotale($distVille, $nbrParticipants);
+        $distanceTotale = Rencontres::getDistanceTotale($distVille, $nbrParticipants);
 
         # ajouter le nombre de participants dans les résultats
         $retour["distanceTotale"] = $distanceTotale;
@@ -625,7 +628,7 @@ class Rencontres
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
 
-        $bdd= $this->connexion();
+        $bdd=  Rencontres::connexion();
 
         $coord = explode('%2C', $coord);
         $lanX = $coord[0];
@@ -662,13 +665,13 @@ class Rencontres
         }
 
 
-         $calculRoute = $this->calculRoute($lanX, $latY, $villes);
+         $calculRoute =  Rencontres::calculRoute($lanX, $latY, $villes);
 
         $distanceEquipe = $calculRoute[0];
         $dureeEquipe = $calculRoute[1];
 
         //Récupérer les noms de villes de destination
-        $mesVilles = $this->mesVilles($villes);
+        $mesVilles =  Rencontres::mesVilles($villes);
 
         //somme des distances
         $distance = array_sum($distanceEquipe) / 1000;
@@ -678,11 +681,11 @@ class Rencontres
         $duree = array_sum($dureeEquipe);
 
         //récupérer le nombre de participant pour chaque entité
-        $nbrParticipants = $this->getNombreParticipants($idsEntites);
+        $nbrParticipants =  Rencontres::getNombreParticipants($idsEntites);
 
 
         // obtenir la distance totale pour toutes équipes
-        $distanceTotale = $this->getDistanceTotale($distanceEquipe, $nbrParticipants);
+        $distanceTotale =  Rencontres::getDistanceTotale($distanceEquipe, $nbrParticipants);
 
 
         $retour = [];
@@ -708,9 +711,9 @@ class Rencontres
 
         $bdd= $this->connexion();
         # obtenir le nombre de participants pour cette groupe
-        $nbrParticipants = $this->getParticipantsPourGroupe($idGroupe);
+        $nbrParticipants = Rencontres::getParticipantsPourGroupe($idGroupe);
 
-        $equipe = $this->index($idGroupe);
+        $equipe = Rencontres::index($idGroupe);
 
         # récupérer l'ids de toutes les entités
         $idsEntites = $equipe[2];
@@ -720,7 +723,7 @@ class Rencontres
 
         $equipe = array_merge($equipe[0], $equipe[1]);
 
-        $listeLieux = $this->getListeLieux($idGroupe);
+        $listeLieux = Rencontres::getListeLieux($idGroupe);
         $terrainNeutre = $listeLieux[1];
         $listeTerrain = $listeLieux[0];
 
@@ -735,7 +738,7 @@ class Rencontres
             $lanX = $start[1];
 
 
-            $calculRoute = $this->calculRoute($lanX, $latY, $equipe);
+            $calculRoute = Rencontres::calculRoute($lanX, $latY, $equipe);
 
             $distanceTotale = $calculRoute[0];
             $dureeTotale = $calculRoute[1];
@@ -776,7 +779,7 @@ class Rencontres
 
 
         //Récupérer les noms de villes de destination
-        $mesVilles = $this->mesVilles($equipe);
+        $mesVilles = Rencontres::mesVilles($equipe);
 
         $stmt1 = $bdd->prepare("SELECT code_postal, ville from entite where longitude = :longitude AND latitude = :latitude");
         $stmt1->bindParam(':longitude', $latY);
@@ -790,7 +793,7 @@ class Rencontres
 
 
         //récupérer le nombre de participant pour chaque entité
-        $nbrParticipants = $this->getNombreParticipants($idsEntitesMerge);
+        $nbrParticipants = Rencontres::getNombreParticipants($idsEntitesMerge);
 
         $retour = [];
 
@@ -808,13 +811,13 @@ class Rencontres
 
 
         // obtenir la distance totale pour toutes équipes
-        $distanceTotale = $this->getDistanceTotale($distanceVilles, $nbrParticipants);
+        $distanceTotale = Rencontres::getDistanceTotale($distanceVilles, $nbrParticipants);
 
         # ajouter le nombre de participants dans les résultats
         $retour["distanceTotale"] = $distanceTotale;
 
         # ajouter le nombre de participants dans les résultats
-        $retour["nbrParticipantsTotal"] = $this->getTotalNombreParticipants($nbrParticipants);
+        $retour["nbrParticipantsTotal"] = Rencontres::getTotalNombreParticipants($nbrParticipants);
 
         return $retour;
     }
@@ -824,7 +827,7 @@ class Rencontres
 
         $bdd= $this->connexion();
 
-        $equipe = $this->index($idGroupe);
+        $equipe = Rencontres::index($idGroupe);
 
         # récupérer l'ids de toutes les entités
         $idsEntites = $equipe[2];
@@ -833,7 +836,7 @@ class Rencontres
 
         $equipe = array_merge($equipe[0], $equipe[1]);
 
-        $listeLieux = $this->getListeLieux($idGroupe);
+        $listeLieux = Rencontres::getListeLieux($idGroupe);
         $terrainNeutre = $listeLieux[1];
 
         $toutesLesDistances = [];
@@ -846,7 +849,7 @@ class Rencontres
             $latY = $start[0];
             $lanX = $start[1];
 
-            $calculRoute = $this->calculRoute($lanX, $latY, $equipe);
+            $calculRoute = Rencontres::calculRoute($lanX, $latY, $equipe);
 
             $distanceTotal = $calculRoute[0];
             $dureeTotale = $calculRoute[1];
@@ -886,7 +889,7 @@ class Rencontres
         $latY = $coord[1];
 
         //Récupérer les noms de villes de destination
-        $mesVilles = $this->mesVilles($equipe);
+        $mesVilles = Rencontres::mesVilles($equipe);
 
         $stmt1 = $bdd->prepare("SELECT code_postal, ville from entite where longitude = :longitude AND latitude = :latitude");
         $stmt1->bindParam(':longitude', $latY);
@@ -899,7 +902,7 @@ class Rencontres
         $maVille = $codePostal." | ".$nomVille;
 
         //récupérer le nombre de participant pour chaque entité
-        $nbrParticipants = $this->getNombreParticipants($idsEntitesMerge);
+        $nbrParticipants = Rencontres::getNombreParticipants($idsEntitesMerge);
 
 
         $retour = [];
@@ -916,7 +919,7 @@ class Rencontres
         $retour[9] = $nbrParticipants;
 
         // obtenir la distance totale pour toutes équipes
-        $distanceTotale = $this->getDistanceTotale($distanceVilles, $nbrParticipants);
+        $distanceTotale = Rencontres::getDistanceTotale($distanceVilles, $nbrParticipants);
 
         # ajouter le nombre de participants dans les résultats
         $retour["distanceTotale"] = $distanceTotale;
@@ -1044,7 +1047,7 @@ class Rencontres
         $app_id = $this->app_id;
         $app_code = $this->app_code;
 
-        $bdd= $this->connexion();
+        $bdd = Rencontres::connexion();
 
         $stmt1 = $bdd->prepare("SELECT id from entite where longitude= :longitude and latitude = :latitude ;");
         $stmt1->bindParam(':longitude', $lanX);
@@ -1106,7 +1109,7 @@ class Rencontres
 //                    error_log("\n Service: Rencontres, Function: calculRoute, datetime: ".$dateTimeNow
 //                        ."\n reqRoute: ".print_r($reqRoute, true), 3, $this->error_log_path);
 
-                    $decoded = $this->getReponseCurl($reqRoute);
+                    $decoded =  Rencontres::getReponseCurl($reqRoute);
 
 
                     if (isset($decoded->response->status) && $decoded->response->status == 'ERROR') {
@@ -1399,7 +1402,7 @@ class Rencontres
 
     }
 
-    private function getParticipantsPourGroupe($idGroupe){
+    public function getParticipantsPourGroupe($idGroupe){
 
         $bdd= $this->connexion();
 
@@ -1442,8 +1445,6 @@ class Rencontres
             "nbrParticipantsTotal" => $nbrParticipants
         );
     }
-
-
 
     private function getReponseCurl($url)
     {
@@ -1506,6 +1507,65 @@ class Rencontres
         }
 
         return $totalNombreParticipants;
+
+    }
+
+    //Ajouter le producer
+
+    public function Producer($idGroupe, $typeAction)
+    {
+
+
+        $bdd= $this->connexion();
+
+        //déclaration des parametres pour la req insert dans la table parametres
+
+        $statut = 0;
+
+        //recuperer la date du jour
+        $date = new \DateTime();
+        $dateCreation = $date->format('Y-m-d');
+
+        //on ajoute un job dans la table parametres
+        //TODO:changer le nom de la table rapport en paramètres
+        $insert = $bdd->prepare("INSERT INTO  rapport (id_groupe, type_action, statut, date_creation) VALUES ( :idGroupe, :typeAction, :statut, :dateCreation );");
+        $insert->bindParam(':idGroupe', $idGroupe);
+        $insert->bindParam(':typeAction', $typeAction);
+        $insert->bindParam(':statut', $statut);
+        $insert->bindParam(':dateCreation', $dateCreation);
+        $insert->execute();
+        $idTache = $bdd->lastInsertId();
+
+        return $idTache;
+
+    }
+
+    public function producerExclusion($idGroupe, $valeurExclusion)
+    {
+
+        $bdd= $this->connexion();
+
+        //déclaration des parametres pour la req insert dans la table parametres
+
+        $statut = 0;
+        $typeAction = "exclusion";
+
+        //recuperer la date du jour
+        $date = new \DateTime();
+        $dateCreation = $date->format('Y-m-d');
+
+        //on ajoute un job dans la table parametres
+        //TODO:changer le nom de la table rapport en paramètres
+        $insert = $bdd->prepare("INSERT INTO  rapport (id_groupe, type_action, statut, date_creation, params) VALUES ( :idGroupe, :typeAction, :statut, :dateCreation, :params );");
+        $insert->bindParam(':idGroupe', $idGroupe);
+        $insert->bindParam(':typeAction', $typeAction);
+        $insert->bindParam(':statut', $statut);
+        $insert->bindParam(':params', $valeurExclusion);
+        $insert->bindParam(':dateCreation', $dateCreation);
+        $insert->execute();
+        $idTache = $bdd->lastInsertId();
+
+        return $idTache;
 
     }
 

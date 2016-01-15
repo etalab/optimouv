@@ -14,7 +14,7 @@ class EntiteRepository extends \Doctrine\ORM\EntityRepository
     public function getDetailsPourEntite($idEntite){
         $query = $this->createQueryBuilder('e')
             ->select('e.codePostal, e.ville')
-            ->where('e.id= :id')
+            ->where('e.id = :id')
             ->setParameter('id', $idEntite)
             ->getQuery();
 

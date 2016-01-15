@@ -22,4 +22,18 @@ class RapportRepository extends \Doctrine\ORM\EntityRepository
         return $result;
     }
 
+    public function getStatut($idTache)
+    {
+
+        $query = $this->createQueryBuilder('t')
+            ->select('t.statut')
+            ->where('t.id = :id')
+            ->setParameter('id', $idTache)
+             ->getQuery();
+        $result = $query->getResult();
+
+        return $result;
+
+    }
+
 }

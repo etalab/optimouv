@@ -3,6 +3,7 @@
 namespace Optimouv\FfbbBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
@@ -82,12 +83,22 @@ class DefaultController extends Controller
     public function rmqAction()
     {
 
-        $name = "Ouss";
+        $email = $this->getUser()->getEmail();
+        $username =  $this->getUser()->getUsername();
+        $body = $this->renderView('FfbbBundle:Mails:confirmationCalcul.html.twig', array('username' => $username));
 
-        $this
-            ->get('old_sound_rabbit_mq.hello_world_producer')
-            ->publish($name);
+            $message = \Swift_Message::newInstance()
+            ->setSubject('Calcul terminé')
+            ->setFrom('vtc.ouss@gmail.com')
+            ->setTo($email)
+            ->setCc('g.oussema@gmail.com')
+            ->setBody($body)
+        ;
+        $this->get('mailer')->send($message);
+
+        return $this->redirect($this->generateUrl('ffbb_accueil'));
 
     }
+
 
 }

@@ -110,6 +110,13 @@ class Scenario
      */
     private $idRapport;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="details_calcul", type="text", nullable=true)
+     */
+    private $detailsCalcul;
+
 
 
     /**
@@ -415,5 +422,53 @@ class Scenario
     public function getIdRapport()
     {
         return $this->idRapport;
+    }
+
+    /**
+     * Set co2Covoiturage
+     *
+     * @param float $co2Covoiturage
+     *
+     * @return Scenario
+     */
+    public function setCo2Covoiturage($co2Covoiturage)
+    {
+        $this->co2Covoiturage = $co2Covoiturage;
+
+        return $this;
+    }
+
+    /**
+     * Get co2Covoiturage
+     *
+     * @return float
+     */
+    public function getCo2Covoiturage()
+    {
+        return $this->co2Covoiturage;
+    }
+
+    /**
+     * Set detailsCalcul
+     *
+     * @param string $detailsCalcul
+     *
+     * @return Scenario
+     */
+    public function setDetailsCalcul($detailsCalcul)
+    {
+        $this->detailsCalcul = $detailsCalcul;
+
+        return $this;
+    }
+
+    /**
+     * Get detailsCalcul
+     *
+     * @return string
+     */
+    public function getDetailsCalcul()
+    {
+        return $this->detailsCalcul;
     }
 }

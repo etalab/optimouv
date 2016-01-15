@@ -108,13 +108,14 @@ old_sound_rabbit_mq:
                    connection: default
                    exchange_options:
                        name: 'rencontre_exchange'
-                       type: topic
+                       type: direct
+
        consumers:
                rencontre:
                    connection: default
                    exchange_options:
                        name: 'rencontre_exchange'
-                       type: topic
+                       type: direct
                    queue_options:
                        name: 'rencontre_queue'
                    callback: service_calcul_rencontre

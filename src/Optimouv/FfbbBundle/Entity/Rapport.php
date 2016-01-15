@@ -61,6 +61,20 @@ class Rapport
      */
     private $dateCreation;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="params", type="text", nullable=true)
+     */
+    private $params;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="statut", type="boolean", nullable=true)
+     */
+    private $statut;
+
 
     /**
      * Get id
@@ -192,5 +206,52 @@ class Rapport
     {
         return $this->dateCreation;
     }
-}
 
+    /**
+     * Set params
+     *
+     * @param string $params
+     *
+     * @return Rapport
+     */
+    public function setParams($params)
+    {
+        $this->params = $params;
+
+        return $this;
+    }
+
+    /**
+     * Get params
+     *
+     * @return string
+     */
+    public function getParams()
+    {
+        return $this->params;
+    }
+
+    /**
+     * Set statut
+     *
+     * @param boolean $statut
+     *
+     * @return Rapport
+     */
+    public function setStatut($statut)
+    {
+        $this->statut = $statut;
+
+        return $this;
+    }
+
+    /**
+     * Get statut
+     *
+     * @return boolean
+     */
+    public function getStatut()
+    {
+        return $this->statut;
+    }
+}
