@@ -256,6 +256,10 @@ class PoulesController extends Controller
         $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
         $nomGroupe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getNom();
 
+//        error_log("\n coordonneesVille: ".print_r($coordonneesVille, true), 3, "error_log_optimouv.txt");
+//        error_log("\n nomsVilles: ".print_r($nomsVilles, true), 3, "error_log_optimouv.txt");
+//
+//        exit;
 
         return $this->render('FfbbBundle:Poules:criteres.html.twig', array(
 
