@@ -84,7 +84,7 @@ class CalculRencontreConsumer implements ConsumerInterface
         $params = $res[0]['params'];
 
         //on recupere le service de rencontre
-        include_once '/Rencontres.php';
+        include_once 'Rencontres.php';
 
         if($typeAction == "barycentre"){
 

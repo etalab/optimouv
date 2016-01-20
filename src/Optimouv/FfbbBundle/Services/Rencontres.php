@@ -50,7 +50,7 @@ class Rencontres
 
     public function index($idGroupe)
     {
-        $bdd= $this->connexion();
+        $bdd= Rencontres::connexion();
 
         $reqVilles = $bdd->prepare("SELECT equipes FROM  groupe WHERE id = :id ;");
         $reqVilles->bindParam(':id', $idGroupe);
@@ -153,7 +153,7 @@ class Rencontres
     public function meilleurLieuRencontre($idGroupe)
     {
 
-        $bdd= $this->connexion();
+        $bdd= Rencontres::connexion();
 
         //Récupération de détail de la liste de lieux
 
@@ -316,7 +316,7 @@ class Rencontres
     public function Barycentre($idGroupe)
     {
 
-        $bdd= $this->connexion();
+        $bdd= Rencontres::connexion();
 
         //recuperer la date du jour
         $date = new \DateTime();
@@ -398,7 +398,7 @@ class Rencontres
     //Calcul exclusion géographique
     public function Exclusion($valeurExclusion, $idGroupe)
     {
-        $bdd= $this->connexion();
+        $bdd= Rencontres::connexion();
 
         if ($valeurExclusion) {
 
@@ -484,7 +484,7 @@ class Rencontres
     //Calcul du scénario équitable
     public function scenarioEquitable($idGroupe)
     {
-        $bdd= $this->connexion();
+        $bdd= Rencontres::connexion();
         //on récupère le tableau des villes
         $retourIndex = Rencontres::index($idGroupe);
 
@@ -709,7 +709,7 @@ class Rencontres
     public function terrainNeutre($idGroupe)
     {
 
-        $bdd= $this->connexion();
+        $bdd= Rencontres::connexion();
         # obtenir le nombre de participants pour cette groupe
         $nbrParticipants = Rencontres::getParticipantsPourGroupe($idGroupe);
 
@@ -825,7 +825,7 @@ class Rencontres
     public function terrainNeutreEquitable($idGroupe)
     {
 
-        $bdd= $this->connexion();
+        $bdd= Rencontres::connexion();
 
         $equipe = Rencontres::index($idGroupe);
 
@@ -933,7 +933,7 @@ class Rencontres
 
         //params de connexion
 
-        $bdd= $this->connexion();
+        $bdd= Rencontres::connexion();
 
         $reqVilles = $bdd->prepare("SELECT equipes FROM  groupe where id = :idGroupe ;");
         $reqVilles->bindParam(':idGroupe', $idGroupe);
@@ -965,7 +965,7 @@ class Rencontres
     public function mesVilles($villes)
     {
 
-        $bdd= $this->connexion();
+        $bdd= Rencontres::connexion();
 
         $mesVilles = [];
         //geocoder inversement les villes pour ramener les noms de villes
@@ -994,7 +994,7 @@ class Rencontres
     public function creerGroupe($villes, $nomGroupe, $idListeParticipants, $idListeLieux, $idUtilisateur)
     {
 
-        $bdd= $this->connexion();
+        $bdd= Rencontres::connexion();
 
         $nbrVilles = count($villes);
         $villes = implode(",", $villes);
@@ -1021,7 +1021,7 @@ class Rencontres
     public function geocoderUneVille($idVille)
     {
 
-        $bdd= $this->connexion();
+        $bdd= Rencontres::connexion();
 
         $reqVille = $bdd->prepare("SELECT ville_latitude_deg, ville_longitude_deg FROM villes_france_free where ville_id = :idVille;");
         $reqVille->bindParam(':idVille', $idVille);
@@ -1158,7 +1158,7 @@ class Rencontres
         $app_id = $this->app_id;
         $app_code = $this->app_code;
 
-        $bdd= $this->connexion();
+        $bdd= Rencontres::connexion();
 
         $reqLieux = $bdd->prepare("SELECT id_liste_lieux FROM  groupe WHERE id = :id;");
         $reqLieux->bindParam(':id', $idGroupe);
@@ -1262,7 +1262,7 @@ class Rencontres
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
         # obtenir l'objet PDO
-        $pdo = $this->connexion();
+        $pdo = Rencontres::connexion();
 
         if(!$pdo){
             error_log("\n erreur récupération de l'objet PDO, Service: Rencontres, Function: creerRapport, datetime: ".$dateTimeNow, 3, $this->error_log_path);
@@ -1335,7 +1335,7 @@ class Rencontres
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
         # obtenir l'objet PDO
-        $pdo = $this->connexion();
+        $pdo = Rencontres::connexion();
 
         if(!$pdo){
             error_log("\n erreur récupération de l'objet PDO, Service: Rencontres, Function: creerScenario, datetime: ".$dateTimeNow, 3, $this->error_log_path);
@@ -1404,7 +1404,7 @@ class Rencontres
 
     public function getParticipantsPourGroupe($idGroupe){
 
-        $bdd= $this->connexion();
+        $bdd= Rencontres::connexion();
 
         if(!$bdd){
             error_log("service: rencontres, function: getParticipantsPourGroupe ", 3, $this->error_log_path);
@@ -1476,7 +1476,7 @@ class Rencontres
     private function getNombreParticipants($idsEntites)
     {
 
-        $bdd= $this->connexion();
+        $bdd= Rencontres::connexion();
         $count = count($idsEntites);
 
         $nbrParticipants = [];
@@ -1516,7 +1516,7 @@ class Rencontres
     {
 
 
-        $bdd= $this->connexion();
+        $bdd= Rencontres::connexion();
 
         //déclaration des parametres pour la req insert dans la table parametres
 
@@ -1543,7 +1543,7 @@ class Rencontres
     public function producerExclusion($idGroupe, $valeurExclusion)
     {
 
-        $bdd= $this->connexion();
+        $bdd= Rencontres::connexion();
 
         //déclaration des parametres pour la req insert dans la table parametres
 
