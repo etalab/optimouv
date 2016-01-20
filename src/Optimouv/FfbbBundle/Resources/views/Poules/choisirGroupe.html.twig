@@ -20,7 +20,7 @@
 
                              <div class="panel-heading">
                                  <h4> La liste que vous avez selectionnée ne contient pas de groupe. Veuillez sélectionner une nouvelle liste.</h4>
-                                 <a href="{{ path('ffbb_choisir_liste_participants') }}" class="btn btn-default">Retour à la liste</a>
+                                 <a href="{{ path('ffbb_poules_choisir_liste') }}" class="btn btn-primary">Retour à la liste</a>
                              </div>
                          {% else %}
 
@@ -63,7 +63,7 @@
                                  <form action="{{ path('ffbb_poules_gerer_groupe', {'idListe': idListe}) }}" method="post">
 
                                      <button type="submit" class="btn btn-primary">Gérer mes groupes</button>
-                                     <a href="{{ path('ffbb_poules_choisir_liste') }}" class="btn btn-info">Retour</a>
+                                     <a href="{{ path('ffbb_poules_choisir_liste') }}" class="btn btn-info-poule">Retour</a>
 
                                  </form>
 

@@ -8,8 +8,8 @@
                  <div class="bs-example">
                      <ul class="breadcrumb">
                          <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
-                         <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Choix de l'équipe</a></li>
-                         <li class="active">Gestion de listes d'équipes</li>
+                         <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Choix de la liste d’équipes </a></li>
+                         <li class="active">Gestion de la liste d’équipes</li>
                      </ul>
                  </div>
                  <div class="col-lg-12">
@@ -80,14 +80,14 @@
                                              <td> {{ listeParticipants.dateCreation|date('d/m/Y') }}</td>
                                              <td>
                                                  <a href="{{ path('ffbb_renommer_liste_equipes', {'idListeParticipants': listeParticipants.id}) }}"
-                                                    class="btn btn-info">Renommer</a> |
-                                                 <button type="submit" class="btn btn-info"
+                                                    class="btn btn-info-poule">Renommer</a> |
+                                                 <button type="submit" class="btn btn-info-poule"
                                                          onclick="deleteListeParticipants({{ listeParticipants.id }})">
                                                      Supprimer
                                                  </button>
                                                  |
                                                  <a href="{{ path('ffbb_visualiser_liste_equipes', {'idListeParticipants': listeParticipants.id}) }}"
-                                                    class="btn btn-info">Visualiser</a>
+                                                    class="btn btn-info-poule">Visualiser</a>
 
                                              </td>
 

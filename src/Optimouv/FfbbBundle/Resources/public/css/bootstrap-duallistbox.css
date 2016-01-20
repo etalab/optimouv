@@ -76,3 +76,14 @@
 .bootstrap-duallistbox-container.moveonselect .removeall {
   width: 100%;
 }
+.btn-info-poule {
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+}
+
+.btn-info-poule:hover {
+  color: #fff;
+  background-color: #40bac3;
+  border-color: #40bac3;
+}
