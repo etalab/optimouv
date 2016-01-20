@@ -7,19 +7,14 @@ parameters:
     database_name:     symfony
     database_user:     root
     database_password: ~
-    # You should uncomment this if you want use pdo_sqlite
-    # database_path: "%kernel.root_dir%/data.db3"
-
     mailer_transport: gmail
     mailer_host: smtp.gmail.com
     mailer_user: vtc.ouss@gmail.com
     mailer_password: EJAg$m896!
-
-    # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
-    #code Here
+    # ci-dessous les deux parametres pour Here
     app_id: tObeTMHIXTfmuTUvyDBa
     app_code: 6ST2s3g8BkS7B0Uft0kPeg
-    #chemin errorlog
+    # chemin errorlog
     error_log_path: error_log_optimouv.txt
 
