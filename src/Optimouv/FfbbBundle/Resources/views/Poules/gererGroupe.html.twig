@@ -43,11 +43,11 @@
                                              <td> {{ groupe.nbParticipants }}</td>
                                              <td> {{ groupe.dateCreation|date('d/m/Y') }}</td>
                                              <td>
-                                                 <a href="{{ path('ffbb_poules_renommer_groupe',{'idGroupe': groupe.id}) }}" class="btn btn-info">Renommer</a> |
-                                                 <button type="button" class="btn btn-info" onclick="deleteGroupe({{ groupe.id }})">Supprimer</button> |
-                                                 <a href="{{ path('ffbb_poules_entite',{'idGroupe': groupe.id}) }}" class="btn btn-info">Ajouter entité</a> |
-                                                 <a href="{{ path('ffbb_poules_lancer_groupe', {'idGroupe': groupe.id}) }}" class="btn btn-info">Lancer</a> |
-                                                 <a href="{{ path('ffbb_poules_visualiser_groupe', {'idGroupe': groupe.id}) }}" class="btn btn-info">Visualiser</a>
+                                                 <a href="{{ path('ffbb_poules_renommer_groupe',{'idGroupe': groupe.id}) }}" class="btn btn-info-poule">Renommer</a> |
+                                                 <button type="button" class="btn btn-info-poule" onclick="deleteGroupe({{ groupe.id }})">Supprimer</button> |
+                                                 <a href="{{ path('ffbb_poules_entite',{'idGroupe': groupe.id}) }}" class="btn btn-info-poule">Ajouter entité</a> |
+                                                 <a href="{{ path('ffbb_poules_lancer_groupe', {'idGroupe': groupe.id}) }}" class="btn btn-info-poule">Lancer</a> |
+                                                 <a href="{{ path('ffbb_poules_visualiser_groupe', {'idGroupe': groupe.id}) }}" class="btn btn-info-poule">Visualiser</a>
 
 
                                              </td>
@@ -58,7 +58,7 @@
 
                                      </tbody>
                                  </table>
-                                 <form action="{{ path('ffbb_choisir_groupe', {'idListe': idListe}) }}" method="post">
+                                 <form action="{{ path('ffbb_poule_choisir_groupe', {'idListe': idListe}) }}" method="post">
 
                                      <button type="submit" class="btn btn-primary">Retour à la liste de groupes</button>
                                  </form>

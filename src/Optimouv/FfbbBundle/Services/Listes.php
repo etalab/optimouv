@@ -182,7 +182,8 @@ class Listes{
                                         $retour = array(
                                             "success" => false,
                                             "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le type d'entité donné: $typeEntite ne correspond pas au type attendu (EQUIPE, PERSONNE)  "
+//                                                ." Le type d'entité donné: $typeEntite ne correspond pas au type attendu (EQUIPE, PERSONNE)  "
+                                                ." Le type d'entité donné: $typeEntite ne correspond pas au type attendu"
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -206,7 +207,6 @@ class Listes{
                                     die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
 
                                 }
-
 
 
                                 // obtenir les valeurs selon le type d'entité
@@ -352,6 +352,17 @@ class Listes{
                                     if(count($donnéesLigne) == 12){
 
                                         $poule = $donnéesLigne[11];
+                                        $alphabet = ['','A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ];
+                                        if (!in_array($poule, $alphabet))
+                                        {
+                                            $retour = array(
+                                                "success" => false,
+                                                "msg" => "Erreur ligne :".$nbrLigne."!"
+                                                    ." Le nom de la poule ".$poule." est erroné.!"
+                                            );
+                                            array_push($lignesErronees, $retour["msg"]);
+                                            continue;
+                                        }
 
                                     }
 
