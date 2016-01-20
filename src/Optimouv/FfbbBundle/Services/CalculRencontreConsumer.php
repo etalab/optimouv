@@ -86,9 +86,25 @@ class CalculRencontreConsumer implements ConsumerInterface
         //on recupere le service de rencontre
         include_once 'Rencontres.php';
 
+        //passer les params du constructeur
+        $app_id = $this->app_id;
+        $app_code = $this->app_code;
+        $database_name = $this->database_name;
+        $database_user = $this->database_user;
+        $database_password = $this->database_password;
+        $error_log_path = $this->error_log_path;
+
+        //Appel de la classe
+        $serviceRencontre = new Rencontres($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path);
+
+
         if($typeAction == "barycentre"){
 
-            $retour = Rencontres::Barycentre($idGroupe);
+
+
+            $retour = $serviceRencontre->Barycentre($idGroupe);
+
+//            $retour = Rencontres::Barycentre($idGroupe);
 
             $idCalcul = $this->stockerResultats($msg,$retour);
 
@@ -104,7 +120,8 @@ class CalculRencontreConsumer implements ConsumerInterface
          }
         elseif($typeAction == "exclusion"){
 
-            $retour = Rencontres::Exclusion($params, $idGroupe);
+            $retour = $serviceRencontre->Exclusion($params, $idGroupe);
+//            $retour = Rencontres::Exclusion($params, $idGroupe);
 
             $idCalcul = $this->stockerResultats($msg,$retour);
 
@@ -119,7 +136,7 @@ class CalculRencontreConsumer implements ConsumerInterface
         }
         elseif($typeAction == "meilleurLieu"){
 
-            $retour = Rencontres::meilleurLieuRencontre($idGroupe);
+            $retour = $serviceRencontre->meilleurLieuRencontre($idGroupe);
 
             $idCalcul = $this->stockerResultats($msg,$retour);
 
@@ -135,7 +152,7 @@ class CalculRencontreConsumer implements ConsumerInterface
         }
         elseif($typeAction == "meilleurLieuEq"){
 
-            $retour = Rencontres::scenarioEquitable($idGroupe);
+            $retour = $serviceRencontre->scenarioEquitable($idGroupe);
             $idCalcul = $this->stockerResultats($msg,$retour);
 
             if ($idCalcul) {
@@ -148,7 +165,7 @@ class CalculRencontreConsumer implements ConsumerInterface
 
         }
         elseif($typeAction == "terrainNeutre"){
-            $retour = Rencontres::terrainNeutre($idGroupe);
+            $retour = $serviceRencontre->terrainNeutre($idGroupe);
             $idCalcul = $this->stockerResultats($msg,$retour);
 
             if ($idCalcul) {
@@ -160,7 +177,7 @@ class CalculRencontreConsumer implements ConsumerInterface
             }
         }
         elseif($typeAction == "terrainNeutreEq"){
-            $retour = Rencontres::terrainNeutreEquitable($idGroupe);
+            $retour = $serviceRencontre->terrainNeutreEquitable($idGroupe);
             $idCalcul = $this->stockerResultats($msg,$retour);
 
             if ($idCalcul) {
