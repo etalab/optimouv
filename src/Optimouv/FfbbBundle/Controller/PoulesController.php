@@ -258,8 +258,8 @@ class PoulesController extends Controller
 
         # récupérer la liste des noms et des ids de villes
         $detailsVilles = $em->getRepository('FfbbBundle:Entite')->getEntities($villes);
-//        error_log("\n detailsVilles : ".print_r($detailsVilles , true), 3, "error_log_optimouv.txt");
 
+//        error_log("\n villesIds : ".print_r($villesIds , true), 3, "error_log_optimouv.txt");
 
 
         return $this->render('FfbbBundle:Poules:criteres.html.twig', array(
@@ -284,7 +284,6 @@ class PoulesController extends Controller
         $coordonneesVille = $this->get('service_rencontres')->index($idGroupe);
         $coordonneesVille = array_merge($coordonneesVille[0], $coordonneesVille[1]);
 
-
         $nomsVilles = $this->get('service_rencontres')->nomsVilles($idGroupe);
 
         # récupérer idListe pour le breadcrump
@@ -292,6 +291,13 @@ class PoulesController extends Controller
         $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
 
         $nomGroupe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getNom();
+
+        # récupérer les villes qui correspondent à un groupe
+        $villes =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getEquipes();
+        $villes = explode(",", $villes);
+
+        # récupérer la liste des noms et des ids de villes
+        $detailsVilles = $em->getRepository('FfbbBundle:Entite')->getEntities($villes);
 
         return $this->render('FfbbBundle:Poules:criteres.html.twig', array(
 
@@ -301,6 +307,7 @@ class PoulesController extends Controller
             'idListe' => $idListe,
             'nomListe' => $nomListe,
             'nomGroupe' => $nomGroupe,
+            'detailsVilles' => $detailsVilles,
 
         ));
     }
