@@ -87,3 +87,15 @@
   background-color: #40bac3;
   border-color: #40bac3;
 }
+
+.btn-default {
+  color: #fff;
+  background-color: #DDDDDD !important;
+  border-color: #ccc;
+}
+
+.btn-default-rencontre {
+  color: #fff;
+  background-color: #A4BD10;
+  border-color: #ccc;
+}
