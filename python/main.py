@@ -2165,9 +2165,11 @@ def callback(ch, method, properties, body):
 		logging.debug("distanceInitOneWay: %s" %(distanceInitOneWay,))
 
 		logging.debug("############################################# OPTIMIZE POOL #################################################")
-		if launchType == "match_aller_retour":
+# 		if launchType == "match_aller_retour":
+		if launchType == "allerRetour":
 			results = optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId )
-		elif launchType == "match_aller_simple":
+# 		elif launchType == "match_aller_simple":
+		elif launchType == "allerSimple":
 			results = optimize_pool_one_way_match(P_InitMat_oneWaywithoutConstraint, P_InitMat_oneWayWithConstraint, D_Mat_oneWay, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId)
 		elif launchType == "plateau":
 			results = optimize_pool_plateau_match()
