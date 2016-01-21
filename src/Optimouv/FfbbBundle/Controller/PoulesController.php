@@ -273,9 +273,13 @@ class PoulesController extends Controller
         ));
     }
 
-    public function lancerCalculAction(){
+    public function lancerCalculAction()
+    {
 
-        error_log("\n data post : ".print_r($_POST , true), 3, "error_log_optimouv.txt");
+        # sauvegarder les params dans la DB
+        $idParams = $this->get('service_poules')->sauvegarderParamsEnDB();
+
+        # envoyer l'id du rapport (params) à  RabbitMQ
 
 
         return new JsonResponse(array(
