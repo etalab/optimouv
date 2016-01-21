@@ -358,7 +358,7 @@ class Listes{
                                             $retour = array(
                                                 "success" => false,
                                                 "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                    ." Le nom de la poule ".$poule." est erroné.!"
+                                                    ."Le champ poule doit contenir une lettre. Veuillez corriger et importer de nouveau votre fichier"
                                             );
                                             array_push($lignesErronees, $retour["msg"]);
                                             continue;
