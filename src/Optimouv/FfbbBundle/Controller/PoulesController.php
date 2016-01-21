@@ -281,11 +281,11 @@ class PoulesController extends Controller
 
         $idParams = $retour["data"];
 
-        error_log("\n id params: ".print_r($idParams , true), 3, "error_log_optimouv.txt");
 
         # envoyer l'id du rapport (params) à  RabbitMQ
-//        $this->get('old_sound_rabbit_mq.poule_producer')->publish($idParams);
+        $this->get('old_sound_rabbit_mq.poule_producer')->publish($idParams);
 
+//        error_log("\n id params: ".print_r($idParams , true), 3, "error_log_optimouv.txt");
 
         return new JsonResponse(array(
             "success" => true,
