@@ -49,11 +49,13 @@ class Poules{
 
             # params d'insertion
             $idGroupe = $_POST["idGroupe"];
-            $poulesNbr = $_POST["poulesNbr"];
+            $poulesNbr = intval($_POST["poulesNbr"]);
+//            error_log("\n Service: Poules, Function: sauvegarderParamsEnDB, datetime: ".$dateTimeNow
+//                ."\n type poulesNbr: ".print_r(gettype($poulesNbr), true), 3, $this->error_log_path);
             $typeAction = $_POST["typeMatch"];
             $nom = "rapport_groupe_".$idGroupe."_action_".$typeAction;
             $statut = 0;
-            $params = json_encode(array("nbrPoule" => $poulesNbr));
+            $params = json_encode(array("nbrPoule" => $poulesNbr, "interdictions"=> array(), "repartitionHomogene"=> array()));
 
             # insérer dans la base de données
             $sql = "INSERT INTO  rapport (nom, id_groupe, type_action, date_creation, statut, params) VALUES ( :nom, :id_groupe, :type_action, :date_creation, :statut, :params);";
