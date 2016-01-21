@@ -110,6 +110,11 @@ old_sound_rabbit_mq:
                        name: 'rencontre_exchange'
                        type: direct
 
+               poule:
+                   connection: default
+                   exchange_options:
+                       name: 'poule_exchange'
+                       type: direct
        consumers:
                rencontre:
                    connection: default
