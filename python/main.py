@@ -2224,7 +2224,7 @@ def main():
 		credentials = pika.PlainCredentials(config.MQ.User, config.MQ.Password)
 		connection = pika.BlockingConnection(pika.ConnectionParameters(host=config.MQ.Host, credentials=credentials))
 		channel = connection.channel()
-		channel.queue_declare(queue=config.MQ.Queue)
+# 		channel.queue_declare(queue=config.MQ.Queue)
 		channel.queue_bind(exchange=config.MQ.Exchange, queue=config.MQ.Queue)
 		channel.basic_qos(prefetch_count=1)
 		print (' [*] Waiting for messages. To exit press CTRL+C')
