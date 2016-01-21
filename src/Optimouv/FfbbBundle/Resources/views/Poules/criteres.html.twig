@@ -4,7 +4,7 @@
 
          <div id="page-wrapper">
 
-             <form id="formParams" action="">
+             <form id="formParams">
 
                  <div class="row">
                      <div class="bs-example">
@@ -139,7 +139,7 @@
                              <div class="panel-body">
 
                                  <div class="form-group">
-                                     <input id="inputPoulesNbr" type="number" min="1" class="form-control" required>
+                                     <input id="inputPoulesNbr" type="number" min="2" class="form-control" value="3" required>
                                  </div>
 
                              </div>
@@ -265,6 +265,7 @@
                  </div>
                  <div class="row">
                      {#<button id="lancerCalculBtn" type="submit" class="btn btn-primary pull-right"> Lancer le calcul</button>#}
+                     {#<button id="lancerCalculBtn" type="button" class="btn btn-primary pull-right"> Lancer le calcul</button>#}
                      <label id="lancerCalculBtn" class="btn btn-primary pull-right"> Lancer le calcul</label>
                  </div>
 
@@ -342,13 +343,47 @@
                          var typeMatch =   $('input[name=typeRencontre]:checked', '#formParams').val();
                          console.log("typeMatch: " + typeMatch);
 
+                         // récupérer l'id du groupe
+                         var idGroupe = {{ idGroupe }};
+                         console.log("idGroupe : " + idGroupe);
+
+
                          // récupérer le nombre de poules
                          var poulesNbr = $("#inputPoulesNbr").val();
                          console.log("poulesNbr : " + poulesNbr );
 
-                         // récupérer l'id du groupe
-                         var idGroupe = {{ idGroupe }};
-                         console.log("idGroupe : " + idGroupe);
+                         // controler le champ obligatoire (le nombre de poules)
+                        if( (poulesNbr == "") || (parseInt(poulesNbr)<2) ){
+                            alert("Veuillez vérifier que le nombre de poules donné est valide");
+                        }
+
+
+                         // agréger les input params
+                         var inputParams = {typeMatch: typeMatch, poulesNbr: poulesNbr, idGroupe: idGroupe};
+                         console.log("inputParams : " + JSON.stringify(inputParams));
+
+
+//                         // AJAX requete
+//                         $.ajax({
+//                             url: '/admin/poules/lancer-groupe/' + idGroupe,
+//                             type: 'POST',
+//                             data: inputParams,
+//                             contentType: false,
+//                             dataType : "json",
+//                             processData: false,
+//                             success: function(data, textStatus, jqXHR)
+//                             {
+//
+//
+//
+//                             },
+//                             error: function(jqXHR, textStatus, errorThrown)
+//                             {
+//                                 // Handle errors here
+//                                 console.log('ERRORS: ' + textStatus);
+//                             }
+//                         });
+
 
                      });
 
