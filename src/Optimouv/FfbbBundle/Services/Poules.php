@@ -29,14 +29,87 @@ class Poules{
         $this->error_log_path = $error_log_path;
     }
 
-    public function sauvegarderParamsEnDB(){
-        $params = $_POST;
-        
-        error_log("\n params: ".print_r($params , true), 3, "error_log_optimouv.txt");
+    public function sauvegarderParamsEnDB()
+    {
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateCreation = date('Y-m-d', time());
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
 
-        $idParams = 1;
+        try{
 
-        return $idParams;
+            # obtenir l'objet PDO
+            $bdd = $this->getPdo();
+
+            if (!$bdd) {
+                //erreur de connexion
+                error_log("\n erreur récupération de l'objet PDO, Service: Poules, Function: sauvegarderParamsEnDB, datetime: ".$dateTimeNow, 3, $this->error_log_path);
+                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+            }
+
+            # params d'insertion
+            $idGroupe = $_POST["idGroupe"];
+            $poulesNbr = $_POST["poulesNbr"];
+            $typeAction = $_POST["typeMatch"];
+            $nom = "rapport_groupe_".$idGroupe."_action_".$typeAction;
+            $statut = 0;
+            $params = json_encode(array("nbrPoule" => $poulesNbr));
+
+            # insérer dans la base de données
+            $sql = "INSERT INTO  rapport (nom, id_groupe, type_action, date_creation, statut, params) VALUES ( :nom, :id_groupe, :type_action, :date_creation, :statut, :params);";
+            $stmt = $bdd->prepare($sql);
+            $stmt->bindParam(':nom', $nom);
+            $stmt->bindParam(':id_groupe', $idGroupe);
+            $stmt->bindParam(':type_action', $typeAction);
+            $stmt->bindParam(':date_creation', $dateCreation);
+            $stmt->bindParam(':statut', $statut);
+            $stmt->bindParam(':params', $params);
+            $stmt->execute();
+
+            # afficher le statut de la requete executée
+            error_log("\n Service: Poules, Function: sauvegarderParamsEnDB, datetime: ".$dateTimeNow
+                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, $this->error_log_path);
+
+            # obtenir l'id de l"entité créée
+            $idParams = $bdd->lastInsertId();
+
+            $retour = array(
+                "success" => true,
+                "data" => $idParams
+            );
+
+
+            return $retour;
+
+        } catch (PDOException $e) {
+            error_log("\n erreur PDO, Service: Poules, Function: sauvegarderParamsEnDB, datetime: ".$dateTimeNow."\n"
+            ."erreur: ".print_r($e, true), 3, $this->error_log_path);
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
 
     }
+
+    # retourner un objet PDO qu'on peut utiliser dans d'autres fonctions
+    private function getPdo(){
+        # récupérer les parametres de connexion
+        $dbname = $this->database_name;
+        $dbuser = $this->database_user;
+        $dbpwd = $this->database_password;
+
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+        try {
+            # créer une objet PDO
+            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
+        } catch (PDOException $e) {
+            error_log("\n Service: Listes, Function: getPdo, datetime: ".$dateTimeNow
+                ."\n PDOException: ".print_r($e, true), 3, $this->error_log_path);
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
+
+        return $bdd;
+    }
+
 }
