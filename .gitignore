@@ -20,3 +20,6 @@
 /.pydevproject
 
 #/app/DoctrineMigrations/*
+
+# Python cache files
+/python/__pycache__/
