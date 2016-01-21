@@ -259,9 +259,6 @@ class PoulesController extends Controller
         # récupérer la liste des noms et des ids de villes
         $detailsVilles = $em->getRepository('FfbbBundle:Entite')->getEntities($villes);
 
-//        error_log("\n villesIds : ".print_r($villesIds , true), 3, "error_log_optimouv.txt");
-
-
         return $this->render('FfbbBundle:Poules:criteres.html.twig', array(
 
             'coordonneesVille' => $coordonneesVille,
@@ -275,6 +272,20 @@ class PoulesController extends Controller
 
         ));
     }
+
+    public function lancerCalculAction(){
+
+        error_log("\n data post : ".print_r($_POST , true), 3, "error_log_optimouv.txt");
+
+
+        return new JsonResponse(array(
+            "success" => true,
+            "msg" => ""
+        ));
+
+    }
+
+
 
     public function lancerGroupeAction($idGroupe)
     {

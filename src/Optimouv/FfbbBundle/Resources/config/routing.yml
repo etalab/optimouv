@@ -217,6 +217,10 @@ ffbb_poules_lancer_groupe:
     path:    /admin/poules/lancer-groupe/{idGroupe}
     defaults: { _controller: FfbbBundle:Poules:lancerGroupe }
 
+ffbb_poules_lancer_calcul:
+    path:    /admin/poules/lancer-calcul/
+    defaults: { _controller: FfbbBundle:Poules:lancerCalcul }
+
 ffbb_rmq:
     path:    /rmq
     defaults: { _controller: FfbbBundle:Default:rmq }

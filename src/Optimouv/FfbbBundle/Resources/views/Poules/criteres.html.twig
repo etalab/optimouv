@@ -356,34 +356,38 @@
                         if( (poulesNbr == "") || (parseInt(poulesNbr)<2) ){
                             alert("Veuillez vérifier que le nombre de poules donné est valide");
                         }
+                         else{
+                            alert("Le calcul est en cours de traitement");
+
+                            // agréger les input params
+                            var inputParams = {typeMatch: typeMatch, poulesNbr: poulesNbr, idGroupe: idGroupe};
+                            console.log("inputParams : " + JSON.stringify(inputParams));
 
 
-                         // agréger les input params
-                         var inputParams = {typeMatch: typeMatch, poulesNbr: poulesNbr, idGroupe: idGroupe};
-                         console.log("inputParams : " + JSON.stringify(inputParams));
+                            // AJAX requete
+                             $.ajax({
+                                 url: '/admin/poules/lancer-calcul/',
+                                 type: 'POST',
+                                 data: inputParams,
+                                 dataType : "json",
+                                 success: function(data, textStatus, jqXHR)
+                                 {
+                                     console.log('data: ' + data);
 
 
-//                         // AJAX requete
-//                         $.ajax({
-//                             url: '/admin/poules/lancer-groupe/' + idGroupe,
-//                             type: 'POST',
-//                             data: inputParams,
-//                             contentType: false,
-//                             dataType : "json",
-//                             processData: false,
-//                             success: function(data, textStatus, jqXHR)
-//                             {
-//
-//
-//
-//                             },
-//                             error: function(jqXHR, textStatus, errorThrown)
-//                             {
-//                                 // Handle errors here
-//                                 console.log('ERRORS: ' + textStatus);
-//                             }
-//                         });
 
+                                 },
+                                 error: function(jqXHR, textStatus, errorThrown)
+                                 {
+                                     // Handle errors here
+                                     console.log('ERRORS: ' + textStatus);
+                                 }
+                             });
+
+
+
+
+                        }
 
                      });
 
