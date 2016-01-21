@@ -1357,6 +1357,13 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		iter = config.INPUT.Iter
 		logging.debug(" iter: %s" %iter)
 		
+		# add status constraints in the result
+		if statusConstraints:
+			results["contraintsExiste"] = 1
+		else:
+			results["contraintsExiste"] = 0
+
+		
 		logging.debug("")
 		logging.debug(" ####################### RESULT OPTIMAL WITHOUT CONSTRAINT #############################################")
 
@@ -1579,6 +1586,12 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		logging.debug(" ########################################## ONE WAY　MATCH ###############################################")
 		iter = config.INPUT.Iter
 		logging.debug(" iter: %s" %iter)
+		
+		# add status constraints in the result
+		if statusConstraints:
+			results["contraintsExiste"] = 1
+		else:
+			results["contraintsExiste"] = 0
 		
 		logging.debug("")
 		logging.debug(" ####################### RESULT OPTIMAL WITHOUT CONSTRAINT #############################################")
@@ -2167,7 +2180,7 @@ def callback(ch, method, properties, body):
 		logging.debug("############################################# OPTIMIZE POOL #################################################")
 # 		if launchType == "match_aller_retour":
 		if launchType == "allerRetour":
-			results = optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId )
+			results = optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId)
 # 		elif launchType == "match_aller_simple":
 		elif launchType == "allerSimple":
 			results = optimize_pool_one_way_match(P_InitMat_oneWaywithoutConstraint, P_InitMat_oneWayWithConstraint, D_Mat_oneWay, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId)
