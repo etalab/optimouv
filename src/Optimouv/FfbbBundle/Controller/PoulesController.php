@@ -256,10 +256,11 @@ class PoulesController extends Controller
         $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
         $nomGroupe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getNom();
 
-//        error_log("\n coordonneesVille: ".print_r($coordonneesVille, true), 3, "error_log_optimouv.txt");
-//        error_log("\n nomsVilles: ".print_r($nomsVilles, true), 3, "error_log_optimouv.txt");
-//
-//        exit;
+        # récupérer la liste des noms et des ids de villes
+        $detailsVilles = $em->getRepository('FfbbBundle:Entite')->getEntities($villes);
+//        error_log("\n detailsVilles : ".print_r($detailsVilles , true), 3, "error_log_optimouv.txt");
+
+
 
         return $this->render('FfbbBundle:Poules:criteres.html.twig', array(
 
@@ -269,6 +270,8 @@ class PoulesController extends Controller
             'idListe' => $idListe,
             'nomListe' => $nomListe,
             'nomGroupe' => $nomGroupe,
+            'detailsVilles' => $detailsVilles,
+
 
         ));
     }
