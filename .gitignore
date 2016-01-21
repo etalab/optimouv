@@ -15,5 +15,8 @@
 # .idea dossier phpStorm
 /.idea
 
+# Eclipse files
+/.project
+/.pydevproject
 
 #/app/DoctrineMigrations/*
