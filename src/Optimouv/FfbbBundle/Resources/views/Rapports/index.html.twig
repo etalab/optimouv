@@ -24,7 +24,7 @@
                                 <table class="table table-striped table-hover table-bordered table-fixed" id="tableRapport" >
                                     <thead>
                                     <tr>
-                                        <th>Identifiant du rapport</th>
+                                        <th>No</th>
                                         <th>Nom du rapport</th>
                                         <th>Type du rapport</th>
                                         <th>Date de création</th>
@@ -39,7 +39,7 @@
                                     {%  for infoRapport in infoRapports %}
                                         <tr id="{{ infoRapport.id }}">
 
-                                            <td> {{ infoRapport.id }} </td>
+                                            <td> {{ loop.index }} </td>
                                             <td> {{ infoRapport.nom }} </td>
                                             <td> {{ infoRapport.typeAction }} </td>
                                             <td> {{ infoRapport.dateCreation.date|date('d/m/Y') }} </td>
