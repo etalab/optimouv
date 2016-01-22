@@ -372,7 +372,14 @@
                                  dataType : "json",
                                  success: function(data, textStatus, jqXHR)
                                  {
-                                     console.log('data: ' + data);
+                                     console.log('data: ' + JSON.stringify(data));
+
+                                     var urlRedirect = window.location.origin + "/admin/rapports";
+                                     console.log('urlRedirect: ' + urlRedirect);
+
+                                     // redirect à la page rapport
+                                     window.location = urlRedirect;
+
                                  },
                                  error: function(jqXHR, textStatus, errorThrown)
                                  {
