@@ -46,16 +46,16 @@
                                             <td>
 
                                                 {%  if (infoRapport.typeAction == "barycentre") or (infoRapport.typeAction == "meilleurLieu")  or (infoRapport.typeAction == "terrainNeutre") %}
-                                                    <button id="btn_rejouer_{{ infoRapport.id  }}"  type="submit" class="btn btn-info">Rejouer</button>
+                                                    <button id="btn_rejouer_{{ infoRapport.id  }}"  type="submit" class="btn btn-info">Consulter</button>
 
                                                 {% elseif (infoRapport.typeAction == "exclusion") %}
 
                                                     <form action="{{ path('ffbb_exclusion', {'idGroupe':infoRapport.idGroupe}) }}" method="POST">
-                                                        <button id="btn_rejouer_{{ infoRapport.id  }}"  type="submit" class="btn btn-info">Rejouer</button>
+                                                        <button id="btn_rejouer_{{ infoRapport.id  }}"  type="submit" class="btn btn-info">Consulter</button>
                                                         <input name="valeurExclusion" id="valeurExclusion_{{ infoRapport.id }}" type="hidden" value={{ infoRapport.valeurExclusion }}>
                                                     </form>
                                                 {% else %}
-                                                    <button id="btn_rejouer_{{ infoRapport.id  }}"  type="button" class="btn btn-info">Rejouer</button>
+                                                    <button id="btn_rejouer_{{ infoRapport.id  }}"  type="button" class="btn btn-info">Consulter</button>
 
                                                 {% endif %}
 
