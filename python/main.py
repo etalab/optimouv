@@ -1863,7 +1863,7 @@ def send_email_to_user(userId, resultId):
 		gmail_sender = config.EMAIL.Account
 		gmail_passwd = config.EMAIL.Password
 		
-		server = smtplib.SMTP('smtp.gmail.com', 587)
+		server = smtplib.SMTP(config.EMAIL.Server, config.EMAIL.Port)
 		server.ehlo()
 		server.starttls()
 		server.login(gmail_sender, gmail_passwd)
