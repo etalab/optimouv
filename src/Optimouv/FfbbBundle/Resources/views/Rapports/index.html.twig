@@ -44,7 +44,20 @@
                                             <td> {{ infoRapport.nom }} </td>
                                             <td> {{ infoRapport.typeAction }} </td>
                                             <td> {{ infoRapport.dateCreation.date|date('d/m/Y') }} </td>
-                                            <td> {{ infoRapport.statut }} </td>
+
+                                            {% if infoRapport.statut  == -1 %}
+                                                <td> Erreur </td>
+                                            {% elseif infoRapport.statut  == 0 %}
+                                                <td> En attente </td>
+                                            {% elseif infoRapport.statut == 1 %}
+                                                <td> En cours </td>
+                                            {% elseif infoRapport.statut  == 2 %}
+                                                <td> Succès</td>
+                                            {% else %}
+                                                <td> Inconnu </td>
+                                            {% endif %}
+
+
                                             <td>
 
                                                 {%  if (infoRapport.typeAction == "barycentre") or (infoRapport.typeAction == "meilleurLieu")  or (infoRapport.typeAction == "terrainNeutre") %}
