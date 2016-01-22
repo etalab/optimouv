@@ -21,5 +21,6 @@
 
 #/app/DoctrineMigrations/*
 
-# Python cache files
+# Python config and cache files
+/python/config.py
 /python/__pycache__/
