@@ -29,12 +29,24 @@ class RapportsController extends Controller
             array_push($idGroupes, $groupesTemp[$i]["id"]);
         }
 
+
+
         # récupérer tous les rapports de tous les groupes
         $infoRapports = $em->getRepository('FfbbBundle:Rapport')->getRapportsParIdGroupe($idGroupes);
 
+        # récupérer l'id du rapport (résultat)
+        # BUG sur Symphony quand on récupère le statut directement en utilisant le repository du rapport
+        for($i=0; $i<count($infoRapports); $i++){
+            $idResultat = $infoRapports[$i]["id"];
+            $statut  = $this->get('service_poules')->getStatut($idResultat);
+            # ajouter le statut dans les infos retournées sur le front
+            $infoRapports[$i]["statut"] = $statut[0]["statut"];
+
+        }
+
 
 //        error_log("\n Controller: Listes, Function: indexAction, datetime: ".$dateTimeNow
-//            ."\n infoRapports: ".print_r($infoRapports, true), 3, $this->error_log_path);
+//            ."\n infoRapports: ".print_r($infoRapports, true), 3, $this->error_log_path );
 
         return $this->render('FfbbBundle:Rapports:index.html.twig', [
             "infoRapports" => $infoRapports

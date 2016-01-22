@@ -28,6 +28,7 @@
                                         <th>Nom du rapport</th>
                                         <th>Type du rapport</th>
                                         <th>Date de création</th>
+                                        <th>Statut</th>
                                         <th>Action</th>
 
                                     </tr>
@@ -43,6 +44,7 @@
                                             <td> {{ infoRapport.nom }} </td>
                                             <td> {{ infoRapport.typeAction }} </td>
                                             <td> {{ infoRapport.dateCreation.date|date('d/m/Y') }} </td>
+                                            <td> {{ infoRapport.statut }} </td>
                                             <td>
 
                                                 {%  if (infoRapport.typeAction == "barycentre") or (infoRapport.typeAction == "meilleurLieu")  or (infoRapport.typeAction == "terrainNeutre") %}
