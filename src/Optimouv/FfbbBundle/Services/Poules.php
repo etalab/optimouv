@@ -106,12 +106,53 @@ class Poules{
             # créer une objet PDO
             $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
         } catch (PDOException $e) {
-            error_log("\n Service: Listes, Function: getPdo, datetime: ".$dateTimeNow
+            error_log("\n Service: Poules, Function: getPdo, datetime: ".$dateTimeNow
                 ."\n PDOException: ".print_r($e, true), 3, $this->error_log_path);
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
 
         return $bdd;
     }
+
+    # retourner le statut de la tache
+    public function getStatut($idResultat){
+        # récupérer les parametres de connexion
+        $dbname = $this->database_name;
+        $dbuser = $this->database_user;
+        $dbpwd = $this->database_password;
+
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+        try {
+            # obtenir l'objet PDO
+            $bdd = $this->getPdo();
+
+            if (!$bdd) {
+                //erreur de connexion
+                error_log("\n erreur récupération de l'objet PDO, Service: Poules, Function: sauvegarderParamsEnDB, datetime: ".$dateTimeNow, 3, $this->error_log_path);
+                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+            }
+
+
+            # insérer dans la base de données
+            $sql = "SELECT statut from rapport where id=:id;";
+            $stmt = $bdd->prepare($sql);
+            $stmt->bindParam(':id', $idResultat);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $result;
+
+        } catch (PDOException $e) {
+            error_log("\n Service: Poules, Function: getPdo, datetime: ".$dateTimeNow
+                ."\n PDOException: ".print_r($e, true), 3, $this->error_log_path);
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
+
+        return $bdd;
+    }
+
 
 }
