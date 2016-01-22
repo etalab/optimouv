@@ -220,22 +220,39 @@ def create_encounters_from_pool_distribution(poolDistribution):
 						# calculate distance and travel time
 						sql = "select distance, duree from trajet where depart=%s and destination=%s" %(member1, member2)
 # 						logging.debug("  sql: %s" %(sql))
-						resultsSql = db.fetchone_multi(sql)
-# 						logging.debug("  resultsSql: %s" %(resultsSql, ))
+						distance, travelTime = db.fetchone_multi(sql)
 
-						sql = "select participants from entite where id=%s" %member2
-						resultSql2 = db.fetchone(sql)
+						sql = "select participants, nom, ville, code_postal from entite where id=%s" %member1
+						nbrParticipants1, name1, city1, postalCode1 = db.fetchone_multi(sql)
+
+						sql = "select participants, nom, ville, code_postal from entite where id=%s" %member2
+						nbrParticipants2, name2, city2, postalCode2 = db.fetchone_multi(sql)
 		
-						distanceAllParticipants = int(resultsSql[0]) * int(resultSql2)
+						distanceAllParticipants = int(distance) * int(nbrParticipants1)
 		
-# 						encounters[pool][encounterNbr] = {"departTeam": member1, "destinationTeam": member2, 
-# 														"distance": resultsSql[0], "travelTime": resultsSql[1],
-# 														"participantsNbr": resultSql2, "distanceAllParticipants": distanceAllParticipants
-# 														}
-						encounters[pool][encounterNbr] = {"equipeDepart": member1, "equipeDestination": member2, 
-														"distance": resultsSql[0], "duree": resultsSql[1],
-														"nbrParticipants": resultSql2, "distanceTousParticipants": distanceAllParticipants
+						# Escape single apostrophe for name and city
+						name1 = name1.replace("'", u"\'")
+						logging.debug("  name1: %s" %(name1))
+						name2 = name2.replace("'", u"\'")
+						logging.debug("  name2: %s" %(name2))
+						city1 = city1.replace("'", u"\'")
+						logging.debug("  city1: %s" %(city1))
+						city2 = city2.replace("'", u"\'")
+						logging.debug("  city2: %s" %(city2))
+						
+						encounter = {"equipeDepartId": member1, "equipeDestinationId": member2, 
+														"distance": distance, "duree": travelTime,
+														"nbrParticipants": nbrParticipants1, "distanceTousParticipants": distanceAllParticipants,
+														"equipeDepartNom": name1, "equipeDestinationNom": name2,
+														"equipeDepartVille": city1, "equipeDestinationVille": city2,
+														"equipeDepartCodePostal": postalCode1, "equipeDestinationCodePostal": postalCode2
+														
 														}
+						
+						logging.debug("  encounter: %s" %(json.dumps(encounter)))
+						
+
+						encounters[pool][encounterNbr] = encounter
 		return encounters
 
 	except Exception as e:
