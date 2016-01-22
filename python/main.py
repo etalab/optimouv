@@ -184,9 +184,11 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 				
 		logging.debug("tempPools: \n%s" %tempPools)
 
+		firstPoolName = ord('A')
 		# obtain group distribution per pool
 		for pool in range(poolNbr):
-			poolDistribution[pool+1] = tempPools[pool]
+# 			poolDistribution[pool+1] = tempPools[pool]
+			poolDistribution[ chr(firstPoolName + pool) ] = tempPools[pool]
 	
 		# calculate efficiency of the algorithm
 		efficiency = round((performanceCounter*100/teamNbr/teamNbr), 2)
@@ -231,14 +233,27 @@ def create_encounters_from_pool_distribution(poolDistribution):
 						distanceAllParticipants = int(distance) * int(nbrParticipants1)
 		
 						# Escape single apostrophe for name and city
-						name1 = name1.replace("'", u"\'")
-						logging.debug("  name1: %s" %(name1))
-						name2 = name2.replace("'", u"\'")
-						logging.debug("  name2: %s" %(name2))
-						city1 = city1.replace("'", u"\'")
-						logging.debug("  city1: %s" %(city1))
-						city2 = city2.replace("'", u"\'")
-						logging.debug("  city2: %s" %(city2))
+# 						name1 = name1.replace("'", u"\\'")
+						name1 = name1.replace("'", u"")
+# 						logging.debug("  name1: %s" %(name1))
+# 						name2 = name2.replace("'", u"\\'")
+						name2 = name2.replace("'", u"")
+# 						logging.debug("  name2: %s" %(name2))
+# 						city1 = city1.replace("'", u"\\'")
+						city1 = city1.replace("'", u"")
+# 						logging.debug("  city1: %s" %(city1))
+# 						city2 = city2.replace("'", u"\\'")
+						city2 = city2.replace("'", u"")
+# 						logging.debug("  city2: %s" %(city2))
+						
+						
+						
+						
+						
+						
+						
+						
+						
 						
 						encounter = {"equipeDepartId": member1, "equipeDestinationId": member2, 
 														"distance": distance, "duree": travelTime,
