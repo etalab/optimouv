@@ -1434,7 +1434,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			results["contraintsExiste"] = 1
 # 			results["params"]["contraintsExiste"] = 1
 		else:
-			results["contraintsExiste"] = 1
+			results["contraintsExiste"] = 0
 # 			results["params"]["contraintsExiste"] = 0
 
 		
@@ -1605,6 +1605,10 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		
 		# process only if there is a reference
 		if returnPoolDistributionRef["status"] == "yes":
+			
+			# add boolean to results
+			results["refExiste"] = 1
+			
 			poolDistributionRef = returnPoolDistributionRef["data"]
 			logging.debug(" poolDistributionRef: \n%s" %poolDistributionRef)
 
@@ -1639,6 +1643,9 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			sumInfoRef = get_sum_info_from_pool_details(poolDetailsRef)
 			results["scenarioRef"]["estimationGenerale"] = sumInfoRef
 			logging.debug(" sumInfoRef: \n%s" %sumInfoRef)
+		else:
+			# add boolean to results
+			results["refExiste"] = 0
 
 			
 # 		logging.debug(" results: \n%s" %results)
@@ -1840,6 +1847,10 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		
 		# process only if there is a reference
 		if returnPoolDistributionRef["status"] == "yes":
+			
+			# add boolean to results
+			results["refExiste"] = 1
+
 			poolDistributionRef = returnPoolDistributionRef["data"]
 			logging.debug(" poolDistributionRef: \n%s" %poolDistributionRef)
 
@@ -1874,6 +1885,10 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			sumInfoRef = get_sum_info_from_pool_details(poolDetailsRef)
 			results["scenarioRef"]["estimationGenerale"] = sumInfoRef
 			logging.debug(" sumInfoRef: \n%s" %sumInfoRef)
+		else:
+			# add boolean to results
+			results["refExiste"] = 0
+
 
 		return results
 	except Exception as e:
