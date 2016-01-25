@@ -1607,6 +1607,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		if returnPoolDistributionRef["status"] == "yes":
 			
 			# add boolean to results
+# 			results["params"]["refExiste"] = 1
 			results["refExiste"] = 1
 			
 			poolDistributionRef = returnPoolDistributionRef["data"]
@@ -1645,6 +1646,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			logging.debug(" sumInfoRef: \n%s" %sumInfoRef)
 		else:
 			# add boolean to results
+# 			results["params"]["refExiste"] = 0
 			results["refExiste"] = 0
 
 			
@@ -1872,6 +1874,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		if returnPoolDistributionRef["status"] == "yes":
 			
 			# add boolean to results
+# 			results["params"]["refExiste"] = 1
 			results["refExiste"] = 1
 
 			poolDistributionRef = returnPoolDistributionRef["data"]
@@ -1910,6 +1913,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			logging.debug(" sumInfoRef: \n%s" %sumInfoRef)
 		else:
 			# add boolean to results
+# 			results["params"]["refExiste"] = 0
 			results["refExiste"] = 0
 
 
