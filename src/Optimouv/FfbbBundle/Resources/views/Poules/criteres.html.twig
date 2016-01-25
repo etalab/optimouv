@@ -159,50 +159,46 @@
 
 
 
-                             <fieldset id="additional-field-model">
-                                 <div class="form-group">
+                             {#<fieldset id="additional-field-model">#}
+                                 {#<div class="form-group">#}
 
-                                     <div class="col-md-6 col-sm-12">
-                                         <div class="input-group">
-                                             <input type="text" value="Interdiction 1">
+                                     {#<div class="col-md-6 col-sm-12">#}
+                                         {#<div class="input-group">#}
+                                             {#<input type="text" value="Interdiction 1">#}
 
-                                             <select class="removeDuplication">
+                                             {#<select class="removeDuplication">#}
 
-                                                 {%  for detailsVille in detailsVilles %}
-                                                     <option value={{ detailsVille.id}}>{{ detailsVille.ville }}</option>
-                                                 {% endfor %}
-
-
-                                             </select>
-                                             <select>
-                                                 {%  for detailsVille in detailsVilles %}
-                                                     <option value={{ detailsVille.id}}>{{ detailsVille.ville }}</option>
-                                                 {% endfor %}
-                                             </select>
-
-                                         </div>
-
-                                     </div>
+                                                 {#{%  for detailsVille in detailsVilles %}#}
+                                                     {#<option value={{ detailsVille.id}}>{{ detailsVille.ville }}</option>#}
+                                                 {#{% endfor %}#}
 
 
+                                             {#</select>#}
+                                             {#<select>#}
+                                                 {#{%  for detailsVille in detailsVilles %}#}
+                                                     {#<option value={{ detailsVille.id}}>{{ detailsVille.ville }}</option>#}
+                                                 {#{% endfor %}#}
+                                             {#</select>#}
 
+                                         {#</div>#}
 
+                                     {#</div>#}
 
+                                     {#<div class="col-md-4 col-xs-7 text-right">#}
+                                         {#<label class="col-xs-12 control-label" for="field-c"><br></label>#}
+                                         {#<a href="javascript:void(0);" class="btn btn-warning remove-this-field" style="display: none;">#}
+                                             {#<i class="fa fa-remove"></i>#}
+                                             {#<span class="hidden-xs"> Supprimer </span>#}
+                                         {#</a>#}
+                                         {#<a href="javascript:void(0);" class="btn btn-success create-new-field" style="display: inline-block;">#}
+                                             {#<i class="fa fa-plus"></i>#}
+                                             {#<span class="hidden-xs"> Dupliquer </span>#}
+                                         {#</a>#}
+                                     {#</div>#}
+                                 {#</div>#}
+                             {#</fieldset>#}
 
-                                     <div class="col-md-4 col-xs-7 text-right">
-                                         <label class="col-xs-12 control-label" for="field-c"><br></label>
-                                         <a href="javascript:void(0);" class="btn btn-warning remove-this-field" style="display: none;">
-                                             <i class="fa fa-remove"></i>
-                                             <span class="hidden-xs"> Supprimer </span>
-                                         </a>
-                                         <a href="javascript:void(0);" class="btn btn-success create-new-field" style="display: inline-block;">
-                                             <i class="fa fa-plus"></i>
-                                             <span class="hidden-xs"> Dupliquer </span>
-                                         </a>
-                                     </div>
-                                 </div>
-                             </fieldset>
-
+                             <label id="btnAjouteInterdiction" class="btn btn-primary pull-left"> Ajouter</label>
 
 
 
@@ -282,10 +278,7 @@
                  function typePlateau() {
 
                      var plateau = document.getElementById("typeRencontre3").checked;
-
                      if (plateau) {
-
-
                          document.getElementById("nbrJournee").style.display = "block";
                          document.getElementById("nbrRencontre").style.display = "block";
                          document.getElementById("ajoutContrainte").style.display = "block";
@@ -307,7 +300,6 @@
                  function typeAller() {
 
                      var aller = document.getElementById("typeRencontre2").checked;
-
                      if (aller) {
                          document.getElementById("nbrJournee").style.display = "none";
                          document.getElementById("nbrRencontre").style.display = "none";
@@ -334,6 +326,15 @@
                      "class_create": ".create-new-field"
                  });
 
+
+                 // javascript pour des contraintes
+                 // JS pour ajouter des contraintes d'interdictions
+                 $("#btnAjouteInterdiction").click(function(){
+                     console.log("test");
+                 });
+
+
+
                  // javascript quand on clique sur le bouton 'lancer le calcul'
                  $(document).ready(function(){
                      $("#lancerCalculBtn").click(function(){
@@ -347,20 +348,19 @@
                          var idGroupe = {{ idGroupe }};
                          console.log("idGroupe : " + idGroupe);
 
-
                          // récupérer le nombre de poules
                          var poulesNbr = $("#inputPoulesNbr").val();
                          console.log("poulesNbr : " + poulesNbr );
 
                          // controler le champ obligatoire (le nombre de poules)
-                        if( (poulesNbr == "") || (parseInt(poulesNbr)<2) ){
+                         if( (poulesNbr == "") || (parseInt(poulesNbr)<2) ){
                             alert("Veuillez vérifier que le nombre de poules donné est valide");
-                        }
+                         }
                          else{
                             alert("Le calcul est en cours de traitement");
 
                             // agréger les input params
-                            var inputParams = {typeMatch: typeMatch, poulesNbr: poulesNbr, idGroupe: idGroupe};
+                            var inputParams = {typeMatch: typeMatch, poulesNbr: poulesNbr, idGroupe: idGroupe  };
                             console.log("inputParams : " + JSON.stringify(inputParams));
 
 
@@ -387,9 +387,6 @@
                                      console.log('ERRORS: ' + textStatus);
                                  }
                              });
-
-
-
 
                         }
 
