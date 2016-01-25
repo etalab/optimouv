@@ -1431,8 +1431,13 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		# based on phantom flag, save to results the possibility to make variation of team number per pool
 		if flagPhantom:
 			results["params"]["varEquipeParPoulePossible"] = 1
+			results["params"]["varEquipeParPouleProposition"] = []
 		else:
 			results["params"]["varEquipeParPoulePossible"] = 0
+			maxVarTeamNbrPerPool = poolSize - 2
+			results["params"]["varEquipeParPouleProposition"] = list(range(1, maxVarTeamNbrPerPool+1 ))
+
+
 
 		logging.debug(" ########################################## ROUND TRIP　MATCH ###############################################")
 		iter = config.INPUT.Iter
@@ -1709,8 +1714,11 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		# based on phantom flag, save to results the possibility to make variation of team number per pool
 		if flagPhantom:
 			results["params"]["varEquipeParPoulePossible"] = 1
+			results["params"]["varEquipeParPouleProposition"] = []
 		else:
 			results["params"]["varEquipeParPoulePossible"] = 0
+			maxVarTeamNbrPerPool = poolSize - 2
+			results["params"]["varEquipeParPouleProposition"] = list(range(1, maxVarTeamNbrPerPool+1 ))
 
 
 		logging.debug(" ########################################## ONE WAY　MATCH ###############################################")
