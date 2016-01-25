@@ -1395,7 +1395,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 	try:
 		results = {"typeMatch": "allerRetour", "nombrePoule": poolNbr, "taillePoule": poolSize, 
 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
-					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
+					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, "params": {}
 					}
 # 		results = {"params": {"typeMatch": "allerRetour", "nombrePoule": poolNbr, "taillePoule": poolSize, 
 # 							"interdictionsIds" : {}, 
@@ -1424,6 +1424,9 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 # 			results["params"]["repartitionsHomogenesNoms"][teamType] =  prohibitionDetail["names"]
 # 			results["params"]["repartitionsHomogenesVilles"][teamType] =  prohibitionDetail["cities"]
 # 		logging.debug(" results: %s" %(results,))
+
+		# save constraint variation of team number per pool
+		results["params"]["varEquipeParPouleChoisi"] = varTeamNbrPerPool
 
 		logging.debug(" ########################################## ROUND TRIP　MATCH ###############################################")
 		iter = config.INPUT.Iter
@@ -1663,7 +1666,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 	try:
 		results = {"typeMatch": "allerSimple", "nombrePoule": poolNbr, "taillePoule": poolSize, 
 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
-					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
+					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, "params": {}
 				}
 
 # 		results = {"params": {"typeMatch": "allerSimple", "nombrePoule": poolNbr, "taillePoule": poolSize, 
@@ -1693,6 +1696,10 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 # 			results["params"]["repartitionsHomogenesNoms"][teamType] =  prohibitionDetail["names"]
 # 			results["params"]["repartitionsHomogenesVilles"][teamType] =  prohibitionDetail["cities"]
 # 		logging.debug(" results: %s" %(results,))
+
+		# save constraint variation of team number per pool
+		results["params"]["varEquipeParPouleChoisi"] = varTeamNbrPerPool
+
 
 		logging.debug(" ########################################## ONE WAY　MATCH ###############################################")
 		iter = config.INPUT.Iter
