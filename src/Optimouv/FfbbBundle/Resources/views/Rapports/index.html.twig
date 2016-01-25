@@ -24,10 +24,11 @@
                                 <table class="table table-striped table-hover table-bordered table-fixed" id="tableRapport" >
                                     <thead>
                                     <tr>
-                                        <th>Identifiant du rapport</th>
+                                        <th>No</th>
                                         <th>Nom du rapport</th>
                                         <th>Type du rapport</th>
                                         <th>Date de création</th>
+                                        <th>Statut</th>
                                         <th>Action</th>
 
                                     </tr>
@@ -39,21 +40,37 @@
                                     {%  for infoRapport in infoRapports %}
                                         <tr id="{{ infoRapport.id }}">
 
-                                            <td> {{ infoRapport.id }} </td>
+                                            <td> {{ loop.index }} </td>
                                             <td> {{ infoRapport.nom }} </td>
                                             <td> {{ infoRapport.typeAction }} </td>
                                             <td> {{ infoRapport.dateCreation.date|date('d/m/Y') }} </td>
+
+                                            {% if infoRapport.statut  == -1 %}
+                                                <td> Erreur </td>
+                                            {% elseif infoRapport.statut  == 0 %}
+                                                <td> En attente </td>
+                                            {% elseif infoRapport.statut == 1 %}
+                                                <td> En cours </td>
+                                            {% elseif infoRapport.statut  == 2 %}
+                                                <td> Succès</td>
+                                            {% else %}
+                                                <td> Inconnu </td>
+                                            {% endif %}
+
+
                                             <td>
 
                                                 {%  if (infoRapport.typeAction == "barycentre") or (infoRapport.typeAction == "meilleurLieu")  or (infoRapport.typeAction == "terrainNeutre") %}
-                                                    <button id="btn_rejouer_{{ infoRapport.id  }}"  type="submit" class="btn btn-info">Rejouer</button>
+                                                    <button id="btn_rejouer_{{ infoRapport.id  }}"  type="submit" class="btn btn-info">Consulter</button>
 
-                                                {% else %}
+                                                {% elseif (infoRapport.typeAction == "exclusion") %}
 
                                                     <form action="{{ path('ffbb_exclusion', {'idGroupe':infoRapport.idGroupe}) }}" method="POST">
-                                                        <button id="btn_rejouer_{{ infoRapport.id  }}"  type="submit" class="btn btn-info">Rejouer</button>
+                                                        <button id="btn_rejouer_{{ infoRapport.id  }}"  type="submit" class="btn btn-info">Consulter</button>
                                                         <input name="valeurExclusion" id="valeurExclusion_{{ infoRapport.id }}" type="hidden" value={{ infoRapport.valeurExclusion }}>
                                                     </form>
+                                                {% else %}
+                                                    <button id="btn_rejouer_{{ infoRapport.id  }}"  type="button" class="btn btn-info">Consulter</button>
 
                                                 {% endif %}
 

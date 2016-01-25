@@ -258,9 +258,6 @@ class PoulesController extends Controller
 
         # récupérer la liste des noms et des ids de villes
         $detailsVilles = $em->getRepository('FfbbBundle:Entite')->getEntities($villes);
-//        error_log("\n detailsVilles : ".print_r($detailsVilles , true), 3, "error_log_optimouv.txt");
-
-
 
         return $this->render('FfbbBundle:Poules:criteres.html.twig', array(
 
@@ -276,6 +273,29 @@ class PoulesController extends Controller
         ));
     }
 
+    public function lancerCalculAction()
+    {
+
+        # sauvegarder les params dans la DB
+        $retour = $this->get('service_poules')->sauvegarderParamsEnDB();
+
+        $idParams = $retour["data"];
+
+
+        # envoyer l'id du rapport (params) à  RabbitMQ
+        $this->get('old_sound_rabbit_mq.poule_producer')->publish($idParams);
+
+//        error_log("\n id params: ".print_r($idParams , true), 3, "error_log_optimouv.txt");
+
+        return new JsonResponse(array(
+            "success" => true,
+            "msg" => ""
+        ));
+
+    }
+
+
+
     public function lancerGroupeAction($idGroupe)
     {
         # obtenir entity manager
@@ -283,7 +303,6 @@ class PoulesController extends Controller
 
         $coordonneesVille = $this->get('service_rencontres')->index($idGroupe);
         $coordonneesVille = array_merge($coordonneesVille[0], $coordonneesVille[1]);
-
 
         $nomsVilles = $this->get('service_rencontres')->nomsVilles($idGroupe);
 
@@ -293,6 +312,13 @@ class PoulesController extends Controller
 
         $nomGroupe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getNom();
 
+        # récupérer les villes qui correspondent à un groupe
+        $villes =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getEquipes();
+        $villes = explode(",", $villes);
+
+        # récupérer la liste des noms et des ids de villes
+        $detailsVilles = $em->getRepository('FfbbBundle:Entite')->getEntities($villes);
+
         return $this->render('FfbbBundle:Poules:criteres.html.twig', array(
 
             'coordonneesVille' => $coordonneesVille,
@@ -301,6 +327,7 @@ class PoulesController extends Controller
             'idListe' => $idListe,
             'nomListe' => $nomListe,
             'nomGroupe' => $nomGroupe,
+            'detailsVilles' => $detailsVilles,
 
         ));
     }

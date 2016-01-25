@@ -28,6 +28,7 @@ def show_exception_traceback():
 	print("Error Detail: %s " %exc_value)
 	print("Filename: %s" %fname)
 	print("Line number: %s " %exc_tb.tb_lineno)
+	sys.exit()
 
 
 """
@@ -184,9 +185,11 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 				
 		logging.debug("tempPools: \n%s" %tempPools)
 
+		firstPoolName = ord('A')
 		# obtain group distribution per pool
 		for pool in range(poolNbr):
-			poolDistribution[pool+1] = tempPools[pool]
+# 			poolDistribution[pool+1] = tempPools[pool]
+			poolDistribution[ chr(firstPoolName + pool) ] = tempPools[pool]
 	
 		# calculate efficiency of the algorithm
 		efficiency = round((performanceCounter*100/teamNbr/teamNbr), 2)
@@ -220,22 +223,40 @@ def create_encounters_from_pool_distribution(poolDistribution):
 						# calculate distance and travel time
 						sql = "select distance, duree from trajet where depart=%s and destination=%s" %(member1, member2)
 # 						logging.debug("  sql: %s" %(sql))
-						resultsSql = db.fetchone_multi(sql)
-# 						logging.debug("  resultsSql: %s" %(resultsSql, ))
+						distance, travelTime = db.fetchone_multi(sql)
 
-						sql = "select participants from entite where id=%s" %member2
-						resultSql2 = db.fetchone(sql)
+						sql = "select participants, nom, ville, code_postal from entite where id=%s" %member1
+						nbrParticipants1, name1, city1, postalCode1 = db.fetchone_multi(sql)
+
+						sql = "select participants, nom, ville, code_postal from entite where id=%s" %member2
+						nbrParticipants2, name2, city2, postalCode2 = db.fetchone_multi(sql)
 		
-						distanceAllParticipants = int(resultsSql[0]) * int(resultSql2)
+						distanceAllParticipants = int(distance) * int(nbrParticipants1)
 		
-# 						encounters[pool][encounterNbr] = {"departTeam": member1, "destinationTeam": member2, 
-# 														"distance": resultsSql[0], "travelTime": resultsSql[1],
-# 														"participantsNbr": resultSql2, "distanceAllParticipants": distanceAllParticipants
-# 														}
-						encounters[pool][encounterNbr] = {"equipeDepart": member1, "equipeDestination": member2, 
-														"distance": resultsSql[0], "duree": resultsSql[1],
-														"nbrParticipants": resultSql2, "distanceTousParticipants": distanceAllParticipants
+						# Escape single apostrophe for name and city
+						name1 = name1.replace("'", u"''")
+# 						name1 = name1.replace("'", u"")
+# 						logging.debug("  name1: %s" %(name1))
+						name2 = name2.replace("'", u"''")
+# 						name2 = name2.replace("'", u"")
+# 						logging.debug("  name2: %s" %(name2))
+						city1 = city1.replace("'", u"''")
+# 						city1 = city1.replace("'", u"")
+# 						logging.debug("  city1: %s" %(city1))
+						city2 = city2.replace("'", u"''")
+# 						city2 = city2.replace("'", u"")
+# 						logging.debug("  city2: %s" %(city2))
+
+						encounter = {"equipeDepartId": member1, "equipeDestinationId": member2, 
+														"distance": distance, "duree": travelTime,
+														"nbrParticipants": nbrParticipants1, "distanceTousParticipants": distanceAllParticipants,
+														"equipeDepartNom": name1, "equipeDestinationNom": name2,
+														"equipeDepartVille": city1, "equipeDestinationVille": city2,
+														"equipeDepartCodePostal": postalCode1, "equipeDestinationCodePostal": postalCode2
+														
 														}
+						encounters[pool][encounterNbr] = encounter
+
 		return encounters
 
 	except Exception as e:
@@ -257,9 +278,9 @@ def create_pool_details_from_encounters(encounters, poolDistribution):
 			# get sum of participants for each team member
 			for member in members:
 				sql = "select participants from entite where id=%s" %member
-				resultSql = db.fetchone(sql)
+				nbrParticipants = db.fetchone(sql)
 # 				poolDetails[pool]["totalParticipants"] += int(resultSql)
-				poolDetails[pool]["nbrParticipantsTotal"] += int(resultSql)
+				poolDetails[pool]["nbrParticipantsTotal"] += int(nbrParticipants)
 		
 			# get sum of other details
 			for encounterNbr, encounterDetails in encountersDetails.items():
@@ -1357,6 +1378,13 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		iter = config.INPUT.Iter
 		logging.debug(" iter: %s" %iter)
 		
+		# add status constraints in the result
+		if statusConstraints:
+			results["contraintsExiste"] = 1
+		else:
+			results["contraintsExiste"] = 0
+
+		
 		logging.debug("")
 		logging.debug(" ####################### RESULT OPTIMAL WITHOUT CONSTRAINT #############################################")
 
@@ -1385,7 +1413,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		# get encounter list from pool distribution dict
 		encounters_OptimalWithoutConstraint = create_encounters_from_pool_distribution(poolDistribution_OptimalWithoutConstraint)
 		results["scenarioOptimalSansContrainte"]["rencontreDetails"] = encounters_OptimalWithoutConstraint
-		logging.debug(" encounters_OptimalWithoutConstraint: \n%s" %encounters_OptimalWithoutConstraint)
+# 		logging.debug(" encounters_OptimalWithoutConstraint: \n%s" %encounters_OptimalWithoutConstraint)
  		
 		# get pool details from encounters
 		poolDetails_OptimalWithoutConstraint = create_pool_details_from_encounters(encounters_OptimalWithoutConstraint, poolDistribution_OptimalWithoutConstraint)
@@ -1425,7 +1453,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		# get encounter list from pool distribution dict
 		encounters_EquitableWithoutConstraint = create_encounters_from_pool_distribution(poolDistribution_EquitableWithoutConstraint)
 		results["scenarioEquitableSansContrainte"]["rencontreDetails"] = encounters_EquitableWithoutConstraint
-		logging.debug(" encounters_EquitableWithoutConstraint: \n%s" %encounters_EquitableWithoutConstraint)
+# 		logging.debug(" encounters_EquitableWithoutConstraint: \n%s" %encounters_EquitableWithoutConstraint)
 
 		# get pool details from encounters
 		poolDetails_EquitableWithoutConstraint = create_pool_details_from_encounters(encounters_EquitableWithoutConstraint, poolDistribution_EquitableWithoutConstraint)
@@ -1466,7 +1494,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			# get encounter list from pool distribution dict
 			encounters_OptimalWithConstraint = create_encounters_from_pool_distribution(poolDistribution_OptimalWithConstraint)
 			results["scenarioOptimalAvecContrainte"]["rencontreDetails"] = encounters_OptimalWithConstraint
-			logging.debug(" encounters_OptimalWithoutConstraint: \n%s" %encounters_OptimalWithoutConstraint)
+# 			logging.debug(" encounters_OptimalWithoutConstraint: \n%s" %encounters_OptimalWithoutConstraint)
 			
 			# get pool details from encounters
 			poolDetails_OptimalWithConstraint = create_pool_details_from_encounters(encounters_OptimalWithConstraint, poolDistribution_OptimalWithConstraint)
@@ -1506,7 +1534,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			# get encounter list from pool distribution dict
 			encounters_EquitableWithConstraint = create_encounters_from_pool_distribution(poolDistribution_EquitableWithConstraint)
 			results["scenarioEquitableAvecContrainte"]["rencontreDetails"] = encounters_EquitableWithConstraint
-			logging.debug(" encounters_EquitableWithConstraint: %s" %encounters_EquitableWithConstraint)
+# 			logging.debug(" encounters_EquitableWithConstraint: %s" %encounters_EquitableWithConstraint)
 	
 			# get pool details from encounters
 			poolDetails_EquitableWithConstraint = create_pool_details_from_encounters(encounters_EquitableWithConstraint, poolDistribution_EquitableWithConstraint)
@@ -1560,7 +1588,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			logging.debug(" sumInfoRef: \n%s" %sumInfoRef)
 
 			
-		logging.debug(" results: \n%s" %results)
+# 		logging.debug(" results: \n%s" %results)
 
 		return results 
 	except Exception as e:
@@ -1579,6 +1607,12 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		logging.debug(" ########################################## ONE WAY　MATCH ###############################################")
 		iter = config.INPUT.Iter
 		logging.debug(" iter: %s" %iter)
+		
+		# add status constraints in the result
+		if statusConstraints:
+			results["contraintsExiste"] = 1
+		else:
+			results["contraintsExiste"] = 0
 		
 		logging.debug("")
 		logging.debug(" ####################### RESULT OPTIMAL WITHOUT CONSTRAINT #############################################")
@@ -1608,7 +1642,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		# get encounter list from pool distribution dict
 		encounters_OptimalWithoutConstraint = create_encounters_from_pool_distribution(poolDistribution_OptimalWithoutConstraint)
 		results["scenarioOptimalSansContrainte"]["rencontreDetails"] = encounters_OptimalWithoutConstraint
-		logging.debug(" encounters_OptimalWithoutConstraint: \n%s" %encounters_OptimalWithoutConstraint)
+# 		logging.debug(" encounters_OptimalWithoutConstraint: \n%s" %encounters_OptimalWithoutConstraint)
  		
 		# get pool details from encounters
 		poolDetails_OptimalWithoutConstraint = create_pool_details_from_encounters(encounters_OptimalWithoutConstraint, poolDistribution_OptimalWithoutConstraint)
@@ -1647,7 +1681,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		# get encounter list from pool distribution dict
 		encounters_EquitableWithoutConstraint = create_encounters_from_pool_distribution(poolDistribution_EquitableWithoutConstraint)
 		results["scenarioEquitableSansContrainte"]["rencontreDetails"] = encounters_EquitableWithoutConstraint
-		logging.debug(" encounters_EquitableWithoutConstraint: \n%s" %encounters_EquitableWithoutConstraint)
+# 		logging.debug(" encounters_EquitableWithoutConstraint: \n%s" %encounters_EquitableWithoutConstraint)
 
 		# get pool details from encounters
 		poolDetails_EquitableWithoutConstraint = create_pool_details_from_encounters(encounters_EquitableWithoutConstraint, poolDistribution_EquitableWithoutConstraint)
@@ -1688,7 +1722,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			# get encounter list from pool distribution dict
 			encounters_OptimalWithConstraint = create_encounters_from_pool_distribution(poolDistribution_OptimalWithConstraint)
 			results["scenarioOptimalAvecContrainte"]["rencontreDetails"] = encounters_OptimalWithConstraint
-			logging.debug(" encounters_OptimalWithoutConstraint: \n%s" %encounters_OptimalWithoutConstraint)
+# 			logging.debug(" encounters_OptimalWithoutConstraint: \n%s" %encounters_OptimalWithoutConstraint)
 			
 			# get pool details from encounters
 			poolDetails_OptimalWithConstraint = create_pool_details_from_encounters(encounters_OptimalWithConstraint, poolDistribution_OptimalWithConstraint)
@@ -1728,7 +1762,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			# get encounter list from pool distribution dict
 			encounters_EquitableWithConstraint = create_encounters_from_pool_distribution(poolDistribution_EquitableWithConstraint)
 			results["scenarioEquitableAvecContrainte"]["rencontreDetails"] = encounters_EquitableWithConstraint
-			logging.debug(" encounters_EquitableWithConstraint: %s" %encounters_EquitableWithConstraint)
+# 			logging.debug(" encounters_EquitableWithConstraint: %s" %encounters_EquitableWithConstraint)
 	
 			# get pool details from encounters
 			poolDetails_EquitableWithConstraint = create_pool_details_from_encounters(encounters_EquitableWithConstraint, poolDistribution_EquitableWithConstraint)
@@ -1829,7 +1863,7 @@ def send_email_to_user(userId, resultId):
 		gmail_sender = config.EMAIL.Account
 		gmail_passwd = config.EMAIL.Password
 		
-		server = smtplib.SMTP('smtp.gmail.com', 587)
+		server = smtplib.SMTP(config.EMAIL.Server, config.EMAIL.Port)
 		server.ehlo()
 		server.starttls()
 		server.login(gmail_sender, gmail_passwd)
@@ -2165,9 +2199,11 @@ def callback(ch, method, properties, body):
 		logging.debug("distanceInitOneWay: %s" %(distanceInitOneWay,))
 
 		logging.debug("############################################# OPTIMIZE POOL #################################################")
-		if launchType == "match_aller_retour":
-			results = optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId )
-		elif launchType == "match_aller_simple":
+# 		if launchType == "match_aller_retour":
+		if launchType == "allerRetour":
+			results = optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId)
+# 		elif launchType == "match_aller_simple":
+		elif launchType == "allerSimple":
 			results = optimize_pool_one_way_match(P_InitMat_oneWaywithoutConstraint, P_InitMat_oneWayWithConstraint, D_Mat_oneWay, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId)
 		elif launchType == "plateau":
 			results = optimize_pool_plateau_match()
@@ -2222,7 +2258,7 @@ def main():
 		credentials = pika.PlainCredentials(config.MQ.User, config.MQ.Password)
 		connection = pika.BlockingConnection(pika.ConnectionParameters(host=config.MQ.Host, credentials=credentials))
 		channel = connection.channel()
-		channel.queue_declare(queue=config.MQ.Queue)
+# 		channel.queue_declare(queue=config.MQ.Queue)
 		channel.queue_bind(exchange=config.MQ.Exchange, queue=config.MQ.Queue)
 		channel.basic_qos(prefetch_count=1)
 		print (' [*] Waiting for messages. To exit press CTRL+C')

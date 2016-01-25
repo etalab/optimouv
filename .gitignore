@@ -15,5 +15,12 @@
 # .idea dossier phpStorm
 /.idea
 
+# Eclipse files
+/.project
+/.pydevproject
 
 #/app/DoctrineMigrations/*
+
+# Python config and cache files
+/python/config.py
+/python/__pycache__/
