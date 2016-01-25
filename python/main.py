@@ -188,8 +188,8 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 		firstPoolName = ord('A')
 		# obtain group distribution per pool
 		for pool in range(poolNbr):
-# 			poolDistribution[pool+1] = tempPools[pool]
-			poolDistribution[ chr(firstPoolName + pool) ] = tempPools[pool]
+			poolDistribution[pool+1] = tempPools[pool]
+# 			poolDistribution[ chr(firstPoolName + pool) ] = tempPools[pool]
 	
 		# calculate efficiency of the algorithm
 		efficiency = round((performanceCounter*100/teamNbr/teamNbr), 2)
