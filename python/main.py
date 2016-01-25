@@ -1373,7 +1373,8 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 # 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
 # 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
 # 					}
-		results = {"params": {"typeMatch": "allerRetour", "nombrePoule": poolNbr, "taillePoule": poolSize},  
+		results = {"params": {"typeMatch": "allerRetour", "nombrePoule": poolNbr, "taillePoule": poolSize, 
+							"interdictionsIds" : prohibitionConstraints, "repartitionsHomogenesIds": typeDistributionConstraints},  
 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
 					}
@@ -1607,7 +1608,8 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 # 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
 # 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
 # 				}
-		results = {"params": {"typeMatch": "allerSimple", "nombrePoule": poolNbr, "taillePoule": poolSize},  
+		results = {"params": {"typeMatch": "allerSimple", "nombrePoule": poolNbr, "taillePoule": poolSize,
+						"interdictionsIds" : prohibitionConstraints, "repartitionsHomogenesIds": typeDistributionConstraints},
 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
 					}
@@ -1994,9 +1996,13 @@ def test_insert_params_to_db():
 		exclusionValue = 0
 		creationDate = time.strftime("%Y-%m-%d")
 		statut = 1
+# 		params = {	"nbrPoule": 3, 
+# 					"interdictions": {"1": [8631, 8632]}, 
+# 					"repartitionHomogene": {}
+# 				}
 		params = {	"nbrPoule": 3, 
-					"interdictions": {"1": [8631, 8632]}, 
-					"repartitionHomogene": {}
+					"interdictions": {}, 
+					"repartitionHomogene": {"espoir": [8631, 8632]}
 				}
 		
 		sql = """insert into rapport (nom, id_groupe, type_action, valeur_exclusion , date_creation, params, statut)
