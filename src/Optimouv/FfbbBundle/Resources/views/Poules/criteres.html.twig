@@ -217,7 +217,7 @@
                          <div class="panel-body" id="contrainteRepartitionBody" style="display: none">
                              <div class="panel-body">
                                  <div class="table-responsive">
-                                     <table class="table table-striped table-bordered table-hover">
+                                     <table class="table table-striped table-bordered table-hover" id="tableContrainteRepartitionHomogene">
                                          <thead>
                                          <tr>
                                              <th><strong>Equipe</strong></th>
@@ -317,6 +317,12 @@
                  $(document).ready(function(){
                      $("#contrainteRepartition").click(function(){
                          $("#contrainteRepartitionBody").toggle();
+
+
+                        // data table pour contraints repartitions homogenes
+                         $('#tableContrainteRepartitionHomogene').DataTable({
+                             responsive: true
+                         });
                      });
                  });
 
