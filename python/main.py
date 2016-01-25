@@ -1663,12 +1663,35 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
 				}
-# 		results = {"params": {"typeMatch": "allerSimple", "nombrePoule": poolNbr, "taillePoule": poolSize,
-# 						"interdictionsIds" : prohibitionConstraints, "repartitionsHomogenesIds": typeDistributionConstraints},
+
+# 		results = {"params": {"typeMatch": "allerSimple", "nombrePoule": poolNbr, "taillePoule": poolSize, 
+# 							"interdictionsIds" : {}, 
+# 							"interdictionsNoms" : {}, "interdictionsVilles" : {}, 
+# 							"repartitionsHomogenesIds": {}, 
+# 							"repartitionsHomogenesNoms": {}, "repartitionsHomogenesVilles": {}, 
+# 							},  
 # 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
 # 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
 # 					}
-		
+# 
+# 		# get list of ids, names and cities from entity table for prohibition constraints
+# 		for indexProhibition, members in enumerate(prohibitionConstraints, start=1):
+# # 			logging.debug(" members: %s" %members)
+# 			members = ",".join(map(str, members)) # convert list of ints to string
+# 			prohibitionDetail = get_list_details_from_list_ids_for_entity(members)
+# 			results["params"]["interdictionsIds"][indexProhibition] =  prohibitionDetail["ids"]
+# 			results["params"]["interdictionsNoms"][indexProhibition] =  prohibitionDetail["names"]
+# 			results["params"]["interdictionsVilles"][indexProhibition] =  prohibitionDetail["cities"]
+# 
+# 		# get list of names and cities from entity table for type distribution constraints
+# 		for teamType, members in typeDistributionConstraints.items():
+# 			members = ",".join(map(str, members)) # convert list of ints to string
+# 			prohibitionDetail = get_list_details_from_list_ids_for_entity(members)
+# 			results["params"]["repartitionsHomogenesIds"][teamType] =  prohibitionDetail["ids"]
+# 			results["params"]["repartitionsHomogenesNoms"][teamType] =  prohibitionDetail["names"]
+# 			results["params"]["repartitionsHomogenesVilles"][teamType] =  prohibitionDetail["cities"]
+# 		logging.debug(" results: %s" %(results,))
+
 		logging.debug(" ########################################## ONE WAY　MATCH ###############################################")
 		iter = config.INPUT.Iter
 		logging.debug(" iter: %s" %iter)
