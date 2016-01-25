@@ -1364,20 +1364,66 @@ def	get_coords_pool_distribution(poolDistribution):
 		return poolDistributionCoords
 	except Exception as e:
 		show_exception_traceback()
+		
+"""
+Function to get list of names and cities from list of entity ids
+"""		
+def get_list_details_from_list_ids_for_entity(listIds):
+	try:
+		listDetails = {"ids":[], "names": [], "cities": []}
+		
+		sql = "select id from entite where id in (%s)"%(listIds)
+		listDetails["ids"] = db.fetchone_column(sql)
+
+		sql = "select nom from entite where id in (%s)"%(listIds)
+		listDetails["names"] = db.fetchone_column(sql)
+
+		sql = "select ville from entite where id in (%s)"%(listIds)
+		listDetails["cities"] = db.fetchone_column(sql)
+		
+# 		logging.debug(" listDetails: %s" %(listDetails,))
+		return listDetails
+		
+		
+	except Exception as e:
+		show_exception_traceback()
+		
 """
 Function to optimize pool for Round Trip Match (Match Aller Retour)
 """
 def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId):
 	try:
-# 		results = {"typeMatch": "allerRetour", "nombrePoule": poolNbr, "taillePoule": poolSize, 
-# 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
-# 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
-# 					}
-		results = {"params": {"typeMatch": "allerRetour", "nombrePoule": poolNbr, "taillePoule": poolSize, 
-							"interdictionsIds" : prohibitionConstraints, "repartitionsHomogenesIds": typeDistributionConstraints},  
+		results = {"typeMatch": "allerRetour", "nombrePoule": poolNbr, "taillePoule": poolSize, 
 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
 					}
+# 		results = {"params": {"typeMatch": "allerRetour", "nombrePoule": poolNbr, "taillePoule": poolSize, 
+# 							"interdictionsIds" : {}, 
+# 							"interdictionsNoms" : {}, "interdictionsVilles" : {}, 
+# 							"repartitionsHomogenesIds": {}, 
+# 							"repartitionsHomogenesNoms": {}, "repartitionsHomogenesVilles": {}, 
+# 							},  
+# 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
+# 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
+# 					}
+# 
+# 		# get list of ids, names and cities from entity table for prohibition constraints
+# 		for indexProhibition, members in enumerate(prohibitionConstraints, start=1):
+# # 			logging.debug(" members: %s" %members)
+# 			members = ",".join(map(str, members)) # convert list of ints to string
+# 			prohibitionDetail = get_list_details_from_list_ids_for_entity(members)
+# 			results["params"]["interdictionsIds"][indexProhibition] =  prohibitionDetail["ids"]
+# 			results["params"]["interdictionsNoms"][indexProhibition] =  prohibitionDetail["names"]
+# 			results["params"]["interdictionsVilles"][indexProhibition] =  prohibitionDetail["cities"]
+# 
+# 		# get list of names and cities from entity table for type distribution constraints
+# 		for teamType, members in typeDistributionConstraints.items():
+# 			members = ",".join(map(str, members)) # convert list of ints to string
+# 			prohibitionDetail = get_list_details_from_list_ids_for_entity(members)
+# 			results["params"]["repartitionsHomogenesIds"][teamType] =  prohibitionDetail["ids"]
+# 			results["params"]["repartitionsHomogenesNoms"][teamType] =  prohibitionDetail["names"]
+# 			results["params"]["repartitionsHomogenesVilles"][teamType] =  prohibitionDetail["cities"]
+# 		logging.debug(" results: %s" %(results,))
 
 		logging.debug(" ########################################## ROUND TRIP　MATCH ###############################################")
 		iter = config.INPUT.Iter
@@ -1385,9 +1431,11 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		
 		# add status constraints in the result
 		if statusConstraints:
-			results["params"]["contraintsExiste"] = 1
+			results["contraintsExiste"] = 1
+# 			results["params"]["contraintsExiste"] = 1
 		else:
-			results["params"]["contraintsExiste"] = 0
+			results["contraintsExiste"] = 1
+# 			results["params"]["contraintsExiste"] = 0
 
 		
 		logging.debug("")
@@ -1604,15 +1652,15 @@ Function to optimize pool for One Way Match (Match Aller Simple)
 """
 def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId):
 	try:
-# 		results = {"typeMatch": "allerSimple", "nombrePoule": poolNbr, "taillePoule": poolSize, 
-# 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
-# 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
-# 				}
-		results = {"params": {"typeMatch": "allerSimple", "nombrePoule": poolNbr, "taillePoule": poolSize,
-						"interdictionsIds" : prohibitionConstraints, "repartitionsHomogenesIds": typeDistributionConstraints},
+		results = {"typeMatch": "allerSimple", "nombrePoule": poolNbr, "taillePoule": poolSize, 
 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
-					}
+				}
+# 		results = {"params": {"typeMatch": "allerSimple", "nombrePoule": poolNbr, "taillePoule": poolSize,
+# 						"interdictionsIds" : prohibitionConstraints, "repartitionsHomogenesIds": typeDistributionConstraints},
+# 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
+# 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
+# 					}
 		
 		logging.debug(" ########################################## ONE WAY　MATCH ###############################################")
 		iter = config.INPUT.Iter
@@ -1620,9 +1668,11 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		
 		# add status constraints in the result
 		if statusConstraints:
-			results["params"]["contraintsExiste"] = 1
+			results["contraintsExiste"] = 1
+# 			results["params"]["contraintsExiste"] = 1
 		else:
-			results["params"]["contraintsExiste"] = 0
+			results["contraintsExiste"] = 0
+# 			results["params"]["contraintsExiste"] = 0
 		
 		logging.debug("")
 		logging.debug(" ####################### RESULT OPTIMAL WITHOUT CONSTRAINT #############################################")
