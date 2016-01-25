@@ -1421,12 +1421,7 @@
                                      <!-- /.col-lg-6 -->
 
 
-
-
                                  </div>
-
-
-
 
 
 
@@ -1704,7 +1699,286 @@
                                  </div>
                                  <!-- /.col-lg-6 -->
 
+                                 <!-- Scénario équitable sans contrainte -->
 
+                                 <div class="col-lg-6">
+
+                                     <!-- declaration de variables -->
+                                     <!-- distanceMin -->
+                                     {% set distanceMinEqContrainte = scenarioEquitableSansContrainte.estimationGenerale.distanceTotale %}
+                                     {% set distanceMinEqContrainte = (distanceMinEqContrainte / 1000)|round %}
+                                     <!-- distanceTotale -->
+                                     {% set distanceTotaleEqContrainte = scenarioEquitableSansContrainte.estimationGenerale.distanceTotaleTousParticipants %}
+                                     {% set distanceTotaleEqContrainte = (distanceTotaleEqContrainte / 1000)|round %}
+                                     <!-- nbrParticipantsTotal -->
+                                     {% set nbrParticipantsTotalEqContrainte = scenarioEquitableSansContrainte.estimationGenerale.nbrParticipantsTotal %}
+                                     <!-- estimationDetails -->
+                                     {% set estimationDetailsEqContrainte = scenarioEquitableSansContrainte.estimationDetails %}
+                                     <!-- rencontreDetails -->
+                                     {% set rencontreDetailsEqContrainte = scenarioEquitableSansContrainte.rencontreDetails %}
+
+
+                                     <div class="panel-body">
+                                         <div class="panel-group" id="scEquitableAvecContrainte">
+                                             <div class="panel panel-default">
+                                                 <div class="panel-heading">
+                                                     <h4 class="panel-title">
+                                                         Scénario équitable
+                                                     </h4>
+                                                 </div>
+                                                 <div class="panel-body"> <!-- premier scÃ©nario -->
+                                                     <div id="mapEquitable"
+                                                          style="width: 100%; height: 600px; background: grey"></div>
+                                                     <script type="text/javascript" charset="UTF-8">
+
+
+                                                     </script>
+                                                     <!-- Nav tabs -->
+                                                     <ul class="nav nav-tabs">
+                                                         <li class="active"><a href="#EstimationsEq" data-toggle="tab">Estimations</a>
+                                                         </li>
+                                                         <li><a href="#DetailsEq" data-toggle="tab">Détails</a>
+                                                         </li>
+                                                         <li><a href="#listeRencontresScEq" data-toggle="tab">liste des rencontres</a>
+                                                         </li>
+
+                                                     </ul>
+
+                                                     <!-- Tab panes -->
+                                                     <div class="tab-content">
+                                                         <div class="tab-pane fade in active" id="EstimationsEq">
+
+                                                             <div class="list-group">
+
+                                                                 <p class="list-group-item">
+                                                                     <i class="fa fa-road fa-fw"
+                                                                        style="padding-right: 30px"></i> <strong> {{ distanceMinEqContrainte }} </strong>
+                                                                     kilomètres au total
+                                                                     à parcourir pour l'ensemble du scénario
+                                                                 </p>
+                                                                 <p class="list-group-item">
+                                                                     <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}"
+                                                                          width="20px" height="20px"/>
+                                                                     <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleEqContrainte * 0.80 )|round }} </strong>
+                                                                     € pour réaliser les trajets de l'ensemble du scénario
+                                                                     en voiture
+
+                                                                 </p>
+                                                                 <p class="list-group-item">
+                                                                     <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}"
+                                                                          width="20px" height="20px"/>
+                                                                     <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleEqContrainte /4 * 0.80 )|round }} </strong>
+                                                                     € pour réaliser les trajets de l'ensemble du scénario
+                                                                     en covoiturage
+
+                                                                 </p>
+                                                                 <p class="list-group-item">
+                                                                     <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}"
+                                                                          width="20px" height="20px"/>
+                                                                     <i style="padding-right: 10px"></i>
+                                                                     <strong>{{ (distanceTotaleEqContrainte /9 * 1.31)|round }} </strong>
+                                                                     € pour réaliser les trajets de l'ensemble du scénario
+                                                                     en minibus
+
+                                                                 </p>
+
+                                                                 <p class="list-group-item">
+                                                                     <img src="{{ asset('bundles/ffbb/images/icons/car-icon.png') }}"
+                                                                          width="20px" height="20px"/>
+                                                                     <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleEqContrainte * 0.157)|round }} </strong>
+                                                                     KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalEqContrainte }}
+                                                                     joueurs en voiture individuelle
+                                                                     pour le scénario
+
+                                                                 </p>
+                                                                 <p class="list-group-item">
+                                                                     <img src="{{ asset('bundles/ffbb/images/icons/covoiturage-icon.png') }}"
+                                                                          width="20px" height="20px"/>
+                                                                     <i style="padding-right: 10px"></i> <strong> {{ (distanceTotaleEqContrainte/4 * 0.157)|round }} </strong>
+                                                                     KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalEqContrainte }}
+                                                                     joueurs en co-voiturage pour le scénario
+
+                                                                 </p>
+
+                                                                 <p class="list-group-item">
+                                                                     <img src="{{ asset('bundles/ffbb/images/icons/bus-icon.png') }}"
+                                                                          width="20px" height="15px"/>
+                                                                     <i style="padding-right: 10px"></i>
+                                                                     <strong> {{ (distanceTotaleEqContrainte/9 * 0.185)|round }}</strong>
+                                                                     KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalEqContrainte }}
+                                                                     joueurs en minibus pour le scénario
+
+                                                                 </p>
+
+                                                             </div>
+
+
+                                                         </div>
+                                                         <div class="tab-pane fade" id="DetailsEq">
+                                                             <div class="table-responsive" style="padding-top: 10px">
+
+                                                                 <table id="exampleExclusion" class="display"
+                                                                        cellspacing="0"
+                                                                        width="100%">
+                                                                     <thead>
+                                                                     <tr>
+                                                                         <th style="font-weight: bold !important;">
+                                                                             Participants
+                                                                         </th>
+                                                                         <th style="text-align:right">Kilomètres à
+                                                                             parcourir
+                                                                         </th>
+                                                                         <th style="text-align:right">Temps de parcours
+                                                                             (H:M)
+                                                                         </th>
+                                                                         <th style="text-align:right">Coût du parcours en
+                                                                             voiture(€)
+                                                                         </th>
+                                                                         <th style="text-align:right">Coût du parcours en
+                                                                             covoiturage(€)
+                                                                         </th>
+                                                                         <th style="text-align:right">Coût du parcours en
+                                                                             minibus(€)
+                                                                         </th>
+                                                                         <th style="text-align:right">Emissions GES voiture
+                                                                             individuelle (en KG eq CO2)
+                                                                         </th>
+                                                                         <th style="text-align:right">Emissions GES
+                                                                             covoiturage (en KG eq CO2)
+                                                                         </th>
+
+                                                                         <th style="text-align:right">Emissions GES minibus
+                                                                             (en KG eq CO2)
+                                                                         </th>
+                                                                     </tr>
+                                                                     </thead>
+                                                                     <tbody>
+
+
+                                                                     {% for key, estimationDetailEqContrainte in estimationDetailsEqContrainte %}
+                                                                         {% set distanceEqContrainte = estimationDetailsEqContrainte[ loop.index ].distanceTotale // 1000 %}
+                                                                         {% set distanceTotaleEqContrainte = estimationDetailsEqContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}
+                                                                         {% set dureeTotaleEqContrainte = estimationDetailsEqContrainte[ loop.index ].dureeTotale  %}
+                                                                         {% set nbrParticipantsEqContrainte = estimationDetailsEqContrainte[ loop.index ].nbrParticipantsTotal  %}
+                                                                         <tr>
+                                                                             <td><strong> Poule {{ key }} </strong></td>
+                                                                             <td style="text-align:right"> {{distanceEqContrainte }}</td>
+                                                                             <td style="text-align:right"> {{ dureeTotaleEqContrainte|date('H:i') }}</td>
+                                                                             <td style="text-align:right"> {{ (distanceTotaleEqContrainte  * 0.80)|round }}</td>
+                                                                             <td style="text-align:right"> {{ (distanceTotaleEqContrainte /4 * 0.80)|round }}</td>
+                                                                             <td style="text-align:right"> {{ (distanceTotaleEqContrainte /9 * 1.31)|round }}</td>
+                                                                             <td style="text-align:right"> {{ (distanceTotaleEqContrainte * 0.157)|round }}</td>
+                                                                             <td style="text-align:right"> {{ ((distanceTotaleEqContrainte /4)*0.157)|round  }} </td>
+                                                                             <td style="text-align:right"> {{ ((distanceTotaleEqContrainte/9)*0.185)|round }} </td>
+                                                                         </tr>
+
+                                                                     {% endfor %}
+
+                                                                     </tbody>
+                                                                 </table>
+
+                                                             </div>
+                                                             <!-- /.table-responsive -->
+                                                         </div>
+
+                                                         <div class="tab-pane fade" id="listeRencontresScEq">
+                                                             <div class="table-responsive" style="padding-top: 10px">
+
+                                                                 <table id="scEqAvecContrainte" class="display"
+                                                                        cellspacing="0"
+                                                                        width="100%">
+                                                                     <thead>
+                                                                     <tr>
+                                                                         <th style="font-weight: bold !important;">
+                                                                             Poules
+                                                                         </th>
+                                                                         <th style="text-align:right">Rencontres</th>
+
+                                                                         <th>Equipe 1</th>
+
+                                                                         <th>Equipe 2</th>
+
+                                                                     </tr>
+                                                                     </thead>
+                                                                     <tbody>
+
+                                                                     {% for keyEqContrainte, rencontreDetailEqContrainte in rencontreDetailsEqContrainte %}
+                                                                         {% set distanceEqContrainte = rencontreDetailsEqContrainte[ loop.index ] %}
+
+                                                                         <tr>
+                                                                             <td><strong> Poule {{ keyEqContrainte }} </strong></td>
+                                                                             <td>
+                                                                                 <ul>
+                                                                                     {% for keyDetailEqContrainte, detailsRencontreEqContrainte in distanceEqContrainte %}
+                                                                                         <li>
+                                                                                             {{ keyDetailEqContrainte }}
+                                                                                         </li>
+
+                                                                                     {% endfor %}
+                                                                                 </ul>
+                                                                             </td>
+                                                                             <td>
+                                                                                 <ul>
+                                                                                     {% for detailsRencontreEqContrainte in distanceEqContrainte %}
+                                                                                         <li>
+                                                                                             {{ distanceEqContrainte[ loop.index ].equipeDepartVille }}
+                                                                                         </li>
+
+                                                                                     {% endfor %}
+                                                                                 </ul>
+                                                                             </td>
+
+                                                                             <td>
+                                                                                 <ul>
+                                                                                     {% for detailsRencontreEqContrainte in distanceEqContrainte %}
+                                                                                         <li>
+                                                                                             {{ distanceEqContrainte[ loop.index ].equipeDestinationVille }}
+                                                                                         </li>
+
+                                                                                     {% endfor %}
+                                                                                 </ul>
+                                                                             </td>
+                                                                         </tr>
+                                                                     {% endfor %}
+
+
+                                                                     </tbody>
+                                                                 </table>
+
+                                                             </div>
+                                                             <!-- /.table-responsive -->
+                                                         </div>
+                                                         <a href="{{ path('ffbb_details_calcul') }}" class="pull-left">Détails
+                                                             du calcul</a>
+
+                                                         <button type="button"
+                                                                 class="btn btn-primary  pull-right">Exporter
+                                                         </button>
+
+
+                                                     </div>
+
+
+
+                                                 </div>
+                                             </div>
+
+
+                                         </div>
+                                     </div>
+                                     <!-- .panel-body -->
+                                     <!-- /.panel -->
+                                 </div>
+
+                                 <!-- /.col-lg-6 -->
+
+
+
+
+                             </div>
+
+
+                             <div class="row">
                                  <!-- Scénario de référence -->
 
 
@@ -1907,9 +2181,6 @@
                                      <!-- /.panel -->
                                  </div>
                                  <!-- /.col-lg-6 -->
-
-
-
 
                              </div>
 
