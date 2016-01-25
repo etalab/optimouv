@@ -594,6 +594,7 @@ class PoulesController extends Controller
         $scenarioEquitableSansContrainte = $detailsCalcul["scenarioEquitableSansContrainte"];
         $scenarioOptimalSansContrainte = $detailsCalcul["scenarioOptimalSansContrainte"];
         $scenarioRef = $detailsCalcul["scenarioRef"];
+        $refExiste = $detailsCalcul["refExiste"];
 
 
 
@@ -608,6 +609,7 @@ class PoulesController extends Controller
             'scenarioEquitableSansContrainte' => $scenarioEquitableSansContrainte,
             'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
             'scenarioRef' => $scenarioRef,
+            'refExiste' => $refExiste
 
 
 
