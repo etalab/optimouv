@@ -1369,7 +1369,11 @@ Function to optimize pool for Round Trip Match (Match Aller Retour)
 """
 def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId):
 	try:
-		results = {"typeMatch": "allerRetour", "nombrePoule": poolNbr, "taillePoule": poolSize, 
+# 		results = {"typeMatch": "allerRetour", "nombrePoule": poolNbr, "taillePoule": poolSize, 
+# 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
+# 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
+# 					}
+		results = {"params": {"typeMatch": "allerRetour", "nombrePoule": poolNbr, "taillePoule": poolSize},  
 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
 					}
@@ -1380,9 +1384,9 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		
 		# add status constraints in the result
 		if statusConstraints:
-			results["contraintsExiste"] = 1
+			results["params"]["contraintsExiste"] = 1
 		else:
-			results["contraintsExiste"] = 0
+			results["params"]["contraintsExiste"] = 0
 
 		
 		logging.debug("")
@@ -1599,10 +1603,14 @@ Function to optimize pool for One Way Match (Match Aller Simple)
 """
 def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId):
 	try:
-		results = {"typeMatch": "allerSimple", "nombrePoule": poolNbr, "taillePoule": poolSize, 
+# 		results = {"typeMatch": "allerSimple", "nombrePoule": poolNbr, "taillePoule": poolSize, 
+# 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
+# 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
+# 				}
+		results = {"params": {"typeMatch": "allerSimple", "nombrePoule": poolNbr, "taillePoule": poolSize},  
 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
-				}
+					}
 		
 		logging.debug(" ########################################## ONE WAY　MATCH ###############################################")
 		iter = config.INPUT.Iter
@@ -1610,9 +1618,9 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		
 		# add status constraints in the result
 		if statusConstraints:
-			results["contraintsExiste"] = 1
+			results["params"]["contraintsExiste"] = 1
 		else:
-			results["contraintsExiste"] = 0
+			results["params"]["contraintsExiste"] = 0
 		
 		logging.debug("")
 		logging.debug(" ####################### RESULT OPTIMAL WITHOUT CONSTRAINT #############################################")
@@ -1980,8 +1988,8 @@ Function to insert params to DB
 def test_insert_params_to_db():
 	try:
 		groupId = 68
-# 		actionType = "match_aller_retour"
-		actionType = "match_aller_simple"
+		actionType = "allerRetour"
+# 		actionType = "allerSimple"
 		name = "rapport_groupe_%s_action_%s"%(groupId, actionType)
 		exclusionValue = 0
 		creationDate = time.strftime("%Y-%m-%d")
