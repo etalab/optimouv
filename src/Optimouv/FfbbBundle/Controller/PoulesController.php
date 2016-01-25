@@ -591,6 +591,7 @@ class PoulesController extends Controller
         $typeMatch = $detailsCalcul["typeMatch"];
         $scenarioOptimalAvecContrainte = $detailsCalcul["scenarioOptimalAvecContrainte"];
         $scenarioEquitableAvecContrainte = $detailsCalcul["scenarioEquitableAvecContrainte"];
+        $scenarioEquitableSansContrainte = $detailsCalcul["scenarioEquitableSansContrainte"];
         $scenarioOptimalSansContrainte = $detailsCalcul["scenarioOptimalSansContrainte"];
         $scenarioRef = $detailsCalcul["scenarioRef"];
 
@@ -604,6 +605,7 @@ class PoulesController extends Controller
             'typeMatch'=> $typeMatch,
             'scenarioOptimalAvecContrainte' => $scenarioOptimalAvecContrainte,
             'scenarioEquitableAvecContrainte' => $scenarioEquitableAvecContrainte,
+            'scenarioEquitableSansContrainte' => $scenarioEquitableSansContrainte,
             'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
             'scenarioRef' => $scenarioRef,
 
