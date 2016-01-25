@@ -797,7 +797,8 @@
                                          {% set estimationDetailsEqContrainte = scenarioEquitableAvecContrainte.estimationDetails %}
                                          <!-- rencontreDetails -->
                                          {% set rencontreDetailsEqContrainte = scenarioEquitableAvecContrainte.rencontreDetails %}
-
+                                         <!-- coordPoules -->
+                                         {% set coordPoulesEqAvecContrainte = scenarioEquitableAvecContrainte.poulesCoords %}
 
                                          <div class="panel-body">
                                              <div class="panel-group" id="scEquitableAvecContrainte">
@@ -812,6 +813,112 @@
                                                               style="width: 100%; height: 600px; background: grey"></div>
                                                          <script type="text/javascript" charset="UTF-8">
 
+                                                             /**
+                                                              *
+                                                              * Changer la langue de la carte
+                                                              */
+                                                             function switchMapLanguage(map, platform) {
+                                                                 var mapTileService = platform.getMapTileService({
+                                                                             type: 'base'
+                                                                         }),
+                                                                         frenchMapLayer = mapTileService.createTileLayer(
+                                                                                 'maptile',
+                                                                                 'normal.day',
+                                                                                 256,
+                                                                                 'png8',
+                                                                                 {lg: 'fre'}
+                                                                         );
+                                                                 map.setBaseLayer(frenchMapLayer);
+
+
+                                                             }
+                                                             /*
+                                                              Fin fn changer langue
+                                                              */
+
+                                                             /**
+                                                              * Markeur principal
+                                                              */
+
+                                                             // Create a marker icon from an image URL:
+                                                             var icon = new H.map.Icon('{{ asset('bundles/ffbb/images/depart.png') }}');
+
+                                                             // Create a marker using the previously instantiated icon:
+                                                             {#var markerPrincipal = new H.map.Marker({#}
+                                                             {#lng: '{{ longPtDep }}',#}
+                                                             {#lat: '{{ latPtDep }}'#}
+                                                             {#}, {icon: icon});#}
+
+                                                             //construction des points de differentes villes
+                                                             function addMarkersAndSetViewBounds() {
+                                                                 var incrment = 1;
+                                                                 var points = [];
+                                                                 {%  for coordPouleEqAvecContrainte in coordPoulesEqAvecContrainte %}
+
+                                                                 //tracer dynamiquement les points de villes
+                                                                 {% for coordonneeVilleEqAvecContrainte in coordPouleEqAvecContrainte %}
+                                                                 var x = '{{ coordonneeVilleEqAvecContrainte[0]}}';
+                                                                 var y = '{{ coordonneeVilleEqAvecContrainte[1]}}';
+//
+                                                                 var xy = x+y;
+//                                                                         var x = xy[0];
+//                                                                         var y = xy[1];
+
+
+                                                                 var marker = 'marker' + incrment;
+                                                                 window[marker] = new H.map.Marker({
+                                                                     lat: parseFloat(x),
+                                                                     lng: parseFloat(y)
+                                                                 } );
+
+
+                                                                 points.push(window[marker]);
+
+                                                                 var incrment = incrment + 1;
+
+                                                                 {% endfor %}
+
+                                                                 {% endfor %}
+                                                                 group = new H.map.Group();
+                                                                 // add markers to the group
+                                                                 group.addObjects(points);
+                                                                 map.addObject(group);
+                                                                 // get geo bounding box for the group and set it to the map
+                                                                 map.setViewBounds(group.getBounds());
+                                                             }
+
+
+
+                                                             /**
+                                                              * Boilerplate map initialization code starts below:
+                                                              */
+
+                                                             //Step 1: initialize communication with the platform
+                                                             var platform = new H.service.Platform({
+                                                                 app_id: '{{ app_id }}',
+                                                                 app_code: '{{ app_code }}',
+                                                                 useCIT: true,
+                                                                 useHTTPS: true
+                                                             });
+                                                             var defaultLayers = platform.createDefaultLayers();
+
+                                                             //Step 2: initialize a map - this map is centered over Europe
+                                                             var map = new H.Map(document.getElementById('mapEquitable'),
+                                                                     defaultLayers.normal.map, {
+                                                                         center: {lat: 48.8567, lng: 2.3508},
+                                                                         zoom: 3
+                                                                     });
+
+                                                             var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+                                                             // Create the default UI components
+                                                             //    var ui = H.ui.UI.createDefault(map, defaultLayers);
+                                                             var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
+
+                                                             // Now use the map as required...
+                                                             // Add the marker to the map:
+                                                             // map.addObject(markerPrincipal);
+                                                             addMarkersAndSetViewBounds(map);
+                                                             switchMapLanguage(map, platform);
 
                                                          </script>
                                                          <!-- Nav tabs -->
@@ -1074,7 +1181,8 @@
                                          {% set estimationDetailsOpSansContrainte = scenarioOptimalSansContrainte.estimationDetails %}
                                          <!-- rencontreDetails -->
                                          {% set rencontreDetailsOpSansContrainte = scenarioOptimalSansContrainte.rencontreDetails %}
-
+                                         <!-- coordPoules -->
+                                         {% set coordPoulesOpSansContrainte = scenarioOptimalSansContrainte.poulesCoords %}
                                          <div class="panel-body">
                                              <div class="panel-group" id="scOptimalSansContrainte">
                                                  <div class="panel panel-default">
@@ -1084,10 +1192,116 @@
                                                          </h4>
                                                      </div>
                                                      <div class="panel-body"> <!-- premier scÃ©nario -->
-                                                         <div id="mapEquitable"
+                                                         <div id="mapOpSansContrainte"
                                                               style="width: 100%; height: 600px; background: grey"></div>
                                                          <script type="text/javascript" charset="UTF-8">
 
+                                                             /**
+                                                              *
+                                                              * Changer la langue de la carte
+                                                              */
+                                                             function switchMapLanguage(map, platform) {
+                                                                 var mapTileService = platform.getMapTileService({
+                                                                             type: 'base'
+                                                                         }),
+                                                                         frenchMapLayer = mapTileService.createTileLayer(
+                                                                                 'maptile',
+                                                                                 'normal.day',
+                                                                                 256,
+                                                                                 'png8',
+                                                                                 {lg: 'fre'}
+                                                                         );
+                                                                 map.setBaseLayer(frenchMapLayer);
+
+
+                                                             }
+                                                             /*
+                                                              Fin fn changer langue
+                                                              */
+
+                                                             /**
+                                                              * Markeur principal
+                                                              */
+
+                                                             // Create a marker icon from an image URL:
+                                                             var icon = new H.map.Icon('{{ asset('bundles/ffbb/images/depart.png') }}');
+
+                                                             // Create a marker using the previously instantiated icon:
+                                                             {#var markerPrincipal = new H.map.Marker({#}
+                                                             {#lng: '{{ longPtDep }}',#}
+                                                             {#lat: '{{ latPtDep }}'#}
+                                                             {#}, {icon: icon});#}
+
+                                                             //construction des points de differentes villes
+                                                             function addMarkersAndSetViewBounds() {
+                                                                 var incrment = 1;
+                                                                 var points = [];
+                                                                 {%  for coordPouleOpSansContrainte in coordPoulesOpSansContrainte %}
+
+                                                                 //tracer dynamiquement les points de villes
+                                                                 {% for coordonneeVilleOpSansContrainte in coordPouleOpSansContrainte %}
+                                                                 var x = '{{ coordonneeVilleOpSansContrainte[0]}}';
+                                                                 var y = '{{ coordonneeVilleOpSansContrainte[1]}}';
+//
+                                                                 var xy = x+y;
+//                                                                         var x = xy[0];
+//                                                                         var y = xy[1];
+
+
+                                                                 var marker = 'marker' + incrment;
+                                                                 window[marker] = new H.map.Marker({
+                                                                     lat: parseFloat(x),
+                                                                     lng: parseFloat(y)
+                                                                 } );
+
+
+                                                                 points.push(window[marker]);
+
+                                                                 var incrment = incrment + 1;
+
+                                                                 {% endfor %}
+
+                                                                 {% endfor %}
+                                                                 group = new H.map.Group();
+                                                                 // add markers to the group
+                                                                 group.addObjects(points);
+                                                                 map.addObject(group);
+                                                                 // get geo bounding box for the group and set it to the map
+                                                                 map.setViewBounds(group.getBounds());
+                                                             }
+
+
+
+                                                             /**
+                                                              * Boilerplate map initialization code starts below:
+                                                              */
+
+                                                             //Step 1: initialize communication with the platform
+                                                             var platform = new H.service.Platform({
+                                                                 app_id: '{{ app_id }}',
+                                                                 app_code: '{{ app_code }}',
+                                                                 useCIT: true,
+                                                                 useHTTPS: true
+                                                             });
+                                                             var defaultLayers = platform.createDefaultLayers();
+
+                                                             //Step 2: initialize a map - this map is centered over Europe
+                                                             var map = new H.Map(document.getElementById('mapOpSansContrainte'),
+                                                                     defaultLayers.normal.map, {
+                                                                         center: {lat: 48.8567, lng: 2.3508},
+                                                                         zoom: 3
+                                                                     });
+
+                                                             var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+                                                             // Create the default UI components
+                                                             //    var ui = H.ui.UI.createDefault(map, defaultLayers);
+                                                             var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
+
+                                                             // Now use the map as required...
+                                                             // Add the marker to the map:
+                                                             // map.addObject(markerPrincipal);
+                                                             addMarkersAndSetViewBounds(map);
+                                                             switchMapLanguage(map, platform);
 
                                                          </script>
 
@@ -1344,7 +1558,8 @@
                                          {% set estimationDetailsRef = scenarioRef.estimationDetails %}
                                          <!-- rencontreDetails -->
                                          {% set rencontreDetailsRef = scenarioRef.rencontreDetails %}
-
+                                         <!-- coordPoules -->
+                                         {% set coordPoulesRef = scenarioRef.poulesCoords %}
                                          <div class="panel-body">
                                              <div class="panel-group" id="scOptimalSansContrainte">
                                                  <div class="panel panel-default">
@@ -1354,10 +1569,116 @@
                                                          </h4>
                                                      </div>
                                                      <div class="panel-body"> <!-- premier scÃ©nario -->
-                                                         <div id="mapEquitable"
+                                                         <div id="mapRef"
                                                               style="width: 100%; height: 600px; background: grey"></div>
                                                          <script type="text/javascript" charset="UTF-8">
 
+                                                             /**
+                                                              *
+                                                              * Changer la langue de la carte
+                                                              */
+                                                             function switchMapLanguage(map, platform) {
+                                                                 var mapTileService = platform.getMapTileService({
+                                                                             type: 'base'
+                                                                         }),
+                                                                         frenchMapLayer = mapTileService.createTileLayer(
+                                                                                 'maptile',
+                                                                                 'normal.day',
+                                                                                 256,
+                                                                                 'png8',
+                                                                                 {lg: 'fre'}
+                                                                         );
+                                                                 map.setBaseLayer(frenchMapLayer);
+
+
+                                                             }
+                                                             /*
+                                                              Fin fn changer langue
+                                                              */
+
+                                                             /**
+                                                              * Markeur principal
+                                                              */
+
+                                                             // Create a marker icon from an image URL:
+                                                             var icon = new H.map.Icon('{{ asset('bundles/ffbb/images/depart.png') }}');
+
+                                                             // Create a marker using the previously instantiated icon:
+                                                             {#var markerPrincipal = new H.map.Marker({#}
+                                                             {#lng: '{{ longPtDep }}',#}
+                                                             {#lat: '{{ latPtDep }}'#}
+                                                             {#}, {icon: icon});#}
+
+                                                             //construction des points de differentes villes
+                                                             function addMarkersAndSetViewBounds() {
+                                                                 var incrment = 1;
+                                                                 var points = [];
+                                                                 {%  for coordPouleRef in coordPoulesRef %}
+
+                                                                 //tracer dynamiquement les points de villes
+                                                                 {% for coordonneeVilleRef in coordPouleRef %}
+                                                                 var x = '{{ coordonneeVilleRef[0]}}';
+                                                                 var y = '{{ coordonneeVilleRef[1]}}';
+//
+                                                                 var xy = x+y;
+//                                                                         var x = xy[0];
+//                                                                         var y = xy[1];
+
+
+                                                                 var marker = 'marker' + incrment;
+                                                                 window[marker] = new H.map.Marker({
+                                                                     lat: parseFloat(x),
+                                                                     lng: parseFloat(y)
+                                                                 } );
+
+
+                                                                 points.push(window[marker]);
+
+                                                                 var incrment = incrment + 1;
+
+                                                                 {% endfor %}
+
+                                                                 {% endfor %}
+                                                                 group = new H.map.Group();
+                                                                 // add markers to the group
+                                                                 group.addObjects(points);
+                                                                 map.addObject(group);
+                                                                 // get geo bounding box for the group and set it to the map
+                                                                 map.setViewBounds(group.getBounds());
+                                                             }
+
+
+
+                                                             /**
+                                                              * Boilerplate map initialization code starts below:
+                                                              */
+
+                                                             //Step 1: initialize communication with the platform
+                                                             var platform = new H.service.Platform({
+                                                                 app_id: '{{ app_id }}',
+                                                                 app_code: '{{ app_code }}',
+                                                                 useCIT: true,
+                                                                 useHTTPS: true
+                                                             });
+                                                             var defaultLayers = platform.createDefaultLayers();
+
+                                                             //Step 2: initialize a map - this map is centered over Europe
+                                                             var map = new H.Map(document.getElementById('mapRef'),
+                                                                     defaultLayers.normal.map, {
+                                                                         center: {lat: 48.8567, lng: 2.3508},
+                                                                         zoom: 3
+                                                                     });
+
+                                                             var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+                                                             // Create the default UI components
+                                                             //    var ui = H.ui.UI.createDefault(map, defaultLayers);
+                                                             var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
+
+                                                             // Now use the map as required...
+                                                             // Add the marker to the map:
+                                                             // map.addObject(markerPrincipal);
+                                                             addMarkersAndSetViewBounds(map);
+                                                             switchMapLanguage(map, platform);
 
                                                          </script>
 
@@ -1557,7 +1878,8 @@
                                      {% set estimationDetailsOpSansContrainte = scenarioOptimalSansContrainte.estimationDetails %}
                                      <!-- rencontreDetails -->
                                      {% set rencontreDetailsOpSansContrainte = scenarioOptimalSansContrainte.rencontreDetails %}
-
+                                     <!-- coordPoules -->
+                                     {% set coordPoulesOpSansContrainte = scenarioOptimalSansContrainte.poulesCoords %}
                                      <div class="panel-body">
                                          <div class="panel-group" id="scOptimalSansContrainte">
                                              <div class="panel panel-default">
@@ -1567,7 +1889,7 @@
                                                      </h4>
                                                  </div>
                                                  <div class="panel-body"> <!-- premier scÃ©nario -->
-                                                     <div id="mapEquitable"
+                                                     <div id="mapOptSansContrainte"
                                                           style="width: 100%; height: 600px; background: grey"></div>
                                                      <script type="text/javascript" charset="UTF-8">
 
@@ -1611,12 +1933,12 @@
                                                          function addMarkersAndSetViewBounds() {
                                                              var incrment = 1;
                                                              var points = [];
-                                                             {%  for coordPoule in coordPoules %}
+                                                             {%  for coordPouleOpSansContrainte in coordPoulesOpSansContrainte %}
 
                                                              //tracer dynamiquement les points de villes
-                                                             {% for coordonneeVille in coordPoule %}
-                                                             var x = '{{ coordonneeVille[0]}}';
-                                                             var y = '{{ coordonneeVille[1]}}';
+                                                             {% for coordonneeVilleOpSansContrainte in coordPouleOpSansContrainte %}
+                                                             var x = '{{ coordonneeVilleOpSansContrainte[0]}}';
+                                                             var y = '{{ coordonneeVilleOpSansContrainte[1]}}';
 //
                                                              var xy = x+y;
 //                                                                         var x = xy[0];
@@ -1661,7 +1983,7 @@
                                                          var defaultLayers = platform.createDefaultLayers();
 
                                                          //Step 2: initialize a map - this map is centered over Europe
-                                                         var map = new H.Map(document.getElementById('map'),
+                                                         var map = new H.Map(document.getElementById('mapOptSansContrainte'),
                                                                  defaultLayers.normal.map, {
                                                                      center: {lat: 48.8567, lng: 2.3508},
                                                                      zoom: 3
