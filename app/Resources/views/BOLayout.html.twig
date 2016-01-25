@@ -212,6 +212,23 @@
         $(document).ready(function () {
             $('#exampleTerrainEq').DataTable();
         });
+
+        $(document).ready(function () {
+            $('#scOpAvecContrainte').DataTable();
+        });
+
+        $(document).ready(function () {
+            $('#scEqAvecContrainte').DataTable();
+        });
+        $(document).ready(function () {
+            $('#scOpSansContrainte').DataTable();
+        });
+        $(document).ready(function () {
+            $('#scReference').DataTable();
+        });
+        $(document).ready(function () {
+            $('#scEqSansContrainte').DataTable();
+        });
     </script>
 
 
@@ -260,6 +277,26 @@
     <script type="text/javascript">
         // For demo to fit into DataTables site builder...
         $('#exampleTerrainEq')
+                .removeClass('display')
+                .addClass('table table-striped table-bordered');
+
+        $('#scOpAvecContrainte')
+                .removeClass('display')
+                .addClass('table table-striped table-bordered');
+
+        $('#scEqAvecContrainte')
+                .removeClass('display')
+                .addClass('table table-striped table-bordered');
+
+        $('#scOpSansContrainte')
+                .removeClass('display')
+                .addClass('table table-striped table-bordered');
+
+        $('#scReference')
+                .removeClass('display')
+                .addClass('table table-striped table-bordered');
+
+        $('#scEqSansContrainte')
                 .removeClass('display')
                 .addClass('table table-striped table-bordered');
     </script>

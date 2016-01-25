@@ -573,4 +573,43 @@ class PoulesController extends Controller
         }
 
     }
+
+    public function resultatCalculAction($idResultat)
+    {
+
+
+        # obtenir entity manager
+        $em = $this->getDoctrine()->getManager();
+
+        $detailsCalcul = $em->getRepository('FfbbBundle:Scenario')->findOneById($idResultat)->getDetailsCalcul();
+
+        $detailsCalcul = json_decode($detailsCalcul, true);
+
+        $nombrePoule = $detailsCalcul["nombrePoule"];
+        $taillePoule = $detailsCalcul["taillePoule"];
+        $contraintsExiste = $detailsCalcul["contraintsExiste"];
+        $typeMatch = $detailsCalcul["typeMatch"];
+        $scenarioOptimalAvecContrainte = $detailsCalcul["scenarioOptimalAvecContrainte"];
+        $scenarioEquitableAvecContrainte = $detailsCalcul["scenarioEquitableAvecContrainte"];
+        $scenarioOptimalSansContrainte = $detailsCalcul["scenarioOptimalSansContrainte"];
+        $scenarioRef = $detailsCalcul["scenarioRef"];
+
+
+
+        return $this->render('FfbbBundle:Poules:resultatCalcul.html.twig' , array(
+
+            'nombrePoule' => $nombrePoule,
+            'taillePoule' => $taillePoule,
+            'contraintsExiste' => $contraintsExiste,
+            'typeMatch'=> $typeMatch,
+            'scenarioOptimalAvecContrainte' => $scenarioOptimalAvecContrainte,
+            'scenarioEquitableAvecContrainte' => $scenarioEquitableAvecContrainte,
+            'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
+            'scenarioRef' => $scenarioRef,
+
+
+
+
+        ));
+    }
 }
