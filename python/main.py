@@ -1391,7 +1391,7 @@ def get_list_details_from_list_ids_for_entity(listIds):
 """
 Function to optimize pool for Round Trip Match (Match Aller Retour)
 """
-def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool):
+def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom):
 	try:
 		results = {"typeMatch": "allerRetour", "nombrePoule": poolNbr, "taillePoule": poolSize, 
 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
@@ -1427,6 +1427,12 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 
 		# save constraint variation of team number per pool
 		results["params"]["varEquipeParPouleChoisi"] = varTeamNbrPerPool
+
+		# based on phantom flag, save to results the possibility to make variation of team number per pool
+		if flagPhantom:
+			results["params"]["varEquipeParPoulePossible"] = 1
+		else:
+			results["params"]["varEquipeParPoulePossible"] = 0
 
 		logging.debug(" ########################################## ROUND TRIP　MATCH ###############################################")
 		iter = config.INPUT.Iter
@@ -1662,7 +1668,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 """
 Function to optimize pool for One Way Match (Match Aller Simple)
 """
-def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool):
+def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom):
 	try:
 		results = {"typeMatch": "allerSimple", "nombrePoule": poolNbr, "taillePoule": poolSize, 
 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
@@ -1699,6 +1705,12 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 
 		# save constraint variation of team number per pool
 		results["params"]["varEquipeParPouleChoisi"] = varTeamNbrPerPool
+
+		# based on phantom flag, save to results the possibility to make variation of team number per pool
+		if flagPhantom:
+			results["params"]["varEquipeParPoulePossible"] = 1
+		else:
+			results["params"]["varEquipeParPoulePossible"] = 0
 
 
 		logging.debug(" ########################################## ONE WAY　MATCH ###############################################")
@@ -2320,10 +2332,10 @@ def callback(ch, method, properties, body):
 		logging.debug("############################################# OPTIMIZE POOL #################################################")
 # 		if launchType == "match_aller_retour":
 		if launchType == "allerRetour":
-			results = optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool)
+			results = optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom)
 # 		elif launchType == "match_aller_simple":
 		elif launchType == "allerSimple":
-			results = optimize_pool_one_way_match(P_InitMat_oneWaywithoutConstraint, P_InitMat_oneWayWithConstraint, D_Mat_oneWay, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool)
+			results = optimize_pool_one_way_match(P_InitMat_oneWaywithoutConstraint, P_InitMat_oneWayWithConstraint, D_Mat_oneWay, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom)
 		elif launchType == "plateau":
 			results = optimize_pool_plateau_match()
 
