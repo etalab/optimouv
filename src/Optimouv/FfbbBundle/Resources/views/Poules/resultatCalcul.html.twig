@@ -667,10 +667,10 @@
                                                                              <tbody>
 
                                                                              {% for key, estimationDetailOptContrainte in estimationDetailsOptContrainte %}
-                                                                                 {% set distanceOptContrainte = estimationDetailsOptContrainte[ loop.index ].distanceTotale // 1000 %}
-                                                                                 {% set distanceTotaleOptContrainte = estimationDetailsOptContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}
-                                                                                 {% set dureeTotaleOptContrainte = estimationDetailsOptContrainte[ loop.index ].dureeTotale  %}
-                                                                                 {% set nbrParticipantsOptContrainte = estimationDetailsOptContrainte[ loop.index ].nbrParticipantsTotal  %}
+                                                                                 {% set distanceOptContrainte = estimationDetailsOptContrainte[ key ].distanceTotale // 1000 %}
+                                                                                 {% set distanceTotaleOptContrainte = estimationDetailsOptContrainte[ key ].distanceTotaleTousParticipants // 1000 %}
+                                                                                 {% set dureeTotaleOptContrainte = estimationDetailsOptContrainte[ key].dureeTotale  %}
+                                                                                 {% set nbrParticipantsOptContrainte = estimationDetailsOptContrainte[ key ].nbrParticipantsTotal  %}
                                                                                  <tr>
                                                                                      <td><strong> Poule {{ key }} </strong></td>
                                                                                      <td style="text-align:right"> {{distanceOptContrainte }}</td>
@@ -733,7 +733,7 @@
                                                                                          <ul>
                                                                                              {% for keyDetail, detailsRencontreOpContrainte in distanceOptContrainte %}
                                                                                                  <li>
-                                                                                                     {{ distanceOptContrainte[ loop.index ].equipeDepartVille }}
+                                                                                                     {{ distanceOptContrainte[ keyDetail ].equipeDepartVille }}
                                                                                                  </li>
 
                                                                                              {% endfor %}
@@ -744,7 +744,7 @@
                                                                                          <ul>
                                                                                              {% for keyDetail, detailsRencontreOpContrainte in distanceOptContrainte %}
                                                                                                  <li>
-                                                                                                     {{ distanceOptContrainte[ loop.index ].equipeDestinationVille }}
+                                                                                                     {{ distanceOptContrainte[ keyDetail ].equipeDestinationVille }}
                                                                                                  </li>
 
                                                                                              {% endfor %}
