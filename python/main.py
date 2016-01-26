@@ -262,6 +262,70 @@ def create_encounters_from_pool_distribution(poolDistribution):
 	except Exception as e:
 		show_exception_traceback()
 
+
+"""
+Function to create encounters from pool distribution
+"""
+def create_encounters_from_pool_distribution_one_way(poolDistribution):
+	try:
+		encounters = {}
+		
+		for pool, members in poolDistribution.items():
+			encounters[pool] = {}
+			encountersPool = []
+			encounterNbr = 0
+			for member1 in members:
+				for member2 in members:
+					if member1 != member2:
+						encounterNbr += 1
+
+						# calculate distance and travel time
+						sql = "select distance, duree from trajet where depart=%s and destination=%s" %(member1, member2)
+# 						logging.debug("  sql: %s" %(sql))
+						distance, travelTime = db.fetchone_multi(sql)
+
+						sql = "select participants, nom, ville, code_postal from entite where id=%s" %member1
+						nbrParticipants1, name1, city1, postalCode1 = db.fetchone_multi(sql)
+
+						sql = "select participants, nom, ville, code_postal from entite where id=%s" %member2
+						nbrParticipants2, name2, city2, postalCode2 = db.fetchone_multi(sql)
+		
+						distanceAllParticipants = int(distance) * int(nbrParticipants1)
+		
+						# Escape single apostrophe for name and city
+						name1 = name1.replace("'", u"''")
+# 						name1 = name1.replace("'", u"")
+# 						logging.debug("  name1: %s" %(name1))
+						name2 = name2.replace("'", u"''")
+# 						name2 = name2.replace("'", u"")
+# 						logging.debug("  name2: %s" %(name2))
+						city1 = city1.replace("'", u"''")
+# 						city1 = city1.replace("'", u"")
+# 						logging.debug("  city1: %s" %(city1))
+						city2 = city2.replace("'", u"''")
+# 						city2 = city2.replace("'", u"")
+# 						logging.debug("  city2: %s" %(city2))
+
+						encounter = {"equipeDepartId": member1, "equipeDestinationId": member2, 
+														"distance": distance, "duree": travelTime,
+														"nbrParticipants": nbrParticipants1, "distanceTousParticipants": distanceAllParticipants,
+														"equipeDepartNom": name1, "equipeDestinationNom": name2,
+														"equipeDepartVille": city1, "equipeDestinationVille": city2,
+														"equipeDepartCodePostal": postalCode1, "equipeDestinationCodePostal": postalCode2
+														
+														}
+						encounters[pool][encounterNbr] = encounter
+
+		return encounters
+
+	except Exception as e:
+		show_exception_traceback()
+
+
+
+
+
+
 """
 Function to create pool details from encounters
 """
@@ -862,11 +926,15 @@ def create_reference_pool_distribution_from_db(teams, poolSize):
 					poolDistributionReference["status"] = "no"
 					return poolDistributionReference
 
+				#############################################################################################################
 				# Patch for front, convert from pool letter given by users to number # FIXME !!!!
 				if poolId not in listChars:
 					listChars.append(poolId)
 				poolId = (listChars.index(poolId)) + 1
 # 				logging.debug(" poolId: %s" %poolId)
+				#############################################################################################################
+
+
 				if poolId not in poolDistributionReference["data"]:
 					poolDistributionReference["data"][poolId] = [teamId]
 				else:
@@ -1774,7 +1842,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		logging.debug(" poolDistributionCoords_OptimalWithoutConstraint: %s" %poolDistributionCoords_OptimalWithoutConstraint)
 		
 		# get encounter list from pool distribution dict
-		encounters_OptimalWithoutConstraint = create_encounters_from_pool_distribution(poolDistribution_OptimalWithoutConstraint)
+		encounters_OptimalWithoutConstraint = create_encounters_from_pool_distribution_one_way(poolDistribution_OptimalWithoutConstraint)
 		results["scenarioOptimalSansContrainte"]["rencontreDetails"] = encounters_OptimalWithoutConstraint
 # 		logging.debug(" encounters_OptimalWithoutConstraint: \n%s" %encounters_OptimalWithoutConstraint)
  		
