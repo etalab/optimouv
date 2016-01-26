@@ -359,6 +359,10 @@
                          console.log("poulesNbr : " + poulesNbr );
 
                          // controler le champ obligatoire (le nombre de poules)
+                         if (typeMatch == "plateau"){
+                             alert("Ce type de match n'est pas encore supporté. Veuillez choisir un autre type de match");
+
+                         }
                          if( (poulesNbr == "") || (parseInt(poulesNbr)<2) ){
                             alert("Veuillez vérifier que le nombre de poules donné est valide");
                          }
