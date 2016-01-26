@@ -845,6 +845,10 @@ def create_reference_pool_distribution_from_db(teams, poolSize):
 		poolDistributionReference = {"status": "yes", "data": {}}
 		phantomTeams = []
 
+		# logging.debug(" teams: %s" %teams)
+		# logging.debug(" poolSize: %s" %poolSize)
+
+
 		# construct pool distribution without phantom teams
 		for team in teams:
 			# check if not phantom team
@@ -864,15 +868,17 @@ def create_reference_pool_distribution_from_db(teams, poolSize):
 			else:
 				phantomTeams.append(team)
 
+		# logging.debug(" phantomTeams: %s" %phantomTeams)
 
 		# add phantom teams to the created distribution
-		poolDistributionReferenceTmp = dict.copy(poolDistributionReference["data"])
-		for pool, poolTeams in poolDistributionReferenceTmp.items():
-			if len(poolTeams) < poolSize:
-				sizeDiff = poolSize - len(poolTeams)
-				for i in range(sizeDiff):
-					phantomTeam = phantomTeams.pop()
-					poolDistributionReference["data"][pool].append(phantomTeam)
+		if len(phantomTeams) > 0:
+			poolDistributionReferenceTmp = dict.copy(poolDistributionReference["data"])
+			for pool, poolTeams in poolDistributionReferenceTmp.items():
+				if len(poolTeams) < poolSize:
+					sizeDiff = poolSize - len(poolTeams)
+					for i in range(sizeDiff):
+						phantomTeam = phantomTeams.pop()
+						poolDistributionReference["data"][pool].append(phantomTeam)
 					
 # 		logging.debug(" teams: %s" %teams)
 # 		logging.debug(" phantomTeams: %s" %phantomTeams)
