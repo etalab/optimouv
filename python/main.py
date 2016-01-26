@@ -1057,6 +1057,8 @@ def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize, varTeamNbr
 		# Initialisation matrix P
 		P_InitMat = np.zeros((teamNbr, teamNbr))
 		
+		logging.debug("varTeamNbrPerPool: %s" %varTeamNbrPerPool)
+
 		# generate a random value for each team
 		teamRandomValues = [round(random.random() * 100) for i in range(teamNbr)]
 		logging.debug("teamRandomValues: %s" %teamRandomValues)
@@ -2108,7 +2110,8 @@ Function to insert params to DB
 """
 def test_insert_params_to_db():
 	try:
-		groupId = 68
+# 		groupId = 68
+		groupId = 190
 		actionType = "allerRetour"
 # 		actionType = "allerSimple"
 		name = "rapport_groupe_%s_action_%s"%(groupId, actionType)
@@ -2120,6 +2123,7 @@ def test_insert_params_to_db():
 # 					"repartitionHomogene": {}
 # 				}
 		params = {	"nbrPoule": 3, 
+					"varEquipeParPoule": 2, 
 					"interdictions": {}, 
 					"repartitionHomogene": {"espoir": [8631, 8632]}
 				}
@@ -2179,6 +2183,7 @@ def callback(ch, method, properties, body):
 		
 # 		logging.debug("####################################### TEST INSERT PARAMS TO DB ##############################################")
 # 		test_insert_params_to_db()
+# 		sys.exit()
 		
 		logging.debug("####################################### READ PARAMS FROM USER ##############################################")
 		# Read params from config file (user)
@@ -2300,7 +2305,9 @@ def callback(ch, method, properties, body):
 		logging.debug("####################################### CREATE INITIALISATION MATRIX ########################################")
 		P_InitMat_withoutConstraint = create_init_matrix_without_constraint(teamNbrWithPhantom, poolNbr, poolSize, varTeamNbrPerPool)
 		logging.debug("P_InitMat_withoutConstraint.shape: %s" %(P_InitMat_withoutConstraint.shape,))
- 
+
+# 		sys.exit()
+
 # 		np.savetxt("/tmp/p_init_without_constraint.csv", P_InitMat_withoutConstraint, delimiter=",", fmt='%d')
 
 		# get P_Init Mat for one way
