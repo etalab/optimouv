@@ -151,10 +151,16 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 			if teamDepart in assignedTeams:
 				continue
 
-			tempPool = [] # create a temporary pool (this pool has max size of poolSize)
+			# get the row content
+			rowContent = list(P_Mat[indexRow])
+# 			logging.debug("  rowContent: %s" %rowContent)
+
+			# calculate the pool size of the row
+			poolSizeRow = rowContent.count(1.0) + 1
+			logging.debug("  poolSizeRow: %s" %poolSizeRow)
+
+			tempPool = [] # create a temporary pool (this pool has max size of poolSizeRow)
 			tempPool.append(teamDepart) # add first element in the pool
-			
-# 			logging.debug("  teamDepart: %s" %teamDepart)
 
 			for indexCol, teamDestination in enumerate(teams):
 				# continue to the next row if teamDepart is already in the list of assigned teams
@@ -168,26 +174,29 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 				performanceCounter += 1
 	
 				# add teamDestination to temporary pool if the pool size has not been reached and if the teamDestination is not yet in temporary pool 
-				if ( len(tempPool) < poolSize) and (teamDestination not in tempPool) and (valueMat == 1):
+# 				if ( len(tempPool) < poolSize) and (teamDestination not in tempPool) and (valueMat == 1):
+				if ( len(tempPool) < poolSizeRow) and (teamDestination not in tempPool) and (valueMat == 1):
 					tempPool.append(teamDestination)
 					
 				# if the pool size has been reached, push the tempPool to tempPools
-				if len(tempPool) == poolSize:
+# 				if len(tempPool) == poolSize:
+				if len(tempPool) == poolSizeRow:
 					tempPool = sorted(tempPool)
 					if tempPool not in tempPools:
 # 						logging.debug("  tempPool: %s" %tempPool)
 						
 						if len(tempPools) < poolNbr:
+							logging.debug("  tempPool: %s" %tempPool)
 							tempPools.append(tempPool)
 							assignedTeams.extend(tempPool)
 						else: 
 							break
 				
-		logging.debug("teamNbr: \n%s" %teamNbr)
-		logging.debug("poolNbr: \n%s" %poolNbr)
-		logging.debug("poolSize: \n%s" %poolSize)
-		logging.debug("teams: \n%s" %teams)
-		logging.debug("tempPools: \n%s" %tempPools)
+# 		logging.debug("teamNbr: \n%s" %teamNbr)
+# 		logging.debug("poolNbr: \n%s" %poolNbr)
+# 		logging.debug("poolSize: \n%s" %poolSize)
+# 		logging.debug("teams: \n%s" %teams)
+# 		logging.debug("tempPools: \n%s" %tempPools)
 
 		firstPoolName = ord('A')
 		# obtain group distribution per pool
@@ -1138,7 +1147,16 @@ def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize, varTeamNbr
 		# Initialisation matrix P
 		P_InitMat = np.zeros((teamNbr, teamNbr))
 		
+		# determine max and min pool size from normal pool size and variation team number per pool
+		poolSizeMax = poolSize + varTeamNbrPerPool
+		poolSizeMin = poolSize - varTeamNbrPerPool
+		
+		logging.debug("teamNbr: %s" %teamNbr)
+		logging.debug("poolNbr: %s" %poolNbr)
+		logging.debug("poolSize: %s" %poolSize)
 		logging.debug("varTeamNbrPerPool: %s" %varTeamNbrPerPool)
+		logging.debug("poolSizeMax: %s" %poolSizeMax)
+		logging.debug("poolSizeMin: %s" %poolSizeMin)
 
 		# generate a random value for each team
 		teamRandomValues = [round(random.random() * 100) for i in range(teamNbr)]
