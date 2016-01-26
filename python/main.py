@@ -133,7 +133,7 @@ def calculate_V_value_equitable(input_P_mat, input_D_mat):
 """
 Function to create pool distribution from P Matrix
 """
-def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, teams):
+def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool):
 	try:
 
 		# Dict containing the distribution of groups in the pools
@@ -183,6 +183,10 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 						else: 
 							break
 				
+		logging.debug("teamNbr: \n%s" %teamNbr)
+		logging.debug("poolNbr: \n%s" %poolNbr)
+		logging.debug("poolSize: \n%s" %poolSize)
+		logging.debug("teams: \n%s" %teams)
 		logging.debug("tempPools: \n%s" %tempPools)
 
 		firstPoolName = ord('A')
@@ -1163,6 +1167,16 @@ def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize, varTeamNbr
 		logging.debug("teamPoolResult: %s" %teamPoolResult)
 		logging.debug("len teamPoolResult: %s" %len(teamPoolResult))
 		
+		#####################################################################################################
+		# take into account variation of team number in a pool
+		#####################################################################################################
+# 		if len(teamPoolResult) == 12:
+# 			teamPoolResult = [1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3]
+# 			logging.debug("teamPoolResult: %s" %teamPoolResult)
+			
+			
+		#####################################################################################################
+		
 		# get index of the teams with the same pool number (create 2D Matrix from list)
 		for indexCurPool, curPoolNbr in enumerate(teamPoolResult):
 			sameCurValueIndex =  [i for i, x in enumerate(teamPoolResult) if x == curPoolNbr]
@@ -1543,7 +1557,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		np.savetxt("/tmp/p_mat_optimal_without_constraint.csv", P_Mat_OptimalWithoutConstraint, delimiter=",", fmt='%d') # DEBUG
 # 
 # 		# get pool distribution
-		poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams)
+		poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
 		logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %poolDistribution_OptimalWithoutConstraint)
 # 		
 		# eliminate phnatom teams
@@ -1583,7 +1597,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		np.savetxt("/tmp/p_mat_equitable_without_constraint.csv", P_Mat_EquitableWithoutConstraint, delimiter=",", fmt='%d') # DEBUG
 
 		# get pool distribution
-		poolDistribution_EquitableWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithoutConstraint, teamNbr, poolNbr, poolSize, teams)
+		poolDistribution_EquitableWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
 		logging.debug(" poolDistribution_EquitableWithoutConstraint: %s" %poolDistribution_EquitableWithoutConstraint)
 
 		# eliminate phnatom teams
@@ -1623,7 +1637,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 	 	
 			np.savetxt("/tmp/p_mat_optimal_with_constraint.csv", P_Mat_OptimalWithConstraint, delimiter=",", fmt='%d') # DEBUG
 	
-			poolDistribution_OptimalWithConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithConstraint, teamNbr, poolNbr, poolSize, teams)
+			poolDistribution_OptimalWithConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
 			logging.debug(" poolDistribution_OptimalWithConstraint: %s" %poolDistribution_OptimalWithConstraint)
 	
 			# eliminate phnatom teams
@@ -1664,7 +1678,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			np.savetxt("/tmp/p_mat_equitable_with_constraint.csv", P_Mat_EquitableWithConstraint, delimiter=",", fmt='%d') # DEBUG
 	
 			# get pool distribution
-			poolDistribution_EquitableWithConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithConstraint, teamNbr, poolNbr, poolSize, teams)
+			poolDistribution_EquitableWithConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
 			logging.debug(" poolDistribution_EquitableWithConstraint: %s" %poolDistribution_EquitableWithConstraint)
 	
 			# eliminate phnatom teams
@@ -1824,7 +1838,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		np.savetxt("/tmp/p_mat_optimal_without_constraint.csv", P_Mat_OptimalWithoutConstraint, delimiter=",", fmt='%d') # DEBUG
 # 
 # 		# get pool distribution
-		poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams)
+		poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
 		logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %poolDistribution_OptimalWithoutConstraint)
 # 		
 		# eliminate phnatom teams
@@ -1863,7 +1877,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		np.savetxt("/tmp/p_mat_equitable_without_constraint.csv", P_Mat_EquitableWithoutConstraint, delimiter=",", fmt='%d') # DEBUG
 
 		# get pool distribution
-		poolDistribution_EquitableWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithoutConstraint, teamNbr, poolNbr, poolSize, teams)
+		poolDistribution_EquitableWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
 		logging.debug(" poolDistribution_EquitableWithoutConstraint: %s" %poolDistribution_EquitableWithoutConstraint)
 
 		# eliminate phnatom teams
@@ -1903,7 +1917,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 	 	
 			np.savetxt("/tmp/p_mat_optimal_with_constraint.csv", P_Mat_OptimalWithConstraint, delimiter=",", fmt='%d') # DEBUG
 	
-			poolDistribution_OptimalWithConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithConstraint, teamNbr, poolNbr, poolSize, teams)
+			poolDistribution_OptimalWithConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
 			logging.debug(" poolDistribution_OptimalWithConstraint: %s" %poolDistribution_OptimalWithConstraint)
 	
 				# eliminate phnatom teams
@@ -1944,7 +1958,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			np.savetxt("/tmp/p_mat_equitable_with_constraint.csv", P_Mat_EquitableWithConstraint, delimiter=",", fmt='%d') # DEBUG
 	
 			# get pool distribution
-			poolDistribution_EquitableWithConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithConstraint, teamNbr, poolNbr, poolSize, teams)
+			poolDistribution_EquitableWithConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
 			logging.debug(" poolDistribution_EquitableWithConstraint: %s" %poolDistribution_EquitableWithConstraint)
 
 			# eliminate phnatom teams
@@ -2199,10 +2213,15 @@ def test_insert_params_to_db():
 # 					"interdictions": {"1": [8631, 8632]}, 
 # 					"repartitionHomogene": {}
 # 				}
+# 		params = {	"nbrPoule": 3, 
+# 					"varEquipeParPoule": 2, 
+# 					"interdictions": {}, 
+# 					"repartitionHomogene": {"espoir": [8631, 8632]}
+# 				}
 		params = {	"nbrPoule": 3, 
 					"varEquipeParPoule": 2, 
 					"interdictions": {}, 
-					"repartitionHomogene": {"espoir": [8631, 8632]}
+					"repartitionHomogene": {}
 				}
 		
 		sql = """insert into rapport (nom, id_groupe, type_action, valeur_exclusion , date_creation, params, statut)
@@ -2220,6 +2239,9 @@ def test_insert_params_to_db():
 		logging.debug("sql: %s" %sql)
 		db.execute(sql)
 		db.commit()
+		
+		sys.exit()
+
 
 	except Exception as e:
 		show_exception_traceback()
@@ -2260,7 +2282,6 @@ def callback(ch, method, properties, body):
 		
 # 		logging.debug("####################################### TEST INSERT PARAMS TO DB ##############################################")
 # 		test_insert_params_to_db()
-# 		sys.exit()
 		
 		logging.debug("####################################### READ PARAMS FROM USER ##############################################")
 		# Read params from config file (user)
