@@ -157,7 +157,7 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 
 			# calculate the pool size of the row
 			poolSizeRow = rowContent.count(1.0) + 1
-			logging.debug("  poolSizeRow: %s" %poolSizeRow)
+# 			logging.debug("  poolSizeRow: %s" %poolSizeRow)
 
 			tempPool = [] # create a temporary pool (this pool has max size of poolSizeRow)
 			tempPool.append(teamDepart) # add first element in the pool
@@ -186,7 +186,7 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 # 						logging.debug("  tempPool: %s" %tempPool)
 						
 						if len(tempPools) < poolNbr:
-							logging.debug("  tempPool: %s" %tempPool)
+# 							logging.debug("  tempPool: %s" %tempPool)
 							tempPools.append(tempPool)
 							assignedTeams.extend(tempPool)
 						else: 
@@ -1129,13 +1129,96 @@ def create_distance_matrix_from_db(teams):
 						logging.debug("resultsHere: %s" %resultsHere)
 
 				D_Mat[indexDepart][indexDestination] = distance
-					
+	
+		return D_Mat
+
 # 		logging.debug("D_Mat: %s" %D_Mat)
 # 		np.savetxt("/tmp/d_mat_%s.csv"%teamNbr, D_Mat, delimiter=",", fmt='%d') # DEBUG
 	except Exception as e:
 		show_exception_traceback()
 
-	return D_Mat
+
+"""
+Function to adjust pool distribution based on variation of team number per pool
+"""
+def adjust_pool_attribution_based_on_pool_variation(teamPoolResult, poolNbr, poolSize, varTeamNbrPerPool):
+	try:
+		teamPoolResultTransformed = [] 
+
+		# determine if pool number is even or odd
+		if poolNbr % 2 == 0:
+			poolNbrCategory = "even"
+		else:
+			poolNbrCategory = "odd"
+			
+		# treat differently according to the pool number category
+		if poolNbrCategory == "even":
+			logging.debug("poolNbrCategory: %s" %poolNbrCategory)
+
+			# create dictionary to transform pool
+			transformDict = {}
+			for pool in range(1, poolNbr+1):
+				# variation for odd numbered member
+				if pool%2 == 1:
+					transformDict[pool] = poolSize - varTeamNbrPerPool
+				# variation for even numbered member
+				elif pool%2 == 0:
+					transformDict[pool] = poolSize + varTeamNbrPerPool
+			logging.debug("transformDict: %s" %transformDict)
+			
+			# change members in all pools
+			for pool in teamPoolResult:
+				# determine the number of pool size of the current pool
+				currentPoolSize = teamPoolResultTransformed.count(pool)
+# 					logging.debug("currentPoolSize: %s" %currentPoolSize)
+
+				if currentPoolSize < transformDict[pool]:
+					teamPoolResultTransformed.append(pool)
+				else:
+					# affect to the next pool
+					pool = pool +1
+					teamPoolResultTransformed.append(pool)
+
+		elif poolNbrCategory == "odd":
+			logging.debug("poolNbrCategory: %s" %poolNbrCategory)
+
+			# create dictionary to transform pool
+			transformDict = {}
+			for pool in range(1, poolNbr+1):
+				# for last pool (no variation)
+				if pool == poolNbr:
+					transformDict[pool] = poolSize
+				# variation for odd numbered member
+				elif pool%2 == 1:
+					transformDict[pool] = poolSize - varTeamNbrPerPool
+				# variation for even numbered member
+				elif pool%2 == 0:
+					transformDict[pool] = poolSize + varTeamNbrPerPool
+			logging.debug("transformDict: %s" %transformDict)
+			
+			# change members in all pools except the last pool
+			for pool in teamPoolResult:
+				if pool == poolNbr:
+					teamPoolResultTransformed.append(pool)
+				else:
+					# determine the number of pool size of the current pool
+					currentPoolSize = teamPoolResultTransformed.count(pool)
+# 					logging.debug("currentPoolSize: %s" %currentPoolSize)
+
+					if currentPoolSize < transformDict[pool]:
+						teamPoolResultTransformed.append(pool)
+					else:
+						# affect to the next pool
+						pool = pool +1
+						teamPoolResultTransformed.append(pool)
+						
+		
+		logging.debug("teamPoolResultTransformed: %s" %teamPoolResultTransformed)
+# 		return teamPoolResult
+		return teamPoolResultTransformed
+	except Exception as e:
+		show_exception_traceback()
+
 
 """
 Function to create initilization matrix without constraint
@@ -1188,11 +1271,9 @@ def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize, varTeamNbr
 		#####################################################################################################
 		# take into account variation of team number in a pool
 		#####################################################################################################
-# 		if len(teamPoolResult) == 12:
-# 			teamPoolResult = [1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3]
-# 			logging.debug("teamPoolResult: %s" %teamPoolResult)
-			
-			
+		teamPoolResult = adjust_pool_attribution_based_on_pool_variation(teamPoolResult, poolNbr, poolSize, varTeamNbrPerPool)
+		logging.debug("teamPoolResult: %s" %teamPoolResult)
+		
 		#####################################################################################################
 		
 		# get index of the teams with the same pool number (create 2D Matrix from list)
@@ -1354,7 +1435,16 @@ def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterCo
 # 			logging.debug("	len teamPoolResult: %s" %len(teamPoolResult))
 			logging.debug("	teamPoolResult: %s" %teamPoolResult)
 	# 		logging.debug("teams: %s" %teams)
-	
+
+
+			#####################################################################################################
+			# take into account variation of team number in a pool
+			#####################################################################################################
+			teamPoolResult = adjust_pool_attribution_based_on_pool_variation(teamPoolResult, poolNbr, poolSize, varTeamNbrPerPool)
+			logging.debug("teamPoolResult: %s" %teamPoolResult)
+
+			#####################################################################################################
+
 			# create pool distribution
 			poolDistribution = {}
 			for i in range(teamNbr):
@@ -2236,8 +2326,13 @@ def test_insert_params_to_db():
 # 					"interdictions": {}, 
 # 					"repartitionHomogene": {"espoir": [8631, 8632]}
 # 				}
-		params = {	"nbrPoule": 3, 
-					"varEquipeParPoule": 2, 
+# 		params = {	"nbrPoule": 3, 
+# 					"varEquipeParPoule": 2, 
+# 					"interdictions": {}, 
+# 					"repartitionHomogene": {}
+# 				}
+		params = {	"nbrPoule": 4, 
+					"varEquipeParPoule": 1, 
 					"interdictions": {}, 
 					"repartitionHomogene": {}
 				}
