@@ -20,6 +20,10 @@
                          <h3 class="page-header">Sélectionnez vos critères et contraintes </h3>
                          {#<h4>{{ nomListe }} | {{ nomGroupe }}</h4>#}
                      </div>
+                     <div class="col-lg-12">
+                         <h5 style="float: right"> <strong> (* champs obligatoires)</strong>  </h5>
+                     </div>
+
                      <!-- /.col-lg-12 -->
                  </div>
                  <!-- /.row -->
@@ -150,7 +154,7 @@
                                          <h5>Interdictions</h5>
                                      </div>
                                      <div class="col-lg-6">
-                                         <button type="button" class="btn btn-primary pull-right" onclick="ajouterInterdiction();">Ajouter</button>
+                                         <button type="button" class="btn btn-primary pull-right" onclick="ajouterInterdiction();">Voir</button>
                                      </div>
 
                                  </div>
@@ -159,7 +163,7 @@
                                          <h5>Répartitions homogènes</h5>
                                      </div>
                                      <div class="col-lg-6">
-                                         <button type="button" class="btn btn-primary pull-right" onclick="ajouterRepartition();">Ajouter</button>
+                                         <button type="button" class="btn btn-primary pull-right" onclick="ajouterRepartition();">Voir</button>
                                      </div>
 
                                  </div>
@@ -436,7 +440,7 @@
                                                      <div id="collapseOne" class="panel-collapse collapse in">
                                                          <div class="panel-body"> <!-- premier scÃ©nario -->
                                                              <div id="map"
-                                                                  style="width: 100%; height: 600px; background: grey"></div>
+                                                                  style="width: 100%; height: 500px; background: grey"></div>
                                                              <script type="text/javascript" charset="UTF-8">
 
                                                                  /**
@@ -462,23 +466,25 @@
                                                                   Fin fn changer langue
                                                                   */
 
-                                                                 /**
-                                                                  * Markeur principal
-                                                                  */
-
                                                                  // Create a marker icon from an image URL:
-                                                                 var icon = new H.map.Icon('{{ asset('bundles/ffbb/images/depart.png') }}');
 
-                                                                 // Create a marker using the previously instantiated icon:
-                                                                 {#var markerPrincipal = new H.map.Marker({#}
-                                                                     {#lng: '{{ longPtDep }}',#}
-                                                                     {#lat: '{{ latPtDep }}'#}
-                                                                 {#}, {icon: icon});#}
+                                                                 var icons0 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon0.png') }}');
+                                                                 var icons1 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon1.png') }}');
+                                                                 var icons2 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon2.png') }}');
+                                                                 var icons3 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon3.png') }}');
+                                                                 var icons4 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon4.png') }}');
+                                                                 var icons5 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon5.png') }}');
+                                                                 var icons6 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon6.png') }}');
+                                                                 var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
+                                                                 var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
+                                                                 var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
 
                                                                  //construction des points de differentes villes
                                                                  function addMarkersAndSetViewBounds() {
                                                                      var incrment = 1;
                                                                      var points = [];
+                                                                     var incrementIcons = 0;
+
                                                                      {%  for coordPoule in coordPoules %}
 
                                                                         //tracer dynamiquement les points de villes
@@ -490,12 +496,12 @@
 //                                                                         var x = xy[0];
 //                                                                         var y = xy[1];
 
-
+                                                                     var icon = 'icons' + incrementIcons;
                                                                          var marker = 'marker' + incrment;
                                                                          window[marker] = new H.map.Marker({
                                                                              lat: parseFloat(x),
                                                                              lng: parseFloat(y)
-                                                                         } );
+                                                                         }, {icon: window[icon]}  );
 
 
                                                                           points.push(window[marker]);
@@ -503,7 +509,7 @@
                                                                          var incrment = incrment + 1;
 
                                                                          {% endfor %}
-
+                                                                     incrementIcons++;
                                                                      {% endfor %}
                                                                          group = new H.map.Group();
                                                                          // add markers to the group
@@ -694,7 +700,7 @@
                                                                  </div>
 
                                                                  <div class="tab-pane fade" id="listeRencontresScOpt">
-                                                                     <div class="table-responsive" style="padding-top: 10px">
+                                                                     <div class="table-responsive" style="padding-top: 10px; max-height: 400px; overflow-y: scroll;">
 
                                                                          <table id="exampleTerrain" class="display"
                                                                                 cellspacing="0"
@@ -810,7 +816,7 @@
                                                      </div>
                                                      <div class="panel-body"> <!-- premier scÃ©nario -->
                                                          <div id="mapEquitable"
-                                                              style="width: 100%; height: 600px; background: grey"></div>
+                                                              style="width: 100%; height: 500px; background: grey"></div>
                                                          <script type="text/javascript" charset="UTF-8">
 
                                                              /**
@@ -836,23 +842,24 @@
                                                               Fin fn changer langue
                                                               */
 
-                                                             /**
-                                                              * Markeur principal
-                                                              */
-
                                                              // Create a marker icon from an image URL:
-                                                             var icon = new H.map.Icon('{{ asset('bundles/ffbb/images/depart.png') }}');
 
-                                                             // Create a marker using the previously instantiated icon:
-                                                             {#var markerPrincipal = new H.map.Marker({#}
-                                                             {#lng: '{{ longPtDep }}',#}
-                                                             {#lat: '{{ latPtDep }}'#}
-                                                             {#}, {icon: icon});#}
+                                                             var icons0 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon0.png') }}');
+                                                             var icons1 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon1.png') }}');
+                                                             var icons2 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon2.png') }}');
+                                                             var icons3 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon3.png') }}');
+                                                             var icons4 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon4.png') }}');
+                                                             var icons5 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon5.png') }}');
+                                                             var icons6 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon6.png') }}');
+                                                             var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
+                                                             var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
+                                                             var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
 
                                                              //construction des points de differentes villes
                                                              function addMarkersAndSetViewBounds() {
                                                                  var incrment = 1;
                                                                  var points = [];
+                                                                 var incrementIcons = 0;
                                                                  {%  for coordPouleEqAvecContrainte in coordPoulesEqAvecContrainte %}
 
                                                                  //tracer dynamiquement les points de villes
@@ -863,13 +870,13 @@
                                                                  var xy = x+y;
 //                                                                         var x = xy[0];
 //                                                                         var y = xy[1];
-
+                                                                 var icon = 'icons' + incrementIcons;
 
                                                                  var marker = 'marker' + incrment;
                                                                  window[marker] = new H.map.Marker({
                                                                      lat: parseFloat(x),
                                                                      lng: parseFloat(y)
-                                                                 } );
+                                                                 }, {icon: window[icon]}  );
 
 
                                                                  points.push(window[marker]);
@@ -877,7 +884,7 @@
                                                                  var incrment = incrment + 1;
 
                                                                  {% endfor %}
-
+                                                                 incrementIcons++;
                                                                  {% endfor %}
                                                                  group = new H.map.Group();
                                                                  // add markers to the group
@@ -1070,7 +1077,7 @@
                                                              </div>
 
                                                              <div class="tab-pane fade" id="listeRencontresScEq">
-                                                                 <div class="table-responsive" style="padding-top: 10px">
+                                                                 <div class="table-responsive" style="padding-top: 10px; max-height: 400px; overflow-y: scroll;">
 
                                                                      <table id="scEqAvecContrainte" class="display"
                                                                             cellspacing="0"
@@ -1159,7 +1166,7 @@
                                      </div>
 
                                      <!-- /.col-lg-6 -->
-                                 </div>
+                                 </div>  <!-- Avec contraintes -->
 
                                  {# Deuxieme partie de cartes #}
 
@@ -1193,7 +1200,7 @@
                                                      </div>
                                                      <div class="panel-body"> <!-- premier scÃ©nario -->
                                                          <div id="mapOpSansContrainte"
-                                                              style="width: 100%; height: 600px; background: grey"></div>
+                                                              style="width: 100%; height: 500px; background: grey"></div>
                                                          <script type="text/javascript" charset="UTF-8">
 
                                                              /**
@@ -1218,24 +1225,24 @@
                                                              /*
                                                               Fin fn changer langue
                                                               */
-
-                                                             /**
-                                                              * Markeur principal
-                                                              */
-
                                                              // Create a marker icon from an image URL:
-                                                             var icon = new H.map.Icon('{{ asset('bundles/ffbb/images/depart.png') }}');
 
-                                                             // Create a marker using the previously instantiated icon:
-                                                             {#var markerPrincipal = new H.map.Marker({#}
-                                                             {#lng: '{{ longPtDep }}',#}
-                                                             {#lat: '{{ latPtDep }}'#}
-                                                             {#}, {icon: icon});#}
+                                                             var icons0 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon0.png') }}');
+                                                             var icons1 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon1.png') }}');
+                                                             var icons2 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon2.png') }}');
+                                                             var icons3 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon3.png') }}');
+                                                             var icons4 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon4.png') }}');
+                                                             var icons5 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon5.png') }}');
+                                                             var icons6 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon6.png') }}');
+                                                             var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
+                                                             var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
+                                                             var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
 
                                                              //construction des points de differentes villes
                                                              function addMarkersAndSetViewBounds() {
                                                                  var incrment = 1;
                                                                  var points = [];
+                                                                 var incrementIcons = 0;
                                                                  {%  for coordPouleOpSansContrainte in coordPoulesOpSansContrainte %}
 
                                                                  //tracer dynamiquement les points de villes
@@ -1247,12 +1254,12 @@
 //                                                                         var x = xy[0];
 //                                                                         var y = xy[1];
 
-
+                                                                 var icon = 'icons' + incrementIcons;
                                                                  var marker = 'marker' + incrment;
                                                                  window[marker] = new H.map.Marker({
                                                                      lat: parseFloat(x),
                                                                      lng: parseFloat(y)
-                                                                 } );
+                                                                 }, {icon: window[icon]} );
 
 
                                                                  points.push(window[marker]);
@@ -1260,7 +1267,7 @@
                                                                  var incrment = incrment + 1;
 
                                                                  {% endfor %}
-
+                                                                 incrementIcons++;
                                                                  {% endfor %}
                                                                  group = new H.map.Group();
                                                                  // add markers to the group
@@ -1451,7 +1458,7 @@
                                                                  <!-- /.table-responsive -->
                                                              </div>
                                                              <div class="tab-pane fade" id="listeRencontresOptSansContrainte">
-                                                                 <div class="table-responsive" style="padding-top: 10px">
+                                                                 <div class="table-responsive" style="padding-top: 10px; max-height: 400px; overflow-y: scroll;">
 
                                                                      <table id="scEqSansContrainte" class="display"
                                                                             cellspacing="0"
@@ -1570,7 +1577,7 @@
                                                      </div>
                                                      <div class="panel-body"> <!-- premier scÃ©nario -->
                                                          <div id="mapRef"
-                                                              style="width: 100%; height: 600px; background: grey"></div>
+                                                              style="width: 100%; height: 500px; background: grey"></div>
                                                          <script type="text/javascript" charset="UTF-8">
 
                                                              /**
@@ -1596,23 +1603,24 @@
                                                               Fin fn changer langue
                                                               */
 
-                                                             /**
-                                                              * Markeur principal
-                                                              */
-
                                                              // Create a marker icon from an image URL:
-                                                             var icon = new H.map.Icon('{{ asset('bundles/ffbb/images/depart.png') }}');
 
-                                                             // Create a marker using the previously instantiated icon:
-                                                             {#var markerPrincipal = new H.map.Marker({#}
-                                                             {#lng: '{{ longPtDep }}',#}
-                                                             {#lat: '{{ latPtDep }}'#}
-                                                             {#}, {icon: icon});#}
+                                                             var icons0 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon0.png') }}');
+                                                             var icons1 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon1.png') }}');
+                                                             var icons2 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon2.png') }}');
+                                                             var icons3 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon3.png') }}');
+                                                             var icons4 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon4.png') }}');
+                                                             var icons5 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon5.png') }}');
+                                                             var icons6 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon6.png') }}');
+                                                             var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
+                                                             var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
+                                                             var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
 
                                                              //construction des points de differentes villes
                                                              function addMarkersAndSetViewBounds() {
                                                                  var incrment = 1;
                                                                  var points = [];
+                                                                 var incrementIcons = 0;
                                                                  {%  for coordPouleRef in coordPoulesRef %}
 
                                                                  //tracer dynamiquement les points de villes
@@ -1624,12 +1632,12 @@
 //                                                                         var x = xy[0];
 //                                                                         var y = xy[1];
 
-
+                                                                 var icon = 'icons' + incrementIcons;
                                                                  var marker = 'marker' + incrment;
                                                                  window[marker] = new H.map.Marker({
                                                                      lat: parseFloat(x),
                                                                      lng: parseFloat(y)
-                                                                 } );
+                                                                 }, {icon: window[icon]}  );
 
 
                                                                  points.push(window[marker]);
@@ -1637,7 +1645,7 @@
                                                                  var incrment = incrment + 1;
 
                                                                  {% endfor %}
-
+                                                                 incrementIcons++;
                                                                  {% endfor %}
                                                                  group = new H.map.Group();
                                                                  // add markers to the group
@@ -1861,8 +1869,10 @@
                          {% else %} <!-- Pas de contrainte -->
 
 
+                         <!-- .panel-heading -->
+                         <div class="panel-body">
                              <div class="row">
-                                 <!-- Scénario optimal sans contrainte -->
+                                 <!-- Scénario optimal sans contraintes -->
                                  <div class="col-lg-6">
 
                                      <!-- declaration de variables -->
@@ -1890,7 +1900,8 @@
                                                  </div>
                                                  <div class="panel-body"> <!-- premier scÃ©nario -->
                                                      <div id="mapOptSansContrainte"
-                                                          style="width: 100%; height: 600px; background: grey"></div>
+                                                          style="width: 100%; height: 500px; background: grey"></div>
+
                                                      <script type="text/javascript" charset="UTF-8">
 
                                                          /**
@@ -1916,24 +1927,26 @@
                                                           Fin fn changer langue
                                                           */
 
-                                                         /**
-                                                          * Markeur principal
-                                                          */
-
                                                          // Create a marker icon from an image URL:
-                                                         var icon = new H.map.Icon('{{ asset('bundles/ffbb/images/depart.png') }}');
 
-                                                         // Create a marker using the previously instantiated icon:
-                                                         {#var markerPrincipal = new H.map.Marker({#}
-                                                         {#lng: '{{ longPtDep }}',#}
-                                                         {#lat: '{{ latPtDep }}'#}
-                                                         {#}, {icon: icon});#}
+                                                         var icons0 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon0.png') }}');
+                                                         var icons1 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon1.png') }}');
+                                                         var icons2 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon2.png') }}');
+                                                         var icons3 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon3.png') }}');
+                                                         var icons4 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon4.png') }}');
+                                                         var icons5 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon5.png') }}');
+                                                         var icons6 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon6.png') }}');
+                                                         var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
+                                                         var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
+                                                         var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
+
 
                                                          //construction des points de differentes villes
                                                          function addMarkersAndSetViewBounds() {
                                                              var incrment = 1;
                                                              var points = [];
-                                                             {%  for coordPouleOpSansContrainte in coordPoulesOpSansContrainte %}
+                                                             var incrementIcons = 0;
+                                                             {%  for key,coordPouleOpSansContrainte in coordPoulesOpSansContrainte %}
 
                                                              //tracer dynamiquement les points de villes
                                                              {% for coordonneeVilleOpSansContrainte in coordPouleOpSansContrainte %}
@@ -1944,12 +1957,12 @@
 //                                                                         var x = xy[0];
 //                                                                         var y = xy[1];
 
-
+                                                            var icon = 'icons' + incrementIcons;
                                                              var marker = 'marker' + incrment;
                                                              window[marker] = new H.map.Marker({
                                                                  lat: parseFloat(x),
                                                                  lng: parseFloat(y)
-                                                             } );
+                                                             }, {icon: window[icon]} );
 
 
                                                              points.push(window[marker]);
@@ -1957,7 +1970,7 @@
                                                              var incrment = incrment + 1;
 
                                                              {% endfor %}
-
+                                                             incrementIcons++;
                                                              {% endfor %}
                                                              group = new H.map.Group();
                                                              // add markers to the group
@@ -2148,12 +2161,13 @@
                                                              <!-- /.table-responsive -->
                                                          </div>
                                                          <div class="tab-pane fade" id="listeRencontresOptSansContrainte">
-                                                             <div class="table-responsive" style="padding-top: 10px">
+                                                             <div class="table-responsive" style="padding-top: 10px; max-height: 400px; overflow-y: scroll;">
 
                                                                  <table id="scEqSansContrainte" class="display"
                                                                         cellspacing="0"
                                                                         width="100%">
-                                                                     <thead>
+
+                                                                         <thead>
                                                                      <tr>
                                                                          <th style="font-weight: bold !important;">
                                                                              Poules
@@ -2166,14 +2180,16 @@
 
                                                                      </tr>
                                                                      </thead>
-                                                                     <tbody>
 
+
+
+                                                                         <tbody >
                                                                      {% for keyOptSansContrainte, rencontreDetailOpSansContrainte in rencontreDetailsOpSansContrainte %}
                                                                          {% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ loop.index ] %}
 
                                                                          <tr>
                                                                              <td><strong> Poule {{ keyOptSansContrainte }} </strong></td>
-                                                                             <td>
+                                                                             <td >
                                                                                  <ul>
                                                                                      {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
                                                                                          <li>
@@ -2208,11 +2224,10 @@
                                                                          </tr>
 
                                                                      {% endfor %}
+                                                                         </tbody>
 
 
-                                                                     </tbody>
                                                                  </table>
-
                                                              </div>
                                                              <!-- /.table-responsive -->
                                                          </div>
@@ -2266,7 +2281,7 @@
                                                  </div>
                                                  <div class="panel-body"> <!-- premier scÃ©nario -->
                                                      <div id="mapEquitableSansContrainte"
-                                                          style="width: 100%; height: 600px; background: grey"></div>
+                                                          style="width: 100%; height: 500px; background: grey"></div>
                                                      <script type="text/javascript" charset="UTF-8">
 
                                                          /**
@@ -2292,23 +2307,26 @@
                                                           Fin fn changer langue
                                                           */
 
-                                                         /**
-                                                          * Markeur principal
-                                                          */
-
                                                          // Create a marker icon from an image URL:
-                                                         var icon = new H.map.Icon('{{ asset('bundles/ffbb/images/depart.png') }}');
 
-                                                         // Create a marker using the previously instantiated icon:
-                                                         {#var markerPrincipal = new H.map.Marker({#}
-                                                         {#lng: '{{ longPtDep }}',#}
-                                                         {#lat: '{{ latPtDep }}'#}
-                                                         {#}, {icon: icon});#}
+                                                         var icons0 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon0.png') }}');
+                                                         var icons1 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon1.png') }}');
+                                                         var icons2 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon2.png') }}');
+                                                         var icons3 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon3.png') }}');
+                                                         var icons4 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon4.png') }}');
+                                                         var icons5 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon5.png') }}');
+                                                         var icons6 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon6.png') }}');
+                                                         var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
+                                                         var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
+                                                         var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
+
 
                                                          //construction des points de differentes villes
                                                          function addMarkersAndSetViewBounds() {
                                                              var incrment = 1;
                                                              var points = [];
+                                                             var incrementIcons = 0;
+
                                                              {%  for coordPouleEquitableSansContrainte in coordPoulesEquitableSansContrainte %}
 
                                                              //tracer dynamiquement les points de villes
@@ -2320,12 +2338,12 @@
 //                                                                         var x = xy[0];
 //                                                                         var y = xy[1];
 
-
+                                                             var icon = 'icons' + incrementIcons;
                                                              var marker = 'marker' + incrment;
                                                              window[marker] = new H.map.Marker({
                                                                  lat: parseFloat(x),
                                                                  lng: parseFloat(y)
-                                                             } );
+                                                             } , {icon: window[icon]} );
 
 
                                                              points.push(window[marker]);
@@ -2333,7 +2351,7 @@
                                                              var incrment = incrment + 1;
 
                                                              {% endfor %}
-
+                                                             incrementIcons++;
                                                              {% endfor %}
                                                              group = new H.map.Group();
                                                              // add markers to the group
@@ -2526,7 +2544,7 @@
                                                          </div>
 
                                                          <div class="tab-pane fade" id="listeRencontresScEq">
-                                                             <div class="table-responsive" style="padding-top: 10px">
+                                                             <div class="table-responsive" style="padding-top: 10px; max-height: 400px; overflow-y: scroll;">
 
                                                                  <table id="scEqAvecContrainte" class="display"
                                                                         cellspacing="0"
@@ -2642,7 +2660,8 @@
                                      {% set estimationDetailsRef = scenarioRef.estimationDetails %}
                                      <!-- rencontreDetails -->
                                      {% set rencontreDetailsRef = scenarioRef.rencontreDetails %}
-
+                                     <!-- coordPoules -->
+                                     {% set coordPoulesRef = scenarioRef.poulesCoords %}
                                      <div class="panel-body">
                                          <div class="panel-group" id="scOptimalSansContrainte">
                                              <div class="panel panel-default">
@@ -2652,10 +2671,119 @@
                                                      </h4>
                                                  </div>
                                                  <div class="panel-body"> <!-- premier scÃ©nario -->
-                                                     <div id="mapEquitable"
-                                                          style="width: 100%; height: 600px; background: grey"></div>
+                                                     <div id="mapScRef"
+                                                          style="width: 100%; height: 500px; background: grey"></div>
                                                      <script type="text/javascript" charset="UTF-8">
 
+                                                         /**
+                                                          *
+                                                          * Changer la langue de la carte
+                                                          */
+                                                         function switchMapLanguage(map, platform) {
+                                                             var mapTileService = platform.getMapTileService({
+                                                                         type: 'base'
+                                                                     }),
+                                                                     frenchMapLayer = mapTileService.createTileLayer(
+                                                                             'maptile',
+                                                                             'normal.day',
+                                                                             256,
+                                                                             'png8',
+                                                                             {lg: 'fre'}
+                                                                     );
+                                                             map.setBaseLayer(frenchMapLayer);
+
+
+                                                         }
+                                                         /*
+                                                          Fin fn changer langue
+                                                          */
+
+                                                         // Create a marker icon from an image URL:
+
+                                                         var icons0 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon0.png') }}');
+                                                         var icons1 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon1.png') }}');
+                                                         var icons2 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon2.png') }}');
+                                                         var icons3 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon3.png') }}');
+                                                         var icons4 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon4.png') }}');
+                                                         var icons5 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon5.png') }}');
+                                                         var icons6 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon6.png') }}');
+                                                         var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
+                                                         var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
+                                                         var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
+
+
+                                                         //construction des points de differentes villes
+                                                         function addMarkersAndSetViewBounds() {
+                                                             var incrment = 1;
+                                                             var points = [];
+                                                             var incrementIcons = 0;
+
+                                                             {%  for coordPouleRef in coordPoulesRef %}
+
+                                                             //tracer dynamiquement les points de villes
+                                                             {% for coordonneeVilleRef in coordPouleRef %}
+                                                             var x = '{{ coordonneeVilleRef[0]}}';
+                                                             var y = '{{ coordonneeVilleRef[1]}}';
+//
+                                                             var xy = x+y;
+//                                                                         var x = xy[0];
+//                                                                         var y = xy[1];
+
+                                                             var icon = 'icons' + incrementIcons;
+                                                             var marker = 'marker' + incrment;
+                                                             window[marker] = new H.map.Marker({
+                                                                 lat: parseFloat(x),
+                                                                 lng: parseFloat(y)
+                                                             } , {icon: window[icon]} );
+
+
+                                                             points.push(window[marker]);
+
+                                                             var incrment = incrment + 1;
+
+                                                             {% endfor %}
+                                                             incrementIcons++;
+                                                             {% endfor %}
+                                                             group = new H.map.Group();
+                                                             // add markers to the group
+                                                             group.addObjects(points);
+                                                             map.addObject(group);
+                                                             // get geo bounding box for the group and set it to the map
+                                                             map.setViewBounds(group.getBounds());
+                                                         }
+
+
+
+                                                         /**
+                                                          * Boilerplate map initialization code starts below:
+                                                          */
+
+                                                         //Step 1: initialize communication with the platform
+                                                         var platform = new H.service.Platform({
+                                                             app_id: '{{ app_id }}',
+                                                             app_code: '{{ app_code }}',
+                                                             useCIT: true,
+                                                             useHTTPS: true
+                                                         });
+                                                         var defaultLayers = platform.createDefaultLayers();
+
+                                                         //Step 2: initialize a map - this map is centered over Europe
+                                                         var map = new H.Map(document.getElementById('mapScRef'),
+                                                                 defaultLayers.normal.map, {
+                                                                     center: {lat: 48.8567, lng: 2.3508},
+                                                                     zoom: 3
+                                                                 });
+
+                                                         var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+                                                         // Create the default UI components
+                                                         //    var ui = H.ui.UI.createDefault(map, defaultLayers);
+                                                         var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
+
+                                                         // Now use the map as required...
+                                                         // Add the marker to the map:
+                                                         // map.addObject(markerPrincipal);
+                                                         addMarkersAndSetViewBounds(map);
+                                                         switchMapLanguage(map, platform);
 
                                                      </script>
 
@@ -2829,6 +2957,9 @@
                                  {% endif %}
 
                              </div>
+
+                         </div>
+                             <!-- .panel-body -->
 
                          {% endif %}
 
