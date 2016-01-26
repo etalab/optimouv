@@ -848,6 +848,7 @@ def create_reference_pool_distribution_from_db(teams, poolSize):
 		# logging.debug(" teams: %s" %teams)
 		# logging.debug(" poolSize: %s" %poolSize)
 
+		listChars = []
 
 		# construct pool distribution without phantom teams
 		for team in teams:
@@ -860,7 +861,12 @@ def create_reference_pool_distribution_from_db(teams, poolSize):
 				if poolId is None:
 					poolDistributionReference["status"] = "no"
 					return poolDistributionReference
-	
+
+				# Patch for front, convert from pool letter given by users to number # FIXME !!!!
+				if poolId not in listChars:
+					listChars.append(poolId)
+				poolId = (listChars.index(poolId)) + 1
+# 				logging.debug(" poolId: %s" %poolId)
 				if poolId not in poolDistributionReference["data"]:
 					poolDistributionReference["data"][poolId] = [teamId]
 				else:
@@ -868,7 +874,6 @@ def create_reference_pool_distribution_from_db(teams, poolSize):
 			else:
 				phantomTeams.append(team)
 
-		# logging.debug(" phantomTeams: %s" %phantomTeams)
 
 		# add phantom teams to the created distribution
 		if len(phantomTeams) > 0:
@@ -880,6 +885,8 @@ def create_reference_pool_distribution_from_db(teams, poolSize):
 						phantomTeam = phantomTeams.pop()
 						poolDistributionReference["data"][pool].append(phantomTeam)
 					
+					
+
 # 		logging.debug(" teams: %s" %teams)
 # 		logging.debug(" phantomTeams: %s" %phantomTeams)
 # 		logging.debug(" len teams: %s" %len(teams))
