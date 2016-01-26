@@ -213,7 +213,6 @@ def create_encounters_from_pool_distribution(poolDistribution):
 		
 		for pool, members in poolDistribution.items():
 			encounters[pool] = {}
-			encountersPool = []
 			encounterNbr = 0
 			for member1 in members:
 				for member2 in members:
@@ -272,11 +271,17 @@ def create_encounters_from_pool_distribution_one_way(poolDistribution):
 		
 		for pool, members in poolDistribution.items():
 			encounters[pool] = {}
-			encountersPool = []
 			encounterNbr = 0
+			encountersTmp = [] # list of possible encounter combinations
 			for member1 in members:
 				for member2 in members:
-					if member1 != member2:
+					firstCombination = [member1, member2]
+					secondCombination = [member2, member1]
+
+					if (member1 != member2) and (firstCombination not in encountersTmp) and (secondCombination not in encountersTmp):
+						encountersTmp.append(firstCombination)
+						encountersTmp.append(secondCombination)
+					
 						encounterNbr += 1
 
 						# calculate distance and travel time
@@ -294,16 +299,12 @@ def create_encounters_from_pool_distribution_one_way(poolDistribution):
 		
 						# Escape single apostrophe for name and city
 						name1 = name1.replace("'", u"''")
-# 						name1 = name1.replace("'", u"")
 # 						logging.debug("  name1: %s" %(name1))
 						name2 = name2.replace("'", u"''")
-# 						name2 = name2.replace("'", u"")
 # 						logging.debug("  name2: %s" %(name2))
 						city1 = city1.replace("'", u"''")
-# 						city1 = city1.replace("'", u"")
 # 						logging.debug("  city1: %s" %(city1))
 						city2 = city2.replace("'", u"''")
-# 						city2 = city2.replace("'", u"")
 # 						logging.debug("  city2: %s" %(city2))
 
 						encounter = {"equipeDepartId": member1, "equipeDestinationId": member2, 
@@ -320,11 +321,6 @@ def create_encounters_from_pool_distribution_one_way(poolDistribution):
 
 	except Exception as e:
 		show_exception_traceback()
-
-
-
-
-
 
 """
 Function to create pool details from encounters
@@ -1845,7 +1841,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		encounters_OptimalWithoutConstraint = create_encounters_from_pool_distribution_one_way(poolDistribution_OptimalWithoutConstraint)
 		results["scenarioOptimalSansContrainte"]["rencontreDetails"] = encounters_OptimalWithoutConstraint
 # 		logging.debug(" encounters_OptimalWithoutConstraint: \n%s" %encounters_OptimalWithoutConstraint)
- 		
+		
 		# get pool details from encounters
 		poolDetails_OptimalWithoutConstraint = create_pool_details_from_encounters(encounters_OptimalWithoutConstraint, poolDistribution_OptimalWithoutConstraint)
 		results["scenarioOptimalSansContrainte"]["estimationDetails"] = poolDetails_OptimalWithoutConstraint
@@ -1881,7 +1877,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		logging.debug(" poolDistributionCoords_EquitableWithoutConstraint: %s" %poolDistributionCoords_EquitableWithoutConstraint)
 
 		# get encounter list from pool distribution dict
-		encounters_EquitableWithoutConstraint = create_encounters_from_pool_distribution(poolDistribution_EquitableWithoutConstraint)
+		encounters_EquitableWithoutConstraint = create_encounters_from_pool_distribution_one_way(poolDistribution_EquitableWithoutConstraint)
 		results["scenarioEquitableSansContrainte"]["rencontreDetails"] = encounters_EquitableWithoutConstraint
 # 		logging.debug(" encounters_EquitableWithoutConstraint: \n%s" %encounters_EquitableWithoutConstraint)
 
@@ -1922,7 +1918,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 
 	
 			# get encounter list from pool distribution dict
-			encounters_OptimalWithConstraint = create_encounters_from_pool_distribution(poolDistribution_OptimalWithConstraint)
+			encounters_OptimalWithConstraint = create_encounters_from_pool_distribution_one_way(poolDistribution_OptimalWithConstraint)
 			results["scenarioOptimalAvecContrainte"]["rencontreDetails"] = encounters_OptimalWithConstraint
 # 			logging.debug(" encounters_OptimalWithoutConstraint: \n%s" %encounters_OptimalWithoutConstraint)
 			
@@ -1962,7 +1958,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			logging.debug(" poolDistributionCoords_EquitableWithConstraint: %s" %poolDistributionCoords_EquitableWithConstraint)
 
 			# get encounter list from pool distribution dict
-			encounters_EquitableWithConstraint = create_encounters_from_pool_distribution(poolDistribution_EquitableWithConstraint)
+			encounters_EquitableWithConstraint = create_encounters_from_pool_distribution_one_way(poolDistribution_EquitableWithConstraint)
 			results["scenarioEquitableAvecContrainte"]["rencontreDetails"] = encounters_EquitableWithConstraint
 # 			logging.debug(" encounters_EquitableWithConstraint: %s" %encounters_EquitableWithConstraint)
 	
@@ -2009,7 +2005,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			logging.debug(" poolDistributionCoordsRef: %s" %poolDistributionCoordsRef)
 	
 			# get encounter list from pool distribution dict
-			encountersRef = create_encounters_from_pool_distribution(poolDistributionRef)
+			encountersRef = create_encounters_from_pool_distribution_one_way(poolDistributionRef)
 			results["scenarioRef"]["rencontreDetails"] = encountersRef
 	
 			# get pool details from encounters
