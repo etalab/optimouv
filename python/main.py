@@ -1050,7 +1050,7 @@ def create_distance_matrix_from_db(teams):
 """
 Function to create initilization matrix without constraint
 """
-def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize):
+def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize, varTeamNbrPerPool ):
 
 	try:
 		logging.debug("-------------------------------------- CREATE INIT MATRIX WITHOUT CONSTRAINT --------------------------------" )
@@ -1204,7 +1204,7 @@ def check_type_distribution_constraints(typeDistributionConstraints, poolDistrib
 """
 Function to create initilization matrix with constraint
 """
-def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterConstraint, prohibitionConstraints, typeDistributionConstraints):
+def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterConstraint, prohibitionConstraints, typeDistributionConstraints, varTeamNbrPerPool):
 
 	try:
 		logging.debug("-------------------------------------- CREATE INIT MATRIX WITH CONSTRAINT --------------------------------" )
@@ -2298,7 +2298,7 @@ def callback(ch, method, properties, body):
 # 		np.savetxt("/tmp/d_mat_oneway.csv", D_Mat_oneWay, delimiter=",", fmt='%d')
 
 		logging.debug("####################################### CREATE INITIALISATION MATRIX ########################################")
-		P_InitMat_withoutConstraint = create_init_matrix_without_constraint(teamNbrWithPhantom, poolNbr, poolSize)
+		P_InitMat_withoutConstraint = create_init_matrix_without_constraint(teamNbrWithPhantom, poolNbr, poolSize, varTeamNbrPerPool)
 		logging.debug("P_InitMat_withoutConstraint.shape: %s" %(P_InitMat_withoutConstraint.shape,))
  
 # 		np.savetxt("/tmp/p_init_without_constraint.csv", P_InitMat_withoutConstraint, delimiter=",", fmt='%d')
@@ -2310,7 +2310,7 @@ def callback(ch, method, properties, body):
 
 		# create init matrix with constraint if there is any constraint
 		if statusConstraints:
-			statusCreateInitMatrix = create_init_matrix_with_constraint(teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, iterConstraint, prohibitionConstraints, typeDistributionConstraints)
+			statusCreateInitMatrix = create_init_matrix_with_constraint(teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, iterConstraint, prohibitionConstraints, typeDistributionConstraints, varTeamNbrPerPool)
 # 
 			if statusCreateInitMatrix["success"]:
 				P_InitMat_withConstraint = statusCreateInitMatrix["data"]
