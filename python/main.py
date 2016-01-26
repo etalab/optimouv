@@ -1271,8 +1271,8 @@ def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize, varTeamNbr
 		#####################################################################################################
 		# take into account variation of team number in a pool
 		#####################################################################################################
-		teamPoolResult = adjust_pool_attribution_based_on_pool_variation(teamPoolResult, poolNbr, poolSize, varTeamNbrPerPool)
-		logging.debug("teamPoolResult: %s" %teamPoolResult)
+# 		teamPoolResult = adjust_pool_attribution_based_on_pool_variation(teamPoolResult, poolNbr, poolSize, varTeamNbrPerPool)
+# 		logging.debug("teamPoolResult: %s" %teamPoolResult)
 		
 		#####################################################################################################
 		
@@ -2311,8 +2311,8 @@ def test_insert_params_to_db():
 	try:
 # 		groupId = 68
 		groupId = 190
-		actionType = "allerRetour"
-# 		actionType = "allerSimple"
+# 		actionType = "allerRetour"
+		actionType = "allerSimple"
 		name = "rapport_groupe_%s_action_%s"%(groupId, actionType)
 		exclusionValue = 0
 		creationDate = time.strftime("%Y-%m-%d")
@@ -2516,8 +2516,6 @@ def callback(ch, method, properties, body):
 		logging.debug("####################################### CREATE INITIALISATION MATRIX ########################################")
 		P_InitMat_withoutConstraint = create_init_matrix_without_constraint(teamNbrWithPhantom, poolNbr, poolSize, varTeamNbrPerPool)
 		logging.debug("P_InitMat_withoutConstraint.shape: %s" %(P_InitMat_withoutConstraint.shape,))
-
-# 		sys.exit()
 
 # 		np.savetxt("/tmp/p_init_without_constraint.csv", P_InitMat_withoutConstraint, delimiter=",", fmt='%d')
 
