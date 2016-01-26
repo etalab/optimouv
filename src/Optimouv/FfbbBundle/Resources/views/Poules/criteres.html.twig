@@ -142,7 +142,7 @@
                              <div class="panel-body">
 
                                  <div class="form-group">
-                                     <input id="inputPoulesNbr" type="number" min="2" class="form-control" required>
+                                     <input id="inputPoulesNbr" type="number" min="1" class="form-control" required>
                                  </div>
 
                              </div>
@@ -362,6 +362,10 @@
                          console.log("poulesNbr : " + poulesNbr );
 
                          // controler le champ obligatoire (le nombre de poules)
+                         if (typeMatch == "plateau"){
+                             alert("Ce type de match n'est pas encore supporté. Veuillez choisir un autre type de match");
+
+                         }
                          if( (poulesNbr == "") || (parseInt(poulesNbr)<2) ){
                             alert("Veuillez vérifier que le nombre de poules donné est valide");
                          }

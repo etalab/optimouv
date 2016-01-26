@@ -213,7 +213,6 @@ def create_encounters_from_pool_distribution(poolDistribution):
 		
 		for pool, members in poolDistribution.items():
 			encounters[pool] = {}
-			encountersPool = []
 			encounterNbr = 0
 			for member1 in members:
 				for member2 in members:
@@ -245,6 +244,67 @@ def create_encounters_from_pool_distribution(poolDistribution):
 # 						logging.debug("  city1: %s" %(city1))
 						city2 = city2.replace("'", u"''")
 # 						city2 = city2.replace("'", u"")
+# 						logging.debug("  city2: %s" %(city2))
+
+						encounter = {"equipeDepartId": member1, "equipeDestinationId": member2, 
+														"distance": distance, "duree": travelTime,
+														"nbrParticipants": nbrParticipants1, "distanceTousParticipants": distanceAllParticipants,
+														"equipeDepartNom": name1, "equipeDestinationNom": name2,
+														"equipeDepartVille": city1, "equipeDestinationVille": city2,
+														"equipeDepartCodePostal": postalCode1, "equipeDestinationCodePostal": postalCode2
+														
+														}
+						encounters[pool][encounterNbr] = encounter
+
+		return encounters
+
+	except Exception as e:
+		show_exception_traceback()
+
+
+"""
+Function to create encounters from pool distribution
+"""
+def create_encounters_from_pool_distribution_one_way(poolDistribution):
+	try:
+		encounters = {}
+		
+		for pool, members in poolDistribution.items():
+			encounters[pool] = {}
+			encounterNbr = 0
+			encountersTmp = [] # list of possible encounter combinations
+			for member1 in members:
+				for member2 in members:
+					firstCombination = [member1, member2]
+					secondCombination = [member2, member1]
+
+					if (member1 != member2) and (firstCombination not in encountersTmp) and (secondCombination not in encountersTmp):
+						encountersTmp.append(firstCombination)
+						encountersTmp.append(secondCombination)
+					
+						encounterNbr += 1
+
+						# calculate distance and travel time
+						sql = "select distance, duree from trajet where depart=%s and destination=%s" %(member1, member2)
+# 						logging.debug("  sql: %s" %(sql))
+						distance, travelTime = db.fetchone_multi(sql)
+
+						sql = "select participants, nom, ville, code_postal from entite where id=%s" %member1
+						nbrParticipants1, name1, city1, postalCode1 = db.fetchone_multi(sql)
+
+						sql = "select participants, nom, ville, code_postal from entite where id=%s" %member2
+						nbrParticipants2, name2, city2, postalCode2 = db.fetchone_multi(sql)
+		
+						distanceAllParticipants = int(distance) * int(nbrParticipants1)
+		
+						# Escape single apostrophe for name and city
+						name1 = name1.replace("'", u"''")
+# 						logging.debug("  name1: %s" %(name1))
+						name2 = name2.replace("'", u"''")
+# 						logging.debug("  name2: %s" %(name2))
+						city1 = city1.replace("'", u"''")
+# 						logging.debug("  city1: %s" %(city1))
+						city2 = city2.replace("'", u"''")
 # 						logging.debug("  city2: %s" %(city2))
 
 						encounter = {"equipeDepartId": member1, "equipeDestinationId": member2, 
@@ -845,6 +905,11 @@ def create_reference_pool_distribution_from_db(teams, poolSize):
 		poolDistributionReference = {"status": "yes", "data": {}}
 		phantomTeams = []
 
+		# logging.debug(" teams: %s" %teams)
+		# logging.debug(" poolSize: %s" %poolSize)
+
+		listChars = []
+
 		# construct pool distribution without phantom teams
 		for team in teams:
 			# check if not phantom team
@@ -856,7 +921,16 @@ def create_reference_pool_distribution_from_db(teams, poolSize):
 				if poolId is None:
 					poolDistributionReference["status"] = "no"
 					return poolDistributionReference
-	
+
+				#############################################################################################################
+				# Patch for front, convert from pool letter given by users to number # FIXME !!!!
+				if poolId not in listChars:
+					listChars.append(poolId)
+				poolId = (listChars.index(poolId)) + 1
+# 				logging.debug(" poolId: %s" %poolId)
+				#############################################################################################################
+
+
 				if poolId not in poolDistributionReference["data"]:
 					poolDistributionReference["data"][poolId] = [teamId]
 				else:
@@ -866,14 +940,17 @@ def create_reference_pool_distribution_from_db(teams, poolSize):
 
 
 		# add phantom teams to the created distribution
-		poolDistributionReferenceTmp = dict.copy(poolDistributionReference["data"])
-		for pool, poolTeams in poolDistributionReferenceTmp.items():
-			if len(poolTeams) < poolSize:
-				sizeDiff = poolSize - len(poolTeams)
-				for i in range(sizeDiff):
-					phantomTeam = phantomTeams.pop()
-					poolDistributionReference["data"][pool].append(phantomTeam)
+		if len(phantomTeams) > 0:
+			poolDistributionReferenceTmp = dict.copy(poolDistributionReference["data"])
+			for pool, poolTeams in poolDistributionReferenceTmp.items():
+				if len(poolTeams) < poolSize:
+					sizeDiff = poolSize - len(poolTeams)
+					for i in range(sizeDiff):
+						phantomTeam = phantomTeams.pop()
+						poolDistributionReference["data"][pool].append(phantomTeam)
 					
+					
+
 # 		logging.debug(" teams: %s" %teams)
 # 		logging.debug(" phantomTeams: %s" %phantomTeams)
 # 		logging.debug(" len teams: %s" %len(teams))
@@ -1050,13 +1127,15 @@ def create_distance_matrix_from_db(teams):
 """
 Function to create initilization matrix without constraint
 """
-def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize):
+def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize, varTeamNbrPerPool ):
 
 	try:
 		logging.debug("-------------------------------------- CREATE INIT MATRIX WITHOUT CONSTRAINT --------------------------------" )
 		# Initialisation matrix P
 		P_InitMat = np.zeros((teamNbr, teamNbr))
 		
+		logging.debug("varTeamNbrPerPool: %s" %varTeamNbrPerPool)
+
 		# generate a random value for each team
 		teamRandomValues = [round(random.random() * 100) for i in range(teamNbr)]
 		logging.debug("teamRandomValues: %s" %teamRandomValues)
@@ -1204,7 +1283,7 @@ def check_type_distribution_constraints(typeDistributionConstraints, poolDistrib
 """
 Function to create initilization matrix with constraint
 """
-def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterConstraint, prohibitionConstraints, typeDistributionConstraints):
+def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterConstraint, prohibitionConstraints, typeDistributionConstraints, varTeamNbrPerPool):
 
 	try:
 		logging.debug("-------------------------------------- CREATE INIT MATRIX WITH CONSTRAINT --------------------------------" )
@@ -1391,11 +1470,11 @@ def get_list_details_from_list_ids_for_entity(listIds):
 """
 Function to optimize pool for Round Trip Match (Match Aller Retour)
 """
-def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId):
+def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom):
 	try:
 		results = {"typeMatch": "allerRetour", "nombrePoule": poolNbr, "taillePoule": poolSize, 
 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
-					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
+					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, "params": {}
 					}
 # 		results = {"params": {"typeMatch": "allerRetour", "nombrePoule": poolNbr, "taillePoule": poolSize, 
 # 							"interdictionsIds" : {}, 
@@ -1424,6 +1503,20 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 # 			results["params"]["repartitionsHomogenesNoms"][teamType] =  prohibitionDetail["names"]
 # 			results["params"]["repartitionsHomogenesVilles"][teamType] =  prohibitionDetail["cities"]
 # 		logging.debug(" results: %s" %(results,))
+
+		# save constraint variation of team number per pool
+		results["params"]["varEquipeParPouleChoisi"] = varTeamNbrPerPool
+
+		# based on phantom flag, save to results the possibility to make variation of team number per pool
+		if flagPhantom:
+			results["params"]["varEquipeParPoulePossible"] = 0
+			results["params"]["varEquipeParPouleProposition"] = []
+		else:
+			results["params"]["varEquipeParPoulePossible"] = 1
+			maxVarTeamNbrPerPool = poolSize - 2
+			results["params"]["varEquipeParPouleProposition"] = list(range(1, maxVarTeamNbrPerPool+1 ))
+
+
 
 		logging.debug(" ########################################## ROUND TRIP　MATCH ###############################################")
 		iter = config.INPUT.Iter
@@ -1607,6 +1700,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		if returnPoolDistributionRef["status"] == "yes":
 			
 			# add boolean to results
+# 			results["params"]["refExiste"] = 1
 			results["refExiste"] = 1
 			
 			poolDistributionRef = returnPoolDistributionRef["data"]
@@ -1645,6 +1739,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			logging.debug(" sumInfoRef: \n%s" %sumInfoRef)
 		else:
 			# add boolean to results
+# 			results["params"]["refExiste"] = 0
 			results["refExiste"] = 0
 
 			
@@ -1657,18 +1752,54 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 """
 Function to optimize pool for One Way Match (Match Aller Simple)
 """
-def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId):
+def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom):
 	try:
 		results = {"typeMatch": "allerSimple", "nombrePoule": poolNbr, "taillePoule": poolSize, 
 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
-					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
+					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, "params": {}
 				}
-# 		results = {"params": {"typeMatch": "allerSimple", "nombrePoule": poolNbr, "taillePoule": poolSize,
-# 						"interdictionsIds" : prohibitionConstraints, "repartitionsHomogenesIds": typeDistributionConstraints},
+
+# 		results = {"params": {"typeMatch": "allerSimple", "nombrePoule": poolNbr, "taillePoule": poolSize, 
+# 							"interdictionsIds" : {}, 
+# 							"interdictionsNoms" : {}, "interdictionsVilles" : {}, 
+# 							"repartitionsHomogenesIds": {}, 
+# 							"repartitionsHomogenesNoms": {}, "repartitionsHomogenesVilles": {}, 
+# 							},  
 # 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
 # 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
 # 					}
-		
+# 
+# 		# get list of ids, names and cities from entity table for prohibition constraints
+# 		for indexProhibition, members in enumerate(prohibitionConstraints, start=1):
+# # 			logging.debug(" members: %s" %members)
+# 			members = ",".join(map(str, members)) # convert list of ints to string
+# 			prohibitionDetail = get_list_details_from_list_ids_for_entity(members)
+# 			results["params"]["interdictionsIds"][indexProhibition] =  prohibitionDetail["ids"]
+# 			results["params"]["interdictionsNoms"][indexProhibition] =  prohibitionDetail["names"]
+# 			results["params"]["interdictionsVilles"][indexProhibition] =  prohibitionDetail["cities"]
+# 
+# 		# get list of names and cities from entity table for type distribution constraints
+# 		for teamType, members in typeDistributionConstraints.items():
+# 			members = ",".join(map(str, members)) # convert list of ints to string
+# 			prohibitionDetail = get_list_details_from_list_ids_for_entity(members)
+# 			results["params"]["repartitionsHomogenesIds"][teamType] =  prohibitionDetail["ids"]
+# 			results["params"]["repartitionsHomogenesNoms"][teamType] =  prohibitionDetail["names"]
+# 			results["params"]["repartitionsHomogenesVilles"][teamType] =  prohibitionDetail["cities"]
+# 		logging.debug(" results: %s" %(results,))
+
+		# save constraint variation of team number per pool
+		results["params"]["varEquipeParPouleChoisi"] = varTeamNbrPerPool
+
+		# based on phantom flag, save to results the possibility to make variation of team number per pool
+		if flagPhantom:
+			results["params"]["varEquipeParPoulePossible"] = 0
+			results["params"]["varEquipeParPouleProposition"] = []
+		else:
+			results["params"]["varEquipeParPoulePossible"] = 1
+			maxVarTeamNbrPerPool = poolSize - 2
+			results["params"]["varEquipeParPouleProposition"] = list(range(1, maxVarTeamNbrPerPool+1 ))
+
+
 		logging.debug(" ########################################## ONE WAY　MATCH ###############################################")
 		iter = config.INPUT.Iter
 		logging.debug(" iter: %s" %iter)
@@ -1707,10 +1838,10 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		logging.debug(" poolDistributionCoords_OptimalWithoutConstraint: %s" %poolDistributionCoords_OptimalWithoutConstraint)
 		
 		# get encounter list from pool distribution dict
-		encounters_OptimalWithoutConstraint = create_encounters_from_pool_distribution(poolDistribution_OptimalWithoutConstraint)
+		encounters_OptimalWithoutConstraint = create_encounters_from_pool_distribution_one_way(poolDistribution_OptimalWithoutConstraint)
 		results["scenarioOptimalSansContrainte"]["rencontreDetails"] = encounters_OptimalWithoutConstraint
 # 		logging.debug(" encounters_OptimalWithoutConstraint: \n%s" %encounters_OptimalWithoutConstraint)
- 		
+		
 		# get pool details from encounters
 		poolDetails_OptimalWithoutConstraint = create_pool_details_from_encounters(encounters_OptimalWithoutConstraint, poolDistribution_OptimalWithoutConstraint)
 		results["scenarioOptimalSansContrainte"]["estimationDetails"] = poolDetails_OptimalWithoutConstraint
@@ -1746,7 +1877,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		logging.debug(" poolDistributionCoords_EquitableWithoutConstraint: %s" %poolDistributionCoords_EquitableWithoutConstraint)
 
 		# get encounter list from pool distribution dict
-		encounters_EquitableWithoutConstraint = create_encounters_from_pool_distribution(poolDistribution_EquitableWithoutConstraint)
+		encounters_EquitableWithoutConstraint = create_encounters_from_pool_distribution_one_way(poolDistribution_EquitableWithoutConstraint)
 		results["scenarioEquitableSansContrainte"]["rencontreDetails"] = encounters_EquitableWithoutConstraint
 # 		logging.debug(" encounters_EquitableWithoutConstraint: \n%s" %encounters_EquitableWithoutConstraint)
 
@@ -1787,7 +1918,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 
 	
 			# get encounter list from pool distribution dict
-			encounters_OptimalWithConstraint = create_encounters_from_pool_distribution(poolDistribution_OptimalWithConstraint)
+			encounters_OptimalWithConstraint = create_encounters_from_pool_distribution_one_way(poolDistribution_OptimalWithConstraint)
 			results["scenarioOptimalAvecContrainte"]["rencontreDetails"] = encounters_OptimalWithConstraint
 # 			logging.debug(" encounters_OptimalWithoutConstraint: \n%s" %encounters_OptimalWithoutConstraint)
 			
@@ -1827,7 +1958,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			logging.debug(" poolDistributionCoords_EquitableWithConstraint: %s" %poolDistributionCoords_EquitableWithConstraint)
 
 			# get encounter list from pool distribution dict
-			encounters_EquitableWithConstraint = create_encounters_from_pool_distribution(poolDistribution_EquitableWithConstraint)
+			encounters_EquitableWithConstraint = create_encounters_from_pool_distribution_one_way(poolDistribution_EquitableWithConstraint)
 			results["scenarioEquitableAvecContrainte"]["rencontreDetails"] = encounters_EquitableWithConstraint
 # 			logging.debug(" encounters_EquitableWithConstraint: %s" %encounters_EquitableWithConstraint)
 	
@@ -1849,6 +1980,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		if returnPoolDistributionRef["status"] == "yes":
 			
 			# add boolean to results
+# 			results["params"]["refExiste"] = 1
 			results["refExiste"] = 1
 
 			poolDistributionRef = returnPoolDistributionRef["data"]
@@ -1873,7 +2005,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			logging.debug(" poolDistributionCoordsRef: %s" %poolDistributionCoordsRef)
 	
 			# get encounter list from pool distribution dict
-			encountersRef = create_encounters_from_pool_distribution(poolDistributionRef)
+			encountersRef = create_encounters_from_pool_distribution_one_way(poolDistributionRef)
 			results["scenarioRef"]["rencontreDetails"] = encountersRef
 	
 			# get pool details from encounters
@@ -1887,6 +2019,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			logging.debug(" sumInfoRef: \n%s" %sumInfoRef)
 		else:
 			# add boolean to results
+# 			results["params"]["refExiste"] = 0
 			results["refExiste"] = 0
 
 
@@ -2054,7 +2187,8 @@ Function to insert params to DB
 """
 def test_insert_params_to_db():
 	try:
-		groupId = 68
+# 		groupId = 68
+		groupId = 190
 		actionType = "allerRetour"
 # 		actionType = "allerSimple"
 		name = "rapport_groupe_%s_action_%s"%(groupId, actionType)
@@ -2066,6 +2200,7 @@ def test_insert_params_to_db():
 # 					"repartitionHomogene": {}
 # 				}
 		params = {	"nbrPoule": 3, 
+					"varEquipeParPoule": 2, 
 					"interdictions": {}, 
 					"repartitionHomogene": {"espoir": [8631, 8632]}
 				}
@@ -2125,6 +2260,7 @@ def callback(ch, method, properties, body):
 		
 # 		logging.debug("####################################### TEST INSERT PARAMS TO DB ##############################################")
 # 		test_insert_params_to_db()
+# 		sys.exit()
 		
 		logging.debug("####################################### READ PARAMS FROM USER ##############################################")
 		# Read params from config file (user)
@@ -2142,6 +2278,12 @@ def callback(ch, method, properties, body):
 
 		poolNbr = params["nbrPoule"]
 		logging.debug("poolNbr: %s" %poolNbr)
+
+		# get constraint variation team number per pool
+		if "varEquipeParPoule" in params:
+			varTeamNbrPerPool = params["varEquipeParPoule"]
+		else:
+			varTeamNbrPerPool = 0
 
 		iterConstraint = config.INPUT.IterConstraint
 		logging.debug("iterConstraint: %s" %iterConstraint)
@@ -2238,9 +2380,11 @@ def callback(ch, method, properties, body):
 # 		np.savetxt("/tmp/d_mat_oneway.csv", D_Mat_oneWay, delimiter=",", fmt='%d')
 
 		logging.debug("####################################### CREATE INITIALISATION MATRIX ########################################")
-		P_InitMat_withoutConstraint = create_init_matrix_without_constraint(teamNbrWithPhantom, poolNbr, poolSize)
+		P_InitMat_withoutConstraint = create_init_matrix_without_constraint(teamNbrWithPhantom, poolNbr, poolSize, varTeamNbrPerPool)
 		logging.debug("P_InitMat_withoutConstraint.shape: %s" %(P_InitMat_withoutConstraint.shape,))
- 
+
+# 		sys.exit()
+
 # 		np.savetxt("/tmp/p_init_without_constraint.csv", P_InitMat_withoutConstraint, delimiter=",", fmt='%d')
 
 		# get P_Init Mat for one way
@@ -2250,7 +2394,7 @@ def callback(ch, method, properties, body):
 
 		# create init matrix with constraint if there is any constraint
 		if statusConstraints:
-			statusCreateInitMatrix = create_init_matrix_with_constraint(teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, iterConstraint, prohibitionConstraints, typeDistributionConstraints)
+			statusCreateInitMatrix = create_init_matrix_with_constraint(teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, iterConstraint, prohibitionConstraints, typeDistributionConstraints, varTeamNbrPerPool)
 # 
 			if statusCreateInitMatrix["success"]:
 				P_InitMat_withConstraint = statusCreateInitMatrix["data"]
@@ -2280,10 +2424,10 @@ def callback(ch, method, properties, body):
 		logging.debug("############################################# OPTIMIZE POOL #################################################")
 # 		if launchType == "match_aller_retour":
 		if launchType == "allerRetour":
-			results = optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId)
+			results = optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom)
 # 		elif launchType == "match_aller_simple":
 		elif launchType == "allerSimple":
-			results = optimize_pool_one_way_match(P_InitMat_oneWaywithoutConstraint, P_InitMat_oneWayWithConstraint, D_Mat_oneWay, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId)
+			results = optimize_pool_one_way_match(P_InitMat_oneWaywithoutConstraint, P_InitMat_oneWayWithConstraint, D_Mat_oneWay, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom)
 		elif launchType == "plateau":
 			results = optimize_pool_plateau_match()
 
