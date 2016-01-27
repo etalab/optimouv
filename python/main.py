@@ -1122,7 +1122,8 @@ def create_distance_matrix_from_db(teams):
 					sql = "select distance from trajet where depart=%s and destination=%s "%(depart, destination)
 # 					logging.debug("sql: %s" %sql)
 					distance = db.fetchone(sql)
-# 					logging.debug("distance: %s" %distance)
+					logging.debug("\n")
+					logging.debug("distance DB: %s" %distance)
 					
 					# call HERE server if distance is None (not found in the table trajet)
 					if distance == None:
@@ -1141,8 +1142,11 @@ def create_distance_matrix_from_db(teams):
 						resultsHere = get_distance_travel_time_from_here_ws(depart, destination, coordDepart, coordDestination)
 						logging.debug("resultsHere: %s" %resultsHere)
 
+						# get distance from results Here
+						distance = resultsHere["distance"]
 				D_Mat[indexDepart][indexDestination] = distance
 	
+# 		logging.debug("D_Mat: \n%s" %D_Mat)
 		return D_Mat
 
 # 		logging.debug("D_Mat: %s" %D_Mat)
