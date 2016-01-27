@@ -918,8 +918,8 @@ def create_reference_pool_distribution_from_db(teams, poolSize):
 		poolDistributionReference = {"status": "yes", "data": {}}
 		phantomTeams = []
 
-		logging.debug(" teams: %s" %teams)
-		logging.debug(" poolSize: %s" %poolSize)
+# 		logging.debug(" teams: %s" %sorted(teams))
+# 		logging.debug(" poolSize: %s" %poolSize)
 
 		listChars = []
 
@@ -931,7 +931,7 @@ def create_reference_pool_distribution_from_db(teams, poolSize):
 				teamId, poolId = db.fetchone_multi(sql)
 	
 				# check if there is poolId, if not exist return function
-				if poolId is None:
+				if (poolId is None) or (poolId == ""):
 					poolDistributionReference["status"] = "no"
 					return poolDistributionReference
 
