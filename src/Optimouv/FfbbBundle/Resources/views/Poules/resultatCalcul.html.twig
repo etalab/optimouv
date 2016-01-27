@@ -28,11 +28,9 @@
                  </div>
                  <!-- /.row -->
                  <div class="row">
-                     {#(* Saisie obligatoire)#}
 
                      <!-- Type de rencontre bloc -->
                      <div class="col-lg-3">
-
 
                          <div class="panel panel-default">
                              <div class="panel-heading">
@@ -389,11 +387,13 @@
 
              <!-- Affichage des résultats sur les cartes -->
              <div class="row">
+                 {% set alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ] %}
+
                  <div class="col-lg-12">
                      <div class="panel panel-default">
                          <div class="panel-heading col-lg-12">
                              <div style="float:left; position:relative; width: 90%">
-                                 <p>Les scénarios ci-dessous présentent les résultats les plus écoresponsables correspondant à votre recherche. </p>
+                                 <p>Les scénarios ci-dessous présentent les résultats les plus écoresponsables correspondant à votre recherche </p>
 
                              </div>
                              <div style="float:left; position:relative; width: 10%">
@@ -478,22 +478,22 @@
                                                                  var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
                                                                  var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
                                                                  var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
-                                                                 var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons10.png') }}');
-                                                                 var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons11.png') }}');
-                                                                 var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons12.png') }}');
-                                                                 var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons13.png') }}');
-                                                                 var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons14.png') }}');
-                                                                 var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons15.png') }}');
-                                                                 var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons16.png') }}');
-                                                                 var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons17.png') }}');
-                                                                 var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons18.png') }}');
-                                                                 var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons19.png') }}');
-                                                                 var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons20.png') }}');
-                                                                 var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons21.png') }}');
-                                                                 var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons22.png') }}');
-                                                                 var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons23.png') }}');
-                                                                 var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons24.png') }}');
-                                                                 var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons25.png') }}');
+                                                                 var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon10.png') }}');
+                                                                 var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon11.png') }}');
+                                                                 var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon12.png') }}');
+                                                                 var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon13.png') }}');
+                                                                 var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon14.png') }}');
+                                                                 var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon15.png') }}');
+                                                                 var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon16.png') }}');
+                                                                 var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon17.png') }}');
+                                                                 var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon18.png') }}');
+                                                                 var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon19.png') }}');
+                                                                 var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon20.png') }}');
+                                                                 var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon21.png') }}');
+                                                                 var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon22.png') }}');
+                                                                 var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon23.png') }}');
+                                                                 var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon24.png') }}');
+                                                                 var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon25.png') }}');
 
                                                                  //construction des points de differentes villes
                                                                  function addMarkersAndSetViewBounds() {
@@ -734,9 +734,9 @@
 
                                                                              {% for key, rencontreDetailOptContrainte in rencontreDetailsOptContrainte %}
                                                                                  {% set distanceOptContrainte = rencontreDetailsOptContrainte[ loop.index ] %}
-
+                                                                                 {% set lettre = alphabet[key-1] %}
                                                                                  <tr>
-                                                                                     <td><strong> Poule {{ key }} </strong></td>
+                                                                                     <td><strong> Poule {{ lettre }} </strong></td>
 
                                                                                      <td>
                                                                                          <ul>
@@ -845,22 +845,22 @@
                                                              var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
                                                              var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
                                                              var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
-                                                             var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons10.png') }}');
-                                                             var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons11.png') }}');
-                                                             var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons12.png') }}');
-                                                             var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons13.png') }}');
-                                                             var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons14.png') }}');
-                                                             var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons15.png') }}');
-                                                             var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons16.png') }}');
-                                                             var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons17.png') }}');
-                                                             var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons18.png') }}');
-                                                             var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons19.png') }}');
-                                                             var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons20.png') }}');
-                                                             var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons21.png') }}');
-                                                             var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons22.png') }}');
-                                                             var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons23.png') }}');
-                                                             var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons24.png') }}');
-                                                             var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons25.png') }}');
+                                                             var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon10.png') }}');
+                                                             var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon11.png') }}');
+                                                             var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon12.png') }}');
+                                                             var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon13.png') }}');
+                                                             var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon14.png') }}');
+                                                             var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon15.png') }}');
+                                                             var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon16.png') }}');
+                                                             var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon17.png') }}');
+                                                             var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon18.png') }}');
+                                                             var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon19.png') }}');
+                                                             var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon20.png') }}');
+                                                             var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon21.png') }}');
+                                                             var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon22.png') }}');
+                                                             var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon23.png') }}');
+                                                             var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon24.png') }}');
+                                                             var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon25.png') }}');
                                                              //construction des points de differentes villes
                                                              function addMarkersAndSetViewBounds() {
                                                                  var incrment = 1;
@@ -1101,9 +1101,10 @@
 
                                                                          {% for keyEqContrainte, rencontreDetailEqContrainte in rencontreDetailsEqContrainte %}
                                                                              {% set distanceEqContrainte = rencontreDetailsEqContrainte[ loop.index ] %}
+                                                                             {% set lettre = alphabet[keyEqContrainte-1] %}
 
                                                                              <tr>
-                                                                                 <td><strong> Poule {{ keyEqContrainte }} </strong></td>
+                                                                                 <td><strong> Poule {{ lettre }} </strong></td>
 
                                                                                  <td>
                                                                                      <ul>
@@ -1220,22 +1221,22 @@
                                                              var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
                                                              var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
                                                              var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
-                                                             var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons10.png') }}');
-                                                             var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons11.png') }}');
-                                                             var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons12.png') }}');
-                                                             var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons13.png') }}');
-                                                             var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons14.png') }}');
-                                                             var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons15.png') }}');
-                                                             var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons16.png') }}');
-                                                             var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons17.png') }}');
-                                                             var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons18.png') }}');
-                                                             var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons19.png') }}');
-                                                             var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons20.png') }}');
-                                                             var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons21.png') }}');
-                                                             var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons22.png') }}');
-                                                             var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons23.png') }}');
-                                                             var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons24.png') }}');
-                                                             var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons25.png') }}');
+                                                             var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon10.png') }}');
+                                                             var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon11.png') }}');
+                                                             var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon12.png') }}');
+                                                             var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon13.png') }}');
+                                                             var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon14.png') }}');
+                                                             var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon15.png') }}');
+                                                             var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon16.png') }}');
+                                                             var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon17.png') }}');
+                                                             var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon18.png') }}');
+                                                             var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon19.png') }}');
+                                                             var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon20.png') }}');
+                                                             var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon21.png') }}');
+                                                             var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon22.png') }}');
+                                                             var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon23.png') }}');
+                                                             var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon24.png') }}');
+                                                             var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon25.png') }}');
                                                              //construction des points de differentes villes
                                                              function addMarkersAndSetViewBounds() {
                                                                  var incrment = 1;
@@ -1466,11 +1467,7 @@
                                                                              <th style="font-weight: bold !important;">
                                                                                  Poules
                                                                              </th>
-                                                                             <th style="text-align:right">Rencontres</th>
-
-                                                                             <th>Equipe 1</th>
-
-                                                                             <th>Equipe 2</th>
+                                                                             <th>Rencontres</th>
 
                                                                          </tr>
                                                                          </thead>
@@ -1478,10 +1475,9 @@
 
                                                                          {% for keyOptSansContrainte, rencontreDetailOpSansContrainte in rencontreDetailsOpSansContrainte %}
                                                                              {% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ loop.index ] %}
-
+                                                                             {% set lettre = alphabet[keyOptSansContrainte-1] %}
                                                                              <tr>
-                                                                                 <td><strong> Poule {{ keyOptSansContrainte }} </strong></td>
-
+                                                                                 <td><strong> Poule {{ lettre }} </strong></td>
                                                                                  <td>
                                                                                      <ul>
                                                                                          {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
@@ -1593,22 +1589,22 @@
                                                              var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
                                                              var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
                                                              var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
-                                                             var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons10.png') }}');
-                                                             var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons11.png') }}');
-                                                             var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons12.png') }}');
-                                                             var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons13.png') }}');
-                                                             var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons14.png') }}');
-                                                             var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons15.png') }}');
-                                                             var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons16.png') }}');
-                                                             var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons17.png') }}');
-                                                             var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons18.png') }}');
-                                                             var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons19.png') }}');
-                                                             var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons20.png') }}');
-                                                             var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons21.png') }}');
-                                                             var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons22.png') }}');
-                                                             var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons23.png') }}');
-                                                             var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons24.png') }}');
-                                                             var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons25.png') }}');
+                                                             var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon10.png') }}');
+                                                             var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon11.png') }}');
+                                                             var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon12.png') }}');
+                                                             var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon13.png') }}');
+                                                             var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon14.png') }}');
+                                                             var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon15.png') }}');
+                                                             var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon16.png') }}');
+                                                             var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon17.png') }}');
+                                                             var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon18.png') }}');
+                                                             var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon19.png') }}');
+                                                             var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon20.png') }}');
+                                                             var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon21.png') }}');
+                                                             var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon22.png') }}');
+                                                             var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon23.png') }}');
+                                                             var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon24.png') }}');
+                                                             var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon25.png') }}');
                                                              //construction des points de differentes villes
                                                              function addMarkersAndSetViewBounds() {
                                                                  var incrment = 1;
@@ -1932,22 +1928,22 @@
                                                          var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
                                                          var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
                                                          var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
-                                                         var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons10.png') }}');
-                                                         var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons11.png') }}');
-                                                         var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons12.png') }}');
-                                                         var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons13.png') }}');
-                                                         var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons14.png') }}');
-                                                         var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons15.png') }}');
-                                                         var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons16.png') }}');
-                                                         var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons17.png') }}');
-                                                         var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons18.png') }}');
-                                                         var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons19.png') }}');
-                                                         var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons20.png') }}');
-                                                         var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons21.png') }}');
-                                                         var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons22.png') }}');
-                                                         var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons23.png') }}');
-                                                         var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons24.png') }}');
-                                                         var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons25.png') }}');
+                                                         var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon10.png') }}');
+                                                         var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon11.png') }}');
+                                                         var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon12.png') }}');
+                                                         var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon13.png') }}');
+                                                         var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon14.png') }}');
+                                                         var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon15.png') }}');
+                                                         var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon16.png') }}');
+                                                         var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon17.png') }}');
+                                                         var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon18.png') }}');
+                                                         var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon19.png') }}');
+                                                         var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon20.png') }}');
+                                                         var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon21.png') }}');
+                                                         var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon22.png') }}');
+                                                         var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon23.png') }}');
+                                                         var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon24.png') }}');
+                                                         var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon25.png') }}');
 
                                                          //construction des points de differentes villes
                                                          function addMarkersAndSetViewBounds() {
@@ -2192,11 +2188,13 @@
 
 
                                                                          <tbody >
-                                                                     {% for keyOptSansContrainte, rencontreDetailOpSansContrainte in rencontreDetailsOpSansContrainte %}
+                                                                     {% for key, rencontreDetailOpSansContrainte in rencontreDetailsOpSansContrainte %}
                                                                          {% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ loop.index ] %}
 
                                                                          <tr>
-                                                                             <td><strong> Poule {{ keyOptSansContrainte }} </strong></td>
+                                                                             {% set lettre = alphabet[key-1] %}
+                                                                             <td><strong> Poule {{ lettre }} </strong></td>
+
                                                                              {#<td >#}
                                                                                  {#<ul>#}
                                                                                      {#{% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}#}
@@ -2230,6 +2228,7 @@
                                                                              {#</td>#}
 
                                                                          </tr>
+
 
                                                                      {% endfor %}
                                                                          </tbody>
@@ -2327,22 +2326,22 @@
                                                          var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
                                                          var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
                                                          var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
-                                                         var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons10.png') }}');
-                                                         var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons11.png') }}');
-                                                         var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons12.png') }}');
-                                                         var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons13.png') }}');
-                                                         var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons14.png') }}');
-                                                         var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons15.png') }}');
-                                                         var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons16.png') }}');
-                                                         var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons17.png') }}');
-                                                         var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons18.png') }}');
-                                                         var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons19.png') }}');
-                                                         var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons20.png') }}');
-                                                         var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons21.png') }}');
-                                                         var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons22.png') }}');
-                                                         var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons23.png') }}');
-                                                         var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons24.png') }}');
-                                                         var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons25.png') }}');
+                                                         var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon10.png') }}');
+                                                         var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon11.png') }}');
+                                                         var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon12.png') }}');
+                                                         var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon13.png') }}');
+                                                         var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon14.png') }}');
+                                                         var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon15.png') }}');
+                                                         var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon16.png') }}');
+                                                         var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon17.png') }}');
+                                                         var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon18.png') }}');
+                                                         var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon19.png') }}');
+                                                         var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon20.png') }}');
+                                                         var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon21.png') }}');
+                                                         var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon22.png') }}');
+                                                         var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon23.png') }}');
+                                                         var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon24.png') }}');
+                                                         var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon25.png') }}');
 
                                                          //construction des points de differentes villes
                                                          function addMarkersAndSetViewBounds() {
@@ -2586,9 +2585,9 @@
 
                                                                      {% for keyEqContrainte, rencontreDetailEqContrainte in rencontreDetailsEqContrainte %}
                                                                          {% set distanceEqContrainte = rencontreDetailsEqContrainte[ loop.index ] %}
-
+                                                                         {% set lettre = alphabet[keyEqContrainte-1] %}
                                                                          <tr>
-                                                                             <td><strong> Poule {{ keyEqContrainte }} </strong></td>
+                                                                             <td><strong> Poule {{ lettre }} </strong></td>
 
                                                                              <td>
                                                                                  <ul>
@@ -2634,8 +2633,6 @@
                                  </div>
 
                                  <!-- /.col-lg-6 -->
-
-
 
 
                              </div>
@@ -2711,22 +2708,22 @@
                                                          var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
                                                          var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
                                                          var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
-                                                         var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons10.png') }}');
-                                                         var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons11.png') }}');
-                                                         var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons12.png') }}');
-                                                         var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons13.png') }}');
-                                                         var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons14.png') }}');
-                                                         var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons15.png') }}');
-                                                         var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons16.png') }}');
-                                                         var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons17.png') }}');
-                                                         var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons18.png') }}');
-                                                         var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons19.png') }}');
-                                                         var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons20.png') }}');
-                                                         var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons21.png') }}');
-                                                         var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons22.png') }}');
-                                                         var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons23.png') }}');
-                                                         var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons24.png') }}');
-                                                         var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons25.png') }}');
+                                                         var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon10.png') }}');
+                                                         var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon11.png') }}');
+                                                         var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon12.png') }}');
+                                                         var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon13.png') }}');
+                                                         var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon14.png') }}');
+                                                         var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon15.png') }}');
+                                                         var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon16.png') }}');
+                                                         var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon17.png') }}');
+                                                         var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon18.png') }}');
+                                                         var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon19.png') }}');
+                                                         var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon20.png') }}');
+                                                         var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon21.png') }}');
+                                                         var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon22.png') }}');
+                                                         var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon23.png') }}');
+                                                         var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon24.png') }}');
+                                                         var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon25.png') }}');
 
                                                          //construction des points de differentes villes
                                                          function addMarkersAndSetViewBounds() {
