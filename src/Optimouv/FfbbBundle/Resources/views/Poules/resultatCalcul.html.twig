@@ -710,11 +710,7 @@
                                                                                  <th style="font-weight: bold !important;">
                                                                                      Poules
                                                                                  </th>
-                                                                                 <th style="text-align:right">Rencontres</th>
-
-                                                                                 <th>Equipe 1</th>
-
-                                                                                 <th>Equipe 2</th>
+                                                                                 <th>Rencontres</th>
 
                                                                              </tr>
                                                                              </thead>
@@ -725,38 +721,17 @@
 
                                                                                  <tr>
                                                                                      <td><strong> Poule {{ key }} </strong></td>
-                                                                                     <td>
-                                                                                         <ul>
-                                                                                             {% for keyDetail, detailsRencontreOpContrainte in distanceOptContrainte %}
-                                                                                                 <li>
-                                                                                                     {{ keyDetail }}
-                                                                                                 </li>
-
-                                                                                             {% endfor %}
-                                                                                         </ul>
-                                                                                     </td>
-                                                                                     <td>
-                                                                                         <ul>
-                                                                                             {% for keyDetail, detailsRencontreOpContrainte in distanceOptContrainte %}
-                                                                                                 <li>
-                                                                                                     {{ distanceOptContrainte[ loop.index ].equipeDepartVille }}
-                                                                                                 </li>
-
-                                                                                             {% endfor %}
-                                                                                         </ul>
-                                                                                     </td>
 
                                                                                      <td>
                                                                                          <ul>
                                                                                              {% for keyDetail, detailsRencontreOpContrainte in distanceOptContrainte %}
                                                                                                  <li>
-                                                                                                     {{ distanceOptContrainte[ loop.index ].equipeDestinationVille }}
+                                                                                                     {{ distanceOptContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceOptContrainte[ loop.index ].equipeDestinationVille }}
                                                                                                  </li>
 
                                                                                              {% endfor %}
                                                                                          </ul>
                                                                                      </td>
-
                                                                                  </tr>
 
                                                                              {% endfor %}
@@ -1087,11 +1062,7 @@
                                                                              <th style="font-weight: bold !important;">
                                                                                  Poules
                                                                              </th>
-                                                                             <th style="text-align:right">Rencontres</th>
-
-                                                                             <th>Equipe 1</th>
-
-                                                                             <th>Equipe 2</th>
+                                                                             <th>Rencontres</th>
 
                                                                          </tr>
                                                                          </thead>
@@ -1102,40 +1073,21 @@
 
                                                                              <tr>
                                                                                  <td><strong> Poule {{ keyEqContrainte }} </strong></td>
-                                                                                 <td>
-                                                                                     <ul>
-                                                                                         {% for keyDetailEqContrainte, detailsRencontreEqContrainte in distanceEqContrainte %}
-                                                                                             <li>
-                                                                                                 {{ keyDetailEqContrainte }}
-                                                                                             </li>
-
-                                                                                         {% endfor %}
-                                                                                     </ul>
-                                                                                 </td>
-                                                                                 <td>
-                                                                                     <ul>
-                                                                                         {% for detailsRencontreEqContrainte in distanceEqContrainte %}
-                                                                                             <li>
-                                                                                                 {{ distanceEqContrainte[ loop.index ].equipeDepartVille }}
-                                                                                             </li>
-
-                                                                                         {% endfor %}
-                                                                                     </ul>
-                                                                                 </td>
 
                                                                                  <td>
                                                                                      <ul>
                                                                                          {% for detailsRencontreEqContrainte in distanceEqContrainte %}
                                                                                              <li>
-                                                                                                 {{ distanceEqContrainte[ loop.index ].equipeDestinationVille }}
+                                                                                                 {{ distanceEqContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceEqContrainte[ loop.index ].equipeDestinationVille }}
                                                                                              </li>
 
                                                                                          {% endfor %}
                                                                                      </ul>
                                                                                  </td>
+
+
                                                                              </tr>
                                                                          {% endfor %}
-
 
                                                                          </tbody>
                                                                      </table>
@@ -1483,32 +1435,12 @@
 
                                                                              <tr>
                                                                                  <td><strong> Poule {{ keyOptSansContrainte }} </strong></td>
-                                                                                 <td>
-                                                                                     <ul>
-                                                                                         {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
-                                                                                             <li>
-                                                                                                 {{ keyDetailOptSansContrainte }}
-                                                                                             </li>
-
-                                                                                         {% endfor %}
-                                                                                     </ul>
-                                                                                 </td>
-                                                                                 <td>
-                                                                                     <ul>
-                                                                                         {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
-                                                                                             <li>
-                                                                                                 {{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }}
-                                                                                             </li>
-
-                                                                                         {% endfor %}
-                                                                                     </ul>
-                                                                                 </td>
 
                                                                                  <td>
                                                                                      <ul>
                                                                                          {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
                                                                                              <li>
-                                                                                                 {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}
+                                                                                                 {{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}
                                                                                              </li>
 
                                                                                          {% endfor %}
@@ -2172,11 +2104,11 @@
                                                                          <th style="font-weight: bold !important;">
                                                                              Poules
                                                                          </th>
-                                                                         <th style="text-align:right">Rencontres</th>
+                                                                         <th>Rencontres</th>
 
-                                                                         <th>Equipe 1</th>
+                                                                         {#<th>Rencontres</th>#}
 
-                                                                         <th>Equipe 2</th>
+                                                                         {#<th>Equipe 2</th>#}
 
                                                                      </tr>
                                                                      </thead>
@@ -2189,37 +2121,37 @@
 
                                                                          <tr>
                                                                              <td><strong> Poule {{ keyOptSansContrainte }} </strong></td>
-                                                                             <td >
-                                                                                 <ul>
-                                                                                     {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
-                                                                                         <li>
-                                                                                             {{ keyDetailOptSansContrainte }}
-                                                                                         </li>
+                                                                             {#<td >#}
+                                                                                 {#<ul>#}
+                                                                                     {#{% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}#}
+                                                                                         {#<li>#}
+                                                                                             {#{{ keyDetailOptSansContrainte }}#}
+                                                                                         {#</li>#}
 
-                                                                                     {% endfor %}
-                                                                                 </ul>
-                                                                             </td>
+                                                                                     {#{% endfor %}#}
+                                                                                 {#</ul>#}
+                                                                             {#</td>#}
                                                                              <td>
                                                                                  <ul>
                                                                                      {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
                                                                                          <li>
-                                                                                             {{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }}
+                                                                                             {{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }} ~  {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}
                                                                                          </li>
 
                                                                                      {% endfor %}
                                                                                  </ul>
                                                                              </td>
 
-                                                                             <td>
-                                                                                 <ul>
-                                                                                     {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
-                                                                                         <li>
-                                                                                             {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}
-                                                                                         </li>
+                                                                             {#<td>#}
+                                                                                 {#<ul>#}
+                                                                                     {#{% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}#}
+                                                                                         {#<li>#}
+                                                                                             {#{{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}#}
+                                                                                         {#</li>#}
 
-                                                                                     {% endfor %}
-                                                                                 </ul>
-                                                                             </td>
+                                                                                     {#{% endfor %}#}
+                                                                                 {#</ul>#}
+                                                                             {#</td>#}
 
                                                                          </tr>
 
@@ -2401,7 +2333,7 @@
                                                          </li>
                                                          <li><a href="#DetailsEq" data-toggle="tab">Détails</a>
                                                          </li>
-                                                         <li><a href="#listeRencontresScEq" data-toggle="tab">liste des rencontres</a>
+                                                         <li><a href="#listeRencontresScEq" data-toggle="tab">Liste des rencontres</a>
                                                          </li>
 
                                                      </ul>
@@ -2554,11 +2486,8 @@
                                                                          <th style="font-weight: bold !important;">
                                                                              Poules
                                                                          </th>
-                                                                         <th style="text-align:right">Rencontres</th>
+                                                                         <th>Rencontres</th>
 
-                                                                         <th>Equipe 1</th>
-
-                                                                         <th>Equipe 2</th>
 
                                                                      </tr>
                                                                      </thead>
@@ -2569,37 +2498,18 @@
 
                                                                          <tr>
                                                                              <td><strong> Poule {{ keyEqContrainte }} </strong></td>
-                                                                             <td>
-                                                                                 <ul>
-                                                                                     {% for keyDetailEqContrainte, detailsRencontreEqContrainte in distanceEqContrainte %}
-                                                                                         <li>
-                                                                                             {{ keyDetailEqContrainte }}
-                                                                                         </li>
-
-                                                                                     {% endfor %}
-                                                                                 </ul>
-                                                                             </td>
-                                                                             <td>
-                                                                                 <ul>
-                                                                                     {% for detailsRencontreEqContrainte in distanceEqContrainte %}
-                                                                                         <li>
-                                                                                             {{ distanceEqContrainte[ loop.index ].equipeDepartVille }}
-                                                                                         </li>
-
-                                                                                     {% endfor %}
-                                                                                 </ul>
-                                                                             </td>
 
                                                                              <td>
                                                                                  <ul>
                                                                                      {% for detailsRencontreEqContrainte in distanceEqContrainte %}
                                                                                          <li>
-                                                                                             {{ distanceEqContrainte[ loop.index ].equipeDestinationVille }}
+                                                                                             {{ distanceEqContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceEqContrainte[ loop.index ].equipeDestinationVille }}
                                                                                          </li>
 
                                                                                      {% endfor %}
                                                                                  </ul>
                                                                              </td>
+
                                                                          </tr>
                                                                      {% endfor %}
 
