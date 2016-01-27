@@ -36,7 +36,7 @@
 
                          <div class="panel panel-default">
                              <div class="panel-heading">
-                                 Type de rencontre*
+                                 <strong>Type de rencontre*</strong>
                              </div>
                              <!-- /.panel-heading -->
                              <div class="panel-body">
@@ -124,7 +124,7 @@
                      <div class="col-lg-3">
                          <div class="panel panel-default">
                              <div class="panel-heading">
-                                 Nombre de poules*
+                                 <strong>Nombre de poules*</strong>
                              </div>
                              <!-- /.panel-heading -->
                              <div class="panel-body">
@@ -393,7 +393,7 @@
                      <div class="panel panel-default">
                          <div class="panel-heading col-lg-12">
                              <div style="float:left; position:relative; width: 90%">
-                                 <p>Les scénarios ci-dessous présentent les résultats les plus écoresponsables correspondant à votre recherche "Orga_Poule_FFBB_National_13082015_Recherche 1" </p>
+                                 <p>Les scénarios ci-dessous présentent les résultats les plus écoresponsables correspondant à votre recherche. </p>
 
                              </div>
                              <div style="float:left; position:relative; width: 10%">
@@ -478,6 +478,22 @@
                                                                  var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
                                                                  var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
                                                                  var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
+                                                                 var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons10.png') }}');
+                                                                 var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons11.png') }}');
+                                                                 var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons12.png') }}');
+                                                                 var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons13.png') }}');
+                                                                 var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons14.png') }}');
+                                                                 var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons15.png') }}');
+                                                                 var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons16.png') }}');
+                                                                 var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons17.png') }}');
+                                                                 var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons18.png') }}');
+                                                                 var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons19.png') }}');
+                                                                 var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons20.png') }}');
+                                                                 var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons21.png') }}');
+                                                                 var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons22.png') }}');
+                                                                 var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons23.png') }}');
+                                                                 var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons24.png') }}');
+                                                                 var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons25.png') }}');
 
                                                                  //construction des points de differentes villes
                                                                  function addMarkersAndSetViewBounds() {
@@ -710,11 +726,7 @@
                                                                                  <th style="font-weight: bold !important;">
                                                                                      Poules
                                                                                  </th>
-                                                                                 <th style="text-align:right">Rencontres</th>
-
-                                                                                 <th>Equipe 1</th>
-
-                                                                                 <th>Equipe 2</th>
+                                                                                 <th>Rencontres</th>
 
                                                                              </tr>
                                                                              </thead>
@@ -725,38 +737,17 @@
 
                                                                                  <tr>
                                                                                      <td><strong> Poule {{ key }} </strong></td>
-                                                                                     <td>
-                                                                                         <ul>
-                                                                                             {% for keyDetail, detailsRencontreOpContrainte in distanceOptContrainte %}
-                                                                                                 <li>
-                                                                                                     {{ keyDetail }}
-                                                                                                 </li>
-
-                                                                                             {% endfor %}
-                                                                                         </ul>
-                                                                                     </td>
-                                                                                     <td>
-                                                                                         <ul>
-                                                                                             {% for keyDetail, detailsRencontreOpContrainte in distanceOptContrainte %}
-                                                                                                 <li>
-                                                                                                     {{ distanceOptContrainte[ loop.index ].equipeDepartVille }}
-                                                                                                 </li>
-
-                                                                                             {% endfor %}
-                                                                                         </ul>
-                                                                                     </td>
 
                                                                                      <td>
                                                                                          <ul>
                                                                                              {% for keyDetail, detailsRencontreOpContrainte in distanceOptContrainte %}
                                                                                                  <li>
-                                                                                                     {{ distanceOptContrainte[ loop.index ].equipeDestinationVille }}
+                                                                                                     {{ distanceOptContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceOptContrainte[ loop.index ].equipeDestinationVille }}
                                                                                                  </li>
 
                                                                                              {% endfor %}
                                                                                          </ul>
                                                                                      </td>
-
                                                                                  </tr>
 
                                                                              {% endfor %}
@@ -854,7 +845,22 @@
                                                              var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
                                                              var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
                                                              var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
-
+                                                             var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons10.png') }}');
+                                                             var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons11.png') }}');
+                                                             var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons12.png') }}');
+                                                             var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons13.png') }}');
+                                                             var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons14.png') }}');
+                                                             var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons15.png') }}');
+                                                             var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons16.png') }}');
+                                                             var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons17.png') }}');
+                                                             var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons18.png') }}');
+                                                             var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons19.png') }}');
+                                                             var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons20.png') }}');
+                                                             var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons21.png') }}');
+                                                             var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons22.png') }}');
+                                                             var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons23.png') }}');
+                                                             var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons24.png') }}');
+                                                             var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons25.png') }}');
                                                              //construction des points de differentes villes
                                                              function addMarkersAndSetViewBounds() {
                                                                  var incrment = 1;
@@ -1087,11 +1093,7 @@
                                                                              <th style="font-weight: bold !important;">
                                                                                  Poules
                                                                              </th>
-                                                                             <th style="text-align:right">Rencontres</th>
-
-                                                                             <th>Equipe 1</th>
-
-                                                                             <th>Equipe 2</th>
+                                                                             <th>Rencontres</th>
 
                                                                          </tr>
                                                                          </thead>
@@ -1102,40 +1104,21 @@
 
                                                                              <tr>
                                                                                  <td><strong> Poule {{ keyEqContrainte }} </strong></td>
-                                                                                 <td>
-                                                                                     <ul>
-                                                                                         {% for keyDetailEqContrainte, detailsRencontreEqContrainte in distanceEqContrainte %}
-                                                                                             <li>
-                                                                                                 {{ keyDetailEqContrainte }}
-                                                                                             </li>
-
-                                                                                         {% endfor %}
-                                                                                     </ul>
-                                                                                 </td>
-                                                                                 <td>
-                                                                                     <ul>
-                                                                                         {% for detailsRencontreEqContrainte in distanceEqContrainte %}
-                                                                                             <li>
-                                                                                                 {{ distanceEqContrainte[ loop.index ].equipeDepartVille }}
-                                                                                             </li>
-
-                                                                                         {% endfor %}
-                                                                                     </ul>
-                                                                                 </td>
 
                                                                                  <td>
                                                                                      <ul>
                                                                                          {% for detailsRencontreEqContrainte in distanceEqContrainte %}
                                                                                              <li>
-                                                                                                 {{ distanceEqContrainte[ loop.index ].equipeDestinationVille }}
+                                                                                                 {{ distanceEqContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceEqContrainte[ loop.index ].equipeDestinationVille }}
                                                                                              </li>
 
                                                                                          {% endfor %}
                                                                                      </ul>
                                                                                  </td>
+
+
                                                                              </tr>
                                                                          {% endfor %}
-
 
                                                                          </tbody>
                                                                      </table>
@@ -1237,7 +1220,22 @@
                                                              var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
                                                              var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
                                                              var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
-
+                                                             var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons10.png') }}');
+                                                             var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons11.png') }}');
+                                                             var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons12.png') }}');
+                                                             var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons13.png') }}');
+                                                             var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons14.png') }}');
+                                                             var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons15.png') }}');
+                                                             var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons16.png') }}');
+                                                             var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons17.png') }}');
+                                                             var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons18.png') }}');
+                                                             var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons19.png') }}');
+                                                             var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons20.png') }}');
+                                                             var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons21.png') }}');
+                                                             var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons22.png') }}');
+                                                             var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons23.png') }}');
+                                                             var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons24.png') }}');
+                                                             var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons25.png') }}');
                                                              //construction des points de differentes villes
                                                              function addMarkersAndSetViewBounds() {
                                                                  var incrment = 1;
@@ -1483,32 +1481,12 @@
 
                                                                              <tr>
                                                                                  <td><strong> Poule {{ keyOptSansContrainte }} </strong></td>
-                                                                                 <td>
-                                                                                     <ul>
-                                                                                         {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
-                                                                                             <li>
-                                                                                                 {{ keyDetailOptSansContrainte }}
-                                                                                             </li>
-
-                                                                                         {% endfor %}
-                                                                                     </ul>
-                                                                                 </td>
-                                                                                 <td>
-                                                                                     <ul>
-                                                                                         {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
-                                                                                             <li>
-                                                                                                 {{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }}
-                                                                                             </li>
-
-                                                                                         {% endfor %}
-                                                                                     </ul>
-                                                                                 </td>
 
                                                                                  <td>
                                                                                      <ul>
                                                                                          {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
                                                                                              <li>
-                                                                                                 {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}
+                                                                                                 {{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}
                                                                                              </li>
 
                                                                                          {% endfor %}
@@ -1615,7 +1593,22 @@
                                                              var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
                                                              var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
                                                              var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
-
+                                                             var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons10.png') }}');
+                                                             var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons11.png') }}');
+                                                             var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons12.png') }}');
+                                                             var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons13.png') }}');
+                                                             var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons14.png') }}');
+                                                             var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons15.png') }}');
+                                                             var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons16.png') }}');
+                                                             var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons17.png') }}');
+                                                             var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons18.png') }}');
+                                                             var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons19.png') }}');
+                                                             var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons20.png') }}');
+                                                             var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons21.png') }}');
+                                                             var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons22.png') }}');
+                                                             var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons23.png') }}');
+                                                             var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons24.png') }}');
+                                                             var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons25.png') }}');
                                                              //construction des points de differentes villes
                                                              function addMarkersAndSetViewBounds() {
                                                                  var incrment = 1;
@@ -1939,7 +1932,22 @@
                                                          var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
                                                          var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
                                                          var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
-
+                                                         var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons10.png') }}');
+                                                         var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons11.png') }}');
+                                                         var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons12.png') }}');
+                                                         var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons13.png') }}');
+                                                         var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons14.png') }}');
+                                                         var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons15.png') }}');
+                                                         var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons16.png') }}');
+                                                         var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons17.png') }}');
+                                                         var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons18.png') }}');
+                                                         var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons19.png') }}');
+                                                         var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons20.png') }}');
+                                                         var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons21.png') }}');
+                                                         var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons22.png') }}');
+                                                         var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons23.png') }}');
+                                                         var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons24.png') }}');
+                                                         var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons25.png') }}');
 
                                                          //construction des points de differentes villes
                                                          function addMarkersAndSetViewBounds() {
@@ -2172,11 +2180,11 @@
                                                                          <th style="font-weight: bold !important;">
                                                                              Poules
                                                                          </th>
-                                                                         <th style="text-align:right">Rencontres</th>
+                                                                         <th>Rencontres</th>
 
-                                                                         <th>Equipe 1</th>
+                                                                         {#<th>Rencontres</th>#}
 
-                                                                         <th>Equipe 2</th>
+                                                                         {#<th>Equipe 2</th>#}
 
                                                                      </tr>
                                                                      </thead>
@@ -2189,37 +2197,37 @@
 
                                                                          <tr>
                                                                              <td><strong> Poule {{ keyOptSansContrainte }} </strong></td>
-                                                                             <td >
-                                                                                 <ul>
-                                                                                     {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
-                                                                                         <li>
-                                                                                             {{ keyDetailOptSansContrainte }}
-                                                                                         </li>
+                                                                             {#<td >#}
+                                                                                 {#<ul>#}
+                                                                                     {#{% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}#}
+                                                                                         {#<li>#}
+                                                                                             {#{{ keyDetailOptSansContrainte }}#}
+                                                                                         {#</li>#}
 
-                                                                                     {% endfor %}
-                                                                                 </ul>
-                                                                             </td>
+                                                                                     {#{% endfor %}#}
+                                                                                 {#</ul>#}
+                                                                             {#</td>#}
                                                                              <td>
                                                                                  <ul>
                                                                                      {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
                                                                                          <li>
-                                                                                             {{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }}
+                                                                                             {{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }} ~  {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}
                                                                                          </li>
 
                                                                                      {% endfor %}
                                                                                  </ul>
                                                                              </td>
 
-                                                                             <td>
-                                                                                 <ul>
-                                                                                     {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
-                                                                                         <li>
-                                                                                             {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}
-                                                                                         </li>
+                                                                             {#<td>#}
+                                                                                 {#<ul>#}
+                                                                                     {#{% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}#}
+                                                                                         {#<li>#}
+                                                                                             {#{{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}#}
+                                                                                         {#</li>#}
 
-                                                                                     {% endfor %}
-                                                                                 </ul>
-                                                                             </td>
+                                                                                     {#{% endfor %}#}
+                                                                                 {#</ul>#}
+                                                                             {#</td>#}
 
                                                                          </tr>
 
@@ -2319,7 +2327,22 @@
                                                          var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
                                                          var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
                                                          var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
-
+                                                         var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons10.png') }}');
+                                                         var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons11.png') }}');
+                                                         var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons12.png') }}');
+                                                         var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons13.png') }}');
+                                                         var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons14.png') }}');
+                                                         var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons15.png') }}');
+                                                         var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons16.png') }}');
+                                                         var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons17.png') }}');
+                                                         var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons18.png') }}');
+                                                         var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons19.png') }}');
+                                                         var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons20.png') }}');
+                                                         var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons21.png') }}');
+                                                         var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons22.png') }}');
+                                                         var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons23.png') }}');
+                                                         var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons24.png') }}');
+                                                         var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons25.png') }}');
 
                                                          //construction des points de differentes villes
                                                          function addMarkersAndSetViewBounds() {
@@ -2401,7 +2424,7 @@
                                                          </li>
                                                          <li><a href="#DetailsEq" data-toggle="tab">Détails</a>
                                                          </li>
-                                                         <li><a href="#listeRencontresScEq" data-toggle="tab">liste des rencontres</a>
+                                                         <li><a href="#listeRencontresScEq" data-toggle="tab">Liste des rencontres</a>
                                                          </li>
 
                                                      </ul>
@@ -2554,11 +2577,8 @@
                                                                          <th style="font-weight: bold !important;">
                                                                              Poules
                                                                          </th>
-                                                                         <th style="text-align:right">Rencontres</th>
+                                                                         <th>Rencontres</th>
 
-                                                                         <th>Equipe 1</th>
-
-                                                                         <th>Equipe 2</th>
 
                                                                      </tr>
                                                                      </thead>
@@ -2569,37 +2589,18 @@
 
                                                                          <tr>
                                                                              <td><strong> Poule {{ keyEqContrainte }} </strong></td>
-                                                                             <td>
-                                                                                 <ul>
-                                                                                     {% for keyDetailEqContrainte, detailsRencontreEqContrainte in distanceEqContrainte %}
-                                                                                         <li>
-                                                                                             {{ keyDetailEqContrainte }}
-                                                                                         </li>
-
-                                                                                     {% endfor %}
-                                                                                 </ul>
-                                                                             </td>
-                                                                             <td>
-                                                                                 <ul>
-                                                                                     {% for detailsRencontreEqContrainte in distanceEqContrainte %}
-                                                                                         <li>
-                                                                                             {{ distanceEqContrainte[ loop.index ].equipeDepartVille }}
-                                                                                         </li>
-
-                                                                                     {% endfor %}
-                                                                                 </ul>
-                                                                             </td>
 
                                                                              <td>
                                                                                  <ul>
                                                                                      {% for detailsRencontreEqContrainte in distanceEqContrainte %}
                                                                                          <li>
-                                                                                             {{ distanceEqContrainte[ loop.index ].equipeDestinationVille }}
+                                                                                             {{ distanceEqContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceEqContrainte[ loop.index ].equipeDestinationVille }}
                                                                                          </li>
 
                                                                                      {% endfor %}
                                                                                  </ul>
                                                                              </td>
+
                                                                          </tr>
                                                                      {% endfor %}
 
@@ -2710,7 +2711,22 @@
                                                          var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
                                                          var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
                                                          var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
-
+                                                         var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons10.png') }}');
+                                                         var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons11.png') }}');
+                                                         var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons12.png') }}');
+                                                         var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons13.png') }}');
+                                                         var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons14.png') }}');
+                                                         var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons15.png') }}');
+                                                         var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons16.png') }}');
+                                                         var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons17.png') }}');
+                                                         var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons18.png') }}');
+                                                         var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons19.png') }}');
+                                                         var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons20.png') }}');
+                                                         var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons21.png') }}');
+                                                         var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons22.png') }}');
+                                                         var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons23.png') }}');
+                                                         var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons24.png') }}');
+                                                         var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icons25.png') }}');
 
                                                          //construction des points de differentes villes
                                                          function addMarkersAndSetViewBounds() {
