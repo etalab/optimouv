@@ -88,6 +88,9 @@ def calculate_V_value(input_P_mat, input_D_mat):
 	try:
 		outputDistance = 0
 	
+# 		logging.debug("  input_P_mat: \n%s" %input_P_mat)
+# 		logging.debug("  input_D_mat: \n%s" %input_D_mat)
+
 		rowSize = input_P_mat.shape[0]
 		colSize = input_P_mat.shape[1]
 		
@@ -100,6 +103,7 @@ def calculate_V_value(input_P_mat, input_D_mat):
 					D_mat_value = 0
 				
 				outputDistance += (P_mat_value * D_mat_value ) 
+# 				logging.debug("  outputDistance: %s" %outputDistance)
 		return outputDistance
 	except Exception as e:
 		show_exception_traceback()
@@ -1976,8 +1980,14 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			# create P Matrix reference to calculate distance	
 			P_Mat_ref = create_matrix_from_pool_distribution(poolDistributionRef, teamNbr, teams)
 			logging.debug(" P_Mat_ref.shape: \n%s" %(P_Mat_ref.shape,))
-	# 		logging.debug(" P_Mat_ref: \n%s" %(P_Mat_ref,))
+# 			logging.debug(" P_Mat_ref: \n%s" %(P_Mat_ref,))
+# 			np.savetxt("/tmp/p_mat_ref_one_way.csv", P_Mat_ref, delimiter=",", fmt='%d') # DEBUG
 	
+			# take upper part of matrix
+			P_Mat_ref = np.triu(P_Mat_ref)
+# 			np.savetxt("/tmp/p_mat_ref_one_way2.csv", P_Mat_ref, delimiter=",", fmt='%d') # DEBUG
+	
+			logging.debug(" P_Mat_ref: \n%s" %(P_Mat_ref,))
 			chosenDistanceRef = calculate_V_value(P_Mat_ref, D_Mat)
 			logging.debug(" chosenDistanceRef: %s" %chosenDistanceRef)
 	
@@ -2012,7 +2022,6 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		logging.debug("")
 		logging.debug(" ####################### RESULT OPTIMAL WITHOUT CONSTRAINT #############################################")
 
-# 		np.savetxt("/tmp/p_init_mat_without_constraint_one_way.csv", P_InitMat_withoutConstraint, delimiter=",", fmt='%d')
 		# optimal scenario without constraint
 		# launch calculation based on ref scenario only if the params are comparable
 		if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
