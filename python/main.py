@@ -1273,7 +1273,7 @@ def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize, varTeamNbr
 		#####################################################################################################
 # 		teamPoolResult = adjust_pool_attribution_based_on_pool_variation(teamPoolResult, poolNbr, poolSize, varTeamNbrPerPool)
 # 		logging.debug("teamPoolResult: %s" %teamPoolResult)
-		
+	
 		#####################################################################################################
 		
 		# get index of the teams with the same pool number (create 2D Matrix from list)
@@ -1283,7 +1283,6 @@ def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize, varTeamNbr
 		
 			P_InitMat[indexCurPool, sameCurValueIndex] = 1
 		# 
-		np.savetxt("/tmp/p_init_mat_without_constraint.csv", P_InitMat, delimiter=",", fmt='%d')
 	except Exception as e:
 		show_exception_traceback()
 
@@ -1440,8 +1439,8 @@ def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterCo
 			#####################################################################################################
 			# take into account variation of team number in a pool
 			#####################################################################################################
-			teamPoolResult = adjust_pool_attribution_based_on_pool_variation(teamPoolResult, poolNbr, poolSize, varTeamNbrPerPool)
-			logging.debug("teamPoolResult: %s" %teamPoolResult)
+# 			teamPoolResult = adjust_pool_attribution_based_on_pool_variation(teamPoolResult, poolNbr, poolSize, varTeamNbrPerPool)
+# 			logging.debug("teamPoolResult: %s" %teamPoolResult)
 
 			#####################################################################################################
 
@@ -1937,13 +1936,14 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		logging.debug("")
 		logging.debug(" ####################### RESULT OPTIMAL WITHOUT CONSTRAINT #############################################")
 
+		np.savetxt("/tmp/p_init_mat_without_constraint_one_way.csv", P_InitMat_withoutConstraint, delimiter=",", fmt='%d')
 		# optimal scenario without constraint
 		P_Mat_OptimalWithoutConstraint = get_p_matrix_for_round_trip_match_optimal_without_constraint(P_InitMat_withoutConstraint, D_Mat, iter, teamNbr)#
+		np.savetxt("/tmp/p_mat_optimal_without_constraint_one_way.csv", P_Mat_OptimalWithoutConstraint, delimiter=",", fmt='%d') # DEBUG
 
 		chosenDistance_OptimalWithoutConstraint = calculate_V_value(P_Mat_OptimalWithoutConstraint, D_Mat)
 		logging.debug(" chosenDistance_OptimalWithoutConstraint: %s" %chosenDistance_OptimalWithoutConstraint)
 	
-		np.savetxt("/tmp/p_mat_optimal_without_constraint.csv", P_Mat_OptimalWithoutConstraint, delimiter=",", fmt='%d') # DEBUG
 # 
 # 		# get pool distribution
 		poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
@@ -1978,11 +1978,11 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		logging.debug(" ####################### RESULT EQUITABLE WITHOUT CONSTRAINT ############################################")
 		# equitable scenario without constraint
 		P_Mat_EquitableWithoutConstraint = get_p_matrix_for_round_trip_match_equitable_without_constraint(P_InitMat_withoutConstraint, D_Mat, iter, teamNbr)#
+# 		np.savetxt("/tmp/p_mat_equitable_without_constraint.csv", P_Mat_EquitableWithoutConstraint, delimiter=",", fmt='%d') # DEBUG
 
 		chosenDistance_EquitableWithoutConstraint = calculate_V_value(P_Mat_EquitableWithoutConstraint, D_Mat)
 		logging.debug(" chosenDistance_EquitableWithoutConstraint: %s" %chosenDistance_EquitableWithoutConstraint)
 
-		np.savetxt("/tmp/p_mat_equitable_without_constraint.csv", P_Mat_EquitableWithoutConstraint, delimiter=",", fmt='%d') # DEBUG
 
 		# get pool distribution
 		poolDistribution_EquitableWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
