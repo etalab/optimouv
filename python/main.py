@@ -918,14 +918,14 @@ def create_reference_pool_distribution_from_db(teams, poolSize):
 		poolDistributionReference = {"status": "yes", "data": {}}
 		phantomTeams = []
 
-		# logging.debug(" teams: %s" %teams)
-		# logging.debug(" poolSize: %s" %poolSize)
+		logging.debug(" teams: %s" %teams)
+		logging.debug(" poolSize: %s" %poolSize)
 
 		listChars = []
 
 		# construct pool distribution without phantom teams
 		for team in teams:
-			# check if not phantom team
+			# check if not phantom team (separate beween normal teams and phantom teams)
 			if int(team) > 0:
 				sql = "select id, poule from entite where id=%s"%team
 				teamId, poolId = db.fetchone_multi(sql)
@@ -951,12 +951,25 @@ def create_reference_pool_distribution_from_db(teams, poolSize):
 			else:
 				phantomTeams.append(team)
 
+		# calculate the max pool size if the distribution is not uniform (there are phantom members)
+		maxPoolSizeRef = 0
+		poolNbrRef = 0
+		for pool, members in poolDistributionReference["data"].items():
+			poolNbrRef += 1
+# 			logging.debug(" members: %s" %members)
+			if maxPoolSizeRef < len(members):
+				maxPoolSizeRef = len(members)
+		poolDistributionReference["maxPoolSizeRef"] = maxPoolSizeRef
+		poolDistributionReference["poolNbrRef"] = poolNbrRef
+		logging.debug(" maxPoolSizeRef: %s" %maxPoolSizeRef)
+		logging.debug(" poolNbrRef: %s" %poolNbrRef)
 
 		# add phantom teams to the created distribution
 		if len(phantomTeams) > 0:
 			poolDistributionReferenceTmp = dict.copy(poolDistributionReference["data"])
 			for pool, poolTeams in poolDistributionReferenceTmp.items():
-				if len(poolTeams) < poolSize:
+# 				if len(poolTeams) < poolSize:
+				if len(poolTeams) < maxPoolSizeRef:
 					sizeDiff = poolSize - len(poolTeams)
 					for i in range(sizeDiff):
 						phantomTeam = phantomTeams.pop()
@@ -1707,7 +1720,11 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		logging.debug(" ####################### RESULT OPTIMAL WITHOUT CONSTRAINT #############################################")
 
 		# optimal scenario without constraint
-		P_Mat_OptimalWithoutConstraint = get_p_matrix_for_round_trip_match_optimal_without_constraint(P_InitMat_withoutConstraint, D_Mat, iter, teamNbr)#
+		# launch calculation based on ref scenario only if the params are comparable
+		if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
+			P_Mat_OptimalWithoutConstraint = get_p_matrix_for_round_trip_match_optimal_without_constraint(P_Mat_ref, D_Mat, iter, teamNbr)#
+		else:
+			P_Mat_OptimalWithoutConstraint = get_p_matrix_for_round_trip_match_optimal_without_constraint(P_InitMat_withoutConstraint, D_Mat, iter, teamNbr)#
 
 		chosenDistance_OptimalWithoutConstraint = calculate_V_value(P_Mat_OptimalWithoutConstraint, D_Mat)
 		logging.debug(" chosenDistance_OptimalWithoutConstraint: %s" %chosenDistance_OptimalWithoutConstraint)
@@ -1747,7 +1764,11 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		logging.debug("")
 		logging.debug(" ####################### RESULT EQUITABLE WITHOUT CONSTRAINT ############################################")
 		# equitable scenario without constraint
-		P_Mat_EquitableWithoutConstraint = get_p_matrix_for_round_trip_match_equitable_without_constraint(P_InitMat_withoutConstraint, D_Mat, iter, teamNbr)#
+		# launch calculation based on ref scenario only if the params are comparable
+		if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
+			P_Mat_EquitableWithoutConstraint = get_p_matrix_for_round_trip_match_equitable_without_constraint(P_Mat_ref, D_Mat, iter, teamNbr)#
+		else:
+			P_Mat_EquitableWithoutConstraint = get_p_matrix_for_round_trip_match_equitable_without_constraint(P_InitMat_withoutConstraint, D_Mat, iter, teamNbr)#
 
 		chosenDistance_EquitableWithoutConstraint = calculate_V_value(P_Mat_EquitableWithoutConstraint, D_Mat)
 		logging.debug(" chosenDistance_EquitableWithoutConstraint: %s" %chosenDistance_EquitableWithoutConstraint)
@@ -1788,8 +1809,12 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			logging.debug("")
 			logging.debug(" ####################### RESULT OPTIMAL WITH CONSTRAINT #############################################")
 			# optimal scenario with constraint   
-			P_Mat_OptimalWithConstraint = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
-	 
+			# launch calculation based on ref scenario only if the params are comparable
+			if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
+				P_Mat_OptimalWithConstraint = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+			else:
+				P_Mat_OptimalWithConstraint = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+
 			chosenDistance_OptimalWithConstraint = calculate_V_value(P_Mat_OptimalWithConstraint, D_Mat)
 			logging.debug(" chosenDistance_OptimalWithConstraint: %s" %chosenDistance_OptimalWithConstraint)
 	 	
@@ -1828,7 +1853,10 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			logging.debug(" ######################### RESULT EQUITABLE WITH CONSTRAINT ############################################")
 	
 			# equitable scenario without constraint
-			P_Mat_EquitableWithConstraint = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+			if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
+				P_Mat_EquitableWithConstraint = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+			else:
+				P_Mat_EquitableWithConstraint = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
 	
 			chosenDistance_EquitableWithConstraint = calculate_V_value(P_Mat_EquitableWithConstraint, D_Mat)
 			logging.debug(" chosenDistance_EquitableWithConstraint: %s" %chosenDistance_EquitableWithConstraint)
