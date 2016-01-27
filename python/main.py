@@ -1638,7 +1638,6 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			results["params"]["varEquipeParPouleProposition"] = list(range(1, maxVarTeamNbrPerPool+1 ))
 
 
-
 		logging.debug(" ########################################## ROUND TRIP　MATCH ###############################################")
 		iter = config.INPUT.Iter
 		logging.debug(" iter: %s" %iter)
@@ -1651,7 +1650,59 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			results["contraintsExiste"] = 0
 # 			results["params"]["contraintsExiste"] = 0
 
+
+		logging.debug("")
+		logging.debug(" #################################### REFERENCE RESULT #################################################")
+		returnPoolDistributionRef = create_reference_pool_distribution_from_db(teams, poolSize)
 		
+		# process only if there is a reference
+		if returnPoolDistributionRef["status"] == "yes":
+			
+			# add boolean to results
+# 			results["params"]["refExiste"] = 1
+			results["refExiste"] = 1
+			
+			poolDistributionRef = returnPoolDistributionRef["data"]
+			logging.debug(" poolDistributionRef: \n%s" %poolDistributionRef)
+
+			# create P Matrix reference to calculate distance	
+			P_Mat_ref = create_matrix_from_pool_distribution(poolDistributionRef, teamNbr, teams)
+			logging.debug(" P_Mat_ref.shape: \n%s" %(P_Mat_ref.shape,))
+	# 		logging.debug(" P_Mat_ref: \n%s" %(P_Mat_ref,))
+	
+			chosenDistanceRef = calculate_V_value(P_Mat_ref, D_Mat)
+			logging.debug(" chosenDistanceRef: %s" %chosenDistanceRef)
+	
+			# eliminate phnatom teams
+			poolDistributionRef = eliminate_phantom_in_pool_distribution(poolDistributionRef)
+			results["scenarioRef"]["poulesId"] = poolDistributionRef
+			logging.debug(" poolDistributionRef: %s" %poolDistributionRef)
+	
+			# get coordinates for each point in the pools
+			poolDistributionCoordsRef = get_coords_pool_distribution(poolDistributionRef)
+			results["scenarioRef"]["poulesCoords"] = poolDistributionCoordsRef
+			logging.debug(" poolDistributionCoordsRef: %s" %poolDistributionCoordsRef)
+	
+			# get encounter list from pool distribution dict
+			encountersRef = create_encounters_from_pool_distribution(poolDistributionRef)
+			results["scenarioRef"]["rencontreDetails"] = encountersRef
+	
+			# get pool details from encounters
+			poolDetailsRef = create_pool_details_from_encounters(encountersRef, poolDistributionRef)
+			results["scenarioRef"]["estimationDetails"] = poolDetailsRef
+			logging.debug(" poolDetailsRef: \n%s" %poolDetailsRef)
+	
+			# get sum info from pool details
+			sumInfoRef = get_sum_info_from_pool_details(poolDetailsRef)
+			results["scenarioRef"]["estimationGenerale"] = sumInfoRef
+			logging.debug(" sumInfoRef: \n%s" %sumInfoRef)
+		else:
+			# add boolean to results
+# 			results["params"]["refExiste"] = 0
+			results["refExiste"] = 0
+
+
+
 		logging.debug("")
 		logging.debug(" ####################### RESULT OPTIMAL WITHOUT CONSTRAINT #############################################")
 
@@ -1813,55 +1864,6 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			results["scenarioEquitableAvecContrainte"]["estimationGenerale"] = sumInfo_EquitableWithConstraint
 			logging.debug(" sumInfo_EquitableWithConstraint: \n%s" %sumInfo_EquitableWithConstraint)
 
-		logging.debug("")
-		logging.debug(" #################################### REFERENCE RESULT #################################################")
-		returnPoolDistributionRef = create_reference_pool_distribution_from_db(teams, poolSize)
-		
-		# process only if there is a reference
-		if returnPoolDistributionRef["status"] == "yes":
-			
-			# add boolean to results
-# 			results["params"]["refExiste"] = 1
-			results["refExiste"] = 1
-			
-			poolDistributionRef = returnPoolDistributionRef["data"]
-			logging.debug(" poolDistributionRef: \n%s" %poolDistributionRef)
-
-			# create P Matrix reference to calculate distance	
-			P_Mat_ref = create_matrix_from_pool_distribution(poolDistributionRef, teamNbr, teams)
-			logging.debug(" P_Mat_ref.shape: \n%s" %(P_Mat_ref.shape,))
-	# 		logging.debug(" P_Mat_ref: \n%s" %(P_Mat_ref,))
-	
-			chosenDistanceRef = calculate_V_value(P_Mat_ref, D_Mat)
-			logging.debug(" chosenDistanceRef: %s" %chosenDistanceRef)
-	
-			# eliminate phnatom teams
-			poolDistributionRef = eliminate_phantom_in_pool_distribution(poolDistributionRef)
-			results["scenarioRef"]["poulesId"] = poolDistributionRef
-			logging.debug(" poolDistributionRef: %s" %poolDistributionRef)
-	
-			# get coordinates for each point in the pools
-			poolDistributionCoordsRef = get_coords_pool_distribution(poolDistributionRef)
-			results["scenarioRef"]["poulesCoords"] = poolDistributionCoordsRef
-			logging.debug(" poolDistributionCoordsRef: %s" %poolDistributionCoordsRef)
-	
-			# get encounter list from pool distribution dict
-			encountersRef = create_encounters_from_pool_distribution(poolDistributionRef)
-			results["scenarioRef"]["rencontreDetails"] = encountersRef
-	
-			# get pool details from encounters
-			poolDetailsRef = create_pool_details_from_encounters(encountersRef, poolDistributionRef)
-			results["scenarioRef"]["estimationDetails"] = poolDetailsRef
-			logging.debug(" poolDetailsRef: \n%s" %poolDetailsRef)
-	
-			# get sum info from pool details
-			sumInfoRef = get_sum_info_from_pool_details(poolDetailsRef)
-			results["scenarioRef"]["estimationGenerale"] = sumInfoRef
-			logging.debug(" sumInfoRef: \n%s" %sumInfoRef)
-		else:
-			# add boolean to results
-# 			results["params"]["refExiste"] = 0
-			results["refExiste"] = 0
 
 			
 # 		logging.debug(" results: \n%s" %results)
