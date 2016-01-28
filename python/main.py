@@ -964,27 +964,38 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 	# 		logging.debug("  P_InitMat: \n%s" %P_InitMat)
 	# 		logging.debug("  P_TransMat: \n%s" %P_TransMat)
 	# 
-			V_oriValue = calculate_V_value_equitable(P_InitMat, D_Mat)
+			V_oriValue_equitable = calculate_V_value_equitable(P_InitMat, D_Mat)
+			logging.debug("  V_oriValue_equitable: %s" %V_oriValue_equitable)
+	
+			V_transValue_equitable = calculate_V_value_equitable(P_TransMat, D_Mat)
+			logging.debug("  V_transValue_equitable: %s" %V_transValue_equitable)
+	
+			deltaV_equitable = V_oriValue_equitable - V_transValue_equitable
+			logging.debug("  deltaV_equitable: %s" %deltaV_equitable)
+			
+# 			######################################################################################################
+			V_oriValue = calculate_V_value(P_InitMat, D_Mat)
 			logging.debug("  V_oriValue: %s" %V_oriValue)
-	
-			V_transValue = calculate_V_value_equitable(P_TransMat, D_Mat)
+			V_transValue = calculate_V_value(P_TransMat, D_Mat)
 			logging.debug("  V_transValue: %s" %V_transValue)
-	
 			deltaV = V_oriValue - V_transValue
 			logging.debug("  deltaV: %s" %deltaV)
+# 			######################################################################################################
+			
+			
 			
 			# temperature function 
 			# reinitialize temperature in the middle of loop
 			if nbIter == int(iter/2):
 				T_Value = 0.1 * initDistance
 	# 
-			if deltaV <= 0:
+			if deltaV_equitable <= 0:
 				pass
 			else:
 				randValue = random.random()
 # 				logging.debug("  randValue: %s" %randValue)
 	
-				expValue = math.exp(-deltaV/T_Value)
+				expValue = math.exp(-deltaV_equitable/T_Value)
 # 				logging.debug("  expValue: %s" %expValue)
 	
 				if randValue <= expValue:
