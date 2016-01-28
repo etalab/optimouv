@@ -2192,11 +2192,16 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 
 		#################################################################################################################
 		# correction calculation for one way match
-# 		poolDetails_OptimalWithoutConstraintTmp = dict.copy(poolDetails_OptimalWithoutConstraint)
-# 		sumInfo_OptimalWithoutConstraintTmp = dict.copy(sumInfo_OptimalWithoutConstraint)
-# 
-# 		for param, value in sumInfo_OptimalWithoutConstraintTmp.items():
-# 			sumInfo_OptimalWithoutConstraint[param] = value/2
+		poolDetails_OptimalWithoutConstraintTmp = dict.copy(poolDetails_OptimalWithoutConstraint)
+		sumInfo_OptimalWithoutConstraintTmp = dict.copy(sumInfo_OptimalWithoutConstraint)
+
+		for pool, content in poolDetails_OptimalWithoutConstraintTmp.items():
+			for param, value in content.items():
+				poolDetails_OptimalWithoutConstraint[pool][param] = value/2
+
+
+		for param, value in sumInfo_OptimalWithoutConstraintTmp.items():
+			sumInfo_OptimalWithoutConstraint[param] = value/2
 
 		#################################################################################################################
 
