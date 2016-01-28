@@ -227,20 +227,19 @@ Function to create pool distribution from P Matrix
 def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool):
 	try:
 
-
-		logging.debug(" create_pool_distribution_from_matrix_one_way ")
-		logging.debug("  teamNbr: %s" %teamNbr)
-		logging.debug("  poolNbr: %s" %poolNbr)
-		logging.debug("  poolSize: %s" %poolSize)
-		logging.debug("  teams: %s" %teams)
-		
+# 		logging.debug(" ------------------------- create_pool_distribution_from_matrix_one_way ------------------------- ")
+# 		logging.debug("  P_Mat: \n%s" %P_Mat)
+# 		logging.debug("  teamNbr: %s" %teamNbr)
+# 		logging.debug("  poolNbr: %s" %poolNbr)
+# 		logging.debug("  poolSize: %s" %poolSize)
+# 		logging.debug("  teams: %s" %teams)
 		
 		# Dict containing the distribution of groups in the pools
 		poolDistribution = {}
 	
 		tempPools = []
-		performanceCounter = 0
-		assignedTeams = []
+		performanceCounter = 0 # counter which indicates the performance of the algorithm
+		assignedTeams = [] # list of all assigned teams
 		for indexRow, teamDepart in enumerate(teams):
 			# break if tempPools has reached number of desired pools
 			if len(tempPools)  == poolNbr:
@@ -258,38 +257,40 @@ def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSi
 			poolSizeRow = rowContent.count(1.0) + 1
 # 			logging.debug("  poolSizeRow: %s" %poolSizeRow)
 
-			tempPool = [] # create a temporary pool (this pool has max size of poolSizeRow)
-			tempPool.append(teamDepart) # add first element in the pool
-
-			for indexCol, teamDestination in enumerate(teams):
-				# continue to the next row if teamDepart is already in the list of assigned teams
-				if teamDestination in assignedTeams:
-					continue
-
-				valueMat = int(P_Mat[indexRow][indexCol])
-# 				logging.debug("  valueMat: %s" %valueMat)
-# 				logging.debug("  teamDestination: %s" %teamDestination)
+			# move to the next row if the pool size is smalller than expected
+			if(poolSizeRow == poolSize):
+				tempPool = [] # create a temporary pool (this pool has max size of poolSizeRow)
+				tempPool.append(teamDepart) # add first element in the pool
 	
-				performanceCounter += 1
+				for indexCol, teamDestination in enumerate(teams):
+					# continue to the next row if teamDepart is already in the list of assigned teams
+					if teamDestination in assignedTeams:
+						continue
 	
-				# add teamDestination to temporary pool if the pool size has not been reached and if the teamDestination is not yet in temporary pool 
-# 				if ( len(tempPool) < poolSize) and (teamDestination not in tempPool) and (valueMat == 1):
-				if ( len(tempPool) < poolSizeRow) and (teamDestination not in tempPool) and (valueMat == 1):
-					tempPool.append(teamDestination)
-					
-				# if the pool size has been reached, push the tempPool to tempPools
-# 				if len(tempPool) == poolSize:
-				if len(tempPool) == poolSizeRow:
-					tempPool = sorted(tempPool)
-					if tempPool not in tempPools:
-# 						logging.debug("  tempPool: %s" %tempPool)
+					valueMat = int(P_Mat[indexRow][indexCol])
+	# 				logging.debug("  valueMat: %s" %valueMat)
+	# 				logging.debug("  teamDestination: %s" %teamDestination)
+		
+					performanceCounter += 1
+		
+					# add teamDestination to temporary pool if the pool size has not been reached and if the teamDestination is not yet in temporary pool 
+	# 				if ( len(tempPool) < poolSize) and (teamDestination not in tempPool) and (valueMat == 1):
+					if ( len(tempPool) < poolSizeRow) and (teamDestination not in tempPool) and (valueMat == 1):
+						tempPool.append(teamDestination)
 						
-						if len(tempPools) < poolNbr:
-# 							logging.debug("  tempPool: %s" %tempPool)
-							tempPools.append(tempPool)
-							assignedTeams.extend(tempPool)
-						else: 
-							break
+					# if the pool size has been reached, push the tempPool to tempPools
+	# 				if len(tempPool) == poolSize:
+					if len(tempPool) == poolSizeRow:
+						tempPool = sorted(tempPool)
+						if tempPool not in tempPools:
+	# 						logging.debug("  tempPool: %s" %tempPool)
+							
+							if len(tempPools) < poolNbr:
+	# 							logging.debug("  tempPool: %s" %tempPool)
+								tempPools.append(tempPool)
+								assignedTeams.extend(tempPool)
+							else: 
+								break
 				
 # 		logging.debug("teamNbr: \n%s" %teamNbr)
 # 		logging.debug("poolNbr: \n%s" %poolNbr)
@@ -2204,7 +2205,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 
 
 		# get pool distribution
-		poolDistribution_EquitableWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+		poolDistribution_EquitableWithoutConstraint = create_pool_distribution_from_matrix_one_way(P_Mat_EquitableWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
 		logging.debug(" poolDistribution_EquitableWithoutConstraint: %s" %poolDistribution_EquitableWithoutConstraint)
 
 		# eliminate phnatom teams
@@ -2248,7 +2249,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 	 	
 			np.savetxt("/tmp/p_mat_optimal_with_constraint.csv", P_Mat_OptimalWithConstraint, delimiter=",", fmt='%d') # DEBUG
 	
-			poolDistribution_OptimalWithConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+			poolDistribution_OptimalWithConstraint = create_pool_distribution_from_matrix_one_way(P_Mat_OptimalWithConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
 			logging.debug(" poolDistribution_OptimalWithConstraint: %s" %poolDistribution_OptimalWithConstraint)
 	
 				# eliminate phnatom teams
@@ -2293,7 +2294,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			np.savetxt("/tmp/p_mat_equitable_with_constraint.csv", P_Mat_EquitableWithConstraint, delimiter=",", fmt='%d') # DEBUG
 	
 			# get pool distribution
-			poolDistribution_EquitableWithConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+			poolDistribution_EquitableWithConstraint = create_pool_distribution_from_matrix_one_way(P_Mat_EquitableWithConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
 			logging.debug(" poolDistribution_EquitableWithConstraint: %s" %poolDistribution_EquitableWithConstraint)
 
 			# eliminate phnatom teams
