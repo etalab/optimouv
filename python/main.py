@@ -2190,6 +2190,16 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		results["scenarioOptimalSansContrainte"]["estimationGenerale"] = sumInfo_OptimalWithoutConstraint
 		logging.debug(" sumInfo_OptimalWithoutConstraint: \n%s" %sumInfo_OptimalWithoutConstraint)
 
+		#################################################################################################################
+		# correction calculation for one way match
+# 		poolDetails_OptimalWithoutConstraintTmp = dict.copy(poolDetails_OptimalWithoutConstraint)
+# 		sumInfo_OptimalWithoutConstraintTmp = dict.copy(sumInfo_OptimalWithoutConstraint)
+# 
+# 		for param, value in sumInfo_OptimalWithoutConstraintTmp.items():
+# 			sumInfo_OptimalWithoutConstraint[param] = value/2
+
+		#################################################################################################################
+
 		logging.debug("")
 		logging.debug(" ####################### RESULT EQUITABLE WITHOUT CONSTRAINT ############################################")
 		# equitable scenario without constraint
