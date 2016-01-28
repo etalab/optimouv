@@ -222,6 +222,105 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 		show_exception_traceback()
 
 """
+Function to create pool distribution from P Matrix
+"""
+def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool):
+	try:
+
+
+		logging.debug(" create_pool_distribution_from_matrix_one_way ")
+		logging.debug("  teamNbr: %s" %teamNbr)
+		logging.debug("  poolNbr: %s" %poolNbr)
+		logging.debug("  poolSize: %s" %poolSize)
+		logging.debug("  teams: %s" %teams)
+		
+		
+		# Dict containing the distribution of groups in the pools
+		poolDistribution = {}
+	
+		tempPools = []
+		performanceCounter = 0
+		assignedTeams = []
+		for indexRow, teamDepart in enumerate(teams):
+			# break if tempPools has reached number of desired pools
+			if len(tempPools)  == poolNbr:
+				break
+			
+			# continue to the next row if teamDepart is already in the list of assigned teams
+			if teamDepart in assignedTeams:
+				continue
+
+			# get the row content
+			rowContent = list(P_Mat[indexRow])
+# 			logging.debug("  rowContent: %s" %rowContent)
+
+			# calculate the pool size of the row
+			poolSizeRow = rowContent.count(1.0) + 1
+# 			logging.debug("  poolSizeRow: %s" %poolSizeRow)
+
+			tempPool = [] # create a temporary pool (this pool has max size of poolSizeRow)
+			tempPool.append(teamDepart) # add first element in the pool
+
+			for indexCol, teamDestination in enumerate(teams):
+				# continue to the next row if teamDepart is already in the list of assigned teams
+				if teamDestination in assignedTeams:
+					continue
+
+				valueMat = int(P_Mat[indexRow][indexCol])
+# 				logging.debug("  valueMat: %s" %valueMat)
+# 				logging.debug("  teamDestination: %s" %teamDestination)
+	
+				performanceCounter += 1
+	
+				# add teamDestination to temporary pool if the pool size has not been reached and if the teamDestination is not yet in temporary pool 
+# 				if ( len(tempPool) < poolSize) and (teamDestination not in tempPool) and (valueMat == 1):
+				if ( len(tempPool) < poolSizeRow) and (teamDestination not in tempPool) and (valueMat == 1):
+					tempPool.append(teamDestination)
+					
+				# if the pool size has been reached, push the tempPool to tempPools
+# 				if len(tempPool) == poolSize:
+				if len(tempPool) == poolSizeRow:
+					tempPool = sorted(tempPool)
+					if tempPool not in tempPools:
+# 						logging.debug("  tempPool: %s" %tempPool)
+						
+						if len(tempPools) < poolNbr:
+# 							logging.debug("  tempPool: %s" %tempPool)
+							tempPools.append(tempPool)
+							assignedTeams.extend(tempPool)
+						else: 
+							break
+				
+# 		logging.debug("teamNbr: \n%s" %teamNbr)
+# 		logging.debug("poolNbr: \n%s" %poolNbr)
+# 		logging.debug("poolSize: \n%s" %poolSize)
+# 		logging.debug("teams: \n%s" %teams)
+# 		logging.debug("tempPools: \n%s" %tempPools)
+
+		firstPoolName = ord('A')
+		# obtain group distribution per pool
+		for pool in range(poolNbr):
+			poolDistribution[pool+1] = tempPools[pool]
+# 			poolDistribution[ chr(firstPoolName + pool) ] = tempPools[pool]
+	
+		# calculate efficiency of the algorithm
+		efficiency = round((performanceCounter*100/teamNbr/teamNbr), 2)
+	
+		logging.debug("  performanceCounter: %s" %performanceCounter)
+		logging.debug("  efficiency: %s %%" %(efficiency))
+# 		logging.debug("  tempPools: %s" %tempPools)
+# 		logging.debug("  len tempPools: %s" %len(tempPools))
+
+		return poolDistribution
+
+	except Exception as e:
+		show_exception_traceback()
+
+
+
+
+
+"""
 Function to create encounters from pool distribution
 """
 def create_encounters_from_pool_distribution(poolDistribution):
@@ -1133,8 +1232,8 @@ def create_distance_matrix_from_db(teams):
 					sql = "select distance from trajet where depart=%s and destination=%s "%(depart, destination)
 # 					logging.debug("sql: %s" %sql)
 					distance = db.fetchone(sql)
-					logging.debug("\n")
-					logging.debug("distance DB: %s" %distance)
+# 					logging.debug("\n")
+# 					logging.debug("distance DB: %s" %distance)
 					
 					# call HERE server if distance is None (not found in the table trajet)
 					if distance == None:
@@ -2002,7 +2101,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			P_Mat_ref = np.triu(P_Mat_ref)
 # 			np.savetxt("/tmp/p_mat_ref_one_way2.csv", P_Mat_ref, delimiter=",", fmt='%d') # DEBUG
 	
-			logging.debug(" P_Mat_ref: \n%s" %(P_Mat_ref,))
+# 			logging.debug(" P_Mat_ref: \n%s" %(P_Mat_ref,))
 			chosenDistanceRef = calculate_V_value(P_Mat_ref, D_Mat)
 			logging.debug(" chosenDistanceRef: %s" %chosenDistanceRef)
 	
@@ -2050,7 +2149,8 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 	
 
 # 		# get pool distribution
-		poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+# 		poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+		poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix_one_way(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
 		logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %poolDistribution_OptimalWithoutConstraint)
 # 		
 		# eliminate phnatom teams
