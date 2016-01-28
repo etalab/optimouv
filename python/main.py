@@ -2197,12 +2197,14 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 
 		for pool, content in poolDetails_OptimalWithoutConstraintTmp.items():
 			for param, value in content.items():
-				poolDetails_OptimalWithoutConstraint[pool][param] = value/2
+				poolDetails_OptimalWithoutConstraint[pool][param] = int(value/2)
 
 
 		for param, value in sumInfo_OptimalWithoutConstraintTmp.items():
-			sumInfo_OptimalWithoutConstraint[param] = value/2
+			sumInfo_OptimalWithoutConstraint[param] = int(value/2)
 
+		logging.debug(" poolDetails_OptimalWithoutConstraint: \n%s" %poolDetails_OptimalWithoutConstraint)
+		logging.debug(" sumInfo_OptimalWithoutConstraint: \n%s" %sumInfo_OptimalWithoutConstraint)
 		#################################################################################################################
 
 		logging.debug("")
