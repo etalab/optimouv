@@ -47,7 +47,7 @@
                              </tr>
                              <tr>
 
-                                 {%  set pourcentage = (scenarioRef.estimationGenerale.distanceTotale - scenarioOptimalSansContrainte.estimationGenerale.distanceTotale)/1000|round %}
+                                 {%  set pourcentage = (100 - (scenarioRef.estimationGenerale.distanceTotale/scenarioOptimalSansContrainte.estimationGenerale.distanceTotale *100))%}
                                  <td> Vous avez gagné {{ pourcentage }} % par rapport ....</td>
                              </tr>
 
