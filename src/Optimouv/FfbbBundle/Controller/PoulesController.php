@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Optimouv\FfbbBundle\Entity\Entite;
 use Optimouv\FfbbBundle\Form\EntiteType;
-
+use PDO;
 class PoulesController extends Controller
 {
     public function indexAction()
@@ -293,8 +293,6 @@ class PoulesController extends Controller
         ));
 
     }
-
-
 
     public function lancerGroupeAction($idGroupe)
     {
@@ -597,6 +595,34 @@ class PoulesController extends Controller
         $refExiste = $detailsCalcul["refExiste"];
 
 
+        //récupération du nom du rapport
+        $connection = $em->getConnection();
+
+        $statement = $connection->prepare("SELECT  b.id as idRapport, b.nom as nomRapport, b.id_groupe as idGroupe FROM scenario as a, rapport as b where a.id_rapport = b.id and a.id = :id");
+        $statement->bindParam(':id', $idResultat);
+        $statement->execute();
+        $statement = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $idRapport = $statement[0]['idRapport'];
+        $nomRapport = $statement[0]['nomRapport'];
+        $idGroupe = $statement[0]['idGroupe'];
+
+        //récupération du nom du groupe
+
+        $statement = $connection->prepare("SELECT  a.nom as nomGroupe, a.id_liste_participant as idListe from groupe as a where a.id = :id");
+        $statement->bindParam(':id', $idGroupe);
+        $statement->execute();
+        $statement = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $idListe = $statement[0]['idListe'];
+        $nomGroupe = $statement[0]['nomGroupe'];
+
+        //récupération du nom du=e la liste
+
+        $statement = $connection->prepare("SELECT  a.nom as nomListe from liste_participants as a where a.id = :id");
+        $statement->bindParam(':id', $idListe);
+        $statement->execute();
+        $statement = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $nomListe = $statement[0]['nomListe'];
+
 
         return $this->render('FfbbBundle:Poules:resultatCalcul.html.twig' , array(
 
@@ -609,7 +635,11 @@ class PoulesController extends Controller
             'scenarioEquitableSansContrainte' => $scenarioEquitableSansContrainte,
             'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
             'scenarioRef' => $scenarioRef,
-            'refExiste' => $refExiste
+            'refExiste' => $refExiste,
+            'nomRapport' => $nomRapport,
+            'nomGroupe' => $nomGroupe,
+            'nomListe' => $nomListe,
+
 
 
 
