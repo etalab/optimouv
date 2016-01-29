@@ -45,12 +45,13 @@
                              <tr>
                                  <td> {{ nombrePoule }} poules de {{ taillePoule }} équipes</td>
                              </tr>
+                             {% if refExiste == 1 %}
                              <tr>
 
-                                 {%  set pourcentage = (100 - (scenarioRef.estimationGenerale.distanceTotale/scenarioOptimalSansContrainte.estimationGenerale.distanceTotale *100))|round %}
-                                 <td> Vous avez gagné {{ pourcentage }} % par rapport ....</td>
+                                    {%  set pourcentage = (100 - (scenarioRef.estimationGenerale.distanceTotale/scenarioOptimalSansContrainte.estimationGenerale.distanceTotale *100))|round %}
+                                    <td> Vous avez gagné {{ pourcentage }} % par rapport à l'ancien scénario</td>
                              </tr>
-
+                             {% endif %}
 
 
                              </tbody>
@@ -341,7 +342,7 @@
                                                                                      parcourir
                                                                                  </th>
                                                                                  <th style="text-align:right">Temps de parcours
-                                                                                     (H:M)
+                                                                                     (J H:M)
                                                                                  </th>
                                                                                  <th style="text-align:right">Coût du parcours en
                                                                                      voiture(€)
@@ -375,7 +376,7 @@
                                                                                  <tr>
                                                                                      <td><strong> Poule {{ lettre }} </strong></td>
                                                                                      <td style="text-align:right"> {{ distanceOptContrainteDetail|number_format(0, ',', ' ') }}</td>
-                                                                                     <td style="text-align:right"> {{ dureeTotaleOptContrainteDetail|date('H:i') }}</td>
+                                                                                     <td style="text-align:right"> {{ dureeTotaleOptContrainteDetail|date('d H:i') }}</td>
                                                                                      <td style="text-align:right"> {{ (distanceTotaleOptContrainteDetail  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                                      <td style="text-align:right"> {{ (distanceTotaleOptContrainteDetail /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                                      <td style="text-align:right"> {{ (distanceTotaleOptContrainteDetail /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -388,7 +389,7 @@
                                                                              <tr>
                                                                                  <td><strong> Totaux </strong></td>
                                                                                  <td style="text-align:right"> {{ distanceMin|number_format(0, ',', ' ') }}</td>
-                                                                                 <td style="text-align:right"> {{ dureeTotale|date('H:i') }}</td>
+                                                                                 <td style="text-align:right"> {{ dureeTotale|date('d H:i') }}</td>
                                                                                  <td style="text-align:right"> {{ (distanceTotale  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                                  <td style="text-align:right"> {{ (distanceTotale /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                                  <td style="text-align:right"> {{ (distanceTotale /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -722,7 +723,7 @@
                                                                                  parcourir
                                                                              </th>
                                                                              <th style="text-align:right">Temps de parcours
-                                                                                 (H:M)
+                                                                                 (J H:M)
                                                                              </th>
                                                                              <th style="text-align:right">Coût du parcours en
                                                                                  voiture(€)
@@ -757,7 +758,7 @@
                                                                              <tr>
                                                                                  <td><strong> Poule {{ lettre }} </strong></td>
                                                                                  <td style="text-align:right"> {{ distanceEqContrainteDetail|number_format(0, ',', ' ') }}</td>
-                                                                                 <td style="text-align:right"> {{ dureeTotaleEqContrainteDetail|date('H:i') }}</td>
+                                                                                 <td style="text-align:right"> {{ dureeTotaleEqContrainteDetail|date('d H:i') }}</td>
                                                                                  <td style="text-align:right"> {{ (distanceTotaleEqContrainteDetail  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                                  <td style="text-align:right"> {{ (distanceTotaleEqContrainteDetail /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                                  <td style="text-align:right"> {{ (distanceTotaleEqContrainteDetail /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -770,7 +771,7 @@
                                                                          <tr>
                                                                              <td><strong> Totaux </strong></td>
                                                                              <td style="text-align:right"> {{distanceMinEqContrainte|number_format(0, ',', ' ') }}</td>
-                                                                             <td style="text-align:right"> {{ dureeTotaleEqContrainte|date('H:i') }}</td>
+                                                                             <td style="text-align:right"> {{ dureeTotaleEqContrainte|date('d H:i') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleEqContrainte  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleEqContrainte /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleEqContrainte /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -1112,7 +1113,7 @@
                                                                                  parcourir
                                                                              </th>
                                                                              <th style="text-align:right">Temps de parcours
-                                                                                 (H:M)
+                                                                                 (J H:M)
                                                                              </th>
                                                                              <th style="text-align:right">Coût du parcours en
                                                                                  voiture(€)
@@ -1147,7 +1148,7 @@
                                                                              <tr>
                                                                                  <td><strong> Poule {{ lettre }} </strong></td>
                                                                                  <td style="text-align:right"> {{distanceOpSansContrainteDetail|number_format(0, ',', ' ') }}</td>
-                                                                                 <td style="text-align:right"> {{ dureeTotaleOpSansContrainteDetail|date('H:i') }}</td>
+                                                                                 <td style="text-align:right"> {{ dureeTotaleOpSansContrainteDetail|date('d H:i') }}</td>
                                                                                  <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                                  <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                                  <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -1160,7 +1161,7 @@
                                                                          <tr>
                                                                              <td><strong> Totaux </strong></td>
                                                                              <td style="text-align:right"> {{distanceMinOpSansContrainte|number_format(0, ',', ' ') }}</td>
-                                                                             <td style="text-align:right"> {{ dureeTotaleOpSansContrainte|date('H:i') }}</td>
+                                                                             <td style="text-align:right"> {{ dureeTotaleOpSansContrainte|date('d H:i') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -1493,7 +1494,7 @@
                                                                                  parcourir
                                                                              </th>
                                                                              <th style="text-align:right">Temps de parcours
-                                                                                 (H:M)
+                                                                                 (J H:M)
                                                                              </th>
                                                                              <th style="text-align:right">Coût du parcours en
                                                                                  voiture(€)
@@ -1530,7 +1531,7 @@
                                                                              <tr>
                                                                                  <td><strong> Poule {{ lettre }} </strong></td>
                                                                                  <td style="text-align:right"> {{distanceRefDetail|number_format(0, ',', ' ') }}</td>
-                                                                                 <td style="text-align:right"> {{ dureeTotaleRefDetail|date('H:i') }}</td>
+                                                                                 <td style="text-align:right"> {{ dureeTotaleRefDetail|date('d H:i') }}</td>
                                                                                  <td style="text-align:right"> {{ (distanceTotaleRefDetail  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                                  <td style="text-align:right"> {{ (distanceTotaleRefDetail /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                                  <td style="text-align:right"> {{ (distanceTotaleRefDetail /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -1543,7 +1544,7 @@
                                                                          <tr>
                                                                              <td><strong> Totaux </strong></td>
                                                                              <td style="text-align:right"> {{ distanceMinRef|number_format(0, ',', ' ') }}</td>
-                                                                             <td style="text-align:right"> {{ dureeTotaleRef|date('H:i') }}</td>
+                                                                             <td style="text-align:right"> {{ dureeTotaleRef|date('d H:i') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleRef  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleRef /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleRef /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -1849,7 +1850,7 @@
                                                                              parcourir
                                                                          </th>
                                                                          <th style="text-align:right">Temps de parcours
-                                                                             (H:M)
+                                                                             (J H:M)
                                                                          </th>
                                                                          <th style="text-align:right">Coût du parcours en
                                                                              voiture(€)
@@ -1885,7 +1886,7 @@
                                                                          <tr>
                                                                              <td><strong> Poule {{ lettre }} </strong></td>
                                                                              <td style="text-align:right"> {{distanceOpSansContrainteDetail|number_format(0, ',', ' ') }}</td>
-                                                                             <td style="text-align:right"> {{ dureeTotaleOpSansContrainteDetail|date('H:i') }}</td>
+                                                                             <td style="text-align:right"> {{ dureeTotaleOpSansContrainteDetail|date('d H:i') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -1898,7 +1899,7 @@
                                                                      <tr>
                                                                          <td><strong> Totaux </strong></td>
                                                                          <td style="text-align:right"> {{ distanceMinOpSansContrainte|number_format(0, ',', ' ') }}</td>
-                                                                         <td style="text-align:right"> {{ dureeTotaleOpSansContrainte|date('H:i') }}</td>
+                                                                         <td style="text-align:right"> {{ dureeTotaleOpSansContrainte|date('d H:i') }}</td>
                                                                          <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                          <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                          <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -2263,7 +2264,7 @@
                                                                              parcourir
                                                                          </th>
                                                                          <th style="text-align:right">Temps de parcours
-                                                                             (H:M)
+                                                                             (J H:M)
                                                                          </th>
                                                                          <th style="text-align:right">Coût du parcours en
                                                                              voiture(€)
@@ -2299,7 +2300,7 @@
                                                                          <tr>
                                                                              <td><strong> Poule {{ lettre }} </strong></td>
                                                                              <td style="text-align:right"> {{ distanceEqDetailContrainte|number_format(0, ',', ' ') }}</td>
-                                                                             <td style="text-align:right"> {{ dureeTotaleEqDetailContrainte|date('H:i') }}</td>
+                                                                             <td style="text-align:right"> {{ dureeTotaleEqDetailContrainte|date('d H:i') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleEqDetailContrainte  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleEqDetailContrainte /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleEqDetailContrainte /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -2311,9 +2312,9 @@
 
                                                                      {% endfor %}
                                                                      <tr>
-                                                                         <td><strong> Toteaux </strong></td>
+                                                                         <td><strong> Totaux </strong></td>
                                                                          <td style="text-align:right"> {{distanceMinEqContrainte|number_format(0, ',', ' ') }}</td>
-                                                                         <td style="text-align:right"> {{ dureeTotaleEqContrainte|date('H:i') }}</td>
+                                                                         <td style="text-align:right"> {{ dureeTotaleEqContrainte|date('d H:i') }}</td>
                                                                          <td style="text-align:right"> {{ (distanceTotaleEqContrainte  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                          <td style="text-align:right"> {{ (distanceTotaleEqContrainte /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                          <td style="text-align:right"> {{ (distanceTotaleEqContrainte /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -2660,7 +2661,7 @@
                                                                              parcourir
                                                                          </th>
                                                                          <th style="text-align:right">Temps de parcours
-                                                                             (H:M)
+                                                                             (J H:M)
                                                                          </th>
                                                                          <th style="text-align:right">Coût du parcours en
                                                                              voiture(€)
@@ -2697,7 +2698,7 @@
                                                                          <tr>
                                                                              <td><strong> Poule {{ lettre }} </strong></td>
                                                                              <td style="text-align:right"> {{distanceDetailRef|number_format(0, ',', ' ') }}</td>
-                                                                             <td style="text-align:right"> {{ dureeTotaleDetailRef|date('H:i') }}</td>
+                                                                             <td style="text-align:right"> {{ dureeTotaleDetailRef|date('d H:i') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleDetailRef  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleDetailRef /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleDetailRef /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -2712,7 +2713,7 @@
                                                                      <tr>
                                                                          <td><strong> Totaux </strong></td>
                                                                          <td style="text-align:right"> {{ distanceMinRef|number_format(0, ',', ' ') }}</td>
-                                                                         <td style="text-align:right"> {{ dureeTotaleRef|date('H:i') }}</td>
+                                                                         <td style="text-align:right"> {{ dureeTotaleRef|date('d H:i') }}</td>
                                                                          <td style="text-align:right"> {{ (distanceTotaleRef * 0.80 )|round|number_format(0, ',', ' ')   }}</td>
                                                                          <td style="text-align:right"> {{ (distanceTotaleRef /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                          <td style="text-align:right"> {{ (distanceTotaleRef /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -2762,8 +2763,6 @@
                  </div>
                  <!-- /.col-lg-12 -->
              </div>
-
-             <hr>
              <div class="row">
                  <div class="col-lg-12">
                      <h3 class="page-header">Relancer le calcul </h3>
