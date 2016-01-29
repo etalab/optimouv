@@ -39,14 +39,16 @@
                              </tr>
                              <tr>
                                  <td>
-                                     {{ typeMatch }}
+                                    Type de rencontre: {{ typeMatch }}
                                  </td>
                              </tr>
                              <tr>
                                  <td> {{ nombrePoule }} poules de {{ taillePoule }} équipes</td>
                              </tr>
                              <tr>
-                                 <td> Vous avez gagné X % par rapport ....</td>
+
+                                 {%  set pourcentage = (scenarioRef.estimationGenerale.distanceTotale - scenarioOptimalSansContrainte.estimationGenerale.distanceTotale)/1000|round %}
+                                 <td> Vous avez gagné {{ pourcentage }} % par rapport ....</td>
                              </tr>
 
 
