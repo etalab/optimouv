@@ -616,4 +616,12 @@ class PoulesController extends Controller
 
         ));
     }
+
+    //page qui affiche les détails des calculs
+
+    public function detailsCalculAction()
+    {
+
+        return $this->render('FfbbBundle:Poules:detailsCalcul.html.twig');
+    }
 }
