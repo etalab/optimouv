@@ -2125,11 +2125,12 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			# get coordinates for each point in the pools
 			poolDistributionCoordsRef = get_coords_pool_distribution(poolDistributionRef)
 			results["scenarioRef"]["poulesCoords"] = poolDistributionCoordsRef
-			logging.debug(" poolDistributionCoordsRef: %s" %poolDistributionCoordsRef)
+# 			logging.debug(" poolDistributionCoordsRef: %s" %poolDistributionCoordsRef)
 	
 			# get encounter list from pool distribution dict
 			encountersRef = create_encounters_from_pool_distribution_one_way(poolDistributionRef)
 			results["scenarioRef"]["rencontreDetails"] = encountersRef
+# 			logging.debug(" encountersRef: %s" %encountersRef)
 	
 			# get pool details from encounters
 			poolDetailsRef = create_pool_details_from_encounters(encountersRef, poolDistributionRef)
@@ -2159,7 +2160,6 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		chosenDistance_OptimalWithoutConstraint = calculate_V_value(P_Mat_OptimalWithoutConstraint, D_Mat)
 		logging.debug(" chosenDistance_OptimalWithoutConstraint: %s" %chosenDistance_OptimalWithoutConstraint)
 	
-
 # 		# get pool distribution
 # 		poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
 		poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix_one_way(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
@@ -2173,7 +2173,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		# get coordinates for each point in the pools
 		poolDistributionCoords_OptimalWithoutConstraint = get_coords_pool_distribution(poolDistribution_OptimalWithoutConstraint)
 		results["scenarioOptimalSansContrainte"]["poulesCoords"] = poolDistributionCoords_OptimalWithoutConstraint
-		logging.debug(" poolDistributionCoords_OptimalWithoutConstraint: %s" %poolDistributionCoords_OptimalWithoutConstraint)
+# 		logging.debug(" poolDistributionCoords_OptimalWithoutConstraint: %s" %poolDistributionCoords_OptimalWithoutConstraint)
 		
 		# get encounter list from pool distribution dict
 		encounters_OptimalWithoutConstraint = create_encounters_from_pool_distribution_one_way(poolDistribution_OptimalWithoutConstraint)
@@ -2189,23 +2189,6 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		sumInfo_OptimalWithoutConstraint = get_sum_info_from_pool_details(poolDetails_OptimalWithoutConstraint)
 		results["scenarioOptimalSansContrainte"]["estimationGenerale"] = sumInfo_OptimalWithoutConstraint
 		logging.debug(" sumInfo_OptimalWithoutConstraint: \n%s" %sumInfo_OptimalWithoutConstraint)
-
-		#################################################################################################################
-		# correction calculation for one way match
-		poolDetails_OptimalWithoutConstraintTmp = dict.copy(poolDetails_OptimalWithoutConstraint)
-		sumInfo_OptimalWithoutConstraintTmp = dict.copy(sumInfo_OptimalWithoutConstraint)
-
-		for pool, content in poolDetails_OptimalWithoutConstraintTmp.items():
-			for param, value in content.items():
-				poolDetails_OptimalWithoutConstraint[pool][param] = int(value/2)
-
-
-		for param, value in sumInfo_OptimalWithoutConstraintTmp.items():
-			sumInfo_OptimalWithoutConstraint[param] = int(value/2)
-
-		logging.debug(" poolDetails_OptimalWithoutConstraint: \n%s" %poolDetails_OptimalWithoutConstraint)
-		logging.debug(" sumInfo_OptimalWithoutConstraint: \n%s" %sumInfo_OptimalWithoutConstraint)
-		#################################################################################################################
 
 		logging.debug("")
 		logging.debug(" ####################### RESULT EQUITABLE WITHOUT CONSTRAINT ############################################")
@@ -2755,7 +2738,8 @@ def callback(ch, method, properties, body):
 			results = optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom)
 # 		elif launchType == "match_aller_simple":
 		elif launchType == "allerSimple":
-			results = optimize_pool_one_way_match(P_InitMat_oneWaywithoutConstraint, P_InitMat_oneWayWithConstraint, D_Mat_oneWay, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom)
+# 			results = optimize_pool_one_way_match(P_InitMat_oneWaywithoutConstraint, P_InitMat_oneWayWithConstraint, D_Mat_oneWay, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom)
+			results = optimize_pool_one_way_match(P_InitMat_oneWaywithoutConstraint, P_InitMat_oneWayWithConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom)
 		elif launchType == "plateau":
 			results = optimize_pool_plateau_match()
 
