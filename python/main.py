@@ -1860,7 +1860,8 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		# optimal scenario without constraint
 		P_Mats_OptimalWithoutConstraint = []
 		chosenDistances_OptimalWithoutConstraint = []
-		for i in range(config.INPUT.IterLaunch):
+		for iterLaunch in range(config.INPUT.IterLaunch):
+			logging.debug(" -----------------------------   iterLaunch: %s -------------------------------------" %iterLaunch)
 			# launch calculation based on ref scenario only if the params are comparable
 			if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
 				P_Mat_OptimalWithoutConstraint = get_p_matrix_for_round_trip_match_optimal_without_constraint(P_Mat_ref, D_Mat, iter, teamNbr)#
