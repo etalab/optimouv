@@ -2766,13 +2766,6 @@ def callback(ch, method, properties, body):
 			
 		logging.debug("D_Mat.shape: %s" %(D_Mat.shape,))
 
-		# get distance matrix for one way match
-		D_Mat_oneWay = np.triu(D_Mat)
-		logging.debug("D_Mat_oneWay.shape: %s" %(D_Mat_oneWay.shape,))
-# 		logging.debug("D_Mat_oneWay: \n%s" %(D_Mat_oneWay,))
-
-# 		np.savetxt("/tmp/d_mat_oneway.csv", D_Mat_oneWay, delimiter=",", fmt='%d')
-
 		logging.debug("####################################### CREATE INITIALISATION MATRIX ########################################")
 		P_InitMat_withoutConstraint = create_init_matrix_without_constraint(teamNbrWithPhantom, poolNbr, poolSize, varTeamNbrPerPool)
 		logging.debug("P_InitMat_withoutConstraint.shape: %s" %(P_InitMat_withoutConstraint.shape,))
@@ -2810,8 +2803,6 @@ def callback(ch, method, properties, body):
 		logging.debug("####################################### COMPARE DISTANCES TWO WAY AND ONE WAY ###############################")
 		distanceInitRoundTrip = calculate_V_value(P_InitMat_withoutConstraint, D_Mat)
 		logging.debug("distanceInitRoundTrip: %s" %(distanceInitRoundTrip,))
-		distanceInitOneWay = calculate_V_value(P_InitMat_oneWaywithoutConstraint, D_Mat_oneWay)
-		logging.debug("distanceInitOneWay: %s" %(distanceInitOneWay,))
 
 		logging.debug("############################################# OPTIMIZE POOL #################################################")
 # 		if launchType == "match_aller_retour":
@@ -2819,7 +2810,6 @@ def callback(ch, method, properties, body):
 			results = optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom)
 # 		elif launchType == "match_aller_simple":
 		elif launchType == "allerSimple":
-# 			results = optimize_pool_one_way_match(P_InitMat_oneWaywithoutConstraint, P_InitMat_oneWayWithConstraint, D_Mat_oneWay, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom)
 			results = optimize_pool_one_way_match(P_InitMat_oneWaywithoutConstraint, P_InitMat_oneWayWithConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom)
 		elif launchType == "plateau":
 			results = optimize_pool_plateau_match()
