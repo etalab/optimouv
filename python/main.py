@@ -641,7 +641,10 @@ def get_p_matrix_for_round_trip_match_optimal_without_constraint(P_InitMat, D_Ma
 			# reinitialize temperature in the middle of loop
 			if nbIter == int(iter/2):
 				T_Value = 0.1 * initDistance
-	# 
+			# reinitilize temperature if deltaV is at least 5% of V_oriValue
+			if deltaV >= 0.05 * V_oriValue:
+				T_Value = 0.1 * initDistance
+	
 			if deltaV <= 0:
 				pass
 			else:
@@ -762,7 +765,10 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 			# reinitialize temperature in the middle of loop
 			if nbIter == int(iter/2):
 				T_Value = 0.1 * initDistance
-	# 
+			# reinitilize temperature if deltaV is at least 5% of V_oriValue
+			if deltaV >= 0.05 * V_oriValue:
+				T_Value = 0.1 * initDistance
+
 			if deltaV <= 0:
 				pass
 			else:
@@ -857,6 +863,9 @@ def get_p_matrix_for_round_trip_match_equitable_without_constraint(P_InitMat, D_
 			# temperature function 
 			# reinitialize temperature in the middle of loop
 			if nbIter == int(iter/2):
+				T_Value = 0.1 * initDistance
+			# reinitilize temperature if deltaV is at least 5% of V_oriValue
+			if deltaV >= 0.05 * V_oriValue:
 				T_Value = 0.1 * initDistance
 	# 
 			if deltaV_equitable <= 0:
@@ -988,6 +997,9 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 			# temperature function 
 			# reinitialize temperature in the middle of loop
 			if nbIter == int(iter/2):
+				T_Value = 0.1 * initDistance
+			# reinitilize temperature if deltaV is at least 5% of V_oriValue
+			if deltaV >= 0.05 * V_oriValue:
 				T_Value = 0.1 * initDistance
 	# 
 			if deltaV_equitable <= 0:
