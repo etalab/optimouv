@@ -2643,11 +2643,8 @@ def callback(ch, method, properties, body):
 		logging.debug("starting current time : %s" %beginTime.strftime('%Y-%m-%d %H:%M:%S'))
 		
 		body = body.decode('utf-8')
-		reportId = str(body)
-
 		# get report id from RabbitMQ
-# 		reportId = 48 # Round Trip Match
-# 		reportId = 49 # Round Trip Match
+		reportId = str(body)
 		print("reportId: %s" %reportId)
 
 		# update job status to 1 (running)
@@ -2657,8 +2654,6 @@ def callback(ch, method, properties, body):
 # 		test_insert_params_to_db()
 		
 		logging.debug("####################################### READ PARAMS FROM USER ##############################################")
-		# Read params from config file (user)
-
 		# get params from DB
 		sql = "select id_groupe, type_action, params from rapport where id=%s"%reportId
 		logging.debug("sql: %s" %sql)
