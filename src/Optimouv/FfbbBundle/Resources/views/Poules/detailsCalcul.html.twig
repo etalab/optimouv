@@ -8,7 +8,8 @@
             <div class="bs-example">
                 <ul class="breadcrumb">
                     <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
-                    <li><a href="{{ path('ffbb_choisir_liste_participants') }}">Choix de listes</a></li>
+                    <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Choix de la liste d'équipes</a></li>
+                    {#<li><a href="{{ path('ffbb_poule_choisir_groupe', {'idListe': idListe}) }}">Choix de groupes</a></li>#}
                     <li class="active">Détails des calculs</li>
                 </ul>
             </div>
@@ -19,6 +20,7 @@
         <!-- /.row -->
         <div class="row">
             <div class="col-lg-12">
+
                 <div class="panel panel-red" style="resize:vertical; overflow-y:auto;">
                     <div class="panel-heading">
                         Informations sur les règles de calcul des estimations financières
@@ -61,8 +63,9 @@
 
         </div>
         <!-- /.row -->
+
         <div class="row">
-            <div class="col-lg-12"> <a href="javascript:history.back()" class="pull-right btn btn-default-rencontre ">Retour à la liste</a></div>
+            <div class="col-lg-12"> <a href="javascript:history.back()" class="pull-right btn btn-primary ">Retour à la liste</a></div>
         </div>
 
 

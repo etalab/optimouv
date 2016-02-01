@@ -226,6 +226,10 @@ ffbb_poules_lancer_calcul:
     path:    /admin/poules/lancer-calcul/
     defaults: { _controller: FfbbBundle:Poules:lancerCalcul }
 
+ffbb_poules_details_calcul:
+    path:     /admin/poules/details-calcul
+    defaults: { _controller: FfbbBundle:Poules:detailsCalcul }
+
 ffbb_rmq:
     path:    /rmq
     defaults: { _controller: FfbbBundle:Default:rmq }
