@@ -1832,7 +1832,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			# get coordinates for each point in the pools
 			poolDistributionCoordsRef = get_coords_pool_distribution(poolDistributionRef)
 			results["scenarioRef"]["poulesCoords"] = poolDistributionCoordsRef
-			logging.debug(" poolDistributionCoordsRef: %s" %poolDistributionCoordsRef)
+# 			logging.debug(" poolDistributionCoordsRef: %s" %poolDistributionCoordsRef)
 	
 			# get encounter list from pool distribution dict
 			encountersRef = create_encounters_from_pool_distribution(poolDistributionRef)
@@ -1904,7 +1904,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		# get coordinates for each point in the pools
 		poolDistributionCoords_OptimalWithoutConstraint = get_coords_pool_distribution(poolDistribution_OptimalWithoutConstraint)
 		results["scenarioOptimalSansContrainte"]["poulesCoords"] = poolDistributionCoords_OptimalWithoutConstraint
-		logging.debug(" poolDistributionCoords_OptimalWithoutConstraint: %s" %poolDistributionCoords_OptimalWithoutConstraint)
+# 		logging.debug(" poolDistributionCoords_OptimalWithoutConstraint: %s" %poolDistributionCoords_OptimalWithoutConstraint)
 		
 		# get encounter list from pool distribution dict
 		encounters_OptimalWithoutConstraint = create_encounters_from_pool_distribution(poolDistribution_OptimalWithoutConstraint)
@@ -1954,7 +1954,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		# get coordinates for each point in the pools
 		poolDistributionCoords_EquitableWithoutConstraint = get_coords_pool_distribution(poolDistribution_EquitableWithoutConstraint)
 		results["scenarioEquitableSansContrainte"]["poulesCoords"] = poolDistributionCoords_EquitableWithoutConstraint
-		logging.debug(" poolDistributionCoords_EquitableWithoutConstraint: %s" %poolDistributionCoords_EquitableWithoutConstraint)
+# 		logging.debug(" poolDistributionCoords_EquitableWithoutConstraint: %s" %poolDistributionCoords_EquitableWithoutConstraint)
 
 		# get encounter list from pool distribution dict
 		encounters_EquitableWithoutConstraint = create_encounters_from_pool_distribution(poolDistribution_EquitableWithoutConstraint)
@@ -2003,7 +2003,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			# get coordinates for each point in the pools
 			poolDistributionCoords_OptimalWithConstraint = get_coords_pool_distribution(poolDistribution_OptimalWithConstraint)
 			results["scenarioOptimalAvecContrainte"]["poulesCoords"] = poolDistributionCoords_OptimalWithConstraint
-			logging.debug(" poolDistributionCoords_OptimalWithConstraint: %s" %poolDistributionCoords_OptimalWithConstraint)
+# 			logging.debug(" poolDistributionCoords_OptimalWithConstraint: %s" %poolDistributionCoords_OptimalWithConstraint)
 
 	
 			# get encounter list from pool distribution dict
@@ -2054,7 +2054,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			# get coordinates for each point in the pools
 			poolDistributionCoords_EquitableWithConstraint = get_coords_pool_distribution(poolDistribution_EquitableWithConstraint)
 			results["scenarioEquitableAvecContrainte"]["poulesCoords"] = poolDistributionCoords_EquitableWithConstraint
-			logging.debug(" poolDistributionCoords_EquitableWithConstraint: %s" %poolDistributionCoords_EquitableWithConstraint)
+# 			logging.debug(" poolDistributionCoords_EquitableWithConstraint: %s" %poolDistributionCoords_EquitableWithConstraint)
 
 			# get encounter list from pool distribution dict
 			encounters_EquitableWithConstraint = create_encounters_from_pool_distribution(poolDistribution_EquitableWithConstraint)
@@ -2285,7 +2285,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		# get coordinates for each point in the pools
 		poolDistributionCoords_EquitableWithoutConstraint = get_coords_pool_distribution(poolDistribution_EquitableWithoutConstraint)
 		results["scenarioEquitableSansContrainte"]["poulesCoords"] = poolDistributionCoords_EquitableWithoutConstraint
-		logging.debug(" poolDistributionCoords_EquitableWithoutConstraint: %s" %poolDistributionCoords_EquitableWithoutConstraint)
+# 		logging.debug(" poolDistributionCoords_EquitableWithoutConstraint: %s" %poolDistributionCoords_EquitableWithoutConstraint)
 
 		# get encounter list from pool distribution dict
 		encounters_EquitableWithoutConstraint = create_encounters_from_pool_distribution_one_way(poolDistribution_EquitableWithoutConstraint)
@@ -2335,7 +2335,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			# get coordinates for each point in the pools
 			poolDistributionCoords_OptimalWithConstraint = get_coords_pool_distribution(poolDistribution_OptimalWithConstraint)
 			results["scenarioOptimalAvecContrainte"]["poulesCoords"] = poolDistributionCoords_OptimalWithConstraint
-			logging.debug(" poolDistributionCoords_OptimalWithConstraint: %s" %poolDistributionCoords_OptimalWithConstraint)
+# 			logging.debug(" poolDistributionCoords_OptimalWithConstraint: %s" %poolDistributionCoords_OptimalWithConstraint)
 
 	
 			# get encounter list from pool distribution dict
@@ -2386,7 +2386,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			# get coordinates for each point in the pools
 			poolDistributionCoords_EquitableWithConstraint = get_coords_pool_distribution(poolDistribution_EquitableWithConstraint)
 			results["scenarioEquitableAvecContrainte"]["poulesCoords"] = poolDistributionCoords_EquitableWithConstraint
-			logging.debug(" poolDistributionCoords_EquitableWithConstraint: %s" %poolDistributionCoords_EquitableWithConstraint)
+# 			logging.debug(" poolDistributionCoords_EquitableWithConstraint: %s" %poolDistributionCoords_EquitableWithConstraint)
 
 			# get encounter list from pool distribution dict
 			encounters_EquitableWithConstraint = create_encounters_from_pool_distribution_one_way(poolDistribution_EquitableWithConstraint)
