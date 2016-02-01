@@ -1858,14 +1858,29 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		logging.debug(" ####################### RESULT OPTIMAL WITHOUT CONSTRAINT #############################################")
 
 		# optimal scenario without constraint
-		# launch calculation based on ref scenario only if the params are comparable
-		if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
-			P_Mat_OptimalWithoutConstraint = get_p_matrix_for_round_trip_match_optimal_without_constraint(P_Mat_ref, D_Mat, iter, teamNbr)#
-		else:
-			P_Mat_OptimalWithoutConstraint = get_p_matrix_for_round_trip_match_optimal_without_constraint(P_InitMat_withoutConstraint, D_Mat, iter, teamNbr)#
+		P_Mats_OptimalWithoutConstraint = []
+		chosenDistances_OptimalWithoutConstraint = []
+		for i in range(config.INPUT.IterLaunch):
+			# launch calculation based on ref scenario only if the params are comparable
+			if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
+				P_Mat_OptimalWithoutConstraint = get_p_matrix_for_round_trip_match_optimal_without_constraint(P_Mat_ref, D_Mat, iter, teamNbr)#
+			else:
+				P_Mat_OptimalWithoutConstraint = get_p_matrix_for_round_trip_match_optimal_without_constraint(P_InitMat_withoutConstraint, D_Mat, iter, teamNbr)#
+	
+			P_Mats_OptimalWithoutConstraint.append(P_Mat_OptimalWithoutConstraint)
+	
+			chosenDistance_OptimalWithoutConstraint = calculate_V_value(P_Mat_OptimalWithoutConstraint, D_Mat)
+			logging.debug(" chosenDistance_OptimalWithoutConstraint: %s" %chosenDistance_OptimalWithoutConstraint)
+	
+			chosenDistances_OptimalWithoutConstraint.append(chosenDistance_OptimalWithoutConstraint)
+	
+		logging.debug(" chosenDistances_OptimalWithoutConstraint: %s" %chosenDistances_OptimalWithoutConstraint)
+		
+		P_Mat_chosenIndex = chosenDistances_OptimalWithoutConstraint.index(min(chosenDistances_OptimalWithoutConstraint))
+		logging.debug(" P_Mat_chosenIndex: %s" %P_Mat_chosenIndex)
 
-		chosenDistance_OptimalWithoutConstraint = calculate_V_value(P_Mat_OptimalWithoutConstraint, D_Mat)
-		logging.debug(" chosenDistance_OptimalWithoutConstraint: %s" %chosenDistance_OptimalWithoutConstraint)
+		P_Mat_OptimalWithoutConstraint = P_Mats_OptimalWithoutConstraint[P_Mat_chosenIndex]
+	
 	
 		np.savetxt("/tmp/p_mat_optimal_without_constraint.csv", P_Mat_OptimalWithoutConstraint, delimiter=",", fmt='%d') # DEBUG
 # 
