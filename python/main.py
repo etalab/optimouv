@@ -1761,9 +1761,9 @@ def variation_team_number_per_pool(poolsIds, varTeamNbrPerPool):
 			
 			tmpTeams = []
 			for index, (pool, teams) in enumerate(poolsIdsCopy.items(), start=1):
-				logging.debug(" index: %s"%index)
-				logging.debug(" pool: %s"%pool)
-				logging.debug(" teams: %s"%teams)
+# 				logging.debug(" index: %s"%index)
+# 				logging.debug(" pool: %s"%pool)
+# 				logging.debug(" teams: %s"%teams)
 			
 				# remove teams from odd number pool
 				if index % 2 == 1:
@@ -1782,10 +1782,9 @@ def variation_team_number_per_pool(poolsIds, varTeamNbrPerPool):
 			for index, (pool, teams) in enumerate(poolsIdsCopy.items(), start=1):
 				# ignore last pool
 				if index != poolNbr:
-					
-					logging.debug(" index: %s"%index)
-					logging.debug(" pool: %s"%pool)
-					logging.debug(" teams: %s"%teams)
+# 					logging.debug(" index: %s"%index)
+# 					logging.debug(" pool: %s"%pool)
+# 					logging.debug(" teams: %s"%teams)
 
 					# remove teams from odd number pool
 					if index % 2 == 1:
@@ -1795,9 +1794,7 @@ def variation_team_number_per_pool(poolsIds, varTeamNbrPerPool):
 					# add teams to even number pool
 					if index % 2 == 0:
 						teams += tmpTeams
-		
-		logging.debug(" poolsIds: %s" %(poolsIds,))
-		
+				
 		return poolsIds
 	except Exception as e:
 		show_exception_traceback()
@@ -1805,21 +1802,68 @@ def variation_team_number_per_pool(poolsIds, varTeamNbrPerPool):
 """
 Functio to optimize pool post treatment
 """	
-def optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult):
+def optimize_pool_post_treatment_match(D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult):
 	try:
+		# duplicate results
 		results = calculatedResult
 
 		logging.debug(" varTeamNbrPerPool: %s" %(varTeamNbrPerPool,))
+
+		typeMatch = results["typeMatch"]
+
+		iter = config.INPUT.Iter
+		logging.debug(" iter: %s" %iter)
 
 		############# optimal scenario #################
 		# optimal scenario without constraint
 		resultsOptimalWithoutConstraint = results["scenarioOptimalSansContrainte"]
 		if resultsOptimalWithoutConstraint:
-# 			logging.debug(" resultsOptimalWithoutConstraint: %s" %(resultsOptimalWithoutConstraint,))
+			poolDistribution_OptimalWithoutConstraint = variation_team_number_per_pool(resultsOptimalWithoutConstraint["poulesId"], varTeamNbrPerPool)
+			results["scenarioOptimalSansContrainte"]["poulesId"] = poolDistribution_OptimalWithoutConstraint
+			logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %(poolDistribution_OptimalWithoutConstraint,))
 			
-			poolsIds = variation_team_number_per_pool(resultsOptimalWithoutConstraint["poulesId"], varTeamNbrPerPool)
-			
+			# create P Matrix from pool distribution	
+			P_Mat_OptimalWithoutConstraint = create_matrix_from_pool_distribution(poolDistribution_OptimalWithoutConstraint, teamNbr, teams)
+
+			# filter upper triangular size in the case of one way match
+			if typeMatch == "allerSimple":
+				P_Mat_OptimalWithoutConstraint = np.triu(P_Mat_OptimalWithoutConstraint)
+			logging.debug(" P_Mat_OptimalWithoutConstraint.shape: \n%s" %(P_Mat_OptimalWithoutConstraint.shape,))
+
+			for iterLaunch in range(config.INPUT.IterLaunch):
+				logging.debug(" -----------------------------   iterLaunch: %s -------------------------------------" %iterLaunch)
+				# launch calculation based on ref scenario only if the params are comparable
+				P_Mat_OptimalWithoutConstraint = get_p_matrix_for_round_trip_match_optimal_without_constraint(P_Mat_OptimalWithoutConstraint, D_Mat, iter, teamNbr)#
+
+			chosenDistance_OptimalWithoutConstraint = calculate_V_value(P_Mat_OptimalWithoutConstraint, D_Mat)
+			logging.debug(" chosenDistance_OptimalWithoutConstraint: %s" %chosenDistance_OptimalWithoutConstraint)
+
+	 		# get pool distribution
+			poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+			logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %poolDistribution_OptimalWithoutConstraint)
+	# 		
+			# eliminate phantom teams
+			poolDistribution_OptimalWithoutConstraint = eliminate_phantom_in_pool_distribution(poolDistribution_OptimalWithoutConstraint)
+			results["scenarioOptimalSansContrainte"]["poulesId"] = poolDistribution_OptimalWithoutConstraint
+			logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %poolDistribution_OptimalWithoutConstraint)
+
+			# get coordinates for each point in the pools
+			poolDistributionCoords_OptimalWithoutConstraint = get_coords_pool_distribution(poolDistribution_OptimalWithoutConstraint)
+			results["scenarioOptimalSansContrainte"]["poulesCoords"] = poolDistributionCoords_OptimalWithoutConstraint
 		
+			# get encounter list from pool distribution dict
+			encounters_OptimalWithoutConstraint = create_encounters_from_pool_distribution(poolDistribution_OptimalWithoutConstraint)
+			results["scenarioOptimalSansContrainte"]["rencontreDetails"] = encounters_OptimalWithoutConstraint
+	 		
+			# get pool details from encounters
+			poolDetails_OptimalWithoutConstraint = create_pool_details_from_encounters(encounters_OptimalWithoutConstraint, poolDistribution_OptimalWithoutConstraint)
+			results["scenarioOptimalSansContrainte"]["estimationDetails"] = poolDetails_OptimalWithoutConstraint
+		
+			# get sum info from pool details
+			sumInfo_OptimalWithoutConstraint = get_sum_info_from_pool_details(poolDetails_OptimalWithoutConstraint)
+			results["scenarioOptimalSansContrainte"]["estimationGenerale"] = sumInfo_OptimalWithoutConstraint
+
+
 		# optimal scenario with constraint
 		resultsOptimalWithConstraint = results["scenarioOptimalAvecContrainte"]
 		if resultsOptimalWithConstraint:
@@ -2986,7 +3030,7 @@ def callback(ch, method, properties, body):
 			calculatedResult = json.loads(db.fetchone(sql))
 # 			logging.debug("calculatedResult : %s" %calculatedResult)
 			
-			results = optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult)
+			results = optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult)
 # 			logging.debug("results : %s" %results)
 			
 
