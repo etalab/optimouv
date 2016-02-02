@@ -1740,12 +1740,101 @@ def get_list_details_from_list_ids_for_entity(listIds):
 	except Exception as e:
 		show_exception_traceback()
 	
+	
+
+"""
+Function to make variation of team number per pool
+"""
+def variation_team_number_per_pool(poolsIds, varTeamNbrPerPool):
+	try:
+
+		logging.debug(" poolsIds: %s" %(poolsIds,))
+		
+		poolNbr = len(poolsIds.keys())
+		logging.debug(" poolNbr: %s" %(poolNbr,))
+
+		poolsIdsCopy = dict.copy(poolsIds)
+
+		# if pool number is even
+		if poolNbr % 2 == 0:
+			logging.debug(" even pool number")
+			
+			tmpTeams = []
+			for index, (pool, teams) in enumerate(poolsIdsCopy.items(), start=1):
+				logging.debug(" index: %s"%index)
+				logging.debug(" pool: %s"%pool)
+				logging.debug(" teams: %s"%teams)
+			
+				# remove teams from odd number pool
+				if index % 2 == 1:
+					for i in range(varTeamNbrPerPool):
+						tmpTeams.append(teams.pop())
+				
+				# add teams to even number pool
+				if index % 2 == 0:
+					teams += tmpTeams
+
+		# if pool number is odd
+		if poolNbr % 2 == 1:
+			logging.debug(" odd pool number")
+		
+			tmpTeams = []
+			for index, (pool, teams) in enumerate(poolsIdsCopy.items(), start=1):
+				# ignore last pool
+				if index != poolNbr:
+					
+					logging.debug(" index: %s"%index)
+					logging.debug(" pool: %s"%pool)
+					logging.debug(" teams: %s"%teams)
+
+					# remove teams from odd number pool
+					if index % 2 == 1:
+						for i in range(varTeamNbrPerPool):
+							tmpTeams.append(teams.pop())
+					
+					# add teams to even number pool
+					if index % 2 == 0:
+						teams += tmpTeams
+		
+		logging.debug(" poolsIds: %s" %(poolsIds,))
+		
+		return poolsIds
+	except Exception as e:
+		show_exception_traceback()
+	
 """
 Functio to optimize pool post treatment
 """	
 def optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult):
 	try:
 		results = calculatedResult
+
+		logging.debug(" varTeamNbrPerPool: %s" %(varTeamNbrPerPool,))
+
+		############# optimal scenario #################
+		# optimal scenario without constraint
+		resultsOptimalWithoutConstraint = results["scenarioOptimalSansContrainte"]
+		if resultsOptimalWithoutConstraint:
+# 			logging.debug(" resultsOptimalWithoutConstraint: %s" %(resultsOptimalWithoutConstraint,))
+			
+			poolsIds = variation_team_number_per_pool(resultsOptimalWithoutConstraint["poulesId"], varTeamNbrPerPool)
+			
+		
+		# optimal scenario with constraint
+		resultsOptimalWithConstraint = results["scenarioOptimalAvecContrainte"]
+		if resultsOptimalWithConstraint:
+			pass
+			
+		############# equitable scenario #################
+		# equitable scenario without constraint
+		resultsEquitableWithoutConstraint = results["scenarioEquitableSansContrainte"]
+		if resultsEquitableWithoutConstraint:
+			pass
+		
+		resultsEquitableWithConstraint = results["scenarioEquitableAvecContrainte"]
+		# equitable scenario without constraint
+		if resultsEquitableWithConstraint:
+			pass
 
 		return results
 
@@ -2604,7 +2693,7 @@ def update_result_to_db(resultId, results):
 		resultsRef = results["scenarioRef"]
 		if resultsRef:
 			replace_single_quote_for_result(resultsRef["rencontreDetails"])
-		logging.debug("resultsRef : %s" %resultsRef)
+# 		logging.debug("resultsRef : %s" %resultsRef)
 
 		# optimal scenario
 		resultsOptimalWithoutConstraint = results["scenarioOptimalSansContrainte"]
@@ -2891,7 +2980,7 @@ def callback(ch, method, properties, body):
 			# get result id from report id
 			sql = "select id from scenario where id_rapport=%s"%reportId
 			resultId = db.fetchone(sql)
-			logging.debug("resultId : %s" %resultId)
+# 			logging.debug("resultId : %s" %resultId)
 			
 			sql = "select details_calcul from scenario where id=%s"%resultId
 			calculatedResult = json.loads(db.fetchone(sql))
@@ -2907,8 +2996,8 @@ def callback(ch, method, properties, body):
 			logging.debug("resultId : %s" %resultId)
 		else:
 			logging.debug("############################################# UPDATE RESULT INTO DB #########################################")
-			resultId = update_result_to_db(resultId, results)
-			logging.debug("resultId : %s" %resultId)
+# 			resultId = update_result_to_db(resultId, results)
+# 			logging.debug("resultId : %s" %resultId)
 
 		logging.debug("############################################# SEND EMAIL ####################################################")
 # 		send_email_to_user(userId, resultId)
