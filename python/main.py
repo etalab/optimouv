@@ -14,6 +14,7 @@ import smtplib
 from email.mime.text import MIMEText
 import time
 import pika
+from pika.adapters import SelectConnection
 # from openpyxl import load_workbook
 
 """
@@ -1744,7 +1745,7 @@ Functio to optimize pool post treatment
 """	
 def optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult):
 	try:
-		results = {}
+		results = calculatedResult
 
 		return results
 
@@ -2576,6 +2577,26 @@ def save_result_to_db(launchType, reportId, groupId, results):
 	except Exception as e:
 		show_exception_traceback()
 
+"""
+Function to save result into DB
+"""
+def update_result_to_db(resultId, results):
+	try:
+		# escape single apostrophe
+		results = json.dumps(results)
+# 		logging.debug("results : %s" %results)
+
+		sql = """update scenario set details_calcul='%(results)s' where id=%(resultId)s
+			"""%{	"resultId": resultId, 
+					"results": results,
+				}
+# 		logging.debug("sql: %s" %sql)
+		db.execute(sql)
+# 		db.commit()
+		
+		return resultId
+	except Exception as e:
+		show_exception_traceback()
 
 """
 Function to insert params to DB
@@ -2837,19 +2858,21 @@ def callback(ch, method, properties, body):
 # 			logging.debug("calculatedResult : %s" %calculatedResult)
 			
 			results = optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult)
-			logging.debug("results : %s" %results)
+# 			logging.debug("results : %s" %results)
 			
 
-		logging.debug("############################################# INSERT RESULT INTO DB #########################################")
 		if varTeamNbrPerPool == 0:
+			logging.debug("############################################# INSERT RESULT INTO DB #########################################")
 			resultId = save_result_to_db(launchType, reportId, groupId, results)
 			logging.debug("resultId : %s" %resultId)
 		else:
-			pass# 
+			logging.debug("############################################# UPDATE RESULT INTO DB #########################################")
+			resultId = update_result_to_db(resultId, results)
+			logging.debug("resultId : %s" %resultId)
 
-# 		logging.debug("############################################# SEND EMAIL ####################################################")
-# 		send_email_to_user(userId, resultId)
-# 		logging.debug("################################################## FINISHED #################################################")
+		logging.debug("############################################# SEND EMAIL ####################################################")
+		send_email_to_user(userId, resultId)
+		logging.debug("################################################## FINISHED #################################################")
 
 		# update job status to 2 (finished)
 		update_job_status(reportId, 2)
@@ -2867,7 +2890,23 @@ def callback(ch, method, properties, body):
 		db.disconnect()
 		sys.exit()
 
+def on_connected(connection):
+	print("timed_receive: Connected to RabbitMQ")
 
+	try:
+		connection.channel(on_channel_open)
+	except Exception as e:
+		show_exception_traceback()
+
+def on_channel_open(channel_):
+	global channel
+	channel = channel_
+	print("timed_receive: Received our Channel")
+
+	try:
+		channel.basic_consume(callback, queue=config.MQ.Queue, no_ack=True)
+	except Exception as e:
+		show_exception_traceback()
 
 """
 Main function
@@ -2906,13 +2945,15 @@ def main():
 # 		channel.start_consuming()
 
 		# asynchronous RabbitMQ
-
+		connection = SelectConnection(parameters, on_connected)
+		connection.ioloop.start()
 
 	except Exception as e:
 		show_exception_traceback()
 	finally:
+		connection.close() # asynchronous only
 		gc.collect()
 		db.disconnect()
 
 if __name__ == "__main__":
-    main()
+	main()
