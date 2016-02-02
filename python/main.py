@@ -2018,6 +2018,7 @@ def optimize_pool_post_treatment_match(D_Mat, teamNbr, poolNbr, poolSize, teams,
 			results["scenarioEquitableAvecContrainte"]["estimationGenerale"] = sumInfo_EquitableWithConstraint
 			logging.debug(" sumInfo_EquitableWithConstraint: \n%s" %sumInfo_EquitableWithConstraint)
 
+
 		return results
 
 	except Exception as e:
@@ -3178,11 +3179,11 @@ def callback(ch, method, properties, body):
 			logging.debug("resultId : %s" %resultId)
 		else:
 			logging.debug("############################################# UPDATE RESULT INTO DB #########################################")
-# 			resultId = update_result_to_db(resultId, results)
-# 			logging.debug("resultId : %s" %resultId)
+			resultId = update_result_to_db(resultId, results)
+			logging.debug("resultId : %s" %resultId)
 
 		logging.debug("############################################# SEND EMAIL ####################################################")
-# 		send_email_to_user(userId, resultId)
+		send_email_to_user(userId, resultId)
 		logging.debug("################################################## FINISHED #################################################")
 
 		# update job status to 2 (finished)
