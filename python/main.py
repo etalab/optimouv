@@ -2864,7 +2864,8 @@ def main():
 		channel.basic_qos(prefetch_count=1)
 		print (' [*] Waiting for messages. To exit press CTRL+C')
 		
-		channel.basic_consume(callback, queue=config.MQ.Queue, no_ack=False)
+# 		channel.basic_consume(callback, queue=config.MQ.Queue, no_ack=False)
+		channel.basic_consume(callback, queue=config.MQ.Queue, no_ack=True)
 		channel.start_consuming()
 
 	except Exception as e:
