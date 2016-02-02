@@ -1819,7 +1819,6 @@ def optimize_pool_post_treatment_match(D_Mat, teamNbr, poolNbr, poolSize, teams,
 		resultsOptimalWithoutConstraint = results["scenarioOptimalSansContrainte"]
 		if resultsOptimalWithoutConstraint:
 			poolDistribution_OptimalWithoutConstraint = variation_team_number_per_pool(resultsOptimalWithoutConstraint["poulesId"], varTeamNbrPerPool)
-			results["scenarioOptimalSansContrainte"]["poulesId"] = poolDistribution_OptimalWithoutConstraint
 			logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %(poolDistribution_OptimalWithoutConstraint,))
 			
 			# create P Matrix from pool distribution	
@@ -1867,7 +1866,62 @@ def optimize_pool_post_treatment_match(D_Mat, teamNbr, poolNbr, poolSize, teams,
 		# optimal scenario with constraint
 		resultsOptimalWithConstraint = results["scenarioOptimalAvecContrainte"]
 		if resultsOptimalWithConstraint:
-			pass
+
+			poolDistribution_OptimalWithConstraint = variation_team_number_per_pool(resultsOptimalWithConstraint["poulesId"], varTeamNbrPerPool)
+			logging.debug(" poolDistribution_OptimalWithConstraint: %s" %(poolDistribution_OptimalWithConstraint,))
+			
+			# create P Matrix from pool distribution	
+			P_Mat_OptimalWithConstraint = create_matrix_from_pool_distribution(poolDistribution_OptimalWithConstraint, teamNbr, teams)
+
+			# filter upper triangular size in the case of one way match
+			if typeMatch == "allerSimple":
+				P_Mat_OptimalWithConstraint = np.triu(P_Mat_OptimalWithConstraint)
+			logging.debug(" P_Mat_OptimalWithConstraint.shape: \n%s" %(P_Mat_OptimalWithConstraint.shape,))
+			
+			for iterLaunch in range(config.INPUT.IterLaunch):
+				logging.debug(" -----------------------------   iterLaunch: %s -------------------------------------" %iterLaunch)
+				# launch calculation based on ref scenario only if the params are comparable
+				P_Mat_OptimalWithConstraint = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_OptimalWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+
+				chosenDistance_OptimalWithConstraint = calculate_V_value(P_Mat_OptimalWithConstraint, D_Mat)
+				logging.debug(" chosenDistance_OptimalWithConstraint: %s" %chosenDistance_OptimalWithConstraint)
+	
+				poolDistribution_OptimalWithConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+				logging.debug(" poolDistribution_OptimalWithConstraint: %s" %poolDistribution_OptimalWithConstraint)
+	
+				# eliminate phnatom teams
+				poolDistribution_OptimalWithConstraint = eliminate_phantom_in_pool_distribution(poolDistribution_OptimalWithConstraint)
+				results["scenarioOptimalAvecContrainte"]["poulesId"] = poolDistribution_OptimalWithConstraint
+				logging.debug(" poolDistribution_OptimalWithConstraint: %s" %poolDistribution_OptimalWithConstraint)
+	
+				# get coordinates for each point in the pools
+				poolDistributionCoords_OptimalWithConstraint = get_coords_pool_distribution(poolDistribution_OptimalWithConstraint)
+				results["scenarioOptimalAvecContrainte"]["poulesCoords"] = poolDistributionCoords_OptimalWithConstraint
+
+				# get encounter list from pool distribution dict
+				encounters_OptimalWithConstraint = create_encounters_from_pool_distribution(poolDistribution_OptimalWithConstraint)
+				results["scenarioOptimalAvecContrainte"]["rencontreDetails"] = encounters_OptimalWithConstraint
+			
+				# get pool details from encounters
+				poolDetails_OptimalWithConstraint = create_pool_details_from_encounters(encounters_OptimalWithConstraint, poolDistribution_OptimalWithConstraint)
+				results["scenarioOptimalAvecContrainte"]["estimationDetails"] = poolDetails_OptimalWithConstraint
+				logging.debug(" poolDetails_OptimalWithConstraint: \n%s" %poolDetails_OptimalWithConstraint)
+		
+				# get sum info from pool details
+				sumInfo_OptimalWithConstraint = get_sum_info_from_pool_details(poolDetails_OptimalWithConstraint)
+				results["scenarioOptimalAvecContrainte"]["estimationGenerale"] = sumInfo_OptimalWithConstraint
+				logging.debug(" sumInfo_OptimalWithConstraint: \n%s" %sumInfo_OptimalWithConstraint)
+
+
+
+
+			
+			
+			
+			
+			
+			
+			
 			
 		############# equitable scenario #################
 		# equitable scenario without constraint
