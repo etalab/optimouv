@@ -2577,22 +2577,62 @@ def save_result_to_db(launchType, reportId, groupId, results):
 	except Exception as e:
 		show_exception_traceback()
 
+
+"""
+Function to escape single quote
+"""
+def replace_single_quote_for_result(result):
+	try:
+		for pool, contentPool in result.items():
+			for encounterNbr, contentEncounter in contentPool.items():
+				contentEncounter["equipeDepartNom"] = contentEncounter["equipeDepartNom"].replace("'", u"''")
+				contentEncounter["equipeDestinationNom"] = contentEncounter["equipeDestinationNom"].replace("'", u"''")
+				contentEncounter["equipeDepartVille"] = contentEncounter["equipeDepartVille"].replace("'", u"''")
+				contentEncounter["equipeDestinationVille"] = contentEncounter["equipeDestinationVille"].replace("'", u"''")
+# 				logging.debug("contentEncounter : %s" %contentEncounter)
+
+	except Exception as e:
+		show_exception_traceback()
+
 """
 Function to save result into DB
 """
 def update_result_to_db(resultId, results):
 	try:
-		# escape single apostrophe
-		results = json.dumps(results)
-# 		logging.debug("results : %s" %results)
+		# escape single apostrophe for city names
+		# ref scenario
+		resultsRef = results["scenarioRef"]
+		if resultsRef:
+			replace_single_quote_for_result(resultsRef["rencontreDetails"])
+		logging.debug("resultsRef : %s" %resultsRef)
+
+		# optimal scenario
+		resultsOptimalWithoutConstraint = results["scenarioOptimalSansContrainte"]
+		if resultsOptimalWithoutConstraint:
+			replace_single_quote_for_result(resultsOptimalWithoutConstraint["rencontreDetails"])
+		
+		resultsOptimalWithConstraint = results["scenarioOptimalAvecContrainte"]
+		if resultsOptimalWithConstraint:
+			replace_single_quote_for_result(resultsOptimalWithConstraint["rencontreDetails"])
+			
+		# equitable scenario
+		resultsEquitableWithoutConstraint = results["scenarioEquitableSansContrainte"]
+		if resultsEquitableWithoutConstraint:
+			replace_single_quote_for_result(resultsEquitableWithoutConstraint["rencontreDetails"])
+			
+		
+		resultsEquitableWithConstraint = results["scenarioEquitableAvecContrainte"]
+		if resultsEquitableWithConstraint:
+			replace_single_quote_for_result(resultsEquitableWithoutConstraint["rencontreDetails"])
+
 
 		sql = """update scenario set details_calcul='%(results)s' where id=%(resultId)s
 			"""%{	"resultId": resultId, 
-					"results": results,
+					"results": json.dumps(results),
 				}
 # 		logging.debug("sql: %s" %sql)
 		db.execute(sql)
-# 		db.commit()
+		db.commit()
 		
 		return resultId
 	except Exception as e:
@@ -2834,7 +2874,7 @@ def callback(ch, method, properties, body):
 		logging.debug("distanceInitRoundTrip: %s" %(distanceInitRoundTrip,))
 
 		logging.debug("############################################# OPTIMIZE POOL #################################################")
-
+# 		varTeamNbrPerPool = 0
 		### Pre treatment
 # 		if launchType == "match_aller_retour":
 		if launchType == "allerRetour" and varTeamNbrPerPool == 0:
@@ -2871,7 +2911,7 @@ def callback(ch, method, properties, body):
 			logging.debug("resultId : %s" %resultId)
 
 		logging.debug("############################################# SEND EMAIL ####################################################")
-		send_email_to_user(userId, resultId)
+# 		send_email_to_user(userId, resultId)
 		logging.debug("################################################## FINISHED #################################################")
 
 		# update job status to 2 (finished)
