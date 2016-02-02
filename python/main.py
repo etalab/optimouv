@@ -1738,6 +1738,19 @@ def get_list_details_from_list_ids_for_entity(listIds):
 		
 	except Exception as e:
 		show_exception_traceback()
+	
+"""
+Functio to optimize pool post treatment
+"""	
+def optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult):
+	try:
+		results = {}
+
+		return results
+
+	except Exception as e:
+		show_exception_traceback()
+	
 		
 """
 Function to optimize pool for Round Trip Match (Match Aller Retour)
@@ -2800,22 +2813,43 @@ def callback(ch, method, properties, body):
 		logging.debug("distanceInitRoundTrip: %s" %(distanceInitRoundTrip,))
 
 		logging.debug("############################################# OPTIMIZE POOL #################################################")
+
+		### Pre treatment
 # 		if launchType == "match_aller_retour":
-		if launchType == "allerRetour":
+		if launchType == "allerRetour" and varTeamNbrPerPool == 0:
 			results = optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom)
 # 		elif launchType == "match_aller_simple":
-		elif launchType == "allerSimple":
+		elif launchType == "allerSimple" and varTeamNbrPerPool == 0:
 			results = optimize_pool_one_way_match(P_InitMat_oneWaywithoutConstraint, P_InitMat_oneWayWithConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom)
-		elif launchType == "plateau":
+		elif launchType == "plateau" and varTeamNbrPerPool == 0:
 			results = optimize_pool_plateau_match()
 
-		logging.debug("############################################# INSERT RESULT INTO DB #########################################")
-		resultId = save_result_to_db(launchType, reportId, groupId, results)
-		logging.debug("resultId : %s" %resultId)
+		### Post treatment
+		if varTeamNbrPerPool > 0 :
+			logging.debug("############################################# POST TREATMENT #########################################")
+			# get result id from report id
+			sql = "select id from scenario where id_rapport=%s"%reportId
+			resultId = db.fetchone(sql)
+			logging.debug("resultId : %s" %resultId)
+			
+			sql = "select details_calcul from scenario where id=%s"%resultId
+			calculatedResult = json.loads(db.fetchone(sql))
+# 			logging.debug("calculatedResult : %s" %calculatedResult)
+			
+			results = optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult)
+			logging.debug("results : %s" %results)
+			
 
-		logging.debug("############################################# SEND EMAIL ####################################################")
-		send_email_to_user(userId, resultId)
-		logging.debug("################################################## FINISHED #################################################")
+		logging.debug("############################################# INSERT RESULT INTO DB #########################################")
+		if varTeamNbrPerPool == 0:
+			resultId = save_result_to_db(launchType, reportId, groupId, results)
+			logging.debug("resultId : %s" %resultId)
+		else:
+			pass# 
+
+# 		logging.debug("############################################# SEND EMAIL ####################################################")
+# 		send_email_to_user(userId, resultId)
+# 		logging.debug("################################################## FINISHED #################################################")
 
 		# update job status to 2 (finished)
 		update_job_status(reportId, 2)
@@ -2857,16 +2891,22 @@ def main():
 
 		# rabbitmq connection
 		credentials = pika.PlainCredentials(config.MQ.User, config.MQ.Password)
-		connection = pika.BlockingConnection(pika.ConnectionParameters(host=config.MQ.Host, credentials=credentials))
-		channel = connection.channel()
-# 		channel.queue_declare(queue=config.MQ.Queue)
-		channel.queue_bind(exchange=config.MQ.Exchange, queue=config.MQ.Queue)
-		channel.basic_qos(prefetch_count=1)
-		print (' [*] Waiting for messages. To exit press CTRL+C')
-		
-# 		channel.basic_consume(callback, queue=config.MQ.Queue, no_ack=False)
-		channel.basic_consume(callback, queue=config.MQ.Queue, no_ack=True)
-		channel.start_consuming()
+		parameters = pika.ConnectionParameters(host=config.MQ.Host, credentials=credentials)
+
+		# synchronous Rabbit MQ
+# 		connection = pika.BlockingConnection(parameters)
+# 		channel = connection.channel()
+# # 		channel.queue_declare(queue=config.MQ.Queue)
+# 		channel.queue_bind(exchange=config.MQ.Exchange, queue=config.MQ.Queue)
+# 		channel.basic_qos(prefetch_count=1)
+# 		print (' [*] Waiting for messages. To exit press CTRL+C')
+# 		
+# # 		channel.basic_consume(callback, queue=config.MQ.Queue, no_ack=False)
+# 		channel.basic_consume(callback, queue=config.MQ.Queue, no_ack=True)
+# 		channel.start_consuming()
+
+		# asynchronous RabbitMQ
+
 
 	except Exception as e:
 		show_exception_traceback()
