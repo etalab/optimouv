@@ -1966,21 +1966,57 @@ def optimize_pool_post_treatment_match(D_Mat, teamNbr, poolNbr, poolSize, teams,
 			logging.debug(" sumInfo_OptimalWithConstraint: \n%s" %sumInfo_OptimalWithConstraint)
 
 
-
-
-			
-			
-			
-			
-			
-			
-			
-			
-		
 		resultsEquitableWithConstraint = results["scenarioEquitableAvecContrainte"]
 		# equitable scenario without constraint
 		if resultsEquitableWithConstraint:
-			pass
+
+			poolDistribution_EquitableWithConstraint = variation_team_number_per_pool(resultsEquitableWithConstraint["poulesId"], varTeamNbrPerPool)
+			logging.debug(" poolDistribution_EquitableWithConstraint: %s" %(poolDistribution_EquitableWithConstraint,))
+			
+			# create P Matrix from pool distribution	
+			P_Mat_EquitableWithConstraint = create_matrix_from_pool_distribution(poolDistribution_EquitableWithConstraint, teamNbr, teams)
+
+			# filter upper triangular size in the case of one way match
+			if typeMatch == "allerSimple":
+				P_Mat_EquitableWithConstraint = np.triu(P_Mat_EquitableWithConstraint)
+			logging.debug(" P_Mat_EquitableWithConstraint.shape: \n%s" %(P_Mat_EquitableWithConstraint.shape,))
+
+			for iterLaunch in range(config.INPUT.IterLaunch):
+				logging.debug(" -----------------------------   iterLaunch: %s -------------------------------------" %iterLaunch)
+				# launch calculation based on ref scenario only if the params are comparable
+				P_Mat_EquitableWithConstraint = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_EquitableWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+
+			chosenDistance_EquitableWithConstraint = calculate_V_value(P_Mat_EquitableWithConstraint, D_Mat)
+			logging.debug(" chosenDistance_EquitableWithConstraint: %s" %chosenDistance_EquitableWithConstraint)
+	
+			# get pool distribution
+			poolDistribution_EquitableWithConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+			logging.debug(" poolDistribution_EquitableWithConstraint: %s" %poolDistribution_EquitableWithConstraint)
+	
+			# eliminate phnatom teams
+			poolDistribution_EquitableWithConstraint = eliminate_phantom_in_pool_distribution(poolDistribution_EquitableWithConstraint)
+			results["scenarioEquitableAvecContrainte"]["poulesId"] = poolDistribution_EquitableWithConstraint
+			logging.debug(" poolDistribution_EquitableWithConstraint: %s" %poolDistribution_EquitableWithConstraint)
+	
+			# get coordinates for each point in the pools
+			poolDistributionCoords_EquitableWithConstraint = get_coords_pool_distribution(poolDistribution_EquitableWithConstraint)
+			results["scenarioEquitableAvecContrainte"]["poulesCoords"] = poolDistributionCoords_EquitableWithConstraint
+# 			logging.debug(" poolDistributionCoords_EquitableWithConstraint: %s" %poolDistributionCoords_EquitableWithConstraint)
+
+			# get encounter list from pool distribution dict
+			encounters_EquitableWithConstraint = create_encounters_from_pool_distribution(poolDistribution_EquitableWithConstraint)
+			results["scenarioEquitableAvecContrainte"]["rencontreDetails"] = encounters_EquitableWithConstraint
+# 			logging.debug(" encounters_EquitableWithConstraint: %s" %encounters_EquitableWithConstraint)
+	
+			# get pool details from encounters
+			poolDetails_EquitableWithConstraint = create_pool_details_from_encounters(encounters_EquitableWithConstraint, poolDistribution_EquitableWithConstraint)
+			results["scenarioEquitableAvecContrainte"]["estimationDetails"] = poolDetails_EquitableWithConstraint
+			logging.debug(" poolDetails_EquitableWithConstraint: \n%s" %poolDetails_EquitableWithConstraint)
+	
+			# get sum info from pool details
+			sumInfo_EquitableWithConstraint = get_sum_info_from_pool_details(poolDetails_EquitableWithConstraint)
+			results["scenarioEquitableAvecContrainte"]["estimationGenerale"] = sumInfo_EquitableWithConstraint
+			logging.debug(" sumInfo_EquitableWithConstraint: \n%s" %sumInfo_EquitableWithConstraint)
 
 		return results
 
