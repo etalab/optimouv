@@ -82,9 +82,8 @@ class RapportsController extends Controller
             $em = $this->getDoctrine()->getManager();
 
             $idResultat = $em->getRepository('FfbbBundle:Scenario')->getIdScenarioByIdRapport($idRapport);
+            $idResultat =$idResultat[0]['id'];
 
-            print_r($idResultat);
-            exit;
 
             return $this->redirect($this->generateUrl('ffbb_poules_resultat_calcul', array('idResultat' => $idResultat)));
         }
@@ -94,6 +93,8 @@ class RapportsController extends Controller
 
             $idResultat = $em->getRepository('FfbbBundle:Scenario')->getIdScenarioByIdRapport($idRapport);
 
+            $idResultat =$idResultat[0]['id'];
+
             return $this->redirect($this->generateUrl('ffbb_poules_resultat_calcul', array('idResultat' => $idResultat)));
         }
         elseif($typeAction == "plateau"){
@@ -101,6 +102,7 @@ class RapportsController extends Controller
             $em = $this->getDoctrine()->getManager();
 
             $idResultat = $em->getRepository('FfbbBundle:Scenario')->getIdScenarioByIdRapport($idRapport);
+            $idResultat =$idResultat[0]['id'];
             return $this->redirect($this->generateUrl('ffbb_poules_resultat_calcul', array('idResultat' => $idResultat)));
         }
         else{
