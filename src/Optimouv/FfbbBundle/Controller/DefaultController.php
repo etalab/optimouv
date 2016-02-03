@@ -79,6 +79,54 @@ class DefaultController extends Controller
         ));
     }
 
+    public function lancerProducerAction($idGroupe)
+    {
+
+
+        $typeAction =  $_POST["rencontre"];
+
+
+        if($typeAction == "exclusion"){
+
+
+            $valeurExclusion =  $_POST["valeurExclusion"];
+
+            $idTache = $this->get('service_rencontres')->producerExclusion($idGroupe, $valeurExclusion);
+
+            if($idTache){
+
+                $this->get('old_sound_rabbit_mq.rencontre_producer')->publish($idTache);
+
+                return $this->redirect($this->generateUrl('ffbb_rapports'));
+
+            }
+            else{
+
+                die("problème de récupération du job");
+
+            }
+
+        }
+
+        else{
+
+            $idTache = $this->get('service_rencontres')->Producer($idGroupe, $typeAction);
+
+            if($idTache){
+                $this->get('old_sound_rabbit_mq.rencontre_producer')->publish($idTache);
+
+                return $this->redirect($this->generateUrl('ffbb_rapports'));
+            }
+            else{
+                die("problème de récupération du job");
+
+            }
+
+
+        }
+
+
+    }
 
     public function rmqAction()
     {

@@ -52,4 +52,35 @@ class RapportsController extends Controller
             "infoRapports" => $infoRapports
         ]);
     }
+
+    public function consulterRapportAction($idRapport)
+    {
+
+        $typeAction = $_POST["typeAction"];
+
+        if($typeAction == "barycentre"){
+
+            return $this->redirect($this->generateUrl('ffbb_barycentre', array('idRapport' => $idRapport)));
+        }
+        elseif($typeAction == "exclusion"){
+
+            return $this->redirect($this->generateUrl('ffbb_exclusion', array('idRapport' => $idRapport)));
+
+        }
+        elseif($typeAction == "meilleurLieu"){
+
+            return $this->redirect($this->generateUrl('ffbb_rencontres', array('idRapport' => $idRapport)));
+        }
+
+        elseif($typeAction == "terrainNeutre"){
+
+            return $this->redirect($this->generateUrl('ffbb_terrain', array('idRapport' => $idRapport)));
+        }
+        else{
+
+            die('type d\'action non reconnu! ~rapport controller');
+        }
+
+
+    }
 }

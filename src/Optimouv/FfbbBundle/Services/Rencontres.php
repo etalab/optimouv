@@ -1498,7 +1498,7 @@ class Rencontres
         return $nbrParticipants;
     }
 
-    private function getTotalNombreParticipants($nbrParticipants){
+    public function getTotalNombreParticipants($nbrParticipants){
 
         $totalNombreParticipants = 0;
 
@@ -1525,10 +1525,12 @@ class Rencontres
         //recuperer la date du jour
         $date = new \DateTime();
         $dateCreation = $date->format('Y-m-d');
+        $nomRapport = "rapport_groupe_".$idGroupe."_action_".$typeAction;
 
         //on ajoute un job dans la table parametres
         //TODO:changer le nom de la table rapport en paramètres
-        $insert = $bdd->prepare("INSERT INTO  rapport (id_groupe, type_action, statut, date_creation) VALUES ( :idGroupe, :typeAction, :statut, :dateCreation );");
+        $insert = $bdd->prepare("INSERT INTO  rapport (nom, id_groupe, type_action, statut, date_creation) VALUES (:nomRapport, :idGroupe, :typeAction, :statut, :dateCreation );");
+        $insert->bindParam(':nomRapport', $nomRapport);
         $insert->bindParam(':idGroupe', $idGroupe);
         $insert->bindParam(':typeAction', $typeAction);
         $insert->bindParam(':statut', $statut);
@@ -1543,7 +1545,8 @@ class Rencontres
     public function producerExclusion($idGroupe, $valeurExclusion)
     {
 
-        $bdd= Rencontres::connexion();
+        $bdd = Rencontres::connexion();
+
 
         //déclaration des parametres pour la req insert dans la table parametres
 
@@ -1553,10 +1556,13 @@ class Rencontres
         //recuperer la date du jour
         $date = new \DateTime();
         $dateCreation = $date->format('Y-m-d');
+        $nomRapport = "rapport_groupe_".$idGroupe."_action_".$typeAction;
+
 
         //on ajoute un job dans la table parametres
         //TODO:changer le nom de la table rapport en paramètres
-        $insert = $bdd->prepare("INSERT INTO  rapport (id_groupe, type_action, statut, date_creation, params) VALUES ( :idGroupe, :typeAction, :statut, :dateCreation, :params );");
+        $insert = $bdd->prepare("INSERT INTO  rapport (nom, id_groupe, type_action, statut, params, date_creation) VALUES (:nomRapport, :idGroupe, :typeAction, :statut, :params, :dateCreation );");
+        $insert->bindParam(':nomRapport', $nomRapport);
         $insert->bindParam(':idGroupe', $idGroupe);
         $insert->bindParam(':typeAction', $typeAction);
         $insert->bindParam(':statut', $statut);

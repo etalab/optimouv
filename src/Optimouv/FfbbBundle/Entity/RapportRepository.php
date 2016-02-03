@@ -36,4 +36,32 @@ class RapportRepository extends \Doctrine\ORM\EntityRepository
 
     }
 
+    public function getIdGroupe($idRapport)
+    {
+
+        $query = $this->createQueryBuilder('t')
+            ->select('IDENTITY (t.idGroupe) as idGroupe')
+            ->where('t.id = :id')
+            ->setParameter('id', $idRapport)
+            ->getQuery();
+        $result = $query->getResult();
+
+        return $result;
+
+    }
+
+    public function getInfosExclusion($idRapport)
+    {
+
+        $query = $this->createQueryBuilder('t')
+            ->select('IDENTITY (t.idGroupe) as idGroupe, t.params')
+            ->where('t.id = :id')
+            ->setParameter('id', $idRapport)
+            ->getQuery();
+        $result = $query->getResult();
+
+        return $result;
+
+    }
+
 }
