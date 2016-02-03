@@ -23,4 +23,18 @@ class ScenarioRepository extends \Doctrine\ORM\EntityRepository
         return $result;
 
     }
+
+    public function getIdScenarioByIdRapport($idRapport)
+    {
+
+        $query = $this->createQueryBuilder('t')
+            ->select('t.id')
+            ->where('t.idRapport = :idRapport')
+            ->setParameter('idRapport', $idRapport)
+            ->getQuery();
+        $result = $query->getResult();
+
+        return $result;
+
+    }
 }

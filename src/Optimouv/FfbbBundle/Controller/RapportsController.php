@@ -76,6 +76,33 @@ class RapportsController extends Controller
 
             return $this->redirect($this->generateUrl('ffbb_terrain', array('idRapport' => $idRapport)));
         }
+        elseif($typeAction == "allerRetour"){
+
+            # obtenir entity manager
+            $em = $this->getDoctrine()->getManager();
+
+            $idResultat = $em->getRepository('FfbbBundle:Scenario')->getIdScenarioByIdRapport($idRapport);
+
+            print_r($idResultat);
+            exit;
+
+            return $this->redirect($this->generateUrl('ffbb_poules_resultat_calcul', array('idResultat' => $idResultat)));
+        }
+        elseif($typeAction == "allerSimple"){
+            # obtenir entity manager
+            $em = $this->getDoctrine()->getManager();
+
+            $idResultat = $em->getRepository('FfbbBundle:Scenario')->getIdScenarioByIdRapport($idRapport);
+
+            return $this->redirect($this->generateUrl('ffbb_poules_resultat_calcul', array('idResultat' => $idResultat)));
+        }
+        elseif($typeAction == "plateau"){
+            # obtenir entity manager
+            $em = $this->getDoctrine()->getManager();
+
+            $idResultat = $em->getRepository('FfbbBundle:Scenario')->getIdScenarioByIdRapport($idRapport);
+            return $this->redirect($this->generateUrl('ffbb_poules_resultat_calcul', array('idResultat' => $idResultat)));
+        }
         else{
 
             die('type d\'action non reconnu! ~rapport controller');
