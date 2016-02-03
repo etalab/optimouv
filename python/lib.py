@@ -8,6 +8,8 @@ import json
 import config
 import smtplib
 from email.mime.text import MIMEText
+import requests
+import datetime
 
 """
 Function to print exception traceback
