@@ -13,6 +13,7 @@ use PhpAmqpLib\Message\AMQPMessage;
 use PDO;
 
 
+
 class CalculRencontreConsumer implements ConsumerInterface
 {
 
@@ -23,6 +24,7 @@ class CalculRencontreConsumer implements ConsumerInterface
     public $app_code;
     public $error_log_path;
 
+
     public function __construct($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path)
     {
         $this->database_name = $database_name;
@@ -31,6 +33,7 @@ class CalculRencontreConsumer implements ConsumerInterface
         $this->app_id = $app_id;
         $this->app_code = $app_code;
         $this->error_log_path = $error_log_path;
+
     }
 
     public function connexion()
@@ -101,7 +104,6 @@ class CalculRencontreConsumer implements ConsumerInterface
         if($typeAction == "barycentre"){
 
 
-
             $retour = $serviceRencontre->Barycentre($idGroupe);
 
 //            $retour = Rencontres::Barycentre($idGroupe);
@@ -114,14 +116,20 @@ class CalculRencontreConsumer implements ConsumerInterface
 
                 $this->updateSatut($msg, $statut);
 
+                $this->sendMail();
+
 
             }
 
          }
         elseif($typeAction == "exclusion"){
 
-            $retour = $serviceRencontre->Exclusion($params, $idGroupe);
-//            $retour = Rencontres::Exclusion($params, $idGroupe);
+            $retour = [];
+            $retourBarycentre = $serviceRencontre->Barycentre($idGroupe);
+            $retourExclusion = $serviceRencontre->Exclusion($params, $idGroupe);
+
+            $retour[0] = $retourBarycentre;
+            $retour[1] = $retourExclusion;
 
             $idCalcul = $this->stockerResultats($msg,$retour);
 
@@ -130,13 +138,18 @@ class CalculRencontreConsumer implements ConsumerInterface
                 $statut = 2;
 
                 $this->updateSatut($msg, $statut);
-
+                //$this->sendMail();
 
             }
         }
         elseif($typeAction == "meilleurLieu"){
 
-            $retour = $serviceRencontre->meilleurLieuRencontre($idGroupe);
+            $retour = [];
+            $retourOp = $serviceRencontre->meilleurLieuRencontre($idGroupe);
+            $retourEq = $serviceRencontre->scenarioEquitable($idGroupe);
+
+            $retour[0] = $retourOp;
+            $retour[1] = $retourEq;
 
             $idCalcul = $this->stockerResultats($msg,$retour);
 
@@ -150,22 +163,27 @@ class CalculRencontreConsumer implements ConsumerInterface
             }
 
         }
-        elseif($typeAction == "meilleurLieuEq"){
-
-            $retour = $serviceRencontre->scenarioEquitable($idGroupe);
-            $idCalcul = $this->stockerResultats($msg,$retour);
-
-            if ($idCalcul) {
-
-                $statut = 2;
-
-                $this->updateSatut($msg, $statut);
-
-            }
-
-        }
+//        elseif($typeAction == "meilleurLieuEq"){
+//
+//            $retour = $serviceRencontre->scenarioEquitable($idGroupe);
+//            $idCalcul = $this->stockerResultats($msg,$retour);
+//
+//            if ($idCalcul) {
+//
+//                $statut = 2;
+//
+//                $this->updateSatut($msg, $statut);
+//
+//            }
+//
+//        }
         elseif($typeAction == "terrainNeutre"){
-            $retour = $serviceRencontre->terrainNeutre($idGroupe);
+
+            $retour = [];
+
+            $retour[0] = $serviceRencontre->terrainNeutre($idGroupe);
+            $retour[1] = $serviceRencontre->terrainNeutreEquitable($idGroupe);
+
             $idCalcul = $this->stockerResultats($msg,$retour);
 
             if ($idCalcul) {
@@ -176,19 +194,23 @@ class CalculRencontreConsumer implements ConsumerInterface
 
             }
         }
-        elseif($typeAction == "terrainNeutreEq"){
-            $retour = $serviceRencontre->terrainNeutreEquitable($idGroupe);
-            $idCalcul = $this->stockerResultats($msg,$retour);
+        else{
 
-            if ($idCalcul) {
-
-                $statut = 2;
-
-                $this->updateSatut($msg, $statut);
-
-
-            }
+            die("type de job non reconnu!");
         }
+//        elseif($typeAction == "terrainNeutreEq"){
+//            $retour = $serviceRencontre->terrainNeutreEquitable($idGroupe);
+//            $idCalcul = $this->stockerResultats($msg,$retour);
+//
+//            if ($idCalcul) {
+//
+//                $statut = 2;
+//
+//                $this->updateSatut($msg, $statut);
+//
+//
+//            }
+//        }
 
 
 
@@ -203,8 +225,6 @@ class CalculRencontreConsumer implements ConsumerInterface
     {
 
         $resultats = json_encode($resultats);
-
-
 
         //on recupere les parametres de connexion
         $bdd= $this->connexion();
@@ -223,7 +243,6 @@ class CalculRencontreConsumer implements ConsumerInterface
         $idCalcul = $bdd->lastInsertId();
 
         return $idCalcul;
-
         
     }
 
@@ -240,6 +259,24 @@ class CalculRencontreConsumer implements ConsumerInterface
 
     }
 
+    public function sendMail()
+    {
+
+        // the message
+        $msg = "First line of text\nSecond line of text";
+
+        // use wordwrap() if lines are longer than 70 characters
+        $msg = wordwrap($msg,70);
+
+     // send email
+
+        try {
+            mail("oussema.ghodbane@it4pme.fr","My subject",$msg);
+        } catch (Exception $e) {
+            echo 'Exception reçue : ',  $e->getMessage(), "\n";
+        }
+
+    }
 
 
 }

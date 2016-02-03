@@ -50,23 +50,23 @@
                         Type de lieu
                     </div>
 
-                    <form style="padding-left:20px;">
+                    <form style="padding-left:20px;" action="{{ path('ffbb_lancer_producer', {'idGroupe':idGroupe}) }}" method="POST">
 
                         <div class="radio">
                             <label>
-                                <input type="radio" name="optionsRadios" id="meilleurLieuOption" value="option1"
-                                       checked>
+                                <input type="radio" name="rencontre" id="meilleurLieuOption" value="meilleurLieu"
+                                       checked disabled>
                                 Lieux définis
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="optionsRadios" id="BarycentreOption" value="option2">
+                                <input type="radio" name="rencontre" id="BarycentreOption" value="barycentre">
                                 Barycentre
                             </label>
                         </div>
 
-                        <button type="button" class="btn btn-default-rencontre  pull-right" onclick="typeLieu()">Lancer le calcul
+                        <button type="submit" class="btn btn-default-rencontre  pull-right">Lancer le calcul
                         </button>
 
 
@@ -91,7 +91,9 @@
                     </div>
 
                 </div>
-                <form style="padding-left:20px;" action="{{ path('ffbb_terrain', {'idGroupe':idGroupe}) }}" method="post">
+                <form style="padding-left:20px;"  action="{{ path('ffbb_lancer_producer', {'idGroupe':idGroupe}) }}" method="POST">
+
+                    <input type="hidden" name="rencontre" value="terrainNeutre">
 
                     <button type="submit" class="btn btn-default-rencontre  pull-right">Lancer le calcul </button>
 
@@ -660,17 +662,17 @@
     {% block javascript %}
         <!-- /#page-wrapper -->
         <script type="text/javascript" charset="UTF-8">
-            function typeLieu() {
-                var idGroupe = {{idGroupe}};
-                if (document.getElementById("meilleurLieuOption").checked == true) {
-                    window.location.href = "{{ path('ffbb_rencontres', {'idGroupe':idGroupe}) }}";
-                }
-                else {
-                    window.location.href = "{{ path('ffbb_barycentre', {'idGroupe':idGroupe}) }}";
+            {#function typeLieu() {#}
+                {#var idGroupe = {{idGroupe}};#}
+                {#if (document.getElementById("meilleurLieuOption").checked == true) {#}
+                    {#window.location.href = "{{ path('ffbb_rencontres', {'idGroupe':idGroupe}) }}";#}
+                {#}#}
+                {#else {#}
+                    {#window.location.href = "{{ path('ffbb_barycentre', {'idGroupe':idGroupe}) }}";#}
 
-                }
+                {#}#}
 
-            }
+            {#}#}
         </script>
     {% endblock %}
 

@@ -95,5 +95,37 @@ class GroupeRepository extends \Doctrine\ORM\EntityRepository
 
     }
 
+    public function getIdListe($idGroupe)
+    {
+
+        $query = $this->createQueryBuilder('t')
+            ->select('t.idListeParticipant')
+            ->where('t.id = :id')
+            ->setParameter('id', $idGroupe)
+            ->getQuery();
+        $result = $query->getResult();
+
+        $result = $result[0]['idListeParticipant'];
+
+        return $result;
+
+    }
+
+    public function getNomGroupe($idGroupe)
+    {
+
+        $query = $this->createQueryBuilder('t')
+            ->select('t.nom')
+            ->where('t.id = :id')
+            ->setParameter('id', $idGroupe)
+            ->getQuery();
+        $result = $query->getResult();
+
+        $result = $result[0]['nom'];
+
+        return $result;
+
+    }
+
 
 }

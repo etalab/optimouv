@@ -52,4 +52,64 @@ class RapportsController extends Controller
             "infoRapports" => $infoRapports
         ]);
     }
+
+    public function consulterRapportAction($idRapport)
+    {
+
+        $typeAction = $_POST["typeAction"];
+
+        if($typeAction == "barycentre"){
+
+            return $this->redirect($this->generateUrl('ffbb_barycentre', array('idRapport' => $idRapport)));
+        }
+        elseif($typeAction == "exclusion"){
+
+            return $this->redirect($this->generateUrl('ffbb_exclusion', array('idRapport' => $idRapport)));
+
+        }
+        elseif($typeAction == "meilleurLieu"){
+
+            return $this->redirect($this->generateUrl('ffbb_rencontres', array('idRapport' => $idRapport)));
+        }
+
+        elseif($typeAction == "terrainNeutre"){
+
+            return $this->redirect($this->generateUrl('ffbb_terrain', array('idRapport' => $idRapport)));
+        }
+        elseif($typeAction == "allerRetour"){
+
+            # obtenir entity manager
+            $em = $this->getDoctrine()->getManager();
+
+            $idResultat = $em->getRepository('FfbbBundle:Scenario')->getIdScenarioByIdRapport($idRapport);
+            $idResultat =$idResultat[0]['id'];
+
+
+            return $this->redirect($this->generateUrl('ffbb_poules_resultat_calcul', array('idResultat' => $idResultat)));
+        }
+        elseif($typeAction == "allerSimple"){
+            # obtenir entity manager
+            $em = $this->getDoctrine()->getManager();
+
+            $idResultat = $em->getRepository('FfbbBundle:Scenario')->getIdScenarioByIdRapport($idRapport);
+
+            $idResultat =$idResultat[0]['id'];
+
+            return $this->redirect($this->generateUrl('ffbb_poules_resultat_calcul', array('idResultat' => $idResultat)));
+        }
+        elseif($typeAction == "plateau"){
+            # obtenir entity manager
+            $em = $this->getDoctrine()->getManager();
+
+            $idResultat = $em->getRepository('FfbbBundle:Scenario')->getIdScenarioByIdRapport($idRapport);
+            $idResultat =$idResultat[0]['id'];
+            return $this->redirect($this->generateUrl('ffbb_poules_resultat_calcul', array('idResultat' => $idResultat)));
+        }
+        else{
+
+            die('type d\'action non reconnu! ~rapport controller');
+        }
+
+
+    }
 }

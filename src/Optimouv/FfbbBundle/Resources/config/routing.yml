@@ -50,19 +50,19 @@ ffbb_update_groupe:
     defaults: { _controller: FfbbBundle:Groupe:renommerGroupe }
 
 ffbb_rencontres:
-    path:     /admin/rencontre/rencontres/{idGroupe}
+    path:     /admin/rencontre/rencontres/{idRapport}
     defaults: { _controller: FfbbBundle:Rencontres:index }
 
 ffbb_barycentre:
-    path:     /admin/rencontre/barycentre/{idGroupe}
+    path:     /admin/rencontre/barycentre/{idRapport}
     defaults: { _controller: FfbbBundle:Rencontres:barycentre }
 
 ffbb_exclusion:
-    path:     /admin/rencontre/exclusion/{idGroupe}
+    path:     /admin/rencontre/exclusion/{idRapport}
     defaults: { _controller: FfbbBundle:Rencontres:exclusion }
 
 ffbb_terrain:
-    path:     /admin/rencontre/terrain-neutre/{idGroupe}
+    path:     /admin/rencontre/terrain-neutre/{idRapport}
     defaults: { _controller: FfbbBundle:Rencontres:terrainNeutre }
 
 ffbb_details_calcul:
@@ -229,6 +229,14 @@ ffbb_poules_lancer_calcul:
 ffbb_poules_details_calcul:
     path:     /admin/poules/details-calcul
     defaults: { _controller: FfbbBundle:Poules:detailsCalcul }
+
+ffbb_lancer_producer:
+    path:     /admin/rencontre/producer/{idGroupe}
+    defaults: { _controller: FfbbBundle:Default:lancerProducer }
+
+ffbb_consulter_rapport:
+    path:     /admin/rapport/{idRapport}
+    defaults: { _controller: FfbbBundle:Rapports:consulterRapport }
 
 ffbb_rmq:
     path:    /rmq

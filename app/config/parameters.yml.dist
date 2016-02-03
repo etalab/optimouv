@@ -7,10 +7,11 @@ parameters:
     database_name:     symfony
     database_user:     root
     database_password: ~
-    mailer_transport: gmail
-    mailer_host: smtp.gmail.com
-    mailer_user: vtc.ouss@gmail.com
-    mailer_password: EJAg$m896!
+    mailer_transport: smtp
+    mailer_host: smtp.it4pme.fr
+    mailer_port: 587
+    mailer_user: serviceclients@it4pme.fr
+    mailer_password: MailMw92
     secret:            ThisTokenIsNotSoSecretChangeIt
     # ci-dessous les deux parametres pour Here
     app_id: tObeTMHIXTfmuTUvyDBa

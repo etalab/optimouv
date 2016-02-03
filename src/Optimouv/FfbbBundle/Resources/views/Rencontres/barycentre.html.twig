@@ -50,21 +50,21 @@
                         Type de lieu
                     </div>
                     {#{{ dump(meilleurLieuOption.value) }}#}
-                    <form name="typeLieux" style="padding-left:20px;">
+                    <form name="typeLieux" style="padding-left:20px;"  action="{{ path('ffbb_lancer_producer', {'idGroupe':idGroupe}) }}" method="POST">
 
                         <div class="radio">
                             <label>
-                                <input type="radio" name="optionsRadios" id="meilleurLieuOption" value="option1">
+                                <input type="radio" name="rencontre" id="meilleurLieuOption" value="meilleurLieu">
                                 Lieux définis
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="optionsRadios" id="BarycentreOption" value="option2" checked>
+                                <input type="radio" name="rencontre" id="BarycentreOption" value="barycentre" checked disabled>
                                 Barycentre
                             </label>
                         </div>
-                        <button type="button" class="btn btn-default-rencontre  pull-right" onclick="typeLieu()">Lancer le calcul
+                        <button type="submit" class="btn btn-default-rencontre  pull-right" >Lancer le calcul
 
                         </button>
 
@@ -82,7 +82,7 @@
                     <div class="panel-heading">
                         Ajouter des contraintes
                     </div>
-                    <form name="typeLieuxContrainte" style="padding-left:20px;" action="{{ path('ffbb_exclusion', {'idGroupe':idGroupe}) }}" method="POST">
+                    <form name="typeLieuxContrainte" style="padding-left:20px;" action="{{ path('ffbb_lancer_producer', {'idGroupe':idGroupe}) }}" method="POST">
 
                         <div style="padding-top: 10px">
                             Saisissez ici le nombre d'habitants maximum des zones à exclure
@@ -91,6 +91,7 @@
                             {#<label>Text Input with Placeholder</label>#}
                             <input name="valeurExclusion" id="valeurExclusion" type="number" onchange="showBtn()"
                                    class="form-control" placeholder="Exemple : '50 000' si je souhaite exclure les zones de plus de 50 000 habitants" min="1000">
+                            <input type="hidden" name="rencontre" value="exclusion">
                         </div>
                         <button type="submit" class="btn btn-default-rencontre  pull-right" id="bntLancerCalcul" style="visibility: hidden" >Lancer le calcul
                         </button>
@@ -384,32 +385,32 @@
     {% block javascript %}
         <!-- /#page-wrapper -->
         <script type="text/javascript" charset="UTF-8">
-            function typeLieu() {
+            {#function typeLieu() {#}
 
-                var idGroupe = {{idGroupe}};
-                if (document.getElementById("meilleurLieuOption").checked == true) {
-                    window.location.href = "{{ path('ffbb_rencontres', {'idGroupe':idGroupe}) }}";
-                }
-                else {
-                    window.location.href = "{{ path('ffbb_barycentre', {'idGroupe':idGroupe}) }}";
-                }
+                {#var idGroupe = {{idGroupe}};#}
+                {#if (document.getElementById("meilleurLieuOption").checked == true) {#}
+                    {#window.location.href = "{{ path('ffbb_rencontres', {'idGroupe':idGroupe}) }}";#}
+                {#}#}
+                {#else {#}
+                    {#window.location.href = "{{ path('ffbb_barycentre', {'idRapport':idRapport}) }}";#}
+                {#}#}
 
-            }
+            {#}#}
 
-            function typeLieuxContrainte() {
-                var idGroupe = {{idGroupe}};
-                if (document.getElementById("Contrainte").checked == true) {
-                    window.location.href = "{{ path('ffbb_exclusion', {'idGroupe':idGroupe}) }}";
-                }
+            {#function typeLieuxContrainte() {#}
+                {#var idGroupe = {{idGroupe}};#}
+                {#if (document.getElementById("Contrainte").checked == true) {#}
+                    {#window.location.href = "{{ path('ffbb_exclusion', {'idGroupe':idGroupe}) }}";#}
+                {#}#}
 
-            }
+            {#}#}
 
-            function xxxx() {
-                var idGroupe = {{idGroupe}};
-                if (document.getElementById("Contrainte").checked == true) {
-                    window.location.href = "{{ path('ffbb_exclusion', {'idGroupe':idGroupe}) }}";
-                }
-            }
+            {#function xxxx() {#}
+                {#var idGroupe = {{idGroupe}};#}
+                {#if (document.getElementById("Contrainte").checked == true) {#}
+                    {#window.location.href = "{{ path('ffbb_exclusion', {'idGroupe':idGroupe}) }}";#}
+                {#}#}
+            {#}#}
 
             function showBtn(){
 
