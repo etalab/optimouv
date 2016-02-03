@@ -2,6 +2,7 @@ class INPUT:
 	Iter=5
 	IterConstraint=10000
 	MainUrl= "http://ffbb" # 
+    IterLaunch=20
 # 	MainUrl= "http://dev.ffbb.it4pme.fr/" # 
 	
 class DB:
