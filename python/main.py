@@ -445,12 +445,10 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 # 					P_Mat_OptimalWithoutConstraint = get_p_matrix_for_round_trip_match_optimal_without_constraint(P_InitMat_withoutConstraint, D_Mat, iter, teamNbr)#
 				
 				
-				
 # 			P_Mats_OptimalWithoutConstraint.append(P_Mat_OptimalWithoutConstraint)	
 # 			chosenDistance_OptimalWithoutConstraint = calculate_V_value(P_Mat_OptimalWithoutConstraint, D_Mat)
 # 			chosenDistances_OptimalWithoutConstraint.append(chosenDistance_OptimalWithoutConstraint)
 	
-		
 # 		P_Mat_chosenIndex = chosenDistances_OptimalWithoutConstraint.index(min(chosenDistances_OptimalWithoutConstraint))
 # 		logging.debug(" P_Mat_chosenIndex: %s" %P_Mat_chosenIndex)
 # 
@@ -641,7 +639,6 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			logging.debug(" sumInfo_EquitableWithConstraint: \n%s" %sumInfo_EquitableWithConstraint)
 
 
-			
 # 		logging.debug(" results: \n%s" %results)
 
 		return results 
@@ -786,7 +783,6 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 					
 # 		np.savetxt("/tmp/p_mat_optimal_without_constraint_one_way.csv", P_Mat_OptimalWithoutConstraint, delimiter=",", fmt='%d') # DEBUG
 
-
 		chosenDistance_OptimalWithoutConstraint = calculate_V_value(P_Mat_OptimalWithoutConstraint, D_Mat)
 		logging.debug(" chosenDistance_OptimalWithoutConstraint: %s" %chosenDistance_OptimalWithoutConstraint)
 	
@@ -906,7 +902,6 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			results["scenarioOptimalAvecContrainte"]["poulesCoords"] = poolDistributionCoords_OptimalWithConstraint
 # 			logging.debug(" poolDistributionCoords_OptimalWithConstraint: %s" %poolDistributionCoords_OptimalWithConstraint)
 
-	
 			# get encounter list from pool distribution dict
 			encounters_OptimalWithConstraint = create_encounters_from_pool_distribution_one_way(poolDistribution_OptimalWithConstraint)
 			results["scenarioOptimalAvecContrainte"]["rencontreDetails"] = encounters_OptimalWithConstraint
@@ -982,17 +977,125 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 """
 Function to optimize pool for Plateau Match (Match Plateau)
 """
-def optimize_pool_plateau_match():
+def optimize_pool_plateau_match(D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom):
 	try:
-		pass
-	# optimal scenario
+		results = {"typeMatch": "plateau", "nombrePoule": poolNbr, "taillePoule": poolSize, 
+					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
+					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, "params": {}
+				}
+		
+		logging.debug(" ########################################## PLATEAU　MATCH ###############################################")
+
+		iter = config.INPUT.Iter
+		logging.debug(" iter: %s" %iter)
+		
+		# add status constraints in the result
+		if statusConstraints:
+			results["contraintsExiste"] = 1
+# 			results["params"]["contraintsExiste"] = 1
+		else:
+			results["contraintsExiste"] = 0
+# 			results["params"]["contraintsExiste"] = 0
+
+
+		logging.debug("teamNbr: %s"%teamNbr)
+		logging.debug("poolNbr: %s"%poolNbr)
+		logging.debug("poolSize: %s"%poolSize)
+		logging.debug("userId: %s"%userId)
+		logging.debug("teams: \n%s"%teams)
+
+		logging.debug("")
+		logging.debug(" #################################### REFERENCE RESULT #################################################")
 	
-	# equitable scenario
+		# get info for reference scenario from DB
+		returnRefScenarioPlateau =  get_ref_scenario_plateau(teams)
+# 		logging.debug("returnRefScenario: \n%s"%returnRefScenario)
+
+		returnPoolDistributionRef = create_reference_pool_distribution_from_db(teams, poolSize)
+		
+		# process only if there is a reference
+		if returnRefScenarioPlateau["status"] == "yes" and  returnPoolDistributionRef["status"] == "yes":
+			
+			# add boolean to results
+# 			results["params"]["refExiste"] = 1
+			results["refExiste"] = 1
+
+			refScenarioPlateau = returnRefScenarioPlateau["data"]
+# 			logging.debug(" refScenarioPlateau: \n%s" %refScenarioPlateau)
+
+			poolDistributionRef = returnPoolDistributionRef["data"]
+# 			logging.debug(" poolDistributionRef: \n%s" %poolDistributionRef)
+
+			# eliminate phnatom teams
+			poolDistributionRef = eliminate_phantom_in_pool_distribution(poolDistributionRef)
+			results["scenarioRef"]["poulesId"] = poolDistributionRef
+			logging.debug(" poolDistributionRef: %s" %poolDistributionRef)
 	
-	# reference scenario
+			# get coordinates for each point in the pools
+			poolDistributionCoordsRef = get_coords_pool_distribution(poolDistributionRef)
+			results["scenarioRef"]["poulesCoords"] = poolDistributionCoordsRef
+			logging.debug(" poolDistributionCoordsRef: %s" %poolDistributionCoordsRef)
+
+
+# 			# create P Matrix reference to calculate distance	
+# 			P_Mat_ref = create_matrix_from_pool_distribution(poolDistributionRef, teamNbr, teams)
+# 			logging.debug(" P_Mat_ref.shape: \n%s" %(P_Mat_ref.shape,))
+# # 			logging.debug(" P_Mat_ref: \n%s" %(P_Mat_ref,))
+# # 			np.savetxt("/tmp/p_mat_ref_one_way.csv", P_Mat_ref, delimiter=",", fmt='%d') # DEBUG
+# 	
+# 			# take upper part of matrix
+# 			P_Mat_ref = np.triu(P_Mat_ref)
+# # 			np.savetxt("/tmp/p_mat_ref_one_way2.csv", P_Mat_ref, delimiter=",", fmt='%d') # DEBUG
+# 	
+# # 			logging.debug(" P_Mat_ref: \n%s" %(P_Mat_ref,))
+# 			chosenDistanceRef = calculate_V_value(P_Mat_ref, D_Mat)
+# 			logging.debug(" chosenDistanceRef: %s" %chosenDistanceRef)
+# 	
+# 			# get encounter list from pool distribution dict
+# 			encountersRef = create_encounters_from_pool_distribution_one_way(poolDistributionRef)
+# 			results["scenarioRef"]["rencontreDetails"] = encountersRef
+# # 			logging.debug(" encountersRef: %s" %encountersRef)
+# 	
+# 			# get pool details from encounters
+# 			poolDetailsRef = create_pool_details_from_encounters(encountersRef, poolDistributionRef)
+# 			results["scenarioRef"]["estimationDetails"] = poolDetailsRef
+# 			logging.debug(" poolDetailsRef: \n%s" %poolDetailsRef)
+# 	
+# 			# get sum info from pool details
+# 			sumInfoRef = get_sum_info_from_pool_details(poolDetailsRef)
+# 			results["scenarioRef"]["estimationGenerale"] = sumInfoRef
+# 			logging.debug(" sumInfoRef: \n%s" %sumInfoRef)
+		else:
+			# add boolean to results
+# 			results["params"]["refExiste"] = 0
+			results["refExiste"] = 0
+
+
+
+
+
+
+		logging.debug("")
+		logging.debug(" ####################### RESULT OPTIMAL WITHOUT CONSTRAINT #############################################")
+		
+		
+		logging.debug("")
+		logging.debug(" ####################### RESULT EQUITABLE WITHOUT CONSTRAINT ############################################")
 	
-	# optimal scenario without constraint
 	
+		logging.debug("")
+		logging.debug(" ####################### RESULT OPTIMAL WITH CONSTRAINT #############################################")
+	
+		logging.debug("")
+		logging.debug(" ######################### RESULT EQUITABLE WITH CONSTRAINT ############################################")
+	
+
+
+
+
+# 		sys.exit()
+
+		return results
 
 	except Exception as e:
 		show_exception_traceback()
@@ -1067,6 +1170,12 @@ def callback(ch, method, properties, body):
 		teamNbr = len(teams)
 		logging.debug("teamNbr: %s" %teamNbr)
 		
+		# check team number and pool number for match plateau
+		if launchType == "plateau":
+			control_params_match_plateau(userId, teamNbr, poolNbr)
+		
+		
+		# update teams and other params by including phantom teams
 		teamsWithPhantom = list(teams)
 		teamNbrWithPhantom = len(teamsWithPhantom)
 		phantomTeamNbr = 0
@@ -1178,7 +1287,7 @@ def callback(ch, method, properties, body):
 		elif launchType == "allerSimple" and varTeamNbrPerPool == 0:
 			results = optimize_pool_one_way_match(P_InitMat_oneWaywithoutConstraint, P_InitMat_oneWayWithConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom)
 		elif launchType == "plateau" and varTeamNbrPerPool == 0:
-			results = optimize_pool_plateau_match()
+			results = optimize_pool_plateau_match(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom)
 
 		### Post treatment
 		if varTeamNbrPerPool > 0 :
@@ -1270,12 +1379,12 @@ def main():
 		# synchronous Rabbit MQ
 # 		connection = pika.BlockingConnection(parameters)
 # 		channel = connection.channel()
-# # 		channel.queue_declare(queue=config.MQ.Queue)
+# 		channel.queue_declare(queue=config.MQ.Queue)
 # 		channel.queue_bind(exchange=config.MQ.Exchange, queue=config.MQ.Queue)
 # 		channel.basic_qos(prefetch_count=1)
 # 		print (' [*] Waiting for messages. To exit press CTRL+C')
 # 		
-# # 		channel.basic_consume(callback, queue=config.MQ.Queue, no_ack=False)
+# 		channel.basic_consume(callback, queue=config.MQ.Queue, no_ack=False)
 # 		channel.basic_consume(callback, queue=config.MQ.Queue, no_ack=True)
 # 		channel.start_consuming()
 
