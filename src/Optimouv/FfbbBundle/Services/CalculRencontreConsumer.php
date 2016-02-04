@@ -258,7 +258,7 @@ class CalculRencontreConsumer implements ConsumerInterface
     {
 
 
-
+        $userEmail = $this->getUserEmail($idRapport);
 
         $body = $this->templating->render('FfbbBundle:Mails:confirmationCalcul.html.twig', array('idRapport' => $idRapport, 'typeAction' => $typeAction));
 
@@ -266,11 +266,27 @@ class CalculRencontreConsumer implements ConsumerInterface
         $message = \Swift_Message::newInstance()
             ->setSubject('Mise à disposition de vos résultats de calculs')
             ->setFrom('servicetechnique@it4pme.fr')
-            ->setTo("oussema.ghodbane@it4pme.fr")
+            ->setTo($userEmail)
             ->setBody($body, 'text/html')
         ;
         $this->container->get('mailer')->send($message);
 
+
+    }
+
+    public function getUserEmail($idRapport)
+    {
+
+        //on recupere les parametres de connexion
+        $bdd= $this->connexion();
+
+        $stmt1 = $bdd->prepare("select email from fos_user where id = (select id_utilisateur from groupe where id = (SELECT id_groupe FROM rapport where id = :id));");
+
+        $stmt1->bindParam(':id', $idRapport);
+        $stmt1->execute();
+        $userEmail = $stmt1->fetchColumn();
+
+        return $userEmail;
 
     }
 
