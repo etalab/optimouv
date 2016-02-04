@@ -216,7 +216,7 @@ class Listes{
                                 if (strtolower($typeEntite) == "equipe") {
 
                                     # controler le nombre de colonnes
-                                    if(count($donnéesLigne) != 11 && count($donnéesLigne) != 12){
+                                    if(count($donnéesLigne) != 11 && count($donnéesLigne) != 12 && count($donnéesLigne) != 18){
                                         $retour = array(
                                             "success" => false,
                                             "msg" => "Erreur ligne :".$nbrLigne."!"
@@ -1340,8 +1340,6 @@ class Listes{
                         return $retour;
                     }
                 }
-
-
 
                 $retour["success"] = true;
 
