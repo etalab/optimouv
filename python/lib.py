@@ -1965,7 +1965,7 @@ Function to get reference scenario for match plateau
 """
 def get_ref_scenario_plateau(teams):
 	try:
-		refScenario = {"status" : False, "data": {} }
+		refScenario = {"status" : "no", "data": {} }
 		
 		teamNames = get_team_names_from_ids(teams)
 		logging.debug("teamNames: %s "%(teamNames))
@@ -1992,7 +1992,7 @@ def get_ref_scenario_plateau(teams):
 			
 			contentTmp = {"hoteId": teamId, "hoteNom": teamName, "equipeNom1" : firstDayTeam1, "equipeNom2": firstDayTeam2, 
 							"equipeId1": teams[teamNames.index(firstDayTeam1)], "equipeId2": teams[teamNames.index(firstDayTeam2)]	}
-			refScenario["status"] = True
+			refScenario["status"] = "yes"
 
 			# pool not yet in reference dict
 			if poolId not in refScenario["data"]:
