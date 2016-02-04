@@ -53,10 +53,14 @@ class RapportsController extends Controller
         ]);
     }
 
-    public function consulterRapportAction($idRapport)
+    public function consulterRapportAction($idRapport, $typeAction)
     {
 
-        $typeAction = $_POST["typeAction"];
+        # obtenir entity manager
+        $em = $this->getDoctrine()->getManager();
+
+
+//        $typeAction = $_POST["typeAction"];
 
         if($typeAction == "barycentre"){
 
@@ -78,8 +82,6 @@ class RapportsController extends Controller
         }
         elseif($typeAction == "allerRetour"){
 
-            # obtenir entity manager
-            $em = $this->getDoctrine()->getManager();
 
             $idResultat = $em->getRepository('FfbbBundle:Scenario')->getIdScenarioByIdRapport($idRapport);
             $idResultat =$idResultat[0]['id'];
@@ -88,8 +90,7 @@ class RapportsController extends Controller
             return $this->redirect($this->generateUrl('ffbb_poules_resultat_calcul', array('idResultat' => $idResultat)));
         }
         elseif($typeAction == "allerSimple"){
-            # obtenir entity manager
-            $em = $this->getDoctrine()->getManager();
+
 
             $idResultat = $em->getRepository('FfbbBundle:Scenario')->getIdScenarioByIdRapport($idRapport);
 
@@ -98,8 +99,7 @@ class RapportsController extends Controller
             return $this->redirect($this->generateUrl('ffbb_poules_resultat_calcul', array('idResultat' => $idResultat)));
         }
         elseif($typeAction == "plateau"){
-            # obtenir entity manager
-            $em = $this->getDoctrine()->getManager();
+
 
             $idResultat = $em->getRepository('FfbbBundle:Scenario')->getIdScenarioByIdRapport($idRapport);
             $idResultat =$idResultat[0]['id'];
@@ -112,4 +112,6 @@ class RapportsController extends Controller
 
 
     }
+
+
 }

@@ -526,9 +526,9 @@ class RencontresController extends Controller
 //        return true;
 //
 //    }
-//    public function detailsCalculAction()
-//    {
-//
-//        return $this->render('FfbbBundle:Rencontres:detailsCalcul.html.twig');
-//    }
+    public function detailsCalculAction()
+    {
+
+        return $this->render('FfbbBundle:Rencontres:detailsCalcul.html.twig');
+    }
 }
