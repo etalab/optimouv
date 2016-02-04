@@ -72,7 +72,8 @@
                      <div class="col-lg-3" id="nbrJournee" style="display: none">
                          <div class="panel panel-default">
                              <div class="panel-heading">
-                                 <strong>  Nombre de journées* </strong>
+                                 {#<strong>  Nombre de journées </strong>#}
+                                 Nombre de journées
                              </div>
                              <!-- /.panel-heading -->
                              <div class="panel-body">
@@ -362,12 +363,17 @@
                          console.log("poulesNbr : " + poulesNbr );
 
                          // controler le champ obligatoire (le nombre de poules)
-                         if (typeMatch == "plateau"){
-                             alert("Ce type de match n'est pas encore supporté. Veuillez choisir un autre type de match");
+//                         if (typeMatch == "plateau"){
+//                             alert("Ce type de match n'est pas encore supporté. Veuillez choisir un autre type de match");
+//
+//                         }
 
-                         }
-                         if( (poulesNbr == "") || (parseInt(poulesNbr)<2) ){
+
+                         if(  (typeMatch == "allerRetour" || typeMatch == "allerSimple") && (poulesNbr == "" || parseInt(poulesNbr)<2 ) ){
                             alert("Veuillez vérifier que le nombre de poules donné est valide");
+                         }
+                         else if (typeMatch == "plateau"  && ((poulesNbr == "" || parseInt(poulesNbr)<1 )) ) {
+                             alert("Veuillez vérifier que le nombre de poules donné est valide");
                          }
                          else{
                             alert("Le calcul est en cours. Vous recevrez un mail pour vous avertir de la mise à disposition de vos résultats de calculs");

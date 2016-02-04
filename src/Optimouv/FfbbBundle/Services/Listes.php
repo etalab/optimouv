@@ -1198,7 +1198,7 @@ class Listes{
 
         // tester le nombre de colonnes
         // nombreColonnesEntetes (11 pour liste d'équipes, 10 pour liste de personnes, 13 pour liste de lieux)
-        $nombreColonnesEntetes = [11,10,13,12];
+        $nombreColonnesEntetes = [11,10,13,12, 18];
         if(!in_array(count($entete), $nombreColonnesEntetes)){
             $retour["msg"] = "Veuillez vérifier le nombre des colonnes.!"
                 .$genericMsg;
