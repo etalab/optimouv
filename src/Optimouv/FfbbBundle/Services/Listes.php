@@ -1068,6 +1068,60 @@ class Listes{
                                     $stmt->bindParam(':id_ville_france', $idVilleFrance);
                                     $stmt->bindParam(':poule', $poule);
                                 }
+                                elseif(count($donnéesLigne) == 18){
+                                    $poule = $donnéesLigne[11];
+                                    //champs rencontre pour specifier si l equipe appartient à une poule ou bien dediee pour les rencontres
+
+                                    $premierJourReception = $donnéesLigne[12];
+                                    $premierJourEquipe1 = $donnéesLigne[13];
+                                    $premierJourEquipe2 = $donnéesLigne[14];
+
+                                    $deuxiemeJourReception = $donnéesLigne[15];
+                                    $deuxiemeJourEquipe1 = $donnéesLigne[16];
+                                    $deuxiemeJourEquipe2 = $donnéesLigne[17];
+
+                                    $refPlateau = [];
+                                    $refPlateau["premierJourReception"] = $premierJourReception;
+                                    $refPlateau["premierJourEquipe1"] = $premierJourEquipe1;
+                                    $refPlateau["premierJourEquipe2"] = $premierJourEquipe2;
+                                    $refPlateau["deuxiemeJourReception"] = $deuxiemeJourReception;
+                                    $refPlateau["deuxiemeJourEquipe1"] = $deuxiemeJourEquipe1;
+                                    $refPlateau["deuxiemeJourEquipe2"] = $deuxiemeJourEquipe2;
+                                    $refPlateau = json_encode($refPlateau);
+
+
+                                    $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, adresse, code_postal, ville, longitude, latitude,"
+                                        ." projection, participants, "
+                                        ." licencies, lieu_rencontre_possible, date_creation, date_modification, id_ville_france, poule, ref_plateau )"
+                                        ."VALUES ( :id_utilisateur, :type_entite, :nom, :adresse, :code_postal, :ville, :longitude, :latitude, "
+                                        ." :projection, :participants, "
+                                        .":licencies, :lieu_rencontre_possible, :date_creation, :date_modification, :id_ville_france, :poule, :ref_plateau);";
+
+                                    $stmt = $bdd->prepare($sql);
+                                    $stmt->bindParam(':id_utilisateur', $idUtilisateur);
+                                    $stmt->bindParam(':type_entite', $typeEntite);
+                                    $stmt->bindParam(':nom', $nom);
+                                    $stmt->bindParam(':adresse', $adresse);
+                                    $stmt->bindParam(':code_postal', $codePostal);
+                                    $stmt->bindParam(':ville', $ville);
+                                    $stmt->bindParam(':longitude', $longitude);
+                                    $stmt->bindParam(':latitude', $latitude);
+                                    $stmt->bindParam(':projection', $projection);
+                                    $stmt->bindParam(':participants', $participants);
+                                    $stmt->bindParam(':licencies', $licencies);
+                                    $stmt->bindParam(':lieu_rencontre_possible', $lieuRencontrePossible);
+                                    $stmt->bindParam(':date_creation', $dateCreation);
+                                    $stmt->bindParam(':date_modification', $dateModification);
+                                    $stmt->bindParam(':id_ville_france', $idVilleFrance);
+                                    $stmt->bindParam(':poule', $poule);
+                                    $stmt->bindParam(':ref_plateau', $refPlateau);
+
+
+
+                                }
+
+
+
                                 else{
                                     $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, adresse, code_postal, ville, longitude, latitude,"
                                         ." projection, participants, "
