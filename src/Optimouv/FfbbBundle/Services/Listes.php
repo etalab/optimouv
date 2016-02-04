@@ -101,7 +101,6 @@ class Listes{
                 // Fichier equipes, personnes, lieux
                 $resultatBooleanControlEntete = $this->controlerEntete($donneesEntete);
 
-//                error_log("service: listes, function: controlerEntites, status: ".print_r($resultatBooleanControlEntete, True), 3, $this->error_log_path);
 
                 if(!$resultatBooleanControlEntete["success"]){
                     $retour = array(
@@ -121,6 +120,18 @@ class Listes{
 
                     # tableau qui contient toutes les données (utilisé pour gérer les doublons)
                     $toutesLignes = [];
+
+                    # tableau qui contient le nom des toutes équipes (utilisé pour gérer le controle du fichier plateau pour les champs equipe adverse 1 et 2)
+                    $tousNomsEquipes = [];
+
+                    # tableau qui contient le nom des equipes adverses pour le premier et deuxième jour
+                    $premierJourEquipesAdverses1 = [];
+                    $premierJourEquipesAdverses2 = [];
+                    $deuxiemeJourEquipesAdverses1 = [];
+                    $deuxiemeJourEquipesAdverses2 = [];
+                    $premierJourReceptionListe = [];
+                    $deuxiemeJourReceptionListe = [];
+
 
                     // msg d'erreur générique
                     $genericMsg = "Veuillez corriger les champs indiqués et effectuer à nouveau l’import";
@@ -185,7 +196,6 @@ class Listes{
                                         $retour = array(
                                             "success" => false,
                                             "msg" => "Erreur ligne :".$nbrLigne."!"
-//                                                ." Le type d'entité donné: $typeEntite ne correspond pas au type attendu (EQUIPE, PERSONNE)  "
                                                 ." Le type d'entité donné: $typeEntite ne correspond pas au type attendu"
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
@@ -372,6 +382,9 @@ class Listes{
                                     // test si le fichier est adapté pour le match plateau
                                     if(count($donnéesLigne) == 18){
 
+                                        # ajouter les noms dans la liste
+                                        array_push($tousNomsEquipes, $donnéesLigne[1]);
+
                                         $premierJourReception = $donnéesLigne[12];
                                         $premierJourEquipe1 = $donnéesLigne[13];
                                         $premierJourEquipe2 = $donnéesLigne[14];
@@ -379,6 +392,15 @@ class Listes{
                                         $deuxiemeJourReception = $donnéesLigne[15];
                                         $deuxiemeJourEquipe1 = $donnéesLigne[16];
                                         $deuxiemeJourEquipe2 = $donnéesLigne[17];
+
+                                        # ajouter les equipes adverses les listes
+                                        array_push($premierJourEquipesAdverses1, $premierJourEquipe1);
+                                        array_push($premierJourEquipesAdverses2, $premierJourEquipe2);
+                                        array_push($deuxiemeJourEquipesAdverses1, $deuxiemeJourEquipe1);
+                                        array_push($deuxiemeJourEquipesAdverses2, $deuxiemeJourEquipe2);
+                                        array_push($premierJourReceptionListe, $premierJourReception);
+                                        array_push($deuxiemeJourReceptionListe, $deuxiemeJourReception);
+
 
                                         // controle les champs des jours de reception
                                         if( ($premierJourReception == ""  ) or ($deuxiemeJourReception == "") ){
@@ -414,10 +436,6 @@ class Listes{
                                             array_push($lignesErronees, $retour["msg"]);
                                             continue;
                                         }
-
-
-                                        // controler equipe 1 et equipe 2, elles doivent figurer dans les lignes importées
-
 
                                     }
 
@@ -704,6 +722,43 @@ class Listes{
 
                     }
 
+                    error_log("service: listes, function: controlerEntites, status: ".print_r($tousNomsEquipes, True), 3, $this->error_log_path);
+
+
+                    // controler equipe 1 et equipe 2, elles doivent figurer dans les lignes importées
+                    for($k = 0; $k < count($toutesLignes); $k ++){
+                        $nbrLigne = $k + 1;
+
+                        // premier jour
+                        $premierJourEquipe1 = $premierJourEquipesAdverses1[$k];
+                        $premierJourEquipe2 = $premierJourEquipesAdverses2[$k];
+                        $premierJourReception = $premierJourReceptionListe[$k];
+
+                        // deuxième jour
+                        $deuxiemeJourEquipe1 = $deuxiemeJourEquipesAdverses1[$k];
+                        $deuxiemeJourEquipe2 = $deuxiemeJourEquipesAdverses2[$k];
+                        $deuxiemeJourReception = $deuxiemeJourReceptionListe[$k];
+
+                        // premier jour equipe adverse 1
+                        if( $premierJourReception > 0 && !in_array($premierJourEquipe1, $tousNomsEquipes) ){
+
+                            error_log("service: listes, function: controlerEntites, status: ".print_r($premierJourEquipe1."\n", True), 3, $this->error_log_path);
+
+
+                            $retour = array(
+                                "success" => false,
+                                "msg" => "Erreur ligne :".$nbrLigne."!"
+                                    ." La valeur pour le champs 'EQUIPE ADVERSE 1 n'est pas reconnue'.!"
+                                    ." Veuillez supprimer cette ligne et effectuer à nouveau l’import"
+                            );
+                            array_push($lignesErronees, $retour["msg"]);
+                            continue;
+
+                        }
+
+                    }
+
+                    // controler s'il y a des lignes erronées
                     if(count($lignesErronees) > 0){
                         $retour = array(
                             "success" => false,
