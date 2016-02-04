@@ -385,16 +385,35 @@ class Listes{
                                             $retour = array(
                                                 "success" => false,
                                                 "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                    ."Le champ 'PREMIER JOUR DE RECEPTION' (colonne 13) et Le champ 'DEUXIEME JOUR DE RECEPTION' (colonne 16) doivent être rempli!"
+                                                    ."Le champ 'PREMIER JOUR DE RECEPTION' (colonne 13) et Le champ 'DEUXIEME JOUR DE RECEPTION' (colonne 16) doivent être rempli and avoir la valeur à partir de 0!"
                                                     ."Veuillez corriger et importer de nouveau votre fichier"
                                             );
                                             array_push($lignesErronees, $retour["msg"]);
                                             continue;
-
                                         }
 
                                         // controler equipe 1 et equipe 2, elles doivent être renseignées
+                                        if( ($premierJourReception > 0 ) && ( $premierJourEquipe1 == "" || $premierJourEquipe2 == "" )  ){
+                                            $retour = array(
+                                                "success" => false,
+                                                "msg" => "Erreur ligne :".$nbrLigne."!"
+                                                    ."Le champ 'EQUIPE ADVERSE 1' (colonne 14) et Le champ 'EQUIPE ADVERSE 2' (colonne 15) doivent être rempli!"
+                                                    ."Veuillez corriger et importer de nouveau votre fichier"
+                                            );
+                                            array_push($lignesErronees, $retour["msg"]);
+                                            continue;
+                                        }
 
+                                        if( ($deuxiemeJourReception > 0 ) && ( $deuxiemeJourEquipe1 == "" || $deuxiemeJourEquipe2 == "" )  ){
+                                            $retour = array(
+                                                "success" => false,
+                                                "msg" => "Erreur ligne :".$nbrLigne."!"
+                                                    ."Le champ 'EQUIPE ADVERSE 1' (colonne 17) et Le champ 'EQUIPE ADVERSE 2' (colonne 18) doivent être rempli!"
+                                                    ."Veuillez corriger et importer de nouveau votre fichier"
+                                            );
+                                            array_push($lignesErronees, $retour["msg"]);
+                                            continue;
+                                        }
 
 
                                         // controler equipe 1 et equipe 2, elles doivent figurer dans les lignes importées
