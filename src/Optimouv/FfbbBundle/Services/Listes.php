@@ -96,9 +96,12 @@ class Listes{
                 // obtenir les données d'en-têtes
                 $donneesEntete = $file->fgetcsv();
 
+
                 // Controler les colonnes des en-têtes avec les formats fixés
                 // Fichier equipes, personnes, lieux
                 $resultatBooleanControlEntete = $this->controlerEntete($donneesEntete);
+
+//                error_log("service: listes, function: controlerEntites, status: ".print_r($resultatBooleanControlEntete, True), 3, $this->error_log_path);
 
                 if(!$resultatBooleanControlEntete["success"]){
                     $retour = array(
@@ -363,6 +366,39 @@ class Listes{
                                             array_push($lignesErronees, $retour["msg"]);
                                             continue;
                                         }
+
+                                    }
+
+                                    // test si le fichier est adapté pour le match plateau
+                                    if(count($donnéesLigne) == 18){
+
+                                        $premierJourReception = $donnéesLigne[12];
+                                        $premierJourEquipe1 = $donnéesLigne[13];
+                                        $premierJourEquipe2 = $donnéesLigne[14];
+
+                                        $deuxiemeJourReception = $donnéesLigne[15];
+                                        $deuxiemeJourEquipe1 = $donnéesLigne[16];
+                                        $deuxiemeJourEquipe2 = $donnéesLigne[17];
+
+                                        // controle les champs des jours de reception
+                                        if( ($premierJourReception == ""  ) or ($deuxiemeJourReception == "") ){
+                                            $retour = array(
+                                                "success" => false,
+                                                "msg" => "Erreur ligne :".$nbrLigne."!"
+                                                    ."Le champ 'PREMIER JOUR DE RECEPTION' (colonne 13) et Le champ 'DEUXIEME JOUR DE RECEPTION' (colonne 16) doivent être rempli!"
+                                                    ."Veuillez corriger et importer de nouveau votre fichier"
+                                            );
+                                            array_push($lignesErronees, $retour["msg"]);
+                                            continue;
+
+                                        }
+
+                                        // controler equipe 1 et equipe 2, elles doivent être renseignées
+
+
+
+                                        // controler equipe 1 et equipe 2, elles doivent figurer dans les lignes importées
+
 
                                     }
 
@@ -1216,8 +1252,10 @@ class Listes{
                 return $retour;
             }
 
+            error_log("service: listes, function: controlerEntites, count entete: ".print_r(count($entete), True), 3, $this->error_log_path);
+
             // pour la liste d'équipes
-            if(count($entete) == 11 || count($entete) == 12){
+            if(count($entete) == 11 || count($entete) == 12 || count($entete) == 18){
                 if($entete[2] != "CODE POSTAL" ){
                     $retour["msg"] = "Veuillez vérifier que le nom de la colonne 3 de l'en-tête correspond au template donné (CODE POSTAL).!"
                         .$genericMsg;
@@ -1263,6 +1301,48 @@ class Listes{
                         .$genericMsg;
                     return $retour;
                 }
+
+                # controle supplementaire pour le fichier plateau
+                if(count($entete) == 18){
+                    if($entete[11] != "POULE" ){
+                        $retour["msg"] = "Veuillez vérifier que le nom de la colonne 12 de l'en-tête correspond au template donné (POULE).!"
+                            .$genericMsg;
+                        return $retour;
+                    }
+                    if($entete[12] != "PREMIER JOUR DE RECEPTION" ){
+                        $retour["msg"] = "Veuillez vérifier que le nom de la colonne 13 de l'en-tête correspond au template donné (PREMIER JOUR DE RECEPTION).!"
+                            .$genericMsg;
+                        return $retour;
+                    }
+                    if($entete[13] != "EQUIPE ADVERSE 1" ){
+                        $retour["msg"] = "Veuillez vérifier que le nom de la colonne 14 de l'en-tête correspond au template donné (EQUIPE ADVERSE 1).!"
+                            .$genericMsg;
+                        return $retour;
+                    }
+                    if($entete[14] != "EQUIPE ADVERSE 2" ){
+                        $retour["msg"] = "Veuillez vérifier que le nom de la colonne 15 de l'en-tête correspond au template donné (EQUIPE ADVERSE 2).!"
+                            .$genericMsg;
+                        return $retour;
+                    }
+                    if($entete[15] != "DEUXIEME JOUR DE RECEPTION" ){
+                        $retour["msg"] = "Veuillez vérifier que le nom de la colonne 16 de l'en-tête correspond au template donné (DEUXIEME JOUR DE RECEPTION).!"
+                            .$genericMsg;
+                        return $retour;
+                    }
+                    if($entete[16] != "EQUIPE ADVERSE 1" ){
+                        $retour["msg"] = "Veuillez vérifier que le nom de la colonne 17 de l'en-tête correspond au template donné (EQUIPE ADVERSE 1).!"
+                            .$genericMsg;
+                        return $retour;
+                    }
+                    if($entete[17] != "EQUIPE ADVERSE 2" ){
+                        $retour["msg"] = "Veuillez vérifier que le nom de la colonne 18 de l'en-tête correspond au template donné (EQUIPE ADVERSE 2).!"
+                            .$genericMsg;
+                        return $retour;
+                    }
+                }
+
+
+
                 $retour["success"] = true;
 
             }
