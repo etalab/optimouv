@@ -1827,6 +1827,64 @@ def send_email_to_user_failure(userId):
 	except Exception as e:
 		show_exception_traceback()
 
+
+"""
+Function control provided params by user
+"""
+def control_params_match_plateau(userId, teamNbr, poolNbr):
+	try:
+		# team number has to be the multiplication of 9 (9, 18, 27)
+		if teamNbr % 9 != 0:		
+			TEXT = u"Bonjour,\n\n" 
+			TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
+			TEXT += u"Veuillez assurer que le nombre de ligne dans votre fichier correspond au match plateau. " 
+
+			send_email_to_user_failure_plateau(userId, TEXT)
+
+	except Exception as e:
+		show_exception_traceback()
+
+"""
+Function to send email to user when the provided params are unexpected (for match plateau)
+"""
+def send_email_to_user_failure_plateau(userId, TEXT):
+	try:
+		# get user's email from user id
+		sql = "select email from fos_user where id=%s"%userId
+		
+		TO = db.fetchone(sql)
+# 		logging.debug("TO: %s" %TO)
+
+		SUBJECT = u'mise à disposition de vos résultats de calculs'
+		logging.debug("TEXT: \n%s" %TEXT)
+		
+		# Gmail Sign In
+		gmail_sender = config.EMAIL.Account
+		gmail_passwd = config.EMAIL.Password
+		
+		server = smtplib.SMTP('smtp.gmail.com', 587)
+		server.ehlo()
+		server.starttls()
+		server.login(gmail_sender, gmail_passwd)
+		
+		
+		msg = MIMEText(TEXT)
+		msg['Subject'] = SUBJECT
+		msg['From'] = gmail_sender
+		msg['To'] = TO
+		
+		
+		server.sendmail(gmail_sender, [TO], msg.as_string())
+		server.quit()	
+
+
+	except Exception as e:
+		show_exception_traceback()
+
+
+
+
+
 """
 Function to save result into DB
 """
