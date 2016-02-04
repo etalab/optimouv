@@ -1942,6 +1942,99 @@ def save_result_to_db(launchType, reportId, groupId, results):
 	except Exception as e:
 		show_exception_traceback()
 
+"""
+Function to get team names from their ids
+"""
+def get_team_names_from_ids(teamIds):
+	try:
+		teamNames = []
+		
+		for teamId in teamIds:
+			sql = "select nom from entite where id=%s"%(teamId)
+			teamName = db.fetchone(sql)
+			teamNames.append(teamName)
+	
+		return teamNames
+	
+	except Exception as e:
+		show_exception_traceback()
+
+
+"""
+Function to get reference scenario for match plateau
+"""
+def get_ref_scenario_plateau(teams):
+	try:
+		refScenario = {}
+		
+		teamNames = get_team_names_from_ids(teams)
+		logging.debug("teamNames: %s "%(teamNames))
+		
+		
+		for team in teams:
+			sql = "select id, nom, poule, ref_plateau from entite where id=%s"%team
+			teamId, teamName, poolId, refPlateau = db.fetchone_multi(sql)
+			
+			refPlateau = json.loads(refPlateau)
+			firstDay = int(refPlateau["premierJourReception"])
+			firstDayTeam1 = refPlateau["premierJourEquipe1"]
+			firstDayTeam2 = refPlateau["premierJourEquipe2"]
+			secondDay = int(refPlateau["deuxiemeJourReception"])
+			secondDayTeam1 = refPlateau["deuxiemeJourEquipe1"]
+			secondDayTeam2 = refPlateau["deuxiemeJourEquipe2"]
+			
+			logging.debug("teamId: %s poolId: %s"%(teamId, poolId))
+			logging.debug("refPlateau: \n%s"%refPlateau)
+
+
+			
+			# continue to next value if value of firstDay is zero
+			if firstDay == 0 or firstDay == "0":
+				continue
+			
+			contentTmp = {"hoteId": teamId, "hoteNom": teamName, "equipeNom1" : firstDayTeam1, "equipeNom2": firstDayTeam2, 
+							"equipeId1": teams[teamNames.index(firstDayTeam1)], "equipeId2": teams[teamNames.index(firstDayTeam2)]	}
+
+			# pool not yet in reference dict
+			if poolId not in refScenario:
+				refScenario[poolId] = {}
+				refScenario[poolId][firstDay] = [contentTmp]
+
+				if secondDay == 0 or secondDay == "0":
+					continue
+				
+				contentTmp = {"hoteId": teamId, "hoteNom": teamName, "equipeNom1" : secondDayTeam1, "equipeNom2": secondDayTeam2, 
+								"equipeId1": teams[teamNames.index(secondDayTeam1)], "equipeId2": teams[teamNames.index(secondDayTeam2)]	}
+				refScenario[poolId][secondDay] = [contentTmp]
+			# pool already in reference dict
+			else:
+				# first day reference
+				if firstDay in refScenario[poolId]:
+					refScenario[poolId][firstDay].append(contentTmp)
+				else:
+					refScenario[poolId][firstDay] = [contentTmp]
+					
+				if secondDay == 0 or secondDay == "0":
+					continue
+
+				# second day reference
+				if secondDay in refScenario[poolId]:
+					refScenario[poolId][secondDay].append(contentTmp)
+				else:
+					refScenario[poolId][secondDay] = [contentTmp]
+					
+					
+		
+		logging.debug("refScenario: \n%s"%(json.dumps(refScenario)))
+		logging.debug("\n")
+		sys.exit()
+		
+		return refScenario
+	
+	except Exception as e:
+		show_exception_traceback()
+		
+
 
 """
 Function to escape single quote
