@@ -742,19 +742,41 @@ class Listes{
                         // premier jour equipe adverse 1
                         if( $premierJourReception > 0 && !in_array($premierJourEquipe1, $tousNomsEquipes) ){
 
-                            error_log("service: listes, function: controlerEntites, status: ".print_r($premierJourEquipe1."\n", True), 3, $this->error_log_path);
-
 
                             $retour = array(
                                 "success" => false,
                                 "msg" => "Erreur ligne :".$nbrLigne."!"
-                                    ." La valeur pour le champs 'EQUIPE ADVERSE 1 n'est pas reconnue'.!"
+                                    ." La valeur pour le champs 'EQUIPE ADVERSE 1 (colonne 14) n'est pas reconnue'.!"
                                     ." Veuillez supprimer cette ligne et effectuer à nouveau l’import"
                             );
                             array_push($lignesErronees, $retour["msg"]);
                             continue;
-
                         }
+                        if( $premierJourReception > 0 && !in_array($premierJourEquipe2, $tousNomsEquipes) ) {
+
+                            $retour = array(
+                                "success" => false,
+                                "msg" => "Erreur ligne :" . $nbrLigne . "!"
+                                    . " La valeur pour le champs 'EQUIPE ADVERSE 2 (colonne 15) n'est pas reconnue'.!"
+                                    . " Veuillez supprimer cette ligne et effectuer à nouveau l’import"
+                            );
+                            array_push($lignesErronees, $retour["msg"]);
+                            continue;
+                        }
+                        if( $deuxiemeJourReception> 0 && !in_array($deuxiemeJourEquipe1, $tousNomsEquipes) ) {
+
+//                            error_log("service: listes, function: controlerEntites, status: ".print_r($deuxiemeJourEquipe1."\n", True), 3, $this->error_log_path);
+
+                            $retour = array(
+                                "success" => false,
+                                "msg" => "Erreur ligne :" . $nbrLigne . "!"
+                                    . " La valeur pour le champs 'EQUIPE ADVERSE 1 (colonne 17) n'est pas reconnue'.!"
+                                    . " Veuillez supprimer cette ligne et effectuer à nouveau l’import"
+                            );
+                            array_push($lignesErronees, $retour["msg"]);
+                            continue;
+                        }
+
 
                     }
 
