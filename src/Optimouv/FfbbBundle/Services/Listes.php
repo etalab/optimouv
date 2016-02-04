@@ -776,6 +776,19 @@ class Listes{
                             array_push($lignesErronees, $retour["msg"]);
                             continue;
                         }
+                        if( $deuxiemeJourReception> 0 && !in_array($deuxiemeJourEquipe2, $tousNomsEquipes) ) {
+
+//                            error_log("service: listes, function: controlerEntites, status: ".print_r($deuxiemeJourEquipe1."\n", True), 3, $this->error_log_path);
+
+                            $retour = array(
+                                "success" => false,
+                                "msg" => "Erreur ligne :" . $nbrLigne . "!"
+                                    . " La valeur pour le champs 'EQUIPE ADVERSE 2 (colonne 18) n'est pas reconnue'.!"
+                                    . " Veuillez supprimer cette ligne et effectuer à nouveau l’import"
+                            );
+                            array_push($lignesErronees, $retour["msg"]);
+                            continue;
+                        }
 
 
                     }
