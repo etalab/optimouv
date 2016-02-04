@@ -1833,13 +1833,22 @@ Function control provided params by user
 """
 def control_params_match_plateau(userId, teamNbr, poolNbr):
 	try:
+		TEXT = u"Bonjour,\n\n" 
+		TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
+
 		# team number has to be the multiplication of 9 (9, 18, 27)
-		if teamNbr % 9 != 0:		
-			TEXT = u"Bonjour,\n\n" 
-			TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
+		if teamNbr % 9 != 0:
 			TEXT += u"Veuillez assurer que le nombre de ligne dans votre fichier correspond au match plateau. " 
 
 			send_email_to_user_failure_plateau(userId, TEXT)
+		
+		# pool number has to be 9
+		poolSize = int(teamNbr/poolNbr)
+		if poolSize != 9:
+			TEXT += u"Veuillez assurer que le nombre de poule selectionné correspond au nombre de ligne dans votre fichier. " 
+
+			send_email_to_user_failure_plateau(userId, TEXT)
+
 
 	except Exception as e:
 		show_exception_traceback()
