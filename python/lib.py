@@ -1965,7 +1965,7 @@ Function to get reference scenario for match plateau
 """
 def get_ref_scenario_plateau(teams):
 	try:
-		refScenario = {}
+		refScenario = {"status" : False, "data": {} }
 		
 		teamNames = get_team_names_from_ids(teams)
 		logging.debug("teamNames: %s "%(teamNames))
@@ -1983,51 +1983,49 @@ def get_ref_scenario_plateau(teams):
 			secondDayTeam1 = refPlateau["deuxiemeJourEquipe1"]
 			secondDayTeam2 = refPlateau["deuxiemeJourEquipe2"]
 			
-			logging.debug("teamId: %s poolId: %s"%(teamId, poolId))
-			logging.debug("refPlateau: \n%s"%refPlateau)
+# 			logging.debug("teamId: %s poolId: %s"%(teamId, poolId))
+# 			logging.debug("refPlateau: \n%s"%refPlateau)
 
-
-			
 			# continue to next value if value of firstDay is zero
 			if firstDay == 0 or firstDay == "0":
 				continue
 			
 			contentTmp = {"hoteId": teamId, "hoteNom": teamName, "equipeNom1" : firstDayTeam1, "equipeNom2": firstDayTeam2, 
 							"equipeId1": teams[teamNames.index(firstDayTeam1)], "equipeId2": teams[teamNames.index(firstDayTeam2)]	}
+			refScenario["status"] = True
 
 			# pool not yet in reference dict
-			if poolId not in refScenario:
-				refScenario[poolId] = {}
-				refScenario[poolId][firstDay] = [contentTmp]
+			if poolId not in refScenario["data"]:
+				refScenario["data"][poolId] = {}
+				refScenario["data"][poolId][firstDay] = [contentTmp]
 
 				if secondDay == 0 or secondDay == "0":
 					continue
 				
 				contentTmp = {"hoteId": teamId, "hoteNom": teamName, "equipeNom1" : secondDayTeam1, "equipeNom2": secondDayTeam2, 
 								"equipeId1": teams[teamNames.index(secondDayTeam1)], "equipeId2": teams[teamNames.index(secondDayTeam2)]	}
-				refScenario[poolId][secondDay] = [contentTmp]
+				refScenario["data"][poolId][secondDay] = [contentTmp]
 			# pool already in reference dict
 			else:
 				# first day reference
-				if firstDay in refScenario[poolId]:
-					refScenario[poolId][firstDay].append(contentTmp)
+				if firstDay in refScenario["data"][poolId]:
+					refScenario["data"][poolId][firstDay].append(contentTmp)
 				else:
-					refScenario[poolId][firstDay] = [contentTmp]
+					refScenario["data"][poolId][firstDay] = [contentTmp]
 					
 				if secondDay == 0 or secondDay == "0":
 					continue
 
 				# second day reference
-				if secondDay in refScenario[poolId]:
-					refScenario[poolId][secondDay].append(contentTmp)
+				if secondDay in refScenario["data"][poolId]:
+					refScenario["data"][poolId][secondDay].append(contentTmp)
 				else:
-					refScenario[poolId][secondDay] = [contentTmp]
+					refScenario["data"][poolId][secondDay] = [contentTmp]
 					
 					
 		
-		logging.debug("refScenario: \n%s"%(json.dumps(refScenario)))
-		logging.debug("\n")
-		sys.exit()
+# 		logging.debug("refScenario: \n%s"%(json.dumps(refScenario)))
+# 		logging.debug("\n")
 		
 		return refScenario
 	
