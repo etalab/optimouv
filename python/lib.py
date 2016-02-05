@@ -1965,7 +1965,13 @@ Function to get list of encounters from host team and other teams (for match pla
 """
 def get_list_encounters_plateau(hostTeamId, hostTeamName, otherTeamsIds, otherTeamNames):
 	try:
-		results = {"groupDistance": 0, "travelNames":  [], "travelIds": [], "groupTravelTime": 0}
+		results = {	"groupDistance": 0,
+					"groupDistanceAllParticipants": 0,
+					"groupTravelTime": 0,
+					"travelIds": [], 
+					"travelNames":  [], 
+					"participantsNbr": 0
+				}
 # 		logging.debug("results: %s "%(results))
 		
 		# encounter ids
@@ -1989,7 +1995,20 @@ def get_list_encounters_plateau(hostTeamId, hostTeamName, otherTeamsIds, otherTe
 			
 			results["groupDistance"] += distance
 			results["groupTravelTime"] += travelTime
+
+			sql = "select participants from entite where id=%s"%cityFrom
+			participantsNbr = db.fetchone(sql)
+			
+			results["participantsNbr"] += participantsNbr
 # 			logging.debug("distance: %s "%(distance))
+
+			results["groupDistanceAllParticipants"] += (participantsNbr * distance)
+			
+
+
+		# divide participants number according to number of travel Id
+		results["participantsNbr"] = int( results["participantsNbr"]/ len(results["travelIds"]))
+		
 
 		return results
 		
@@ -2051,9 +2070,12 @@ def get_ref_scenario_plateau(teamsIds):
 							"deuxiemeEquipeCodePostal": firstDaySecondTeamPostalCode, 
 							
 							"distanceGroupe": listEncountersGroup["groupDistance"], 
+							"distanceGroupeTousParticipants": listEncountersGroup["groupDistanceAllParticipants"], 
 							"dureeGroupe": listEncountersGroup["groupTravelTime"],
 							"deplacementsIds": listEncountersGroup["travelIds"], 
-							"deplacementsNoms": listEncountersGroup["travelNames"]}
+							"deplacementsNoms": listEncountersGroup["travelNames"],
+							"nbrParticipants": listEncountersGroup["participantsNbr"]
+							}
 			refScenario["status"] = "yes"
 
 			secondDay = int(refPlateau["deuxiemeJourReception"])
@@ -2101,9 +2123,12 @@ def get_ref_scenario_plateau(teamsIds):
 								"deuxiemeEquipeCodePostal": secondDaySecondTeamPostalCode, 
 
 								"distanceGroupe": listEncountersGroup["groupDistance"], 
+								"distanceGroupeTousParticipants": listEncountersGroup["groupDistanceAllParticipants"], 
 								"dureeGroupe": listEncountersGroup["groupTravelTime"],
 								"deplacementsIds": listEncountersGroup["travelIds"], 
-								"deplacementsNoms": listEncountersGroup["travelNames"]}
+								"deplacementsNoms": listEncountersGroup["travelNames"],
+								"nbrParticipants": listEncountersGroup["participantsNbr"]
+								}
 				refScenario["data"][poolId][secondDay] = [contentTmp]
 			# pool already in reference dict
 			else:
