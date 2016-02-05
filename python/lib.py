@@ -2130,12 +2130,19 @@ def get_ref_scenario_plateau(teamsIds):
 			refScenario["status"] = "yes"
 
 			secondDay = int(refPlateau["deuxiemeJourReception"])
+# 			logging.debug("secondDay: %s "%(secondDay))
 			# continue to next value if value of firstDay is zero
 			if secondDay != 0 and secondDay != "0":
 				secondDayFirstTeamName = refPlateau["deuxiemeJourEquipe1"]
 				secondDaySecondTeamName = refPlateau["deuxiemeJourEquipe2"]
+
 				secondDayFirstTeamId = teamsIds[teamNames.index(secondDayFirstTeamName)]
+				sql = "select ville, code_postal from entite where id=%s"%secondDayFirstTeamId
+				secondDayFirstTeamCity, secondDayFirstTeamPostalCode = db.fetchone_multi(sql)
+
 				secondDaySecondTeamId = teamsIds[teamNames.index(secondDaySecondTeamName)]
+				sql = "select ville, code_postal from entite where id=%s"%secondDaySecondTeamId
+				secondDaySecondTeamCity, secondDaySecondTeamPostalCode = db.fetchone_multi(sql)
 			
 			#############################################################################################################
 			# Patch for front, convert from pool letter given by users to number # FIXME !!!!
