@@ -1971,6 +1971,7 @@ def get_ref_scenario_plateau(teams):
 		teamNames = get_team_names_from_ids(teams)
 		logging.debug("teamNames: %s "%(teamNames))
 		
+		listChars = []
 		
 		for team in teams:
 			sql = "select id, nom, poule, ref_plateau from entite where id=%s"%team
@@ -1994,6 +1995,15 @@ def get_ref_scenario_plateau(teams):
 			contentTmp = {"hoteId": teamId, "hoteNom": teamName, "equipeNom1" : firstDayTeam1, "equipeNom2": firstDayTeam2, 
 							"equipeId1": teams[teamNames.index(firstDayTeam1)], "equipeId2": teams[teamNames.index(firstDayTeam2)]	}
 			refScenario["status"] = "yes"
+
+
+			#############################################################################################################
+			# Patch for front, convert from pool letter given by users to number # FIXME !!!!
+			if poolId not in listChars:
+				listChars.append(poolId)
+			poolId = (listChars.index(poolId)) + 1
+# 				logging.debug(" poolId: %s" %poolId)
+			#############################################################################################################
 
 			# pool not yet in reference dict
 			if poolId not in refScenario["data"]:
