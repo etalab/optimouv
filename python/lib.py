@@ -1886,6 +1886,7 @@ def send_email_to_user_failure_plateau(userId, TEXT):
 		server.sendmail(gmail_sender, [TO], msg.as_string())
 		server.quit()	
 
+		sys.exit()
 
 	except Exception as e:
 		show_exception_traceback()
