@@ -2082,6 +2082,10 @@ def get_ref_scenario_plateau(teamsIds):
 		for team in teamsIds:
 			sql = "select id, nom, ville, code_postal,  poule, ref_plateau from entite where id=%s"%team
 			hostTeamId, hostTeamName, hostTeamCity, hostTeamPostalCode, poolId, refPlateau = db.fetchone_multi(sql)
+
+			# escape single quote			
+			hostTeamName = hostTeamName.replace("'", u"''")
+			hostTeamCity = hostTeamCity.replace("'", u"''")
 			
 			refPlateau = json.loads(refPlateau)
 # 			logging.debug("refPlateau: %s "%(refPlateau))
@@ -2101,6 +2105,13 @@ def get_ref_scenario_plateau(teamsIds):
 			firstDaySecondTeamId = teamsIds[teamNames.index(firstDaySecondTeamName)]
 			sql = "select ville, code_postal from entite where id=%s"%firstDaySecondTeamId
 			firstDaySecondTeamCity, firstDaySecondTeamPostalCode = db.fetchone_multi(sql)
+
+			# escape single quote			
+			firstDayFirstTeamName = firstDayFirstTeamName.replace("'", u"''")
+			firstDaySecondTeamName = firstDaySecondTeamName.replace("'", u"''")
+			firstDayFirstTeamCity = firstDayFirstTeamCity.replace("'", u"''")
+			firstDaySecondTeamCity = firstDaySecondTeamCity.replace("'", u"''")
+
 			
 			listEncountersGroup = get_list_encounters_plateau(hostTeamId, hostTeamName, [firstDayFirstTeamId, firstDaySecondTeamId] , [firstDayFirstTeamName, firstDaySecondTeamName] )
 # 			logging.debug("listEncountersGroup: %s "%(listEncountersGroup))
@@ -2144,6 +2155,12 @@ def get_ref_scenario_plateau(teamsIds):
 				sql = "select ville, code_postal from entite where id=%s"%secondDaySecondTeamId
 				secondDaySecondTeamCity, secondDaySecondTeamPostalCode = db.fetchone_multi(sql)
 			
+				# escape single quote			
+				secondDayFirstTeamName = secondDayFirstTeamName.replace("'", u"''")
+				secondDaySecondTeamName = secondDaySecondTeamName.replace("'", u"''")
+				secondDayFirstTeamCity = secondDayFirstTeamCity.replace("'", u"''")
+				secondDaySecondTeamCity = secondDaySecondTeamCity.replace("'", u"''")
+
 			#############################################################################################################
 			# Patch for front, convert from pool letter given by users to number # FIXME !!!!
 			if poolId not in listChars:
