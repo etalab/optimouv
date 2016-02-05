@@ -1961,6 +1961,23 @@ def get_team_names_from_ids(teamIds):
 		show_exception_traceback()
 
 """
+Function to calculate distance from encounters details for match plateau
+"""
+def calculate_distance_from_encounters_details_plateau(detailsPlateau):
+	try:
+		distance = 0
+
+		for pool, contentPool in detailsPlateau.items():
+			for day, contentDay in contentPool.items():
+				for contentGroup in contentDay:
+					distance += contentGroup["distanceGroupeTousParticipants"]
+
+		return distance
+	
+	except Exception as e:
+		show_exception_traceback()
+
+"""
 Function to get list of encounters from host team and other teams (for match plateau)
 """
 def get_list_encounters_plateau(hostTeamId, hostTeamName, otherTeamsIds, otherTeamNames):
@@ -2003,8 +2020,6 @@ def get_list_encounters_plateau(hostTeamId, hostTeamName, otherTeamsIds, otherTe
 # 			logging.debug("distance: %s "%(distance))
 
 			results["groupDistanceAllParticipants"] += (participantsNbr * distance)
-			
-
 
 		# divide participants number according to number of travel Id
 		results["participantsNbr"] = int( results["participantsNbr"]/ len(results["travelIds"]))
@@ -2086,9 +2101,6 @@ def get_ref_scenario_plateau(teamsIds):
 				secondDayFirstTeamId = teamsIds[teamNames.index(secondDayFirstTeamName)]
 				secondDaySecondTeamId = teamsIds[teamNames.index(secondDaySecondTeamName)]
 			
-			
-
-
 			#############################################################################################################
 			# Patch for front, convert from pool letter given by users to number # FIXME !!!!
 			if poolId not in listChars:
