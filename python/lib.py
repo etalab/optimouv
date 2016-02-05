@@ -1961,14 +1961,35 @@ def get_team_names_from_ids(teamIds):
 		show_exception_traceback()
 
 """
-Function to get list of encounters from host team, team 1 and team 2 (for match plateau)
+Function to get list of encounters from host team and other teams (for match plateau)
 """
-def get_list_encounters_plateau(hostTeamId, hostTeamName, firstTeamId, firstTeamName, secondTeamId, secondTeamName):
+def get_list_encounters_plateau(hostTeamId, hostTeamName, otherTeamsIds, otherTeamNames):
 	try:
-		results = {"groupDistance": 0, "encountersNames:":  [], "encountersIds": []}
+		results = {"groupDistance": 0, "travelNames":  [], "travelIds": []}
+# 		logging.debug("results: %s "%(results))
 		
+		# encounter ids
+		for otherTeamId in otherTeamsIds:
+			travelId = [hostTeamId, otherTeamId]
+			results["travelIds"].append(travelId)
+			
+		# encounter names
+		for otherTeamName in otherTeamNames:
+			travelName = [hostTeamName, otherTeamName]
+			results["travelNames"].append(travelName)
 		
-		
+		# distance
+		for travelId in results["travelIds"]:
+			cityTo = travelId[0]
+			cityFrom = travelId[1]
+			
+			sql = "select distance from trajet where depart=%s and destination=%s"%(cityFrom, cityTo)
+# 			logging.debug("sql: %s "%(sql))
+			distance = db.fetchone(sql)
+			
+			results["groupDistance"] += distance
+# 			logging.debug("distance: %s "%(distance))
+
 		return results
 		
 	except Exception as e:
@@ -2004,11 +2025,13 @@ def get_ref_scenario_plateau(teamsIds):
 			firstDayFirstTeamId = teamsIds[teamNames.index(firstDayFirstTeamName)]
 			firstDaySecondTeamId = teamsIds[teamNames.index(firstDaySecondTeamName)]
 			
-# 			listEncountersGroup = get_list_encounters_plateau(hostTeamId, hostTeamName, firsthostTeamId, firsthostTeamName, secondhostTeamId, secondhostTeamName)
+			listEncountersGroup = get_list_encounters_plateau(hostTeamId, hostTeamName, [firstDayFirstTeamId, firstDaySecondTeamId] , [firstDayFirstTeamName, firstDaySecondTeamName] )
+# 			logging.debug("listEncountersGroup: %s "%(listEncountersGroup))
 
 			contentTmp = {"hoteId": hostTeamId, "hoteNom": hostTeamName, "equipeNom1" : firstDayFirstTeamName, "equipeNom2": firstDaySecondTeamName, 
 							"equipeId1": firstDayFirstTeamId, "equipeId2": firstDaySecondTeamId , 
-							"distanceGroupe": 0, "rencontresIds": [], "rencontresNoms": []}
+							"distanceGroupe": listEncountersGroup["groupDistance"], "deplacementsIds": listEncountersGroup["travelIds"], 
+							"deplacementsNoms": listEncountersGroup["travelNames"]}
 			refScenario["status"] = "yes"
 
 			secondDay = int(refPlateau["deuxiemeJourReception"])
@@ -2038,9 +2061,10 @@ def get_ref_scenario_plateau(teamsIds):
 				if secondDay == 0 or secondDay == "0":
 					continue
 				
-				contentTmp = {"hoteId": hostTeamId, "hoteNom": hostTeamName, "equipeNom1" : secondDayFirstTeamName, "equipeNom2": secondDaySecondTeamName, 
-								"equipeId1": secondDayFirstTeamId, "equipeId2": secondDaySecondTeamId,
-							"distanceGroupe": 0, "rencontresIds": [], "rencontresNoms": []}
+				contentTmp = {"hoteId": hostTeamId, "hoteNom": hostTeamName, "equipeNom1" : firstDayFirstTeamName, "equipeNom2": firstDaySecondTeamName, 
+							"equipeId1": firstDayFirstTeamId, "equipeId2": firstDaySecondTeamId , 
+							"distanceGroupe": listEncountersGroup["groupDistance"], "deplacementsIds": listEncountersGroup["travelIds"], 
+							"deplacementsNoms": listEncountersGroup["travelNames"]}
 				refScenario["data"][poolId][secondDay] = [contentTmp]
 			# pool already in reference dict
 			else:
