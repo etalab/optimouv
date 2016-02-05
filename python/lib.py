@@ -505,7 +505,31 @@ Function to create pool details from encounters for match plateau
 def create_pool_details_from_encounters_plateau(encountersPlateau, poolDistribution):
 	try:
 		poolDetailsPlateau = {}
-		
+	
+		logging.debug("  poolDistribution: %s" %(poolDistribution))
+	
+	
+		for pool, contentPool in encountersPlateau.items():
+			poolDetailsPlateau[pool] = {	"distanceTotale": 0,
+											"dureeTotale": 0,
+											"nbrParticipantsTotal": 0,
+											"distanceTotaleTousParticipants": 0,
+											}
+			teamsIds = poolDistribution[pool]
+			
+			
+			for teamId in teamsIds: 
+				sql = "select participants from entite where id=%s"%teamId
+				nbrParticipants = int(db.fetchone(sql))
+				poolDetailsPlateau[pool]["nbrParticipantsTotal"] += nbrParticipants
+			
+			for day, contentDay in contentPool.items():
+				for contentGroup in contentDay:
+					poolDetailsPlateau[pool]["distanceTotale"] += contentGroup["distanceGroupe"]
+					poolDetailsPlateau[pool]["dureeTotale"] += contentGroup["dureeGroupe"]
+					poolDetailsPlateau[pool]["distanceTotaleTousParticipants"] += contentGroup["distanceGroupeTousParticipants"]
+				
+
 		return poolDetailsPlateau
 
 	except Exception as e:
