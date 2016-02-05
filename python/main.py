@@ -1021,6 +1021,7 @@ def optimize_pool_plateau_match(D_Mat, teamNbr, poolNbr, poolSize, teams, prohib
 			results["refExiste"] = 1
 
 			encountersRefPlateau = returnRefScenarioPlateau["data"]
+			results["scenarioRef"]["rencontreDetails"] = encountersRefPlateau
 			logging.debug(" encountersRefPlateau: \n%s" %json.dumps(encountersRefPlateau))
 
 			chosenDistanceRef = calculate_distance_from_encounters_details_plateau(encountersRefPlateau)
