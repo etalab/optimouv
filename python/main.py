@@ -1022,11 +1022,10 @@ def optimize_pool_plateau_match(D_Mat, teamNbr, poolNbr, poolSize, teams, prohib
 
 			encountersRefPlateau = returnRefScenarioPlateau["data"]
 			results["scenarioRef"]["rencontreDetails"] = encountersRefPlateau
-			logging.debug(" encountersRefPlateau: \n%s" %json.dumps(encountersRefPlateau))
+# 			logging.debug(" encountersRefPlateau: \n%s" %json.dumps(encountersRefPlateau))
 
 			chosenDistanceRef = calculate_distance_from_encounters_plateau(encountersRefPlateau)
 			logging.debug(" chosenDistanceRef: %s" %chosenDistanceRef)
-			
 # 	
 			poolDistributionRef = returnPoolDistributionRef["data"]
 # 			logging.debug(" poolDistributionRef: \n%s" %poolDistributionRef)
@@ -1055,13 +1054,15 @@ def optimize_pool_plateau_match(D_Mat, teamNbr, poolNbr, poolSize, teams, prohib
 # 			results["params"]["refExiste"] = 0
 			results["refExiste"] = 0
 
-
-
-
-
-
 		logging.debug("")
 		logging.debug(" ####################### RESULT OPTIMAL WITHOUT CONSTRAINT #############################################")
+
+
+
+
+
+
+
 		
 		
 		logging.debug("")
@@ -1074,11 +1075,7 @@ def optimize_pool_plateau_match(D_Mat, teamNbr, poolNbr, poolSize, teams, prohib
 		logging.debug("")
 		logging.debug(" ######################### RESULT EQUITABLE WITH CONSTRAINT ############################################")
 	
-
-
-
-
-# 		sys.exit()
+		sys.exit()
 
 		return results
 
@@ -1275,7 +1272,7 @@ def callback(ch, method, properties, body):
 			results = optimize_pool_plateau_match(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom)
 
 		### Post treatment
-		if varTeamNbrPerPool > 0 :
+		if varTeamNbrPerPool > 0 and ( launchType in  ["allerRetour", "allerSimple"] ):
 			logging.debug("############################################# POST TREATMENT #########################################")
 			# get result id from report id
 			sql = "select id from scenario where id_rapport=%s"%reportId
@@ -1288,7 +1285,6 @@ def callback(ch, method, properties, body):
 			
 			results = optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult)
 # 			logging.debug("results : %s" %results)
-			
 
 		if varTeamNbrPerPool == 0:
 			logging.debug("############################################# INSERT RESULT INTO DB #########################################")
