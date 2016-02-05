@@ -1960,41 +1960,66 @@ def get_team_names_from_ids(teamIds):
 	except Exception as e:
 		show_exception_traceback()
 
+"""
+Function to get list of encounters from host team, team 1 and team 2 (for match plateau)
+"""
+def get_list_encounters_plateau(hostTeamId, hostTeamName, firstTeamId, firstTeamName, secondTeamId, secondTeamName):
+	try:
+		results = {"groupDistance": 0, "encountersNames:":  [], "encountersIds": []}
+		
+		
+		
+		return results
+		
+	except Exception as e:
+		show_exception_traceback()
+
 
 """
 Function to get reference scenario for match plateau
 """
-def get_ref_scenario_plateau(teams):
+def get_ref_scenario_plateau(teamsIds):
 	try:
 		refScenario = {"status" : "no", "data": {} }
 		
-		teamNames = get_team_names_from_ids(teams)
+		teamNames = get_team_names_from_ids(teamsIds)
 		logging.debug("teamNames: %s "%(teamNames))
 		
 		listChars = []
 		
-		for team in teams:
+		for team in teamsIds:
 			sql = "select id, nom, poule, ref_plateau from entite where id=%s"%team
-			teamId, teamName, poolId, refPlateau = db.fetchone_multi(sql)
+			hostTeamId, hostTeamName, poolId, refPlateau = db.fetchone_multi(sql)
 			
 			refPlateau = json.loads(refPlateau)
-			firstDay = int(refPlateau["premierJourReception"])
-			firstDayTeam1 = refPlateau["premierJourEquipe1"]
-			firstDayTeam2 = refPlateau["premierJourEquipe2"]
-			secondDay = int(refPlateau["deuxiemeJourReception"])
-			secondDayTeam1 = refPlateau["deuxiemeJourEquipe1"]
-			secondDayTeam2 = refPlateau["deuxiemeJourEquipe2"]
-			
-# 			logging.debug("teamId: %s poolId: %s"%(teamId, poolId))
-# 			logging.debug("refPlateau: \n%s"%refPlateau)
+# 			logging.debug("refPlateau: %s "%(refPlateau))
 
+			firstDay = int(refPlateau["premierJourReception"])
 			# continue to next value if value of firstDay is zero
 			if firstDay == 0 or firstDay == "0":
 				continue
+
+			firstDayFirstTeamName = refPlateau["premierJourEquipe1"]
+			firstDaySecondTeamName = refPlateau["premierJourEquipe2"]
+			firstDayFirstTeamId = teamsIds[teamNames.index(firstDayFirstTeamName)]
+			firstDaySecondTeamId = teamsIds[teamNames.index(firstDaySecondTeamName)]
 			
-			contentTmp = {"hoteId": teamId, "hoteNom": teamName, "equipeNom1" : firstDayTeam1, "equipeNom2": firstDayTeam2, 
-							"equipeId1": teams[teamNames.index(firstDayTeam1)], "equipeId2": teams[teamNames.index(firstDayTeam2)]	}
+# 			listEncountersGroup = get_list_encounters_plateau(hostTeamId, hostTeamName, firsthostTeamId, firsthostTeamName, secondhostTeamId, secondhostTeamName)
+
+			contentTmp = {"hoteId": hostTeamId, "hoteNom": hostTeamName, "equipeNom1" : firstDayFirstTeamName, "equipeNom2": firstDaySecondTeamName, 
+							"equipeId1": firstDayFirstTeamId, "equipeId2": firstDaySecondTeamId , 
+							"distanceGroupe": 0, "rencontresIds": [], "rencontresNoms": []}
 			refScenario["status"] = "yes"
+
+			secondDay = int(refPlateau["deuxiemeJourReception"])
+			# continue to next value if value of firstDay is zero
+			if secondDay != 0 and secondDay != "0":
+				secondDayFirstTeamName = refPlateau["deuxiemeJourEquipe1"]
+				secondDaySecondTeamName = refPlateau["deuxiemeJourEquipe2"]
+				secondDayFirstTeamId = teamsIds[teamNames.index(secondDayFirstTeamName)]
+				secondDaySecondTeamId = teamsIds[teamNames.index(secondDaySecondTeamName)]
+			
+			
 
 
 			#############################################################################################################
@@ -2013,8 +2038,9 @@ def get_ref_scenario_plateau(teams):
 				if secondDay == 0 or secondDay == "0":
 					continue
 				
-				contentTmp = {"hoteId": teamId, "hoteNom": teamName, "equipeNom1" : secondDayTeam1, "equipeNom2": secondDayTeam2, 
-								"equipeId1": teams[teamNames.index(secondDayTeam1)], "equipeId2": teams[teamNames.index(secondDayTeam2)]	}
+				contentTmp = {"hoteId": hostTeamId, "hoteNom": hostTeamName, "equipeNom1" : secondDayFirstTeamName, "equipeNom2": secondDaySecondTeamName, 
+								"equipeId1": secondDayFirstTeamId, "equipeId2": secondDaySecondTeamId,
+							"distanceGroupe": 0, "rencontresIds": [], "rencontresNoms": []}
 				refScenario["data"][poolId][secondDay] = [contentTmp]
 			# pool already in reference dict
 			else:
