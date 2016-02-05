@@ -1024,15 +1024,10 @@ def optimize_pool_plateau_match(D_Mat, teamNbr, poolNbr, poolSize, teams, prohib
 			results["scenarioRef"]["rencontreDetails"] = encountersRefPlateau
 			logging.debug(" encountersRefPlateau: \n%s" %json.dumps(encountersRefPlateau))
 
-			chosenDistanceRef = calculate_distance_from_encounters_details_plateau(encountersRefPlateau)
+			chosenDistanceRef = calculate_distance_from_encounters_plateau(encountersRefPlateau)
 			logging.debug(" chosenDistanceRef: %s" %chosenDistanceRef)
 			
-	
-
-
-
-
-
+# 	
 			poolDistributionRef = returnPoolDistributionRef["data"]
 # 			logging.debug(" poolDistributionRef: \n%s" %poolDistributionRef)
 
@@ -1046,18 +1041,15 @@ def optimize_pool_plateau_match(D_Mat, teamNbr, poolNbr, poolSize, teams, prohib
 			results["scenarioRef"]["poulesCoords"] = poolDistributionCoordsRef
 # 			logging.debug(" poolDistributionCoordsRef: %s" %poolDistributionCoordsRef)
 
-
-
-# 	
 # 			# get pool details from encounters
-# 			poolDetailsRef = create_pool_details_from_encounters(encountersRef, poolDistributionRef)
-# 			results["scenarioRef"]["estimationDetails"] = poolDetailsRef
-# 			logging.debug(" poolDetailsRef: \n%s" %poolDetailsRef)
-# 	
-# 			# get sum info from pool details
-# 			sumInfoRef = get_sum_info_from_pool_details(poolDetailsRef)
-# 			results["scenarioRef"]["estimationGenerale"] = sumInfoRef
-# 			logging.debug(" sumInfoRef: \n%s" %sumInfoRef)
+			poolDetailsRefPlateau = create_pool_details_from_encounters_plateau(encountersRefPlateau, poolDistributionRef)
+			results["scenarioRef"]["estimationDetails"] = poolDetailsRefPlateau
+			logging.debug(" poolDetailsRefPlateau: \n%s" %poolDetailsRefPlateau)
+
+			# get sum info from pool details
+			sumInfoRef = get_sum_info_from_pool_details(poolDetailsRefPlateau)
+			results["scenarioRef"]["estimationGenerale"] = sumInfoRef
+			logging.debug(" sumInfoRef: \n%s" %sumInfoRef)
 		else:
 			# add boolean to results
 # 			results["params"]["refExiste"] = 0
@@ -1308,7 +1300,7 @@ def callback(ch, method, properties, body):
 			logging.debug("resultId : %s" %resultId)
 
 		logging.debug("############################################# SEND EMAIL ####################################################")
-# 		send_email_to_user(userId, resultId)
+		send_email_to_user(userId, resultId)
 		logging.debug("################################################## FINISHED #################################################")
 
 		# update job status to 2 (finished)
