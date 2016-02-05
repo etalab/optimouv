@@ -401,13 +401,13 @@ class Listes{
                                         array_push($premierJourReceptionListe, $premierJourReception);
                                         array_push($deuxiemeJourReceptionListe, $deuxiemeJourReception);
 
-
                                         // controle les champs des jours de reception
-                                        if( ($premierJourReception == ""  ) or ($deuxiemeJourReception == "") ){
+                                        if( ($premierJourReception == "" ) or  ($deuxiemeJourReception == "") or !(is_numeric($premierJourReception))  or !(is_numeric($deuxiemeJourReception)) ){
+
                                             $retour = array(
                                                 "success" => false,
                                                 "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                    ."Le champ 'PREMIER JOUR DE RECEPTION' (colonne 13) et Le champ 'DEUXIEME JOUR DE RECEPTION' (colonne 16) doivent être rempli and avoir la valeur à partir de 0!"
+                                                    ."Le champ 'PREMIER JOUR DE RECEPTION' (colonne 13) et Le champ 'DEUXIEME JOUR DE RECEPTION' (colonne 16) doivent être rempli and avoir la valeur de type entier à partir de 0!"
                                                     ."Veuillez corriger et importer de nouveau votre fichier"
                                             );
                                             array_push($lignesErronees, $retour["msg"]);
@@ -722,7 +722,7 @@ class Listes{
 
                     }
 
-                    error_log("service: listes, function: controlerEntites, status: ".print_r($tousNomsEquipes, True), 3, $this->error_log_path);
+//                    error_log("service: listes, function: controlerEntites, status: ".print_r($tousNomsEquipes, True), 3, $this->error_log_path);
 
 
                     // controler equipe 1 et equipe 2, elles doivent figurer dans les lignes importées
@@ -1415,7 +1415,7 @@ class Listes{
                 return $retour;
             }
 
-            error_log("service: listes, function: controlerEntites, count entete: ".print_r(count($entete), True), 3, $this->error_log_path);
+//            error_log("service: listes, function: controlerEntites, count entete: ".print_r(count($entete), True), 3, $this->error_log_path);
 
             // pour la liste d'équipes
             if(count($entete) == 11 || count($entete) == 12 || count($entete) == 18){
