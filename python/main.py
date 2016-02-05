@@ -1020,8 +1020,17 @@ def optimize_pool_plateau_match(D_Mat, teamNbr, poolNbr, poolSize, teams, prohib
 # 			results["params"]["refExiste"] = 1
 			results["refExiste"] = 1
 
-			refScenarioPlateau = returnRefScenarioPlateau["data"]
-# 			logging.debug(" refScenarioPlateau: \n%s" %refScenarioPlateau)
+			encountersRefPlateau = returnRefScenarioPlateau["data"]
+			logging.debug(" encountersRefPlateau: \n%s" %json.dumps(encountersRefPlateau))
+
+			chosenDistanceRef = calculate_distance_from_encounters_details_plateau(encountersRefPlateau)
+			logging.debug(" chosenDistanceRef: %s" %chosenDistanceRef)
+			
+	
+
+
+
+
 
 			poolDistributionRef = returnPoolDistributionRef["data"]
 # 			logging.debug(" poolDistributionRef: \n%s" %poolDistributionRef)
@@ -1029,32 +1038,15 @@ def optimize_pool_plateau_match(D_Mat, teamNbr, poolNbr, poolSize, teams, prohib
 			# eliminate phnatom teams
 			poolDistributionRef = eliminate_phantom_in_pool_distribution(poolDistributionRef)
 			results["scenarioRef"]["poulesId"] = poolDistributionRef
-			logging.debug(" poolDistributionRef: %s" %poolDistributionRef)
+# 			logging.debug(" poolDistributionRef: %s" %poolDistributionRef)
 	
 			# get coordinates for each point in the pools
 			poolDistributionCoordsRef = get_coords_pool_distribution(poolDistributionRef)
 			results["scenarioRef"]["poulesCoords"] = poolDistributionCoordsRef
-			logging.debug(" poolDistributionCoordsRef: %s" %poolDistributionCoordsRef)
+# 			logging.debug(" poolDistributionCoordsRef: %s" %poolDistributionCoordsRef)
 
 
-# 			# create P Matrix reference to calculate distance	
-# 			P_Mat_ref = create_matrix_from_pool_distribution(poolDistributionRef, teamNbr, teams)
-# 			logging.debug(" P_Mat_ref.shape: \n%s" %(P_Mat_ref.shape,))
-# # 			logging.debug(" P_Mat_ref: \n%s" %(P_Mat_ref,))
-# # 			np.savetxt("/tmp/p_mat_ref_one_way.csv", P_Mat_ref, delimiter=",", fmt='%d') # DEBUG
-# 	
-# 			# take upper part of matrix
-# 			P_Mat_ref = np.triu(P_Mat_ref)
-# # 			np.savetxt("/tmp/p_mat_ref_one_way2.csv", P_Mat_ref, delimiter=",", fmt='%d') # DEBUG
-# 	
-# # 			logging.debug(" P_Mat_ref: \n%s" %(P_Mat_ref,))
-# 			chosenDistanceRef = calculate_V_value(P_Mat_ref, D_Mat)
-# 			logging.debug(" chosenDistanceRef: %s" %chosenDistanceRef)
-# 	
-# 			# get encounter list from pool distribution dict
-# 			encountersRef = create_encounters_from_pool_distribution_one_way(poolDistributionRef)
-# 			results["scenarioRef"]["rencontreDetails"] = encountersRef
-# # 			logging.debug(" encountersRef: %s" %encountersRef)
+
 # 	
 # 			# get pool details from encounters
 # 			poolDetailsRef = create_pool_details_from_encounters(encountersRef, poolDistributionRef)
@@ -1315,7 +1307,7 @@ def callback(ch, method, properties, body):
 			logging.debug("resultId : %s" %resultId)
 
 		logging.debug("############################################# SEND EMAIL ####################################################")
-		send_email_to_user(userId, resultId)
+# 		send_email_to_user(userId, resultId)
 		logging.debug("################################################## FINISHED #################################################")
 
 		# update job status to 2 (finished)
