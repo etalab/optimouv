@@ -500,6 +500,18 @@ def create_pool_details_from_encounters(encounters, poolDistribution):
 		show_exception_traceback()
 
 """
+Function to create pool details from encounters for match plateau
+"""
+def create_pool_details_from_encounters_plateau(encountersPlateau, poolDistribution):
+	try:
+		poolDetailsPlateau = {}
+		
+		return poolDetailsPlateau
+
+	except Exception as e:
+		show_exception_traceback()
+
+"""
 Function to get the sum of all info from pool details
 """
 def get_sum_info_from_pool_details(poolDetails):
@@ -1963,7 +1975,7 @@ def get_team_names_from_ids(teamIds):
 """
 Function to calculate distance from encounters details for match plateau
 """
-def calculate_distance_from_encounters_details_plateau(detailsPlateau):
+def calculate_distance_from_encounters_plateau(detailsPlateau):
 	try:
 		distance = 0
 
