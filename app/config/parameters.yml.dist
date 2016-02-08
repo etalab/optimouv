@@ -18,4 +18,5 @@ parameters:
     app_code: 6ST2s3g8BkS7B0Uft0kPeg
     # chemin errorlog
     error_log_path: error_log_optimouv.txt
+    base_url: optimouv
 

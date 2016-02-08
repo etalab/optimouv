@@ -48,9 +48,9 @@ function addEventHandlerImportListeEquipes(){
           nouvelleStr = nouvelleStr + '<td> '+ nouvelElementNom  + ' </td>';
           nouvelleStr = nouvelleStr + '<td> '+ nouvelElementDateCreation  + ' </td>';
           nouvelleStr = nouvelleStr + '<td> ';
-          nouvelleStr = nouvelleStr + '   <a href="renommer-liste-participants/'+ nouvelElementId +'" class="btn btn-info"> Renommer</a> | ';
-          nouvelleStr = nouvelleStr + '   <button type="submit" class="btn btn-info" onclick="deleteListeParticipants('+ nouvelElementId +')"> Supprimer</button> |';
-          nouvelleStr = nouvelleStr + '   <a href="visualiser-liste-participants/'+ nouvelElementId +'" class="btn btn-info"> Visualiser</a> ';
+          nouvelleStr = nouvelleStr + '   <a href="renommer-liste-equipes/'+ nouvelElementId +'" class="btn btn-info-poule"> Renommer</a> | ';
+          nouvelleStr = nouvelleStr + '   <button type="submit" class="btn btn-info-poule" onclick="deleteListeParticipants('+ nouvelElementId +')"> Supprimer</button> |';
+          nouvelleStr = nouvelleStr + '   <a href="visualiser-liste-equipes/'+ nouvelElementId +'" class="btn btn-info-poule"> Visualiser</a> ';
           nouvelleStr = nouvelleStr + '</td> </tr> ';
           console.log('nouvelleStr: ' + nouvelleStr);
 

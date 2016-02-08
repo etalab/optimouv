@@ -16,6 +16,8 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         Liste de vos rapports
+
+                        {{ app.request.server.get('SERVER_NAME') }}
                     </div>
 
                     <div class="panel-body">
@@ -63,7 +65,7 @@
                                                 {% if infoRapport.statut  == 2 %}
 
                                                     <form name="consulterRapport"
-                                                          action="{{ path('ffbb_consulter_rapport', {'idRapport':infoRapport.id}) }}"
+                                                          action="{{ path('ffbb_consulter_rapport', {'idRapport':infoRapport.id, 'typeAction': infoRapport.typeAction}) }}"
                                                           method="post">
                                                         <input type="hidden" name="typeAction" id="typeAction"
                                                                value="{{ infoRapport.typeAction }}">

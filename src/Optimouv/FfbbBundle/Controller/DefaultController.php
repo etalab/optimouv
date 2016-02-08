@@ -116,6 +116,7 @@ class DefaultController extends Controller
                 $this->get('old_sound_rabbit_mq.rencontre_producer')->publish($idTache);
 
                 return $this->redirect($this->generateUrl('ffbb_rapports'));
+
             }
             else{
                 die("problème de récupération du job");
@@ -128,23 +129,24 @@ class DefaultController extends Controller
 
     }
 
-    public function rmqAction()
+    public function sendMailAction()
     {
 
-        $email = $this->getUser()->getEmail();
+//        $email = $this->getUser()->getEmail();
+        $email = "oussema.ghodbane@it4pme.fr";
         $username =  $this->getUser()->getUsername();
         $body = $this->renderView('FfbbBundle:Mails:confirmationCalcul.html.twig', array('username' => $username));
 
             $message = \Swift_Message::newInstance()
             ->setSubject('Calcul terminé')
-            ->setFrom('vtc.ouss@gmail.com')
+            ->setFrom('serviceclients@it4pme.fr')
             ->setTo($email)
-            ->setCc('g.oussema@gmail.com')
             ->setBody($body)
         ;
         $this->get('mailer')->send($message);
 
-        return $this->redirect($this->generateUrl('ffbb_accueil'));
+//        return $this->redirect($this->generateUrl('ffbb_accueil'));
+        return true;
 
     }
 

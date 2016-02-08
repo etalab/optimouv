@@ -235,12 +235,12 @@ ffbb_lancer_producer:
     defaults: { _controller: FfbbBundle:Default:lancerProducer }
 
 ffbb_consulter_rapport:
-    path:     /admin/rapport/{idRapport}
+    path:     /admin/rapport/{idRapport}/{typeAction}
     defaults: { _controller: FfbbBundle:Rapports:consulterRapport }
 
-ffbb_rmq:
-    path:    /rmq
-    defaults: { _controller: FfbbBundle:Default:rmq }
+ffbb_sendMail:
+    path:    /sendMail
+    defaults: { _controller: FfbbBundle:Default:sendMail }
 
 
 

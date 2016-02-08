@@ -11,8 +11,8 @@ namespace Optimouv\FfbbBundle\Services;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
 use PDO;
-
-
+use Symfony\Component\DependencyInjection\ContainerInterface ;
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 
 class CalculRencontreConsumer implements ConsumerInterface
 {
@@ -23,9 +23,12 @@ class CalculRencontreConsumer implements ConsumerInterface
     public $app_id;
     public $app_code;
     public $error_log_path;
+    private $container;
+    private $mailer;
+    private $templating;
 
 
-    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path)
+    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, ContainerInterface $container, $mailer, EngineInterface $templating)
     {
         $this->database_name = $database_name;
         $this->database_user = $database_user;
@@ -33,7 +36,9 @@ class CalculRencontreConsumer implements ConsumerInterface
         $this->app_id = $app_id;
         $this->app_code = $app_code;
         $this->error_log_path = $error_log_path;
-
+        $this->container = $container;
+        $this->mailer = $mailer;
+        $this->templating = $templating;
     }
 
     public function connexion()
@@ -96,8 +101,7 @@ class CalculRencontreConsumer implements ConsumerInterface
         $database_user = $this->database_user;
         $database_password = $this->database_password;
         $error_log_path = $this->error_log_path;
-
-        //Appel de la classe
+         //Appel de la classe
         $serviceRencontre = new Rencontres($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path);
 
 
@@ -115,8 +119,7 @@ class CalculRencontreConsumer implements ConsumerInterface
                 $statut = 2;
 
                 $this->updateSatut($msg, $statut);
-
-                $this->sendMail();
+                $this->sendMail($msg,$typeAction );
 
 
             }
@@ -138,8 +141,7 @@ class CalculRencontreConsumer implements ConsumerInterface
                 $statut = 2;
 
                 $this->updateSatut($msg, $statut);
-                //$this->sendMail();
-
+                $this->sendMail($msg,$typeAction );
             }
         }
         elseif($typeAction == "meilleurLieu"){
@@ -158,25 +160,11 @@ class CalculRencontreConsumer implements ConsumerInterface
                 $statut = 2;
 
                 $this->updateSatut($msg, $statut);
-
+                $this->sendMail($msg,$typeAction );
 
             }
 
         }
-//        elseif($typeAction == "meilleurLieuEq"){
-//
-//            $retour = $serviceRencontre->scenarioEquitable($idGroupe);
-//            $idCalcul = $this->stockerResultats($msg,$retour);
-//
-//            if ($idCalcul) {
-//
-//                $statut = 2;
-//
-//                $this->updateSatut($msg, $statut);
-//
-//            }
-//
-//        }
         elseif($typeAction == "terrainNeutre"){
 
             $retour = [];
@@ -191,26 +179,13 @@ class CalculRencontreConsumer implements ConsumerInterface
                 $statut = 2;
 
                 $this->updateSatut($msg, $statut);
-
+                $this->sendMail($msg,$typeAction );
             }
         }
         else{
 
             die("type de job non reconnu!");
         }
-//        elseif($typeAction == "terrainNeutreEq"){
-//            $retour = $serviceRencontre->terrainNeutreEquitable($idGroupe);
-//            $idCalcul = $this->stockerResultats($msg,$retour);
-//
-//            if ($idCalcul) {
-//
-//                $statut = 2;
-//
-//                $this->updateSatut($msg, $statut);
-//
-//
-//            }
-//        }
 
 
 
@@ -218,6 +193,7 @@ class CalculRencontreConsumer implements ConsumerInterface
 //    fwrite($myfile, print_r($typeAction, true));
 //        return $retour;
         echo "la tache $msg a ete bien executee!".PHP_EOL;
+
 
      }
 
@@ -259,22 +235,58 @@ class CalculRencontreConsumer implements ConsumerInterface
 
     }
 
-    public function sendMail()
+//    public function sendMail()
+//    {
+//
+//        // the message
+//        $msg = "First line of text\nSecond line of text";
+//
+//        // use wordwrap() if lines are longer than 70 characters
+//        $msg = wordwrap($msg,70);
+//
+//     // send email
+//
+//        try {
+//            mail("oussema.ghodbane@it4pme.fr","My subject",$msg);
+//        } catch (Exception $e) {
+//            echo 'Exception reçue : ',  $e->getMessage(), "\n";
+//        }
+//
+//    }
+
+    public function sendMail($idRapport,$typeAction)
     {
 
-        // the message
-        $msg = "First line of text\nSecond line of text";
 
-        // use wordwrap() if lines are longer than 70 characters
-        $msg = wordwrap($msg,70);
+        $userEmail = $this->getUserEmail($idRapport);
 
-     // send email
+        $body = $this->templating->render('FfbbBundle:Mails:confirmationCalcul.html.twig', array('idRapport' => $idRapport, 'typeAction' => $typeAction));
 
-        try {
-            mail("oussema.ghodbane@it4pme.fr","My subject",$msg);
-        } catch (Exception $e) {
-            echo 'Exception reçue : ',  $e->getMessage(), "\n";
-        }
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject('Mise à disposition de vos résultats de calculs')
+            ->setFrom('servicetechnique@it4pme.fr')
+            ->setTo($userEmail)
+            ->setBody($body, 'text/html')
+        ;
+        $this->container->get('mailer')->send($message);
+
+
+    }
+
+    public function getUserEmail($idRapport)
+    {
+
+        //on recupere les parametres de connexion
+        $bdd= $this->connexion();
+
+        $stmt1 = $bdd->prepare("select email from fos_user where id = (select id_utilisateur from groupe where id = (SELECT id_groupe FROM rapport where id = :id));");
+
+        $stmt1->bindParam(':id', $idRapport);
+        $stmt1->execute();
+        $userEmail = $stmt1->fetchColumn();
+
+        return $userEmail;
 
     }
 
