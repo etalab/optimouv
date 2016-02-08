@@ -342,6 +342,22 @@ def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSi
 	except Exception as e:
 		show_exception_traceback()
 
+"""
+Function to calculate distance plateau for a given 3x4 matrix (plateau distribution)
+"""
+def calculate_distance_plateau_from_3_4_matrix(plateauDistribution):
+	try:
+		logging.debug("  plateauDistribution: %s" %plateauDistribution)
+
+		distance = 0
+		
+		
+		logging.debug("  distance: %s" %distance)
+		
+		return distance
+		
+	except Exception as e:
+		show_exception_traceback()
 
 """
 Function to create encounters from pool distribution for match plateau
@@ -350,10 +366,55 @@ def create_encounters_from_pool_distribution_plateau(poolDistribution):
 	try:
 		encountersPlateau = {}
 
-		logging.debug("  poolDistribution: %s" %poolDistribution)
+		logging.debug("")
+
+		for pool, teams in poolDistribution.items():
+			logging.debug("  teams: %s" %teams)
+			encountersPlateau[pool] = {}
+
+			teamRandomValues = [round(random.random() * 100) for i in range(len(teams))]
+# 			logging.debug("  teamRandomValues: %s" %teamRandomValues)
+
+			# get the index values of the sorted random values
+			indexSortedTeamRandomValues = list(range(1, len(teamRandomValues)+1))
+			indexSortedTeamRandomValues = sorted( indexSortedTeamRandomValues, key=lambda k: teamRandomValues[indexSortedTeamRandomValues.index(k)] )
+			logging.debug("  indexSortedTeamRandomValues: %s" %indexSortedTeamRandomValues)
+
+
+			# assign teams based on their random number values according to the established matrix
+			firstTeamAssigned = teams[indexSortedTeamRandomValues.index(1)]
+			secondTeamAssigned = teams[indexSortedTeamRandomValues.index(2)]
+			thirdTeamAssigned = teams[indexSortedTeamRandomValues.index(3)]
+			fourthTeamAssigned = teams[indexSortedTeamRandomValues.index(4)]
+			fifthTeamAssigned = teams[indexSortedTeamRandomValues.index(5)]
+			sixthTeamAssigned = teams[indexSortedTeamRandomValues.index(6)]
+			seventhTeamAssigned = teams[indexSortedTeamRandomValues.index(7)]
+			eighthTeamAssigned = teams[indexSortedTeamRandomValues.index(8)]
+			ninthTeamAssigned = teams[indexSortedTeamRandomValues.index(9)]
+
+
+			objTmp = {	1: [ 	[ firstTeamAssigned, secondTeamAssigned, thirdTeamAssigned ], 
+								[ fourthTeamAssigned, fifthTeamAssigned, sixthTeamAssigned ], 
+								[ seventhTeamAssigned, eighthTeamAssigned, ninthTeamAssigned] ],
+						2: [ 	[ thirdTeamAssigned, fifthTeamAssigned, eighthTeamAssigned ],
+								[ firstTeamAssigned, sixthTeamAssigned, ninthTeamAssigned ], 
+								[ secondTeamAssigned, fourthTeamAssigned, seventhTeamAssigned] ],
+						3: [ 	[ firstTeamAssigned, fourthTeamAssigned, eighthTeamAssigned], 
+								[ thirdTeamAssigned, sixthTeamAssigned, seventhTeamAssigned], 
+								[ secondTeamAssigned, fifthTeamAssigned, ninthTeamAssigned] ],
+						4: [ 	[ thirdTeamAssigned, fourthTeamAssigned, ninthTeamAssigned], 
+								[ secondTeamAssigned, sixthTeamAssigned, eighthTeamAssigned], 
+								[ firstTeamAssigned, fifthTeamAssigned, seventhTeamAssigned] ],
+					}
+			logging.debug("  objTmp: %s" %objTmp)
+
+			distanceTmp = calculate_distance_plateau_from_3_4_matrix(objTmp)
+
+
+			encountersPlateau[pool] = objTmp
 
 		
-		logging.debug("  encountersPlateau: %s" %encountersPlateau)
+		logging.debug("  encountersPlateau: \n%s" %json.dumps(encountersPlateau))
 
 		return encountersPlateau 
 
