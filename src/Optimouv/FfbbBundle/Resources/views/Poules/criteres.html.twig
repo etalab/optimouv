@@ -465,7 +465,8 @@
 
                  function getContraintes(){
                      var mesLignes = document.getElementById("mesContraintes").rows;
-                     var tabContraintes = [];
+//                     var tabContraintes = [];
+                     var tabContraintes = {};
                      for (i = 1; i < mesLignes.length; i++) {
                          var maLigne = mesLignes[i];
                          var td1 = maLigne.getElementsByTagName("td")[1];
@@ -473,9 +474,13 @@
                          var monEquipe1 = td1.getElementsByClassName("equipe1")[0].value;
                          var monEquipe2 = td2.getElementsByClassName("equipe2")[0].value;
 
-                         var maContrainte = monEquipe1+":"+monEquipe2;
+//                         var maContrainte = monEquipe1+":"+monEquipe2;
+                         var maContrainte = [parseInt(monEquipe1), parseInt(monEquipe2)];
 
-                         tabContraintes.push(maContrainte);
+
+//                         tabContraintes.push(maContrainte);
+                         tabContraintes[i] = maContrainte;
+
                    }
 
 
