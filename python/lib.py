@@ -343,6 +343,22 @@ def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSi
 		show_exception_traceback()
 
 
+"""
+Function to create encounters from pool distribution for match plateau
+"""
+def create_encounters_from_pool_distribution_plateau(poolDistribution):
+	try:
+		encountersPlateau = {}
+
+		logging.debug("  poolDistribution: %s" %poolDistribution)
+
+		
+		logging.debug("  encountersPlateau: %s" %encountersPlateau)
+
+		return encountersPlateau 
+
+	except Exception as e:
+		show_exception_traceback()
 
 
 

@@ -1014,7 +1014,6 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		returnPoolDistributionRef = create_reference_pool_distribution_from_db(teams, poolSize)
 		
 		
-
 		# process only if there is a reference
 		if returnRefScenarioPlateau["status"] == "yes" and  returnPoolDistributionRef["status"] == "yes":
 			
@@ -1040,8 +1039,6 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 
 			chosenDistanceRefPool = calculate_V_value(P_Mat_ref, D_Mat)
 			logging.debug(" chosenDistanceRefPool: %s" %chosenDistanceRefPool)
-
-
 
 
 			# eliminate phnatom teams
@@ -1090,7 +1087,7 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 	
 			# get pool distribution
 			poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
-			logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %poolDistribution_OptimalWithoutConstraint)
+# 			logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %poolDistribution_OptimalWithoutConstraint)
 	 		
 			# eliminate phnatom teams
 			poolDistribution_OptimalWithoutConstraint = eliminate_phantom_in_pool_distribution(poolDistribution_OptimalWithoutConstraint)
@@ -1101,8 +1098,15 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		elif poolNbr == 1:
 			poolDistribution_OptimalWithoutConstraint = {1: sorted(teams)}
 			logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %poolDistribution_OptimalWithoutConstraint)
- 
 
+
+		# get coordinates for each point in the pools
+		poolDistributionCoordsRef = get_coords_pool_distribution(poolDistribution_OptimalWithoutConstraint)
+		results["scenarioRef"]["poulesCoords"] = poolDistributionCoordsRef
+
+		# optimize distance for each pool
+		encounters_OptimalWithoutConstraint_plateau = create_encounters_from_pool_distribution_plateau(poolDistribution_OptimalWithoutConstraint)
+# 		results["scenarioOptimalSansContrainte"]["rencontreDetails"] = encounters_OptimalWithoutConstraint
 
 		
 		
