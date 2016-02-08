@@ -506,8 +506,7 @@ def create_pool_details_from_encounters_plateau(encountersPlateau, poolDistribut
 	try:
 		poolDetailsPlateau = {}
 	
-		logging.debug("  poolDistribution: %s" %(poolDistribution))
-	
+# 		logging.debug("  poolDistribution: %s" %(poolDistribution))
 	
 		for pool, contentPool in encountersPlateau.items():
 			poolDetailsPlateau[pool] = {	"distanceTotale": 0,
