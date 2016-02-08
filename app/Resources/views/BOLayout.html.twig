@@ -229,6 +229,9 @@
         $(document).ready(function () {
             $('#scEqSansContrainte').DataTable();
         });
+        $(document).ready(function () {
+            $('#tableContrainteRepartitionHomogene').DataTable();
+        });
     </script>
 
 
@@ -297,6 +300,9 @@
                 .addClass('table table-striped table-bordered');
 
         $('#scEqSansContrainte')
+                .removeClass('display')
+                .addClass('table table-striped table-bordered');
+        $('#tableContrainteRepartitionHomogene')
                 .removeClass('display')
                 .addClass('table table-striped table-bordered');
     </script>
