@@ -584,21 +584,30 @@
                      }
 
 
-                     var mesRepartitionsHomogenes = [];
+//                     var mesRepartitionsHomogenes = [];
+                     var mesRepartitionsHomogenes = {};
                      for (i = 0; i < length-1; i++) {
 
                          var element = "repartitionHomogeneOption"+i;
                          var idVille = "repartitionHomogeneIdVille"+i;
 
                          var categorie = document.getElementById(element).value;
-                         var ville = document.getElementById(idVille).textContent;
+                         var ville = parseInt(document.getElementById(idVille).textContent);
 
                          var maRepartition = null;
 
                          if(categorie !="Aucun"){
 
-                             maRepartition = ville+':'+categorie;
-                             mesRepartitionsHomogenes.push(maRepartition);
+//                             maRepartition = ville+':'+categorie;
+//                             mesRepartitionsHomogenes.push(maRepartition);
+
+                             if(categorie in mesRepartitionsHomogenes){
+                                 mesRepartitionsHomogenes[categorie].push(ville);
+                             }
+                             else{
+                                 mesRepartitionsHomogenes[categorie] = [ville];
+
+                             }
                          }
 
                      }
