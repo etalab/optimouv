@@ -60,6 +60,11 @@ class Listes{
         ini_set('auto_detect_line_endings', TRUE);
 
 
+//        error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+//            ."\n _SERVER: ".print_r($_SERVER, true), 3, $this->error_log_path);
+
+
+
         # obtenir le chemin d'upload du fichier
         $cheminFichierTemp = $_FILES["file-0"]["tmp_name"];
 
@@ -145,6 +150,8 @@ class Listes{
                         // obtenir les données pour chaque ligne
                         $nbrLigne = 1;
 
+
+
                         while (!$file->eof()) {
                             $donnéesLigne = $file->fgetcsv();
                             $nbrLigne++;
@@ -166,8 +173,12 @@ class Listes{
                                 continue;
                             }
 
+
+
+
                             // tester s'il y a des données
                             if($donnéesLigne != array(null)){
+
 
 //                                # controler des doublons # FIXME
 //                                # ajouter la ligne courante dans le répértoire des lignes si ce n'est pas un doublon
@@ -220,6 +231,7 @@ class Listes{
                                     die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
 
                                 }
+
 
 
                                 // obtenir les valeurs selon le type d'entité
@@ -323,6 +335,7 @@ class Listes{
                                     }
 
 
+
                                     # corriger le code postal si un zéro est manquant dans le premier chiffre
                                     $codePostal = $this->corrigerCodePostal($codePostal);
 
@@ -353,6 +366,9 @@ class Listes{
                                         continue;
                                     }
 
+
+
+
                                     # les champs optionnels
                                     $adresse = $donnéesLigne[6];
                                     $longitude = $donnéesLigne[7];
@@ -378,6 +394,8 @@ class Listes{
                                         }
 
                                     }
+
+
 
                                     // test si le fichier est adapté pour le match plateau
                                     if(count($donnéesLigne) == 18){
@@ -693,6 +711,10 @@ class Listes{
                                     continue;
                                 }
 
+
+
+
+
                                 # controler les doublons pour tous les types
                                 # ajouter la ligne courante dans le répértoire des lignes si ce n'est pas un doublon
                                 $donneesLigneEquipe = [$nom, $codePostal, $ville];
@@ -725,73 +747,83 @@ class Listes{
 //                    error_log("service: listes, function: controlerEntites, status: ".print_r($tousNomsEquipes, True), 3, $this->error_log_path);
 
 
-                    // controler equipe 1 et equipe 2, elles doivent figurer dans les lignes importées
-                    for($k = 0; $k < count($toutesLignes); $k ++){
-                        $nbrLigne = $k + 1;
 
-                        // premier jour
-                        $premierJourEquipe1 = $premierJourEquipesAdverses1[$k];
-                        $premierJourEquipe2 = $premierJourEquipesAdverses2[$k];
-                        $premierJourReception = $premierJourReceptionListe[$k];
+                    // controler equipe 1 et equipe 2, elles doivent figurer dans les lignes importées (match plateau)
+//                    error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+//                        ."\n premierJourEquipesAdverses1 : ".print_r($premierJourEquipesAdverses1 , true), 3, $this->error_log_path);
+                    if($toutesLignes != [] && count($toutesLignes[0]) == 18){
+                        for($k = 0; $k < count($toutesLignes); $k ++){
+                            $nbrLigne = $k + 1;
 
-                        // deuxième jour
-                        $deuxiemeJourEquipe1 = $deuxiemeJourEquipesAdverses1[$k];
-                        $deuxiemeJourEquipe2 = $deuxiemeJourEquipesAdverses2[$k];
-                        $deuxiemeJourReception = $deuxiemeJourReceptionListe[$k];
-
-                        // premier jour equipe adverse 1
-                        if( $premierJourReception > 0 && !in_array($premierJourEquipe1, $tousNomsEquipes) ){
+                            // premier jour
+                            $premierJourEquipe1 = $premierJourEquipesAdverses1[$k];
+                            $premierJourEquipe2 = $premierJourEquipesAdverses2[$k];
+                            $premierJourReception = $premierJourReceptionListe[$k];
 
 
-                            $retour = array(
-                                "success" => false,
-                                "msg" => "Erreur ligne :".$nbrLigne."!"
-                                    ." La valeur pour le champs 'EQUIPE ADVERSE 1 (colonne 14) n'est pas reconnue'.!"
-                                    ." Veuillez supprimer cette ligne et effectuer à nouveau l’import"
-                            );
-                            array_push($lignesErronees, $retour["msg"]);
-                            continue;
-                        }
-                        if( $premierJourReception > 0 && !in_array($premierJourEquipe2, $tousNomsEquipes) ) {
+                            // deuxième jour
+                            $deuxiemeJourEquipe1 = $deuxiemeJourEquipesAdverses1[$k];
+                            $deuxiemeJourEquipe2 = $deuxiemeJourEquipesAdverses2[$k];
+                            $deuxiemeJourReception = $deuxiemeJourReceptionListe[$k];
 
-                            $retour = array(
-                                "success" => false,
-                                "msg" => "Erreur ligne :" . $nbrLigne . "!"
-                                    . " La valeur pour le champs 'EQUIPE ADVERSE 2 (colonne 15) n'est pas reconnue'.!"
-                                    . " Veuillez supprimer cette ligne et effectuer à nouveau l’import"
-                            );
-                            array_push($lignesErronees, $retour["msg"]);
-                            continue;
-                        }
-                        if( $deuxiemeJourReception> 0 && !in_array($deuxiemeJourEquipe1, $tousNomsEquipes) ) {
 
-//                            error_log("service: listes, function: controlerEntites, status: ".print_r($deuxiemeJourEquipe1."\n", True), 3, $this->error_log_path);
+                            // premier jour equipe adverse 1
+                            if( $premierJourReception > 0 && !in_array($premierJourEquipe1, $tousNomsEquipes) ){
 
-                            $retour = array(
-                                "success" => false,
-                                "msg" => "Erreur ligne :" . $nbrLigne . "!"
-                                    . " La valeur pour le champs 'EQUIPE ADVERSE 1 (colonne 17) n'est pas reconnue'.!"
-                                    . " Veuillez supprimer cette ligne et effectuer à nouveau l’import"
-                            );
-                            array_push($lignesErronees, $retour["msg"]);
-                            continue;
-                        }
-                        if( $deuxiemeJourReception> 0 && !in_array($deuxiemeJourEquipe2, $tousNomsEquipes) ) {
+
+                                $retour = array(
+                                    "success" => false,
+                                    "msg" => "Erreur ligne :".$nbrLigne."!"
+                                        ." La valeur pour le champs 'EQUIPE ADVERSE 1 (colonne 14) n'est pas reconnue'.!"
+                                        ." Veuillez supprimer cette ligne et effectuer à nouveau l’import"
+                                );
+                                array_push($lignesErronees, $retour["msg"]);
+                                continue;
+                            }
+                            if( $premierJourReception > 0 && !in_array($premierJourEquipe2, $tousNomsEquipes) ) {
+
+                                $retour = array(
+                                    "success" => false,
+                                    "msg" => "Erreur ligne :" . $nbrLigne . "!"
+                                        . " La valeur pour le champs 'EQUIPE ADVERSE 2 (colonne 15) n'est pas reconnue'.!"
+                                        . " Veuillez supprimer cette ligne et effectuer à nouveau l’import"
+                                );
+                                array_push($lignesErronees, $retour["msg"]);
+                                continue;
+                            }
+                            if( $deuxiemeJourReception> 0 && !in_array($deuxiemeJourEquipe1, $tousNomsEquipes) ) {
 
 //                            error_log("service: listes, function: controlerEntites, status: ".print_r($deuxiemeJourEquipe1."\n", True), 3, $this->error_log_path);
 
-                            $retour = array(
-                                "success" => false,
-                                "msg" => "Erreur ligne :" . $nbrLigne . "!"
-                                    . " La valeur pour le champs 'EQUIPE ADVERSE 2 (colonne 18) n'est pas reconnue'.!"
-                                    . " Veuillez supprimer cette ligne et effectuer à nouveau l’import"
-                            );
-                            array_push($lignesErronees, $retour["msg"]);
-                            continue;
-                        }
+                                $retour = array(
+                                    "success" => false,
+                                    "msg" => "Erreur ligne :" . $nbrLigne . "!"
+                                        . " La valeur pour le champs 'EQUIPE ADVERSE 1 (colonne 17) n'est pas reconnue'.!"
+                                        . " Veuillez supprimer cette ligne et effectuer à nouveau l’import"
+                                );
+                                array_push($lignesErronees, $retour["msg"]);
+                                continue;
+                            }
+                            if( $deuxiemeJourReception> 0 && !in_array($deuxiemeJourEquipe2, $tousNomsEquipes) ) {
 
+//                            error_log("service: listes, function: controlerEntites, status: ".print_r($deuxiemeJourEquipe1."\n", True), 3, $this->error_log_path);
+
+                                $retour = array(
+                                    "success" => false,
+                                    "msg" => "Erreur ligne :" . $nbrLigne . "!"
+                                        . " La valeur pour le champs 'EQUIPE ADVERSE 2 (colonne 18) n'est pas reconnue'.!"
+                                        . " Veuillez supprimer cette ligne et effectuer à nouveau l’import"
+                                );
+                                array_push($lignesErronees, $retour["msg"]);
+                                continue;
+                            }
+
+
+                        }
 
                     }
+
+
 
                     // controler s'il y a des lignes erronées
                     if(count($lignesErronees) > 0){
