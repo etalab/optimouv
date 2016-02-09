@@ -579,6 +579,18 @@ class PoulesController extends Controller
         # obtenir entity manager
         $em = $this->getDoctrine()->getManager();
 
+        $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idResultat);
+        $idGroupe = $idGroupe[0]['idGroupe'];
+
+        $equipes = $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getEquipes();
+        //$equipes de string a array
+        $equipes = explode(",", $equipes);
+
+        # récupérer la liste des noms et des ids de villes
+        $detailsVilles = $em->getRepository('FfbbBundle:Entite')->getEntities($equipes);
+
+
+
         $detailsCalcul = $em->getRepository('FfbbBundle:Scenario')->findOneById($idResultat)->getDetailsCalcul();
 
         $detailsCalcul = json_decode($detailsCalcul, true);
@@ -639,6 +651,7 @@ class PoulesController extends Controller
             'nomRapport' => $nomRapport,
             'nomGroupe' => $nomGroupe,
             'nomListe' => $nomListe,
+            'detailsVilles' => $detailsVilles,
 
 
 
