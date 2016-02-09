@@ -664,7 +664,7 @@ def getIndexesTypeDistributionConstraints(typeDistributionConstraints, teams):
 		for type, constraint in typeDistributionConstraints.items():
 			indexesTmp = []
 			for member in constraint:
-				indexesTmp.append(teams.index(member))
+				indexesTmp.append(teams.index(int(member)))
 			indexesTypeDistributionConstraints[type] = indexesTmp
 
 		return indexesTypeDistributionConstraints	
@@ -1565,7 +1565,7 @@ def check_prohibition_constraints(prohibitionConstraints, poolDistribution):
 		
 
 """
-Function to check if list A is a sublist of list B or not
+Function to check if list 1 is a sublist of list 2 or not
 return True if yes
 return False if not
 """
@@ -1579,6 +1579,27 @@ def list1_is_sublist_of_list2(list1, list2):
 	except Exception as e:
 		show_exception_traceback()
 		
+"""
+Function to distribute team members (type distribution constraint)
+"""
+def distribute_team_members_type_distribution_constraints(poolNbr, inputConstraintNbr):
+	try:
+		result = [0] * poolNbr
+
+		for i in range(inputConstraintNbr):
+			indexResult = i
+				
+			while True:	
+				if indexResult > len(result)-1:			
+					indexResult -= len(result)
+				else:
+					break
+			result[indexResult] += 1
+
+		return result
+
+	except Exception as e:
+		show_exception_traceback()
 
 """
 Function to check type distribution constraints
@@ -1587,19 +1608,34 @@ Return 0 if success (all the type distribution constraints are fulfilled)
 """
 def check_type_distribution_constraints(typeDistributionConstraints, poolDistribution):
 	try:
+		logging.debug("typeDistributionConstraints: %s" %typeDistributionConstraints)
+		logging.debug("poolDistribution: %s" %poolDistribution)
+
+		poolNbr = len(poolDistribution.keys())
 
 		for constraintType, constraintTeamMembers in typeDistributionConstraints.items():
+			constraintTeamMembersNbr = len(constraintTeamMembers)
+			logging.debug("constraintTeamMembers: %s" %constraintTeamMembers)
+			logging.debug("constraintTeamMembersNbr: %s" %constraintTeamMembersNbr)
+
 			for pool, poolMembers in poolDistribution.items():
-				statusSublist = list1_is_sublist_of_list2(constraintTeamMembers, poolMembers)
+				
+				logging.debug("poolMembers: %s" %poolMembers)
+				logging.debug("poolNbr: %s" %poolNbr)
+
+				memberDistributionList = distribute_team_members_type_distribution_constraints(poolNbr, constraintTeamMembersNbr)
+				logging.debug("memberDistributionList: %s" %memberDistributionList)
+				
+
+				
+
+# 				statusSublist = list1_is_sublist_of_list2(constraintTeamMembers, poolMembers)
 # 				logging.debug("statusSublist: %s" %statusSublist)
-		
-				# go to the next constraint if statusSublist is true
-				if statusSublist == True:
-					break
-			# if all statusSublist are false for a given constraintType then issue a 1
-			if statusSublist == False:
-				return 1
-		
+# 		
+# 				# if at least two constraintTeamMembers are in the same pool then error
+# 				if statusSublist == True:
+# 					return 1
+				
 		return 0
 	except Exception as e:
 		show_exception_traceback()
