@@ -640,9 +640,11 @@ def getIndexesProhibitionConstraints(prohibitionConstraints, teams):
 	try:
 		indexesProhibitionConstraints = []
 
+
 		for constraint in prohibitionConstraints:
-			member1 = constraint[0]
-			member2 = constraint[1]
+# 			logging.debug("  prohibitionConstraints: %s" %(prohibitionConstraints))
+			member1 = int(constraint[0])
+			member2 = int(constraint[1])
 			indexesTmp = [ teams.index(member1), teams.index(member2) ]
 			indexesProhibitionConstraints.append(indexesTmp)
 
@@ -658,6 +660,7 @@ def getIndexesTypeDistributionConstraints(typeDistributionConstraints, teams):
 	try:
 		indexesTypeDistributionConstraints = {}
 		
+
 		for type, constraint in typeDistributionConstraints.items():
 			indexesTmp = []
 			for member in constraint:
