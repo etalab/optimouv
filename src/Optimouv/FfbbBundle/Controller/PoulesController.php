@@ -576,11 +576,25 @@ class PoulesController extends Controller
     {
 
 
+//        error_log("\n idResultat: ".print_r($idResultat , true), 3, "error_log_optimouv.txt");
+
         # obtenir entity manager
         $em = $this->getDoctrine()->getManager();
 
-        $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idResultat);
-        $idGroupe = $idGroupe[0]['idGroupe'];
+        $idRapport = $em->getRepository('FfbbBundle:Scenario')->getIdRapportByIdScenario($idResultat);
+
+        if($idRapport != []){
+            $idRapport  = $idRapport[0]["idRapport"];
+        }
+
+//        error_log("\n idRapport : ".print_r($idRapport , true), 3, "error_log_optimouv.txt");
+
+//        $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idResultat);
+        $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idRapport);
+
+        if($idGroupe != []){
+            $idGroupe = $idGroupe[0]['idGroupe'];
+        }
 
         $equipes = $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getEquipes();
         //$equipes de string a array
