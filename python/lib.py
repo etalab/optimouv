@@ -1611,30 +1611,38 @@ def check_type_distribution_constraints(typeDistributionConstraints, poolDistrib
 		logging.debug("typeDistributionConstraints: %s" %typeDistributionConstraints)
 		logging.debug("poolDistribution: %s" %poolDistribution)
 
+		# get pool number
 		poolNbr = len(poolDistribution.keys())
 
 		for constraintType, constraintTeamMembers in typeDistributionConstraints.items():
 			constraintTeamMembersNbr = len(constraintTeamMembers)
 			logging.debug("constraintTeamMembers: %s" %constraintTeamMembers)
-			logging.debug("constraintTeamMembersNbr: %s" %constraintTeamMembersNbr)
+# 			logging.debug("constraintTeamMembersNbr: %s" %constraintTeamMembersNbr)
 
+			expectedMemberDistribution = distribute_team_members_type_distribution_constraints(poolNbr, constraintTeamMembersNbr)
+			logging.debug("expectedMemberDistribution: %s" %expectedMemberDistribution)
+
+			currentMemberDistribution = []
 			for pool, poolMembers in poolDistribution.items():
 				
-				logging.debug("poolMembers: %s" %poolMembers)
-				logging.debug("poolNbr: %s" %poolNbr)
+# 				logging.debug("poolMembers: %s" %poolMembers)
+# 				logging.debug("poolNbr: %s" %poolNbr)
 
-				memberDistributionList = distribute_team_members_type_distribution_constraints(poolNbr, constraintTeamMembersNbr)
-				logging.debug("memberDistributionList: %s" %memberDistributionList)
-				
+				# check for each constraintTeamMember
+				constraintTeamMembers_inPoolMembersNbr = 0
+				for constraintTeamMember in constraintTeamMembers:
+					if int(constraintTeamMember) in poolMembers:
+						constraintTeamMembers_inPoolMembersNbr += 1
+				currentMemberDistribution.append(constraintTeamMembers_inPoolMembersNbr)
+# 				logging.debug("constraintTeamMembers_inPoolMembersNbr: %s" %constraintTeamMembers_inPoolMembersNbr)
 
-				
-
-# 				statusSublist = list1_is_sublist_of_list2(constraintTeamMembers, poolMembers)
-# 				logging.debug("statusSublist: %s" %statusSublist)
-# 		
-# 				# if at least two constraintTeamMembers are in the same pool then error
-# 				if statusSublist == True:
-# 					return 1
+			# sort current member distribution
+			currentMemberDistribution = sorted(currentMemberDistribution, reverse=True)
+			logging.debug("currentMemberDistribution: %s" %currentMemberDistribution)
+			
+			# check if current member distribution equals to expected member distribution
+			if(currentMemberDistribution != expectedMemberDistribution):
+				return 1
 				
 		return 0
 	except Exception as e:
