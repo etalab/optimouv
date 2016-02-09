@@ -120,7 +120,8 @@ def optimize_pool_post_treatment_match(D_Mat, teamNbr, poolNbr, poolSize, teams,
 			logging.debug(" chosenDistance_OptimalWithoutConstraint: %s" %chosenDistance_OptimalWithoutConstraint)
 
 	 		# get pool distribution
-			poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+# 			poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+			poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams)
 			logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %poolDistribution_OptimalWithoutConstraint)
 	# 		
 			# eliminate phantom teams
@@ -169,7 +170,8 @@ def optimize_pool_post_treatment_match(D_Mat, teamNbr, poolNbr, poolSize, teams,
 			logging.debug(" chosenDistance_EquitableWithoutConstraint: %s" %chosenDistance_EquitableWithoutConstraint)
 	
 			# get pool distribution
-			poolDistribution_EquitableWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+# 			poolDistribution_EquitableWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+			poolDistribution_EquitableWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithoutConstraint, teamNbr, poolNbr, poolSize, teams)
 			logging.debug(" poolDistribution_EquitableWithoutConstraint: %s" %poolDistribution_EquitableWithoutConstraint)
 	
 			# eliminate phnatom teams
@@ -222,7 +224,8 @@ def optimize_pool_post_treatment_match(D_Mat, teamNbr, poolNbr, poolSize, teams,
 			chosenDistance_OptimalWithConstraint = calculate_V_value(P_Mat_OptimalWithConstraint, D_Mat)
 			logging.debug(" chosenDistance_OptimalWithConstraint: %s" %chosenDistance_OptimalWithConstraint)
 
-			poolDistribution_OptimalWithConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+# 			poolDistribution_OptimalWithConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+			poolDistribution_OptimalWithConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithConstraint, teamNbr, poolNbr, poolSize, teams)
 			logging.debug(" poolDistribution_OptimalWithConstraint: %s" %poolDistribution_OptimalWithConstraint)
 
 			# eliminate phnatom teams
@@ -273,7 +276,8 @@ def optimize_pool_post_treatment_match(D_Mat, teamNbr, poolNbr, poolSize, teams,
 			logging.debug(" chosenDistance_EquitableWithConstraint: %s" %chosenDistance_EquitableWithConstraint)
 	
 			# get pool distribution
-			poolDistribution_EquitableWithConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+# 			poolDistribution_EquitableWithConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+			poolDistribution_EquitableWithConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithConstraint, teamNbr, poolNbr, poolSize, teams)
 			logging.debug(" poolDistribution_EquitableWithConstraint: %s" %poolDistribution_EquitableWithConstraint)
 	
 			# eliminate phnatom teams
@@ -460,7 +464,8 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		np.savetxt("/tmp/p_mat_optimal_without_constraint.csv", P_Mat_OptimalWithoutConstraint, delimiter=",", fmt='%d') # DEBUG
 # 
 # 		# get pool distribution
-		poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+# 		poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+		poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams)
 		logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %poolDistribution_OptimalWithoutConstraint)
 # 		
 		# eliminate phnatom teams
@@ -510,7 +515,8 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		np.savetxt("/tmp/p_mat_equitable_without_constraint.csv", P_Mat_EquitableWithoutConstraint, delimiter=",", fmt='%d') # DEBUG
 
 		# get pool distribution
-		poolDistribution_EquitableWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+# 		poolDistribution_EquitableWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+		poolDistribution_EquitableWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithoutConstraint, teamNbr, poolNbr, poolSize, teams)
 		logging.debug(" poolDistribution_EquitableWithoutConstraint: %s" %poolDistribution_EquitableWithoutConstraint)
 
 		# eliminate phnatom teams
@@ -559,7 +565,8 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 	 	
 			np.savetxt("/tmp/p_mat_optimal_with_constraint.csv", P_Mat_OptimalWithConstraint, delimiter=",", fmt='%d') # DEBUG
 	
-			poolDistribution_OptimalWithConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+# 			poolDistribution_OptimalWithConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+			poolDistribution_OptimalWithConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithConstraint, teamNbr, poolNbr, poolSize, teams)
 			logging.debug(" poolDistribution_OptimalWithConstraint: %s" %poolDistribution_OptimalWithConstraint)
 	
 			# eliminate phnatom teams
@@ -610,7 +617,8 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			np.savetxt("/tmp/p_mat_equitable_with_constraint.csv", P_Mat_EquitableWithConstraint, delimiter=",", fmt='%d') # DEBUG
 	
 			# get pool distribution
-			poolDistribution_EquitableWithConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+# 			poolDistribution_EquitableWithConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+			poolDistribution_EquitableWithConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithConstraint, teamNbr, poolNbr, poolSize, teams)
 			logging.debug(" poolDistribution_EquitableWithConstraint: %s" %poolDistribution_EquitableWithConstraint)
 	
 			# eliminate phnatom teams
@@ -1088,7 +1096,8 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			logging.debug(" chosenDistance_OptimalWithoutConstraint: %s" %chosenDistance_OptimalWithoutConstraint)
 	
 			# get pool distribution
-			poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+# 			poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+			poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams)
 # 			logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %poolDistribution_OptimalWithoutConstraint)
 	 		
 			# eliminate phnatom teams
@@ -1269,7 +1278,8 @@ def callback(ch, method, properties, body):
 		logging.debug("D_Mat.shape: %s" %(D_Mat.shape,))
 
 		logging.debug("####################################### CREATE INITIALISATION MATRIX ########################################")
-		P_InitMat_withoutConstraint = create_init_matrix_without_constraint(teamNbrWithPhantom, poolNbr, poolSize, varTeamNbrPerPool)
+# 		P_InitMat_withoutConstraint = create_init_matrix_without_constraint(teamNbrWithPhantom, poolNbr, poolSize, varTeamNbrPerPool)
+		P_InitMat_withoutConstraint = create_init_matrix_without_constraint(teamNbrWithPhantom, poolNbr, poolSize)
 		logging.debug("P_InitMat_withoutConstraint.shape: %s" %(P_InitMat_withoutConstraint.shape,))
 
 # 		np.savetxt("/tmp/p_init_without_constraint.csv", P_InitMat_withoutConstraint, delimiter=",", fmt='%d')
@@ -1281,7 +1291,8 @@ def callback(ch, method, properties, body):
 
 		# create init matrix with constraint if there is any constraint
 		if statusConstraints:
-			statusCreateInitMatrix = create_init_matrix_with_constraint(teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, iterConstraint, prohibitionConstraints, typeDistributionConstraints, varTeamNbrPerPool)
+# 			statusCreateInitMatrix = create_init_matrix_with_constraint(teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, iterConstraint, prohibitionConstraints, typeDistributionConstraints, varTeamNbrPerPool)
+			statusCreateInitMatrix = create_init_matrix_with_constraint(teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, iterConstraint, prohibitionConstraints, typeDistributionConstraints)
 # 
 			if statusCreateInitMatrix["success"]:
 				P_InitMat_withConstraint = statusCreateInitMatrix["data"]
