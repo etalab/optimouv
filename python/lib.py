@@ -163,7 +163,8 @@ def adjust_pool_attribution_based_on_pool_variation(teamPoolResult, poolNbr, poo
 """
 Function to create pool distribution from P Matrix
 """
-def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool):
+# def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool):
+def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, teams):
 	try:
 
 		# Dict containing the distribution of groups in the pools
@@ -829,9 +830,10 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 		logging.debug("  indexesProhibitionConstraints: %s" %indexesProhibitionConstraints)
 		
 		# get indexes of type distribution constraints
-		indexesTypeDistributionConstraints = getIndexesTypeDistributionConstraints(typeDistributionConstraints, teams)
-		logging.debug("  indexesTypeDistributionConstraints: %s" %indexesTypeDistributionConstraints)
+# 		indexesTypeDistributionConstraints = getIndexesTypeDistributionConstraints(typeDistributionConstraints, teams)
+# 		logging.debug("  indexesTypeDistributionConstraints: %s" %indexesTypeDistributionConstraints)
 		
+		logging.debug("  typeDistributionConstraints: \n%s" %typeDistributionConstraints)
 
 		for nbIter in range(iter):
 			logging.debug("  ----------------------------------------------------------------------------------------------------")
@@ -848,10 +850,10 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 			logging.debug("  rulesProhibitionConstraints: %s" %(rulesProhibitionConstraints))
 
 			# list of type distribution constraints
-			rulesTypeDistributionConstraints = []
-			for type, indexConstraint in indexesTypeDistributionConstraints.items():
-				rulesTypeDistributionConstraints += indexConstraint
-			logging.debug("  rulesTypeDistributionConstraints: %s" %(rulesTypeDistributionConstraints))
+# 			rulesTypeDistributionConstraints = []
+# 			for type, indexConstraint in indexesTypeDistributionConstraints.items():
+# 				rulesTypeDistributionConstraints += indexConstraint
+# 			logging.debug("  rulesTypeDistributionConstraints: %s" %(rulesTypeDistributionConstraints))
 
 			### get index to change row and column
 			while True:
@@ -877,11 +879,29 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 				if i <= j and int(P_ij) == 0:
 					# apply prohibition constraints
 					if transIndex not in rulesProhibitionConstraints:
-						# apply type distribution constraints
-						if i not in rulesTypeDistributionConstraints and j not in rulesTypeDistributionConstraints:
+						
+						##### apply type distribution constraints #####
+						# create temporary P matrix if the transIndex is applied 
+						P_TransMatTmp = np.copy(P_InitMat)
+						P_TransMatTmp[transIndex,:] = P_TransMatTmp[list(reversed(transIndex)),:]  # change two columns according to transIndex
+						P_TransMatTmp[:,transIndex] = P_TransMatTmp[:,list(reversed(transIndex))] # change two rows according to transIndex
+
+						poolDistributionTmp = create_pool_distribution_from_matrix(P_TransMatTmp, teamNbr, poolNbr, poolSize, teams)
+						logging.debug("  poolDistributionTmp: \n%s" %poolDistributionTmp)
+						
+						statusTypeDistributionConstraints = check_type_distribution_constraints(typeDistributionConstraints, poolDistributionTmp)
+						logging.debug("	statusTypeDistributionConstraints: %s" %statusTypeDistributionConstraints)
+
+						# if the transformed matrix fulfills the type distribution constraints
+						if statusTypeDistributionConstraints == 0:
 							logging.debug("  i: %s, j: %s" %(i, j))
 							logging.debug("  iterConstraint: %s" %(iterConstraint))
 							break
+		
+# 						if i not in rulesTypeDistributionConstraints and j not in rulesTypeDistributionConstraints:
+# 							logging.debug("  i: %s, j: %s" %(i, j))
+# 							logging.debug("  iterConstraint: %s" %(iterConstraint))
+# 							break
 	# 			
 
 			
@@ -1051,8 +1071,8 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 		logging.debug("  indexesProhibitionConstraints: %s" %indexesProhibitionConstraints)
 		
 		# get indexes of type distribution constraints
-		indexesTypeDistributionConstraints = getIndexesTypeDistributionConstraints(typeDistributionConstraints, teams)
-		logging.debug("  indexesTypeDistributionConstraints: %s" %indexesTypeDistributionConstraints)
+# 		indexesTypeDistributionConstraints = getIndexesTypeDistributionConstraints(typeDistributionConstraints, teams)
+# 		logging.debug("  indexesTypeDistributionConstraints: %s" %indexesTypeDistributionConstraints)
 
 
 
@@ -1071,10 +1091,10 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 			logging.debug("  rulesProhibitionConstraints: %s" %(rulesProhibitionConstraints))
 
 			# list of type distribution constraints
-			rulesTypeDistributionConstraints = []
-			for type, indexConstraint in indexesTypeDistributionConstraints.items():
-				rulesTypeDistributionConstraints += indexConstraint
-			logging.debug("  rulesTypeDistributionConstraints: %s" %(rulesTypeDistributionConstraints))
+# 			rulesTypeDistributionConstraints = []
+# 			for type, indexConstraint in indexesTypeDistributionConstraints.items():
+# 				rulesTypeDistributionConstraints += indexConstraint
+# 			logging.debug("  rulesTypeDistributionConstraints: %s" %(rulesTypeDistributionConstraints))
 
 	
 			### get index to change row and column
@@ -1101,11 +1121,29 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 				if i <= j and int(P_ij) == 0:
 					# apply prohibition constraints
 					if transIndex not in rulesProhibitionConstraints:
-						# apply type distribution constraints
-						if i not in rulesTypeDistributionConstraints and j not in rulesTypeDistributionConstraints:
+
+						##### apply type distribution constraints #####
+						# create temporary P matrix if the transIndex is applied 
+						P_TransMatTmp = np.copy(P_InitMat)
+						P_TransMatTmp[transIndex,:] = P_TransMatTmp[list(reversed(transIndex)),:]  # change two columns according to transIndex
+						P_TransMatTmp[:,transIndex] = P_TransMatTmp[:,list(reversed(transIndex))] # change two rows according to transIndex
+
+						poolDistributionTmp = create_pool_distribution_from_matrix(P_TransMatTmp, teamNbr, poolNbr, poolSize, teams)
+						logging.debug("  poolDistributionTmp: \n%s" %poolDistributionTmp)
+						
+						statusTypeDistributionConstraints = check_type_distribution_constraints(typeDistributionConstraints, poolDistributionTmp)
+						logging.debug("	statusTypeDistributionConstraints: %s" %statusTypeDistributionConstraints)
+
+						# if the transformed matrix fulfills the type distribution constraints
+						if statusTypeDistributionConstraints == 0:
 							logging.debug("  i: %s, j: %s" %(i, j))
 							logging.debug("  iterConstraint: %s" %(iterConstraint))
 							break
+						
+# 						if i not in rulesTypeDistributionConstraints and j not in rulesTypeDistributionConstraints:
+# 							logging.debug("  i: %s, j: %s" %(i, j))
+# 							logging.debug("  iterConstraint: %s" %(iterConstraint))
+# 							break
 
 			P_TransMat = np.copy(P_InitMat)
 	
@@ -1435,7 +1473,8 @@ def create_distance_matrix_from_db(teams):
 """
 Function to create initilization matrix without constraint
 """
-def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize, varTeamNbrPerPool ):
+# def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize, varTeamNbrPerPool ):
+def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize):
 
 	try:
 		logging.debug("-------------------------------------- CREATE INIT MATRIX WITHOUT CONSTRAINT --------------------------------" )
@@ -1443,15 +1482,15 @@ def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize, varTeamNbr
 		P_InitMat = np.zeros((teamNbr, teamNbr))
 		
 		# determine max and min pool size from normal pool size and variation team number per pool
-		poolSizeMax = poolSize + varTeamNbrPerPool
-		poolSizeMin = poolSize - varTeamNbrPerPool
+# 		poolSizeMax = poolSize + varTeamNbrPerPool
+# 		poolSizeMin = poolSize - varTeamNbrPerPool
 		
 		logging.debug("teamNbr: %s" %teamNbr)
 		logging.debug("poolNbr: %s" %poolNbr)
 		logging.debug("poolSize: %s" %poolSize)
-		logging.debug("varTeamNbrPerPool: %s" %varTeamNbrPerPool)
-		logging.debug("poolSizeMax: %s" %poolSizeMax)
-		logging.debug("poolSizeMin: %s" %poolSizeMin)
+# 		logging.debug("varTeamNbrPerPool: %s" %varTeamNbrPerPool)
+# 		logging.debug("poolSizeMax: %s" %poolSizeMax)
+# 		logging.debug("poolSizeMin: %s" %poolSizeMin)
 
 		# generate a random value for each team
 		teamRandomValues = [round(random.random() * 100) for i in range(teamNbr)]
@@ -1608,19 +1647,19 @@ Return 0 if success (all the type distribution constraints are fulfilled)
 """
 def check_type_distribution_constraints(typeDistributionConstraints, poolDistribution):
 	try:
-		logging.debug("typeDistributionConstraints: %s" %typeDistributionConstraints)
-		logging.debug("poolDistribution: %s" %poolDistribution)
+# 		logging.debug("typeDistributionConstraints: %s" %typeDistributionConstraints)
+# 		logging.debug("poolDistribution: %s" %poolDistribution)
 
 		# get pool number
 		poolNbr = len(poolDistribution.keys())
 
 		for constraintType, constraintTeamMembers in typeDistributionConstraints.items():
 			constraintTeamMembersNbr = len(constraintTeamMembers)
-			logging.debug("constraintTeamMembers: %s" %constraintTeamMembers)
+# 			logging.debug("constraintTeamMembers: %s" %constraintTeamMembers)
 # 			logging.debug("constraintTeamMembersNbr: %s" %constraintTeamMembersNbr)
 
 			expectedMemberDistribution = distribute_team_members_type_distribution_constraints(poolNbr, constraintTeamMembersNbr)
-			logging.debug("expectedMemberDistribution: %s" %expectedMemberDistribution)
+# 			logging.debug("expectedMemberDistribution: %s" %expectedMemberDistribution)
 
 			currentMemberDistribution = []
 			for pool, poolMembers in poolDistribution.items():
@@ -1638,7 +1677,7 @@ def check_type_distribution_constraints(typeDistributionConstraints, poolDistrib
 
 			# sort current member distribution
 			currentMemberDistribution = sorted(currentMemberDistribution, reverse=True)
-			logging.debug("currentMemberDistribution: %s" %currentMemberDistribution)
+# 			logging.debug("currentMemberDistribution: %s" %currentMemberDistribution)
 			
 			# check if current member distribution equals to expected member distribution
 			if(currentMemberDistribution != expectedMemberDistribution):
@@ -1651,7 +1690,8 @@ def check_type_distribution_constraints(typeDistributionConstraints, poolDistrib
 """
 Function to create initilization matrix with constraint
 """
-def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterConstraint, prohibitionConstraints, typeDistributionConstraints, varTeamNbrPerPool):
+# def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterConstraint, prohibitionConstraints, typeDistributionConstraints, varTeamNbrPerPool):
+def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterConstraint, prohibitionConstraints, typeDistributionConstraints):
 
 	try:
 		logging.debug("-------------------------------------- CREATE INIT MATRIX WITH CONSTRAINT --------------------------------" )
