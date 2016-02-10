@@ -221,7 +221,8 @@
                          <div class="panel-body" id="contrainteRepartitionBody" style="display: none">
                          {#<div class="panel-body" id="contrainteRepartitionBody">#}
                              <div class="panel-body">
-                                 <div class="table-responsive">
+                                 {#<div class="table-responsive">#}
+                                 <div>
                                      <table class="table table-striped table-bordered table-hover" id="tableContrainteRepartitionHomogene">
                                          <thead>
                                          <tr>
@@ -334,10 +335,6 @@
                      $("#contrainteRepartition").click(function(){
                          $("#contrainteRepartitionBody").toggle();
 
-                     });
-                     // table responsive
-                     $('#tableContrainteRepartitionHomogene').DataTable({
-                         responsive: true
                      });
                  });
 
@@ -520,6 +517,8 @@
 
                      var length = document.getElementById("tableContrainteRepartitionHomogene").rows.length;
 //                     var ligne = document.getElementById("tableContrainteRepartitionHomogene").rows;
+
+                     console.log("length: " + length);
 
                      var mesRepartitions = [];
                      for (i = 0; i < length-1; i++) {
