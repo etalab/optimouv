@@ -219,11 +219,13 @@
                          </div>
                          <!-- /.panel-heading -->
                          <div class="panel-body" id="contrainteRepartitionBody" style="display: none">
+                         {#<div class="panel-body" id="contrainteRepartitionBody">#}
                              <div class="panel-body">
                                  <div class="table-responsive">
                                      <table class="table table-striped table-bordered table-hover" id="tableContrainteRepartitionHomogene">
                                          <thead>
                                          <tr>
+                                             <th style="display: none"></th>
                                              <th><strong>Equipe</strong></th>
                                              <th><strong>Catégorie</strong></th>
                                          </tr>
@@ -235,7 +237,7 @@
                                                  <td style="display: none" id="repartitionHomogeneIdVille{{ key }}">{{ detailsVille.id }}</td>
                                                  <td>{{ detailsVille.nom }}</td>
                                                  <td>
-                                                     <select class="form-control" id="repartitionHomogeneOption{{ key }}">
+                                                     <select class="form-control" id="repartitionHomogeneOption{{ key }}" style="width: 100%;">
                                                          <option value="Aucun" disabled selected> -- Aucun -- </option>
                                                          <option value="Espoir">Espoir</option>
                                                          <option value="Descendant">Descendant</option>
@@ -279,7 +281,15 @@
 
              {{ parent() }}
 
+
+
+
+
              <script language="javascript">
+
+
+
+
 
                  function typePlateau() {
 
@@ -325,7 +335,12 @@
                          $("#contrainteRepartitionBody").toggle();
 
                      });
+                     // table responsive
+                     $('#tableContrainteRepartitionHomogene').DataTable({
+                         responsive: true
+                     });
                  });
+
 
                  // dupliquer élément
                  $('#additional-field-model').duplicateElement({
