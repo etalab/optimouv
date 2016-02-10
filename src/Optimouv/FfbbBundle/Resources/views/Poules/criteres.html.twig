@@ -373,13 +373,22 @@
                              alert("Veuillez vérifier que le nombre de poules donné est valide");
                          }
                          else{
+                             var interdictions = getContraintes();
+                             var repartitionsHomogenes = verifRepartitionHomogene();
+
+                             console.log("repartitionsHomogenes: " + repartitionsHomogenes );
+
+                             // si la vérification des répartitions homogenes retourne une erreur
+                             if(repartitionsHomogenes == "erreur" ){
+                                 return;
+                             }
+
+
                             alert("Le calcul est en cours. Vous recevrez un mail pour vous avertir de la mise à disposition de vos résultats de calculs");
 
-                             var Interdiction = getContraintes();
-                             var repatitionHomogene = verifRepartitionHomogene();
 
                             // agréger les input params
-                            var inputParams = {typeMatch: typeMatch, poulesNbr: poulesNbr, idGroupe: idGroupe, interdictions: Interdiction, repatitionsHomogenes : repatitionHomogene };
+                            var inputParams = {typeMatch: typeMatch, poulesNbr: poulesNbr, idGroupe: idGroupe, interdictions: interdictions, repartitionsHomogenes  : repartitionsHomogenes };
                             console.log("inputParams : " + JSON.stringify(inputParams));
 
 
@@ -397,7 +406,7 @@
                                      console.log('urlRedirect: ' + urlRedirect);
 
                                      // redirect à la page rapport
-//                                     window.location = urlRedirect;
+                                     window.location = urlRedirect;
 
                                  },
                                  error: function(jqXHR, textStatus, errorThrown)
@@ -465,17 +474,23 @@
 
                  function getContraintes(){
                      var mesLignes = document.getElementById("mesContraintes").rows;
-                     var tabContraintes = [];
+                     var tabContraintes = {};
                      for (i = 1; i < mesLignes.length; i++) {
                          var maLigne = mesLignes[i];
                          var td1 = maLigne.getElementsByTagName("td")[1];
                          var td2 = maLigne.getElementsByTagName("td")[2];
-                         var monEquipe1 = td1.getElementsByClassName("equipe1")[0].value;
-                         var monEquipe2 = td2.getElementsByClassName("equipe2")[0].value;
+                         var monEquipe1 = parseInt(td1.getElementsByClassName("equipe1")[0].value);
+                         var monEquipe2 = parseInt(td2.getElementsByClassName("equipe2")[0].value);
 
-                         var maContrainte = monEquipe1+":"+monEquipe2;
+                         console.log("monEquipe1: " + monEquipe1);
+                         console.log("monEquipe2: " + monEquipe2);
 
-                         tabContraintes.push(maContrainte);
+                         if ((monEquipe1) && (monEquipe2 )){
+                             var maContrainte = [monEquipe1, monEquipe2];
+                             tabContraintes[i] = maContrainte;
+
+                         };
+
                    }
 
 
@@ -537,53 +552,62 @@
                      //test sur le nombre d'occurence
                      if(nbrEspoir == 1){
                          alert("La catégorie Espoir doit contenir au moins deux équipes. Veuillez choisir au moins une équipe supplémentaire pour cette catégorie  ou annuler la catégorie sélectionnée pour votre équipe.");
-                        return;
+                        return "erreur";
                      }
                      if(nbrDescendant == 1){
                          alert("La catégorie Descendant doit contenir au moins deux équipes. Veuillez choisir au moins une équipe supplémentaire pour cette catégorie  ou annuler la catégorie sélectionnée pour votre équipe.");
-                         return;
+                         return "erreur";
                      }
                      if(nbrPromu == 1){
                          alert("La catégorie Promu doit contenir au moins deux équipes. Veuillez choisir au moins une équipe supplémentaire pour cette catégorie  ou annuler la catégorie sélectionnée pour votre équipe.");
-                         return;
+                         return "erreur";
                      }
                      if(nbrEquipeNiveauA == 1){
                          alert("La catégorie Equie de niveau A doit contenir au moins deux équipes. Veuillez choisir au moins une équipe supplémentaire pour cette catégorie  ou annuler la catégorie sélectionnée pour votre équipe.");
-                         return;
+                         return "erreur";
                      }
                      if(nbrEquipeNiveauB == 1){
                          alert("La catégorie Equie de niveau B doit contenir au moins deux équipes. Veuillez choisir au moins une équipe supplémentaire pour cette catégorie  ou annuler la catégorie sélectionnée pour votre équipe.");
-                         return;
+                         return "erreur";
                      }
                      if(nbrEquipeNiveauC == 1){
                          alert("La catégorie Equie de niveau C doit contenir au moins deux équipes. Veuillez choisir au moins une équipe supplémentaire pour cette catégorie  ou annuler la catégorie sélectionnée pour votre équipe.");
-                         return;
+                         return "erreur";
                      }
                      if(nbrTeteSerie2 == 1){
                          alert("La catégorie Tête de série 2 doit contenir au moins deux équipes. Veuillez choisir au moins une équipe supplémentaire pour cette catégorie  ou annuler la catégorie sélectionnée pour votre équipe.");
-                         return;
+                         return "erreur";
                      }
                      if(nbrTeteSerie1 == 1){
                          alert("La catégorie Tête de série 1 doit contenir au moins deux équipes. Veuillez choisir au moins une équipe supplémentaire pour cette catégorie  ou annuler la catégorie sélectionnée pour votre équipe.");
-                         return;
+                         return "erreur";
                      }
 
 
-                     var mesRepartitionsHomogenes = [];
+//                     var mesRepartitionsHomogenes = [];
+                     var mesRepartitionsHomogenes = {};
                      for (i = 0; i < length-1; i++) {
 
                          var element = "repartitionHomogeneOption"+i;
                          var idVille = "repartitionHomogeneIdVille"+i;
 
                          var categorie = document.getElementById(element).value;
-                         var ville = document.getElementById(idVille).textContent;
+                         var ville = parseInt(document.getElementById(idVille).textContent);
 
                          var maRepartition = null;
 
                          if(categorie !="Aucun"){
 
-                             maRepartition = ville+':'+categorie;
-                             mesRepartitionsHomogenes.push(maRepartition);
+//                             maRepartition = ville+':'+categorie;
+//                             mesRepartitionsHomogenes.push(maRepartition);
+
+                             if(categorie in mesRepartitionsHomogenes){
+                                 mesRepartitionsHomogenes[categorie].push(ville);
+                             }
+                             else{
+                                 mesRepartitionsHomogenes[categorie] = [ville];
+
+                             }
                          }
 
                      }

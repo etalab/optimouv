@@ -1,8 +1,10 @@
 class INPUT:
-	Iter=5
-	IterConstraint=10000
-	MainUrl= "http://ffbb" # 
-    IterLaunch=20
+	Iter=5 # number of iteration to calculate P matrix for round trip and one way match
+    IterPlateau=5 # number of iteration to calculate shortest distance for match plateau
+	IterConstraint=10000 # maximum number of iteration before error constraint
+    IterLaunch=20 # number of launch iteration for round trip and one way match
+    IterLaunchPlateau=10 # number of launch iteration for plateau match
+    MainUrl= "http://ffbb" # 
 # 	MainUrl= "http://dev.ffbb.it4pme.fr/" # 
 	
 class DB:

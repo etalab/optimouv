@@ -60,6 +60,11 @@ class Listes{
         ini_set('auto_detect_line_endings', TRUE);
 
 
+//        error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+//            ."\n _SERVER: ".print_r($_SERVER, true), 3, $this->error_log_path);
+
+
+
         # obtenir le chemin d'upload du fichier
         $cheminFichierTemp = $_FILES["file-0"]["tmp_name"];
 
@@ -96,9 +101,11 @@ class Listes{
                 // obtenir les données d'en-têtes
                 $donneesEntete = $file->fgetcsv();
 
+
                 // Controler les colonnes des en-têtes avec les formats fixés
                 // Fichier equipes, personnes, lieux
                 $resultatBooleanControlEntete = $this->controlerEntete($donneesEntete);
+
 
                 if(!$resultatBooleanControlEntete["success"]){
                     $retour = array(
@@ -119,6 +126,18 @@ class Listes{
                     # tableau qui contient toutes les données (utilisé pour gérer les doublons)
                     $toutesLignes = [];
 
+                    # tableau qui contient le nom des toutes équipes (utilisé pour gérer le controle du fichier plateau pour les champs equipe adverse 1 et 2)
+                    $tousNomsEquipes = [];
+
+                    # tableau qui contient le nom des equipes adverses pour le premier et deuxième jour
+                    $premierJourEquipesAdverses1 = [];
+                    $premierJourEquipesAdverses2 = [];
+                    $deuxiemeJourEquipesAdverses1 = [];
+                    $deuxiemeJourEquipesAdverses2 = [];
+                    $premierJourReceptionListe = [];
+                    $deuxiemeJourReceptionListe = [];
+
+
                     // msg d'erreur générique
                     $genericMsg = "Veuillez corriger les champs indiqués et effectuer à nouveau l’import";
 
@@ -130,6 +149,8 @@ class Listes{
                         $idsEntite = [];
                         // obtenir les données pour chaque ligne
                         $nbrLigne = 1;
+
+
 
                         while (!$file->eof()) {
                             $donnéesLigne = $file->fgetcsv();
@@ -152,8 +173,12 @@ class Listes{
                                 continue;
                             }
 
+
+
+
                             // tester s'il y a des données
                             if($donnéesLigne != array(null)){
+
 
 //                                # controler des doublons # FIXME
 //                                # ajouter la ligne courante dans le répértoire des lignes si ce n'est pas un doublon
@@ -182,7 +207,6 @@ class Listes{
                                         $retour = array(
                                             "success" => false,
                                             "msg" => "Erreur ligne :".$nbrLigne."!"
-//                                                ." Le type d'entité donné: $typeEntite ne correspond pas au type attendu (EQUIPE, PERSONNE)  "
                                                 ." Le type d'entité donné: $typeEntite ne correspond pas au type attendu"
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
@@ -209,11 +233,12 @@ class Listes{
                                 }
 
 
+
                                 // obtenir les valeurs selon le type d'entité
                                 if (strtolower($typeEntite) == "equipe") {
 
                                     # controler le nombre de colonnes
-                                    if(count($donnéesLigne) != 11 && count($donnéesLigne) != 12){
+                                    if(count($donnéesLigne) != 11 && count($donnéesLigne) != 12 && count($donnéesLigne) != 18){
                                         $retour = array(
                                             "success" => false,
                                             "msg" => "Erreur ligne :".$nbrLigne."!"
@@ -310,6 +335,7 @@ class Listes{
                                     }
 
 
+
                                     # corriger le code postal si un zéro est manquant dans le premier chiffre
                                     $codePostal = $this->corrigerCodePostal($codePostal);
 
@@ -340,6 +366,9 @@ class Listes{
                                         continue;
                                     }
 
+
+
+
                                     # les champs optionnels
                                     $adresse = $donnéesLigne[6];
                                     $longitude = $donnéesLigne[7];
@@ -359,6 +388,68 @@ class Listes{
                                                 "success" => false,
                                                 "msg" => "Erreur ligne :".$nbrLigne."!"
                                                     ."Le champ poule doit contenir une lettre. Veuillez corriger et importer de nouveau votre fichier"
+                                            );
+                                            array_push($lignesErronees, $retour["msg"]);
+                                            continue;
+                                        }
+
+                                    }
+
+
+
+                                    // test si le fichier est adapté pour le match plateau
+                                    if(count($donnéesLigne) == 18){
+
+                                        # ajouter les noms dans la liste
+                                        array_push($tousNomsEquipes, $donnéesLigne[1]);
+
+                                        $premierJourReception = $donnéesLigne[12];
+                                        $premierJourEquipe1 = $donnéesLigne[13];
+                                        $premierJourEquipe2 = $donnéesLigne[14];
+
+                                        $deuxiemeJourReception = $donnéesLigne[15];
+                                        $deuxiemeJourEquipe1 = $donnéesLigne[16];
+                                        $deuxiemeJourEquipe2 = $donnéesLigne[17];
+
+                                        # ajouter les equipes adverses les listes
+                                        array_push($premierJourEquipesAdverses1, $premierJourEquipe1);
+                                        array_push($premierJourEquipesAdverses2, $premierJourEquipe2);
+                                        array_push($deuxiemeJourEquipesAdverses1, $deuxiemeJourEquipe1);
+                                        array_push($deuxiemeJourEquipesAdverses2, $deuxiemeJourEquipe2);
+                                        array_push($premierJourReceptionListe, $premierJourReception);
+                                        array_push($deuxiemeJourReceptionListe, $deuxiemeJourReception);
+
+                                        // controle les champs des jours de reception
+                                        if( ($premierJourReception == "" ) or  ($deuxiemeJourReception == "") or !(is_numeric($premierJourReception))  or !(is_numeric($deuxiemeJourReception)) ){
+
+                                            $retour = array(
+                                                "success" => false,
+                                                "msg" => "Erreur ligne :".$nbrLigne."!"
+                                                    ."Le champ 'PREMIER JOUR DE RECEPTION' (colonne 13) et Le champ 'DEUXIEME JOUR DE RECEPTION' (colonne 16) doivent être rempli and avoir la valeur de type entier à partir de 0!"
+                                                    ."Veuillez corriger et importer de nouveau votre fichier"
+                                            );
+                                            array_push($lignesErronees, $retour["msg"]);
+                                            continue;
+                                        }
+
+                                        // controler equipe 1 et equipe 2, elles doivent être renseignées
+                                        if( ($premierJourReception > 0 ) && ( $premierJourEquipe1 == "" || $premierJourEquipe2 == "" )  ){
+                                            $retour = array(
+                                                "success" => false,
+                                                "msg" => "Erreur ligne :".$nbrLigne."!"
+                                                    ."Le champ 'EQUIPE ADVERSE 1' (colonne 14) et Le champ 'EQUIPE ADVERSE 2' (colonne 15) doivent être rempli!"
+                                                    ."Veuillez corriger et importer de nouveau votre fichier"
+                                            );
+                                            array_push($lignesErronees, $retour["msg"]);
+                                            continue;
+                                        }
+
+                                        if( ($deuxiemeJourReception > 0 ) && ( $deuxiemeJourEquipe1 == "" || $deuxiemeJourEquipe2 == "" )  ){
+                                            $retour = array(
+                                                "success" => false,
+                                                "msg" => "Erreur ligne :".$nbrLigne."!"
+                                                    ."Le champ 'EQUIPE ADVERSE 1' (colonne 17) et Le champ 'EQUIPE ADVERSE 2' (colonne 18) doivent être rempli!"
+                                                    ."Veuillez corriger et importer de nouveau votre fichier"
                                             );
                                             array_push($lignesErronees, $retour["msg"]);
                                             continue;
@@ -620,6 +711,10 @@ class Listes{
                                     continue;
                                 }
 
+
+
+
+
                                 # controler les doublons pour tous les types
                                 # ajouter la ligne courante dans le répértoire des lignes si ce n'est pas un doublon
                                 $donneesLigneEquipe = [$nom, $codePostal, $ville];
@@ -649,6 +744,88 @@ class Listes{
 
                     }
 
+//                    error_log("service: listes, function: controlerEntites, status: ".print_r($tousNomsEquipes, True), 3, $this->error_log_path);
+
+
+
+                    // controler equipe 1 et equipe 2, elles doivent figurer dans les lignes importées (match plateau)
+//                    error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
+//                        ."\n premierJourEquipesAdverses1 : ".print_r($premierJourEquipesAdverses1 , true), 3, $this->error_log_path);
+                    if($toutesLignes != [] && count($toutesLignes[0]) == 18){
+                        for($k = 0; $k < count($toutesLignes); $k ++){
+                            $nbrLigne = $k + 1;
+
+                            // premier jour
+                            $premierJourEquipe1 = $premierJourEquipesAdverses1[$k];
+                            $premierJourEquipe2 = $premierJourEquipesAdverses2[$k];
+                            $premierJourReception = $premierJourReceptionListe[$k];
+
+
+                            // deuxième jour
+                            $deuxiemeJourEquipe1 = $deuxiemeJourEquipesAdverses1[$k];
+                            $deuxiemeJourEquipe2 = $deuxiemeJourEquipesAdverses2[$k];
+                            $deuxiemeJourReception = $deuxiemeJourReceptionListe[$k];
+
+
+                            // premier jour equipe adverse 1
+                            if( $premierJourReception > 0 && !in_array($premierJourEquipe1, $tousNomsEquipes) ){
+
+
+                                $retour = array(
+                                    "success" => false,
+                                    "msg" => "Erreur ligne :".$nbrLigne."!"
+                                        ." La valeur pour le champs 'EQUIPE ADVERSE 1 (colonne 14) n'est pas reconnue'.!"
+                                        ." Veuillez supprimer cette ligne et effectuer à nouveau l’import"
+                                );
+                                array_push($lignesErronees, $retour["msg"]);
+                                continue;
+                            }
+                            if( $premierJourReception > 0 && !in_array($premierJourEquipe2, $tousNomsEquipes) ) {
+
+                                $retour = array(
+                                    "success" => false,
+                                    "msg" => "Erreur ligne :" . $nbrLigne . "!"
+                                        . " La valeur pour le champs 'EQUIPE ADVERSE 2 (colonne 15) n'est pas reconnue'.!"
+                                        . " Veuillez supprimer cette ligne et effectuer à nouveau l’import"
+                                );
+                                array_push($lignesErronees, $retour["msg"]);
+                                continue;
+                            }
+                            if( $deuxiemeJourReception> 0 && !in_array($deuxiemeJourEquipe1, $tousNomsEquipes) ) {
+
+//                            error_log("service: listes, function: controlerEntites, status: ".print_r($deuxiemeJourEquipe1."\n", True), 3, $this->error_log_path);
+
+                                $retour = array(
+                                    "success" => false,
+                                    "msg" => "Erreur ligne :" . $nbrLigne . "!"
+                                        . " La valeur pour le champs 'EQUIPE ADVERSE 1 (colonne 17) n'est pas reconnue'.!"
+                                        . " Veuillez supprimer cette ligne et effectuer à nouveau l’import"
+                                );
+                                array_push($lignesErronees, $retour["msg"]);
+                                continue;
+                            }
+                            if( $deuxiemeJourReception> 0 && !in_array($deuxiemeJourEquipe2, $tousNomsEquipes) ) {
+
+//                            error_log("service: listes, function: controlerEntites, status: ".print_r($deuxiemeJourEquipe1."\n", True), 3, $this->error_log_path);
+
+                                $retour = array(
+                                    "success" => false,
+                                    "msg" => "Erreur ligne :" . $nbrLigne . "!"
+                                        . " La valeur pour le champs 'EQUIPE ADVERSE 2 (colonne 18) n'est pas reconnue'.!"
+                                        . " Veuillez supprimer cette ligne et effectuer à nouveau l’import"
+                                );
+                                array_push($lignesErronees, $retour["msg"]);
+                                continue;
+                            }
+
+
+                        }
+
+                    }
+
+
+
+                    // controler s'il y a des lignes erronées
                     if(count($lignesErronees) > 0){
                         $retour = array(
                             "success" => false,
@@ -923,6 +1100,60 @@ class Listes{
                                     $stmt->bindParam(':id_ville_france', $idVilleFrance);
                                     $stmt->bindParam(':poule', $poule);
                                 }
+                                elseif(count($donnéesLigne) == 18){
+                                    $poule = $donnéesLigne[11];
+                                    //champs rencontre pour specifier si l equipe appartient à une poule ou bien dediee pour les rencontres
+
+                                    $premierJourReception = $donnéesLigne[12];
+                                    $premierJourEquipe1 = $donnéesLigne[13];
+                                    $premierJourEquipe2 = $donnéesLigne[14];
+
+                                    $deuxiemeJourReception = $donnéesLigne[15];
+                                    $deuxiemeJourEquipe1 = $donnéesLigne[16];
+                                    $deuxiemeJourEquipe2 = $donnéesLigne[17];
+
+                                    $refPlateau = [];
+                                    $refPlateau["premierJourReception"] = $premierJourReception;
+                                    $refPlateau["premierJourEquipe1"] = $premierJourEquipe1;
+                                    $refPlateau["premierJourEquipe2"] = $premierJourEquipe2;
+                                    $refPlateau["deuxiemeJourReception"] = $deuxiemeJourReception;
+                                    $refPlateau["deuxiemeJourEquipe1"] = $deuxiemeJourEquipe1;
+                                    $refPlateau["deuxiemeJourEquipe2"] = $deuxiemeJourEquipe2;
+                                    $refPlateau = json_encode($refPlateau);
+
+
+                                    $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, adresse, code_postal, ville, longitude, latitude,"
+                                        ." projection, participants, "
+                                        ." licencies, lieu_rencontre_possible, date_creation, date_modification, id_ville_france, poule, ref_plateau )"
+                                        ."VALUES ( :id_utilisateur, :type_entite, :nom, :adresse, :code_postal, :ville, :longitude, :latitude, "
+                                        ." :projection, :participants, "
+                                        .":licencies, :lieu_rencontre_possible, :date_creation, :date_modification, :id_ville_france, :poule, :ref_plateau);";
+
+                                    $stmt = $bdd->prepare($sql);
+                                    $stmt->bindParam(':id_utilisateur', $idUtilisateur);
+                                    $stmt->bindParam(':type_entite', $typeEntite);
+                                    $stmt->bindParam(':nom', $nom);
+                                    $stmt->bindParam(':adresse', $adresse);
+                                    $stmt->bindParam(':code_postal', $codePostal);
+                                    $stmt->bindParam(':ville', $ville);
+                                    $stmt->bindParam(':longitude', $longitude);
+                                    $stmt->bindParam(':latitude', $latitude);
+                                    $stmt->bindParam(':projection', $projection);
+                                    $stmt->bindParam(':participants', $participants);
+                                    $stmt->bindParam(':licencies', $licencies);
+                                    $stmt->bindParam(':lieu_rencontre_possible', $lieuRencontrePossible);
+                                    $stmt->bindParam(':date_creation', $dateCreation);
+                                    $stmt->bindParam(':date_modification', $dateModification);
+                                    $stmt->bindParam(':id_ville_france', $idVilleFrance);
+                                    $stmt->bindParam(':poule', $poule);
+                                    $stmt->bindParam(':ref_plateau', $refPlateau);
+
+
+
+                                }
+
+
+
                                 else{
                                     $sql = "INSERT INTO  entite (id_utilisateur, type_entite, nom, adresse, code_postal, ville, longitude, latitude,"
                                         ." projection, participants, "
@@ -1216,8 +1447,10 @@ class Listes{
                 return $retour;
             }
 
+//            error_log("service: listes, function: controlerEntites, count entete: ".print_r(count($entete), True), 3, $this->error_log_path);
+
             // pour la liste d'équipes
-            if(count($entete) == 11 || count($entete) == 12){
+            if(count($entete) == 11 || count($entete) == 12 || count($entete) == 18){
                 if($entete[2] != "CODE POSTAL" ){
                     $retour["msg"] = "Veuillez vérifier que le nom de la colonne 3 de l'en-tête correspond au template donné (CODE POSTAL).!"
                         .$genericMsg;
@@ -1263,6 +1496,46 @@ class Listes{
                         .$genericMsg;
                     return $retour;
                 }
+
+                # controle supplementaire pour le fichier plateau
+                if(count($entete) == 18){
+                    if($entete[11] != "POULE" ){
+                        $retour["msg"] = "Veuillez vérifier que le nom de la colonne 12 de l'en-tête correspond au template donné (POULE).!"
+                            .$genericMsg;
+                        return $retour;
+                    }
+                    if($entete[12] != "PREMIER JOUR DE RECEPTION" ){
+                        $retour["msg"] = "Veuillez vérifier que le nom de la colonne 13 de l'en-tête correspond au template donné (PREMIER JOUR DE RECEPTION).!"
+                            .$genericMsg;
+                        return $retour;
+                    }
+                    if($entete[13] != "EQUIPE ADVERSE 1" ){
+                        $retour["msg"] = "Veuillez vérifier que le nom de la colonne 14 de l'en-tête correspond au template donné (EQUIPE ADVERSE 1).!"
+                            .$genericMsg;
+                        return $retour;
+                    }
+                    if($entete[14] != "EQUIPE ADVERSE 2" ){
+                        $retour["msg"] = "Veuillez vérifier que le nom de la colonne 15 de l'en-tête correspond au template donné (EQUIPE ADVERSE 2).!"
+                            .$genericMsg;
+                        return $retour;
+                    }
+                    if($entete[15] != "DEUXIEME JOUR DE RECEPTION" ){
+                        $retour["msg"] = "Veuillez vérifier que le nom de la colonne 16 de l'en-tête correspond au template donné (DEUXIEME JOUR DE RECEPTION).!"
+                            .$genericMsg;
+                        return $retour;
+                    }
+                    if($entete[16] != "EQUIPE ADVERSE 1" ){
+                        $retour["msg"] = "Veuillez vérifier que le nom de la colonne 17 de l'en-tête correspond au template donné (EQUIPE ADVERSE 1).!"
+                            .$genericMsg;
+                        return $retour;
+                    }
+                    if($entete[17] != "EQUIPE ADVERSE 2" ){
+                        $retour["msg"] = "Veuillez vérifier que le nom de la colonne 18 de l'en-tête correspond au template donné (EQUIPE ADVERSE 2).!"
+                            .$genericMsg;
+                        return $retour;
+                    }
+                }
+
                 $retour["success"] = true;
 
             }

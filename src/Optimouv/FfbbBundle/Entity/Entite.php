@@ -179,6 +179,13 @@ class Entite
      */
     private $idVilleFrance;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ref_plateau", type="text", nullable=true)
+     */
+    private $refPlateau;
+
 
     /**
      * Get id
@@ -741,4 +748,31 @@ class Entite
     {
         return $this->rencontre;
     }
+
+    /**
+     * Set refPlateau
+     *
+     * @param string $refPlateau
+     *
+     * @return Entite
+     */
+    public function setRefPlateau($refPlateau)
+    {
+        $this->refPlateau = $refPlateau;
+
+        return $this;
+    }
+
+    /**
+     * Get refPlateau
+     *
+     * @return string
+     */
+    public function geRefPlateau()
+    {
+        return $this->refPlateau;
+    }
+
+
+
 }
