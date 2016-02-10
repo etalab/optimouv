@@ -359,7 +359,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		else:
 			results["params"]["varEquipeParPoulePossible"] = 1
 			maxVarTeamNbrPerPool = poolSize - 2
-			results["params"]["varEquipeParPouleProposition"] = list(range(1, maxVarTeamNbrPerPool+1 ))
+			results["params"]["varEquipeParPouleProposition"] = list(range(0, maxVarTeamNbrPerPool+1 ))
 
 
 		logging.debug(" ########################################## ROUND TRIP　MATCH ###############################################")
@@ -701,7 +701,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		else:
 			results["params"]["varEquipeParPoulePossible"] = 1
 			maxVarTeamNbrPerPool = poolSize - 2
-			results["params"]["varEquipeParPouleProposition"] = list(range(1, maxVarTeamNbrPerPool+1 ))
+			results["params"]["varEquipeParPouleProposition"] = list(range(0, maxVarTeamNbrPerPool+1 ))
 
 
 		logging.debug(" ########################################## ONE WAY　MATCH ###############################################")
@@ -1344,7 +1344,7 @@ def callback(ch, method, properties, body):
 			check_final_result(calculatedResult, userId)
 
 
-			
+# 			results = optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult)
 			results = optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult)
 # 			logging.debug("results : %s" %results)
 
