@@ -666,6 +666,7 @@ class PoulesController extends Controller
             'nomGroupe' => $nomGroupe,
             'nomListe' => $nomListe,
             'detailsVilles' => $detailsVilles,
+            'idGroupe' => $idGroupe,
 
 
 
