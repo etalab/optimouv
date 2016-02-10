@@ -70,10 +70,20 @@ class Poules{
                 $repartitionsHomogenes  = [];
             }
 
+            # variation du nombre d'equipes par poule
+            if(array_key_exists("varEquipeParPoule", $_POST)){
+                $varEquipeParPoule = $_POST["varEquipeParPoule"];
+            }
+            else{
+                $varEquipeParPoule   = 0;
+            }
+
+
 
             $nom = "rapport_groupe_".$idGroupe."_action_".$typeAction;
             $statut = 0;
-            $params = json_encode(array("nbrPoule" => $poulesNbr, "interdictions"=> $interdictions, "repartitionHomogene"=> $repartitionsHomogenes));
+            $params = json_encode(array("nbrPoule" => $poulesNbr, "interdictions"=> $interdictions,
+                "repartitionHomogene"=> $repartitionsHomogenes, "varEquipeParPoule"=> $varEquipeParPoule));
 
             # insérer dans la base de données
             $sql = "INSERT INTO  rapport (nom, id_groupe, type_action, date_creation, statut, params) VALUES ( :nom, :id_groupe, :type_action, :date_creation, :statut, :params);";
