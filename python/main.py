@@ -1334,7 +1334,7 @@ def callback(ch, method, properties, body):
 			# get result id from report id
 			sql = "select id from scenario where id_rapport=%s"%reportId
 			resultId = db.fetchone(sql)
-# 			logging.debug("resultId : %s" %resultId)
+			logging.debug("resultId : %s" %resultId)
 			
 			sql = "select details_calcul from scenario where id=%s"%resultId
 			calculatedResult = json.loads(db.fetchone(sql))
@@ -1393,8 +1393,8 @@ def on_channel_open(channel_):
 	print("timed_receive: Received our Channel")
 
 	try:
-# 		channel.basic_consume(callback, queue=config.MQ.Queue, no_ack=True)
-		channel.basic_consume(callback, queue=config.MQ.Queue, no_ack=False)
+		channel.basic_consume(callback, queue=config.MQ.Queue, no_ack=True)
+# 		channel.basic_consume(callback, queue=config.MQ.Queue, no_ack=False)
 	except Exception as e:
 		show_exception_traceback()
 
