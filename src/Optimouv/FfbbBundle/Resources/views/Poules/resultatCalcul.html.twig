@@ -3027,7 +3027,7 @@
                                          <option disabled selected> -- selectionnez une option -- </option>
                                          {% for detailsVille in detailsVilles %}
 
-                                             <option value={{ detailsVille.id }}>{{ detailsVille.ville }}</option>
+                                             <option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>
                                          {% endfor %}
                                      </select>
                                  </td>
@@ -3038,7 +3038,7 @@
                                          <option disabled selected> -- selectionnez une option -- </option>
                                          {% for detailsVille in detailsVilles %}
 
-                                             <option value={{ detailsVille.id }}>{{ detailsVille.ville }}</option>
+                                             <option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>
                                          {% endfor %}
                                      </select>
 
@@ -3084,7 +3084,7 @@
                                      {% for key, detailsVille in detailsVilles %}
                                          <tr>
                                              <td style="display: none" id="repartitionHomogeneIdVille{{ key }}">{{ detailsVille.id }}</td>
-                                             <td>{{ detailsVille.ville }}</td>
+                                             <td>{{ detailsVille.nom }}</td>
                                              <td>
                                                  <select class="form-control" id="repartitionHomogeneOption{{ key }}">
                                                      <option value="Aucun" disabled selected> -- Aucun -- </option>
