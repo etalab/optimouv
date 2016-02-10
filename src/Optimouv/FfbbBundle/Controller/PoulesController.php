@@ -619,6 +619,7 @@ class PoulesController extends Controller
         $scenarioOptimalSansContrainte = $detailsCalcul["scenarioOptimalSansContrainte"];
         $scenarioRef = $detailsCalcul["scenarioRef"];
         $refExiste = $detailsCalcul["refExiste"];
+        $varEquipeParPouleProposition = $detailsCalcul["params"]["varEquipeParPouleProposition"];
 
 
         //récupération du nom du rapport
@@ -667,6 +668,7 @@ class PoulesController extends Controller
             'nomListe' => $nomListe,
             'detailsVilles' => $detailsVilles,
             'idGroupe' => $idGroupe,
+            'varEquipeParPouleProposition' => $varEquipeParPouleProposition,
 
 
 

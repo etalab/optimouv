@@ -2929,7 +2929,12 @@
                              <h5>Choisissez le nombre d'équipes par poule à faire varier</h5>
 
                              <div class="form-group">
-                                 <input id="variationNbrEquipe" type="number" min="1" class="form-control" required>
+                                 {#<input id="variationNbrEquipe" type="number" min="1" class="form-control" required>#}
+                                 <select id="variationNbrEquipe" class="form-control input-sm">
+                                     {% for proposition in varEquipeParPouleProposition %}
+                                         <option value={{ proposition }}>{{ proposition }}</option>
+                                     {% endfor %}
+                                 </select>
                              </div>
 
                          </div>
