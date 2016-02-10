@@ -433,7 +433,8 @@
                                                                                          <ul>
                                                                                              {% for keyDetail, detailsRencontreOpContrainte in distanceOptContrainte %}
                                                                                                  <li>
-                                                                                                     {{ distanceOptContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceOptContrainte[ loop.index ].equipeDestinationVille }}
+                                                                                                     {#{{ distanceOptContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceOptContrainte[ loop.index ].equipeDestinationVille }}#}
+                                                                                                     {{ distanceOptContrainte[ loop.index ].equipeDepartNom }} ~ {{ distanceOptContrainte[ loop.index ].equipeDestinationNom }}
                                                                                                  </li>
 
                                                                                              {% endfor %}
@@ -815,7 +816,8 @@
                                                                                      <ul>
                                                                                          {% for detailsRencontreEqContrainte in distanceEqContrainte %}
                                                                                              <li>
-                                                                                                 {{ distanceEqContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceEqContrainte[ loop.index ].equipeDestinationVille }}
+                                                                                                 {#{{ distanceEqContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceEqContrainte[ loop.index ].equipeDestinationVille }}#}
+                                                                                                 {{ distanceEqContrainte[ loop.index ].equipeDepartNom }} ~ {{ distanceEqContrainte[ loop.index ].equipeDestinationNom }}
                                                                                              </li>
 
                                                                                          {% endfor %}
@@ -1201,7 +1203,8 @@
                                                                                      <ul>
                                                                                          {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
                                                                                              <li>
-                                                                                                 {{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}
+                                                                                                 {#{{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}#}
+                                                                                                 {{ distanceOptSansContrainte[ loop.index ].equipeDepartNom }} ~ {{ distanceOptSansContrainte[ loop.index ].equipeDestinationNom }}
                                                                                              </li>
 
                                                                                          {% endfor %}
@@ -1958,7 +1961,8 @@
                                                                                  <ul>
                                                                                      {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
                                                                                          <li>
-                                                                                             {{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }} ~  {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}
+                                                                                             {#{{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }} ~  {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}#}
+                                                                                             {{ distanceOptSansContrainte[ loop.index ].equipeDepartNom }} ~  {{ distanceOptSansContrainte[ loop.index ].equipeDestinationNom }}
                                                                                          </li>
 
                                                                                      {% endfor %}
@@ -2358,7 +2362,8 @@
                                                                                  <ul>
                                                                                      {% for detailsRencontreEqContrainte in distanceEqContrainte %}
                                                                                          <li>
-                                                                                             {{ distanceEqContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceEqContrainte[ loop.index ].equipeDestinationVille }}
+                                                                                             {#{{ distanceEqContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceEqContrainte[ loop.index ].equipeDestinationVille }}#}
+                                                                                             {{ distanceEqContrainte[ loop.index ].equipeDepartNom }} ~ {{ distanceEqContrainte[ loop.index ].equipeDestinationNom }}
                                                                                          </li>
 
                                                                                      {% endfor %}
