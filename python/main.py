@@ -1180,7 +1180,7 @@ def callback(ch, method, properties, body):
 
 		# get constraint variation team number per pool
 		if "varEquipeParPoule" in params:
-			varTeamNbrPerPool = params["varEquipeParPoule"]
+			varTeamNbrPerPool = int(params["varEquipeParPoule"])
 		else:
 			varTeamNbrPerPool = 0
 
