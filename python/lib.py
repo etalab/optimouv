@@ -2432,6 +2432,22 @@ def check_final_result(calculatedResult, userId):
 		show_exception_traceback()
 
 """
+Function to check params for post treatment round trip and one way match
+"""
+def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints):
+	try:
+		if calculatedResult["typeMatch"] != launchType:
+			TEXT = u"Bonjour,\n\n" 
+			TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
+			TEXT += u"Veuillez utiliser les mêmes parametres que vous avez utilisé précédemment . " 
+			send_email_to_user_failure_with_text(userId, TEXT)
+			
+		
+	except Exception as e:
+		show_exception_traceback()
+
+
+"""
 Function to save result into DB
 """
 def update_result_to_db(resultId, results):
