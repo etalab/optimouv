@@ -1318,7 +1318,6 @@ def callback(ch, method, properties, body):
 		logging.debug("distanceInitRoundTrip: %s" %(distanceInitRoundTrip,))
 
 		logging.debug("############################################# OPTIMIZE POOL #################################################")
-# 		varTeamNbrPerPool = 0
 		### Pre treatment
 # 		if launchType == "match_aller_retour":
 		if launchType == "allerRetour" and varTeamNbrPerPool == 0:
@@ -1340,6 +1339,11 @@ def callback(ch, method, properties, body):
 			sql = "select details_calcul from scenario where id=%s"%resultId
 			calculatedResult = json.loads(db.fetchone(sql))
 # 			logging.debug("calculatedResult : %s" %calculatedResult)
+			
+			# check final result
+			check_final_result(calculatedResult, userId)
+
+
 			
 			results = optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult)
 # 			logging.debug("results : %s" %results)
