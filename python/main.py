@@ -1153,7 +1153,7 @@ def callback(ch, method, properties, body):
 		logging.debug("starting current time : %s" %beginTime.strftime('%Y-%m-%d %H:%M:%S'))
 		
 # 		# consume one message at a time
-		consumer.stop_consuming()
+# 		consumer.stop_consuming()
 # 		ch.stop_consuming()
 # 		print('Sending a Basic.Cancel RPC command to RabbitMQ')
 # 		ch.basic_cancel(self.on_cancelok, self._consumer_tag)
@@ -1822,7 +1822,7 @@ def main():
 
 		# rabbitmq connection
 		credentials = pika.PlainCredentials(config.MQ.User, config.MQ.Password)
-		parameters = pika.ConnectionParameters(host=config.MQ.Host, credentials=credentials)
+		parameters = pika.ConnectionParameters(host=config.MQ.Host, credentials=credentials, heartbeat_interval=0)
 
 		# synchronous Rabbit MQ
 # 		connection = pika.BlockingConnection(parameters)
