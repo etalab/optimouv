@@ -694,6 +694,9 @@ class PoulesController extends Controller
         //recuperation des donnees relatives au scenario
         $infoPdf = $this->getInfoPdfAction($params);
 
+        echo '<pre>',print_r($infoPdf,1),'</pre>';exit;
+
+
         $nombrePoule = $infoPdf[0];
         $taillePoule = $infoPdf[1];
         $contraintsExiste = $infoPdf[2];
@@ -851,7 +854,7 @@ class PoulesController extends Controller
         $retour[8] = $detailsVilles;
         $retour[9] = $idGroupe;
         $retour[10] = $idRapport;
-        echo '<pre>',print_r($retour,1),'</pre>';exit;
+
         return $retour;
     }
 }
