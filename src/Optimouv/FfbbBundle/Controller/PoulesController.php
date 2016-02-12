@@ -642,6 +642,9 @@ class PoulesController extends Controller
         $idListe = $statement[0]['idListe'];
         $nomGroupe = $statement[0]['nomGroupe'];
 
+        print_r($idListe);
+        exit;
+
         //récupération du nom du=e la liste
 
         $statement = $connection->prepare("SELECT  a.nom as nomListe from liste_participants as a where a.id = :id");
