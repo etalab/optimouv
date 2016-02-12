@@ -825,9 +825,12 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 		
 		logging.debug("  iterConstraint: %s" %iterConstraint)
 
+# 		logging.debug("  teams: %s" %teams)
+# 		logging.debug("  prohibitionConstraints: %s" %prohibitionConstraints)
+
 		# get indexes of prohibition constraints
-		indexesProhibitionConstraints = getIndexesProhibitionConstraints(prohibitionConstraints, teams)
-		logging.debug("  indexesProhibitionConstraints: %s" %indexesProhibitionConstraints)
+# 		indexesProhibitionConstraints = getIndexesProhibitionConstraints(prohibitionConstraints, teams)
+# 		logging.debug("  indexesProhibitionConstraints: %s" %indexesProhibitionConstraints)
 		
 		# get indexes of type distribution constraints
 # 		indexesTypeDistributionConstraints = getIndexesTypeDistributionConstraints(typeDistributionConstraints, teams)
@@ -846,8 +849,8 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 	
 	
 			# list of prohibited constraints
-			rulesProhibitionConstraints = create_rules_for_prohibition_constraints(indexesProhibitionConstraints, P_InitMat)
-			logging.debug("  rulesProhibitionConstraints: %s" %(rulesProhibitionConstraints))
+# 			rulesProhibitionConstraints = create_rules_for_prohibition_constraints(indexesProhibitionConstraints, P_InitMat)
+# 			logging.debug("  rulesProhibitionConstraints: %s" %(rulesProhibitionConstraints))
 
 			# list of type distribution constraints
 # 			rulesTypeDistributionConstraints = []
@@ -878,7 +881,7 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 				# P_ij == 0 means that both teams are in different pool 
 				if i <= j and int(P_ij) == 0:
 					# apply prohibition constraints
-					if transIndex not in rulesProhibitionConstraints:
+# 					if transIndex not in rulesProhibitionConstraints:
 						
 						##### apply type distribution constraints #####
 						# create temporary P matrix if the transIndex is applied 
@@ -889,11 +892,16 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 						poolDistributionTmp = create_pool_distribution_from_matrix(P_TransMatTmp, teamNbr, poolNbr, poolSize, teams)
 						logging.debug("  poolDistributionTmp: \n%s" %poolDistributionTmp)
 						
+						
+						statusProhibitionConstraints = check_prohibition_constraints(prohibitionConstraints, poolDistributionTmp)
+						logging.debug("	statusProhibitionConstraints: %s" %statusProhibitionConstraints)
+						
+
 						statusTypeDistributionConstraints = check_type_distribution_constraints(typeDistributionConstraints, poolDistributionTmp)
 						logging.debug("	statusTypeDistributionConstraints: %s" %statusTypeDistributionConstraints)
 
 						# if the transformed matrix fulfills the type distribution constraints
-						if statusTypeDistributionConstraints == 0:
+						if statusProhibitionConstraints and statusTypeDistributionConstraints == 0:
 							logging.debug("  i: %s, j: %s" %(i, j))
 							logging.debug("  iterConstraint: %s" %(iterConstraint))
 							break
@@ -1067,8 +1075,8 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 		logging.debug("  iterConstraint: %s" %iterConstraint)
 
 		# get indexes of prohibition constraints
-		indexesProhibitionConstraints = getIndexesProhibitionConstraints(prohibitionConstraints, teams)
-		logging.debug("  indexesProhibitionConstraints: %s" %indexesProhibitionConstraints)
+# 		indexesProhibitionConstraints = getIndexesProhibitionConstraints(prohibitionConstraints, teams)
+# 		logging.debug("  indexesProhibitionConstraints: %s" %indexesProhibitionConstraints)
 		
 		# get indexes of type distribution constraints
 # 		indexesTypeDistributionConstraints = getIndexesTypeDistributionConstraints(typeDistributionConstraints, teams)
@@ -1087,8 +1095,8 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 	
 	
 			# list of prohibited constraints
-			rulesProhibitionConstraints = create_rules_for_prohibition_constraints(indexesProhibitionConstraints, P_InitMat)
-			logging.debug("  rulesProhibitionConstraints: %s" %(rulesProhibitionConstraints))
+# 			rulesProhibitionConstraints = create_rules_for_prohibition_constraints(indexesProhibitionConstraints, P_InitMat)
+# 			logging.debug("  rulesProhibitionConstraints: %s" %(rulesProhibitionConstraints))
 
 			# list of type distribution constraints
 # 			rulesTypeDistributionConstraints = []
@@ -1120,7 +1128,7 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 				# P_ij == 0 means that both teams are in different pool 
 				if i <= j and int(P_ij) == 0:
 					# apply prohibition constraints
-					if transIndex not in rulesProhibitionConstraints:
+# 					if transIndex not in rulesProhibitionConstraints:
 
 						##### apply type distribution constraints #####
 						# create temporary P matrix if the transIndex is applied 
@@ -1131,11 +1139,15 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 						poolDistributionTmp = create_pool_distribution_from_matrix(P_TransMatTmp, teamNbr, poolNbr, poolSize, teams)
 						logging.debug("  poolDistributionTmp: \n%s" %poolDistributionTmp)
 						
+						statusProhibitionConstraints = check_prohibition_constraints(prohibitionConstraints, poolDistributionTmp)
+						logging.debug("  statusProhibitionConstraints: %s" %statusProhibitionConstraints)
+
+
 						statusTypeDistributionConstraints = check_type_distribution_constraints(typeDistributionConstraints, poolDistributionTmp)
 						logging.debug("	statusTypeDistributionConstraints: %s" %statusTypeDistributionConstraints)
 
 						# if the transformed matrix fulfills the type distribution constraints
-						if statusTypeDistributionConstraints == 0:
+						if statusProhibitionConstraints and statusTypeDistributionConstraints == 0:
 							logging.debug("  i: %s, j: %s" %(i, j))
 							logging.debug("  iterConstraint: %s" %(iterConstraint))
 							break

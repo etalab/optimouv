@@ -330,7 +330,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 # 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
 # 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
 # 					}
-# 
+
 # 		# get list of ids, names and cities from entity table for prohibition constraints
 # 		for indexProhibition, members in enumerate(prohibitionConstraints, start=1):
 # # 			logging.debug(" members: %s" %members)
@@ -360,6 +360,9 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			results["params"]["varEquipeParPoulePossible"] = 1
 			maxVarTeamNbrPerPool = poolSize - 2
 			results["params"]["varEquipeParPouleProposition"] = list(range(0, maxVarTeamNbrPerPool+1 ))
+			# limit variation of team member to max 2
+			if len(results["params"]["varEquipeParPouleProposition"]) > 3:
+				results["params"]["varEquipeParPouleProposition"] = results["params"]["varEquipeParPouleProposition"][:3]
 
 
 		logging.debug(" ########################################## ROUND TRIP　MATCH ###############################################")
@@ -702,6 +705,9 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			results["params"]["varEquipeParPoulePossible"] = 1
 			maxVarTeamNbrPerPool = poolSize - 2
 			results["params"]["varEquipeParPouleProposition"] = list(range(0, maxVarTeamNbrPerPool+1 ))
+			# limit variation of team member to max 2
+			if len(results["params"]["varEquipeParPouleProposition"]) > 3:
+				results["params"]["varEquipeParPouleProposition"] = results["params"]["varEquipeParPouleProposition"][:3]
 
 
 		logging.debug(" ########################################## ONE WAY　MATCH ###############################################")
@@ -1211,7 +1217,7 @@ def callback(ch, method, properties, body):
 # 		logging.debug("sql: %s" %sql)
 
 		# convert list of strings to list of ints
-		teams = list(map(int, db.fetchone(sql).split(",")))
+		teams = sorted(list(map(int, db.fetchone(sql).split(","))))
 		logging.debug("teams: %s" %teams)
 		teamNbr = len(teams)
 		logging.debug("teamNbr: %s" %teamNbr)
