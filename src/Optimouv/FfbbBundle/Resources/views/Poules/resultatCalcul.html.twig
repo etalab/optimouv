@@ -445,7 +445,8 @@
                                                                                          <ul>
                                                                                              {% for keyDetail, detailsRencontreOpContrainte in distanceOptContrainte %}
                                                                                                  <li>
-                                                                                                     {{ distanceOptContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceOptContrainte[ loop.index ].equipeDestinationVille }}
+                                                                                                     {#{{ distanceOptContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceOptContrainte[ loop.index ].equipeDestinationVille }}#}
+                                                                                                     {{ distanceOptContrainte[ loop.index ].equipeDepartNom }} ~ {{ distanceOptContrainte[ loop.index ].equipeDestinationNom }}
                                                                                                  </li>
 
                                                                                              {% endfor %}
@@ -645,7 +646,7 @@
                                                              </li>
                                                              <li><a href="#DetailsEq" data-toggle="tab">Détails</a>
                                                              </li>
-                                                             <li><a href="#listeRencontresScEq" data-toggle="tab">liste des rencontres</a>
+                                                             <li><a href="#listeRencontresScEq" data-toggle="tab">Liste des rencontres</a>
                                                              </li>
 
                                                          </ul>
@@ -827,7 +828,8 @@
                                                                                      <ul>
                                                                                          {% for detailsRencontreEqContrainte in distanceEqContrainte %}
                                                                                              <li>
-                                                                                                 {{ distanceEqContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceEqContrainte[ loop.index ].equipeDestinationVille }}
+                                                                                                 {#{{ distanceEqContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceEqContrainte[ loop.index ].equipeDestinationVille }}#}
+                                                                                                 {{ distanceEqContrainte[ loop.index ].equipeDepartNom }} ~ {{ distanceEqContrainte[ loop.index ].equipeDestinationNom }}
                                                                                              </li>
 
                                                                                          {% endfor %}
@@ -1213,7 +1215,8 @@
                                                                                      <ul>
                                                                                          {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
                                                                                              <li>
-                                                                                                 {{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}
+                                                                                                 {#{{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}#}
+                                                                                                 {{ distanceOptSansContrainte[ loop.index ].equipeDepartNom }} ~ {{ distanceOptSansContrainte[ loop.index ].equipeDestinationNom }}
                                                                                              </li>
 
                                                                                          {% endfor %}
@@ -1959,7 +1962,8 @@
                                                                                  <ul>
                                                                                      {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
                                                                                          <li>
-                                                                                             {{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }} ~  {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}
+                                                                                             {#{{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }} ~  {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}#}
+                                                                                             {{ distanceOptSansContrainte[ loop.index ].equipeDepartNom }} ~  {{ distanceOptSansContrainte[ loop.index ].equipeDestinationNom }}
                                                                                          </li>
 
                                                                                      {% endfor %}
@@ -2357,7 +2361,8 @@
                                                                                  <ul>
                                                                                      {% for detailsRencontreEqContrainte in distanceEqContrainte %}
                                                                                          <li>
-                                                                                             {{ distanceEqContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceEqContrainte[ loop.index ].equipeDestinationVille }}
+                                                                                             {#{{ distanceEqContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceEqContrainte[ loop.index ].equipeDestinationVille }}#}
+                                                                                             {{ distanceEqContrainte[ loop.index ].equipeDepartNom }} ~ {{ distanceEqContrainte[ loop.index ].equipeDestinationNom }}
                                                                                          </li>
 
                                                                                      {% endfor %}
@@ -2923,7 +2928,12 @@
                              <h5>Choisissez le nombre d'équipes par poule à faire varier</h5>
 
                              <div class="form-group">
-                                 <input id="variationNbrEquipe" type="number" min="1" class="form-control" required>
+                                 {#<input id="variationNbrEquipe" type="number" min="1" class="form-control" required>#}
+                                 <select id="variationNbrEquipe" class="form-control input-sm">
+                                     {% for proposition in varEquipeParPouleProposition %}
+                                         <option value={{ proposition }}>{{ proposition }}</option>
+                                     {% endfor %}
+                                 </select>
                              </div>
 
                          </div>
@@ -3070,7 +3080,8 @@
                      <!-- /.panel-heading -->
                      <div class="panel-body" id="contrainteRepartitionBody" style="display: none">
                          <div class="panel-body">
-                             <div class="table-responsive">
+                             {#<div class="table-responsive" >#}
+                             <div class="table-responsive"  style="max-height: 400px; overflow-y: scroll;">
                                  <table class="table table-striped table-bordered table-hover" id="tableContrainteRepartitionHomogene">
                                      <thead>
                                      <tr>
@@ -3190,6 +3201,90 @@
 
                  // javascript quand on clique sur le bouton 'lancer le calcul'
                  $(document).ready(function(){
+                        $("#lancerCalculBtn").click(function(){
+
+                            console.log("------------------------------------ debug bouton lancer calcul ---------------------------------------");
+
+                            // récupérer le type de match
+                            var typeMatch =   $('input[name=typeRencontre]:checked').val();
+                            console.log("typeMatch: " + typeMatch);
+
+                            // récupérer l'id du groupe
+                            var idGroupe = {{ idGroupe }};
+                            console.log("idGroupe : " + idGroupe);
+
+                            // récupérer le nombre de poules
+                            var poulesNbr = $("#inputPoulesNbr").val();
+                            console.log("poulesNbr : " + poulesNbr );
+
+                            // récupérer la variation du nombre d'équipes par pouls
+                            var varEquipeParPoule = $("#variationNbrEquipe").val();
+                            console.log("varEquipeParPoule : " + varEquipeParPoule );
+
+
+                            // controler le champ obligatoire (le nombre de poules)
+//                         if (typeMatch == "plateau"){
+//                             alert("Ce type de match n'est pas encore supporté. Veuillez choisir un autre type de match");
+//
+//                         }
+
+
+                            if(  (typeMatch == "allerRetour" || typeMatch == "allerSimple") && (poulesNbr == "" || parseInt(poulesNbr)<2 ) ){
+                                alert("Veuillez vérifier que le nombre de poules donné est valide");
+                            }
+                            else if (typeMatch == "plateau"  && ((poulesNbr == "" || parseInt(poulesNbr)<1 )) ) {
+                                alert("Veuillez vérifier que le nombre de poules donné est valide");
+                            }
+                            else{
+                                var interdictions = getContraintes();
+                                var repartitionsHomogenes = verifRepartitionHomogene();
+
+                                console.log("repartitionsHomogenes: " + repartitionsHomogenes );
+
+                                // si la vérification des répartitions homogenes retourne une erreur
+                                if(repartitionsHomogenes == "erreur" ){
+                                    return;
+                                }
+
+
+                                alert("Le calcul est en cours. Vous recevrez un mail pour vous avertir de la mise à disposition de vos résultats de calculs");
+
+
+                                // agréger les input params
+                                var inputParams = {typeMatch: typeMatch, poulesNbr: poulesNbr, idGroupe: idGroupe,
+                                    interdictions: interdictions, repartitionsHomogenes  : repartitionsHomogenes,
+                                    varEquipeParPoule: varEquipeParPoule};
+                                console.log("inputParams : " + JSON.stringify(inputParams));
+
+
+                                // AJAX requete
+                                $.ajax({
+                                    url: '/admin/poules/lancer-calcul/',
+                                    type: 'POST',
+                                    data: inputParams,
+                                    dataType : "json",
+                                    success: function(data, textStatus, jqXHR)
+                                    {
+                                        console.log('data: ' + JSON.stringify(data));
+
+                                        var urlRedirect = window.location.origin + "/admin/rapports";
+                                        console.log('urlRedirect: ' + urlRedirect);
+
+                                        // redirect à la page rapport
+                                        window.location = urlRedirect;
+
+                                    },
+                                    error: function(jqXHR, textStatus, errorThrown)
+                                    {
+                                        // Handle errors here
+                                        console.log('ERRORS: ' + textStatus);
+                                    }
+                                });
+
+                            }
+
+
+                        });
 
 
                  });
@@ -3263,17 +3358,23 @@
 
                  function getContraintes(){
                      var mesLignes = document.getElementById("mesContraintes").rows;
-                     var tabContraintes = [];
+                     var tabContraintes = {};
                      for (i = 1; i < mesLignes.length; i++) {
                          var maLigne = mesLignes[i];
                          var td1 = maLigne.getElementsByTagName("td")[1];
                          var td2 = maLigne.getElementsByTagName("td")[2];
-                         var monEquipe1 = td1.getElementsByClassName("equipe1")[0].value;
-                         var monEquipe2 = td2.getElementsByClassName("equipe2")[0].value;
+                         var monEquipe1 = parseInt(td1.getElementsByClassName("equipe1")[0].value);
+                         var monEquipe2 = parseInt(td2.getElementsByClassName("equipe2")[0].value);
 
-                         var maContrainte = monEquipe1+":"+monEquipe2;
+                         console.log("monEquipe1: " + monEquipe1);
+                         console.log("monEquipe2: " + monEquipe2);
 
-                         tabContraintes.push(maContrainte);
+                         if ((monEquipe1) && (monEquipe2 )){
+                             var maContrainte = [monEquipe1, monEquipe2];
+                             tabContraintes[i] = maContrainte;
+
+                         };
+
                      }
 
 
@@ -3333,61 +3434,68 @@
                      }
 
                      //test sur le nombre d'occurence
+                     //test sur le nombre d'occurence
                      if(nbrEspoir == 1){
                          alert("La catégorie Espoir doit contenir au moins deux équipes. Veuillez choisir au moins une équipe supplémentaire pour cette catégorie  ou annuler la catégorie sélectionnée pour votre équipe.");
-                         return;
+                         return "erreur";
                      }
                      if(nbrDescendant == 1){
                          alert("La catégorie Descendant doit contenir au moins deux équipes. Veuillez choisir au moins une équipe supplémentaire pour cette catégorie  ou annuler la catégorie sélectionnée pour votre équipe.");
-                         return;
+                         return "erreur";
                      }
                      if(nbrPromu == 1){
                          alert("La catégorie Promu doit contenir au moins deux équipes. Veuillez choisir au moins une équipe supplémentaire pour cette catégorie  ou annuler la catégorie sélectionnée pour votre équipe.");
-                         return;
+                         return "erreur";
                      }
                      if(nbrEquipeNiveauA == 1){
                          alert("La catégorie Equie de niveau A doit contenir au moins deux équipes. Veuillez choisir au moins une équipe supplémentaire pour cette catégorie  ou annuler la catégorie sélectionnée pour votre équipe.");
-                         return;
+                         return "erreur";
                      }
                      if(nbrEquipeNiveauB == 1){
                          alert("La catégorie Equie de niveau B doit contenir au moins deux équipes. Veuillez choisir au moins une équipe supplémentaire pour cette catégorie  ou annuler la catégorie sélectionnée pour votre équipe.");
-                         return;
+                         return "erreur";
                      }
                      if(nbrEquipeNiveauC == 1){
                          alert("La catégorie Equie de niveau C doit contenir au moins deux équipes. Veuillez choisir au moins une équipe supplémentaire pour cette catégorie  ou annuler la catégorie sélectionnée pour votre équipe.");
-                         return;
+                         return "erreur";
                      }
                      if(nbrTeteSerie2 == 1){
                          alert("La catégorie Tête de série 2 doit contenir au moins deux équipes. Veuillez choisir au moins une équipe supplémentaire pour cette catégorie  ou annuler la catégorie sélectionnée pour votre équipe.");
-                         return;
+                         return "erreur";
                      }
                      if(nbrTeteSerie1 == 1){
                          alert("La catégorie Tête de série 1 doit contenir au moins deux équipes. Veuillez choisir au moins une équipe supplémentaire pour cette catégorie  ou annuler la catégorie sélectionnée pour votre équipe.");
-                         return;
+                         return "erreur";
                      }
 
 
-                     var mesRepartitionsHomogenes = [];
+                     var mesRepartitionsHomogenes = {};
                      for (i = 0; i < length-1; i++) {
 
                          var element = "repartitionHomogeneOption"+i;
                          var idVille = "repartitionHomogeneIdVille"+i;
 
                          var categorie = document.getElementById(element).value;
-                         var ville = document.getElementById(idVille).textContent;
+                         var ville = parseInt(document.getElementById(idVille).textContent);
 
                          var maRepartition = null;
 
                          if(categorie !="Aucun"){
 
-                             maRepartition = ville+':'+categorie;
-                             mesRepartitionsHomogenes.push(maRepartition);
+//                             maRepartition = ville+':'+categorie;
+//                             mesRepartitionsHomogenes.push(maRepartition);
+
+                             if(categorie in mesRepartitionsHomogenes){
+                                 mesRepartitionsHomogenes[categorie].push(ville);
+                             }
+                             else{
+                                 mesRepartitionsHomogenes[categorie] = [ville];
+
+                             }
                          }
 
                      }
                      return mesRepartitionsHomogenes;
-
-//                     console.log(mesRepartitionsHomogenes);
 
 
                  }

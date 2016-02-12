@@ -2040,14 +2040,14 @@ def control_params_match_plateau(userId, teamNbr, poolNbr):
 		if teamNbr % 9 != 0:
 			TEXT += u"Veuillez assurer que le nombre de ligne dans votre fichier correspond au match plateau. " 
 
-			send_email_to_user_failure_plateau(userId, TEXT)
+			send_email_to_user_failure_with_text(userId, TEXT)
 		
 		# pool number has to be 9
 		poolSize = int(teamNbr/poolNbr)
 		if poolSize != 9:
 			TEXT += u"Veuillez assurer que le nombre de poule selectionné correspond au nombre de ligne dans votre fichier. " 
 
-			send_email_to_user_failure_plateau(userId, TEXT)
+			send_email_to_user_failure_with_text(userId, TEXT)
 
 
 	except Exception as e:
@@ -2056,7 +2056,7 @@ def control_params_match_plateau(userId, teamNbr, poolNbr):
 """
 Function to send email to user when the provided params are unexpected (for match plateau)
 """
-def send_email_to_user_failure_plateau(userId, TEXT):
+def send_email_to_user_failure_with_text(userId, TEXT):
 	try:
 		# get user's email from user id
 		sql = "select email from fos_user where id=%s"%userId
@@ -2412,6 +2412,42 @@ def replace_single_quote_for_result(result):
 		show_exception_traceback()
 
 """
+Function to check final result
+send error message to user if one tries to relaunch based on final result
+final result flag is set when user tries to play the variation of team number in pools
+"""
+def check_final_result(calculatedResult, userId):
+	try:
+		if "params" in calculatedResult:
+			if "final" in calculatedResult["params"]:
+				if results["params"]["final"] == "yes":
+					
+					TEXT = u"Bonjour,\n\n" 
+					TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
+					TEXT += u"Vous ne pouvez lancer le critère de variation du nombre d'équipes par poule qu'une seule fois. " 
+					send_email_to_user_failure_with_text(userId, TEXT)
+					
+		
+	except Exception as e:
+		show_exception_traceback()
+
+"""
+Function to check params for post treatment round trip and one way match
+"""
+def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints):
+	try:
+		if calculatedResult["typeMatch"] != launchType:
+			TEXT = u"Bonjour,\n\n" 
+			TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
+			TEXT += u"Veuillez utiliser les mêmes parametres que vous avez utilisé précédemment . " 
+			send_email_to_user_failure_with_text(userId, TEXT)
+			
+		
+	except Exception as e:
+		show_exception_traceback()
+
+
+"""
 Function to save result into DB
 """
 def update_result_to_db(resultId, results):
@@ -2442,6 +2478,9 @@ def update_result_to_db(resultId, results):
 		if resultsEquitableWithConstraint:
 			replace_single_quote_for_result(resultsEquitableWithoutConstraint["rencontreDetails"])
 
+
+		# mark the final result
+		results["params"]["final"] = "yes"
 
 		sql = """update scenario set details_calcul='%(results)s' where id=%(resultId)s
 			"""%{	"resultId": resultId, 
