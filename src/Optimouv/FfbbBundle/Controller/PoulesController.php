@@ -800,18 +800,14 @@ class PoulesController extends Controller
 
         # récupérer la liste des noms et des ids de villes
         $detailsVilles = $em->getRepository('FfbbBundle:Entite')->getEntities($equipes);
-
         $detailsCalcul = $em->getRepository('FfbbBundle:Scenario')->findOneById($idResultat)->getDetailsCalcul();
-
         $detailsCalcul = json_decode($detailsCalcul, true);
-
         $nombrePoule = $detailsCalcul["nombrePoule"];
         $taillePoule = $detailsCalcul["taillePoule"];
         $contraintsExiste = $detailsCalcul["contraintsExiste"];
         $typeMatch = $detailsCalcul["typeMatch"];
         $scenarioOptimalSansContrainte = $detailsCalcul["scenarioOptimalSansContrainte"];
 
-        echo '<pre>',print_r($scenarioOptimalSansContrainte,1),'</pre>';exit;
         //récupération du nom du rapport
         $connection = $em->getConnection();
 
@@ -855,7 +851,7 @@ class PoulesController extends Controller
         $retour[8] = $detailsVilles;
         $retour[9] = $idGroupe;
         $retour[10] = $idRapport;
-
+        echo '<pre>',print_r($retour,1),'</pre>';exit;
         return $retour;
     }
 }
