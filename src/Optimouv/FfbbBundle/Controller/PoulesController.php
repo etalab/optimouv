@@ -650,8 +650,6 @@ class PoulesController extends Controller
         $statement->execute();
         $statement = $statement->fetchAll(PDO::FETCH_ASSOC);
         $nomListe = $statement[0]['nomListe'];
-        print_r($nomListe);
-        exit;
 
         return $this->render('FfbbBundle:Poules:resultatCalcul.html.twig' , array(
 
