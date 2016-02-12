@@ -805,8 +805,9 @@ class PoulesController extends Controller
 
         $detailsCalcul = json_decode($detailsCalcul, true);
 
-        echo '<pre>',print_r($detailsCalcul,1),'</pre>';exit;
         $nombrePoule = $detailsCalcul["nombrePoule"];
+        echo '<pre>',print_r($nombrePoule,1),'</pre>';exit;
+
         $taillePoule = $detailsCalcul["taillePoule"];
         $contraintsExiste = $detailsCalcul["contraintsExiste"];
         $typeMatch = $detailsCalcul["typeMatch"];
