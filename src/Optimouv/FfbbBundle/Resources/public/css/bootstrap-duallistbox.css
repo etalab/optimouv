@@ -99,3 +99,14 @@
   background-color: #A4BD10;
   border-color: #ccc;
 }
+
+.btn-consulter-rapport {
+   color: #333;
+   background-color: #fff;
+   border-color: #ccc;
+ }
+.btn-consulter-rapport:hover {
+  color: #fff;
+  background-color: #EE7700;
+  border-color: #ccc;
+}

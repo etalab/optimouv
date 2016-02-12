@@ -242,6 +242,11 @@ ffbb_sendMail:
     path:    /sendMail
     defaults: { _controller: FfbbBundle:Default:sendMail }
 
+ffbb_previsualisation_pdf:
+    path:    /admin/export/previsualisation/pdf/
+    defaults: { _controller: FfbbBundle:Poules:previsualisationPdf }
 
-
+ffbb_export_pdf:
+    path:    /admin/export/sauvegarde/pdf/
+    defaults: { _controller: FfbbBundle:Poules:exportScenario }
 

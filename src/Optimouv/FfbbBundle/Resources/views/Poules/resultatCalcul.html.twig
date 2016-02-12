@@ -29,22 +29,34 @@
 
                              <tbody>
                              <tr>
-                                 <td>Nom du rapport: {{ nomRapport }}</td>
+                                 <td>Nom du rapport : {{ nomRapport }}</td>
                              </tr>
                              <tr>
-                                 <td>Nom de la liste: {{ nomListe }}</td>
+                                 <td>Nom de la liste : {{ nomListe }}</td>
                              </tr>
                              <tr>
-                                 <td>Nom du groupe: {{ nomGroupe }}</td>
+                                 <td>Nom du groupe : {{ nomGroupe }}</td>
                              </tr>
                              <tr>
                                  <td>
-                                    Type de rencontre: {{ typeMatch }}
+                                    Type de rencontre : {{ typeMatch }}
                                  </td>
                              </tr>
                              <tr>
-                                 <td> {{ nombrePoule }} poules de {{ taillePoule }} équipes</td>
+                                 <td>Poules :  {{ nombrePoule }} poules de {{ taillePoule }} équipes</td>
                              </tr>
+
+                                 {% if contraintsExiste == 1 %}
+                                 {% set contrainte = "Avec contrainte" %}
+
+                             {% else %}
+                                 {% set contrainte = "Sans contrainte" %}
+
+                             {% endif %}
+                             <tr>
+                                 <td> Contraintes : {{ contrainte  }} </td>
+                             </tr>
+
                              {% if refExiste == 1 %}
                              <tr>
 
@@ -1224,10 +1236,14 @@
                                                              </div>
                                                              <a href="{{ path('ffbb_poules_details_calcul') }}" class="pull-left">Détails
                                                                  du calcul</a>
+                                                             {% set params = "Ouss" %}
+                                                             <a href="{{ path('ffbb_previsualisation_pdf', {'params': params}) }}" class="btn btn-primary  pull-right">Exporter</a>
 
-                                                             <button type="button"
-                                                                     class="btn btn-primary  pull-right">Exporter
-                                                             </button>
+
+
+                                                             {#<button type="button"#}
+                                                                     {#class="btn btn-primary  pull-right">Exporter#}
+                                                             {#</button>#}
 
 
                                                          </div>
@@ -1929,11 +1945,6 @@
                                                                              Poules
                                                                          </th>
                                                                          <th>Rencontres</th>
-
-                                                                         {#<th>Rencontres</th>#}
-
-                                                                         {#<th>Equipe 2</th>#}
-
                                                                      </tr>
                                                                      </thead>
 
@@ -1947,16 +1958,6 @@
                                                                              {% set lettre = alphabet[key-1] %}
                                                                              <td><strong> Poule {{ lettre }} </strong></td>
 
-                                                                             {#<td >#}
-                                                                                 {#<ul>#}
-                                                                                     {#{% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}#}
-                                                                                         {#<li>#}
-                                                                                             {#{{ keyDetailOptSansContrainte }}#}
-                                                                                         {#</li>#}
-
-                                                                                     {#{% endfor %}#}
-                                                                                 {#</ul>#}
-                                                                             {#</td>#}
                                                                              <td>
                                                                                  <ul>
                                                                                      {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
@@ -1968,17 +1969,6 @@
                                                                                      {% endfor %}
                                                                                  </ul>
                                                                              </td>
-
-                                                                             {#<td>#}
-                                                                                 {#<ul>#}
-                                                                                     {#{% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}#}
-                                                                                         {#<li>#}
-                                                                                             {#{{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}#}
-                                                                                         {#</li>#}
-
-                                                                                     {#{% endfor %}#}
-                                                                                 {#</ul>#}
-                                                                             {#</td>#}
 
                                                                          </tr>
 
@@ -1994,10 +1984,19 @@
                                                          <a href="{{ path('ffbb_poules_details_calcul') }}" class="pull-left">Détails
                                                              du calcul</a>
 
-                                                         <button type="button"
-                                                                 class="btn btn-primary  pull-right">Exporter
-                                                         </button>
+                                                         {#<button type="button"#}
+                                                                 {#class="btn btn-primary  pull-right">Exporter#}
+                                                         {#</button>#}
+                                                         {#,nomGroupe,typeMatch, nombrePoule, coordPoulesOpSansContrainte#}
+                                                         {% set params = [nomRapport,typeMatch, nombrePoule, coordPoulesOpSansContrainte, distanceMinOpSansContrainte, distanceTotaleOpSansContrainte, nbrParticipantsTotalOpSansContrainte, estimationDetailsOpSansContrainte, dureeTotaleOpSansContrainte, rencontreDetailsOpSansContrainte, nomListe, nomGroupe, taillePoule, contrainte] %}
+                                                         {% set params = params|json_encode() %}
 
+                                                         <form name="submitParams" action="{{ path('ffbb_previsualisation_pdf')}}" method="post">
+                                                             <input type="hidden" value="{{ params }}" name="params" id="params">
+
+                                                             <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
+                                                         </form>
+                                                         {#<a href="{{ path('ffbb_previsualisation_pdf', {'params': params}) }}" class="btn btn-primary  pull-right">Exporter</a>#}
 
                                                      </div>
                                                  </div>

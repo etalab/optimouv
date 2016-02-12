@@ -17,7 +17,7 @@
                     <div class="panel-heading">
                         Liste de vos rapports
 
-                        {{ app.request.server.get('SERVER_NAME') }}
+                        {#{{ app.request.server.get('SERVER_NAME') }}#}
                     </div>
 
                     <div class="panel-body">
@@ -69,12 +69,12 @@
                                                           method="post">
                                                         <input type="hidden" name="typeAction" id="typeAction"
                                                                value="{{ infoRapport.typeAction }}">
-                                                        <button type="submit" class="btn btn-info">Consulter</button>
+                                                        <button type="submit" class="btn btn-consulter-rapport">Consulter</button>
 
 
                                                     </form>
                                                 {% else %}
-                                                    <button type="submit" class="btn btn-info" disabled>Consulter
+                                                    <button type="submit" class="btn btn-consulter-rapport" disabled>Consulter
                                                     </button>
 
 

@@ -642,6 +642,7 @@ class PoulesController extends Controller
         $idListe = $statement[0]['idListe'];
         $nomGroupe = $statement[0]['nomGroupe'];
 
+
         //récupération du nom du=e la liste
 
         $statement = $connection->prepare("SELECT  a.nom as nomListe from liste_participants as a where a.id = :id");
@@ -649,7 +650,6 @@ class PoulesController extends Controller
         $statement->execute();
         $statement = $statement->fetchAll(PDO::FETCH_ASSOC);
         $nomListe = $statement[0]['nomListe'];
-
 
         return $this->render('FfbbBundle:Poules:resultatCalcul.html.twig' , array(
 
@@ -683,5 +683,103 @@ class PoulesController extends Controller
     {
 
         return $this->render('FfbbBundle:Poules:detailsCalcul.html.twig');
+    }
+
+    public function previsualisationPdfAction()
+    {
+
+        $params = $_POST['params'];
+        $params = json_decode($params, true);
+
+
+        $nomRapport = $params[0];
+        $typeMatch = $params[1];
+        $nombrePoule = $params[2];
+        $coordPoulesOpSansContrainte = $params[3];
+        $distanceMinOpSansContrainte = $params[4];
+        $distanceTotaleOpSansContrainte = $params[5];
+        $nbrParticipantsTotalOpSansContrainte = $params[6];
+        $estimationDetailsOpSansContrainte = $params[7];
+        $dureeTotaleOpSansContrainte = $params[8];
+        $rencontreDetailsOpSansContrainte = $params[9];
+        $nomListe = $params[10];
+        $nomGroupe = $params[11];
+        $taillePoule = $params[12];
+        $contrainte = $params[13];
+
+
+        return $this->render('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
+            'nomRapport' => $nomRapport,
+            'typeMatch' => $typeMatch,
+            'nombrePoule' => $nombrePoule,
+            'coordPoulesOpSansContrainte' => $coordPoulesOpSansContrainte,
+            'distanceMinOpSansContrainte' => $distanceMinOpSansContrainte,
+            'distanceTotaleOpSansContrainte' => $distanceTotaleOpSansContrainte,
+            'nbrParticipantsTotalOpSansContrainte' => $nbrParticipantsTotalOpSansContrainte,
+            'estimationDetailsOpSansContrainte' => $estimationDetailsOpSansContrainte,
+            'dureeTotaleOpSansContrainte' => $dureeTotaleOpSansContrainte,
+            'rencontreDetailsOpSansContrainte' => $rencontreDetailsOpSansContrainte,
+            'nomListe' => $nomListe,
+            'nomGroupe' => $nomGroupe,
+            'taillePoule' => $taillePoule,
+            'contrainte' => $contrainte,
+        ));
+
+    }
+
+    public function exportScenarioAction()
+    {
+
+        $params = $_POST['params'];
+        $params = json_decode($params, true);
+
+
+        $nomRapport = $params[0];
+        $typeMatch = $params[1];
+        $nombrePoule = $params[2];
+        $coordPoulesOpSansContrainte = $params[3];
+        $distanceMinOpSansContrainte = $params[4];
+        $distanceTotaleOpSansContrainte = $params[5];
+        $nbrParticipantsTotalOpSansContrainte = $params[6];
+        $estimationDetailsOpSansContrainte = $params[7];
+        $dureeTotaleOpSansContrainte = $params[8];
+        $rencontreDetailsOpSansContrainte = $params[9];
+        $nomListe = $params[10];
+        $nomGroupe = $params[11];
+        $taillePoule = $params[12];
+        $contrainte = $params[13];
+
+
+        $html = $this->renderView('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
+            'nomRapport' => $nomRapport,
+            'typeMatch' => $typeMatch,
+            'nombrePoule' => $nombrePoule,
+            'coordPoulesOpSansContrainte' => $coordPoulesOpSansContrainte,
+            'distanceMinOpSansContrainte' => $distanceMinOpSansContrainte,
+            'distanceTotaleOpSansContrainte' => $distanceTotaleOpSansContrainte,
+            'nbrParticipantsTotalOpSansContrainte' => $nbrParticipantsTotalOpSansContrainte,
+            'estimationDetailsOpSansContrainte' => $estimationDetailsOpSansContrainte,
+            'dureeTotaleOpSansContrainte' => $dureeTotaleOpSansContrainte,
+            'rencontreDetailsOpSansContrainte' => $rencontreDetailsOpSansContrainte,
+            'nomListe' => $nomListe,
+            'nomGroupe' => $nomGroupe,
+            'taillePoule' => $taillePoule,
+            'contrainte' => $contrainte,
+
+        ));
+
+//        $html = "Hello Ouss";
+        $dompdf = $this->get('slik_dompdf');
+
+        // Generate the pdf
+        $dompdf->getpdf($html);
+
+        // Either stream the pdf to the browser
+        $dompdf->stream("myfile.pdf");
+
+        // Or get the output to handle it yourself
+        $dompdf->output();
+
+
     }
 }
