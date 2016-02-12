@@ -38,9 +38,17 @@
                                  <td>Nom du groupe : {{ nomGroupe }}</td>
                              </tr>
                              <tr>
-                                 <td>
-                                    Type de rencontre : {{ typeMatch }}
-                                 </td>
+
+                                 {% if typeMatch == "allerRetour" %}
+                                     <td>  Type de rencontre : Optimisation de poules - match aller retour </td>
+                                 {% elseif typeMatch == "allerSimple" %}
+                                     <td>  Type de rencontre : Optimisation de poules - match aller simple </td>
+                                 {% elseif typeMatch == "plateau" %}
+                                     <td>  Type de rencontre : Optimisation de poules - match aller plateau </td>
+                                 {% else %}
+                                     <td> Type de rencontre : {{ typeMatch }} </td>
+                                 {% endif %}
+
                              </tr>
                              <tr>
                                  <td>Poules :  {{ nombrePoule }} poules de {{ taillePoule }} équipes</td>

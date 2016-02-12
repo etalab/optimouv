@@ -867,7 +867,8 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 					logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 # 					# update status job failure
 					update_job_status(reportId, -1)
-					send_email_to_user_failure(userId)
+# 					send_email_to_user_failure(userId)
+					send_email_to_user_failure(userId, reportId)
 					sys.exit()
 				iterConstraint -= 1
 				
@@ -1113,7 +1114,8 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 					logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 # 					# update status job failure
 					update_job_status(reportId, -1)
-					send_email_to_user_failure(userId)
+# 					send_email_to_user_failure(userId)
+					send_email_to_user_failure(userId, reportId)
 					sys.exit()
 				iterConstraint -= 1
 
@@ -2002,8 +2004,12 @@ def send_email_to_user(userId, resultId):
 """
 Function to send email to user when there is no results (there are too many constraints)
 """
-def send_email_to_user_failure(userId):
+# def send_email_to_user_failure(userId):
+def send_email_to_user_failure(userId, reportId):
 	try:
+		sql = "select nom from rapport where id=%s"%reportId
+		reportName = db.fetchone(sql)
+		
 		# get user's email from user id
 		sql = "select email from fos_user where id=%s"%userId
 		
@@ -2012,7 +2018,8 @@ def send_email_to_user_failure(userId):
 
 		SUBJECT = u'mise à disposition de vos résultats de calculs'
 		TEXT = u"Bonjour,\n\n" 
-		TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
+# 		TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
+		TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
 		TEXT += u"Veuillez modifier vos critères et contraintes et relancer un calcul. " 
 		logging.debug("TEXT: \n%s" %TEXT)
 		
@@ -2035,6 +2042,7 @@ def send_email_to_user_failure(userId):
 		server.sendmail(gmail_sender, [TO], msg.as_string())
 		server.quit()	
 
+		sys.exit()
 
 	except Exception as e:
 		show_exception_traceback()
@@ -2043,10 +2051,15 @@ def send_email_to_user_failure(userId):
 """
 Function control provided params by user
 """
-def control_params_match_plateau(userId, teamNbr, poolNbr):
+# def control_params_match_plateau(userId, teamNbr, poolNbr):
+def control_params_match_plateau(userId, teamNbr, poolNbr, reportId):
 	try:
+		sql = "select nom from rapport where id=%s"%reportId
+		reportName = db.fetchone(sql)
+
 		TEXT = u"Bonjour,\n\n" 
-		TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
+# 		TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
+		TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
 
 		# team number has to be the multiplication of 9 (9, 18, 27)
 		if teamNbr % 9 != 0:
@@ -2428,14 +2441,19 @@ Function to check final result
 send error message to user if one tries to relaunch based on final result
 final result flag is set when user tries to play the variation of team number in pools
 """
-def check_final_result(calculatedResult, userId):
+# def check_final_result(calculatedResult, userId):
+def check_final_result(calculatedResult, userId, reportId):
 	try:
+		sql = "select nom from rapport where id=%s"%reportId
+		reportName = db.fetchone(sql)
+
 		if "params" in calculatedResult:
 			if "final" in calculatedResult["params"]:
 				if results["params"]["final"] == "yes":
 					
 					TEXT = u"Bonjour,\n\n" 
-					TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
+# 					TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
+					TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
 					TEXT += u"Vous ne pouvez lancer le critère de variation du nombre d'équipes par poule qu'une seule fois. " 
 					send_email_to_user_failure_with_text(userId, TEXT)
 					
@@ -2446,11 +2464,16 @@ def check_final_result(calculatedResult, userId):
 """
 Function to check params for post treatment round trip and one way match
 """
-def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints):
+# def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints):
+def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints, reportId):
 	try:
+		sql = "select nom from rapport where id=%s"%reportId
+		reportName = db.fetchone(sql)
+		
 		if calculatedResult["typeMatch"] != launchType:
 			TEXT = u"Bonjour,\n\n" 
-			TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
+# 			TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
+			TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
 			TEXT += u"Veuillez utiliser les mêmes parametres que vous avez utilisé précédemment . " 
 			send_email_to_user_failure_with_text(userId, TEXT)
 			

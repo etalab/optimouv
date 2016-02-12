@@ -45,7 +45,27 @@
 
                                             <td> {{ loop.index }} </td>
                                             <td> {{ infoRapport.nom }} </td>
-                                            <td> {{ infoRapport.typeAction }} </td>
+
+                                            {% if infoRapport.typeAction == "allerRetour" %}
+                                                <td>  Optimisation de poules - match aller retour </td>
+                                            {% elseif infoRapport.typeAction == "allerSimple" %}
+                                                <td>  Optimisation de poules - match aller simple </td>
+                                            {% elseif infoRapport.typeAction == "plateau" %}
+                                                <td>  Optimisation de poules - match aller plateau </td>
+                                            {% elseif infoRapport.typeAction == "barycentre" %}
+                                                <td>  Meilleur lieu - barycentre </td>
+                                            {% elseif infoRapport.typeAction == "meilleurLieu" %}
+                                                <td>  Meilleur lieu - lieux définis  </td>
+                                            {% elseif infoRapport.typeAction == "exclusion" %}
+                                                <td>  Meilleur lieu - barycentre avec exclusion </td>
+                                            {% elseif infoRapport.typeAction == "terrainNeutre" %}
+                                                <td>  Meilleur lieu - lieux définis avec liste de lieux </td>
+                                            {% else %}
+                                                <td> {{ infoRapport.typeAction }} </td>
+                                            {% endif %}
+
+
+
                                             <td> {{ infoRapport.dateCreation.date|date('d/m/Y') }} </td>
 
                                             {% if infoRapport.statut  == -1 %}
