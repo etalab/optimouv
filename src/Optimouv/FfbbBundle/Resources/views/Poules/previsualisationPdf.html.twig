@@ -51,6 +51,13 @@
 <h4>Nom du groupe : {{ nomGroupe }}</h4>
 <h4>Type de rencontre : {{ typeMatch }} </h4>
 <h4>Poules : {{ nombrePoule }} poules de {{ taillePoule }} équipes </h4>
+{% if contraintsExiste == 1 %}
+    {% set contrainte = "Avec contrainte" %}
+
+{% else %}
+    {% set contrainte = "Sans contrainte" %}
+
+{% endif %}
 <h4>Contraintes : {{ contrainte }} </h4>
 
 
