@@ -332,21 +332,43 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 # 					}
 
 # 		# get list of ids, names and cities from entity table for prohibition constraints
-# 		for indexProhibition, members in enumerate(prohibitionConstraints, start=1):
-# # 			logging.debug(" members: %s" %members)
-# 			members = ",".join(map(str, members)) # convert list of ints to string
-# 			prohibitionDetail = get_list_details_from_list_ids_for_entity(members)
-# 			results["params"]["interdictionsIds"][indexProhibition] =  prohibitionDetail["ids"]
-# 			results["params"]["interdictionsNoms"][indexProhibition] =  prohibitionDetail["names"]
-# 			results["params"]["interdictionsVilles"][indexProhibition] =  prohibitionDetail["cities"]
-# 
-# 		# get list of names and cities from entity table for type distribution constraints
-# 		for teamType, members in typeDistributionConstraints.items():
-# 			members = ",".join(map(str, members)) # convert list of ints to string
-# 			prohibitionDetail = get_list_details_from_list_ids_for_entity(members)
-# 			results["params"]["repartitionsHomogenesIds"][teamType] =  prohibitionDetail["ids"]
-# 			results["params"]["repartitionsHomogenesNoms"][teamType] =  prohibitionDetail["names"]
-# 			results["params"]["repartitionsHomogenesVilles"][teamType] =  prohibitionDetail["cities"]
+		for indexProhibition, members in enumerate(prohibitionConstraints, start=1):
+# 			logging.debug(" indexProhibition: %s" %indexProhibition)
+			members = ",".join(map(str, members)) # convert list of ints to string
+			prohibitionDetail = get_list_details_from_list_ids_for_entity(members)
+# 			logging.debug(" prohibitionDetail: %s" %prohibitionDetail)
+			
+			if "interdictionsIds" not in results["params"]:
+				results["params"]["interdictionsIds"] = {indexProhibition: prohibitionDetail["ids"]}
+			else: 
+				results["params"]["interdictionsIds"][indexProhibition] = prohibitionDetail["ids"]
+			if "interdictionsNoms" not in results["params"]:
+				results["params"]["interdictionsNoms"] = {indexProhibition: prohibitionDetail["names"]}
+			else: 
+				results["params"]["interdictionsNoms"][indexProhibition] = prohibitionDetail["names"]
+			if "interdictionsVilles" not in results["params"]:
+				results["params"]["interdictionsVilles"] = {indexProhibition: prohibitionDetail["cities"]}
+			else: 
+				results["params"]["interdictionsVilles"][indexProhibition] = prohibitionDetail["cities"]
+
+		# get list of names and cities from entity table for type distribution constraints
+		for teamType, members in typeDistributionConstraints.items():
+			members = ",".join(map(str, members)) # convert list of ints to string
+			prohibitionDetail = get_list_details_from_list_ids_for_entity(members)
+			
+			if "repartitionsHomogenesIds" not in results["params"]:
+				results["params"]["repartitionsHomogenesIds"] = {teamType: prohibitionDetail["ids"]}
+			else: 
+				results["params"]["repartitionsHomogenesIds"][teamType] = prohibitionDetail["ids"]
+			if "repartitionsHomogenesNoms" not in results["params"]:
+				results["params"]["repartitionsHomogenesNoms"] = {teamType: prohibitionDetail["names"]}
+			else: 
+				results["params"]["repartitionsHomogenesNoms"][teamType] = prohibitionDetail["names"]
+			if "repartitionsHomogenesVilles" not in results["params"]:
+				results["params"]["repartitionsHomogenesVilles"] = {teamType: prohibitionDetail["cities"]}
+			else: 
+				results["params"]["repartitionsHomogenesVilles"][teamType] = prohibitionDetail["cities"]
+
 # 		logging.debug(" results: %s" %(results,))
 
 		# save constraint variation of team number per pool
@@ -677,22 +699,42 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 # 					}
 # 
 # 		# get list of ids, names and cities from entity table for prohibition constraints
-# 		for indexProhibition, members in enumerate(prohibitionConstraints, start=1):
-# # 			logging.debug(" members: %s" %members)
-# 			members = ",".join(map(str, members)) # convert list of ints to string
-# 			prohibitionDetail = get_list_details_from_list_ids_for_entity(members)
-# 			results["params"]["interdictionsIds"][indexProhibition] =  prohibitionDetail["ids"]
-# 			results["params"]["interdictionsNoms"][indexProhibition] =  prohibitionDetail["names"]
-# 			results["params"]["interdictionsVilles"][indexProhibition] =  prohibitionDetail["cities"]
-# 
-# 		# get list of names and cities from entity table for type distribution constraints
-# 		for teamType, members in typeDistributionConstraints.items():
-# 			members = ",".join(map(str, members)) # convert list of ints to string
-# 			prohibitionDetail = get_list_details_from_list_ids_for_entity(members)
-# 			results["params"]["repartitionsHomogenesIds"][teamType] =  prohibitionDetail["ids"]
-# 			results["params"]["repartitionsHomogenesNoms"][teamType] =  prohibitionDetail["names"]
-# 			results["params"]["repartitionsHomogenesVilles"][teamType] =  prohibitionDetail["cities"]
-# 		logging.debug(" results: %s" %(results,))
+		for indexProhibition, members in enumerate(prohibitionConstraints, start=1):
+# 			logging.debug(" indexProhibition: %s" %indexProhibition)
+			members = ",".join(map(str, members)) # convert list of ints to string
+			prohibitionDetail = get_list_details_from_list_ids_for_entity(members)
+# 			logging.debug(" prohibitionDetail: %s" %prohibitionDetail)
+			
+			if "interdictionsIds" not in results["params"]:
+				results["params"]["interdictionsIds"] = {indexProhibition: prohibitionDetail["ids"]}
+			else: 
+				results["params"]["interdictionsIds"][indexProhibition] = prohibitionDetail["ids"]
+			if "interdictionsNoms" not in results["params"]:
+				results["params"]["interdictionsNoms"] = {indexProhibition: prohibitionDetail["names"]}
+			else: 
+				results["params"]["interdictionsNoms"][indexProhibition] = prohibitionDetail["names"]
+			if "interdictionsVilles" not in results["params"]:
+				results["params"]["interdictionsVilles"] = {indexProhibition: prohibitionDetail["cities"]}
+			else: 
+				results["params"]["interdictionsVilles"][indexProhibition] = prohibitionDetail["cities"]
+
+		# get list of names and cities from entity table for type distribution constraints
+		for teamType, members in typeDistributionConstraints.items():
+			members = ",".join(map(str, members)) # convert list of ints to string
+			prohibitionDetail = get_list_details_from_list_ids_for_entity(members)
+			
+			if "repartitionsHomogenesIds" not in results["params"]:
+				results["params"]["repartitionsHomogenesIds"] = {teamType: prohibitionDetail["ids"]}
+			else: 
+				results["params"]["repartitionsHomogenesIds"][teamType] = prohibitionDetail["ids"]
+			if "repartitionsHomogenesNoms" not in results["params"]:
+				results["params"]["repartitionsHomogenesNoms"] = {teamType: prohibitionDetail["names"]}
+			else: 
+				results["params"]["repartitionsHomogenesNoms"][teamType] = prohibitionDetail["names"]
+			if "repartitionsHomogenesVilles" not in results["params"]:
+				results["params"]["repartitionsHomogenesVilles"] = {teamType: prohibitionDetail["cities"]}
+			else: 
+				results["params"]["repartitionsHomogenesVilles"][teamType] = prohibitionDetail["cities"]
 
 		# save constraint variation of team number per pool
 		results["params"]["varEquipeParPouleChoisi"] = varTeamNbrPerPool
