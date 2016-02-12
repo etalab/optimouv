@@ -1224,7 +1224,8 @@ def callback(ch, method, properties, body):
 		
 		# check team number and pool number for match plateau
 		if launchType == "plateau":
-			control_params_match_plateau(userId, teamNbr, poolNbr)
+# 			control_params_match_plateau(userId, teamNbr, poolNbr)
+			control_params_match_plateau(userId, teamNbr, poolNbr, reportId)
 		
 		
 		# update teams and other params by including phantom teams
@@ -1356,10 +1357,12 @@ def callback(ch, method, properties, body):
 # 			logging.debug("calculatedResult : %s" %calculatedResult)
 			
 			# check final result
-			check_final_result(calculatedResult, userId)
+# 			check_final_result(calculatedResult, userId)
+			check_final_result(calculatedResult, userId, reportId)
 
 			# check given params if they are the same or not as the stocked params
-			check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints)
+# 			check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints)
+			check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints, reportId)
 
 # 			results = optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult)
 			results = optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult)

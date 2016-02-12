@@ -2047,7 +2047,8 @@ def send_email_to_user_failure(userId, reportId):
 """
 Function control provided params by user
 """
-def control_params_match_plateau(userId, teamNbr, poolNbr):
+# def control_params_match_plateau(userId, teamNbr, poolNbr):
+def control_params_match_plateau(userId, teamNbr, poolNbr, reportId):
 	try:
 		TEXT = u"Bonjour,\n\n" 
 		TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
@@ -2432,7 +2433,8 @@ Function to check final result
 send error message to user if one tries to relaunch based on final result
 final result flag is set when user tries to play the variation of team number in pools
 """
-def check_final_result(calculatedResult, userId):
+# def check_final_result(calculatedResult, userId):
+def check_final_result(calculatedResult, userId, reportId):
 	try:
 		if "params" in calculatedResult:
 			if "final" in calculatedResult["params"]:
@@ -2450,7 +2452,8 @@ def check_final_result(calculatedResult, userId):
 """
 Function to check params for post treatment round trip and one way match
 """
-def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints):
+# def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints):
+def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints, reportId):
 	try:
 		if calculatedResult["typeMatch"] != launchType:
 			TEXT = u"Bonjour,\n\n" 
