@@ -16,7 +16,7 @@
 <body>
 
 
-!-- declaration de variables -->
+<!-- declaration de variables -->
 <!-- distanceMin -->
 {% set distanceMinOpSansContrainte = scenarioOptimalSansContrainte.estimationGenerale.distanceTotale %}
 {% set distanceMinOpSansContrainte = (distanceMinOpSansContrainte / 1000)|round %}
@@ -39,7 +39,7 @@
 {% set pathImage = base_url %}
 {% set pathImage = pathImage~"/bundles/ffbb/accueil/img/Logo-Optimouv.jpg" %}
 
- <img src="http://{{pathImage}}" />
+<img src="http://{{pathImage}}" />
 
 <br><br>
 
@@ -51,6 +51,13 @@
 <h4>Nom du groupe : {{ nomGroupe }}</h4>
 <h4>Type de rencontre : {{ typeMatch }} </h4>
 <h4>Poules : {{ nombrePoule }} poules de {{ taillePoule }} équipes </h4>
+{% if contraintsExiste == 1 %}
+    {% set contrainte = "Avec contrainte" %}
+
+{% else %}
+    {% set contrainte = "Sans contrainte" %}
+
+{% endif %}
 <h4>Contraintes : {{ contrainte }} </h4>
 
 
@@ -121,6 +128,7 @@
     </ul>
 
 </div>
+
 <div style="page-break-after:always;"></div>
 <hr>
 <h4> Détails des estimations </h4>
@@ -200,55 +208,54 @@
     </table>
 
 </div>
+
 <div style="page-break-after:always;"></div>
 <hr>
 <h4> Liste des rencontres </h4>
 <!-- bloc détails rencontres -->
-{#<div style="overflow-y: scroll; max-height: 300px">#}
-    {#<table >#}
+<div style="overflow-y: scroll; max-height: 300px">
+    <table>
 
-        {#<thead>#}
-        {#<tr>#}
-            {#<th style="font-weight: bold !important;">#}
-                {#Poules#}
-            {#</th>#}
-            {#<th>Rencontres</th>#}
+        <thead>
+        <tr>
+            <th style="font-weight: bold !important;">
+                Poules
+            </th>
+            <th>Rencontres</th>
 
-        {#</tr>#}
-        {#</thead>#}
+        </tr>
+        </thead>
 
-        {#<tbody>#}
-        {#{% for key, rencontreDetailOpSansContrainte in rencontreDetailsOpSansContrainte %}#}
-            {#{% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ loop.index ] %}#}
+        <tbody>
+        {% for key, rencontreDetailOpSansContrainte in rencontreDetailsOpSansContrainte %}
+            {% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ loop.index ] %}
 
-            {#<tr>#}
-                {#{% set lettre = alphabet[key-1] %}#}
-                {#<td><strong> Poule {{ lettre }} </strong></td>#}
+            <tr>
+                {% set lettre = alphabet[key-1] %}
+                <td><strong> Poule {{ lettre }} </strong></td>
 
-                {#<td>#}
-                    {#<ul>#}
-                        {#{% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}#}
-                            {#<li>#}
-                                {#{{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }} ~  {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}#}
-                            {#</li>#}
+                <td>
+                    <ul>
+                        {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
+                            <li>
+                                {{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }}
+                                ~ {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}
+                            </li>
 
-                        {#{% endfor %}#}
-                    {#</ul>#}
-                {#</td>#}
+                        {% endfor %}
+                    </ul>
+                </td>
 
-            {#</tr>#}
+            </tr>
 
-        {#{% endfor %}#}
-        {#</tbody>#}
+        {% endfor %}
+        </tbody>
 
-
-    {#</table>#}
-{#</div>#}
-
-
-
+    </table>
+</div>
+{{ idRapport }}
 <form name="submitParams" action="{{ path('ffbb_previsualisation_pdf')}}" method="post">
-    <input type="hidden" value="{{ idRapport }}" name="params" id="params">
+    <input type="hidden" value="{{ idResultat }}" name="params" id="params">
 
     <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
 </form>

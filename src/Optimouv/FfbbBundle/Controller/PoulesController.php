@@ -669,7 +669,7 @@ class PoulesController extends Controller
             'detailsVilles' => $detailsVilles,
             'idGroupe' => $idGroupe,
             'varEquipeParPouleProposition' => $varEquipeParPouleProposition,
-            'idRapport' => $idRapport,
+            'idResultat' => $idResultat,
 
 
 
@@ -693,6 +693,9 @@ class PoulesController extends Controller
 
         //recuperation des donnees relatives au scenario
         $infoPdf = $this->getInfoPdfAction($params);
+
+//        echo '<pre>',print_r($infoPdf,1),'</pre>';exit;
+
 
         $nombrePoule = $infoPdf[0];
         $taillePoule = $infoPdf[1];
@@ -766,7 +769,7 @@ class PoulesController extends Controller
         $dompdf->getpdf($html);
 
         // Either stream the pdf to the browser
-        $dompdf->stream("myfile.pdf");
+        $dompdf->stream("mon_rapport.pdf");
 
         // Or get the output to handle it yourself
         $dompdf->output();
@@ -786,10 +789,7 @@ class PoulesController extends Controller
             $idRapport  = $idRapport[0]["idRapport"];
         }
 
-//        error_log("\n idRapport : ".print_r($idRapport , true), 3, "error_log_optimouv.txt");
-
-//        $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idResultat);
-        $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idRapport);
+         $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idRapport);
 
 
         if($idGroupe != []){
@@ -803,19 +803,13 @@ class PoulesController extends Controller
 
         # récupérer la liste des noms et des ids de villes
         $detailsVilles = $em->getRepository('FfbbBundle:Entite')->getEntities($equipes);
-
-
-
         $detailsCalcul = $em->getRepository('FfbbBundle:Scenario')->findOneById($idResultat)->getDetailsCalcul();
-
         $detailsCalcul = json_decode($detailsCalcul, true);
-
         $nombrePoule = $detailsCalcul["nombrePoule"];
         $taillePoule = $detailsCalcul["taillePoule"];
         $contraintsExiste = $detailsCalcul["contraintsExiste"];
         $typeMatch = $detailsCalcul["typeMatch"];
         $scenarioOptimalSansContrainte = $detailsCalcul["scenarioOptimalSansContrainte"];
-
 
         //récupération du nom du rapport
         $connection = $em->getConnection();
