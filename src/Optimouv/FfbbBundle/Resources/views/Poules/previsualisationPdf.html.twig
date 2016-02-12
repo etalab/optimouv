@@ -227,7 +227,8 @@
 
 
 
-{% set params = [nomRapport,typeMatch, nombrePoule, coordPoulesOpSansContrainte, distanceMinOpSansContrainte, distanceTotaleOpSansContrainte, nbrParticipantsTotalOpSansContrainte, estimationDetailsOpSansContrainte, dureeTotaleOpSansContrainte, rencontreDetailsOpSansContrainte, nomListe, nomGroupe, taillePoule, contrainte] %}
+{#{% set params = [nomRapport,typeMatch, nombrePoule, coordPoulesOpSansContrainte, distanceMinOpSansContrainte, distanceTotaleOpSansContrainte, nbrParticipantsTotalOpSansContrainte, estimationDetailsOpSansContrainte, dureeTotaleOpSansContrainte, rencontreDetailsOpSansContrainte, nomListe, nomGroupe, taillePoule, contrainte] %}#}
+{% set params = [nomRapport,typeMatch, nombrePoule, coordPoulesOpSansContrainte, nomListe, nomGroupe, taillePoule, contrainte] %}
 {% set params = params|json_encode() %}
 
 <form name="submitParams" action="{{ path('ffbb_export_pdf')}}" method="post">

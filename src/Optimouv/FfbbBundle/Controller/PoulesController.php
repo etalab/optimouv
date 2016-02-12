@@ -738,12 +738,12 @@ class PoulesController extends Controller
         $typeMatch = $params[1];
         $nombrePoule = $params[2];
         $coordPoulesOpSansContrainte = $params[3];
-        $distanceMinOpSansContrainte = $params[4];
-        $distanceTotaleOpSansContrainte = $params[5];
-        $nbrParticipantsTotalOpSansContrainte = $params[6];
-        $estimationDetailsOpSansContrainte = $params[7];
-        $dureeTotaleOpSansContrainte = $params[8];
-        $rencontreDetailsOpSansContrainte = $params[9];
+//        $distanceMinOpSansContrainte = $params[4];
+//        $distanceTotaleOpSansContrainte = $params[5];
+//        $nbrParticipantsTotalOpSansContrainte = $params[6];
+//        $estimationDetailsOpSansContrainte = $params[7];
+//        $dureeTotaleOpSansContrainte = $params[8];
+//        $rencontreDetailsOpSansContrainte = $params[9];
         $nomListe = $params[10];
         $nomGroupe = $params[11];
         $taillePoule = $params[12];
@@ -755,36 +755,23 @@ class PoulesController extends Controller
             'typeMatch' => $typeMatch,
             'nombrePoule' => $nombrePoule,
             'coordPoulesOpSansContrainte' => $coordPoulesOpSansContrainte,
-            'distanceMinOpSansContrainte' => $distanceMinOpSansContrainte,
-            'distanceTotaleOpSansContrainte' => $distanceTotaleOpSansContrainte,
-            'nbrParticipantsTotalOpSansContrainte' => $nbrParticipantsTotalOpSansContrainte,
-            'estimationDetailsOpSansContrainte' => $estimationDetailsOpSansContrainte,
-            'dureeTotaleOpSansContrainte' => $dureeTotaleOpSansContrainte,
-            'rencontreDetailsOpSansContrainte' => $rencontreDetailsOpSansContrainte,
+//            'distanceMinOpSansContrainte' => $distanceMinOpSansContrainte,
+//            'distanceTotaleOpSansContrainte' => $distanceTotaleOpSansContrainte,
+//            'nbrParticipantsTotalOpSansContrainte' => $nbrParticipantsTotalOpSansContrainte,
+//            'estimationDetailsOpSansContrainte' => $estimationDetailsOpSansContrainte,
+//            'dureeTotaleOpSansContrainte' => $dureeTotaleOpSansContrainte,
+//            'rencontreDetailsOpSansContrainte' => $rencontreDetailsOpSansContrainte,
             'nomListe' => $nomListe,
             'nomGroupe' => $nomGroupe,
             'taillePoule' => $taillePoule,
             'contrainte' => $contrainte,
 
         ));
-        try {
-            $dompdf = $this->get('slik_dompdf');
-        } catch (Exception $e) {
-            echo 'Exception reçue : ',  $e->getMessage(), "\n";
-        }
-        try {
-            // Generate the pdf
-            $dompdf->getpdf($html);
-        } catch (Exception $e) {
-            echo 'Exception reçue : ',  $e->getMessage(), "\n";
-        }
-        try {
-            // Either stream the pdf to the browser
-            $dompdf->stream("myfile.pdf");
-        } catch (Exception $e) {
-            echo 'Exception reçue : ',  $e->getMessage(), "\n";
-        }
 
+        $dompdf = $this->get('slik_dompdf');
+
+        // Generate the pdf
+        $dompdf->getpdf($html);
 
         // Either stream the pdf to the browser
         $dompdf->stream("myfile.pdf");
