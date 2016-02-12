@@ -691,6 +691,7 @@ class PoulesController extends Controller
 
         $params = $_POST['params'];
 
+
         //recuperation des donnees relatives au scenario
         $infoPdf = $this->getInfoPdfAction($params);
 
@@ -722,6 +723,7 @@ class PoulesController extends Controller
             'idRapport' => $idRapport,
             'detailsVilles' => $detailsVilles,
             'idGroupe' => $idGroupe,
+            'idResultat' => $params,
         ));
 
     }
@@ -760,6 +762,7 @@ class PoulesController extends Controller
             'idRapport' => $idRapport,
             'detailsVilles' => $detailsVilles,
             'idGroupe' => $idGroupe,
+            'idResultat' => $params,
 
         ));
 

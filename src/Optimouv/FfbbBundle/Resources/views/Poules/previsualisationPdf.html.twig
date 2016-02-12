@@ -39,7 +39,9 @@
 {% set pathImage = base_url %}
 {% set pathImage = pathImage~"/bundles/ffbb/accueil/img/Logo-Optimouv.jpg" %}
 
-<img src="http://{{pathImage}}" />
+<img src="http://{{pathImage}}" alt="logo-optimouv">
+<img src="http://dev.ffbb.it4pme.fr/bundles/ffbb/accueil/img/Logo-Optimouv.jpg">
+<img src="{{app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/ffbb/accueil/img/Logo-Optimouv.jpg') }}" width="60%"/>
 
 <br><br>
 
@@ -49,7 +51,17 @@
 <h4>Utilisateur : Jean Dupont</h4>
 <h4>Nom de la liste : {{ nomListe }}</h4>
 <h4>Nom du groupe : {{ nomGroupe }}</h4>
-<h4>Type de rencontre : {{ typeMatch }} </h4>
+
+{% if typeMatch == "allerRetour" %}
+    <h4>  Type de rencontre : Optimisation de poules - match aller retour </h4>
+{% elseif typeMatch == "allerSimple" %}
+    <h4>  Type de rencontre : Optimisation de poules - match aller simple </h4>
+{% elseif typeMatch == "plateau" %}
+    <h4>  Type de rencontre : Optimisation de poules - match aller plateau </h4>
+{% else %}
+    <h4> Type de rencontre : {{ typeMatch }} </h4>
+{% endif %}
+
 <h4>Poules : {{ nombrePoule }} poules de {{ taillePoule }} équipes </h4>
 {% if contraintsExiste == 1 %}
     {% set contrainte = "Avec contrainte" %}
@@ -253,8 +265,8 @@
 
     </table>
 </div>
-{{ idRapport }}
-<form name="submitParams" action="{{ path('ffbb_previsualisation_pdf')}}" method="post">
+
+<form name="submitParams" action="{{ path('ffbb_export_pdf')}}" method="post">
     <input type="hidden" value="{{ idResultat }}" name="params" id="params">
 
     <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
