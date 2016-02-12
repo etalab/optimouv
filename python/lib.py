@@ -902,7 +902,7 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 						logging.debug("	statusTypeDistributionConstraints: %s" %statusTypeDistributionConstraints)
 
 						# if the transformed matrix fulfills the type distribution constraints
-						if statusProhibitionConstraints and statusTypeDistributionConstraints == 0:
+						if statusProhibitionConstraints == 0 and statusTypeDistributionConstraints == 0:
 							logging.debug("  i: %s, j: %s" %(i, j))
 							logging.debug("  iterConstraint: %s" %(iterConstraint))
 							break
@@ -1149,7 +1149,7 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 						logging.debug("	statusTypeDistributionConstraints: %s" %statusTypeDistributionConstraints)
 
 						# if the transformed matrix fulfills the type distribution constraints
-						if statusProhibitionConstraints and statusTypeDistributionConstraints == 0:
+						if statusProhibitionConstraints == 0 and statusTypeDistributionConstraints == 0:
 							logging.debug("  i: %s, j: %s" %(i, j))
 							logging.debug("  iterConstraint: %s" %(iterConstraint))
 							break
