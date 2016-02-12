@@ -360,6 +360,9 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			results["params"]["varEquipeParPoulePossible"] = 1
 			maxVarTeamNbrPerPool = poolSize - 2
 			results["params"]["varEquipeParPouleProposition"] = list(range(0, maxVarTeamNbrPerPool+1 ))
+			# limit variation of team member to max 2
+			if len(results["params"]["varEquipeParPouleProposition"]) > 3:
+				results["params"]["varEquipeParPouleProposition"] = results["params"]["varEquipeParPouleProposition"][:3]
 
 
 		logging.debug(" ########################################## ROUND TRIP　MATCH ###############################################")
@@ -702,6 +705,9 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			results["params"]["varEquipeParPoulePossible"] = 1
 			maxVarTeamNbrPerPool = poolSize - 2
 			results["params"]["varEquipeParPouleProposition"] = list(range(0, maxVarTeamNbrPerPool+1 ))
+			# limit variation of team member to max 2
+			if len(results["params"]["varEquipeParPouleProposition"]) > 3:
+				results["params"]["varEquipeParPouleProposition"] = results["params"]["varEquipeParPouleProposition"][:3]
 
 
 		logging.debug(" ########################################## ONE WAY　MATCH ###############################################")
