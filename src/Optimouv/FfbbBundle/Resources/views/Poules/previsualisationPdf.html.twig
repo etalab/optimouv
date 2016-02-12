@@ -109,121 +109,121 @@
 <div>
     {% set alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ] %}
 
-    <table>
-        <thead>
-        <tr>
-            <th>
-                Participants
-            </th>
-            <th>Kilomètres à
-                parcourir
-            </th>
-            <th>Temps de parcours
-                (J H:M)
-            </th>
-            <th>Coût du parcours en
-                voiture(€)
-            </th>
-            <th >Coût du parcours en
-                covoiturage(€)
-            </th>
-            <th>Coût du parcours en
-                minibus(€)
-            </th>
-            <th >Emissions GES voiture
-                individuelle (en KG eq CO2)
-            </th>
-            <th>Emissions GES
-                covoiturage (en KG eq CO2)
-            </th>
+    {#<table>#}
+        {#<thead>#}
+        {#<tr>#}
+            {#<th>#}
+                {#Participants#}
+            {#</th>#}
+            {#<th>Kilomètres à#}
+                {#parcourir#}
+            {#</th>#}
+            {#<th>Temps de parcours#}
+                {#(J H:M)#}
+            {#</th>#}
+            {#<th>Coût du parcours en#}
+                {#voiture(€)#}
+            {#</th>#}
+            {#<th >Coût du parcours en#}
+                {#covoiturage(€)#}
+            {#</th>#}
+            {#<th>Coût du parcours en#}
+                {#minibus(€)#}
+            {#</th>#}
+            {#<th >Emissions GES voiture#}
+                {#individuelle (en KG eq CO2)#}
+            {#</th>#}
+            {#<th>Emissions GES#}
+                {#covoiturage (en KG eq CO2)#}
+            {#</th>#}
 
-            <th>Emissions GES minibus
-                (en KG eq CO2)
-            </th>
-        </tr>
-        </thead>
-        <tbody>
+            {#<th>Emissions GES minibus#}
+                {#(en KG eq CO2)#}
+            {#</th>#}
+        {#</tr>#}
+        {#</thead>#}
+        {#<tbody>#}
 
 
-        {% for key, estimationDetailOpSansContrainte in estimationDetailsOpSansContrainte %}
-            {% set distanceOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotale // 1000 %}
-            {% set distanceTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}
-            {% set dureeTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].dureeTotale  %}
-            {% set nbrParticipantsOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].nbrParticipantsTotal  %}
-            {% set lettre = alphabet[key-1] %}
+        {#{% for key, estimationDetailOpSansContrainte in estimationDetailsOpSansContrainte %}#}
+            {#{% set distanceOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotale // 1000 %}#}
+            {#{% set distanceTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
+            {#{% set dureeTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].dureeTotale  %}#}
+            {#{% set nbrParticipantsOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].nbrParticipantsTotal  %}#}
+            {#{% set lettre = alphabet[key-1] %}#}
 
-            <tr>
-                <td><strong> Poule {{ lettre }} </strong></td>
-                <td style="text-align:right"> {{distanceOpSansContrainteDetail|number_format(0, ',', ' ') }}</td>
-                <td style="text-align:right"> {{ dureeTotaleOpSansContrainteDetail|date('d H:i') }}</td>
-                <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail  * 0.80)|round|number_format(0, ',', ' ') }}</td>
-                <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
-                <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
-                <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail * 0.157)|round|number_format(0, ',', ' ') }}</td>
-                <td style="text-align:right"> {{ ((distanceTotaleOpSansContrainteDetail /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
-                <td style="text-align:right"> {{ ((distanceTotaleOpSansContrainteDetail/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
-            </tr>
+            {#<tr>#}
+                {#<td><strong> Poule {{ lettre }} </strong></td>#}
+                {#<td style="text-align:right"> {{distanceOpSansContrainteDetail|number_format(0, ',', ' ') }}</td>#}
+                {#<td style="text-align:right"> {{ dureeTotaleOpSansContrainteDetail|date('d H:i') }}</td>#}
+                {#<td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail  * 0.80)|round|number_format(0, ',', ' ') }}</td>#}
+                {#<td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>#}
+                {#<td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>#}
+                {#<td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail * 0.157)|round|number_format(0, ',', ' ') }}</td>#}
+                {#<td style="text-align:right"> {{ ((distanceTotaleOpSansContrainteDetail /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>#}
+                {#<td style="text-align:right"> {{ ((distanceTotaleOpSansContrainteDetail/9)*0.185)|round|number_format(0, ',', ' ') }} </td>#}
+            {#</tr>#}
 
-        {% endfor %}
-        <tr>
-            <td><strong> Totaux </strong></td>
-            <td style="text-align:right"> {{ distanceMinOpSansContrainte|number_format(0, ',', ' ') }}</td>
-            <td style="text-align:right"> {{ dureeTotaleOpSansContrainte|date('d H:i') }}</td>
-            <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte  * 0.80)|round|number_format(0, ',', ' ') }}</td>
-            <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
-            <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
-            <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte * 0.157)|round|number_format(0, ',', ' ') }}</td>
-            <td style="text-align:right"> {{ ((distanceTotaleOpSansContrainte /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
-            <td style="text-align:right"> {{ ((distanceTotaleOpSansContrainte/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
-        </tr>
-        </tbody>
-    </table>
+        {#{% endfor %}#}
+        {#<tr>#}
+            {#<td><strong> Totaux </strong></td>#}
+            {#<td style="text-align:right"> {{ distanceMinOpSansContrainte|number_format(0, ',', ' ') }}</td>#}
+            {#<td style="text-align:right"> {{ dureeTotaleOpSansContrainte|date('d H:i') }}</td>#}
+            {#<td style="text-align:right"> {{ (distanceTotaleOpSansContrainte  * 0.80)|round|number_format(0, ',', ' ') }}</td>#}
+            {#<td style="text-align:right"> {{ (distanceTotaleOpSansContrainte /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>#}
+            {#<td style="text-align:right"> {{ (distanceTotaleOpSansContrainte /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>#}
+            {#<td style="text-align:right"> {{ (distanceTotaleOpSansContrainte * 0.157)|round|number_format(0, ',', ' ') }}</td>#}
+            {#<td style="text-align:right"> {{ ((distanceTotaleOpSansContrainte /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>#}
+            {#<td style="text-align:right"> {{ ((distanceTotaleOpSansContrainte/9)*0.185)|round|number_format(0, ',', ' ') }} </td>#}
+        {#</tr>#}
+        {#</tbody>#}
+    {#</table>#}
 
 </div>
 <div style="page-break-after:always;"></div>
 <hr>
 <h4> Liste des rencontres </h4>
 <!-- bloc détails rencontres -->
-<div style="overflow-y: scroll; max-height: 300px">
-    <table >
+{#<div style="overflow-y: scroll; max-height: 300px">#}
+    {#<table >#}
 
-        <thead>
-        <tr>
-            <th style="font-weight: bold !important;">
-                Poules
-            </th>
-            <th>Rencontres</th>
+        {#<thead>#}
+        {#<tr>#}
+            {#<th style="font-weight: bold !important;">#}
+                {#Poules#}
+            {#</th>#}
+            {#<th>Rencontres</th>#}
 
-        </tr>
-        </thead>
+        {#</tr>#}
+        {#</thead>#}
 
-        <tbody>
-        {% for key, rencontreDetailOpSansContrainte in rencontreDetailsOpSansContrainte %}
-            {% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ loop.index ] %}
+        {#<tbody>#}
+        {#{% for key, rencontreDetailOpSansContrainte in rencontreDetailsOpSansContrainte %}#}
+            {#{% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ loop.index ] %}#}
 
-            <tr>
-                {% set lettre = alphabet[key-1] %}
-                <td><strong> Poule {{ lettre }} </strong></td>
+            {#<tr>#}
+                {#{% set lettre = alphabet[key-1] %}#}
+                {#<td><strong> Poule {{ lettre }} </strong></td>#}
 
-                <td>
-                    <ul>
-                        {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
-                            <li>
-                                {{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }} ~  {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}
-                            </li>
+                {#<td>#}
+                    {#<ul>#}
+                        {#{% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}#}
+                            {#<li>#}
+                                {#{{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }} ~  {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}#}
+                            {#</li>#}
 
-                        {% endfor %}
-                    </ul>
-                </td>
+                        {#{% endfor %}#}
+                    {#</ul>#}
+                {#</td>#}
 
-            </tr>
+            {#</tr>#}
 
-        {% endfor %}
-        </tbody>
+        {#{% endfor %}#}
+        {#</tbody>#}
 
 
-    </table>
-</div>
+    {#</table>#}
+{#</div>#}
 
 
 
