@@ -809,10 +809,9 @@ class PoulesController extends Controller
         $taillePoule = $detailsCalcul["taillePoule"];
         $contraintsExiste = $detailsCalcul["contraintsExiste"];
         $typeMatch = $detailsCalcul["typeMatch"];
-        echo '<pre>',print_r($typeMatch,1),'</pre>';exit;
         $scenarioOptimalSansContrainte = $detailsCalcul["scenarioOptimalSansContrainte"];
 
-
+        echo '<pre>',print_r($typeMatch,1),'</pre>';exit;
         //récupération du nom du rapport
         $connection = $em->getConnection();
 
