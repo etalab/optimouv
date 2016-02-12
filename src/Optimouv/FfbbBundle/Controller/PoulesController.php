@@ -691,8 +691,6 @@ class PoulesController extends Controller
 
         $params = $_POST['params'];
 
-        print_r($params);
-        exit;
 
         //recuperation des donnees relatives au scenario
         $infoPdf = $this->getInfoPdfAction($params);
