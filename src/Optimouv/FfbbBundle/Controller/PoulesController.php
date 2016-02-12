@@ -694,43 +694,31 @@ class PoulesController extends Controller
         //recuperation des donnees relatives au scenario
         $infoPdf = $this->getInfoPdfAction($params);
 
-        echo '<pre>',print_r($infoPdf,1),'</pre>';exit;
-
-
-//        $params = json_decode($params, true);
-
-
-        $nomRapport = $params[0];
-        $typeMatch = $params[1];
-        $nombrePoule = $params[2];
-        $coordPoulesOpSansContrainte = $params[3];
-        $distanceMinOpSansContrainte = $params[4];
-        $distanceTotaleOpSansContrainte = $params[5];
-        $nbrParticipantsTotalOpSansContrainte = $params[6];
-        $estimationDetailsOpSansContrainte = $params[7];
-        $dureeTotaleOpSansContrainte = $params[8];
-        $rencontreDetailsOpSansContrainte = $params[9];
-        $nomListe = $params[10];
-        $nomGroupe = $params[11];
-        $taillePoule = $params[12];
-        $contrainte = $params[13];
+        $nombrePoule = $infoPdf[0];
+        $taillePoule = $infoPdf[1];
+        $contraintsExiste = $infoPdf[2];
+        $typeMatch = $infoPdf[3];
+        $scenarioOptimalSansContrainte = $infoPdf[4];
+        $nomRapport = $infoPdf[5];
+        $nomGroupe = $infoPdf[6];
+        $nomListe = $infoPdf[7];
+        $detailsVilles = $infoPdf[8];
+        $idGroupe = $infoPdf[9];
+        $idRapport = $infoPdf[10];
 
 
         return $this->render('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
             'nomRapport' => $nomRapport,
             'typeMatch' => $typeMatch,
             'nombrePoule' => $nombrePoule,
-            'coordPoulesOpSansContrainte' => $coordPoulesOpSansContrainte,
-            'distanceMinOpSansContrainte' => $distanceMinOpSansContrainte,
-            'distanceTotaleOpSansContrainte' => $distanceTotaleOpSansContrainte,
-            'nbrParticipantsTotalOpSansContrainte' => $nbrParticipantsTotalOpSansContrainte,
-            'estimationDetailsOpSansContrainte' => $estimationDetailsOpSansContrainte,
-            'dureeTotaleOpSansContrainte' => $dureeTotaleOpSansContrainte,
-            'rencontreDetailsOpSansContrainte' => $rencontreDetailsOpSansContrainte,
             'nomListe' => $nomListe,
             'nomGroupe' => $nomGroupe,
             'taillePoule' => $taillePoule,
-            'contrainte' => $contrainte,
+            'contrainte' => $contraintsExiste,
+            'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
+            'idRapport' => $idRapport,
+            'detailsVilles' => $detailsVilles,
+            'idGroupe' => $idGroupe,
         ));
 
     }
@@ -825,9 +813,6 @@ class PoulesController extends Controller
         $detailsCalcul = $em->getRepository('FfbbBundle:Scenario')->findOneById($idResultat)->getDetailsCalcul();
 
         $detailsCalcul = json_decode($detailsCalcul, true);
-
-        var_dump($detailsCalcul);
-        exit;
 
         $nombrePoule = $detailsCalcul["nombrePoule"];
         $taillePoule = $detailsCalcul["taillePoule"];
