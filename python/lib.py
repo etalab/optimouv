@@ -2007,6 +2007,9 @@ Function to send email to user when there is no results (there are too many cons
 # def send_email_to_user_failure(userId):
 def send_email_to_user_failure(userId, reportId):
 	try:
+		sql = "select nom from rapport where id=%s"%reportId
+		reportName = db.fetchone(sql)
+		
 		# get user's email from user id
 		sql = "select email from fos_user where id=%s"%userId
 		
@@ -2015,7 +2018,8 @@ def send_email_to_user_failure(userId, reportId):
 
 		SUBJECT = u'mise à disposition de vos résultats de calculs'
 		TEXT = u"Bonjour,\n\n" 
-		TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
+# 		TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
+		TEXT += u"Aucun résultat n'est disponible pour votre rapport: %s" %reportName
 		TEXT += u"Veuillez modifier vos critères et contraintes et relancer un calcul. " 
 		logging.debug("TEXT: \n%s" %TEXT)
 		
@@ -2050,8 +2054,12 @@ Function control provided params by user
 # def control_params_match_plateau(userId, teamNbr, poolNbr):
 def control_params_match_plateau(userId, teamNbr, poolNbr, reportId):
 	try:
+		sql = "select nom from rapport where id=%s"%reportId
+		reportName = db.fetchone(sql)
+
 		TEXT = u"Bonjour,\n\n" 
-		TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
+# 		TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
+		TEXT += u"Aucun résultat n'est disponible pour votre rapport: %s" %reportName
 
 		# team number has to be the multiplication of 9 (9, 18, 27)
 		if teamNbr % 9 != 0:
@@ -2436,12 +2444,16 @@ final result flag is set when user tries to play the variation of team number in
 # def check_final_result(calculatedResult, userId):
 def check_final_result(calculatedResult, userId, reportId):
 	try:
+		sql = "select nom from rapport where id=%s"%reportId
+		reportName = db.fetchone(sql)
+
 		if "params" in calculatedResult:
 			if "final" in calculatedResult["params"]:
 				if results["params"]["final"] == "yes":
 					
 					TEXT = u"Bonjour,\n\n" 
-					TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
+# 					TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
+					TEXT += u"Aucun résultat n'est disponible pour votre rapport: %s" %reportName
 					TEXT += u"Vous ne pouvez lancer le critère de variation du nombre d'équipes par poule qu'une seule fois. " 
 					send_email_to_user_failure_with_text(userId, TEXT)
 					
@@ -2455,9 +2467,13 @@ Function to check params for post treatment round trip and one way match
 # def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints):
 def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints, reportId):
 	try:
+		sql = "select nom from rapport where id=%s"%reportId
+		reportName = db.fetchone(sql)
+		
 		if calculatedResult["typeMatch"] != launchType:
 			TEXT = u"Bonjour,\n\n" 
-			TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
+# 			TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
+			TEXT += u"Aucun résultat n'est disponible pour votre rapport: %s" %reportName
 			TEXT += u"Veuillez utiliser les mêmes parametres que vous avez utilisé précédemment . " 
 			send_email_to_user_failure_with_text(userId, TEXT)
 			
