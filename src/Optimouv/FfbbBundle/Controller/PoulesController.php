@@ -723,6 +723,7 @@ class PoulesController extends Controller
             'idRapport' => $idRapport,
             'detailsVilles' => $detailsVilles,
             'idGroupe' => $idGroupe,
+            'idResultat' => $params,
         ));
 
     }
@@ -761,6 +762,7 @@ class PoulesController extends Controller
             'idRapport' => $idRapport,
             'detailsVilles' => $detailsVilles,
             'idGroupe' => $idGroupe,
+            'idResultat' => $params,
 
         ));
 
