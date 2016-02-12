@@ -2019,7 +2019,7 @@ def send_email_to_user_failure(userId, reportId):
 		SUBJECT = u'mise à disposition de vos résultats de calculs'
 		TEXT = u"Bonjour,\n\n" 
 # 		TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
-		TEXT += u"Aucun résultat n'est disponible pour votre rapport: %s. \n" %reportName
+		TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
 		TEXT += u"Veuillez modifier vos critères et contraintes et relancer un calcul. " 
 		logging.debug("TEXT: \n%s" %TEXT)
 		
@@ -2059,7 +2059,7 @@ def control_params_match_plateau(userId, teamNbr, poolNbr, reportId):
 
 		TEXT = u"Bonjour,\n\n" 
 # 		TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
-		TEXT += u"Aucun résultat n'est disponible pour votre rapport: %s. \n" %reportName
+		TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
 
 		# team number has to be the multiplication of 9 (9, 18, 27)
 		if teamNbr % 9 != 0:
@@ -2453,7 +2453,7 @@ def check_final_result(calculatedResult, userId, reportId):
 					
 					TEXT = u"Bonjour,\n\n" 
 # 					TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
-					TEXT += u"Aucun résultat n'est disponible pour votre rapport: %s. \n" %reportName
+					TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
 					TEXT += u"Vous ne pouvez lancer le critère de variation du nombre d'équipes par poule qu'une seule fois. " 
 					send_email_to_user_failure_with_text(userId, TEXT)
 					
@@ -2473,8 +2473,7 @@ def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, pro
 		if calculatedResult["typeMatch"] != launchType:
 			TEXT = u"Bonjour,\n\n" 
 # 			TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
-# 			TEXT += u"Aucun résultat n'est disponible pour votre rapport: %s" %reportName
-			TEXT += u"Aucun résultat n'est disponible pour votre rapport: %s. \n" %reportName
+			TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
 			TEXT += u"Veuillez utiliser les mêmes parametres que vous avez utilisé précédemment . " 
 			send_email_to_user_failure_with_text(userId, TEXT)
 			
