@@ -806,11 +806,10 @@ class PoulesController extends Controller
         $detailsCalcul = json_decode($detailsCalcul, true);
 
         $nombrePoule = $detailsCalcul["nombrePoule"];
-        echo '<pre>',print_r($nombrePoule,1),'</pre>';exit;
-
         $taillePoule = $detailsCalcul["taillePoule"];
         $contraintsExiste = $detailsCalcul["contraintsExiste"];
         $typeMatch = $detailsCalcul["typeMatch"];
+        echo '<pre>',print_r($typeMatch,1),'</pre>';exit;
         $scenarioOptimalSansContrainte = $detailsCalcul["scenarioOptimalSansContrainte"];
 
 
