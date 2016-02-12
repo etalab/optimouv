@@ -669,7 +669,7 @@ class PoulesController extends Controller
             'detailsVilles' => $detailsVilles,
             'idGroupe' => $idGroupe,
             'varEquipeParPouleProposition' => $varEquipeParPouleProposition,
-            'idRapport' => $idRapport,
+            'idResultat' => $idResultat,
 
 
 
