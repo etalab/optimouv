@@ -15,6 +15,26 @@
 </head>
 <body>
 
+
+!-- declaration de variables -->
+<!-- distanceMin -->
+{% set distanceMinOpSansContrainte = scenarioOptimalSansContrainte.estimationGenerale.distanceTotale %}
+{% set distanceMinOpSansContrainte = (distanceMinOpSansContrainte / 1000)|round %}
+<!-- distanceTotale -->
+{% set distanceTotaleOpSansContrainte = scenarioOptimalSansContrainte.estimationGenerale.distanceTotaleTousParticipants %}
+{% set distanceTotaleOpSansContrainte = (distanceTotaleOpSansContrainte / 1000)|round %}
+<!-- nbrParticipantsTotal -->
+{% set nbrParticipantsTotalOpSansContrainte = scenarioOptimalSansContrainte.estimationGenerale.nbrParticipantsTotal %}
+<!-- dureeTotale -->
+{% set dureeTotaleOpSansContrainte = scenarioOptimalSansContrainte.estimationGenerale.dureeTotale %}
+<!-- estimationDetails -->
+{% set estimationDetailsOpSansContrainte = scenarioOptimalSansContrainte.estimationDetails %}
+<!-- rencontreDetails -->
+{% set rencontreDetailsOpSansContrainte = scenarioOptimalSansContrainte.rencontreDetails %}
+<!-- coordPoules -->
+{% set coordPoulesOpSansContrainte = scenarioOptimalSansContrainte.poulesCoords %}
+
+
 {#<img src="https://symfony.com/images/v5/opengraph/symfony_logo.png?v=4" width="100">#}
 {% set pathImage = base_url %}
 {% set pathImage = pathImage~"/bundles/ffbb/accueil/img/Logo-Optimouv.jpg" %}
@@ -227,12 +247,8 @@
 
 
 
-{#{% set params = [nomRapport,typeMatch, nombrePoule, coordPoulesOpSansContrainte, distanceMinOpSansContrainte, distanceTotaleOpSansContrainte, nbrParticipantsTotalOpSansContrainte, estimationDetailsOpSansContrainte, dureeTotaleOpSansContrainte, rencontreDetailsOpSansContrainte, nomListe, nomGroupe, taillePoule, contrainte] %}#}
-{% set params = [nomRapport,typeMatch, nombrePoule, coordPoulesOpSansContrainte, distanceMinOpSansContrainte, distanceTotaleOpSansContrainte, nbrParticipantsTotalOpSansContrainte, estimationDetailsOpSansContrainte, dureeTotaleOpSansContrainte,  nomListe, nomGroupe, taillePoule, contrainte] %}
-{% set params = params|json_encode() %}
-
-<form name="submitParams" action="{{ path('ffbb_export_pdf')}}" method="post">
-    <input type="hidden" value="{{ params }}" name="params" id="params">
+<form name="submitParams" action="{{ path('ffbb_previsualisation_pdf')}}" method="post">
+    <input type="hidden" value="{{ idRapport }}" name="params" id="params">
 
     <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
 </form>

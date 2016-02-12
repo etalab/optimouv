@@ -669,6 +669,7 @@ class PoulesController extends Controller
             'detailsVilles' => $detailsVilles,
             'idGroupe' => $idGroupe,
             'varEquipeParPouleProposition' => $varEquipeParPouleProposition,
+            'idRapport' => $idRapport,
 
 
 
@@ -689,40 +690,35 @@ class PoulesController extends Controller
     {
 
         $params = $_POST['params'];
-        $params = json_decode($params, true);
 
+        //recuperation des donnees relatives au scenario
+        $infoPdf = $this->getInfoPdfAction($params);
 
-        $nomRapport = $params[0];
-        $typeMatch = $params[1];
-        $nombrePoule = $params[2];
-        $coordPoulesOpSansContrainte = $params[3];
-        $distanceMinOpSansContrainte = $params[4];
-        $distanceTotaleOpSansContrainte = $params[5];
-        $nbrParticipantsTotalOpSansContrainte = $params[6];
-        $estimationDetailsOpSansContrainte = $params[7];
-        $dureeTotaleOpSansContrainte = $params[8];
-        $rencontreDetailsOpSansContrainte = $params[9];
-        $nomListe = $params[10];
-        $nomGroupe = $params[11];
-        $taillePoule = $params[12];
-        $contrainte = $params[13];
+        $nombrePoule = $infoPdf[0];
+        $taillePoule = $infoPdf[1];
+        $contraintsExiste = $infoPdf[2];
+        $typeMatch = $infoPdf[3];
+        $scenarioOptimalSansContrainte = $infoPdf[4];
+        $nomRapport = $infoPdf[5];
+        $nomGroupe = $infoPdf[6];
+        $nomListe = $infoPdf[7];
+        $detailsVilles = $infoPdf[8];
+        $idGroupe = $infoPdf[9];
+        $idRapport = $infoPdf[10];
 
 
         return $this->render('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
             'nomRapport' => $nomRapport,
             'typeMatch' => $typeMatch,
             'nombrePoule' => $nombrePoule,
-            'coordPoulesOpSansContrainte' => $coordPoulesOpSansContrainte,
-            'distanceMinOpSansContrainte' => $distanceMinOpSansContrainte,
-            'distanceTotaleOpSansContrainte' => $distanceTotaleOpSansContrainte,
-            'nbrParticipantsTotalOpSansContrainte' => $nbrParticipantsTotalOpSansContrainte,
-            'estimationDetailsOpSansContrainte' => $estimationDetailsOpSansContrainte,
-            'dureeTotaleOpSansContrainte' => $dureeTotaleOpSansContrainte,
-            'rencontreDetailsOpSansContrainte' => $rencontreDetailsOpSansContrainte,
             'nomListe' => $nomListe,
             'nomGroupe' => $nomGroupe,
             'taillePoule' => $taillePoule,
-            'contrainte' => $contrainte,
+            'contrainte' => $contraintsExiste,
+            'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
+            'idRapport' => $idRapport,
+            'detailsVilles' => $detailsVilles,
+            'idGroupe' => $idGroupe,
         ));
 
     }
@@ -731,40 +727,36 @@ class PoulesController extends Controller
     {
 
         $params = $_POST['params'];
-        $params = json_decode($params, true);
 
+        //recuperation des donnees relatives au scenario
+        $infoPdf = $this->getInfoPdfAction($params);
 
-        $nomRapport = $params[0];
-        $typeMatch = $params[1];
-        $nombrePoule = $params[2];
-        $coordPoulesOpSansContrainte = $params[3];
-        $distanceMinOpSansContrainte = $params[4];
-        $distanceTotaleOpSansContrainte = $params[5];
-        $nbrParticipantsTotalOpSansContrainte = $params[6];
-        $estimationDetailsOpSansContrainte = $params[7];
-        $dureeTotaleOpSansContrainte = $params[8];
-//        $rencontreDetailsOpSansContrainte = $params[9];
-        $nomListe = $params[10];
-        $nomGroupe = $params[11];
-        $taillePoule = $params[12];
-        $contrainte = $params[13];
+        $nombrePoule = $infoPdf[0];
+        $taillePoule = $infoPdf[1];
+        $contraintsExiste = $infoPdf[2];
+        $typeMatch = $infoPdf[3];
+        $scenarioOptimalSansContrainte = $infoPdf[4];
+        $nomRapport = $infoPdf[5];
+        $nomGroupe = $infoPdf[6];
+        $nomListe = $infoPdf[7];
+        $detailsVilles = $infoPdf[8];
+        $idGroupe = $infoPdf[9];
+        $idRapport = $infoPdf[10];
+
 
 
         $html = $this->renderView('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
             'nomRapport' => $nomRapport,
             'typeMatch' => $typeMatch,
             'nombrePoule' => $nombrePoule,
-            'coordPoulesOpSansContrainte' => $coordPoulesOpSansContrainte,
-            'distanceMinOpSansContrainte' => $distanceMinOpSansContrainte,
-            'distanceTotaleOpSansContrainte' => $distanceTotaleOpSansContrainte,
-            'nbrParticipantsTotalOpSansContrainte' => $nbrParticipantsTotalOpSansContrainte,
-            'estimationDetailsOpSansContrainte' => $estimationDetailsOpSansContrainte,
-            'dureeTotaleOpSansContrainte' => $dureeTotaleOpSansContrainte,
-//            'rencontreDetailsOpSansContrainte' => $rencontreDetailsOpSansContrainte,
             'nomListe' => $nomListe,
             'nomGroupe' => $nomGroupe,
             'taillePoule' => $taillePoule,
-            'contrainte' => $contrainte,
+            'contrainte' => $contraintsExiste,
+            'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
+            'idRapport' => $idRapport,
+            'detailsVilles' => $detailsVilles,
+            'idGroupe' => $idGroupe,
 
         ));
 
@@ -780,5 +772,95 @@ class PoulesController extends Controller
         $dompdf->output();
 
 
+    }
+
+    public function getInfoPdfAction($idResultat)
+    {
+
+
+        $em = $this->getDoctrine()->getManager();
+
+        $idRapport = $em->getRepository('FfbbBundle:Scenario')->getIdRapportByIdScenario($idResultat);
+
+        if($idRapport != []){
+            $idRapport  = $idRapport[0]["idRapport"];
+        }
+
+//        error_log("\n idRapport : ".print_r($idRapport , true), 3, "error_log_optimouv.txt");
+
+//        $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idResultat);
+        $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idRapport);
+
+
+        if($idGroupe != []){
+            $idGroupe = $idGroupe[0]['idGroupe'];
+        }
+
+
+        $equipes = $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getEquipes();
+        //$equipes de string a array
+        $equipes = explode(",", $equipes);
+
+        # récupérer la liste des noms et des ids de villes
+        $detailsVilles = $em->getRepository('FfbbBundle:Entite')->getEntities($equipes);
+
+
+
+        $detailsCalcul = $em->getRepository('FfbbBundle:Scenario')->findOneById($idResultat)->getDetailsCalcul();
+
+        $detailsCalcul = json_decode($detailsCalcul, true);
+
+        $nombrePoule = $detailsCalcul["nombrePoule"];
+        $taillePoule = $detailsCalcul["taillePoule"];
+        $contraintsExiste = $detailsCalcul["contraintsExiste"];
+        $typeMatch = $detailsCalcul["typeMatch"];
+        $scenarioOptimalSansContrainte = $detailsCalcul["scenarioOptimalSansContrainte"];
+
+
+        //récupération du nom du rapport
+        $connection = $em->getConnection();
+
+        $statement = $connection->prepare("SELECT  b.id as idRapport, b.nom as nomRapport, b.id_groupe as idGroupe FROM scenario as a, rapport as b where a.id_rapport = b.id and a.id = :id");
+        $statement->bindParam(':id', $idResultat);
+        $statement->execute();
+        $statement = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $idRapport = $statement[0]['idRapport'];
+        $nomRapport = $statement[0]['nomRapport'];
+        $idGroupe = $statement[0]['idGroupe'];
+
+        //récupération du nom du groupe
+
+        $statement = $connection->prepare("SELECT  a.nom as nomGroupe, a.id_liste_participant as idListe from groupe as a where a.id = :id");
+        $statement->bindParam(':id', $idGroupe);
+        $statement->execute();
+        $statement = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $idListe = $statement[0]['idListe'];
+        $nomGroupe = $statement[0]['nomGroupe'];
+
+
+        //récupération du nom du=e la liste
+
+        $statement = $connection->prepare("SELECT  a.nom as nomListe from liste_participants as a where a.id = :id");
+        $statement->bindParam(':id', $idListe);
+        $statement->execute();
+        $statement = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $nomListe = $statement[0]['nomListe'];
+
+        //construire le tableau de retour
+
+        $retour = [];
+        $retour[0] = $nombrePoule;
+        $retour[1] = $taillePoule;
+        $retour[2] = $contraintsExiste;
+        $retour[3] = $typeMatch;
+        $retour[4] = $scenarioOptimalSansContrainte;
+        $retour[5] = $nomRapport;
+        $retour[6] = $nomGroupe;
+        $retour[7] = $nomListe;
+        $retour[8] = $detailsVilles;
+        $retour[9] = $idGroupe;
+        $retour[10] = $idRapport;
+
+        return $retour;
     }
 }
