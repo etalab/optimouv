@@ -16,7 +16,7 @@
 <body>
 
 
-!-- declaration de variables -->
+<!-- declaration de variables -->
 <!-- distanceMin -->
 {% set distanceMinOpSansContrainte = scenarioOptimalSansContrainte.estimationGenerale.distanceTotale %}
 {% set distanceMinOpSansContrainte = (distanceMinOpSansContrainte / 1000)|round %}
@@ -202,6 +202,50 @@
 
 </div>
 
+<div style="page-break-after:always;"></div>
+<hr>
+<h4> Liste des rencontres </h4>
+<!-- bloc détails rencontres -->
+<div style="overflow-y: scroll; max-height: 300px">
+    <table>
+
+        <thead>
+        <tr>
+            <th style="font-weight: bold !important;">
+                Poules
+            </th>
+            <th>Rencontres</th>
+
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for key, rencontreDetailOpSansContrainte in rencontreDetailsOpSansContrainte %}
+            {% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ loop.index ] %}
+
+            <tr>
+                {% set lettre = alphabet[key-1] %}
+                <td><strong> Poule {{ lettre }} </strong></td>
+
+                <td>
+                    <ul>
+                        {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
+                            <li>
+                                {{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }}
+                                ~ {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}
+                            </li>
+
+                        {% endfor %}
+                    </ul>
+                </td>
+
+            </tr>
+
+        {% endfor %}
+        </tbody>
+
+    </table>
+</div>
 
 <form name="submitParams" action="{{ path('ffbb_previsualisation_pdf')}}" method="post">
     <input type="hidden" value="{{ idRapport }}" name="params" id="params">
