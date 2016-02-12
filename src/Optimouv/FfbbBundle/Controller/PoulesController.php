@@ -642,7 +642,7 @@ class PoulesController extends Controller
         $idListe = $statement[0]['idListe'];
         $nomGroupe = $statement[0]['nomGroupe'];
 
-        print_r($idListe);
+        print_r($nomGroupe);
         exit;
 
         //récupération du nom du=e la liste
