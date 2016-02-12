@@ -811,7 +811,7 @@ class PoulesController extends Controller
         $typeMatch = $detailsCalcul["typeMatch"];
         $scenarioOptimalSansContrainte = $detailsCalcul["scenarioOptimalSansContrainte"];
 
-        echo '<pre>',print_r($typeMatch,1),'</pre>';exit;
+        echo '<pre>',print_r($scenarioOptimalSansContrainte,1),'</pre>';exit;
         //récupération du nom du rapport
         $connection = $em->getConnection();
 
