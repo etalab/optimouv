@@ -743,7 +743,7 @@ class PoulesController extends Controller
         $nbrParticipantsTotalOpSansContrainte = $params[6];
         $estimationDetailsOpSansContrainte = $params[7];
         $dureeTotaleOpSansContrainte = $params[8];
-        $rencontreDetailsOpSansContrainte = $params[9];
+//        $rencontreDetailsOpSansContrainte = $params[9];
         $nomListe = $params[10];
         $nomGroupe = $params[11];
         $taillePoule = $params[12];
@@ -760,7 +760,7 @@ class PoulesController extends Controller
             'nbrParticipantsTotalOpSansContrainte' => $nbrParticipantsTotalOpSansContrainte,
             'estimationDetailsOpSansContrainte' => $estimationDetailsOpSansContrainte,
             'dureeTotaleOpSansContrainte' => $dureeTotaleOpSansContrainte,
-            'rencontreDetailsOpSansContrainte' => $rencontreDetailsOpSansContrainte,
+//            'rencontreDetailsOpSansContrainte' => $rencontreDetailsOpSansContrainte,
             'nomListe' => $nomListe,
             'nomGroupe' => $nomGroupe,
             'taillePoule' => $taillePoule,
@@ -768,7 +768,6 @@ class PoulesController extends Controller
 
         ));
 
-//        $html = "Hello Ouss";
         $dompdf = $this->get('slik_dompdf');
 
         // Generate the pdf
