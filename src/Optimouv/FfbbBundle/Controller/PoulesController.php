@@ -642,8 +642,6 @@ class PoulesController extends Controller
         $idListe = $statement[0]['idListe'];
         $nomGroupe = $statement[0]['nomGroupe'];
 
-        print_r($nomGroupe);
-        exit;
 
         //récupération du nom du=e la liste
 
@@ -651,6 +649,8 @@ class PoulesController extends Controller
         $statement->bindParam(':id', $idListe);
         $statement->execute();
         $statement = $statement->fetchAll(PDO::FETCH_ASSOC);
+        print_r($statement);
+        exit;
         $nomListe = $statement[0]['nomListe'];
 
 
