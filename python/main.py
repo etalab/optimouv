@@ -741,18 +741,6 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 																		"noms": prohibitionDetail["names"], 
 																		"villes": prohibitionDetail["cities"], 
 																		}
-# 			if "interdictionsIds" not in results["params"]:
-# 				results["params"]["interdictionsIds"] = {indexProhibition: prohibitionDetail["ids"]}
-# 			else: 
-# 				results["params"]["interdictionsIds"][indexProhibition] = prohibitionDetail["ids"]
-# 			if "interdictionsNoms" not in results["params"]:
-# 				results["params"]["interdictionsNoms"] = {indexProhibition: prohibitionDetail["names"]}
-# 			else: 
-# 				results["params"]["interdictionsNoms"][indexProhibition] = prohibitionDetail["names"]
-# 			if "interdictionsVilles" not in results["params"]:
-# 				results["params"]["interdictionsVilles"] = {indexProhibition: prohibitionDetail["cities"]}
-# 			else: 
-# 				results["params"]["interdictionsVilles"][indexProhibition] = prohibitionDetail["cities"]
 
 		# get list of names and cities from entity table for type distribution constraints
 		for teamType, members in typeDistributionConstraints.items():
@@ -770,19 +758,6 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 																		 "noms": prohibitionDetail["names"], 
 																		 "villes": prohibitionDetail["cities"], 
 																		 } 
-
-# 			if "repartitionsHomogenesIds" not in results["params"]:
-# 				results["params"]["repartitionsHomogenesIds"] = {teamType: prohibitionDetail["ids"]}
-# 			else: 
-# 				results["params"]["repartitionsHomogenesIds"][teamType] = prohibitionDetail["ids"]
-# 			if "repartitionsHomogenesNoms" not in results["params"]:
-# 				results["params"]["repartitionsHomogenesNoms"] = {teamType: prohibitionDetail["names"]}
-# 			else: 
-# 				results["params"]["repartitionsHomogenesNoms"][teamType] = prohibitionDetail["names"]
-# 			if "repartitionsHomogenesVilles" not in results["params"]:
-# 				results["params"]["repartitionsHomogenesVilles"] = {teamType: prohibitionDetail["cities"]}
-# 			else: 
-# 				results["params"]["repartitionsHomogenesVilles"][teamType] = prohibitionDetail["cities"]
 
 		# save constraint variation of team number per pool
 		results["params"]["varEquipeParPouleChoisi"] = varTeamNbrPerPool
