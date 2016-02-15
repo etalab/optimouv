@@ -3267,6 +3267,13 @@
 
                  // javascript quand on clique sur le bouton 'lancer le calcul'
                  $(document).ready(function(){
+
+                        // selectionner la valeur pour la variation du nombre d'équipes par poule
+                        $("#variationNbrEquipe").val({{ varEquipeParPouleChoisi }});
+
+                        // bloquer le bouton de lancement si le résultat est de type final
+                        $('#lancerCalculBtn').prop('disabled', true);
+
                         $("#lancerCalculBtn").click(function(){
 
                             console.log("------------------------------------ debug bouton lancer calcul ---------------------------------------");
