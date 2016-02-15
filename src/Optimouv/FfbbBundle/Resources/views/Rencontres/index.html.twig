@@ -349,7 +349,7 @@
                                                                 <tr>
                                                                     <td><strong> {{ participant.ville|slice(8) }}</strong></td>
                                                                     <td style="text-align:right"> {{ (participant.distance //1000)|number_format(0, ',', ' ') }}</td>
-                                                                    <td style="text-align:right"> {{ participant.duree|date('H:i')}}</td>
+                                                                    <td style="text-align:right"> {{ (participant.duree/3600)|round }}:{{ ((participant.duree%3600)/60)|round}}</td>
                                                                     <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                     <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants/4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                     <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants/9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -618,7 +618,7 @@
                                                                     <td><strong> {{ participantEq.villeEq|slice(8) }}</strong>
                                                                     </td>
                                                                     <td style="text-align:right"> {{ (participantEq.distanceEq //1000)|number_format(0, ',', ' ') }}</td>
-                                                                    <td style="text-align:right"> {{ participantEq.dureeEq|date('H:i')}}</td>
+                                                                    <td style="text-align:right"> {{ (participantEq.dureeEq/3600)|round }}:{{ ((participantEq.dureeEq%3600)/60)|round}}</td>
                                                                     <td style="text-align:right"> {{ (participantEq.distanceEq / 1000 * participantEq.nbrParticipants *  0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                     <td style="text-align:right"> {{ (participantEq.distanceEq / 1000 * participantEq.nbrParticipants/4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                     <td style="text-align:right"> {{ (participantEq.distanceEq / 1000 * participantEq.nbrParticipants/9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
