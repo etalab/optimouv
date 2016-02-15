@@ -78,12 +78,22 @@ class Poules{
                 $varEquipeParPoule   = 0;
             }
 
+            # id de l'ancien résultat
+            if(array_key_exists("idAncienResultat", $_POST)){
+                $idAncienResultat = $_POST["idAncienResultat"];
+            }
+            else{
+                $idAncienResultat = -1;
+            }
+
 
 
             $nom = "rapport_groupe_".$idGroupe."_action_".$typeAction;
             $statut = 0;
             $params = json_encode(array("nbrPoule" => $poulesNbr, "interdictions"=> $interdictions,
-                "repartitionHomogene"=> $repartitionsHomogenes, "varEquipeParPoule"=> $varEquipeParPoule));
+                "repartitionHomogene"=> $repartitionsHomogenes, "varEquipeParPoule"=> $varEquipeParPoule,
+                "idAncienResultat"=> $idAncienResultat
+            ));
 
             # insérer dans la base de données
             $sql = "INSERT INTO  rapport (nom, id_groupe, type_action, date_creation, statut, params) VALUES ( :nom, :id_groupe, :type_action, :date_creation, :statut, :params);";
