@@ -254,25 +254,25 @@
                                                             <p  class="list-group-item">
                                                                 <i class="fa fa-road fa-fw"
                                                                    style="padding-right: 30px"></i>
-                                                                <strong>{{ distanceMin }}</strong> kilomètres au total
+                                                                <strong>{{ distanceMin|number_format(0, ',', ' ') }}</strong> kilomètres au total
                                                                 à parcourir pour l'ensemble du scénario
                                                             </p>
                                                             <p  class="list-group-item">
                                                                 <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}" width="20px" height="20px"/>
                                                                 <i style="padding-right: 10px"></i>
-                                                                <strong>{{ (distanceTotale * 0.80 )|round }}</strong>
+                                                                <strong>{{ (distanceTotale * 0.80 )|round|number_format(0, ',', ' ') }}</strong>
                                                                 € pour réaliser les trajets de l'ensemble du scénario en voiture
                                                             </p>
                                                             <p  class="list-group-item">
                                                                 <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}" width="20px" height="20px"/>
                                                                 <i style="padding-right: 10px"></i>
-                                                                <strong>{{ (distanceTotale /4 * 0.80 )|round }}</strong>
+                                                                <strong>{{ (distanceTotale /4 * 0.80 )|round|number_format(0, ',', ' ') }}</strong>
                                                                 € pour réaliser les trajets de l'ensemble du scénario en covoiturage
                                                             </p>
                                                             <p   class="list-group-item">
                                                                 <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}" width="20px" height="20px"/>
                                                                 <i style="padding-right: 10px"></i>
-                                                                <strong>{{ (distanceTotale /9 * 1.31)|round }}</strong>
+                                                                <strong>{{ (distanceTotale /9 * 1.31)|round|round|number_format(0, ',', ' ') }}</strong>
                                                                 € pour réaliser les trajets de l'ensemble du scénario en minibus
 
                                                             </p>
@@ -280,7 +280,7 @@
                                                             <p   class="list-group-item">
                                                                 <img src="{{ asset('bundles/ffbb/images/icons/car-icon.png') }}" width="20px" height="20px"/>
                                                                 <i style="padding-right: 10px"></i>
-                                                                <strong>{{ (distanceTotale * 0.157)|round }}</strong>
+                                                                <strong>{{ (distanceTotale * 0.157)|round|number_format(0, ',', ' ') }}</strong>
                                                                 KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}
                                                                 joueurs en voiture individuelle
                                                                 pour le scénario
@@ -289,7 +289,7 @@
                                                             <p   class="list-group-item">
                                                                 <img src="{{ asset('bundles/ffbb/images/icons/covoiturage-icon.png') }}" width="20px" height="20px"/>
                                                                 <i  style="padding-right: 10px"></i>
-                                                                <strong>{{ (distanceTotale/4 * 0.157)|round }}</strong>
+                                                                <strong>{{ (distanceTotale/4 * 0.157)|round|number_format(0, ',', ' ') }}</strong>
                                                                 KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}
                                                                 joueurs en co-voiturage pour le scénario
 
@@ -298,7 +298,7 @@
                                                             <p  class="list-group-item">
                                                                 <img src="{{ asset('bundles/ffbb/images/icons/bus-icon.png') }}" width="20px" height="15px"/>
                                                                 <i style="padding-right: 10px;  "></i>
-                                                                <strong>{{ (distanceTotale/9 * 0.185)|round }}</strong>
+                                                                <strong>{{ (distanceTotale/9 * 0.185)|round|number_format(0, ',', ' ') }}</strong>
                                                                 KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}
                                                                 joueurs en minibus pour le scénario
 
@@ -337,14 +337,14 @@
                                                                     <tr>
                                                                         <td><strong> {{ participant.ville|slice(8) }}</strong>
                                                                         </td>
-                                                                        <td style="text-align:right"> {{ participant.distance // 1000 }}</td>
+                                                                        <td style="text-align:right"> {{ (participant.distance // 1000)|number_format(0, ',', ' ') }}</td>
                                                                         <td style="text-align:right"> {{ participant.duree|date('H:i')}}</td>
-                                                                        <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants * 0.80)|round }}</td>
-                                                                        <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants /4 * 0.80)|round }}</td>
-                                                                        <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants /9 * 1.31)|round }}</td>
-                                                                        <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants * 0.157)|round }}</td>
-                                                                        <td style="text-align:right"> {{ (participant.distance / 1000 *(participant.nbrParticipants/4)*0.157)|round }} </td>
-                                                                        <td style="text-align:right"> {{ (participant.distance / 1000 *(participant.nbrParticipants/9)*0.185)|round }} </td>
+                                                                        <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants * 0.80)|round|number_format(0, ',', ' ') }}</td>
+                                                                        <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
+                                                                        <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
+                                                                        <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants * 0.157)|round|number_format(0, ',', ' ') }}</td>
+                                                                        <td style="text-align:right"> {{ (participant.distance / 1000 *(participant.nbrParticipants/4)*0.157)|round|number_format(0, ',', ' ') }} </td>
+                                                                        <td style="text-align:right"> {{ (participant.distance / 1000 *(participant.nbrParticipants/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
                                                                     </tr>
 
 
