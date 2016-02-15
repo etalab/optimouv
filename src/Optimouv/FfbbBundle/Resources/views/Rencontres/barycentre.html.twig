@@ -333,6 +333,7 @@
                                                                 </thead>
                                                                 <tbody>
 
+                                                                {% set dureeTotale = "" %}
                                                                 {% for participant in participants %}
                                                                     <tr>
                                                                         <td><strong> {{ participant.ville|slice(8) }}</strong>
@@ -346,9 +347,19 @@
                                                                         <td style="text-align:right"> {{ (participant.distance / 1000 *(participant.nbrParticipants/4)*0.157)|round|number_format(0, ',', ' ') }} </td>
                                                                         <td style="text-align:right"> {{ (participant.distance / 1000 *(participant.nbrParticipants/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
                                                                     </tr>
-
-
+                                                                    {% set dureeTotale = dureeTotale + participant.duree %}
                                                                 {% endfor %}
+                                                                <tr>
+                                                                    <td><strong> Totaux </strong></td>
+                                                                    <td style="text-align:right"> {{ distanceMin|number_format(0, ',', ' ') }}</td>
+                                                                    <td style="text-align:right"> {{ dureeTotale|date('d H:i') }}</td>
+                                                                    <td style="text-align:right"> {{ (distanceTotale  * 0.80)|round|number_format(0, ',', ' ') }}</td>
+                                                                    <td style="text-align:right"> {{ (distanceTotale /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
+                                                                    <td style="text-align:right"> {{ (distanceTotale /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
+                                                                    <td style="text-align:right"> {{ (distanceTotale * 0.157)|round|number_format(0, ',', ' ') }}</td>
+                                                                    <td style="text-align:right"> {{ ((distanceTotale /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
+                                                                    <td style="text-align:right"> {{ ((distanceTotale /9)*0.185)|round|number_format(0, ',', ' ') }} </td>
+                                                                </tr>
                                                                 </tbody>
                                                             </table>
 
