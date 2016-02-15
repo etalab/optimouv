@@ -2497,24 +2497,37 @@ def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, pro
 		
 # 		logging.debug("calculatedResult : \n%s" %json.dumps(calculatedResult))
 		
-		# map list of strings to list of ints
-		prohibitionConstraintsInput = [list(map(int, prohibitionConstraint)) for prohibitionConstraint in prohibitionConstraints]
-# 		logging.debug("prohibitionConstraintsInput : %s" %prohibitionConstraintsInput)
-		
-		# check prohibition constraints
+		# map list of strings to list of ints for prohibition constraints
+		prohibitionConstraintsInput = [sorted(list(map(int, prohibitionConstraint))) for prohibitionConstraint in prohibitionConstraints]
+		logging.debug("prohibitionConstraintsInput : %s" %prohibitionConstraintsInput)
+
+		# map list of strings to list of ints for type distribution constraints
+		typeDistributionConstraintsInput = {}
+		for type, members in typeDistributionConstraints.items(): 
+			typeDistributionConstraintsInput[type] = sorted(list(map(int, members)))
+		logging.debug("typeDistributionConstraintsInput : %s" %typeDistributionConstraintsInput)
+
 		if "params" in calculatedResult:
+			# check prohibition constraints
 			if "interdictions" in calculatedResult["params"]:
 				prohibitionConstraintsSavedUnformatted = calculatedResult["params"]["interdictions"]
 				prohibitionConstraintsSaved = []
 				for prohibitionNbr, prohibitionConstraintSavedUnformatted in prohibitionConstraintsSavedUnformatted.items():
-					prohibitionConstraintsSaved.append(prohibitionConstraintSavedUnformatted["ids"])
-					
-# 				logging.debug("prohibitionConstraintsSaved : %s" %prohibitionConstraintsSaved)
-# 				logging.debug("prohibitionConstraintsInput : %s" %prohibitionConstraintsInput)
-# 				logging.debug("prohibitionConstraintsInput == prohibitionConstraintsSaved : %s" %(prohibitionConstraintsInput == prohibitionConstraintsSaved))
-				
-				if prohibitionConstraintsInput != prohibitionConstraintsSaved : 
+					prohibitionConstraintsSaved.append(sorted(prohibitionConstraintSavedUnformatted["ids"]))
+				if prohibitionConstraintsInput != prohibitionConstraintsSaved: 
 					errorStatus = True
+# 				logging.debug("prohibitionConstraintsInput == prohibitionConstraintsSaved : %s" %(prohibitionConstraintsInput == prohibitionConstraintsSaved))
+			# check type distribution constraints
+			if "repartitionsHomogenes" in calculatedResult["params"]:
+				typeDistributionConstraintsSavedUnformatted = calculatedResult["params"]["repartitionsHomogenes"]
+				typeDistributionConstraintsSaved = {}
+				for type, typeDistributionConstraintSavedUnformatted in typeDistributionConstraintsSavedUnformatted.items():
+					typeDistributionConstraintsSaved[type] = sorted(typeDistributionConstraintSavedUnformatted["ids"])
+				if typeDistributionConstraintsInput != typeDistributionConstraintsSaved: 
+					errorStatus = True
+# 				logging.debug("typeDistributionConstraintsSaved : %s" %typeDistributionConstraintsSaved)
+# 				logging.debug("typeDistributionConstraintsInput : %s" %typeDistributionConstraintsInput)
+# 				logging.debug("typeDistributionConstraintsInput == typeDistributionConstraintsSaved : %s" %(typeDistributionConstraintsInput == typeDistributionConstraintsSaved))
 				
 		
 		# send email if errorStatus is true
