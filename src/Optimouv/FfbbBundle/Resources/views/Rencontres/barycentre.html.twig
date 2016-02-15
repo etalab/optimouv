@@ -352,7 +352,7 @@
                                                                 <tr>
                                                                     <td><strong> Totaux </strong></td>
                                                                     <td style="text-align:right"> {{ distanceMin|number_format(0, ',', ' ') }}</td>
-                                                                    <td style="text-align:right"> {{ dureeTrajet|date('H:i') }}</td>
+                                                                    <td style="text-align:right"> {{ (dureeTotale/3600)|round }}:{{ ((dureeTotale%3600)/60)|round}}</td>
                                                                     <td style="text-align:right"> {{ (distanceTotale  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                     <td style="text-align:right"> {{ (distanceTotale /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                     <td style="text-align:right"> {{ (distanceTotale /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>

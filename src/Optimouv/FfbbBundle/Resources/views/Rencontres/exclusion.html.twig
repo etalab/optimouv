@@ -319,7 +319,7 @@
                                                                 </tr>
                                                                 </thead>
                                                                 <tbody>
-
+                                                                {% set dureeTotale = "" %}
                                                                 {% for participant in participants %}
                                                                     <tr>
                                                                         <td><strong> {{ participant.ville|slice(8)}}</strong></td>
@@ -333,8 +333,20 @@
                                                                         <td style="text-align:right"> {{ (participant.distance / 1000 * (participant.nbrParticipants/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
                                                                     </tr>
 
+                                                                    {% set dureeTotale = dureeTotale + participant.duree %}
 
                                                                 {% endfor %}
+                                                                <tr>
+                                                                    <td><strong> Totaux </strong></td>
+                                                                    <td style="text-align:right"> {{ distanceMin|number_format(0, ',', ' ') }}</td>
+                                                                    <td style="text-align:right"> {{ (dureeTotale/3600)|round }}:{{ ((dureeTotale%3600)/60)|round}}</td>
+                                                                    <td style="text-align:right"> {{ (distanceTotale  * 0.80)|round|number_format(0, ',', ' ') }}</td>
+                                                                    <td style="text-align:right"> {{ (distanceTotale /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
+                                                                    <td style="text-align:right"> {{ (distanceTotale /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
+                                                                    <td style="text-align:right"> {{ (distanceTotale * 0.157)|round|number_format(0, ',', ' ') }}</td>
+                                                                    <td style="text-align:right"> {{ ((distanceTotale /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
+                                                                    <td style="text-align:right"> {{ ((distanceTotale /9)*0.185)|round|number_format(0, ',', ' ') }} </td>
+                                                                </tr>
                                                                 </tbody>
                                                             </table>
 
@@ -571,7 +583,7 @@
                                                                 </tr>
                                                                 </thead>
                                                                 <tbody>
-
+                                                                {% set dureeTotaleEq = "" %}
                                                                 {% for participantEq in participantsEq %}
                                                                     <tr>
                                                                         <td><strong> {{ participantEq.villeEq|slice(8)}}</strong></td>
@@ -585,9 +597,20 @@
                                                                         <td style="text-align:right"> {{ (participantEq.distanceEq / 1000 *(participantEq.nbrParticipants/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
 
                                                                     </tr>
-
+                                                                    {% set dureeTotaleEq = dureeTotaleEq +  participantEq.dureeEq %}
 
                                                                 {% endfor %}
+                                                                <tr>
+                                                                    <td><strong> Totaux </strong></td>
+                                                                    <td style="text-align:right"> {{ distanceMinEq|number_format(0, ',', ' ') }}</td>
+                                                                    <td style="text-align:right"> {{ (dureeTotaleEq/3600)|round }}:{{ ((dureeTotaleEq%3600)/60)|round}}</td>
+                                                                    <td style="text-align:right"> {{ (distanceTotaleEq  * 0.80)|round|number_format(0, ',', ' ') }}</td>
+                                                                    <td style="text-align:right"> {{ (distanceTotaleEq /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
+                                                                    <td style="text-align:right"> {{ (distanceTotaleEq /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
+                                                                    <td style="text-align:right"> {{ (distanceTotaleEq * 0.157)|round|number_format(0, ',', ' ') }}</td>
+                                                                    <td style="text-align:right"> {{ ((distanceTotaleEq /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
+                                                                    <td style="text-align:right"> {{ ((distanceTotaleEq /9)*0.185)|round|number_format(0, ',', ' ') }} </td>
+                                                                </tr>
                                                                 </tbody>
                                                             </table>
 
