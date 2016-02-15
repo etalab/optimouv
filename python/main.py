@@ -93,20 +93,28 @@ def optimize_pool_post_treatment_match(D_Mat, teamNbr, poolNbr, poolSize, teams,
 		logging.debug(" varTeamNbrPerPool: %s" %(varTeamNbrPerPool,))
 
 		typeMatch = results["typeMatch"]
+		logging.debug(" typeMatch: %s" %(typeMatch,))
 
 		iter = config.INPUT.Iter
 		logging.debug(" iter: %s" %iter)
+
+		# add final flag to results
+		if "params" in results:
+			results["params"]["final"] = "oui"
+
 
 		############# optimal scenario without constraint #################
 		logging.debug("")
 		logging.debug(" ####################### RESULT OPTIMAL WITHOUT CONSTRAINT #############################################")
 		resultsOptimalWithoutConstraint = results["scenarioOptimalSansContrainte"]
 		if resultsOptimalWithoutConstraint:
+			
 			poolDistribution_OptimalWithoutConstraint = variation_team_number_per_pool(resultsOptimalWithoutConstraint["poulesId"], varTeamNbrPerPool)
 			logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %(poolDistribution_OptimalWithoutConstraint,))
 			
 			# create P Matrix from pool distribution	
 			P_Mat_OptimalWithoutConstraint = create_matrix_from_pool_distribution(poolDistribution_OptimalWithoutConstraint, teamNbr, teams)
+# 			logging.debug(" P_Mat_OptimalWithoutConstraint: \n%s" %(P_Mat_OptimalWithoutConstraint,))
 
 			# filter upper triangular size in the case of one way match
 			if typeMatch == "allerSimple":
@@ -122,10 +130,9 @@ def optimize_pool_post_treatment_match(D_Mat, teamNbr, poolNbr, poolSize, teams,
 			logging.debug(" chosenDistance_OptimalWithoutConstraint: %s" %chosenDistance_OptimalWithoutConstraint)
 
 	 		# get pool distribution
-# 			poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
 			poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams)
 			logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %poolDistribution_OptimalWithoutConstraint)
-	# 		
+
 			# eliminate phantom teams
 			poolDistribution_OptimalWithoutConstraint = eliminate_phantom_in_pool_distribution(poolDistribution_OptimalWithoutConstraint)
 			results["scenarioOptimalSansContrainte"]["poulesId"] = poolDistribution_OptimalWithoutConstraint
@@ -1409,21 +1416,21 @@ def callback(ch, method, properties, body):
 			# check given params if they are the same or not as the stocked params
 			check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints, reportId)
 
-
-
 # 			results = optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult)
 			results = optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, oldResultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult)
-			logging.debug("results : %s" %results)
+# 			logging.debug("results : \n%s" %json.dumps(results))
 
-			sys.exit()
+# 			sys.exit()
 
 		if varTeamNbrPerPool == 0:
 			logging.debug("############################################# INSERT RESULT INTO DB #########################################")
 			resultId = save_result_to_db(launchType, reportId, groupId, results)
 			logging.debug("resultId : %s" %resultId)
 		else:
-			logging.debug("############################################# UPDATE RESULT INTO DB #########################################")
-			resultId = update_result_to_db(resultId, results)
+# 			logging.debug("############################################# UPDATE RESULT INTO DB #########################################")
+			logging.debug("############################################# INSERT RESULT INTO DB #########################################")
+# 			resultId = update_result_to_db(resultId, results)
+			resultId = save_result_to_db_post_treatment(launchType, reportId, groupId, results)
 			logging.debug("resultId : %s" %resultId)
 
 		logging.debug("############################################# SEND EMAIL ####################################################")
