@@ -1303,8 +1303,11 @@
                                                              </div>
                                                              <a href="{{ path('ffbb_poules_details_calcul') }}" class="pull-left">Détails
                                                                  du calcul</a>
-                                                             {% set params = "Ouss" %}
-                                                             <a href="{{ path('ffbb_previsualisation_pdf', {'params': params}) }}" class="btn btn-primary  pull-right">Exporter</a>
+                                                             <form name="submitParams" action="{{ path('ffbb_previsualisation_pdf')}}" method="post">
+                                                                 <input type="hidden" value="{{ idResultat }}" name="params" id="params">
+
+                                                                 <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
+                                                             </form>
 
 
 
