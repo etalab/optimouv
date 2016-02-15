@@ -2452,7 +2452,6 @@ def check_final_result(calculatedResult, userId, reportId):
 				if results["params"]["final"] == "yes":
 					
 					TEXT = u"Bonjour,\n\n" 
-# 					TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
 					TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
 					TEXT += u"Vous ne pouvez lancer le critère de variation du nombre d'équipes par poule qu'une seule fois. " 
 					send_email_to_user_failure_with_text(userId, TEXT)
@@ -2462,21 +2461,46 @@ def check_final_result(calculatedResult, userId, reportId):
 		show_exception_traceback()
 
 """
-Function to check params for post treatment round trip and one way match
+Function to check params for post treatment (variation of team members per pool) round trip and one way match
 """
-# def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints):
 def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints, reportId):
 	try:
+		errorStatus = False
+		
 		sql = "select nom from rapport where id=%s"%reportId
 		reportName = db.fetchone(sql)
 		
-		if calculatedResult["typeMatch"] != launchType:
+		if ( calculatedResult["typeMatch"] != launchType) or (int(calculatedResult["nombrePoule"]) != int(poolNbr)):
+			errorStatus = True
+		
+# 		logging.debug("calculatedResult : \n%s" %json.dumps(calculatedResult))
+		
+		# map list of strings to list of ints
+		prohibitionConstraintsInput = [list(map(int, prohibitionConstraint)) for prohibitionConstraint in prohibitionConstraints]
+# 		logging.debug("prohibitionConstraintsInput : %s" %prohibitionConstraintsInput)
+		
+		# check prohibition constraints
+		if "params" in calculatedResult:
+			if "interdictions" in calculatedResult["params"]:
+				prohibitionConstraintsSavedUnformatted = calculatedResult["params"]["interdictions"]
+				prohibitionConstraintsSaved = []
+				for prohibitionNbr, prohibitionConstraintSavedUnformatted in prohibitionConstraintsSavedUnformatted.items():
+					prohibitionConstraintsSaved.append(prohibitionConstraintSavedUnformatted["ids"])
+					
+# 				logging.debug("prohibitionConstraintsSaved : %s" %prohibitionConstraintsSaved)
+# 				logging.debug("prohibitionConstraintsInput : %s" %prohibitionConstraintsInput)
+# 				logging.debug("prohibitionConstraintsInput == prohibitionConstraintsSaved : %s" %(prohibitionConstraintsInput == prohibitionConstraintsSaved))
+				
+				if prohibitionConstraintsInput != prohibitionConstraintsSaved : 
+					errorStatus = True
+				
+		
+		# send email if errorStatus is true
+		if errorStatus:
 			TEXT = u"Bonjour,\n\n" 
-# 			TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
 			TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
 			TEXT += u"Veuillez utiliser les mêmes parametres que vous avez utilisé précédemment . " 
 			send_email_to_user_failure_with_text(userId, TEXT)
-			
 		
 	except Exception as e:
 		show_exception_traceback()
