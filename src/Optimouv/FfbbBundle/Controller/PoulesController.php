@@ -621,47 +621,59 @@ class PoulesController extends Controller
         $varEquipeParPouleProposition = $detailsCalcul["params"]["varEquipeParPouleProposition"];
 
         # récupérer les contraintes d'interdictions
-        if(array_key_exists("interdictionsNoms", $detailsCalcul["params"])){
-            $interdictionsNoms = $detailsCalcul["params"]["interdictionsNoms"];
-        }
-        else{
-            $interdictionsNoms = [];
-        }
-        if(array_key_exists("interdictionsVilles", $detailsCalcul["params"])){
-            $interdictionsVilles = $detailsCalcul["params"]["interdictionsVilles"];
-        }
-        else{
-            $interdictionsVilles = [];
-        }
-        if(array_key_exists("interdictionsIds", $detailsCalcul["params"])){
-            $interdictionsIds = $detailsCalcul["params"]["interdictionsIds"];
+//        if(array_key_exists("interdictionsNoms", $detailsCalcul["params"])){
+//            $interdictionsNoms = $detailsCalcul["params"]["interdictionsNoms"];
+//        }
+//        else{
+//            $interdictionsNoms = [];
+//        }
+//        if(array_key_exists("interdictionsVilles", $detailsCalcul["params"])){
+//            $interdictionsVilles = $detailsCalcul["params"]["interdictionsVilles"];
+//        }
+//        else{
+//            $interdictionsVilles = [];
+//        }
+//        if(array_key_exists("interdictionsIds", $detailsCalcul["params"])){
+//            $interdictionsIds = $detailsCalcul["params"]["interdictionsIds"];
+//        }
+//        else {
+//            $interdictionsIds = [];
+//        }
+        if(array_key_exists("interdictions", $detailsCalcul["params"])){
+            $interdictions = $detailsCalcul["params"]["interdictions"];
         }
         else {
-            $interdictionsIds = [];
+            $interdictions = [];
         }
 
         # récupérer les contraintes de répartitions homogènes
-        if(array_key_exists("repartitionsHomogenesNoms", $detailsCalcul["params"])){
-            $repartitionsHomogenesNoms = $detailsCalcul["params"]["repartitionsHomogenesNoms"];
+//        if(array_key_exists("repartitionsHomogenesNoms", $detailsCalcul["params"])){
+//            $repartitionsHomogenesNoms = $detailsCalcul["params"]["repartitionsHomogenesNoms"];
+//        }
+//        else{
+//            $repartitionsHomogenesNoms = [];
+//        }
+//        if(array_key_exists("repartitionsHomogenesVilles", $detailsCalcul["params"])){
+//            $repartitionsHomogenesVilles = $detailsCalcul["params"]["repartitionsHomogenesVilles"];
+//        }
+//        else{
+//            $repartitionsHomogenesVilles = [];
+//        }
+//        if(array_key_exists("repartitionsHomogenesIds", $detailsCalcul["params"])){
+//            $repartitionsHomogenesIds = $detailsCalcul["params"]["repartitionsHomogenesIds"];
+//        }
+//        else {
+//            $repartitionsHomogenesIds  = [];
+//        }
+        if(array_key_exists("repartitionsHomogenes", $detailsCalcul["params"])){
+            $repartitionsHomogenes = $detailsCalcul["params"]["repartitionsHomogenes"];
         }
         else{
-            $repartitionsHomogenesNoms = [];
-        }
-        if(array_key_exists("repartitionsHomogenesVilles", $detailsCalcul["params"])){
-            $repartitionsHomogenesVilles = $detailsCalcul["params"]["repartitionsHomogenesVilles"];
-        }
-        else{
-            $repartitionsHomogenesVilles = [];
-        }
-        if(array_key_exists("repartitionsHomogenesIds", $detailsCalcul["params"])){
-            $repartitionsHomogenesIds = $detailsCalcul["params"]["repartitionsHomogenesIds"];
-        }
-        else {
-            $repartitionsHomogenesIds  = [];
+            $repartitionsHomogenes = [];
         }
 
 
-//        error_log("\n interdictionsNoms : ".print_r($interdictionsNoms , true), 3, "error_log_optimouv.txt");
+//        error_log("\n interdictions : ".print_r($interdictions , true), 3, "error_log_optimouv.txt");
 
 
         //récupération du nom du rapport
@@ -712,12 +724,14 @@ class PoulesController extends Controller
             'idGroupe' => $idGroupe,
             'varEquipeParPouleProposition' => $varEquipeParPouleProposition,
             'idResultat' => $idResultat,
-            'interdictionsNoms' => $interdictionsNoms,
-            'interdictionsVilles' => $interdictionsVilles,
-            'interdictionsIds' => $interdictionsIds,
-            'repartitionsHomogenesNoms' => $repartitionsHomogenesNoms,
-            'repartitionsHomogenesVilles' => $repartitionsHomogenesVilles,
-            'repartitionsHomogenesIds' => $repartitionsHomogenesIds,
+            'interdictions' => $interdictions,
+            'repartitionsHomogenes' => $repartitionsHomogenes,
+//            'interdictionsNoms' => $interdictionsNoms,
+//            'interdictionsVilles' => $interdictionsVilles,
+//            'interdictionsIds' => $interdictionsIds,
+//            'repartitionsHomogenesNoms' => $repartitionsHomogenesNoms,
+//            'repartitionsHomogenesVilles' => $repartitionsHomogenesVilles,
+//            'repartitionsHomogenesIds' => $repartitionsHomogenesIds,
 
 
         ));

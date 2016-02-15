@@ -3030,32 +3030,68 @@
                                  <th><h4>Equipe N°2</h4></th>
                              </tr>
                              </thead>
-                             <tr>
-                                 <td id="interdiction">
-                                     Interdiction
-                                 </td>
-                                 <td>
-                                     <select id="equipe1" class="equipe1" onchange="selectEquipe(this,this.parentNode.parentNode.getElementsByClassName('equipe2'))">
-                                         <option disabled selected> -- selectionnez une option -- </option>
-                                         {% for detailsVille in detailsVilles %}
+                             <tbody>
+                             {% for interdictionNbr, interdictionInfo in interdictions%}
+                                 <tr>
+                                     <td id="interdiction"> Interdiction {{ interdictionNbr }} </td>
 
-                                             <option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>
-                                         {% endfor %}
-                                     </select>
-                                 </td>
-                                 <td>
+                                     <td>
+                                         <select id="equipe1" class="equipe1" >
+                                             {% for detailsVille in detailsVilles %}
+                                                 {%  if detailsVille.id == interdictionInfo.ids[0] %}
+                                                     <option selected value={{detailsVille.id}}>> {{ detailsVille.nom }} </option>
+                                                 {% else %}
+                                                      <option value={{detailsVille.id}}>> {{ detailsVille.nom }} </option>
+                                                 {% endif %}
+                                             {% endfor %}
 
-                                     {#<select id="equipe2" class="equipe2" onchange="selectEquipe2()">#}
-                                     <select id="equipe2" class="equipe2">
-                                         <option disabled selected> -- selectionnez une option -- </option>
-                                         {% for detailsVille in detailsVilles %}
+                                         </select>
+                                     </td>
 
-                                             <option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>
-                                         {% endfor %}
-                                     </select>
+                                     <td>
+                                         <select id="equipe2" class="equipe2">
+                                             {% for detailsVille in detailsVilles %}
+                                                 {%  if detailsVille.id == interdictionInfo.ids[1] %}
+                                                     <option selected value={{detailsVille.id}}>> {{ detailsVille.nom }} </option>
+                                                 {% else %}
+                                                     <option value={{detailsVille.id}}>> {{ detailsVille.nom }} </option>
+                                                 {% endif %}
+                                             {% endfor %}
+                                         </select>
 
-                                 </td>
-                             </tr>
+                                     </td>
+
+
+                                 </tr>
+
+                             {%  endfor %}
+                                 {#<tr>#}
+                                     {#<td id="interdiction">#}
+                                         {#Interdiction#}
+                                     {#</td>#}
+                                     {#<td>#}
+                                         {#<select id="equipe1" class="equipe1" onchange="selectEquipe(this,this.parentNode.parentNode.getElementsByClassName('equipe2'))">#}
+                                             {#<option disabled selected> -- selectionnez une option -- </option>#}
+                                             {#{% for detailsVille in detailsVilles %}#}
+    {##}
+                                                 {#<option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>#}
+                                             {#{% endfor %}#}
+                                         {#</select>#}
+                                     {#</td>#}
+                                     {#<td>#}
+    {##}
+                                         {#&#123;&#35;<select id="equipe2" class="equipe2" onchange="selectEquipe2()">&#35;&#125;#}
+                                         {#<select id="equipe2" class="equipe2">#}
+                                             {#<option disabled selected> -- selectionnez une option -- </option>#}
+                                             {#{% for detailsVille in detailsVilles %}#}
+    {##}
+                                                 {#<option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>#}
+                                             {#{% endfor %}#}
+                                         {#</select>#}
+    {##}
+                                     {#</td>#}
+                                 {#</tr>#}
+                             </tbody>
                          </table>
                          <br>
 
@@ -3190,15 +3226,10 @@
                      });
                      $("#btnVoirInterdiction").click(function(){
 //                         console.log("btnVoirInterdiction")    ;
-
                          $("#contrainteInterdictionBody").toggle();
                      });
 
                  });
-
-
-
-
 
 
                  $(document).ready(function(){
