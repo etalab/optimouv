@@ -3287,6 +3287,10 @@
                             var varEquipeParPoule = $("#variationNbrEquipe").val();
                             console.log("varEquipeParPoule : " + varEquipeParPoule );
 
+                            // obtenir l'id du résultat
+                            var idResultat = {{ idResultat }};
+                            console.log("idResultat: " + idResultat );
+
 
                             // controler le champ obligatoire (le nombre de poules)
 //                         if (typeMatch == "plateau"){
@@ -3319,7 +3323,7 @@
                                 // agréger les input params
                                 var inputParams = {typeMatch: typeMatch, poulesNbr: poulesNbr, idGroupe: idGroupe,
                                     interdictions: interdictions, repartitionsHomogenes  : repartitionsHomogenes,
-                                    varEquipeParPoule: varEquipeParPoule};
+                                    varEquipeParPoule: varEquipeParPoule, idAncienResultat: idResultat };
                                 console.log("inputParams : " + JSON.stringify(inputParams));
 
 
