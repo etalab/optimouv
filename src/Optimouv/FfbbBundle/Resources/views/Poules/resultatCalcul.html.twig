@@ -3134,9 +3134,9 @@
                                      <tbody>
 
                                      {% for key, detailsVille in detailsVilles %}
-                                         <tr id="repartitionHomogeneIdVille{{ detailsVille.id }}">
-                                             {#<td style="display: none" id="repartitionHomogeneIdVille{{ key }}">{{ detailsVille.id }}</td>#}
-                                             <td style="display: none" >{{ detailsVille.id }}</td>
+                                         <tr id="trRepartitionHomogeneIdVille{{ detailsVille.id }}">
+                                             <td style="display: none" id="repartitionHomogeneIdVille{{ key }}">{{ detailsVille.id }}</td>
+                                             {#<td style="display: none" >{{ detailsVille.id }}</td>#}
                                              <td>{{ detailsVille.nom }}</td>
                                              <td>
                                                  <select class="form-control" id="repartitionHomogeneOption{{ key }}">
@@ -3250,9 +3250,8 @@
 
                          for (var i=0; i<entitesIds.length; i++){
                              entiteId = entitesIds[i];
-                             $("#repartitionHomogeneIdVille" + entiteId).find("td select").val(type);
+                             $("#trRepartitionHomogeneIdVille" + entiteId).find("td select").val(type);
                          }
-
 
                      }
 
