@@ -3134,8 +3134,9 @@
                                      <tbody>
 
                                      {% for key, detailsVille in detailsVilles %}
-                                         <tr>
-                                             <td style="display: none" id="repartitionHomogeneIdVille{{ key }}">{{ detailsVille.id }}</td>
+                                         <tr id="repartitionHomogeneIdVille{{ detailsVille.id }}">
+                                             {#<td style="display: none" id="repartitionHomogeneIdVille{{ key }}">{{ detailsVille.id }}</td>#}
+                                             <td style="display: none" >{{ detailsVille.id }}</td>
                                              <td>{{ detailsVille.nom }}</td>
                                              <td>
                                                  <select class="form-control" id="repartitionHomogeneOption{{ key }}">
@@ -3224,6 +3225,7 @@
                  }
 
                  $(document).ready(function(){
+                     // toggle boutons interdictions
                      $("#contrainteInterdiction").click(function(){
                          $("#contrainteInterdictionBody").toggle();
                      });
@@ -3231,12 +3233,30 @@
                          $("#contrainteInterdictionBody").toggle();
                      });
 
+                     // toggle boutons repartitions homogenes
                      $("#contrainteRepartition").click(function(){
                          $("#contrainteRepartitionBody").toggle();
                      });
                      $("#btnVoirRepartition").click(function(){
                          $("#contrainteRepartitionBody").toggle();
                      });
+
+                     // remplir les valeurs de repartitions homogenes
+                     var repartitionsHomogenes = {{ repartitionsHomogenes| json_encode | raw }};
+                     for (var type in repartitionsHomogenes){
+//                         console.log(type );
+                         var detailsContraints = repartitionsHomogenes[type];
+                         var entitesIds = detailsContraints.ids;
+
+                         for (var i=0; i<entitesIds.length; i++){
+                             entiteId = entitesIds[i];
+                             $("#repartitionHomogeneIdVille" + entiteId).find("td select").val(type);
+                         }
+
+
+                     }
+
+
                  });
 
 
