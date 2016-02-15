@@ -690,12 +690,6 @@ class PoulesController extends Controller
             'idResultat' => $idResultat,
             'interdictions' => $interdictions,
             'repartitionsHomogenes' => $repartitionsHomogenes,
-//            'interdictionsNoms' => $interdictionsNoms,
-//            'interdictionsVilles' => $interdictionsVilles,
-//            'interdictionsIds' => $interdictionsIds,
-//            'repartitionsHomogenesNoms' => $repartitionsHomogenesNoms,
-//            'repartitionsHomogenesVilles' => $repartitionsHomogenesVilles,
-//            'repartitionsHomogenesIds' => $repartitionsHomogenesIds,
 
 
         ));
