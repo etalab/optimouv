@@ -2127,6 +2127,28 @@ def save_result_to_db(launchType, reportId, groupId, results):
 	try:
 		resultId = -1
 		
+		
+		logging.debug(" results: %s" %(json.dumps(results["params"]["repartitionsHomogenes"]),))
+
+		if "params" in results:
+			# characters substitution for prohibition constraints
+			if "interdictions" in results["params"]:
+				for indexProhibition, contentProhibition in results["params"]["interdictions"].items():
+					for indexName, name in enumerate(contentProhibition["noms"]):
+						results["params"]["interdictions"][indexProhibition]["noms"][indexName] = name.replace("'", u"''")
+					for indexCity, city in enumerate(contentProhibition["villes"]):
+						results["params"]["interdictions"][indexProhibition]["villes"][indexCity] = city.replace("'", u"''")
+
+		
+			# characters substitution for type distribution constraints
+			if "repartitionsHomogenes" in results["params"]:
+				for teamType, contentTypeDistribution in results["params"]["repartitionsHomogenes"].items():
+					for indexName, name in enumerate(contentTypeDistribution["noms"]):
+						results["params"]["repartitionsHomogenes"][teamType]["noms"][indexName] = name.replace("'", u"''")
+					for indexCity, city in enumerate(contentTypeDistribution["villes"]):
+						results["params"]["repartitionsHomogenes"][teamType]["villes"][indexCity] = city.replace("'", u"''") 
+# 						logging.debug(" city: %s" %(city,))
+		
 		name = "%s_rapport_%s_groupe_%s"%(launchType , reportId, groupId) 
 		km = 0
 		travelTime = 0
