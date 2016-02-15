@@ -167,6 +167,12 @@ Function to create pool distribution from P Matrix
 def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, teams):
 	try:
 
+
+# 		logging.debug(" P_Mat: \n%s" %P_Mat)
+# 		logging.debug(" teamNbr: \n%s" %teamNbr)
+# 		logging.debug(" poolNbr: \n%s" %poolNbr)
+# 		logging.debug(" teams: \n%s" %teams)
+
 		# Dict containing the distribution of groups in the pools
 		poolDistribution = {}
 	
@@ -184,6 +190,8 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 
 			# get the row content
 			rowContent = list(P_Mat[indexRow])
+# 			logging.debug("")
+# 			logging.debug("  indexRow: %s" %indexRow)
 # 			logging.debug("  rowContent: %s" %rowContent)
 
 			# calculate the pool size of the row
@@ -228,6 +236,7 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 # 		logging.debug("poolSize: \n%s" %poolSize)
 # 		logging.debug("teams: \n%s" %teams)
 # 		logging.debug("tempPools: \n%s" %tempPools)
+
 
 		firstPoolName = ord('A')
 		# obtain group distribution per pool
@@ -1912,6 +1921,7 @@ def variation_team_number_per_pool(poolsIds, varTeamNbrPerPool):
 		logging.debug(" poolNbr: %s" %(poolNbr,))
 
 		poolsIdsCopy = dict.copy(poolsIds)
+		resultPoolsIds = {}
 
 		# if pool number is even
 		if poolNbr % 2 == 0:
@@ -1931,6 +1941,8 @@ def variation_team_number_per_pool(poolsIds, varTeamNbrPerPool):
 				# add teams to even number pool
 				if index % 2 == 0:
 					teams += tmpTeams
+					tmpTeams = []
+				resultPoolsIds[pool] = teams
 
 		# if pool number is odd
 		if poolNbr % 2 == 1:
@@ -1952,8 +1964,13 @@ def variation_team_number_per_pool(poolsIds, varTeamNbrPerPool):
 					# add teams to even number pool
 					if index % 2 == 0:
 						teams += tmpTeams
+						tmpTeams = []
+					resultPoolsIds[pool] = teams
 				
-		return poolsIds
+# 		logging.debug(" resultPoolsIds: %s" %(resultPoolsIds,))
+
+# 		return poolsIds
+		return resultPoolsIds
 	except Exception as e:
 		show_exception_traceback()
 
