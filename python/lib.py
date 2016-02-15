@@ -2144,7 +2144,6 @@ def save_result_to_db(launchType, reportId, groupId, results):
 	try:
 		resultId = -1
 		
-		
 		if "params" in results:
 			# characters substitution for prohibition constraints
 			if "interdictions" in results["params"]:
@@ -2204,6 +2203,106 @@ def save_result_to_db(launchType, reportId, groupId, results):
 		return resultId
 	except Exception as e:
 		show_exception_traceback()
+
+
+"""
+Function to save result into DB
+"""
+def save_result_to_db_post_treatment(launchType, reportId, groupId, results):
+	try:
+		resultId = -1
+		
+		if "params" in results:
+			# characters substitution for prohibition constraints
+			if "interdictions" in results["params"]:
+				for indexProhibition, contentProhibition in results["params"]["interdictions"].items():
+					for indexName, name in enumerate(contentProhibition["noms"]):
+						results["params"]["interdictions"][indexProhibition]["noms"][indexName] = name.replace("'", u"''")
+					for indexCity, city in enumerate(contentProhibition["villes"]):
+						results["params"]["interdictions"][indexProhibition]["villes"][indexCity] = city.replace("'", u"''")
+
+		
+			# characters substitution for type distribution constraints
+			if "repartitionsHomogenes" in results["params"]:
+				for teamType, contentTypeDistribution in results["params"]["repartitionsHomogenes"].items():
+					for indexName, name in enumerate(contentTypeDistribution["noms"]):
+						results["params"]["repartitionsHomogenes"][teamType]["noms"][indexName] = name.replace("'", u"''")
+					for indexCity, city in enumerate(contentTypeDistribution["villes"]):
+						results["params"]["repartitionsHomogenes"][teamType]["villes"][indexCity] = city.replace("'", u"''") 
+# 						logging.debug(" city: %s" %(city,))
+		
+		
+		# escape single apostrophe for city names
+		# ref scenario
+		resultsRef = results["scenarioRef"]
+		if resultsRef:
+			replace_single_quote_for_result(resultsRef["rencontreDetails"])
+# 		logging.debug("resultsRef : %s" %resultsRef)
+
+		# optimal scenario
+		resultsOptimalWithoutConstraint = results["scenarioOptimalSansContrainte"]
+		if resultsOptimalWithoutConstraint:
+			replace_single_quote_for_result(resultsOptimalWithoutConstraint["rencontreDetails"])
+		
+		resultsOptimalWithConstraint = results["scenarioOptimalAvecContrainte"]
+		if resultsOptimalWithConstraint:
+			replace_single_quote_for_result(resultsOptimalWithConstraint["rencontreDetails"])
+			
+		# equitable scenario
+		resultsEquitableWithoutConstraint = results["scenarioEquitableSansContrainte"]
+		if resultsEquitableWithoutConstraint:
+			replace_single_quote_for_result(resultsEquitableWithoutConstraint["rencontreDetails"])
+			
+		
+		resultsEquitableWithConstraint = results["scenarioEquitableAvecContrainte"]
+		if resultsEquitableWithConstraint:
+			replace_single_quote_for_result(resultsEquitableWithoutConstraint["rencontreDetails"])
+
+		
+		
+		
+		name = "%s_rapport_%s_groupe_%s"%(launchType , reportId, groupId) 
+		km = 0
+		travelTime = 0
+		creationDate = time.strftime("%Y-%m-%d")
+		modificationDate = time.strftime("%Y-%m-%d")
+		co2Car = 0
+		co2SharedCar = 0
+		co2Bus = 0
+		costCar = 0
+		costSharedCar = 0
+		costBus = 0
+		
+		sql = """insert into scenario (id_rapport, nom, kilometres, duree, date_creation, date_modification, 
+					co2_voiture, co2_covoiturage, co2_minibus, cout_voiture, cout_covoiturage, cout_minibus, details_calcul ) 
+			values ( %(reportId)s , '%(name)s', %(km)s, %(travelTime)s,' %(creationDate)s', '%(modificationDate)s',
+					%(co2Car)s, %(co2SharedCar)s, %(co2Bus)s, %(costCar)s, %(costSharedCar)s, %(costBus)s, '%(results)s' )
+			"""%{	"reportId": reportId, 
+					"name": name,
+					"km": km,
+					"travelTime": travelTime,
+					"creationDate": creationDate,
+					"modificationDate": modificationDate,
+					"co2Car": co2Car,
+					"co2SharedCar": co2SharedCar,
+					"co2Bus": co2Bus,
+					"costCar": costCar,
+					"costSharedCar": costSharedCar,
+					"costBus": costBus,
+					"results": json.dumps(results),
+					
+				}
+# 		logging.debug("sql: %s" %sql)
+		db.execute(sql)
+		db.commit()
+		
+		resultId = db.lastinsertedid()
+		
+		return resultId
+	except Exception as e:
+		show_exception_traceback()
+
+
 
 """
 Function to get team names from their ids
@@ -2486,7 +2585,8 @@ def check_final_result(calculatedResult, userId, reportId):
 
 		if "params" in calculatedResult:
 			if "final" in calculatedResult["params"]:
-				if results["params"]["final"] == "yes":
+# 				if results["params"]["final"] == "yes":
+				if results["params"]["final"] == "oui":
 					
 					TEXT = u"Bonjour,\n\n" 
 					TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
@@ -2589,7 +2689,8 @@ def update_result_to_db(resultId, results):
 
 
 		# mark the final result
-		results["params"]["final"] = "yes"
+# 		results["params"]["final"] = "yes"
+		results["params"]["final"] = "oui"
 
 		sql = """update scenario set details_calcul='%(results)s' where id=%(resultId)s
 			"""%{	"resultId": resultId, 
