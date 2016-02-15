@@ -587,7 +587,6 @@ class PoulesController extends Controller
             $idRapport  = $idRapport[0]["idRapport"];
         }
 
-//        error_log("\n idRapport : ".print_r($idRapport , true), 3, "error_log_optimouv.txt");
 
 //        $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idResultat);
         $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idRapport);
@@ -620,6 +619,49 @@ class PoulesController extends Controller
         $scenarioRef = $detailsCalcul["scenarioRef"];
         $refExiste = $detailsCalcul["refExiste"];
         $varEquipeParPouleProposition = $detailsCalcul["params"]["varEquipeParPouleProposition"];
+
+        # récupérer les contraintes d'interdictions
+        if(array_key_exists("interdictionsNoms", $detailsCalcul["params"])){
+            $interdictionsNoms = $detailsCalcul["params"]["interdictionsNoms"];
+        }
+        else{
+            $interdictionsNoms = [];
+        }
+        if(array_key_exists("interdictionsVilles", $detailsCalcul["params"])){
+            $interdictionsVilles = $detailsCalcul["params"]["interdictionsVilles"];
+        }
+        else{
+            $interdictionsVilles = [];
+        }
+        if(array_key_exists("interdictionsIds", $detailsCalcul["params"])){
+            $interdictionsIds = $detailsCalcul["params"]["interdictionsIds"];
+        }
+        else {
+            $interdictionsIds = [];
+        }
+
+        # récupérer les contraintes de répartitions homogènes
+        if(array_key_exists("repartitionsHomogenesNoms", $detailsCalcul["params"])){
+            $repartitionsHomogenesNoms = $detailsCalcul["params"]["repartitionsHomogenesNoms"];
+        }
+        else{
+            $repartitionsHomogenesNoms = [];
+        }
+        if(array_key_exists("repartitionsHomogenesVilles", $detailsCalcul["params"])){
+            $repartitionsHomogenesVilles = $detailsCalcul["params"]["repartitionsHomogenesVilles"];
+        }
+        else{
+            $repartitionsHomogenesVilles = [];
+        }
+        if(array_key_exists("repartitionsHomogenesIds", $detailsCalcul["params"])){
+            $repartitionsHomogenesIds = $detailsCalcul["params"]["repartitionsHomogenesIds"];
+        }
+        else {
+            $repartitionsHomogenesIds  = [];
+        }
+
+
+//        error_log("\n interdictionsNoms : ".print_r($interdictionsNoms , true), 3, "error_log_optimouv.txt");
 
 
         //récupération du nom du rapport
@@ -670,9 +712,12 @@ class PoulesController extends Controller
             'idGroupe' => $idGroupe,
             'varEquipeParPouleProposition' => $varEquipeParPouleProposition,
             'idResultat' => $idResultat,
-
-
-
+            'interdictionsNoms' => $interdictionsNoms,
+            'interdictionsVilles' => $interdictionsVilles,
+            'interdictionsIds' => $interdictionsIds,
+            'repartitionsHomogenesNoms' => $repartitionsHomogenesNoms,
+            'repartitionsHomogenesVilles' => $repartitionsHomogenesVilles,
+            'repartitionsHomogenesIds' => $repartitionsHomogenesIds,
 
 
         ));
