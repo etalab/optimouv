@@ -620,6 +620,14 @@ class PoulesController extends Controller
         $refExiste = $detailsCalcul["refExiste"];
         $varEquipeParPouleProposition = $detailsCalcul["params"]["varEquipeParPouleProposition"];
 
+        # récupérer la nombre de la variation d'équipes choisi
+        if(array_key_exists("varEquipeParPouleChoisi", $detailsCalcul["params"])){
+            $varEquipeParPouleChoisi = $detailsCalcul["params"]["varEquipeParPouleChoisi"];
+        }
+        else {
+            $varEquipeParPouleChoisi  = 0;
+        }
+
         # récupérer les contraintes d'interdictions
         if(array_key_exists("interdictions", $detailsCalcul["params"])){
             $interdictions = $detailsCalcul["params"]["interdictions"];
@@ -636,6 +644,13 @@ class PoulesController extends Controller
             $repartitionsHomogenes = [];
         }
 
+        # récupérer le statut final pour le rapport
+        if(array_key_exists("final", $detailsCalcul["params"])){
+            $finalStatut = $detailsCalcul["params"]["final"];
+        }
+        else{
+            $finalStatut= "non";
+        }
 
 //        error_log("\n interdictions : ".print_r($interdictions , true), 3, "error_log_optimouv.txt");
 
@@ -687,9 +702,11 @@ class PoulesController extends Controller
             'detailsVilles' => $detailsVilles,
             'idGroupe' => $idGroupe,
             'varEquipeParPouleProposition' => $varEquipeParPouleProposition,
+            'varEquipeParPouleChoisi' => $varEquipeParPouleChoisi,
             'idResultat' => $idResultat,
             'interdictions' => $interdictions,
             'repartitionsHomogenes' => $repartitionsHomogenes,
+            'finalStatut' => $finalStatut,
 
 
         ));
