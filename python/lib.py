@@ -2128,8 +2128,6 @@ def save_result_to_db(launchType, reportId, groupId, results):
 		resultId = -1
 		
 		
-		logging.debug(" results: %s" %(json.dumps(results["params"]["repartitionsHomogenes"]),))
-
 		if "params" in results:
 			# characters substitution for prohibition constraints
 			if "interdictions" in results["params"]:
