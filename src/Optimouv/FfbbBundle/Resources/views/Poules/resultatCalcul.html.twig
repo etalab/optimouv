@@ -69,7 +69,7 @@
                              <tr>
 
                                     {%  set pourcentage = (100 - (scenarioRef.estimationGenerale.distanceTotale/scenarioOptimalSansContrainte.estimationGenerale.distanceTotale *100))|round %}
-                                    <td> Vous avez gagné {{ pourcentage|abs }} % par rapport à l'ancien scénario</td>
+                                    <td> Avec le scénario optimal, vous réduisez de {{ pourcentage|abs }} % le nombre de kilomètres à parcourir, par rapport au scénario de référence </td>
                              </tr>
                              {% endif %}
 
