@@ -102,6 +102,11 @@ def optimize_pool_post_treatment_match(D_Mat, teamNbr, poolNbr, poolSize, teams,
 		if "params" in results:
 			results["params"]["final"] = "oui"
 
+ 			# change values concerning variation of team members per pool
+# 			results["params"]["varEquipeParPouleProposition"] = [0]
+			results["params"]["varEquipeParPouleChoisi"] = varTeamNbrPerPool
+			results["params"]["varEquipeParPoulePossible"] = 0
+ 			
 
 		############# optimal scenario without constraint #################
 		logging.debug("")
