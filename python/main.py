@@ -370,13 +370,13 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			prohibitionDetail = get_list_details_from_list_ids_for_entity(members)
 			
 			if "epartitionsHomogenes" not in results["params"]:
-				results["params"]["epartitionsHomogenes"] = {teamType: { "ids": prohibitionDetail["ids"], 
+				results["params"]["repartitionsHomogenes"] = {teamType: { "ids": prohibitionDetail["ids"], 
 																		 "noms": prohibitionDetail["names"], 
 																		 "villes": prohibitionDetail["cities"], 
 																		 } 
 															}
 			else:
-				results["params"]["epartitionsHomogenes"][teamType] = { "ids": prohibitionDetail["ids"], 
+				results["params"]["repartitionsHomogenes"][teamType] = { "ids": prohibitionDetail["ids"], 
 																		 "noms": prohibitionDetail["names"], 
 																		 "villes": prohibitionDetail["cities"], 
 																		 } 
@@ -760,13 +760,13 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			prohibitionDetail = get_list_details_from_list_ids_for_entity(members)
 			
 			if "epartitionsHomogenes" not in results["params"]:
-				results["params"]["epartitionsHomogenes"] = {teamType: { "ids": prohibitionDetail["ids"], 
+				results["params"]["repartitionsHomogenes"] = {teamType: { "ids": prohibitionDetail["ids"], 
 																		 "noms": prohibitionDetail["names"], 
 																		 "villes": prohibitionDetail["cities"], 
 																		 } 
 															}
 			else:
-				results["params"]["epartitionsHomogenes"][teamType] = { "ids": prohibitionDetail["ids"], 
+				results["params"]["repartitionsHomogenes"][teamType] = { "ids": prohibitionDetail["ids"], 
 																		 "noms": prohibitionDetail["names"], 
 																		 "villes": prohibitionDetail["cities"], 
 																		 } 
