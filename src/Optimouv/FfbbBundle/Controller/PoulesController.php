@@ -621,24 +621,6 @@ class PoulesController extends Controller
         $varEquipeParPouleProposition = $detailsCalcul["params"]["varEquipeParPouleProposition"];
 
         # récupérer les contraintes d'interdictions
-//        if(array_key_exists("interdictionsNoms", $detailsCalcul["params"])){
-//            $interdictionsNoms = $detailsCalcul["params"]["interdictionsNoms"];
-//        }
-//        else{
-//            $interdictionsNoms = [];
-//        }
-//        if(array_key_exists("interdictionsVilles", $detailsCalcul["params"])){
-//            $interdictionsVilles = $detailsCalcul["params"]["interdictionsVilles"];
-//        }
-//        else{
-//            $interdictionsVilles = [];
-//        }
-//        if(array_key_exists("interdictionsIds", $detailsCalcul["params"])){
-//            $interdictionsIds = $detailsCalcul["params"]["interdictionsIds"];
-//        }
-//        else {
-//            $interdictionsIds = [];
-//        }
         if(array_key_exists("interdictions", $detailsCalcul["params"])){
             $interdictions = $detailsCalcul["params"]["interdictions"];
         }
@@ -647,24 +629,6 @@ class PoulesController extends Controller
         }
 
         # récupérer les contraintes de répartitions homogènes
-//        if(array_key_exists("repartitionsHomogenesNoms", $detailsCalcul["params"])){
-//            $repartitionsHomogenesNoms = $detailsCalcul["params"]["repartitionsHomogenesNoms"];
-//        }
-//        else{
-//            $repartitionsHomogenesNoms = [];
-//        }
-//        if(array_key_exists("repartitionsHomogenesVilles", $detailsCalcul["params"])){
-//            $repartitionsHomogenesVilles = $detailsCalcul["params"]["repartitionsHomogenesVilles"];
-//        }
-//        else{
-//            $repartitionsHomogenesVilles = [];
-//        }
-//        if(array_key_exists("repartitionsHomogenesIds", $detailsCalcul["params"])){
-//            $repartitionsHomogenesIds = $detailsCalcul["params"]["repartitionsHomogenesIds"];
-//        }
-//        else {
-//            $repartitionsHomogenesIds  = [];
-//        }
         if(array_key_exists("repartitionsHomogenes", $detailsCalcul["params"])){
             $repartitionsHomogenes = $detailsCalcul["params"]["repartitionsHomogenes"];
         }
