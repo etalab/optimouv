@@ -78,12 +78,13 @@
 {% set coordEq ="" %}
 {% for key,coordPouleOpSansContrainte in coordPoulesOpSansContrainte %}
 
-    {% for coordonneeVilleOpSansContrainte in coordPouleOpSansContrainte %}
-        {% set  x = coordonneeVilleOpSansContrainte[0] %}
-        {% set y =  coordonneeVilleOpSansContrainte[1] %}
-        {% set xy = x~"%2C"~y %}
-        {% set coordEq = coordEq~xy~"%2C"  %}
-
+    {% for key, coordonneeVilleOpSansContrainte in coordPouleOpSansContrainte %}
+        {% if key <20 %}
+            {% set  x = coordonneeVilleOpSansContrainte[0] %}
+            {% set y =  coordonneeVilleOpSansContrainte[1] %}
+            {% set xy = x~"%2C"~y %}
+            {% set coordEq = coordEq~xy~"%2C" %}
+        {% endif %}
 
     {% endfor %}
 {% endfor %}
@@ -93,6 +94,8 @@
 
 
 <img src="https://image.maps.api.here.com/mia/1.6/mapview?poi={{ coordEq }}&ml=fre&poitxs=16&poifc=olive&app_id={{ app_id }}&amp;app_code={{ app_code }}&w=1024&h=600" style="margin-left: 40px">
+
+
 <div style="page-break-after:always;"></div>
 
 <!-- bloc estimation générale -->

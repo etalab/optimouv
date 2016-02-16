@@ -69,7 +69,7 @@
                              <tr>
 
                                     {%  set pourcentage = (100 - (scenarioRef.estimationGenerale.distanceTotale/scenarioOptimalSansContrainte.estimationGenerale.distanceTotale *100))|round %}
-                                    <td> Vous avez gagné {{ pourcentage|abs }} % par rapport à l'ancien scénario</td>
+                                    <td> Avec le scénario optimal, vous réduisez de {{ pourcentage|abs }} % le nombre de kilomètres à parcourir, par rapport au scénario de référence </td>
                              </tr>
                              {% endif %}
 
@@ -396,7 +396,26 @@
                                                                                  <tr>
                                                                                      <td><strong> Poule {{ lettre }} </strong></td>
                                                                                      <td style="text-align:right"> {{ distanceOptContrainteDetail|number_format(0, ',', ' ') }}</td>
-                                                                                     <td style="text-align:right"> {{ dureeTotaleOptContrainteDetail|date('d H:i') }}</td>
+                                                                                     <td style="text-align:right">
+                                                                                         {#{{ dureeTotaleOptContrainteDetail|date('d H:i') }}#}
+
+                                                                                         {# récupérer le nbr de jour #}
+                                                                                         {% set nbrJourOptContrainteDetail = (dureeTotaleOptContrainteDetail/86400)|round %}
+                                                                                         {% if nbrJourOptContrainteDetail <10 %}
+                                                                                             {% set nbrJourOptContrainteDetail = "0"~nbrJourOptContrainteDetail %}
+                                                                                         {% endif %}
+                                                                                         {# récupérer le nbr d heure #}
+                                                                                         {% set nbrHeureOptContrainteDetail = ((dureeTotaleOptContrainteDetail%86400)/3600)|round %}
+                                                                                         {% if nbrHeureOptContrainteDetail <10 %}
+                                                                                             {% set nbrHeureOptContrainteDetail = "0"~nbrHeureOptContrainteDetail %}
+                                                                                         {% endif %}
+                                                                                         {# récupérer le nbr de minute #}
+                                                                                         {% set nbrMinOptContrainteDetail = (((dureeTotaleOptContrainteDetail%86400)%3600)/60)|round %}
+                                                                                         {% if nbrMinOptContrainteDetail <10 %}
+                                                                                             {% set nbrMinOptContrainteDetail = "0"~nbrMinOptContrainteDetail %}
+                                                                                         {% endif %}
+                                                                                         {{ nbrJourOptContrainteDetail}} {{ nbrHeureOptContrainteDetail }}:{{ nbrMinOptContrainteDetail }}
+                                                                                     </td>
                                                                                      <td style="text-align:right"> {{ (distanceTotaleOptContrainteDetail  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                                      <td style="text-align:right"> {{ (distanceTotaleOptContrainteDetail /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                                      <td style="text-align:right"> {{ (distanceTotaleOptContrainteDetail /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -779,7 +798,27 @@
                                                                              <tr>
                                                                                  <td><strong> Poule {{ lettre }} </strong></td>
                                                                                  <td style="text-align:right"> {{ distanceEqContrainteDetail|number_format(0, ',', ' ') }}</td>
-                                                                                 <td style="text-align:right"> {{ dureeTotaleEqContrainteDetail|date('d H:i') }}</td>
+                                                                                 <td style="text-align:right">
+                                                                                     {#{{ dureeTotaleEqContrainteDetail|date('d H:i') }}#}
+
+                                                                                     {# récupérer le nbr de jour #}
+                                                                                     {% set nbrJour = (dureeTotaleOpSansContrainteDetail/86400)|round %}
+                                                                                     {% if nbrJour <10 %}
+                                                                                         {% set nbrJour = "0"~nbrJour %}
+                                                                                     {% endif %}
+                                                                                     {# récupérer le nbr d heure #}
+                                                                                     {% set nbrHeure = ((dureeTotaleOpSansContrainteDetail%86400)/3600)|round %}
+                                                                                     {% if nbrHeure <10 %}
+                                                                                         {% set nbrHeure = "0"~nbrHeure %}
+                                                                                     {% endif %}
+                                                                                     {# récupérer le nbr de minute #}
+                                                                                     {% set nbrMin = (((dureeTotaleOpSansContrainteDetail%86400)%3600)/60)|round %}
+                                                                                     {% if nbrMin <10 %}
+                                                                                         {% set nbrMin = "0"~nbrMin %}
+                                                                                     {% endif %}
+                                                                                     {{ nbrJour}} {{ nbrHeure }}:{{ nbrMin }}
+
+                                                                                 </td>
                                                                                  <td style="text-align:right"> {{ (distanceTotaleEqContrainteDetail  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                                  <td style="text-align:right"> {{ (distanceTotaleEqContrainteDetail /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                                  <td style="text-align:right"> {{ (distanceTotaleEqContrainteDetail /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -1170,7 +1209,27 @@
                                                                              <tr>
                                                                                  <td><strong> Poule {{ lettre }} </strong></td>
                                                                                  <td style="text-align:right"> {{distanceOpSansContrainteDetail|number_format(0, ',', ' ') }}</td>
-                                                                                 <td style="text-align:right"> {{ dureeTotaleOpSansContrainteDetail|date('d H:i') }}</td>
+                                                                                 <td style="text-align:right">
+                                                                                     {#{{ dureeTotaleOpSansContrainteDetail|date('d H:i') }}#}
+
+                                                                                     {# récupérer le nbr de jour #}
+                                                                                     {% set nbrJourOpSansContrainteDetail = (distanceOpSansContrainteDetail/86400)|round %}
+                                                                                     {% if nbrJourOpSansContrainteDetail <10 %}
+                                                                                         {% set nbrJourOpSansContrainteDetail = "0"~nbrJourOpSansContrainteDetail %}
+                                                                                     {% endif %}
+                                                                                     {# récupérer le nbr d heure #}
+                                                                                     {% set nbrHeureOpSansContrainteDetail = ((distanceOpSansContrainteDetail%86400)/3600)|round %}
+                                                                                     {% if nbrHeureOpSansContrainteDetail <10 %}
+                                                                                         {% set nbrHeureOpSansContrainteDetail = "0"~nbrHeureOpSansContrainteDetail %}
+                                                                                     {% endif %}
+                                                                                     {# récupérer le nbr de minute #}
+                                                                                     {% set nbrMinOpSansContrainteDetail = (((distanceOpSansContrainteDetail%86400)%3600)/60)|round %}
+                                                                                     {% if nbrMinOpSansContrainteDetail <10 %}
+                                                                                         {% set nbrMinOpSansContrainteDetail = "0"~nbrMinOpSansContrainteDetail %}
+                                                                                     {% endif %}
+                                                                                     {{ nbrJourOpSansContrainteDetail}} {{ nbrHeureOpSansContrainteDetail }}:{{ nbrMinOpSansContrainteDetail }}
+
+                                                                                 </td>
                                                                                  <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                                  <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                                  <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -1244,8 +1303,11 @@
                                                              </div>
                                                              <a href="{{ path('ffbb_poules_details_calcul') }}" class="pull-left">Détails
                                                                  du calcul</a>
-                                                             {% set params = "Ouss" %}
-                                                             <a href="{{ path('ffbb_previsualisation_pdf', {'params': params}) }}" class="btn btn-primary  pull-right">Exporter</a>
+                                                             <form name="submitParams" action="{{ path('ffbb_previsualisation_pdf')}}" method="post">
+                                                                 <input type="hidden" value="{{ idResultat }}" name="params" id="params">
+
+                                                                 <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
+                                                             </form>
 
 
 
@@ -1558,7 +1620,27 @@
                                                                              <tr>
                                                                                  <td><strong> Poule {{ lettre }} </strong></td>
                                                                                  <td style="text-align:right"> {{distanceRefDetail|number_format(0, ',', ' ') }}</td>
-                                                                                 <td style="text-align:right"> {{ dureeTotaleRefDetail|date('d H:i') }}</td>
+                                                                                 <td style="text-align:right">
+                                                                                     {#{{ dureeTotaleRefDetail|date('d H:i') }}#}
+
+                                                                                     {# récupérer le nbr de jour #}
+                                                                                     {% set nbrJourRefDetailContrainte = (dureeTotaleRefDetail/86400)|round %}
+                                                                                     {% if nbrJourRefDetailContrainte <10 %}
+                                                                                         {% set nbrJourRefDetailContrainte = "0"~nbrJourRefDetailContrainte %}
+                                                                                     {% endif %}
+                                                                                     {# récupérer le nbr d heure #}
+                                                                                     {% set nbrHeureRefDetailContrainte = ((dureeTotaleRefDetail%86400)/3600)|round %}
+                                                                                     {% if nbrHeureRefDetailContrainte <10 %}
+                                                                                         {% set nbrHeureRefDetailContrainte = "0"~nbrHeureRefDetailContrainte %}
+                                                                                     {% endif %}
+                                                                                     {# récupérer le nbr de minute #}
+                                                                                     {% set nbrMinRefDetailContrainte = (((dureeTotaleRefDetail%86400)%3600)/60)|round %}
+                                                                                     {% if nbrMinRefDetailContrainte <10 %}
+                                                                                         {% set nbrMinRefDetailContrainte = "0"~nbrMinRefDetailContrainte %}
+                                                                                     {% endif %}
+                                                                                     {{ nbrJourRefDetailContrainte}} {{ nbrHeureRefDetailContrainte }}:{{ nbrMinRefDetailContrainte }}
+
+                                                                                 </td>
                                                                                  <td style="text-align:right"> {{ (distanceTotaleRefDetail  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                                  <td style="text-align:right"> {{ (distanceTotaleRefDetail /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                                  <td style="text-align:right"> {{ (distanceTotaleRefDetail /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -1913,7 +1995,27 @@
                                                                          <tr>
                                                                              <td><strong> Poule {{ lettre }} </strong></td>
                                                                              <td style="text-align:right"> {{distanceOpSansContrainteDetail|number_format(0, ',', ' ') }}</td>
-                                                                             <td style="text-align:right"> {{ dureeTotaleOpSansContrainteDetail|date('d H:i') }}</td>
+                                                                             {#<td style="text-align:right"> {{ dureeTotaleOpSansContrainteDetail|date('d H:i') }}</td>#}
+                                                                             <td style="text-align:right">
+                                                                                {# récupérer le nbr de jour #}
+                                                                                 {% set nbrJour = (dureeTotaleOpSansContrainteDetail/86400)|round %}
+                                                                                 {% if nbrJour <10 %}
+                                                                                     {% set nbrJour = "0"~nbrJour %}
+                                                                                 {% endif %}
+                                                                                 {# récupérer le nbr d heure #}
+                                                                                 {% set nbrHeure = ((dureeTotaleOpSansContrainteDetail%86400)/3600)|round %}
+                                                                                 {% if nbrHeure <10 %}
+                                                                                     {% set nbrHeure = "0"~nbrHeure %}
+                                                                                 {% endif %}
+                                                                                 {# récupérer le nbr de minute #}
+                                                                                 {% set nbrMin = (((dureeTotaleOpSansContrainteDetail%86400)%3600)/60)|round %}
+                                                                                 {% if nbrMin <10 %}
+                                                                                     {% set nbrMin = "0"~nbrMin %}
+                                                                                 {% endif %}
+                                                                                 {{ nbrJour}} {{ nbrHeure }}:{{ nbrMin }}
+
+                                                                             </td>
+
                                                                              <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -1927,6 +2029,8 @@
                                                                          <td><strong> Totaux </strong></td>
                                                                          <td style="text-align:right"> {{ distanceMinOpSansContrainte|number_format(0, ',', ' ') }}</td>
                                                                          <td style="text-align:right"> {{ dureeTotaleOpSansContrainte|date('d H:i') }}</td>
+
+
                                                                          <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                          <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                          <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -2304,7 +2408,29 @@
                                                                          <tr>
                                                                              <td><strong> Poule {{ lettre }} </strong></td>
                                                                              <td style="text-align:right"> {{ distanceEqDetailContrainte|number_format(0, ',', ' ') }}</td>
-                                                                             <td style="text-align:right"> {{ dureeTotaleEqDetailContrainte|date('d H:i') }}</td>
+                                                                             <td style="text-align:right">
+
+                                                                                 {#{{ dureeTotaleEqDetailContrainte|date('d H:i') }}#}
+
+                                                                                 {# récupérer le nbr de jour #}
+                                                                                 {% set nbrJourEqDetailContrainte = (dureeTotaleEqDetailContrainte/86400)|round %}
+                                                                                 {% if nbrJourEqDetailContrainte <10 %}
+                                                                                     {% set nbrJourEqDetailContrainte = "0"~nbrJourEqDetailContrainte %}
+                                                                                 {% endif %}
+                                                                                 {# récupérer le nbr d heure #}
+                                                                                 {% set nbrHeureEqDetailContrainte = ((dureeTotaleEqDetailContrainte%86400)/3600)|round %}
+                                                                                 {% if nbrHeureEqDetailContrainte <10 %}
+                                                                                     {% set nbrHeureEqDetailContrainte = "0"~nbrHeureEqDetailContrainte %}
+                                                                                 {% endif %}
+                                                                                 {# récupérer le nbr de minute #}
+                                                                                 {% set nbrMinEqDetailContrainte = (((dureeTotaleEqDetailContrainte%86400)%3600)/60)|round %}
+                                                                                 {% if nbrMinEqDetailContrainte <10 %}
+                                                                                     {% set nbrMinEqDetailContrainte = "0"~nbrMinEqDetailContrainte %}
+                                                                                 {% endif %}
+                                                                                 {{ nbrJourEqDetailContrainte}} {{ nbrHeureEqDetailContrainte }}:{{ nbrMinEqDetailContrainte }}
+
+                                                                             </td>
+
                                                                              <td style="text-align:right"> {{ (distanceTotaleEqDetailContrainte  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleEqDetailContrainte /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleEqDetailContrainte /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -2703,7 +2829,28 @@
                                                                          <tr>
                                                                              <td><strong> Poule {{ lettre }} </strong></td>
                                                                              <td style="text-align:right"> {{distanceDetailRef|number_format(0, ',', ' ') }}</td>
-                                                                             <td style="text-align:right"> {{ dureeTotaleDetailRef|date('d H:i') }}</td>
+                                                                             <td style="text-align:right">
+                                                                                 {#{{ dureeTotaleDetailRef|date('d H:i') }}#}
+
+                                                                                 {# récupérer le nbr de jour #}
+                                                                                 {% set nbrJourDetailRef = (dureeTotaleDetailRef/86400)|round %}
+                                                                                 {% if nbrJourDetailRef <10 %}
+                                                                                     {% set nbrJourDetailRef = "0"~nbrJourDetailRef %}
+                                                                                 {% endif %}
+                                                                                 {# récupérer le nbr d heure #}
+                                                                                 {% set nbrHeureDetailRef = ((dureeTotaleDetailRef%86400)/3600)|round %}
+                                                                                 {% if nbrHeureDetailRef <10 %}
+                                                                                     {% set nbrHeureDetailRef = "0"~nbrHeureDetailRef %}
+                                                                                 {% endif %}
+                                                                                 {# récupérer le nbr de minute #}
+                                                                                 {% set nbrMinDetailRef = (((dureeTotaleDetailRef%86400)%3600)/60)|round %}
+                                                                                 {% if nbrMinDetailRef <10 %}
+                                                                                     {% set nbrMinDetailRef = "0"~nbrMinDetailRef %}
+                                                                                 {% endif %}
+                                                                                 {{ nbrJourDetailRef}} {{ nbrHeureDetailRef }}:{{ nbrMinDetailRef }}
+
+
+                                                                             </td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleDetailRef  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleDetailRef /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleDetailRef /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
