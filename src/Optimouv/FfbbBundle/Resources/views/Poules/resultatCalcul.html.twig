@@ -3184,6 +3184,7 @@
                                          <td id="interdiction"> Interdiction </td>
                                          <td>
                                              <select id="equipe1" class="equipe1" >
+                                                 <option selected> -- selectionnez une option -- </option>
                                                  {% for detailsVille in detailsVilles %}
                                                      {%  if detailsVille.id == interdictionInfo.ids[0] %}
                                                          <option selected value={{detailsVille.id}}>> {{ detailsVille.nom }} </option>
@@ -3197,6 +3198,7 @@
 
                                          <td>
                                              <select id="equipe2" class="equipe2">
+                                                 <option selected> -- selectionnez une option -- </option>
                                                  {% for detailsVille in detailsVilles %}
                                                      {%  if detailsVille.id == interdictionInfo.ids[1] %}
                                                          <option selected value={{detailsVille.id}}>> {{ detailsVille.nom }} </option>
@@ -3212,9 +3214,7 @@
                                  {%  endfor %}
                              {% else %}
                                  <tr>
-                                     <td id="interdiction">
-                                         Interdiction
-                                     </td>
+                                     <td id="interdiction"> Interdiction </td>
                                      <td>
                                          <select id="equipe1" class="equipe1" onchange="selectEquipe(this,this.parentNode.parentNode.getElementsByClassName('equipe2'))">
                                              {#<option disabled selected> -- selectionnez une option -- </option>#}
@@ -3454,10 +3454,10 @@
 
 
                                 // controler le champ obligatoire (le nombre de poules)
-//                         if (typeMatch == "plateau"){
-//                             alert("Ce type de match n'est pas encore supporté. Veuillez choisir un autre type de match");
+//                                 if (typeMatch == "plateau"){
+//                                     alert("Ce type de match n'est pas encore supporté. Veuillez choisir un autre type de match");
 //
-//                         }
+//                                 }
 
 
                                 if(  (typeMatch == "allerRetour" || typeMatch == "allerSimple") && (poulesNbr == "" || parseInt(poulesNbr)<2 ) ){
