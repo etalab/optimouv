@@ -3172,7 +3172,7 @@
                          <table id="mesContraintes" class="table table-striped table-bordered table-hover">
                              <thead>
                              <tr>
-                                 <th><h4>#</h4></th>
+                                 <th><h4></h4></th>
                                  <th><h4>Equipe N°1</h4></th>
                                  <th><h4>Equipe N°2</h4></th>
                              </tr>
@@ -3184,6 +3184,7 @@
                                          <td id="interdiction"> Interdiction </td>
                                          <td>
                                              <select id="equipe1" class="equipe1" >
+                                                 <option selected> -- selectionnez une option -- </option>
                                                  {% for detailsVille in detailsVilles %}
                                                      {%  if detailsVille.id == interdictionInfo.ids[0] %}
                                                          <option selected value={{detailsVille.id}}>> {{ detailsVille.nom }} </option>
@@ -3197,6 +3198,7 @@
 
                                          <td>
                                              <select id="equipe2" class="equipe2">
+                                                 <option selected> -- selectionnez une option -- </option>
                                                  {% for detailsVille in detailsVilles %}
                                                      {%  if detailsVille.id == interdictionInfo.ids[1] %}
                                                          <option selected value={{detailsVille.id}}>> {{ detailsVille.nom }} </option>
@@ -3212,14 +3214,12 @@
                                  {%  endfor %}
                              {% else %}
                                  <tr>
-                                     <td id="interdiction">
-                                         Interdiction
-                                     </td>
+                                     <td id="interdiction"> Interdiction </td>
                                      <td>
                                          <select id="equipe1" class="equipe1" onchange="selectEquipe(this,this.parentNode.parentNode.getElementsByClassName('equipe2'))">
-                                             <option disabled selected> -- selectionnez une option -- </option>
+                                             {#<option disabled selected> -- selectionnez une option -- </option>#}
+                                             <option selected> -- selectionnez une option -- </option>
                                              {% for detailsVille in detailsVilles %}
-
                                                  <option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>
                                              {% endfor %}
                                          </select>
@@ -3228,9 +3228,9 @@
 
                                          {#<select id="equipe2" class="equipe2" onchange="selectEquipe2()">#}
                                          <select id="equipe2" class="equipe2">
-                                             <option disabled selected> -- selectionnez une option -- </option>
+                                             {#<option disabled selected> -- selectionnez une option -- </option>#}
+                                             <option selected> -- selectionnez une option -- </option>
                                              {% for detailsVille in detailsVilles %}
-
                                                  <option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>
                                              {% endfor %}
                                          </select>
@@ -3286,7 +3286,8 @@
                                              <td>{{ detailsVille.nom }}</td>
                                              <td>
                                                  <select class="form-control" id="repartitionHomogeneOption{{ key }}">
-                                                     <option value="Aucun" disabled selected> -- Aucun -- </option>
+                                                     {#<option value="Aucun" disabled selected> -- Aucun -- </option>#}
+                                                     <option value="Aucun" selected> -- Aucun -- </option>
                                                      <option value="Espoir">Espoir</option>
                                                      <option value="Descendant">Descendant</option>
                                                      <option value="Promu">Promu</option>
@@ -3453,10 +3454,10 @@
 
 
                                 // controler le champ obligatoire (le nombre de poules)
-//                         if (typeMatch == "plateau"){
-//                             alert("Ce type de match n'est pas encore supporté. Veuillez choisir un autre type de match");
+//                                 if (typeMatch == "plateau"){
+//                                     alert("Ce type de match n'est pas encore supporté. Veuillez choisir un autre type de match");
 //
-//                         }
+//                                 }
 
 
                                 if(  (typeMatch == "allerRetour" || typeMatch == "allerSimple") && (poulesNbr == "" || parseInt(poulesNbr)<2 ) ){
