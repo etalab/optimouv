@@ -395,9 +395,12 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 
 		# based on phantom flag, save to results the possibility to make variation of team number per pool
 		if flagPhantom:
+			results["params"]["phantomExiste"] = 1
 			results["params"]["varEquipeParPoulePossible"] = 0
 			results["params"]["varEquipeParPouleProposition"] = [0]
+			
 		else:
+			results["params"]["phantomExiste"] = 0
 			results["params"]["varEquipeParPoulePossible"] = 1
 			maxVarTeamNbrPerPool = poolSize - 2
 			results["params"]["varEquipeParPouleProposition"] = list(range(0, maxVarTeamNbrPerPool+1 ))
@@ -758,9 +761,11 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 
 		# based on phantom flag, save to results the possibility to make variation of team number per pool
 		if flagPhantom:
+			results["params"]["phantomExiste"] = 1
 			results["params"]["varEquipeParPoulePossible"] = 0
 			results["params"]["varEquipeParPouleProposition"] = [0]
 		else:
+			results["params"]["phantomExiste"] = 0
 			results["params"]["varEquipeParPoulePossible"] = 1
 			maxVarTeamNbrPerPool = poolSize - 2
 			results["params"]["varEquipeParPouleProposition"] = list(range(0, maxVarTeamNbrPerPool+1 ))
