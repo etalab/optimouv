@@ -19,4 +19,5 @@ parameters:
     # chemin errorlog
     error_log_path: error_log_optimouv.txt
     base_url: optimouv
+    path_wkhtmltopdf: "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
 

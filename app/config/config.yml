@@ -133,10 +133,6 @@ old_sound_rabbit_mq:
 knp_snappy:
     pdf:
         enabled:    true
-        binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
-        options:    []
-    image:
-        enabled:    true
-        binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltoimage.exe\""
+        binary:     "%path_wkhtmltopdf%"
         options:    []
     temporary_folder: %kernel.cache_dir%/snappy
