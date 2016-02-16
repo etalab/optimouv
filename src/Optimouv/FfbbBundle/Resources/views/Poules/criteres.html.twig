@@ -160,46 +160,49 @@
                          </div>
                          <!-- /.panel-heading -->
                          <div class="panel-body" id="contrainteInterdictionBody" style="display: none">
-
                              <table id="mesContraintes" class="table table-striped table-bordered table-hover">
                                  <thead>
                                  <tr>
-                                     <th><h4>#</h4></th>
+                                     <th><h4></h4></th>
                                      <th><h4>Equipe N°1</h4></th>
                                      <th><h4>Equipe N°2</h4></th>
                                  </tr>
                                  </thead>
-                                 <tr>
-                                     <td id="interdiction">
-                                         Interdiction
-                                     </td>
-                                     <td>
-                                         <select id="equipe1" class="equipe1" onchange="selectEquipe(this,this.parentNode.parentNode.getElementsByClassName('equipe2'))">
-                                             <option disabled selected> -- selectionnez une option -- </option>
-                                             {% for detailsVille in detailsVilles %}
 
-                                                 <option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>
-                                             {% endfor %}
-                                         </select>
-                                     </td>
-                                     <td>
+                                 <tbody id="tbodyInterdictions">
 
-                                         {#<select id="equipe2" class="equipe2" onchange="selectEquipe2()">#}
-                                         <select id="equipe2" class="equipe2">
-                                             <option disabled selected> -- selectionnez une option -- </option>
-                                             {% for detailsVille in detailsVilles %}
+                                     <tr>
+                                         <td id="interdiction">
+                                             Interdiction
+                                         </td>
+                                         <td>
+                                             <select id="equipe1" class="equipe1" onchange="selectEquipe(this,this.parentNode.parentNode.getElementsByClassName('equipe2'))">
+                                                 {#<option disabled selected> -- selectionnez une option -- </option>#}
+                                                 <option selected> -- selectionnez une option -- </option>
+                                                 {% for detailsVille in detailsVilles %}
+                                                     <option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>
+                                                 {% endfor %}
+                                             </select>
+                                         </td>
 
-                                                 <option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>
-                                             {% endfor %}
-                                         </select>
+                                         <td>
+                                             {#<select id="equipe2" class="equipe2" onchange="selectEquipe2()">#}
+                                             <select id="equipe2" class="equipe2">
+                                                 {#<option disabled selected> -- selectionnez une option -- </option>#}
+                                                 <option selected> -- selectionnez une option -- </option>
+                                                 {% for detailsVille in detailsVilles %}
+                                                     <option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>
+                                                 {% endfor %}
+                                             </select>
+                                         </td>
+                                     </tr>
 
-                                     </td>
-                                 </tr>
+                                 </tbody>
                              </table>
                              <br>
 
                              <button onclick="myCreateFunction()" class="btn btn-primary ">Ajouter</button>
-                             <button onclick="myDeleteFunction()" class="btn btn-primary">Supprimer</button>
+                             {#<button onclick="myDeleteFunction()" class="btn btn-primary">Supprimer</button>#}
                              {#<button onclick="getContraintes()" class="btn btn-primary">mes contraintes</button>#}
 
                          </div>
@@ -238,7 +241,8 @@
                                                  <td>{{ detailsVille.nom }}</td>
                                                  <td>
                                                      <select class="form-control" id="repartitionHomogeneOption{{ key }}" style="width: 100%;">
-                                                         <option value="Aucun" disabled selected> -- Aucun -- </option>
+                                                         {#<option value="Aucun" disabled selected> -- Aucun -- </option>#}
+                                                         <option value="Aucun" selected> -- Aucun -- </option>
                                                          <option value="Espoir">Espoir</option>
                                                          <option value="Descendant">Descendant</option>
                                                          <option value="Promu">Promu</option>
@@ -281,15 +285,7 @@
 
              {{ parent() }}
 
-
-
-
-
              <script language="javascript">
-
-
-
-
 
                  function typePlateau() {
 
@@ -343,6 +339,7 @@
 
 
                  });
+
 
 
                  // dupliquer élément
@@ -435,6 +432,12 @@
 
 
 
+                 // select js plugin
+//                 $(".equipe1").select2();
+//                 $(".equipe2").select2();
+
+                 console.log($(".equipe1"));
+
                  function myCreateFunction() {
                      var table = $('#mesContraintes tbody');
                      var children = table.find('tr');
@@ -442,6 +445,36 @@
                      var lastChild = children.last();
                      console.log(lastChild);
                      table.append(lastChild[0].outerHTML);
+
+//                     console.log("test");
+
+//                     $(".equipe1").select2();
+//                     $(".equipe2").select2();
+
+
+                     {#var newLigneInterdiction = "\#}
+                        {#<tr> \#}
+                             {#<td id=\"interdiction\"> Interdiction </td> \#}
+                             {#<td> \#}
+                                 {#<select id=\"equipe1\" class=\"equipe1\" onchange=\"selectEquipe(this,this.parentNode.parentNode.getElementsByClassName('equipe2'))\"> \#}
+                                     {#<option selected> -- selectionnez une option -- </option> \#}
+                                     {#{% for detailsVille in detailsVilles %} \#}
+                                     {#<option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option> \#}
+                                     {#{% endfor %} \#}
+                                 {#</select> \#}
+                              {#</td>\#}
+                             {#<td> \#}
+                                 {#<select id=\"equipe2\" class=\"equipe2\"> \#}
+                                     {#<option selected> -- selectionnez une option -- </option> \#}
+                                     {#{% for detailsVille in detailsVilles %} \#}
+                                    {#<option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option> \#}
+                                 {#{% endfor %} \#}
+                                 {#</select> \#}
+                             {#</td> \#}
+                        {#</tr>";#}
+
+                     {#$("#tbodyInterdictions").append(newLigneInterdiction);#}
+                     {#$('.select2-container').width('100%');#}
 
                  }
 
