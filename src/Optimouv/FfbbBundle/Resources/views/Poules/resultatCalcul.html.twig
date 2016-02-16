@@ -802,17 +802,17 @@
                                                                                      {#{{ dureeTotaleEqContrainteDetail|date('d H:i') }}#}
 
                                                                                      {# récupérer le nbr de jour #}
-                                                                                     {% set nbrJour = (dureeTotaleOpSansContrainteDetail/86400)|round %}
+                                                                                     {% set nbrJour = (dureeTotaleEqContrainteDetail/86400)|round %}
                                                                                      {% if nbrJour <10 %}
                                                                                          {% set nbrJour = "0"~nbrJour %}
                                                                                      {% endif %}
                                                                                      {# récupérer le nbr d heure #}
-                                                                                     {% set nbrHeure = ((dureeTotaleOpSansContrainteDetail%86400)/3600)|round %}
+                                                                                     {% set nbrHeure = ((dureeTotaleEqContrainteDetail%86400)/3600)|round %}
                                                                                      {% if nbrHeure <10 %}
                                                                                          {% set nbrHeure = "0"~nbrHeure %}
                                                                                      {% endif %}
                                                                                      {# récupérer le nbr de minute #}
-                                                                                     {% set nbrMin = (((dureeTotaleOpSansContrainteDetail%86400)%3600)/60)|round %}
+                                                                                     {% set nbrMin = (((dureeTotaleEqContrainteDetail%86400)%3600)/60)|round %}
                                                                                      {% if nbrMin <10 %}
                                                                                          {% set nbrMin = "0"~nbrMin %}
                                                                                      {% endif %}
