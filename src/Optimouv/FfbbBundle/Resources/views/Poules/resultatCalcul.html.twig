@@ -51,7 +51,27 @@
 
                              </tr>
                              <tr>
-                                 <td>Poules :  {{ nombrePoule }} poules de {{ taillePoule }} équipes</td>
+
+                                 {% if phantomExiste %}
+                                     <td>Poules :
+                                     {%  for taillePoule, nombrePoule in infoPoule %}
+                                         {% if nombrePoule == 1 %}
+                                             {{ nombrePoule }} poule de {{ taillePoule }} équipes
+                                         {% else %}
+                                             {{ nombrePoule }} poules de {{ taillePoule }} équipes
+                                         {% endif %}
+
+                                         {%  if not loop.last %}
+                                             et
+                                         {% endif %}
+
+                                    {% endfor %}
+                                    </td>
+                                     {#<td>Poules :  {{ nombrePoule }} poules de {{ taillePoule }} équipes</td>#}
+                                 {%  else %}
+                                     <td>Poules :  {{ nombrePoule }} poules de {{ taillePoule }} équipes</td>
+                                 {% endif %}
+
                              </tr>
 
                                  {% if contraintsExiste == 1 %}
