@@ -752,7 +752,7 @@ class PoulesController extends Controller
             'nomListe' => $nomListe,
             'nomGroupe' => $nomGroupe,
             'taillePoule' => $taillePoule,
-            'contrainte' => $contraintsExiste,
+            'contraintsExiste' => $contraintsExiste,
             'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
             'idRapport' => $idRapport,
             'detailsVilles' => $detailsVilles,
@@ -768,38 +768,39 @@ class PoulesController extends Controller
         $params = $_POST['params'];
 
         //recuperation des donnees relatives au scenario
-        $infoPdf = $this->getInfoPdfAction($params);
+//        $infoPdf = $this->getInfoPdfAction($params);
+//
+//        $nombrePoule = $infoPdf[0];
+//        $taillePoule = $infoPdf[1];
+//        $contraintsExiste = $infoPdf[2];
+//        $typeMatch = $infoPdf[3];
+//        $scenarioOptimalSansContrainte = $infoPdf[4];
+//        $nomRapport = $infoPdf[5];
+//        $nomGroupe = $infoPdf[6];
+//        $nomListe = $infoPdf[7];
+//        $detailsVilles = $infoPdf[8];
+//        $idGroupe = $infoPdf[9];
+//        $idRapport = $infoPdf[10];
+//
+//
+//
+//        $html = $this->renderView('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
+//            'nomRapport' => $nomRapport,
+//            'typeMatch' => $typeMatch,
+//            'nombrePoule' => $nombrePoule,
+//            'nomListe' => $nomListe,
+//            'nomGroupe' => $nomGroupe,
+//            'taillePoule' => $taillePoule,
+//            'contrainte' => $contraintsExiste,
+//            'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
+//            'idRapport' => $idRapport,
+//            'detailsVilles' => $detailsVilles,
+//            'idGroupe' => $idGroupe,
+//            'idResultat' => $params,
+//
+//        ));
 
-        $nombrePoule = $infoPdf[0];
-        $taillePoule = $infoPdf[1];
-        $contraintsExiste = $infoPdf[2];
-        $typeMatch = $infoPdf[3];
-        $scenarioOptimalSansContrainte = $infoPdf[4];
-        $nomRapport = $infoPdf[5];
-        $nomGroupe = $infoPdf[6];
-        $nomListe = $infoPdf[7];
-        $detailsVilles = $infoPdf[8];
-        $idGroupe = $infoPdf[9];
-        $idRapport = $infoPdf[10];
-
-
-
-        $html = $this->renderView('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
-            'nomRapport' => $nomRapport,
-            'typeMatch' => $typeMatch,
-            'nombrePoule' => $nombrePoule,
-            'nomListe' => $nomListe,
-            'nomGroupe' => $nomGroupe,
-            'taillePoule' => $taillePoule,
-            'contrainte' => $contraintsExiste,
-            'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
-            'idRapport' => $idRapport,
-            'detailsVilles' => $detailsVilles,
-            'idGroupe' => $idGroupe,
-            'idResultat' => $params,
-
-        ));
-
+        $html = $this->renderView('FfbbBundle:Poules:testPdf.html.twig');
         $dompdf = $this->get('slik_dompdf');
 
         // Generate the pdf
