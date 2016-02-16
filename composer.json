@@ -22,7 +22,8 @@
         "doctrine/doctrine-migrations-bundle": "^1.0",
         "friendsofsymfony/user-bundle": "^1.3",
         "oldsound/rabbitmq-bundle": "^1.8",
-        "slik/dompdf-bundle" : "dev-master"
+        "slik/dompdf-bundle" : "dev-master",
+        "knplabs/knp-snappy-bundle": "^1.4"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
