@@ -801,27 +801,25 @@ class PoulesController extends Controller
 
         ));
 
-//        $html = $this->renderView('FfbbBundle:Poules:testPdf.html.twig');
-//        $dompdf = $this->get('slik_dompdf');
-//
-//        // Generate the pdf
-//        $dompdf->getpdf($html);
-//
-//        // Either stream the pdf to the browser
-//        $dompdf->stream("mon_rapport.pdf");
-//
-//        // Or get the output to handle it yourself
-//        $dompdf->output();
 
         return new Response(
             $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
             200,
             array(
                 'Content-Type'          => 'application/pdf',
-                'Content-Disposition'   => 'attachment; filename="mon_rapport.pdf"'
+                'Content-Disposition'   => 'attachment; filename="mon_rapport.pdf"',
+                'options' => [
+                    'print-media-type' => false,
+                    'outline' => true,
+                    'dpi' => 96,
+                    'footer-center' => 'foobar HERE © ' . date('Y'),
+                    'footer-right' => 'Page [page] of [toPage]',
+                ]
             )
         );
     }
+
+//    function qui ramene toutes les infos necessaires à la view
 
     public function getInfoPdfAction($idResultat)
     {
