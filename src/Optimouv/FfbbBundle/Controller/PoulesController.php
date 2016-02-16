@@ -652,7 +652,23 @@ class PoulesController extends Controller
             $finalStatut= "non";
         }
 
-//        error_log("\n interdictions : ".print_r($interdictions , true), 3, "error_log_optimouv.txt");
+        # récupérer le boolean des equipes phantom
+        if(array_key_exists("phantomExiste", $detailsCalcul["params"])){
+            $phantomExiste = $detailsCalcul["params"]["phantomExiste"];
+        }
+        else{
+            $phantomExiste = 0;
+        }
+        # récupérer l'info des poules
+        if(array_key_exists("infoPoule", $detailsCalcul["params"])){
+            $infoPoule = $detailsCalcul["params"]["infoPoule"];
+        }
+        else{
+            $infoPoule = array($taillePoule => $nombrePoule);
+        }
+
+
+//        error_log("\n infoPoule : ".print_r($infoPoule , true), 3, "error_log_optimouv.txt");
 
 
         //récupération du nom du rapport
@@ -707,6 +723,8 @@ class PoulesController extends Controller
             'interdictions' => $interdictions,
             'repartitionsHomogenes' => $repartitionsHomogenes,
             'finalStatut' => $finalStatut,
+            'phantomExiste' => $phantomExiste,
+            'infoPoule' => $infoPoule,
 
 
         ));
