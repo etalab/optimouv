@@ -522,7 +522,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		# get real info without phantom teams (only for optimal scenario without constraint)
 		infoPool = get_info_pool_from_pool_distribution(poolDistribution_OptimalWithoutConstraint)
 		logging.debug(" infoPool: %s" %infoPool)
-		results["params"]["infoPool"] = infoPool
+		results["params"]["infoPoule"] = infoPool
 		
 		# get coordinates for each point in the pools
 		poolDistributionCoords_OptimalWithoutConstraint = get_coords_pool_distribution(poolDistribution_OptimalWithoutConstraint)
@@ -881,7 +881,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		# get real info without phantom teams (only for optimal scenario without constraint)
 		infoPool = get_info_pool_from_pool_distribution(poolDistribution_OptimalWithoutConstraint)
 		logging.debug(" infoPool: %s" %infoPool)
-		results["params"]["infoPool"] = infoPool
+		results["params"]["infoPoule"] = infoPool
 		
 		
 		# get coordinates for each point in the pools
