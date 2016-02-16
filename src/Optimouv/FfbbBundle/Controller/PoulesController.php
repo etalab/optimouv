@@ -808,13 +808,11 @@ class PoulesController extends Controller
             array(
                 'Content-Type'          => 'application/pdf',
                 'Content-Disposition'   => 'attachment; filename="mon_rapport.pdf"',
-                'options' => [
-                    'print-media-type' => false,
-                    'outline' => true,
-                    'dpi' => 96,
-                    'footer-center' => 'foobar HERE © ' . date('Y'),
-                    'footer-right' => 'Page [page] of [toPage]',
-                ]
+                'print-media-type'      => false,
+                'outline'               => true,
+                'dpi'                   => 96,
+                'footer-center'         => 'foobar HERE © ' . date('Y'),
+                'footer-right'          => 'Page [page] of [toPage]',
             )
         );
     }
