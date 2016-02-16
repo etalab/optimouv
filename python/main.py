@@ -358,7 +358,6 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			prohibitionDetail = get_list_details_from_list_ids_for_entity(members)
 # 			logging.debug(" prohibitionDetail: %s" %prohibitionDetail)
 			
-
 			if "interdictions" not in results["params"]:
 				results["params"]["interdictions"] = {indexProhibition: {"ids": prohibitionDetail["ids"], 
 																		"noms": prohibitionDetail["names"], 
@@ -508,7 +507,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		logging.debug(" chosenDistance_OptimalWithoutConstraint: %s" %chosenDistance_OptimalWithoutConstraint)
 # 	
 	
-		np.savetxt("/tmp/p_mat_optimal_without_constraint.csv", P_Mat_OptimalWithoutConstraint, delimiter=",", fmt='%d') # DEBUG
+# 		np.savetxt("/tmp/p_mat_optimal_without_constraint.csv", P_Mat_OptimalWithoutConstraint, delimiter=",", fmt='%d') # DEBUG
 # 
 # 		# get pool distribution
 # 		poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
@@ -519,6 +518,11 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		poolDistribution_OptimalWithoutConstraint = eliminate_phantom_in_pool_distribution(poolDistribution_OptimalWithoutConstraint)
 		results["scenarioOptimalSansContrainte"]["poulesId"] = poolDistribution_OptimalWithoutConstraint
 		logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %poolDistribution_OptimalWithoutConstraint)
+		
+		# get real info without phantom teams (only for optimal scenario without constraint)
+		infoPool = get_info_pool_from_pool_distribution(poolDistribution_OptimalWithoutConstraint)
+		logging.debug(" infoPool: %s" %infoPool)
+		results["params"]["infoPool"] = infoPool
 		
 		# get coordinates for each point in the pools
 		poolDistributionCoords_OptimalWithoutConstraint = get_coords_pool_distribution(poolDistribution_OptimalWithoutConstraint)
@@ -873,6 +877,12 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		poolDistribution_OptimalWithoutConstraint = eliminate_phantom_in_pool_distribution(poolDistribution_OptimalWithoutConstraint)
 		results["scenarioOptimalSansContrainte"]["poulesId"] = poolDistribution_OptimalWithoutConstraint
 		logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %poolDistribution_OptimalWithoutConstraint)
+		
+		# get real info without phantom teams (only for optimal scenario without constraint)
+		infoPool = get_info_pool_from_pool_distribution(poolDistribution_OptimalWithoutConstraint)
+		logging.debug(" infoPool: %s" %infoPool)
+		results["params"]["infoPool"] = infoPool
+		
 		
 		# get coordinates for each point in the pools
 		poolDistributionCoords_OptimalWithoutConstraint = get_coords_pool_distribution(poolDistribution_OptimalWithoutConstraint)
