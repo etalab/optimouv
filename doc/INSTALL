@@ -1,0 +1,15 @@
+
+= installation de wkhtmltopdf
+
+	télécharger la version stable (0.12)
+	http://wkhtmltopdf.org/downloads.html
+	wget http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz
+	tar xJf wkhtmltox-0.12.3_linux-generic-amd64.tar.xz
+	cp -a wkhtmltox/bin/wkhtmlto* /usr/local/bin
+
+= installation des dépendance
+
+	installer composer
+	(...)
+	php composer.phar install
+
