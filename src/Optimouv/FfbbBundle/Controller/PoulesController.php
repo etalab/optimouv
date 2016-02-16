@@ -587,7 +587,6 @@ class PoulesController extends Controller
             $idRapport  = $idRapport[0]["idRapport"];
         }
 
-//        error_log("\n idRapport : ".print_r($idRapport , true), 3, "error_log_optimouv.txt");
 
 //        $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idResultat);
         $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idRapport);
@@ -620,6 +619,40 @@ class PoulesController extends Controller
         $scenarioRef = $detailsCalcul["scenarioRef"];
         $refExiste = $detailsCalcul["refExiste"];
         $varEquipeParPouleProposition = $detailsCalcul["params"]["varEquipeParPouleProposition"];
+
+        # récupérer la nombre de la variation d'équipes choisi
+        if(array_key_exists("varEquipeParPouleChoisi", $detailsCalcul["params"])){
+            $varEquipeParPouleChoisi = $detailsCalcul["params"]["varEquipeParPouleChoisi"];
+        }
+        else {
+            $varEquipeParPouleChoisi  = 0;
+        }
+
+        # récupérer les contraintes d'interdictions
+        if(array_key_exists("interdictions", $detailsCalcul["params"])){
+            $interdictions = $detailsCalcul["params"]["interdictions"];
+        }
+        else {
+            $interdictions = [];
+        }
+
+        # récupérer les contraintes de répartitions homogènes
+        if(array_key_exists("repartitionsHomogenes", $detailsCalcul["params"])){
+            $repartitionsHomogenes = $detailsCalcul["params"]["repartitionsHomogenes"];
+        }
+        else{
+            $repartitionsHomogenes = [];
+        }
+
+        # récupérer le statut final pour le rapport
+        if(array_key_exists("final", $detailsCalcul["params"])){
+            $finalStatut = $detailsCalcul["params"]["final"];
+        }
+        else{
+            $finalStatut= "non";
+        }
+
+//        error_log("\n interdictions : ".print_r($interdictions , true), 3, "error_log_optimouv.txt");
 
 
         //récupération du nom du rapport
@@ -669,10 +702,11 @@ class PoulesController extends Controller
             'detailsVilles' => $detailsVilles,
             'idGroupe' => $idGroupe,
             'varEquipeParPouleProposition' => $varEquipeParPouleProposition,
+            'varEquipeParPouleChoisi' => $varEquipeParPouleChoisi,
             'idResultat' => $idResultat,
-
-
-
+            'interdictions' => $interdictions,
+            'repartitionsHomogenes' => $repartitionsHomogenes,
+            'finalStatut' => $finalStatut,
 
 
         ));

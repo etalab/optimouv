@@ -93,18 +93,33 @@ def optimize_pool_post_treatment_match(D_Mat, teamNbr, poolNbr, poolSize, teams,
 		logging.debug(" varTeamNbrPerPool: %s" %(varTeamNbrPerPool,))
 
 		typeMatch = results["typeMatch"]
+		logging.debug(" typeMatch: %s" %(typeMatch,))
 
 		iter = config.INPUT.Iter
 		logging.debug(" iter: %s" %iter)
 
+		# add final flag to results
+		if "params" in results:
+			results["params"]["final"] = "oui"
+
+ 			# change values concerning variation of team members per pool
+# 			results["params"]["varEquipeParPouleProposition"] = [0]
+			results["params"]["varEquipeParPouleChoisi"] = varTeamNbrPerPool
+			results["params"]["varEquipeParPoulePossible"] = 0
+ 			
+
 		############# optimal scenario without constraint #################
+		logging.debug("")
+		logging.debug(" ####################### RESULT OPTIMAL WITHOUT CONSTRAINT #############################################")
 		resultsOptimalWithoutConstraint = results["scenarioOptimalSansContrainte"]
 		if resultsOptimalWithoutConstraint:
+			
 			poolDistribution_OptimalWithoutConstraint = variation_team_number_per_pool(resultsOptimalWithoutConstraint["poulesId"], varTeamNbrPerPool)
 			logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %(poolDistribution_OptimalWithoutConstraint,))
 			
 			# create P Matrix from pool distribution	
 			P_Mat_OptimalWithoutConstraint = create_matrix_from_pool_distribution(poolDistribution_OptimalWithoutConstraint, teamNbr, teams)
+# 			logging.debug(" P_Mat_OptimalWithoutConstraint: \n%s" %(P_Mat_OptimalWithoutConstraint,))
 
 			# filter upper triangular size in the case of one way match
 			if typeMatch == "allerSimple":
@@ -120,10 +135,9 @@ def optimize_pool_post_treatment_match(D_Mat, teamNbr, poolNbr, poolSize, teams,
 			logging.debug(" chosenDistance_OptimalWithoutConstraint: %s" %chosenDistance_OptimalWithoutConstraint)
 
 	 		# get pool distribution
-# 			poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
 			poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams)
 			logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %poolDistribution_OptimalWithoutConstraint)
-	# 		
+
 			# eliminate phantom teams
 			poolDistribution_OptimalWithoutConstraint = eliminate_phantom_in_pool_distribution(poolDistribution_OptimalWithoutConstraint)
 			results["scenarioOptimalSansContrainte"]["poulesId"] = poolDistribution_OptimalWithoutConstraint
@@ -147,6 +161,8 @@ def optimize_pool_post_treatment_match(D_Mat, teamNbr, poolNbr, poolSize, teams,
 
 		############# equitable scenario without constraint #################
 		resultsEquitableWithoutConstraint = results["scenarioEquitableSansContrainte"]
+		logging.debug("")
+		logging.debug(" ####################### RESULT EQUITABLE WITHOUT CONSTRAINT ############################################")
 		if resultsEquitableWithoutConstraint:
 
 
@@ -202,6 +218,8 @@ def optimize_pool_post_treatment_match(D_Mat, teamNbr, poolNbr, poolSize, teams,
 
 
 		############# optimal scenario with constraint #################
+		logging.debug("")
+		logging.debug(" ####################### RESULT OPTIMAL WITH CONSTRAINT #############################################")
 		resultsOptimalWithConstraint = results["scenarioOptimalAvecContrainte"]
 		if resultsOptimalWithConstraint:
 
@@ -252,8 +270,10 @@ def optimize_pool_post_treatment_match(D_Mat, teamNbr, poolNbr, poolSize, teams,
 			logging.debug(" sumInfo_OptimalWithConstraint: \n%s" %sumInfo_OptimalWithConstraint)
 
 
+		############# equitable scenario with constraint #################
+		logging.debug("")
+		logging.debug(" ######################### RESULT EQUITABLE WITH CONSTRAINT ############################################")
 		resultsEquitableWithConstraint = results["scenarioEquitableAvecContrainte"]
-		# equitable scenario without constraint
 		if resultsEquitableWithConstraint:
 
 			poolDistribution_EquitableWithConstraint = variation_team_number_per_pool(resultsEquitableWithConstraint["poulesId"], varTeamNbrPerPool)
@@ -338,38 +358,37 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			prohibitionDetail = get_list_details_from_list_ids_for_entity(members)
 # 			logging.debug(" prohibitionDetail: %s" %prohibitionDetail)
 			
-			if "interdictionsIds" not in results["params"]:
-				results["params"]["interdictionsIds"] = {indexProhibition: prohibitionDetail["ids"]}
+
+			if "interdictions" not in results["params"]:
+				results["params"]["interdictions"] = {indexProhibition: {"ids": prohibitionDetail["ids"], 
+																		"noms": prohibitionDetail["names"], 
+																		"villes": prohibitionDetail["cities"], 
+																		}
+													}
 			else: 
-				results["params"]["interdictionsIds"][indexProhibition] = prohibitionDetail["ids"]
-			if "interdictionsNoms" not in results["params"]:
-				results["params"]["interdictionsNoms"] = {indexProhibition: prohibitionDetail["names"]}
-			else: 
-				results["params"]["interdictionsNoms"][indexProhibition] = prohibitionDetail["names"]
-			if "interdictionsVilles" not in results["params"]:
-				results["params"]["interdictionsVilles"] = {indexProhibition: prohibitionDetail["cities"]}
-			else: 
-				results["params"]["interdictionsVilles"][indexProhibition] = prohibitionDetail["cities"]
+				results["params"]["interdictions"][indexProhibition] = {"ids": prohibitionDetail["ids"], 
+																		"noms": prohibitionDetail["names"], 
+																		"villes": prohibitionDetail["cities"], 
+																		}
 
 		# get list of names and cities from entity table for type distribution constraints
 		for teamType, members in typeDistributionConstraints.items():
 			members = ",".join(map(str, members)) # convert list of ints to string
 			prohibitionDetail = get_list_details_from_list_ids_for_entity(members)
 			
-			if "repartitionsHomogenesIds" not in results["params"]:
-				results["params"]["repartitionsHomogenesIds"] = {teamType: prohibitionDetail["ids"]}
-			else: 
-				results["params"]["repartitionsHomogenesIds"][teamType] = prohibitionDetail["ids"]
-			if "repartitionsHomogenesNoms" not in results["params"]:
-				results["params"]["repartitionsHomogenesNoms"] = {teamType: prohibitionDetail["names"]}
-			else: 
-				results["params"]["repartitionsHomogenesNoms"][teamType] = prohibitionDetail["names"]
-			if "repartitionsHomogenesVilles" not in results["params"]:
-				results["params"]["repartitionsHomogenesVilles"] = {teamType: prohibitionDetail["cities"]}
-			else: 
-				results["params"]["repartitionsHomogenesVilles"][teamType] = prohibitionDetail["cities"]
-
-# 		logging.debug(" results: %s" %(results,))
+			if "repartitionsHomogenes" not in results["params"]:
+				results["params"]["repartitionsHomogenes"] = {teamType: { "ids": prohibitionDetail["ids"], 
+																		 "noms": prohibitionDetail["names"], 
+																		 "villes": prohibitionDetail["cities"], 
+																		 } 
+															}
+			else:
+				results["params"]["repartitionsHomogenes"][teamType] = { "ids": prohibitionDetail["ids"], 
+																		 "noms": prohibitionDetail["names"], 
+																		 "villes": prohibitionDetail["cities"], 
+																		 } 
+				
+# 		logging.debug(" results: %s" %(json.dumps(results["params"]["repartitionsHomogenes"]),))
 
 		# save constraint variation of team number per pool
 		results["params"]["varEquipeParPouleChoisi"] = varTeamNbrPerPool
@@ -705,36 +724,34 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			prohibitionDetail = get_list_details_from_list_ids_for_entity(members)
 # 			logging.debug(" prohibitionDetail: %s" %prohibitionDetail)
 			
-			if "interdictionsIds" not in results["params"]:
-				results["params"]["interdictionsIds"] = {indexProhibition: prohibitionDetail["ids"]}
+			if "interdictions" not in results["params"]:
+				results["params"]["interdictions"] = {indexProhibition: {"ids": prohibitionDetail["ids"], 
+																		"noms": prohibitionDetail["names"], 
+																		"villes": prohibitionDetail["cities"], 
+																		}
+													}
 			else: 
-				results["params"]["interdictionsIds"][indexProhibition] = prohibitionDetail["ids"]
-			if "interdictionsNoms" not in results["params"]:
-				results["params"]["interdictionsNoms"] = {indexProhibition: prohibitionDetail["names"]}
-			else: 
-				results["params"]["interdictionsNoms"][indexProhibition] = prohibitionDetail["names"]
-			if "interdictionsVilles" not in results["params"]:
-				results["params"]["interdictionsVilles"] = {indexProhibition: prohibitionDetail["cities"]}
-			else: 
-				results["params"]["interdictionsVilles"][indexProhibition] = prohibitionDetail["cities"]
+				results["params"]["interdictions"][indexProhibition] = {"ids": prohibitionDetail["ids"], 
+																		"noms": prohibitionDetail["names"], 
+																		"villes": prohibitionDetail["cities"], 
+																		}
 
 		# get list of names and cities from entity table for type distribution constraints
 		for teamType, members in typeDistributionConstraints.items():
 			members = ",".join(map(str, members)) # convert list of ints to string
 			prohibitionDetail = get_list_details_from_list_ids_for_entity(members)
 			
-			if "repartitionsHomogenesIds" not in results["params"]:
-				results["params"]["repartitionsHomogenesIds"] = {teamType: prohibitionDetail["ids"]}
-			else: 
-				results["params"]["repartitionsHomogenesIds"][teamType] = prohibitionDetail["ids"]
-			if "repartitionsHomogenesNoms" not in results["params"]:
-				results["params"]["repartitionsHomogenesNoms"] = {teamType: prohibitionDetail["names"]}
-			else: 
-				results["params"]["repartitionsHomogenesNoms"][teamType] = prohibitionDetail["names"]
-			if "repartitionsHomogenesVilles" not in results["params"]:
-				results["params"]["repartitionsHomogenesVilles"] = {teamType: prohibitionDetail["cities"]}
-			else: 
-				results["params"]["repartitionsHomogenesVilles"][teamType] = prohibitionDetail["cities"]
+			if "repartitionsHomogenes" not in results["params"]:
+				results["params"]["repartitionsHomogenes"] = {teamType: { "ids": prohibitionDetail["ids"], 
+																		 "noms": prohibitionDetail["names"], 
+																		 "villes": prohibitionDetail["cities"], 
+																		 } 
+															}
+			else:
+				results["params"]["repartitionsHomogenes"][teamType] = { "ids": prohibitionDetail["ids"], 
+																		 "noms": prohibitionDetail["names"], 
+																		 "villes": prohibitionDetail["cities"], 
+																		 } 
 
 		# save constraint variation of team number per pool
 		results["params"]["varEquipeParPouleChoisi"] = varTeamNbrPerPool
@@ -1389,34 +1406,36 @@ def callback(ch, method, properties, body):
 		### Post treatment
 		if varTeamNbrPerPool > 0 and ( launchType in  ["allerRetour", "allerSimple"] ):
 			logging.debug("############################################# POST TREATMENT #########################################")
-			# get result id from report id
-			sql = "select id from scenario where id_rapport=%s"%reportId
-			resultId = db.fetchone(sql)
-			logging.debug("resultId : %s" %resultId)
+			# get old result id 
+			oldResultId = params["idAncienResultat"]
+			logging.debug("oldResultId : %s" %oldResultId)
 			
-			sql = "select details_calcul from scenario where id=%s"%resultId
+			sql = "select details_calcul from scenario where id=%s"%oldResultId
 			calculatedResult = json.loads(db.fetchone(sql))
 # 			logging.debug("calculatedResult : %s" %calculatedResult)
 			
-			# check final result
-# 			check_final_result(calculatedResult, userId)
+			# check whether it is a final result (the variation of team members per pool has already been performed)
 			check_final_result(calculatedResult, userId, reportId)
 
+
 			# check given params if they are the same or not as the stocked params
-# 			check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints)
 			check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints, reportId)
 
 # 			results = optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult)
-			results = optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult)
-# 			logging.debug("results : %s" %results)
+			results = optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, oldResultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult)
+# 			logging.debug("results : \n%s" %json.dumps(results))
+
+# 			sys.exit()
 
 		if varTeamNbrPerPool == 0:
 			logging.debug("############################################# INSERT RESULT INTO DB #########################################")
 			resultId = save_result_to_db(launchType, reportId, groupId, results)
 			logging.debug("resultId : %s" %resultId)
 		else:
-			logging.debug("############################################# UPDATE RESULT INTO DB #########################################")
-			resultId = update_result_to_db(resultId, results)
+# 			logging.debug("############################################# UPDATE RESULT INTO DB #########################################")
+			logging.debug("############################################# INSERT RESULT INTO DB #########################################")
+# 			resultId = update_result_to_db(resultId, results)
+			resultId = save_result_to_db_post_treatment(launchType, reportId, groupId, results)
 			logging.debug("resultId : %s" %resultId)
 
 		logging.debug("############################################# SEND EMAIL ####################################################")

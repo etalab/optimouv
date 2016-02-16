@@ -167,6 +167,12 @@ Function to create pool distribution from P Matrix
 def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, teams):
 	try:
 
+
+# 		logging.debug(" P_Mat: \n%s" %P_Mat)
+# 		logging.debug(" teamNbr: \n%s" %teamNbr)
+# 		logging.debug(" poolNbr: \n%s" %poolNbr)
+# 		logging.debug(" teams: \n%s" %teams)
+
 		# Dict containing the distribution of groups in the pools
 		poolDistribution = {}
 	
@@ -184,6 +190,8 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 
 			# get the row content
 			rowContent = list(P_Mat[indexRow])
+# 			logging.debug("")
+# 			logging.debug("  indexRow: %s" %indexRow)
 # 			logging.debug("  rowContent: %s" %rowContent)
 
 			# calculate the pool size of the row
@@ -228,6 +236,7 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 # 		logging.debug("poolSize: \n%s" %poolSize)
 # 		logging.debug("teams: \n%s" %teams)
 # 		logging.debug("tempPools: \n%s" %tempPools)
+
 
 		firstPoolName = ord('A')
 		# obtain group distribution per pool
@@ -1912,6 +1921,7 @@ def variation_team_number_per_pool(poolsIds, varTeamNbrPerPool):
 		logging.debug(" poolNbr: %s" %(poolNbr,))
 
 		poolsIdsCopy = dict.copy(poolsIds)
+		resultPoolsIds = {}
 
 		# if pool number is even
 		if poolNbr % 2 == 0:
@@ -1931,6 +1941,8 @@ def variation_team_number_per_pool(poolsIds, varTeamNbrPerPool):
 				# add teams to even number pool
 				if index % 2 == 0:
 					teams += tmpTeams
+					tmpTeams = []
+				resultPoolsIds[pool] = teams
 
 		# if pool number is odd
 		if poolNbr % 2 == 1:
@@ -1952,8 +1964,13 @@ def variation_team_number_per_pool(poolsIds, varTeamNbrPerPool):
 					# add teams to even number pool
 					if index % 2 == 0:
 						teams += tmpTeams
+						tmpTeams = []
+					resultPoolsIds[pool] = teams
 				
-		return poolsIds
+# 		logging.debug(" resultPoolsIds: %s" %(resultPoolsIds,))
+
+# 		return poolsIds
+		return resultPoolsIds
 	except Exception as e:
 		show_exception_traceback()
 
@@ -2127,6 +2144,25 @@ def save_result_to_db(launchType, reportId, groupId, results):
 	try:
 		resultId = -1
 		
+		if "params" in results:
+			# characters substitution for prohibition constraints
+			if "interdictions" in results["params"]:
+				for indexProhibition, contentProhibition in results["params"]["interdictions"].items():
+					for indexName, name in enumerate(contentProhibition["noms"]):
+						results["params"]["interdictions"][indexProhibition]["noms"][indexName] = name.replace("'", u"''")
+					for indexCity, city in enumerate(contentProhibition["villes"]):
+						results["params"]["interdictions"][indexProhibition]["villes"][indexCity] = city.replace("'", u"''")
+
+		
+			# characters substitution for type distribution constraints
+			if "repartitionsHomogenes" in results["params"]:
+				for teamType, contentTypeDistribution in results["params"]["repartitionsHomogenes"].items():
+					for indexName, name in enumerate(contentTypeDistribution["noms"]):
+						results["params"]["repartitionsHomogenes"][teamType]["noms"][indexName] = name.replace("'", u"''")
+					for indexCity, city in enumerate(contentTypeDistribution["villes"]):
+						results["params"]["repartitionsHomogenes"][teamType]["villes"][indexCity] = city.replace("'", u"''") 
+# 						logging.debug(" city: %s" %(city,))
+		
 		name = "%s_rapport_%s_groupe_%s"%(launchType , reportId, groupId) 
 		km = 0
 		travelTime = 0
@@ -2167,6 +2203,106 @@ def save_result_to_db(launchType, reportId, groupId, results):
 		return resultId
 	except Exception as e:
 		show_exception_traceback()
+
+
+"""
+Function to save result into DB
+"""
+def save_result_to_db_post_treatment(launchType, reportId, groupId, results):
+	try:
+		resultId = -1
+		
+		if "params" in results:
+			# characters substitution for prohibition constraints
+			if "interdictions" in results["params"]:
+				for indexProhibition, contentProhibition in results["params"]["interdictions"].items():
+					for indexName, name in enumerate(contentProhibition["noms"]):
+						results["params"]["interdictions"][indexProhibition]["noms"][indexName] = name.replace("'", u"''")
+					for indexCity, city in enumerate(contentProhibition["villes"]):
+						results["params"]["interdictions"][indexProhibition]["villes"][indexCity] = city.replace("'", u"''")
+
+		
+			# characters substitution for type distribution constraints
+			if "repartitionsHomogenes" in results["params"]:
+				for teamType, contentTypeDistribution in results["params"]["repartitionsHomogenes"].items():
+					for indexName, name in enumerate(contentTypeDistribution["noms"]):
+						results["params"]["repartitionsHomogenes"][teamType]["noms"][indexName] = name.replace("'", u"''")
+					for indexCity, city in enumerate(contentTypeDistribution["villes"]):
+						results["params"]["repartitionsHomogenes"][teamType]["villes"][indexCity] = city.replace("'", u"''") 
+# 						logging.debug(" city: %s" %(city,))
+		
+		
+		# escape single apostrophe for city names
+		# ref scenario
+		resultsRef = results["scenarioRef"]
+		if resultsRef:
+			replace_single_quote_for_result(resultsRef["rencontreDetails"])
+# 		logging.debug("resultsRef : %s" %resultsRef)
+
+		# optimal scenario
+		resultsOptimalWithoutConstraint = results["scenarioOptimalSansContrainte"]
+		if resultsOptimalWithoutConstraint:
+			replace_single_quote_for_result(resultsOptimalWithoutConstraint["rencontreDetails"])
+		
+		resultsOptimalWithConstraint = results["scenarioOptimalAvecContrainte"]
+		if resultsOptimalWithConstraint:
+			replace_single_quote_for_result(resultsOptimalWithConstraint["rencontreDetails"])
+			
+		# equitable scenario
+		resultsEquitableWithoutConstraint = results["scenarioEquitableSansContrainte"]
+		if resultsEquitableWithoutConstraint:
+			replace_single_quote_for_result(resultsEquitableWithoutConstraint["rencontreDetails"])
+			
+		
+		resultsEquitableWithConstraint = results["scenarioEquitableAvecContrainte"]
+		if resultsEquitableWithConstraint:
+			replace_single_quote_for_result(resultsEquitableWithoutConstraint["rencontreDetails"])
+
+		
+		
+		
+		name = "%s_rapport_%s_groupe_%s"%(launchType , reportId, groupId) 
+		km = 0
+		travelTime = 0
+		creationDate = time.strftime("%Y-%m-%d")
+		modificationDate = time.strftime("%Y-%m-%d")
+		co2Car = 0
+		co2SharedCar = 0
+		co2Bus = 0
+		costCar = 0
+		costSharedCar = 0
+		costBus = 0
+		
+		sql = """insert into scenario (id_rapport, nom, kilometres, duree, date_creation, date_modification, 
+					co2_voiture, co2_covoiturage, co2_minibus, cout_voiture, cout_covoiturage, cout_minibus, details_calcul ) 
+			values ( %(reportId)s , '%(name)s', %(km)s, %(travelTime)s,' %(creationDate)s', '%(modificationDate)s',
+					%(co2Car)s, %(co2SharedCar)s, %(co2Bus)s, %(costCar)s, %(costSharedCar)s, %(costBus)s, '%(results)s' )
+			"""%{	"reportId": reportId, 
+					"name": name,
+					"km": km,
+					"travelTime": travelTime,
+					"creationDate": creationDate,
+					"modificationDate": modificationDate,
+					"co2Car": co2Car,
+					"co2SharedCar": co2SharedCar,
+					"co2Bus": co2Bus,
+					"costCar": costCar,
+					"costSharedCar": costSharedCar,
+					"costBus": costBus,
+					"results": json.dumps(results),
+					
+				}
+# 		logging.debug("sql: %s" %sql)
+		db.execute(sql)
+		db.commit()
+		
+		resultId = db.lastinsertedid()
+		
+		return resultId
+	except Exception as e:
+		show_exception_traceback()
+
+
 
 """
 Function to get team names from their ids
@@ -2449,10 +2585,10 @@ def check_final_result(calculatedResult, userId, reportId):
 
 		if "params" in calculatedResult:
 			if "final" in calculatedResult["params"]:
-				if results["params"]["final"] == "yes":
+# 				if results["params"]["final"] == "yes":
+				if results["params"]["final"] == "oui":
 					
 					TEXT = u"Bonjour,\n\n" 
-# 					TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
 					TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
 					TEXT += u"Vous ne pouvez lancer le critère de variation du nombre d'équipes par poule qu'une seule fois. " 
 					send_email_to_user_failure_with_text(userId, TEXT)
@@ -2462,21 +2598,59 @@ def check_final_result(calculatedResult, userId, reportId):
 		show_exception_traceback()
 
 """
-Function to check params for post treatment round trip and one way match
+Function to check params for post treatment (variation of team members per pool) round trip and one way match
 """
-# def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints):
 def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints, reportId):
 	try:
+		errorStatus = False
+		
 		sql = "select nom from rapport where id=%s"%reportId
 		reportName = db.fetchone(sql)
 		
-		if calculatedResult["typeMatch"] != launchType:
+		if ( calculatedResult["typeMatch"] != launchType) or (int(calculatedResult["nombrePoule"]) != int(poolNbr)):
+			errorStatus = True
+		
+# 		logging.debug("calculatedResult : \n%s" %json.dumps(calculatedResult))
+		
+		# map list of strings to list of ints for prohibition constraints
+		prohibitionConstraintsInput = [sorted(list(map(int, prohibitionConstraint))) for prohibitionConstraint in prohibitionConstraints]
+		logging.debug("prohibitionConstraintsInput : %s" %prohibitionConstraintsInput)
+
+		# map list of strings to list of ints for type distribution constraints
+		typeDistributionConstraintsInput = {}
+		for type, members in typeDistributionConstraints.items(): 
+			typeDistributionConstraintsInput[type] = sorted(list(map(int, members)))
+		logging.debug("typeDistributionConstraintsInput : %s" %typeDistributionConstraintsInput)
+
+		if "params" in calculatedResult:
+			# check prohibition constraints
+			if "interdictions" in calculatedResult["params"]:
+				prohibitionConstraintsSavedUnformatted = calculatedResult["params"]["interdictions"]
+				prohibitionConstraintsSaved = []
+				for prohibitionNbr, prohibitionConstraintSavedUnformatted in prohibitionConstraintsSavedUnformatted.items():
+					prohibitionConstraintsSaved.append(sorted(prohibitionConstraintSavedUnformatted["ids"]))
+				if prohibitionConstraintsInput != prohibitionConstraintsSaved: 
+					errorStatus = True
+# 				logging.debug("prohibitionConstraintsInput == prohibitionConstraintsSaved : %s" %(prohibitionConstraintsInput == prohibitionConstraintsSaved))
+			# check type distribution constraints
+			if "repartitionsHomogenes" in calculatedResult["params"]:
+				typeDistributionConstraintsSavedUnformatted = calculatedResult["params"]["repartitionsHomogenes"]
+				typeDistributionConstraintsSaved = {}
+				for type, typeDistributionConstraintSavedUnformatted in typeDistributionConstraintsSavedUnformatted.items():
+					typeDistributionConstraintsSaved[type] = sorted(typeDistributionConstraintSavedUnformatted["ids"])
+				if typeDistributionConstraintsInput != typeDistributionConstraintsSaved: 
+					errorStatus = True
+# 				logging.debug("typeDistributionConstraintsSaved : %s" %typeDistributionConstraintsSaved)
+# 				logging.debug("typeDistributionConstraintsInput : %s" %typeDistributionConstraintsInput)
+# 				logging.debug("typeDistributionConstraintsInput == typeDistributionConstraintsSaved : %s" %(typeDistributionConstraintsInput == typeDistributionConstraintsSaved))
+				
+		
+		# send email if errorStatus is true
+		if errorStatus:
 			TEXT = u"Bonjour,\n\n" 
-# 			TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
 			TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
 			TEXT += u"Veuillez utiliser les mêmes parametres que vous avez utilisé précédemment . " 
 			send_email_to_user_failure_with_text(userId, TEXT)
-			
 		
 	except Exception as e:
 		show_exception_traceback()
@@ -2515,7 +2689,8 @@ def update_result_to_db(resultId, results):
 
 
 		# mark the final result
-		results["params"]["final"] = "yes"
+# 		results["params"]["final"] = "yes"
+		results["params"]["final"] = "oui"
 
 		sql = """update scenario set details_calcul='%(results)s' where id=%(resultId)s
 			"""%{	"resultId": resultId, 
