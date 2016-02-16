@@ -1252,6 +1252,32 @@ def eliminate_phantom_in_pool_distribution(poolDistribution):
 
 
 """
+Function to get info pool (pool size and team numbers in each pool) even when there is any phantom teams
+"""
+def get_info_pool_from_pool_distribution(poolDistribution):
+	try:
+		
+		infoPool = {}
+
+		for pool, members in poolDistribution.items():
+			poolSize = len(members)
+			if poolSize not in infoPool:
+				infoPool[poolSize] = 1
+			else:
+				infoPool[poolSize] += 1
+				
+
+
+		return infoPool
+
+	except Exception as e:
+		show_exception_traceback()
+
+
+
+
+
+"""
 Function to get reference pool distribution from DB
 """
 def create_reference_pool_distribution_from_db(teams, poolSize):
