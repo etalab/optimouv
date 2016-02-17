@@ -35,16 +35,17 @@
 {% set coordPoulesOpSansContrainte = scenarioOptimalSansContrainte.poulesCoords %}
 
 
-<img src="{{app.request.scheme ~'://'~ app.request.httpHost ~  asset('bundles/ffbb/accueil/img/Logo-Optimouv.jpg') }}" />
+{#<img src="{{app.request.scheme ~'://'~ app.request.httpHost ~  asset('bundles/ffbb/accueil/img/Logo-Optimouv.jpg') }}" />#}
+<img src="http://dev.ffbb.it4pme.fr/bundles/ffbb/accueil/img/Logo-Optimouv.jpg" />
 
-{#<img src="https://symfony.com/images/v5/opengraph/symfony_logo.png?v=4" width="100">#}
-{#{% set pathImage = base_url %}#}
+
+
+ {#{% set pathImage = base_url %}#}
 {#{% set pathImage = pathImage~"/bundles/ffbb/accueil/img/Logo-Optimouv.jpg" %}#}
 
 {#<img src="http://{{pathImage}}" alt="logo-optimouv">#}
 {#<img src="http://dev.ffbb.it4pme.fr/bundles/ffbb/accueil/img/Logo-Optimouv.jpg">#}
-{#<img src="{{app.request.scheme ~'://' ~ app.request.httpHost ~ asset('bundles/ffbb/accueil/img/Logo-Optimouv.jpg') }}" width="60%"/>#}
-<br><br>
+ <br><br>
 
 <h3> Export de votre recherche "{{ nomRapport }}" - scénario optimal</h3>
 <h4>Fédération : UFOLEP</h4>
