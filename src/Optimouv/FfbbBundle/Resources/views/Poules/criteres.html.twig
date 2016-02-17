@@ -419,14 +419,12 @@
 
                      // javascript quand on clique sur le bouton 'lancer le calcul'
                      $("#lancerCalculBtn").click(function(){
+                         console.log("------------------------------------ debug bouton lancer calcul ---------------------------------------");
                          // nettoyer le filtre de recherche de datatable
                          console.log("nettoyer filtre recherche datatable");
                          dataTableRepartitionHomogene.search( '' )
                                  .columns().search( '' )
                                  .draw();
-
-
-                         console.log("------------------------------------ debug bouton lancer calcul ---------------------------------------");
 
                          // récupérer le type de match
                          var typeMatch =   $('input[name=typeRencontre]:checked', '#formParams').val();

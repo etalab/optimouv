@@ -3296,6 +3296,7 @@
                                  <table class="table table-striped table-bordered table-hover" id="tableContrainteRepartitionHomogene">
                                      <thead>
                                      <tr>
+                                         <th style="display: none"></th>
                                          <th><strong>Equipe</strong></th>
                                          <th><strong>Catégorie</strong></th>
                                      </tr>
@@ -3511,6 +3512,10 @@
                      var finalStatut = "{{ finalStatut  }}";
                      console.log("finalStatut: " + finalStatut)
 
+                     // filtre de la table repartition homogene
+                     var dataTableRepartitionHomogene = $("#tableContrainteRepartitionHomogene").DataTable({
+                         "paging":   false
+                     });
 
                      if(finalStatut == "oui"){
                          $('#lancerCalculBtn').prop('disabled', true);
@@ -3518,6 +3523,12 @@
                      }else{
                          $("#lancerCalculBtn").click(function(){
                              console.log("------------------------------------ debug bouton lancer calcul ---------------------------------------");
+                             // nettoyer le filtre de recherche de datatable
+                             console.log("nettoyer filtre recherche datatable");
+                             dataTableRepartitionHomogene.search( '' )
+                                     .columns().search( '' )
+                                     .draw();
+
                              // récupérer le type de match
                              var typeMatch =   $('input[name=typeRencontre]:checked').val();
                              console.log("typeMatch: " + typeMatch);
