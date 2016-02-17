@@ -3192,81 +3192,83 @@
                          <table id="mesContraintes" class="table table-striped table-bordered table-hover">
                              <thead>
                              <tr>
-                                 <th><h4></h4></th>
-                                 <th><h4>Equipe N°1</h4></th>
-                                 <th><h4>Equipe N°2</h4></th>
+                                 <th width="10%"><h4></h4></th>
+                                 <th width="20%"><h4>Equipe N°1</h4></th>
+                                 <th width="20%"><h4>Equipe N°2</h4></th>
+                                 <th width="10%"><h4></h4></th>
                              </tr>
                              </thead>
-                             <tbody>
+                             <tbody id="tbodyInterdictions">
                              {%  if interdictions %}
                                  {% for interdictionNbr, interdictionInfo in interdictions%}
-                                     <tr>
-                                         <td id="interdiction"> Interdiction </td>
-                                         <td>
-                                             <select id="equipe1" class="equipe1" >
-                                                 <option selected> -- selectionnez une option -- </option>
-                                                 {% for detailsVille in detailsVilles %}
-                                                     {%  if detailsVille.id == interdictionInfo.ids[0] %}
-                                                         <option selected value={{detailsVille.id}}>> {{ detailsVille.nom }} </option>
-                                                     {% else %}
-                                                         <option value={{detailsVille.id}}>> {{ detailsVille.nom }} </option>
-                                                     {% endif %}
-                                                 {% endfor %}
-
-                                             </select>
+                                     <tr id="interdiction{{ interdictionNbr }}" >
+                                         <td width="10%" > Interdiction</td>
+                                         <td width="20%">
+                                             {{ interdictionInfo.noms[0] }}
+                                             <span id="interdiction{{ interdictionNbr }}equipe1" style="display:none" >  {{ interdictionInfo.ids[0] }} </span>
                                          </td>
 
-                                         <td>
-                                             <select id="equipe2" class="equipe2">
-                                                 <option selected> -- selectionnez une option -- </option>
-                                                 {% for detailsVille in detailsVilles %}
-                                                     {%  if detailsVille.id == interdictionInfo.ids[1] %}
-                                                         <option selected value={{detailsVille.id}}>> {{ detailsVille.nom }} </option>
-                                                     {% else %}
-                                                         <option value={{detailsVille.id}}>> {{ detailsVille.nom }} </option>
-                                                     {% endif %}
-                                                 {% endfor %}
-                                             </select>
+                                         <td width="20%">
+                                             {{ interdictionInfo.noms[1] }}
+                                             <span id="interdiction{{ interdictionNbr }}equipe2" style="display:none" > {{ interdictionInfo.ids[1] }} </span>
 
                                          </td>
 
+
+                                         <td width="10%">
+                                             <button id="btnSupprimerInterdiction{{ interdictionNbr }}" class="btn btn-primary"> Supprimer </button>
+                                         </td>
                                      </tr>
                                  {%  endfor %}
-                             {% else %}
-                                 <tr>
-                                     <td id="interdiction"> Interdiction </td>
-                                     <td>
-                                         <select id="equipe1" class="equipe1" onchange="selectEquipe(this,this.parentNode.parentNode.getElementsByClassName('equipe2'))">
-                                             {#<option disabled selected> -- selectionnez une option -- </option>#}
-                                             <option selected> -- selectionnez une option -- </option>
-                                             {% for detailsVille in detailsVilles %}
-                                                 <option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>
-                                             {% endfor %}
-                                         </select>
-                                     </td>
-                                     <td>
-
-                                         {#<select id="equipe2" class="equipe2" onchange="selectEquipe2()">#}
-                                         <select id="equipe2" class="equipe2">
-                                             {#<option disabled selected> -- selectionnez une option -- </option>#}
-                                             <option selected> -- selectionnez une option -- </option>
-                                             {% for detailsVille in detailsVilles %}
-                                                 <option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>
-                                             {% endfor %}
-                                         </select>
-
-                                     </td>
-                                 </tr>
-
                              {% endif %}
 
 
                              </tbody>
+
+
                          </table>
                          <br>
 
-                         <button onclick="myCreateFunction()" class="btn btn-primary ">Ajouter</button>
-                         {#<button onclick="myDeleteFunction()" class="btn btn-primary">Supprimer</button>#}
+                         <br>
+                         <table class="table table-striped table-bordered table-hover">
+                             <thead>
+                                 <tr>
+                                     <th>Equipe N°1</th>
+                                     <th>Equipe N°2</th>
+                                 </tr>
+                             </thead>
+
+                             <tbody>
+
+                                 <tr>
+                                     <td width="50%">
+                                         <select id="equipe1" class="equipe1" onchange="selectEquipe(this,this.parentNode.parentNode.getElementsByClassName('equipe2'))">
+                                             <option value="vide" selected> -- selectionnez une option -- </option>
+                                             {% for detailsVille in detailsVilles %}
+                                                 <option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>
+                                             {% endfor %}
+                                         </select>
+                                     </td>
+
+                                     <td width="50%">
+                                         {#<select id="equipe2" class="equipe2" onchange="selectEquipe2()">#}
+                                         <select id="equipe2" class="equipe2">
+                                             <option value = "vide" selected> -- selectionnez une option -- </option>
+                                             {% for detailsVille in detailsVilles %}
+                                                 <option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>
+                                             {% endfor %}
+                                         </select>
+                                     </td>
+                                 </tr>
+
+                             </tbody>
+                         </table>
+
+
+
+                         <button id="btnAjouterInterdiction" class="btn btn-primary ">Ajouter</button>
+
+                         {#<button onclick="myCreateFunction()" class="btn btn-primary ">Ajouter</button>#}
                          {#<button onclick="getContraintes()" class="btn btn-primary">mes contraintes</button>#}
 
                      </div>
@@ -3420,10 +3422,7 @@
                              entiteId = entitesIds[i];
                              $("#trRepartitionHomogeneIdVille" + entiteId).find("td select").val(type);
                          }
-
                      }
-
-
                  });
 
 
@@ -3434,111 +3433,178 @@
                      "class_create": ".create-new-field"
                  });
 
+
+                 // select js plugin
+                 $(".equipe1").select2({
+                     width:'100%'
+                 });
+                 $(".equipe2").select2({
+                     width:'100%'
+                 });
+
+
+
                  // javascript quand on clique sur le bouton 'lancer le calcul'
                  $(document).ready(function(){
 
-                        // selectionner la valeur pour la variation du nombre d'équipes par poule
-                        $("#variationNbrEquipe").val({{ varEquipeParPouleChoisi }});
+                     // js pour boutons supprimer les contraintes d'interdictions présentes
+                     var ligneNbr = $('#mesContraintes tr').length;
+                     console.log("ligneNbr : " + ligneNbr);
 
-                        // bloquer le bouton de lancement si le résultat est de type final
-                        var finalStatut = "{{ finalStatut  }}";
-                        console.log("finalStatut: " + finalStatut)
+                     for(var j=1; j< ligneNbr; j++){
+                         // binding jquery bouton supprimer
+                         $("#btnSupprimerInterdiction" + j).click(function(){
+                             $(this).closest('tr').remove();
+                         });
 
-
-                        if(finalStatut == "oui"){
-                            $('#lancerCalculBtn').prop('disabled', true);
-
-                        }else{
-                            $("#lancerCalculBtn").click(function(){
-                                console.log("------------------------------------ debug bouton lancer calcul ---------------------------------------");
-
-                                // récupérer le type de match
-                                var typeMatch =   $('input[name=typeRencontre]:checked').val();
-                                console.log("typeMatch: " + typeMatch);
-
-                                // récupérer l'id du groupe
-                                var idGroupe = {{ idGroupe }};
-                                console.log("idGroupe : " + idGroupe);
-
-                                // récupérer le nombre de poules
-                                var poulesNbr = $("#inputPoulesNbr").val();
-                                console.log("poulesNbr : " + poulesNbr );
-
-                                // récupérer la variation du nombre d'équipes par pouls
-                                var varEquipeParPoule = $("#variationNbrEquipe").val();
-                                console.log("varEquipeParPoule : " + varEquipeParPoule );
-
-                                // obtenir l'id du résultat
-                                var idResultat = {{ idResultat }};
-                                console.log("idResultat: " + idResultat );
+                     }
 
 
-                                // controler le champ obligatoire (le nombre de poules)
+                     // ajouter des nouvelles lignes pour les contraintes d'interdiction
+                     $("#btnAjouterInterdiction").click(function(){
+
+                         console.log("------------------------------------ debug bouton ajouter des interdictions  ---------------------------------------");
+
+                         var ligneNbr = $('#mesContraintes tr').length;
+                         console.log("ligneNbr : " + ligneNbr);
+
+                         // obtenir les valeurs séléctionnées
+                         var interdictionEquipe1Id = $("#equipe1 option:selected").val();
+                         var interdictionEquipe2Id = $("#equipe2 option:selected").val();
+
+                         console.log("interdictionEquipe1Id : " + interdictionEquipe1Id );
+                         console.log("interdictionEquipe2Id : " + interdictionEquipe2Id );
+
+                         // ajouter une nouvelle ligne dans la table d'interdictions
+                         if(interdictionEquipe1Id != "vide" && interdictionEquipe2Id  != "vide"){
+                             var interdictionEquipe1Nom = $("#equipe1 option:selected").text();
+                             console.log("interdictionEquipe1Nom : " + interdictionEquipe1Nom  );
+
+                             var interdictionEquipe2Nom = $("#equipe2 option:selected").text();
+                             console.log("interdictionEquipe2Nom : " + interdictionEquipe2Nom  );
+
+                             var newLigneInterdiction = "\
+                             <tr id=\"interdiction" + ligneNbr + "\"> \
+                                 <td width=\"10%\" > Interdiction </td> \
+                                 <td width=\"20%\"> " + interdictionEquipe1Nom + "  <span id=\"interdiction" + ligneNbr + "equipe1\" style=\"display:none\" >" +  interdictionEquipe1Id + "</span>  </td> \
+                                 <td width=\"20%\"> " + interdictionEquipe2Nom + "  <span id=\"interdiction" + ligneNbr + "equipe2\" style=\"display:none\" >" +  interdictionEquipe2Id + "</span> </td> \
+                                 <td width=\"10%\"> \
+                                     <button id=\"btnSupprimerInterdiction" +  ligneNbr + "\"  class=\"btn btn-primary\"> Supprimer </button> \
+                                 </td> \
+                             </tr>";
+
+                             $("#tbodyInterdictions").append(newLigneInterdiction);
+
+                             // binding jquery bouton supprimer
+                             $("#btnSupprimerInterdiction" + ligneNbr).click(function(){
+                                 $(this).closest('tr').remove();
+                             });
+
+                         }
+
+                     });
+
+                     // selectionner la valeur pour la variation du nombre d'équipes par poule
+                     $("#variationNbrEquipe").val({{ varEquipeParPouleChoisi }});
+
+                     // bloquer le bouton de lancement si le résultat est de type final
+                     var finalStatut = "{{ finalStatut  }}";
+                     console.log("finalStatut: " + finalStatut)
+
+
+                     if(finalStatut == "oui"){
+                         $('#lancerCalculBtn').prop('disabled', true);
+
+                     }else{
+                         $("#lancerCalculBtn").click(function(){
+                             console.log("------------------------------------ debug bouton lancer calcul ---------------------------------------");
+                             // récupérer le type de match
+                             var typeMatch =   $('input[name=typeRencontre]:checked').val();
+                             console.log("typeMatch: " + typeMatch);
+
+                             // récupérer l'id du groupe
+                             var idGroupe = {{ idGroupe }};
+                             console.log("idGroupe : " + idGroupe);
+
+                             // récupérer le nombre de poules
+                             var poulesNbr = $("#inputPoulesNbr").val();
+                             console.log("poulesNbr : " + poulesNbr );
+
+                             // récupérer la variation du nombre d'équipes par pouls
+                             var varEquipeParPoule = $("#variationNbrEquipe").val();
+                             console.log("varEquipeParPoule : " + varEquipeParPoule );
+
+                             // obtenir l'id du résultat
+                             var idResultat = {{ idResultat }};
+                             console.log("idResultat: " + idResultat );
+
+
+                            // controler le champ obligatoire (le nombre de poules)
 //                                 if (typeMatch == "plateau"){
 //                                     alert("Ce type de match n'est pas encore supporté. Veuillez choisir un autre type de match");
 //
 //                                 }
 
 
-                                if(  (typeMatch == "allerRetour" || typeMatch == "allerSimple") && (poulesNbr == "" || parseInt(poulesNbr)<2 ) ){
-                                    alert("Veuillez vérifier que le nombre de poules donné est valide");
-                                }
-                                else if (typeMatch == "plateau"  && ((poulesNbr == "" || parseInt(poulesNbr)<1 )) ) {
-                                    alert("Veuillez vérifier que le nombre de poules donné est valide");
-                                }
-                                else{
-                                    var interdictions = getContraintes();
-                                    var repartitionsHomogenes = verifRepartitionHomogene();
+                             if(  (typeMatch == "allerRetour" || typeMatch == "allerSimple") && (poulesNbr == "" || parseInt(poulesNbr)<2 ) ){
+                                 alert("Veuillez vérifier que le nombre de poules donné est valide");
+                             }
+                             else if (typeMatch == "plateau"  && ((poulesNbr == "" || parseInt(poulesNbr)<1 )) ) {
+                                 alert("Veuillez vérifier que le nombre de poules donné est valide");
+                             }
+                             else{
+                                 var interdictions = getContraintes();
+                                 var repartitionsHomogenes = verifRepartitionHomogene();
 
-                                    console.log("repartitionsHomogenes: " + repartitionsHomogenes );
+                                 console.log("repartitionsHomogenes: " + repartitionsHomogenes );
 
-                                    // si la vérification des répartitions homogenes retourne une erreur
-                                    if(repartitionsHomogenes == "erreur" ){
-                                        return;
-                                    }
-
-
-                                    alert("Le calcul est en cours. Vous recevrez un mail pour vous avertir de la mise à disposition de vos résultats de calculs");
+                                 // si la vérification des répartitions homogenes retourne une erreur
+                                 if(repartitionsHomogenes == "erreur" ){
+                                     return;
+                                 }
 
 
-                                    // agréger les input params
-                                    var inputParams = {typeMatch: typeMatch, poulesNbr: poulesNbr, idGroupe: idGroupe,
-                                        interdictions: interdictions, repartitionsHomogenes  : repartitionsHomogenes,
-                                        varEquipeParPoule: varEquipeParPoule, idAncienResultat: idResultat };
-                                    console.log("inputParams : " + JSON.stringify(inputParams));
+                                 alert("Le calcul est en cours. Vous recevrez un mail pour vous avertir de la mise à disposition de vos résultats de calculs");
 
 
-                                    // AJAX requete
-                                    $.ajax({
-                                        url: '/admin/poules/lancer-calcul/',
-                                        type: 'POST',
-                                        data: inputParams,
-                                        dataType : "json",
-                                        success: function(data, textStatus, jqXHR)
-                                        {
-                                            console.log('data: ' + JSON.stringify(data));
-
-                                            var urlRedirect = window.location.origin + "/admin/rapports";
-                                            console.log('urlRedirect: ' + urlRedirect);
-
-                                            // redirect à la page rapport
-                                            window.location = urlRedirect;
-
-                                        },
-                                        error: function(jqXHR, textStatus, errorThrown)
-                                        {
-                                            // Handle errors here
-                                            console.log('ERRORS: ' + textStatus);
-                                        }
-                                    });
-
-                                }
+                                 // agréger les input params
+                                 var inputParams = {typeMatch: typeMatch, poulesNbr: poulesNbr, idGroupe: idGroupe,
+                                     interdictions: interdictions, repartitionsHomogenes  : repartitionsHomogenes,
+                                     varEquipeParPoule: varEquipeParPoule, idAncienResultat: idResultat };
+                                 console.log("inputParams : " + JSON.stringify(inputParams));
 
 
-                            });
+                                 // AJAX requete
+                                 $.ajax({
+                                     url: '/admin/poules/lancer-calcul/',
+                                     type: 'POST',
+                                     data: inputParams,
+                                     dataType : "json",
+                                     success: function(data, textStatus, jqXHR)
+                                     {
+                                         console.log('data: ' + JSON.stringify(data));
+
+                                         var urlRedirect = window.location.origin + "/admin/rapports";
+                                         console.log('urlRedirect: ' + urlRedirect);
+
+                                         // redirect à la page rapport
+                                         window.location = urlRedirect;
+
+                                     },
+                                     error: function(jqXHR, textStatus, errorThrown)
+                                     {
+                                         // Handle errors here
+                                         console.log('ERRORS: ' + textStatus);
+                                     }
+                                 });
+
+                             }
 
 
-                        }
+                         });
+
+
+                     }
 
 
 
@@ -3575,9 +3641,6 @@
 
                  }
 
-                 function myDeleteFunction() {
-                     document.getElementById("mesContraintes").deleteRow(0);
-                 }
 
 
                  ////////traitement des interdictions///////////////
@@ -3614,30 +3677,41 @@
                  ///////////récupération contraintes /////////////
 
                  function getContraintes(){
-                     var mesLignes = document.getElementById("mesContraintes").rows;
                      var tabContraintes = {};
-                     for (i = 1; i < mesLignes.length; i++) {
-                         var maLigne = mesLignes[i];
-                         var td1 = maLigne.getElementsByTagName("td")[1];
-                         var td2 = maLigne.getElementsByTagName("td")[2];
-                         var monEquipe1 = parseInt(td1.getElementsByClassName("equipe1")[0].value);
-                         var monEquipe2 = parseInt(td2.getElementsByClassName("equipe2")[0].value);
 
-                         console.log("monEquipe1: " + monEquipe1);
-                         console.log("monEquipe2: " + monEquipe2);
+                     var compteur = 1;
+                     $('#tbodyInterdictions tr').each(function() {
+                         var equipe1Id = $(this).find("td").eq(1).find("span").text();
+                         var equipe2Id = $(this).find("td").eq(2).find("span").text();
+                         var interdictionContrainte = [equipe1Id, equipe2Id];
+                         console.log("interdictionContrainte: " + interdictionContrainte);
+                         tabContraintes[compteur] = interdictionContrainte;
+                         compteur ++;
+                     });
 
-                         if ((monEquipe1) && (monEquipe2 )){
-                             var maContrainte = [monEquipe1, monEquipe2];
-                             tabContraintes[i] = maContrainte;
-
-                         };
-
-                     }
+//                     var mesLignes = document.getElementById("mesContraintes").rows;
+//                     var tabContraintes = {};
+//                     for (i = 1; i < mesLignes.length; i++) {
+//                         var maLigne = mesLignes[i];
+//                         var td1 = maLigne.getElementsByTagName("td")[1];
+//                         var td2 = maLigne.getElementsByTagName("td")[2];
+//                         var monEquipe1 = parseInt(td1.getElementsByClassName("equipe1")[0].value);
+//                         var monEquipe2 = parseInt(td2.getElementsByClassName("equipe2")[0].value);
+//
+//                         console.log("monEquipe1: " + monEquipe1);
+//                         console.log("monEquipe2: " + monEquipe2);
+//
+//                         if ((monEquipe1) && (monEquipe2 )){
+//                             var maContrainte = [monEquipe1, monEquipe2];
+//                             tabContraintes[i] = maContrainte;
+//
+//                         };
+//
+//                     }
 
 
                      return tabContraintes;
 
-//                     console.log(tabContraintes);
                  }
 
                  //////////traitement de la répartition homogène////////////
