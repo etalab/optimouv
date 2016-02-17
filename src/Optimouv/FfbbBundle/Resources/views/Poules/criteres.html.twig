@@ -160,36 +160,47 @@
                          </div>
                          <!-- /.panel-heading -->
                          <div class="panel-body" id="contrainteInterdictionBody" style="display: none">
+
                              <table id="mesContraintes" class="table table-striped table-bordered table-hover">
                                  <thead>
                                  <tr>
-                                     <th><h4></h4></th>
-                                     <th><h4>Equipe N°1</h4></th>
-                                     <th><h4>Equipe N°2</h4></th>
+                                     <th width="10%"><h4></h4></th>
+                                     <th width="20%"><h4>Equipe N°1</h4></th>
+                                     <th width="20%"><h4>Equipe N°2</h4></th>
+                                     <th width="10%"><h4></h4></th>
                                  </tr>
                                  </thead>
 
                                  <tbody id="tbodyInterdictions">
+                                 </tbody>
+                             </table>
+
+
+                             <br>
+                             <table class="table table-striped table-bordered table-hover">
+                                 <thead>
+                                     <tr>
+                                         <th>Equipe N°1</th>
+                                         <th>Equipe N°2</th>
+                                     </tr>
+                                 </thead>
+
+                                 <tbody>
 
                                      <tr>
-                                         <td id="interdiction">
-                                             Interdiction
-                                         </td>
-                                         <td>
+                                         <td width="50%">
                                              <select id="equipe1" class="equipe1" onchange="selectEquipe(this,this.parentNode.parentNode.getElementsByClassName('equipe2'))">
-                                                 {#<option disabled selected> -- selectionnez une option -- </option>#}
-                                                 <option selected> -- selectionnez une option -- </option>
+                                                 <option value="vide" selected> -- selectionnez une option -- </option>
                                                  {% for detailsVille in detailsVilles %}
                                                      <option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>
                                                  {% endfor %}
                                              </select>
                                          </td>
 
-                                         <td>
+                                         <td width="50%">
                                              {#<select id="equipe2" class="equipe2" onchange="selectEquipe2()">#}
                                              <select id="equipe2" class="equipe2">
-                                                 {#<option disabled selected> -- selectionnez une option -- </option>#}
-                                                 <option selected> -- selectionnez une option -- </option>
+                                                 <option value = "vide" selected> -- selectionnez une option -- </option>
                                                  {% for detailsVille in detailsVilles %}
                                                      <option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>
                                                  {% endfor %}
@@ -199,10 +210,14 @@
 
                                  </tbody>
                              </table>
+
+
+
+
                              <br>
 
-                             <button onclick="myCreateFunction()" class="btn btn-primary ">Ajouter</button>
-                             {#<button onclick="myDeleteFunction()" class="btn btn-primary">Supprimer</button>#}
+                             <button id="btnAjouterInterdiction" class="btn btn-primary ">Ajouter</button>
+                             {#<button onclick="myCreateFunction()" class="btn btn-primary ">Ajouter</button>#}
                              {#<button onclick="getContraintes()" class="btn btn-primary">mes contraintes</button>#}
 
                          </div>
@@ -272,7 +287,6 @@
                      {#<button type="button" id="verifRepartitionHomogenebtn" class="btn btn-info-poule" onclick="verifRepartitionHomogene()">Valider répartition</button>#}
                  </div>
                  <div class="row">
-                     {#<button id="lancerCalculBtn" type="submit" class="btn btn-primary pull-right"> Lancer le calcul</button>#}
                      {#<button id="lancerCalculBtn" type="button" class="btn btn-primary pull-right"> Lancer le calcul</button>#}
                      <label id="lancerCalculBtn" class="btn btn-primary pull-right"> Lancer le calcul</label>
                  </div>
@@ -320,6 +334,13 @@
                      }
                  }
 
+                 // dupliquer élément
+                 $('#additional-field-model').duplicateElement({
+                     "class_remove": ".remove-this-field",
+                     "class_create": ".create-new-field"
+                 });
+
+                 // fonction toggle
                  $(document).ready(function(){
                      $("#contrainteInterdiction").click(function(){
                          $("#contrainteInterdictionBody").toggle();
@@ -328,27 +349,82 @@
                          $("#contrainteRepartitionBody").toggle();
                      });
 
-
-
                  });
 
 
 
+                 // select js plugin
+                  $(".equipe1").select2({
+                      width:'100%'
+                  });
+                  $(".equipe2").select2({
+                          width:'100%'
+                  });
 
 
 
-                 // dupliquer élément
-                 $('#additional-field-model').duplicateElement({
-                     "class_remove": ".remove-this-field",
-                     "class_create": ".create-new-field"
-                 });
 
 
-
-                 // javascript quand on clique sur le bouton 'lancer le calcul'
                  $(document).ready(function(){
+
+
+                     // ajouter des nouvelles lignes pour les contraintes d'interdiction
+                     $("#btnAjouterInterdiction").click(function(){
+
+                         console.log("------------------------------------ debug bouton ajouter des interdictions  ---------------------------------------");
+
+                         var ligneNbr = $('#mesContraintes tr').length;
+                         console.log("ligneNbr : " + ligneNbr);
+
+                         // obtenir les valeurs séléctionnées
+                         var interdictionEquipe1Id = $("#equipe1 option:selected").val();
+                         var interdictionEquipe2Id = $("#equipe2 option:selected").val();
+
+                         console.log("interdictionEquipe1Id : " + interdictionEquipe1Id );
+                         console.log("interdictionEquipe2Id : " + interdictionEquipe2Id );
+
+                         // ajouter une nouvelle ligne dans la table d'interdictions
+                         if(interdictionEquipe1Id != "vide" && interdictionEquipe2Id  != "vide"){
+                             var interdictionEquipe1Nom = $("#equipe1 option:selected").text();
+                             console.log("interdictionEquipe1Nom : " + interdictionEquipe1Nom  );
+
+                             var interdictionEquipe2Nom = $("#equipe2 option:selected").text();
+                             console.log("interdictionEquipe2Nom : " + interdictionEquipe2Nom  );
+
+                             var newLigneInterdiction = "\
+                             <tr id=\"interdiction" + ligneNbr + "\"> \
+                                 <td width=\"10%\" > Interdiction </td> \
+                                 <td width=\"20%\"> " + interdictionEquipe1Nom + "  <span id=\"interdiction" + ligneNbr + "equipe1\" style=\"display:none\" >" +  interdictionEquipe1Id + "</span>  </td> \
+                                 <td width=\"20%\"> " + interdictionEquipe2Nom + "  <span id=\"interdiction" + ligneNbr + "equipe2\" style=\"display:none\" >" +  interdictionEquipe2Id + "</span> </td> \
+                                 <td width=\"10%\"> \
+                                     <button id=\"btnSupprimerInterdiction" +  ligneNbr + "\"  class=\"btn btn-primary\"> Supprimer </button> \
+                                 </td> \
+                             </tr>";
+
+                             $("#tbodyInterdictions").append(newLigneInterdiction);
+
+                             // binding jquery bouton supprimer
+                             $("#btnSupprimerInterdiction" + ligneNbr).click(function(){
+                                $(this).closest('tr').remove();
+                             });
+
+                         }
+
+                     });
+
+                     // filtre de la table repartition homogene
+                     var dataTableRepartitionHomogene = $("#tableContrainteRepartitionHomogene").DataTable({
+                         "paging":   false
+                     });
+
+                     // javascript quand on clique sur le bouton 'lancer le calcul'
                      $("#lancerCalculBtn").click(function(){
-                        console.log("------------------------------------ debug bouton lancer calcul ---------------------------------------");
+                         console.log("------------------------------------ debug bouton lancer calcul ---------------------------------------");
+                         // nettoyer le filtre de recherche de datatable
+                         console.log("nettoyer filtre recherche datatable");
+                         dataTableRepartitionHomogene.search( '' )
+                                 .columns().search( '' )
+                                 .draw();
 
                          // récupérer le type de match
                          var typeMatch =   $('input[name=typeRencontre]:checked', '#formParams').val();
@@ -376,8 +452,10 @@
                          }
                          else{
                              var interdictions = getContraintes();
-                             var repartitionsHomogenes = verifRepartitionHomogene();
+                             console.log("interdictions : " + interdictions );
 
+
+                             var repartitionsHomogenes = verifRepartitionHomogene();
                              console.log("repartitionsHomogenes: " + repartitionsHomogenes );
 
                              // si la vérification des répartitions homogenes retourne une erreur
@@ -426,55 +504,16 @@
 
 
 
-                 // select js plugin
-//                 $(".equipe1").select2();
-//                 $(".equipe2").select2();
 
-                 console.log($(".equipe1"));
+//                 function myCreateFunction() {
+//                     var table = $('#mesContraintes tbody');
+//                     var children = table.find('tr');
+//                     var numberChilds = children.length;
+//                     var lastChild = children.last();
+//                     console.log(lastChild);
+//                     table.append(lastChild[0].outerHTML);
+//                 }
 
-                 function myCreateFunction() {
-                     var table = $('#mesContraintes tbody');
-                     var children = table.find('tr');
-                     var numberChilds = children.length;
-                     var lastChild = children.last();
-                     console.log(lastChild);
-                     table.append(lastChild[0].outerHTML);
-
-//                     console.log("test");
-
-//                     $(".equipe1").select2();
-//                     $(".equipe2").select2();
-
-
-                     {#var newLigneInterdiction = "\#}
-                        {#<tr> \#}
-                             {#<td id=\"interdiction\"> Interdiction </td> \#}
-                             {#<td> \#}
-                                 {#<select id=\"equipe1\" class=\"equipe1\" onchange=\"selectEquipe(this,this.parentNode.parentNode.getElementsByClassName('equipe2'))\"> \#}
-                                     {#<option selected> -- selectionnez une option -- </option> \#}
-                                     {#{% for detailsVille in detailsVilles %} \#}
-                                     {#<option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option> \#}
-                                     {#{% endfor %} \#}
-                                 {#</select> \#}
-                              {#</td>\#}
-                             {#<td> \#}
-                                 {#<select id=\"equipe2\" class=\"equipe2\"> \#}
-                                     {#<option selected> -- selectionnez une option -- </option> \#}
-                                     {#{% for detailsVille in detailsVilles %} \#}
-                                    {#<option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option> \#}
-                                 {#{% endfor %} \#}
-                                 {#</select> \#}
-                             {#</td> \#}
-                        {#</tr>";#}
-
-                     {#$("#tbodyInterdictions").append(newLigneInterdiction);#}
-                     {#$('.select2-container').width('100%');#}
-
-                 }
-
-                 function myDeleteFunction() {
-                     document.getElementById("mesContraintes").deleteRow(0);
-                 }
 
 
                  ////////traitement des interdictions///////////////
@@ -511,35 +550,53 @@
                  ///////////récupération contraintes /////////////
 
                  function getContraintes(){
-                     var mesLignes = document.getElementById("mesContraintes").rows;
+
                      var tabContraintes = {};
-                     for (i = 1; i < mesLignes.length; i++) {
-                         var maLigne = mesLignes[i];
-                         var td1 = maLigne.getElementsByTagName("td")[1];
-                         var td2 = maLigne.getElementsByTagName("td")[2];
-                         var monEquipe1 = parseInt(td1.getElementsByClassName("equipe1")[0].value);
-                         var monEquipe2 = parseInt(td2.getElementsByClassName("equipe2")[0].value);
 
-                         console.log("monEquipe1: " + monEquipe1);
-                         console.log("monEquipe2: " + monEquipe2);
+                     var compteur = 1;
+                     $('#tbodyInterdictions tr').each(function() {
+                         var equipe1Id = $(this).find("td").eq(1).find("span").text();
+                         var equipe2Id = $(this).find("td").eq(2).find("span").text();
+                         var interdictionContrainte = [equipe1Id, equipe2Id];
+                         console.log("interdictionContrainte: " + interdictionContrainte);
+                         tabContraintes[compteur] = interdictionContrainte;
+                         compteur ++;
+                     });
 
-                         if ((monEquipe1) && (monEquipe2 )){
-                             var maContrainte = [monEquipe1, monEquipe2];
-                             tabContraintes[i] = maContrainte;
-
-                         };
-
-                   }
+//                     var mesLignes = document.getElementById("mesContraintes").rows;
+//                     for (i = 1; i < mesLignes.length; i++) {
+//                         var maLigne = mesLignes[i];
+//                         console.log("maLigne: " + maLigne);
+//
+//
+//                         var td1 = maLigne.getElementsByTagName("td")[1];
+//                         var td2 = maLigne.getElementsByTagName("td")[2];
+//                         var monEquipe1 = parseInt(td1.getElementsByClassName("equipe1")[0].value);
+//                         var monEquipe2 = parseInt(td2.getElementsByClassName("equipe2")[0].value);
+//
+//                         console.log("monEquipe1: " + monEquipe1);
+//                         console.log("monEquipe2: " + monEquipe2);
+//
+//                         if ((monEquipe1) && (monEquipe2 )){
+//                             var maContrainte = [monEquipe1, monEquipe2];
+//                             tabContraintes[i] = maContrainte;
+//
+//                         };
+//
+//                     }
 
 
                      return tabContraintes;
 
-//                     console.log(tabContraintes);
                  }
 
                  //////////traitement de la répartition homogène////////////
 
                  function verifRepartitionHomogene(){
+
+
+
+
 
                      var length = document.getElementById("tableContrainteRepartitionHomogene").rows.length;
 //                     var ligne = document.getElementById("tableContrainteRepartitionHomogene").rows;
@@ -650,9 +707,6 @@
 
                      }
                      return mesRepartitionsHomogenes;
-
-//                     console.log(mesRepartitionsHomogenes);
-
 
                  }
 
