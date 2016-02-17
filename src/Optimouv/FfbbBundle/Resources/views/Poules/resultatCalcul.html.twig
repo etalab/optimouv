@@ -1203,7 +1203,7 @@
                                                                          {% for key, estimationDetailOpSansContrainte in estimationDetailsOpSansContrainte %}
                                                                              {% set distanceOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotale // 1000 %}
                                                                              {% set distanceTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}
-                                                                             {% set dureeTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].dureeTotale  %}
+                                                                             {% set dureeTotaleOpSansContrainteDetailC = estimationDetailsOpSansContrainte[ loop.index ].dureeTotale  %}
                                                                              {% set nbrParticipantsOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].nbrParticipantsTotal  %}
                                                                              {% set lettre = alphabet[key-1] %}
                                                                              <tr>
@@ -1213,21 +1213,21 @@
                                                                                      {#{{ dureeTotaleOpSansContrainteDetail|date('d H:i') }}#}
 
                                                                                      {# récupérer le nbr de jour #}
-                                                                                     {% set nbrJourOpSansContrainteDetail = (distanceOpSansContrainteDetail/86400)|round %}
-                                                                                     {% if nbrJourOpSansContrainteDetail <10 %}
-                                                                                         {% set nbrJourOpSansContrainteDetail = "0"~nbrJourOpSansContrainteDetail %}
+                                                                                     {% set nbrJourOpSansContrainteDetailC = (dureeTotaleOpSansContrainteDetailC/86400)|round %}
+                                                                                     {% if nbrJourOpSansContrainteDetailC <10 %}
+                                                                                         {% set nbrJourOpSansContrainteDetailC = "0"~nbrJourOpSansContrainteDetailC %}
                                                                                      {% endif %}
                                                                                      {# récupérer le nbr d heure #}
-                                                                                     {% set nbrHeureOpSansContrainteDetail = ((distanceOpSansContrainteDetail%86400)/3600)|round %}
-                                                                                     {% if nbrHeureOpSansContrainteDetail <10 %}
-                                                                                         {% set nbrHeureOpSansContrainteDetail = "0"~nbrHeureOpSansContrainteDetail %}
+                                                                                     {% set nbrHeureOpSansContrainteDetailC = ((dureeTotaleOpSansContrainteDetailC%86400)/3600)|round %}
+                                                                                     {% if nbrHeureOpSansContrainteDetailC <10 %}
+                                                                                         {% set nbrHeureOpSansContrainteDetailC = "0"~nbrHeureOpSansContrainteDetailC %}
                                                                                      {% endif %}
                                                                                      {# récupérer le nbr de minute #}
-                                                                                     {% set nbrMinOpSansContrainteDetail = (((distanceOpSansContrainteDetail%86400)%3600)/60)|round %}
-                                                                                     {% if nbrMinOpSansContrainteDetail <10 %}
-                                                                                         {% set nbrMinOpSansContrainteDetail = "0"~nbrMinOpSansContrainteDetail %}
+                                                                                     {% set nbrMinOpSansContrainteDetailC = (((dureeTotaleOpSansContrainteDetailC%86400)%3600)/60)|round %}
+                                                                                     {% if nbrMinOpSansContrainteDetailC <10 %}
+                                                                                         {% set nbrMinOpSansContrainteDetailC = "0"~nbrMinOpSansContrainteDetailC %}
                                                                                      {% endif %}
-                                                                                     {{ nbrJourOpSansContrainteDetail}} {{ nbrHeureOpSansContrainteDetail }}:{{ nbrMinOpSansContrainteDetail }}
+                                                                                     {{ nbrJourOpSansContrainteDetailC}} {{ nbrHeureOpSansContrainteDetailC }}:{{ nbrMinOpSansContrainteDetailC }}
 
                                                                                  </td>
                                                                                  <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail  * 0.80)|round|number_format(0, ',', ' ') }}</td>
