@@ -108,6 +108,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
     {
 
              $em = $this->getDoctrine()->getManager();
+
+        $connection = $em->getConnection();
+        $statement = $connection->prepare('SET foreign_key_checks = 0');
+        $statement->execute();
              $entity = $em->getRepository('FfbbBundle:Groupe')->find($idGroupe);
 
             if (!$entity) {
