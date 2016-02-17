@@ -40,6 +40,7 @@ twig:
            app_id: %app_id%
            app_code: %app_code%
            base_url: %base_url%
+           kernelRootDir: %kernel.root_dir%
 
 # Assetic Configuration
 assetic:
