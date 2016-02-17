@@ -1,0 +1,7 @@
+
+= installation des dépendance
+
+	installer composer
+	(...)
+	php composer.phar install
+

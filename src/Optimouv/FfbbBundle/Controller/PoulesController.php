@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Optimouv\FfbbBundle\Entity\Entite;
 use Optimouv\FfbbBundle\Form\EntiteType;
+use Symfony\Component\HttpFoundation\Response;
 use PDO;
 class PoulesController extends Controller
 {
@@ -786,52 +787,53 @@ class PoulesController extends Controller
         $params = $_POST['params'];
 
         //recuperation des donnees relatives au scenario
-//        $infoPdf = $this->getInfoPdfAction($params);
-//
-//        $nombrePoule = $infoPdf[0];
-//        $taillePoule = $infoPdf[1];
-//        $contraintsExiste = $infoPdf[2];
-//        $typeMatch = $infoPdf[3];
-//        $scenarioOptimalSansContrainte = $infoPdf[4];
-//        $nomRapport = $infoPdf[5];
-//        $nomGroupe = $infoPdf[6];
-//        $nomListe = $infoPdf[7];
-//        $detailsVilles = $infoPdf[8];
-//        $idGroupe = $infoPdf[9];
-//        $idRapport = $infoPdf[10];
-//
-//
-//
-//        $html = $this->renderView('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
-//            'nomRapport' => $nomRapport,
-//            'typeMatch' => $typeMatch,
-//            'nombrePoule' => $nombrePoule,
-//            'nomListe' => $nomListe,
-//            'nomGroupe' => $nomGroupe,
-//            'taillePoule' => $taillePoule,
-//            'contrainte' => $contraintsExiste,
-//            'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
-//            'idRapport' => $idRapport,
-//            'detailsVilles' => $detailsVilles,
-//            'idGroupe' => $idGroupe,
-//            'idResultat' => $params,
-//
-//        ));
+        $infoPdf = $this->getInfoPdfAction($params);
 
-        $html = $this->renderView('FfbbBundle:Poules:testPdf.html.twig');
-        $dompdf = $this->get('slik_dompdf');
-
-        // Generate the pdf
-        $dompdf->getpdf($html);
-
-        // Either stream the pdf to the browser
-        $dompdf->stream("mon_rapport.pdf");
-
-        // Or get the output to handle it yourself
-        $dompdf->output();
+        $nombrePoule = $infoPdf[0];
+        $taillePoule = $infoPdf[1];
+        $contraintsExiste = $infoPdf[2];
+        $typeMatch = $infoPdf[3];
+        $scenarioOptimalSansContrainte = $infoPdf[4];
+        $nomRapport = $infoPdf[5];
+        $nomGroupe = $infoPdf[6];
+        $nomListe = $infoPdf[7];
+        $detailsVilles = $infoPdf[8];
+        $idGroupe = $infoPdf[9];
+        $idRapport = $infoPdf[10];
 
 
+
+        $html = $this->renderView('FfbbBundle:Poules:exportPdf.html.twig', array(
+            'nomRapport' => $nomRapport,
+            'typeMatch' => $typeMatch,
+            'nombrePoule' => $nombrePoule,
+            'nomListe' => $nomListe,
+            'nomGroupe' => $nomGroupe,
+            'taillePoule' => $taillePoule,
+            'contraintsExiste' => $contraintsExiste,
+            'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
+            'idRapport' => $idRapport,
+            'detailsVilles' => $detailsVilles,
+            'idGroupe' => $idGroupe,
+            'idResultat' => $params,
+
+        ));
+
+
+        return new Response(
+            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+            200,
+            array(
+                'Content-Type'          => 'application/pdf',
+                'Content-Disposition'   => 'attachment; filename="mon_rapport.pdf"',
+                'print-media-type'      => false,
+                'outline'               => true,
+
+            )
+        );
     }
+
+//    function qui ramene toutes les infos necessaires à la view
 
     public function getInfoPdfAction($idResultat)
     {
