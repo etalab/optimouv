@@ -395,7 +395,21 @@ class Listes{
 
                                     }
 
+                                    // test poules manquantes pour match aller retour et match plateau
+                                    if( count($donnéesLigne) == 12 || count($donnéesLigne) == 18  ){
+                                        $poule = $donnéesLigne[11];
 
+                                        if(empty($poule)){
+                                            $retour = array(
+                                                "success" => false,
+                                                "msg" => "Erreur ligne :".$nbrLigne."!"
+                                                    ."Le champ poule doit être rempli. Veuillez corriger et importer de nouveau votre fichier"
+                                            );
+                                            array_push($lignesErronees, $retour["msg"]);
+                                            continue;
+                                        }
+
+                                    };
 
                                     // test si le fichier est adapté pour le match plateau
                                     if(count($donnéesLigne) == 18){
