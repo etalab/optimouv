@@ -476,26 +476,5 @@ class RencontresController extends Controller
 
         return $this->render('FfbbBundle:Rencontres:detailsCalcul.html.twig');
     }
-    public function previsualisationPdfAction($pdf)
-    {
 
-        $pdf = json_decode($pdf, true);
-
-
-
-        $html = $this->renderView('FfbbBundle:Poules:previsualisationPdf.html');
-
-//        $html = "Hello Ouss";
-        $dompdf = $this->get('slik_dompdf');
-
-        // Generate the pdf
-        $dompdf->getpdf($html);
-
-        // Either stream the pdf to the browser
-        $dompdf->stream("myfile.pdf");
-
-        // Or get the output to handle it yourself
-         $dompdf->output();
-
-    }
 }
