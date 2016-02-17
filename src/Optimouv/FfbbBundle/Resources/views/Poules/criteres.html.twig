@@ -393,7 +393,7 @@
 
                              var newLigneInterdiction = "\
                              <tr id=\"interdiction" + ligneNbr + "\"> \
-                                 <td width=\"10%\" > Interdiction " + ligneNbr + " </td> \
+                                 <td width=\"10%\" > Interdiction </td> \
                                  <td width=\"20%\"> " + interdictionEquipe1Nom + "  <span id=\"interdiction" + ligneNbr + "equipe1\" style=\"display:none\" >" +  interdictionEquipe1Id + "</span>  </td> \
                                  <td width=\"20%\"> " + interdictionEquipe2Nom + "  <span id=\"interdiction" + ligneNbr + "equipe2\" style=\"display:none\" >" +  interdictionEquipe2Id + "</span> </td> \
                                  <td width=\"10%\"> \
@@ -543,19 +543,19 @@
 
                      var tabContraintes = {};
 
-                     var ligneNbr = $('#mesContraintes tr').length;
-                     console.log("ligneNbr : " + ligneNbr);
-
-                     for(var i= 1; i< ligneNbr; i++){
-                        // obtenir la valeur pour equipe 1
-                         var equipe1Id = $.trim($("#interdiction" + i + "equipe1").text()) ;
-                         var equipe2Id = $.trim($("#interdiction" + i + "equipe2").text())  ;
-                         console.log("equipe1Id : " + equipe1Id);
-
+                     var compteur = 1;
+                     $('#tbodyInterdictions tr').each(function() {
+                         var equipe1Id = $(this).find("td").eq(1).find("span").text();
+                         var equipe2Id = $(this).find("td").eq(2).find("span").text();
                          var interdictionContrainte = [equipe1Id, equipe2Id];
-                         tabContraintes[i] = interdictionContrainte;
+                         console.log("interdictionContrainte: " + interdictionContrainte);
+                         tabContraintes[compteur] = interdictionContrainte;
+                         compteur ++;
+                     });
 
-                     }
+
+
+
 
 //                     var mesLignes = document.getElementById("mesContraintes").rows;
 //                     for (i = 1; i < mesLignes.length; i++) {
