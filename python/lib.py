@@ -2626,7 +2626,7 @@ def check_final_result(calculatedResult, userId, reportId):
 """
 Function to check params for post treatment (variation of team members per pool) round trip and one way match
 """
-def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints, reportId):
+def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints, userId, reportId):
 	try:
 		errorStatus = False
 		
