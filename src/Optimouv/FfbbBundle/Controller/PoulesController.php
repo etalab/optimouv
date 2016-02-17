@@ -810,9 +810,7 @@ class PoulesController extends Controller
                 'Content-Disposition'   => 'attachment; filename="mon_rapport.pdf"',
                 'print-media-type'      => false,
                 'outline'               => true,
-                'dpi'                   => 96,
-                'footer-center'         => 'foobar HERE © ' . date('Y'),
-                'footer-right'          => 'Page [page] of [toPage]',
+
             )
         );
     }
