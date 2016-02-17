@@ -251,8 +251,8 @@
                     <ul>
                         {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
                             <li>
-                                {{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }}
-                                ~ {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}
+                                {{ distanceOptSansContrainte[ loop.index ].equipeDepartNom }}
+                                ~ {{ distanceOptSansContrainte[ loop.index ].equipeDestinationNom }}
                             </li>
 
                         {% endfor %}
@@ -266,6 +266,7 @@
 
     </table>
 </div>
+
 
 </body>
 </html>
