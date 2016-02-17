@@ -785,7 +785,7 @@ class PoulesController extends Controller
 
 
 
-        $html = $this->renderView('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
+        $html = $this->renderView('FfbbBundle:Poules:exportPdf.html.twig', array(
             'nomRapport' => $nomRapport,
             'typeMatch' => $typeMatch,
             'nombrePoule' => $nombrePoule,
