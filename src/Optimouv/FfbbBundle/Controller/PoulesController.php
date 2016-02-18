@@ -735,6 +735,7 @@ class PoulesController extends Controller
         error_log("\n idResultat : ".print_r($idResultat , true), 3, "error_log_optimouv.txt");
 
         return $this->render('FfbbBundle:Poules:comparaisonScenario.html.twig', array(
+            'idResultat' => $idResultat
             ));
     }
 
