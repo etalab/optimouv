@@ -35,16 +35,16 @@
 
                                     {%  if contraintsExiste and refExiste %}
                                         <th colspan="4" style="text-align:center">Kilomètres à parcourir</th>
-                                        <th colspan="4" style="text-align:center">Temps de parcours</th>
+                                        <th colspan="4" style="text-align:center">Temps de parcours (J H:M) </th>
                                     {%  elseif contraintsExiste and not refExiste %}
                                         <th colspan="3" style="text-align:center">Kilomètres à parcourir</th>
-                                        <th colspan="3" style="text-align:center">Temps de parcours</th>
+                                        <th colspan="3" style="text-align:center">Temps de parcours (J H:M)</th>
                                     {%  elseif not contraintsExiste and refExiste %}
                                         <th colspan="3" style="text-align:center">Kilomètres à parcourir</th>
-                                        <th colspan="3" style="text-align:center">Temps de parcours</th>
+                                        <th colspan="3" style="text-align:center">Temps de parcours (J H:M)</th>
                                     {% else %}
                                         <th colspan="2" style="text-align:center">Kilomètres à parcourir</th>
-                                        <th colspan="2" style="text-align:center">Temps de parcours</th>
+                                        <th colspan="2" style="text-align:center">Temps de parcours (J H:M)</th>
                                     {%  endif %}
                                 </tr>
 
@@ -91,39 +91,258 @@
                                 <tr>
                                     {%  if contraintsExiste and refExiste %}
                                         <td style="text-align:center"> {{ equipe.nom }} </td>
-                                        <td style="text-align:center"></td>
-                                        <td style="text-align:center"></td>
-                                        <td style="text-align:center"></td>
-                                        <td style="text-align:center"></td>
-                                        <td style="text-align:center"></td>
-                                        <td style="text-align:center"></td>
-                                        <td style="text-align:center"></td>
-                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"> {{ (equipe.distance.scenarioOptimalAvecContrainte // 1000) | number_format(0, ',', ' ') }}  </td>
+                                        <td style="text-align:center"> {{ (equipe.distance.scenarioEquitableAvecContrainte // 1000) | number_format(0, ',', ' ') }}  </td>
+                                        <td style="text-align:center"> {{ (equipe.distance.scenarioRef // 1000) | number_format(0, ',', ' ') }} </td>
+                                        <td style="text-align:center"> {{ (equipe.distance.scenarioOptimalSansContrainte // 1000) | number_format(0, ',', ' ') }}  </td>
+
+                                        <td style="text-align:center">
+                                            {# récupérer le nbr de jour #}
+                                            {% set nbrJour = (equipe.duree.scenarioOptimalAvecContrainte /86400)|round %}
+                                            {% if nbrJour <10 %}
+                                                {% set nbrJour = "0"~nbrJour %}
+                                            {% endif %}
+                                            {# récupérer le nbr d heure #}
+                                            {% set nbrHeure = ((equipe.duree.scenarioOptimalAvecContrainte%86400)/3600)|round %}
+                                            {% if nbrHeure <10 %}
+                                                {% set nbrHeure = "0"~nbrHeure %}
+                                            {% endif %}
+                                            {# récupérer le nbr de minute #}
+                                            {% set nbrMin = (((equipe.duree.scenarioOptimalAvecContrainte%86400)%3600)/60)|round %}
+                                            {% if nbrMin <10 %}
+                                                {% set nbrMin = "0"~nbrMin%}
+                                            {% endif %}
+                                            {{ nbrJour}} {{ nbrHeure }}:{{ nbrMin }}
+                                        </td>
+
+                                        <td style="text-align:center">
+                                            {# récupérer le nbr de jour #}
+                                            {% set nbrJour = (equipe.duree.scenarioEquitableAvecContrainte /86400)|round %}
+                                            {% if nbrJour <10 %}
+                                                {% set nbrJour = "0"~nbrJour %}
+                                            {% endif %}
+                                            {# récupérer le nbr d heure #}
+                                            {% set nbrHeure = ((equipe.duree.scenarioEquitableAvecContrainte %86400)/3600)|round %}
+                                            {% if nbrHeure <10 %}
+                                                {% set nbrHeure = "0"~nbrHeure %}
+                                            {% endif %}
+                                            {# récupérer le nbr de minute #}
+                                            {% set nbrMin = (((equipe.duree.scenarioEquitableAvecContrainte %86400)%3600)/60)|round %}
+                                            {% if nbrMin <10 %}
+                                                {% set nbrMin = "0"~nbrMin%}
+                                            {% endif %}
+                                            {{ nbrJour}} {{ nbrHeure }}:{{ nbrMin }}
+
+                                        </td>
+                                        <td style="text-align:center">
+                                            {# récupérer le nbr de jour #}
+                                            {% set nbrJour = (equipe.duree.scenarioRef /86400)|round %}
+                                            {% if nbrJour <10 %}
+                                                {% set nbrJour = "0"~nbrJour %}
+                                            {% endif %}
+                                            {# récupérer le nbr d heure #}
+                                            {% set nbrHeure = ((equipe.duree.scenarioRef%86400)/3600)|round %}
+                                            {% if nbrHeure <10 %}
+                                                {% set nbrHeure = "0"~nbrHeure %}
+                                            {% endif %}
+                                            {# récupérer le nbr de minute #}
+                                            {% set nbrMin = (((equipe.duree.scenarioRef%86400)%3600)/60)|round %}
+                                            {% if nbrMin <10 %}
+                                                {% set nbrMin = "0"~nbrMin%}
+                                            {% endif %}
+                                            {{ nbrJour}} {{ nbrHeure }}:{{ nbrMin }}
+
+                                        </td>
+                                        <td style="text-align:center">
+                                            {# récupérer le nbr de jour #}
+                                            {% set nbrJour = (equipe.duree.scenarioOptimalSansContrainte /86400)|round %}
+                                            {% if nbrJour <10 %}
+                                                {% set nbrJour = "0"~nbrJour %}
+                                            {% endif %}
+                                            {# récupérer le nbr d heure #}
+                                            {% set nbrHeure = ((equipe.duree.scenarioOptimalSansContrainte %86400)/3600)|round %}
+                                            {% if nbrHeure <10 %}
+                                                {% set nbrHeure = "0"~nbrHeure %}
+                                            {% endif %}
+                                            {# récupérer le nbr de minute #}
+                                            {% set nbrMin = (((equipe.duree.scenarioOptimalSansContrainte %86400)%3600)/60)|round %}
+                                            {% if nbrMin <10 %}
+                                                {% set nbrMin = "0"~nbrMin%}
+                                            {% endif %}
+                                            {{ nbrJour}} {{ nbrHeure }}:{{ nbrMin }}
+
+                                        </td>
 
                                     {%  elseif contraintsExiste and not refExiste %}
                                         <td style="text-align:center"> {{ equipe.nom }} </td>
-                                        <td style="text-align:center"></td>
-                                        <td style="text-align:center"></td>
-                                        <td style="text-align:center"></td>
-                                        <td style="text-align:center"></td>
-                                        <td style="text-align:center"></td>
-                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"> {{ (equipe.distance.scenarioOptimalAvecContrainte // 1000) | number_format(0, ',', ' ') }}  </td>
+                                        <td style="text-align:center"> {{ (equipe.distance.scenarioEquitableAvecContrainte // 1000) | number_format(0, ',', ' ') }}  </td>
+                                        <td style="text-align:center"> {{ (equipe.distance.scenarioOptimalSansContrainte // 1000) | number_format(0, ',', ' ') }}  </td>
+
+                                        <td style="text-align:center">
+                                            {# récupérer le nbr de jour #}
+                                            {% set nbrJour = (equipe.duree.scenarioOptimalAvecContrainte /86400)|round %}
+                                            {% if nbrJour <10 %}
+                                                {% set nbrJour = "0"~nbrJour %}
+                                            {% endif %}
+                                            {# récupérer le nbr d heure #}
+                                            {% set nbrHeure = ((equipe.duree.scenarioOptimalAvecContrainte%86400)/3600)|round %}
+                                            {% if nbrHeure <10 %}
+                                                {% set nbrHeure = "0"~nbrHeure %}
+                                            {% endif %}
+                                            {# récupérer le nbr de minute #}
+                                            {% set nbrMin = (((equipe.duree.scenarioOptimalAvecContrainte%86400)%3600)/60)|round %}
+                                            {% if nbrMin <10 %}
+                                                {% set nbrMin = "0"~nbrMin%}
+                                            {% endif %}
+                                            {{ nbrJour}} {{ nbrHeure }}:{{ nbrMin }}
+                                        </td>
+
+                                        <td style="text-align:center">
+                                            {# récupérer le nbr de jour #}
+                                            {% set nbrJour = (equipe.duree.scenarioEquitableAvecContrainte /86400)|round %}
+                                            {% if nbrJour <10 %}
+                                                {% set nbrJour = "0"~nbrJour %}
+                                            {% endif %}
+                                            {# récupérer le nbr d heure #}
+                                            {% set nbrHeure = ((equipe.duree.scenarioEquitableAvecContrainte %86400)/3600)|round %}
+                                            {% if nbrHeure <10 %}
+                                                {% set nbrHeure = "0"~nbrHeure %}
+                                            {% endif %}
+                                            {# récupérer le nbr de minute #}
+                                            {% set nbrMin = (((equipe.duree.scenarioEquitableAvecContrainte %86400)%3600)/60)|round %}
+                                            {% if nbrMin <10 %}
+                                                {% set nbrMin = "0"~nbrMin%}
+                                            {% endif %}
+                                            {{ nbrJour}} {{ nbrHeure }}:{{ nbrMin }}
+
+                                        </td>
+                                        <td style="text-align:center">
+                                            {# récupérer le nbr de jour #}
+                                            {% set nbrJour = (equipe.duree.scenarioOptimalSansContrainte /86400)|round %}
+                                            {% if nbrJour <10 %}
+                                                {% set nbrJour = "0"~nbrJour %}
+                                            {% endif %}
+                                            {# récupérer le nbr d heure #}
+                                            {% set nbrHeure = ((equipe.duree.scenarioOptimalSansContrainte %86400)/3600)|round %}
+                                            {% if nbrHeure <10 %}
+                                                {% set nbrHeure = "0"~nbrHeure %}
+                                            {% endif %}
+                                            {# récupérer le nbr de minute #}
+                                            {% set nbrMin = (((equipe.duree.scenarioOptimalSansContrainte %86400)%3600)/60)|round %}
+                                            {% if nbrMin <10 %}
+                                                {% set nbrMin = "0"~nbrMin%}
+                                            {% endif %}
+                                            {{ nbrJour}} {{ nbrHeure }}:{{ nbrMin }}
+
+                                        </td>
 
                                     {%  elseif not contraintsExiste and refExiste %}
                                         <td style="text-align:center"> {{ equipe.nom }} </td>
-                                        <td style="text-align:center"></td>
-                                        <td style="text-align:center"></td>
-                                        <td style="text-align:center"></td>
-                                        <td style="text-align:center"></td>
-                                        <td style="text-align:center"></td>
-                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"> {{ (equipe.distance.scenarioOptimalSansContrainte // 1000) | number_format(0, ',', ' ') }}  </td>
+                                        <td style="text-align:center"> {{ (equipe.distance.scenarioEquitableSansContrainte // 1000) | number_format(0, ',', ' ') }}  </td>
+                                        <td style="text-align:center"> {{ (equipe.distance.scenarioRef // 1000) | number_format(0, ',', ' ') }} </td>
+
+                                        <td style="text-align:center">
+                                            {# récupérer le nbr de jour #}
+                                            {% set nbrJour = (equipe.duree.scenarioOptimalSansContrainte /86400)|round %}
+                                            {% if nbrJour <10 %}
+                                                {% set nbrJour = "0"~nbrJour %}
+                                            {% endif %}
+                                            {# récupérer le nbr d heure #}
+                                            {% set nbrHeure = ((equipe.duree.scenarioOptimalSansContrainte %86400)/3600)|round %}
+                                            {% if nbrHeure <10 %}
+                                                {% set nbrHeure = "0"~nbrHeure %}
+                                            {% endif %}
+                                            {# récupérer le nbr de minute #}
+                                            {% set nbrMin = (((equipe.duree.scenarioOptimalSansContrainte %86400)%3600)/60)|round %}
+                                            {% if nbrMin <10 %}
+                                                {% set nbrMin = "0"~nbrMin%}
+                                            {% endif %}
+                                            {{ nbrJour}} {{ nbrHeure }}:{{ nbrMin }}
+                                        </td>
+
+                                        <td style="text-align:center">
+                                            {# récupérer le nbr de jour #}
+                                            {% set nbrJour = (equipe.duree.scenarioEquitableSansContrainte /86400)|round %}
+                                            {% if nbrJour <10 %}
+                                                {% set nbrJour = "0"~nbrJour %}
+                                            {% endif %}
+                                            {# récupérer le nbr d heure #}
+                                            {% set nbrHeure = ((equipe.duree.scenarioEquitableSansContrainte  %86400)/3600)|round %}
+                                            {% if nbrHeure <10 %}
+                                                {% set nbrHeure = "0"~nbrHeure %}
+                                            {% endif %}
+                                            {# récupérer le nbr de minute #}
+                                            {% set nbrMin = (((equipe.duree.scenarioEquitableSansContrainte %86400)%3600)/60)|round %}
+                                            {% if nbrMin <10 %}
+                                                {% set nbrMin = "0"~nbrMin%}
+                                            {% endif %}
+                                            {{ nbrJour}} {{ nbrHeure }}:{{ nbrMin }}
+
+                                        </td>
+                                        <td style="text-align:center">
+                                            {# récupérer le nbr de jour #}
+                                            {% set nbrJour = (equipe.duree.scenarioRef /86400)|round %}
+                                            {% if nbrJour <10 %}
+                                                {% set nbrJour = "0"~nbrJour %}
+                                            {% endif %}
+                                            {# récupérer le nbr d heure #}
+                                            {% set nbrHeure = ((equipe.duree.scenarioRef%86400)/3600)|round %}
+                                            {% if nbrHeure <10 %}
+                                                {% set nbrHeure = "0"~nbrHeure %}
+                                            {% endif %}
+                                            {# récupérer le nbr de minute #}
+                                            {% set nbrMin = (((equipe.duree.scenarioRef%86400)%3600)/60)|round %}
+                                            {% if nbrMin <10 %}
+                                                {% set nbrMin = "0"~nbrMin%}
+                                            {% endif %}
+                                            {{ nbrJour}} {{ nbrHeure }}:{{ nbrMin }}
+
+                                        </td>
 
                                     {%  else %}
                                         <td style="text-align:center"> {{ equipe.nom }} </td>
-                                        <td style="text-align:center"></td>
-                                        <td style="text-align:center"></td>
-                                        <td style="text-align:center"></td>
-                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"> {{ (equipe.distance.scenarioOptimalSansContrainte // 1000) | number_format(0, ',', ' ') }}  </td>
+                                        <td style="text-align:center"> {{ (equipe.distance.scenarioEquitableSansContrainte // 1000) | number_format(0, ',', ' ') }}  </td>
+                                        <td style="text-align:center">
+                                            {# récupérer le nbr de jour #}
+                                            {% set nbrJour = (equipe.duree.scenarioOptimalSansContrainte /86400)|round %}
+                                            {% if nbrJour <10 %}
+                                                {% set nbrJour = "0"~nbrJour %}
+                                            {% endif %}
+                                            {# récupérer le nbr d heure #}
+                                            {% set nbrHeure = ((equipe.duree.scenarioOptimalSansContrainte %86400)/3600)|round %}
+                                            {% if nbrHeure <10 %}
+                                                {% set nbrHeure = "0"~nbrHeure %}
+                                            {% endif %}
+                                            {# récupérer le nbr de minute #}
+                                            {% set nbrMin = (((equipe.duree.scenarioOptimalSansContrainte %86400)%3600)/60)|round %}
+                                            {% if nbrMin <10 %}
+                                                {% set nbrMin = "0"~nbrMin%}
+                                            {% endif %}
+                                            {{ nbrJour}} {{ nbrHeure }}:{{ nbrMin }}
+                                        </td>
+
+                                        <td style="text-align:center">
+                                            {# récupérer le nbr de jour #}
+                                            {% set nbrJour = (equipe.duree.scenarioEquitableSansContrainte /86400)|round %}
+                                            {% if nbrJour <10 %}
+                                                {% set nbrJour = "0"~nbrJour %}
+                                            {% endif %}
+                                            {# récupérer le nbr d heure #}
+                                            {% set nbrHeure = ((equipe.duree.scenarioEquitableSansContrainte  %86400)/3600)|round %}
+                                            {% if nbrHeure <10 %}
+                                                {% set nbrHeure = "0"~nbrHeure %}
+                                            {% endif %}
+                                            {# récupérer le nbr de minute #}
+                                            {% set nbrMin = (((equipe.duree.scenarioEquitableSansContrainte %86400)%3600)/60)|round %}
+                                            {% if nbrMin <10 %}
+                                                {% set nbrMin = "0"~nbrMin%}
+                                            {% endif %}
+                                            {{ nbrJour}} {{ nbrHeure }}:{{ nbrMin }}
+
+                                        </td>
 
                                     {%  endif %}
 
