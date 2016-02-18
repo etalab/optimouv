@@ -731,6 +731,14 @@ class PoulesController extends Controller
         ));
     }
 
+    public function comparaisonScenarioAction($idResultat){
+        error_log("\n idResultat : ".print_r($idResultat , true), 3, "error_log_optimouv.txt");
+
+        return $this->render('FfbbBundle:Poules:comparaisonScenario.html.twig', array(
+            ));
+    }
+
+
     //page qui affiche les détails des calculs
 
     public function detailsCalculAction()
