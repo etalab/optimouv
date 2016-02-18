@@ -84,6 +84,51 @@
 
 
                             <tbody>
+
+                            {% for equipe in donneesComparison %}
+                                <tr>
+                                    {%  if contraintsExiste and refExiste %}
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+
+                                    {%  elseif contraintsExiste and not refExiste %}
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+
+                                    {%  elseif not contraintsExiste and refExiste %}
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+
+                                    {%  else %}
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"></td>
+
+                                    {%  endif %}
+
+                                </tr>
+
+                            {% endfor %}
+
                             </tbody>
 
                         </table>
@@ -172,6 +217,52 @@
 
 
                                 <tbody>
+
+                                {% for equipe in donneesComparison %}
+                                    <tr>
+                                        {%  if contraintsExiste and refExiste %}
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+
+                                        {%  elseif contraintsExiste and not refExiste %}
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+
+                                        {%  elseif not contraintsExiste and refExiste %}
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+
+                                        {%  else %}
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+
+                                        {%  endif %}
+
+                                    </tr>
+
+                                {% endfor %}
+
+
                                 </tbody>
 
                             </table>
@@ -257,6 +348,62 @@
 
 
                                 <tbody>
+                                {% for equipe in donneesComparison %}
+                                    <tr>
+                                        {%  if contraintsExiste and refExiste %}
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+
+                                        {%  elseif contraintsExiste and not refExiste %}
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+
+                                        {%  elseif not contraintsExiste and refExiste %}
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+
+                                        {%  else %}
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"></td>
+
+                                        {%  endif %}
+
+                                    </tr>
+
+                                {% endfor %}
+
                                 </tbody>
 
                             </table>
