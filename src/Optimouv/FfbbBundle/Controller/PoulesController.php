@@ -732,10 +732,49 @@ class PoulesController extends Controller
     }
 
     public function comparaisonScenarioAction($idResultat){
-        error_log("\n idResultat : ".print_r($idResultat , true), 3, "error_log_optimouv.txt");
+        $em = $this->getDoctrine()->getManager();
+        $detailsCalcul = $em->getRepository('FfbbBundle:Scenario')->findOneById($idResultat)->getDetailsCalcul();
+        $detailsCalcul = json_decode($detailsCalcul, true);
+
+        $contraintsExiste = $detailsCalcul["contraintsExiste"];
+        $refExiste = $detailsCalcul["refExiste"];
+        $scenarioOptimalSansContrainte = $detailsCalcul["scenarioOptimalSansContrainte"];
+        $scenarioEquitableSansContrainte = $detailsCalcul["scenarioEquitableSansContrainte"];
+
+        # récupérer le scénario optimal avec contrainte
+        if(array_key_exists("scenarioOptimalAvecContrainte", $detailsCalcul)){
+            $scenarioOptimalAvecContrainte = $detailsCalcul["scenarioOptimalAvecContrainte"];
+        }
+        else {
+            $scenarioOptimalAvecContrainte = [];
+        }
+        # récupérer le scénario équitable avec contrainte
+        if(array_key_exists("scenarioEquitableAvecContrainte", $detailsCalcul)){
+            $scenarioEquitableAvecContrainte = $detailsCalcul["scenarioEquitableAvecContrainte"];
+        }
+        else {
+            $scenarioEquitableAvecContrainte = [];
+        }
+        # récupérer le scénario de réference
+        if(array_key_exists("scenarioRef", $detailsCalcul)){
+            $scenarioRef = $detailsCalcul["scenarioRef"];
+        }
+        else {
+            $scenarioRef = [];
+        }
+
+//        error_log("\n detailsCalcul : ".print_r($detailsCalcul , true), 3, "error_log_optimouv.txt");
 
         return $this->render('FfbbBundle:Poules:comparaisonScenario.html.twig', array(
-            'idResultat' => $idResultat
+            'idResultat' => $idResultat,
+            'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
+            'scenarioEquitableSansContrainte' => $scenarioEquitableSansContrainte,
+            'scenarioOptimalAvecContrainte' => $scenarioOptimalAvecContrainte,
+            'scenarioEquitableAvecContrainte' => $scenarioEquitableAvecContrainte,
+            'scenarioRef' => $scenarioRef,
+            'contraintsExiste' => $contraintsExiste,
+            'refExiste' => $refExiste,
+
             ));
     }
 
