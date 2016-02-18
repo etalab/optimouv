@@ -763,7 +763,35 @@ class PoulesController extends Controller
             $scenarioRef = [];
         }
 
-//        error_log("\n detailsCalcul : ".print_r($detailsCalcul , true), 3, "error_log_optimouv.txt");
+
+        # obtenir l'id du rapport
+        $idRapport = $em->getRepository('FfbbBundle:Scenario')->getIdRapportByIdScenario($idResultat);
+        if($idRapport != []){
+            $idRapport  = $idRapport[0]["idRapport"];
+        }
+
+        # obtenir l'id du groupe
+        $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idRapport);
+        if($idGroupe != []){
+            $idGroupe = $idGroupe[0]['idGroupe'];
+        }
+
+
+        # obtenir l'id des équipes
+        $equipes = $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getEquipes();
+        //$equipes de string a array
+        $equipes = explode(",", $equipes);
+
+        $detailsVilles = $em->getRepository('FfbbBundle:Entite')->getEntities($equipes);
+
+
+//        error_log("\n equipes : ".print_r($equipes , true), 3, "error_log_optimouv.txt");
+
+        # parser les données pour l'affichage
+        $donneesComparison = $this->get('service_poules')->parserComparaisonScenario($detailsVilles, $scenarioOptimalAvecContrainte, $scenarioOptimalSansContrainte, $scenarioEquitableAvecContrainte, $scenarioEquitableSansContrainte, $scenarioRef, $refExiste, $contraintsExiste );
+
+
+//        error_log("\n donneesComparison : ".print_r($donneesComparison , true), 3, "error_log_optimouv.txt");
 
         return $this->render('FfbbBundle:Poules:comparaisonScenario.html.twig', array(
             'idResultat' => $idResultat,
