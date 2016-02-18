@@ -31,7 +31,7 @@
                             <thead>
 
                                 <tr>
-                                    <th rowspan="2" style="text-align:center; vertical-align: middle;">Equipes</th>
+                                    <th rowspan="2" style="text-align:center; vertical-align: middle; max-width: 20%">Equipes</th>
 
                                     {%  if contraintsExiste and refExiste %}
                                         <th colspan="4" style="text-align:center">Kilomètres à parcourir</th>
@@ -50,31 +50,33 @@
 
                                 <tr>
                                     {%  if contraintsExiste and refExiste %}
-                                        <th style="text-align:center">Scénario optimal</th>
-                                        <th style="text-align:center">Scénario équitable</th>
-                                        <th style="text-align:center">Scénario de référence</th>
-                                        <th style="text-align:center">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:center">Scénario optimal</th>
-                                        <th style="text-align:center">Scénario équitable</th>
-                                        <th style="text-align:center">Scénario de référence</th>
-                                        <th style="text-align:center">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario équitable</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario de référence</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario équitable</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario de référence</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
                                     {%  elseif contraintsExiste and not refExiste %}
-                                        <th style="text-align:center">Scénario optimal</th>
-                                        <th style="text-align:center">Scénario équitable</th>
-                                        <th style="text-align:center">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:center">Scénario optimal</th>
-                                        <th style="text-align:center">Scénario équitable</th>
-                                        <th style="text-align:center">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario équitable</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario équitable</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
                                     {%  elseif not contraintsExiste and refExiste %}
-                                        <th style="text-align:center">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:center">Scénario équitable sans contrainte</th>
-                                        <th style="text-align:center">Scénario de référence</th>
-                                        <th style="text-align:center">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:center">Scénario équitable sans contrainte</th>
-                                        <th style="text-align:center">Scénario de référence</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario équitable sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario de référence</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario équitable sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario de référence</th>
                                     {%  else %}
-                                        <th style="text-align:center">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:center">Scénario équitable sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario équitable sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario équitable sans contrainte</th>
                                     {%  endif %}
 
 
@@ -88,7 +90,7 @@
                             {% for equipe in donneesComparison %}
                                 <tr>
                                     {%  if contraintsExiste and refExiste %}
-                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"> {{ equipe.nom }} </td>
                                         <td style="text-align:center"></td>
                                         <td style="text-align:center"></td>
                                         <td style="text-align:center"></td>
@@ -99,7 +101,7 @@
                                         <td style="text-align:center"></td>
 
                                     {%  elseif contraintsExiste and not refExiste %}
-                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"> {{ equipe.nom }} </td>
                                         <td style="text-align:center"></td>
                                         <td style="text-align:center"></td>
                                         <td style="text-align:center"></td>
@@ -108,7 +110,7 @@
                                         <td style="text-align:center"></td>
 
                                     {%  elseif not contraintsExiste and refExiste %}
-                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"> {{ equipe.nom }} </td>
                                         <td style="text-align:center"></td>
                                         <td style="text-align:center"></td>
                                         <td style="text-align:center"></td>
@@ -117,7 +119,7 @@
                                         <td style="text-align:center"></td>
 
                                     {%  else %}
-                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center"> {{ equipe.nom }} </td>
                                         <td style="text-align:center"></td>
                                         <td style="text-align:center"></td>
                                         <td style="text-align:center"></td>
@@ -165,7 +167,7 @@
                                 <thead>
                                 <tr>
 
-                                    <th rowspan="2" style="text-align:center; vertical-align: middle;">Equipes</th>
+                                    <th rowspan="2" style="text-align:center; vertical-align: middle; max-width: 20%">Equipes</th>
 
                                     {%  if contraintsExiste and refExiste %}
                                         <th colspan="4" style="text-align:center">Coût du parcours en voiture ou en covoiturage (€) </th>
@@ -184,31 +186,33 @@
                                 </tr>
                                 <tr>
                                     {%  if contraintsExiste and refExiste %}
-                                        <th style="text-align:center">Scénario optimal</th>
-                                        <th style="text-align:center">Scénario équitable</th>
-                                        <th style="text-align:center">Scénario de référence</th>
-                                        <th style="text-align:center">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:center">Scénario optimal</th>
-                                        <th style="text-align:center">Scénario équitable</th>
-                                        <th style="text-align:center">Scénario de référence</th>
-                                        <th style="text-align:center">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario équitable</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario de référence</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario équitable</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario de référence</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
                                     {%  elseif contraintsExiste and not refExiste %}
-                                        <th style="text-align:center">Scénario optimal</th>
-                                        <th style="text-align:center">Scénario équitable</th>
-                                        <th style="text-align:center">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:center">Scénario optimal</th>
-                                        <th style="text-align:center">Scénario équitable</th>
-                                        <th style="text-align:center">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario équitable</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario équitable</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
                                     {%  elseif not contraintsExiste and refExiste %}
-                                        <th style="text-align:center">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:center">Scénario équitable sans contrainte</th>
-                                        <th style="text-align:center">Scénario de référence</th>
-                                        <th style="text-align:center">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:center">Scénario équitable sans contrainte</th>
-                                        <th style="text-align:center">Scénario de référence</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario équitable sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario de référence</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario équitable sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario de référence</th>
                                     {%  else %}
-                                        <th style="text-align:center">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:center">Scénario équitable sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario équitable sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; max-width: 10%">Scénario équitable sans contrainte</th>
                                     {%  endif %}
 
 
@@ -221,7 +225,7 @@
                                 {% for equipe in donneesComparison %}
                                     <tr>
                                         {%  if contraintsExiste and refExiste %}
-                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"> {{ equipe.nom }} </td>
                                             <td style="text-align:center"></td>
                                             <td style="text-align:center"></td>
                                             <td style="text-align:center"></td>
@@ -232,7 +236,7 @@
                                             <td style="text-align:center"></td>
 
                                         {%  elseif contraintsExiste and not refExiste %}
-                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"> {{ equipe.nom }} </td>
                                             <td style="text-align:center"></td>
                                             <td style="text-align:center"></td>
                                             <td style="text-align:center"></td>
@@ -241,7 +245,7 @@
                                             <td style="text-align:center"></td>
 
                                         {%  elseif not contraintsExiste and refExiste %}
-                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"> {{ equipe.nom }} </td>
                                             <td style="text-align:center"></td>
                                             <td style="text-align:center"></td>
                                             <td style="text-align:center"></td>
@@ -250,7 +254,7 @@
                                             <td style="text-align:center"></td>
 
                                         {%  else %}
-                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"> {{ equipe.nom }} </td>
                                             <td style="text-align:center"></td>
                                             <td style="text-align:center"></td>
                                             <td style="text-align:center"></td>
@@ -297,7 +301,7 @@
                             <table class="table table-striped table-hover table-bordered table-fixed" id="tableEmission" >
                                 <thead>
                                     <tr>
-                                        <th rowspan="2" style="text-align:center; vertical-align: middle;">Equipes</th>
+                                        <th rowspan="2" style="text-align:center; vertical-align: middle; max-width: 20%">Equipes</th>
                                         <th colspan="4" style="text-align:center">Emission GES en voiture individuelle (kilos équivalent C02) </th>
                                         <th colspan="4" style="text-align:center">Emission GES en covoiturage (kilos équivalent C02) </th>
                                         <th colspan="4" style="text-align:center">Emission GES en minibus (kilos équivalent C02) </th>
@@ -305,41 +309,45 @@
 
                                     <tr>
                                         {%  if contraintsExiste and refExiste %}
-                                            <th style="text-align:center">Scénario optimal</th>
-                                            <th style="text-align:center">Scénario équitable</th>
-                                            <th style="text-align:center">Scénario de référence</th>
-                                            <th style="text-align:center">Scénario optimal sans contrainte</th>
-                                            <th style="text-align:center">Scénario optimal</th>
-                                            <th style="text-align:center">Scénario équitable</th>
-                                            <th style="text-align:center">Scénario de référence</th>
-                                            <th style="text-align:center">Scénario optimal sans contrainte</th>
-                                            <th style="text-align:center">Scénario optimal</th>
-                                            <th style="text-align:center">Scénario équitable</th>
-                                            <th style="text-align:center">Scénario de référence</th>
-                                            <th style="text-align:center">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario optimal</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario équitable</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario de référence</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario optimal</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario équitable</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario de référence</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario optimal</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario équitable</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario de référence</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
                                         {%  elseif contraintsExiste and not refExiste %}
-                                            <th style="text-align:center">Scénario optimal</th>
-                                            <th style="text-align:center">Scénario équitable</th>
-                                            <th style="text-align:center">Scénario optimal sans contrainte</th>
-                                            <th style="text-align:center">Scénario optimal</th>
-                                            <th style="text-align:center">Scénario équitable</th>
-                                            <th style="text-align:center">Scénario optimal sans contrainte</th>
-                                            <th style="text-align:center">Scénario optimal</th>
-                                            <th style="text-align:center">Scénario équitable</th>
-                                            <th style="text-align:center">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario optimal</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario équitable</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario optimal</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario équitable</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario optimal</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario équitable</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
                                         {%  elseif not contraintsExiste and refExiste %}
-                                            <th style="text-align:center">Scénario optimal sans contrainte</th>
-                                            <th style="text-align:center">Scénario équitable sans contrainte</th>
-                                            <th style="text-align:center">Scénario de référence</th>
-                                            <th style="text-align:center">Scénario optimal sans contrainte</th>
-                                            <th style="text-align:center">Scénario équitable sans contrainte</th>
-                                            <th style="text-align:center">Scénario de référence</th>
-                                            <th style="text-align:center">Scénario optimal sans contrainte</th>
-                                            <th style="text-align:center">Scénario équitable sans contrainte</th>
-                                            <th style="text-align:center">Scénario de référence</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario équitable sans contrainte</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario de référence</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario équitable sans contrainte</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario de référence</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario équitable sans contrainte</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario de référence</th>
                                         {%  else %}
-                                            <th style="text-align:center">Scénario optimal sans contrainte</th>
-                                            <th style="text-align:center">Scénario équitable sans contrainte</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario équitable sans contrainte</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario équitable sans contrainte</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; max-width: 10%">Scénario équitable sans contrainte</th>
                                         {%  endif %}
 
                                     </tr>
@@ -351,7 +359,7 @@
                                 {% for equipe in donneesComparison %}
                                     <tr>
                                         {%  if contraintsExiste and refExiste %}
-                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"> {{ equipe.nom }} </td>
                                             <td style="text-align:center"></td>
                                             <td style="text-align:center"></td>
                                             <td style="text-align:center"></td>
@@ -366,7 +374,7 @@
                                             <td style="text-align:center"></td>
 
                                         {%  elseif contraintsExiste and not refExiste %}
-                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"> {{ equipe.nom }} </td>
                                             <td style="text-align:center"></td>
                                             <td style="text-align:center"></td>
                                             <td style="text-align:center"></td>
@@ -378,7 +386,7 @@
                                             <td style="text-align:center"></td>
 
                                         {%  elseif not contraintsExiste and refExiste %}
-                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"> {{ equipe.nom }} </td>
                                             <td style="text-align:center"></td>
                                             <td style="text-align:center"></td>
                                             <td style="text-align:center"></td>
@@ -390,7 +398,7 @@
                                             <td style="text-align:center"></td>
 
                                         {%  else %}
-                                            <td style="text-align:center"></td>
+                                            <td style="text-align:center"> {{ equipe.nom }} </td>
                                             <td style="text-align:center"></td>
                                             <td style="text-align:center"></td>
                                             <td style="text-align:center"></td>
