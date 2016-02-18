@@ -36,17 +36,11 @@
 
 
 {#<img src="{{app.request.scheme ~'://'~ app.request.httpHost ~  asset('bundles/ffbb/accueil/img/Logo-Optimouv.jpg') }}" />#}
-{#<img src="http://dev.ffbb.it4pme.fr/bundles/ffbb/accueil/img/Logo-FFBB.jpg" />#}
-{#<img src="http://www.it4pme.fr/wp-content/uploads/2013/02/logopme4sitebizlite5_sign%C3%A96-e1361372749331.png" />#}
-{#<img src="http://symfony.com/logos/symfony_black_01.png?v=4">#}
 
- {#{% set pathImage = base_url %}#}
-{#{% set pathImage = pathImage~"/bundles/ffbb/accueil/img/Logo-Optimouv.jpg" %}#}
+{% set kernelRootDir = kernelRootDir[:-3] %}
+<img src="{{ kernelRootDir }}web\bundles\ffbb\accueil\img\Logo-Optimouv.jpg">
 
-{#<img src="http://{{pathImage}}" alt="logo-optimouv">#}
-{#<img src="http://dev.ffbb.it4pme.fr/bundles/ffbb/accueil/img/Logo-Optimouv.jpg">#}
-<h3>Optimouv</h3>
- <br><br>
+<br><br>
 
 <h3> Export de votre recherche "{{ nomRapport }}" - scénario optimal</h3>
 <h4>Fédération : UFOLEP</h4>
