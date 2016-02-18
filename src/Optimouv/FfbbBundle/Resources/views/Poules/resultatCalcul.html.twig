@@ -406,7 +406,7 @@
                                                                              </tr>
                                                                              </thead>
                                                                              <tbody>
-
+                                                                             {% set dureeTotaleOptContrainteDetail = "" %}
                                                                              {% for key, estimationDetailOptContrainte in estimationDetailsOptContrainte %}
                                                                                  {% set distanceOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].distanceTotale // 1000 %}
                                                                                  {% set distanceTotaleOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}
@@ -443,12 +443,15 @@
                                                                                      <td style="text-align:right"> {{ ((distanceTotaleOptContrainteDetail /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
                                                                                      <td style="text-align:right"> {{ ((distanceTotaleOptContrainteDetail /9)*0.185)|round|number_format(0, ',', ' ') }} </td>
                                                                                  </tr>
-
+                                                                                 {% set dureeTotaleOptContrainteDetail = dureeTotaleOptContrainteDetail + dureeTotaleOptContrainteDetail %}
                                                                              {% endfor %}
                                                                              <tr>
                                                                                  <td><strong> Totaux </strong></td>
                                                                                  <td style="text-align:right"> {{ distanceMin|number_format(0, ',', ' ') }}</td>
-                                                                                 <td style="text-align:right"> {{ dureeTotale|date('d H:i') }}</td>
+                                                                                 <td style="text-align:right">
+                                                                                     {{ dureeTotaleOptContrainteDetail|date('d H:i') }}
+
+                                                                                 </td>
                                                                                  <td style="text-align:right"> {{ (distanceTotale  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                                  <td style="text-align:right"> {{ (distanceTotale /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                                  <td style="text-align:right"> {{ (distanceTotale /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
