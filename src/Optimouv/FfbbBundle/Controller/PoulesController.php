@@ -782,10 +782,9 @@ class PoulesController extends Controller
         //$equipes de string a array
         $equipes = explode(",", $equipes);
 
+        # obtenir le détail des équipes
         $detailsVilles = $em->getRepository('FfbbBundle:Entite')->getEntities($equipes);
 
-
-//        error_log("\n equipes : ".print_r($equipes , true), 3, "error_log_optimouv.txt");
 
         # parser les données pour l'affichage
         $donneesComparison = $this->get('service_poules')->parserComparaisonScenario($detailsVilles, $scenarioOptimalAvecContrainte, $scenarioOptimalSansContrainte, $scenarioEquitableAvecContrainte, $scenarioEquitableSansContrainte, $scenarioRef, $refExiste, $contraintsExiste );
@@ -802,6 +801,7 @@ class PoulesController extends Controller
             'scenarioRef' => $scenarioRef,
             'contraintsExiste' => $contraintsExiste,
             'refExiste' => $refExiste,
+            'donneesComparison' => $donneesComparison
 
             ));
     }
