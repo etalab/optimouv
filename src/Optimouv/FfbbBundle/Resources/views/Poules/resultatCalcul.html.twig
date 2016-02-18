@@ -449,7 +449,24 @@
                                                                                  <td><strong> Totaux </strong></td>
                                                                                  <td style="text-align:right"> {{ distanceMin|number_format(0, ',', ' ') }}</td>
                                                                                  <td style="text-align:right">
-                                                                                     {{ dureeTotaleScOptContrainte|date('d H:i') }}
+                                                                                     {#{{ dureeTotaleScOptContrainte|date('d H:i') }}#}
+
+                                                                                     {# récupérer le nbr de jour #}
+                                                                                     {% set nbrJourScOptContrainte = (dureeTotaleScOptContrainte/86400)|round %}
+                                                                                     {% if nbrJourScOptContrainte <10 %}
+                                                                                         {% set nbrJourScOptContrainte = "0"~nbrJourScOptContrainte %}
+                                                                                     {% endif %}
+                                                                                     {# récupérer le nbr d heure #}
+                                                                                     {% set nbrHeureScOptContrainte = ((dureeTotaleScOptContrainte%86400)/3600)|round %}
+                                                                                     {% if nbrHeureScOptContrainte <10 %}
+                                                                                         {% set nbrHeureScOptContrainte = "0"~nbrHeureScOptContrainte %}
+                                                                                     {% endif %}
+                                                                                     {# récupérer le nbr de minute #}
+                                                                                     {% set nbrMinScOptContrainte = (((dureeTotaleScOptContrainte%86400)%3600)/60)|round %}
+                                                                                     {% if nbrMinScOptContrainte <10 %}
+                                                                                         {% set nbrMinScOptContrainte = "0"~nbrMinScOptContrainte %}
+                                                                                     {% endif %}
+                                                                                     {{ nbrJourScOptContrainte}} {{ nbrHeureScOptContrainte }}:{{ nbrMinScOptContrainte }}
 
                                                                                  </td>
                                                                                  <td style="text-align:right"> {{ (distanceTotale  * 0.80)|round|number_format(0, ',', ' ') }}</td>
