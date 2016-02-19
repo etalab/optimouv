@@ -1180,30 +1180,38 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			logging.debug(" chosenDistance_OptimalWithoutConstraint: %s" %chosenDistance_OptimalWithoutConstraint)
 	
 			# get pool distribution
-# 			poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
 			poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams)
 # 			logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %poolDistribution_OptimalWithoutConstraint)
 	 		
-			# eliminate phnatom teams
-			poolDistribution_OptimalWithoutConstraint = eliminate_phantom_in_pool_distribution(poolDistribution_OptimalWithoutConstraint)
-			results["scenarioOptimalSansContrainte"]["poulesId"] = poolDistribution_OptimalWithoutConstraint
-			logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %poolDistribution_OptimalWithoutConstraint)
 
 		# optimize distance pool only if pool numer is 1
 		elif poolNbr == 1:
 			poolDistribution_OptimalWithoutConstraint = {1: sorted(teams)}
 			logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %poolDistribution_OptimalWithoutConstraint)
 
+		# eliminate phnatom teams
+		poolDistribution_OptimalWithoutConstraint = eliminate_phantom_in_pool_distribution(poolDistribution_OptimalWithoutConstraint)
+		results["scenarioOptimalSansContrainte"]["poulesId"] = poolDistribution_OptimalWithoutConstraint
+		logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %poolDistribution_OptimalWithoutConstraint)
 
 		# get coordinates for each point in the pools
 		poolDistributionCoordsRef = get_coords_pool_distribution(poolDistribution_OptimalWithoutConstraint)
 		results["scenarioRef"]["poulesCoords"] = poolDistributionCoordsRef
+
+
+
 
 		# optimize distance for each pool
 		encounters_OptimalWithoutConstraint_plateau = create_encounters_from_pool_distribution_plateau(poolDistribution_OptimalWithoutConstraint)
 # 		results["scenarioOptimalSansContrainte"]["rencontreDetails"] = encounters_OptimalWithoutConstraint
 
 		
+
+
+
+
+
+
 		
 		logging.debug("")
 		logging.debug(" ####################### RESULT EQUITABLE WITHOUT CONSTRAINT ############################################")
