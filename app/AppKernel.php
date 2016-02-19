@@ -21,7 +21,6 @@ class AppKernel extends Kernel
             new FOS\UserBundle\FOSUserBundle(),
             new Optimouv\AdminBundle\AdminBundle(),
             new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
-            new Slik\DompdfBundle\SlikDompdfBundle(),
             new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
 
         );
