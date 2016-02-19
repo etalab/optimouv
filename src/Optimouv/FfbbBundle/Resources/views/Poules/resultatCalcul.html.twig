@@ -52,25 +52,20 @@
                              </tr>
                              <tr>
 
-                                 {% if phantomExiste %}
-                                     <td>Poules :
-                                     {%  for taillePoule, nombrePoule in infoPoule %}
-                                         {% if nombrePoule == 1 %}
-                                             {{ nombrePoule }} poule de {{ taillePoule }} équipes
-                                         {% else %}
-                                             {{ nombrePoule }} poules de {{ taillePoule }} équipes
-                                         {% endif %}
+                                 <td>Poules :
+                                 {%  for taillePoule, nombrePoule in infoPoule %}
+                                     {% if nombrePoule == 1 %}
+                                         {{ nombrePoule }} poule de {{ taillePoule }} équipes
+                                     {% else %}
+                                         {{ nombrePoule }} poules de {{ taillePoule }} équipes
+                                     {% endif %}
 
-                                         {%  if not loop.last %}
-                                             et
-                                         {% endif %}
+                                     {%  if not loop.last %}
+                                         et
+                                     {% endif %}
 
-                                    {% endfor %}
-                                    </td>
-                                     {#<td>Poules :  {{ nombrePoule }} poules de {{ taillePoule }} équipes</td>#}
-                                 {%  else %}
-                                     <td>Poules :  {{ nombrePoule }} poules de {{ taillePoule }} équipes</td>
-                                 {% endif %}
+                                {% endfor %}
+                                </td>
 
                              </tr>
 
@@ -3043,7 +3038,20 @@
                              <div class="form-group">
                                  <input id="inputPoulesNbr" type="number" min="1" class="form-control" value="{{ nombrePoule  }}" required>
                              </div>
-                             <h5> {{ nombrePoule }} poules de {{ taillePoule }} équipes </h5>
+
+                             {#<h5> {{ nombrePoule }} poules de {{ taillePoule }} équipes </h5>#}
+                             {%  for taillePoule, nombrePoule in infoPoule %}
+                                 {% if nombrePoule == 1 %}
+                                     {{ nombrePoule }} poule de {{ taillePoule }} équipes
+                                 {% else %}
+                                     {{ nombrePoule }} poules de {{ taillePoule }} équipes
+                                 {% endif %}
+
+                                 {%  if not loop.last %}
+                                     et
+                                 {% endif %}
+
+                             {% endfor %}
 
                          </div>
                          <!-- /.panel-body -->
