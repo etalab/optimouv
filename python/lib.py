@@ -402,18 +402,33 @@ Function to get host names from Plateau distribution Per pool
 """
 def get_member_combination_ids_from_host_combination_index(plateauDistributionPerPool, combination):
 	try:
-		hostNames = {}
+		memberCombinationIds = {}
 	
 		for day, contentDay in plateauDistributionPerPool.items():
-			hostNamesTmp = []
+			memberCombinationIds[day] = {}
 			
 			for indexGroup, group in enumerate(contentDay):
 # 				logging.debug("  group: %s" %group)
-				hostNamesTmp.append(group[combination[day][indexGroup]])
+				hostIndex = combination[day][indexGroup]
+# 				logging.debug("  hostIndex: %s" %hostIndex)
+				hostId = group[hostIndex]
+# 				logging.debug("  hostId: %s" %hostId)
+				
+				# get member ids
+				memberIds = list(group)
+				if hostId in memberIds:
+					memberIds.remove(hostId)
+				
+				distance = 0
+				
+				for memberId in memberIds:
+					sql = "select distance from trajet where depart=%s and destination=%s"%(hostId, memberId)
+					distanceTmp = db.fetchone()
+				
+				memberCombinationIds[day][indexGroup+1] = {"hostId": hostId, "memberIds": memberIds, "distance": distance}
 			
-			hostNames[day] = hostNamesTmp
 		
-		return hostNames 
+		return memberCombinationIds
 			
 	except Exception as e:
 		show_exception_traceback()
@@ -457,7 +472,7 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 			# complete base3 to 12 characters
 			for k in range(12-len(base3Tmp)):
 				base3Tmp = '0' + base3Tmp
-			logging.debug("  base3Tmp: %s" %base3Tmp)
+# 			logging.debug("  base3Tmp: %s" %base3Tmp)
 
 			hostCombinationIndex = get_host_combination_index_from_base3(hostCombinationIndex, base3Tmp)
 			logging.debug("  hostCombinationIndex: %s" %hostCombinationIndex)
