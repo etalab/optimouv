@@ -143,6 +143,10 @@ def optimize_pool_post_treatment_match(D_Mat, teamNbr, poolNbr, poolSize, teams,
 			results["scenarioOptimalSansContrainte"]["poulesId"] = poolDistribution_OptimalWithoutConstraint
 			logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %poolDistribution_OptimalWithoutConstraint)
 
+			infoPool = get_info_pool_from_pool_distribution(poolDistribution_OptimalWithoutConstraint)
+			logging.debug(" infoPool: %s" %infoPool)
+			results["params"]["infoPoule"] = infoPool
+
 			# get coordinates for each point in the pools
 			poolDistributionCoords_OptimalWithoutConstraint = get_coords_pool_distribution(poolDistribution_OptimalWithoutConstraint)
 			results["scenarioOptimalSansContrainte"]["poulesCoords"] = poolDistributionCoords_OptimalWithoutConstraint

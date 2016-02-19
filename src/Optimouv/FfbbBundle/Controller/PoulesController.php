@@ -731,6 +731,82 @@ class PoulesController extends Controller
         ));
     }
 
+    public function comparaisonScenarioAction($idResultat){
+        $em = $this->getDoctrine()->getManager();
+        $detailsCalcul = $em->getRepository('FfbbBundle:Scenario')->findOneById($idResultat)->getDetailsCalcul();
+        $detailsCalcul = json_decode($detailsCalcul, true);
+
+        $contraintsExiste = $detailsCalcul["contraintsExiste"];
+        $refExiste = $detailsCalcul["refExiste"];
+        $scenarioOptimalSansContrainte = $detailsCalcul["scenarioOptimalSansContrainte"];
+        $scenarioEquitableSansContrainte = $detailsCalcul["scenarioEquitableSansContrainte"];
+
+        # récupérer le scénario optimal avec contrainte
+        if(array_key_exists("scenarioOptimalAvecContrainte", $detailsCalcul)){
+            $scenarioOptimalAvecContrainte = $detailsCalcul["scenarioOptimalAvecContrainte"];
+        }
+        else {
+            $scenarioOptimalAvecContrainte = [];
+        }
+        # récupérer le scénario équitable avec contrainte
+        if(array_key_exists("scenarioEquitableAvecContrainte", $detailsCalcul)){
+            $scenarioEquitableAvecContrainte = $detailsCalcul["scenarioEquitableAvecContrainte"];
+        }
+        else {
+            $scenarioEquitableAvecContrainte = [];
+        }
+        # récupérer le scénario de réference
+        if(array_key_exists("scenarioRef", $detailsCalcul)){
+            $scenarioRef = $detailsCalcul["scenarioRef"];
+        }
+        else {
+            $scenarioRef = [];
+        }
+
+
+        # obtenir l'id du rapport
+        $idRapport = $em->getRepository('FfbbBundle:Scenario')->getIdRapportByIdScenario($idResultat);
+        if($idRapport != []){
+            $idRapport  = $idRapport[0]["idRapport"];
+        }
+
+        # obtenir l'id du groupe
+        $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idRapport);
+        if($idGroupe != []){
+            $idGroupe = $idGroupe[0]['idGroupe'];
+        }
+
+
+        # obtenir l'id des équipes
+        $equipes = $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getEquipes();
+        //$equipes de string a array
+        $equipes = explode(",", $equipes);
+
+        # obtenir le détail des équipes
+        $detailsVilles = $em->getRepository('FfbbBundle:Entite')->getEntities($equipes);
+
+
+        # parser les données pour l'affichage
+        $donneesComparison = $this->get('service_poules')->parserComparaisonScenario($detailsVilles, $scenarioOptimalAvecContrainte, $scenarioOptimalSansContrainte, $scenarioEquitableAvecContrainte, $scenarioEquitableSansContrainte, $scenarioRef, $refExiste, $contraintsExiste );
+
+
+//        error_log("\n donneesComparison : ".print_r($donneesComparison , true), 3, "error_log_optimouv.txt");
+
+        return $this->render('FfbbBundle:Poules:comparaisonScenario.html.twig', array(
+            'idResultat' => $idResultat,
+            'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
+            'scenarioEquitableSansContrainte' => $scenarioEquitableSansContrainte,
+            'scenarioOptimalAvecContrainte' => $scenarioOptimalAvecContrainte,
+            'scenarioEquitableAvecContrainte' => $scenarioEquitableAvecContrainte,
+            'scenarioRef' => $scenarioRef,
+            'contraintsExiste' => $contraintsExiste,
+            'refExiste' => $refExiste,
+            'donneesComparison' => $donneesComparison
+
+            ));
+    }
+
+
     //page qui affiche les détails des calculs
 
     public function detailsCalculAction()

@@ -230,6 +230,13 @@ ffbb_poules_details_calcul:
     path:     /admin/poules/details-calcul
     defaults: { _controller: FfbbBundle:Poules:detailsCalcul }
 
+
+ffbb_poules_comparaison_scenario:
+    path:    /admin/poules/comparaison-scenario/{idResultat}
+    defaults: { _controller: FfbbBundle:Poules:comparaisonScenario}
+
+
+
 ffbb_lancer_producer:
     path:     /admin/rencontre/producer/{idGroupe}
     defaults: { _controller: FfbbBundle:Default:lancerProducer }

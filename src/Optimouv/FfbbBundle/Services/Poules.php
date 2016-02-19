@@ -129,6 +129,163 @@ class Poules{
 
     }
 
+    public function parserComparaisonScenario($detailsVilles, $scenarioOptimalAvecContrainte, $scenarioOptimalSansContrainte, $scenarioEquitableAvecContrainte, $scenarioEquitableSansContrainte, $scenarioRef, $refExiste, $contraintsExiste )
+    {
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateCreation = date('Y-m-d', time());
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+        try{
+            $detailsEquipeComparaison = [];
+
+            for($i=0; $i<count($detailsVilles); $i++){
+                $idEquipe = $detailsVilles[$i]["id"];
+                $nomEquipe = $detailsVilles[$i]["nom"];
+
+                $distanceScenarioOptimalAvecContrainte = 0;
+                $distanceScenarioOptimalSansContrainte = 0;
+                $distanceScenarioEquitableAvecContrainte = 0;
+                $distanceScenarioEquitableSansContrainte = 0;
+                $distanceScenarioRef = 0;
+
+                $distanceTotaleScenarioOptimalAvecContrainte = 0;
+                $distanceTotaleScenarioOptimalSansContrainte = 0;
+                $distanceTotaleScenarioEquitableAvecContrainte = 0;
+                $distanceTotaleScenarioEquitableSansContrainte = 0;
+                $distanceTotaleScenarioRef = 0;
+
+                $dureeScenarioOptimalAvecContrainte = 0;
+                $dureeScenarioOptimalSansContrainte = 0;
+                $dureeScenarioEquitableAvecContrainte = 0;
+                $dureeScenarioEquitableSansContrainte = 0;
+                $dureeScenarioRef = 0;
+
+                # scenario optimal sans contrainte
+                $rencontreDetails = $scenarioOptimalSansContrainte["rencontreDetails"];
+                foreach($rencontreDetails as $poule => $contenuPoule){
+                    foreach($contenuPoule as $rencontre => $contenuRencontre){
+
+                        if($contenuRencontre["equipeDepartId"] == $idEquipe){
+                            $distanceScenarioOptimalSansContrainte += $contenuRencontre["distance"];
+                            $distanceTotaleScenarioOptimalSansContrainte += $contenuRencontre["distanceTousParticipants"];
+                            $dureeScenarioOptimalSansContrainte += $contenuRencontre["duree"];
+
+                        }
+                    }
+                }
+
+                # scenario équitable sans contrainte
+                $rencontreDetails = $scenarioEquitableSansContrainte["rencontreDetails"];
+                foreach($rencontreDetails as $poule => $contenuPoule){
+                    foreach($contenuPoule as $rencontre => $contenuRencontre){
+                        if($contenuRencontre["equipeDepartId"] == $idEquipe){
+                            $distanceScenarioEquitableSansContrainte += $contenuRencontre["distance"];
+                            $distanceTotaleScenarioEquitableSansContrainte += $contenuRencontre["distanceTousParticipants"];
+                            $dureeScenarioEquitableSansContrainte += $contenuRencontre["duree"];
+
+                        }
+                    }
+                }
+
+
+                if($contraintsExiste){
+                    # scenario optimal avec contrainte
+                    $rencontreDetails = $scenarioOptimalAvecContrainte["rencontreDetails"];
+                    foreach($rencontreDetails as $poule => $contenuPoule){
+                        foreach($contenuPoule as $rencontre => $contenuRencontre){
+                            if($contenuRencontre["equipeDepartId"] == $idEquipe){
+                                $distanceScenarioOptimalAvecContrainte += $contenuRencontre["distance"];
+                                $distanceTotaleScenarioOptimalAvecContrainte += $contenuRencontre["distanceTousParticipants"];
+                                $dureeScenarioOptimalAvecContrainte += $contenuRencontre["duree"];
+
+                            }
+                        }
+                    }
+
+                    # scenario équitable avec contrainte
+                    $rencontreDetails = $scenarioEquitableAvecContrainte["rencontreDetails"];
+                    foreach($rencontreDetails as $poule => $contenuPoule){
+                        foreach($contenuPoule as $rencontre => $contenuRencontre){
+                            if($contenuRencontre["equipeDepartId"] == $idEquipe){
+                                $distanceScenarioEquitableAvecContrainte += $contenuRencontre["distance"];
+                                $distanceTotaleScenarioEquitableAvecContrainte += $contenuRencontre["distanceTousParticipants"];
+                                $dureeScenarioEquitableAvecContrainte += $contenuRencontre["duree"];
+
+                            }
+                        }
+                    }
+                }
+
+
+
+                if($refExiste){
+                    # scenario ref
+                    $rencontreDetails = $scenarioRef["rencontreDetails"];
+                    foreach($rencontreDetails as $poule => $contenuPoule){
+                        foreach($contenuPoule as $rencontre => $contenuRencontre){
+                            if($contenuRencontre["equipeDepartId"] == $idEquipe){
+                                $distanceScenarioRef += $contenuRencontre["distance"];
+                                $distanceTotaleScenarioRef += $contenuRencontre["distanceTousParticipants"];
+                                $dureeScenarioRef += $contenuRencontre["duree"];
+
+                            }
+                        }
+                    }
+                }
+
+
+                # obtenir l'id de l'equipe
+                $detailsEquipeComparaison[$i] = array(
+                    "id"=> $idEquipe,
+                    "nom" => $nomEquipe,
+                    "distance"=> array(
+                        "scenarioOptimalAvecContrainte"=> $distanceScenarioOptimalAvecContrainte,
+                        "scenarioOptimalSansContrainte"=> $distanceScenarioOptimalSansContrainte,
+                        "scenarioEquitableAvecContrainte"=> $distanceScenarioEquitableAvecContrainte,
+                        "scenarioEquitableSansContrainte"=> $distanceScenarioEquitableSansContrainte,
+                        "scenarioRef"=> $distanceScenarioRef,
+                        ),
+                    "distanceTotale"=> array(
+                        "scenarioOptimalAvecContrainte"=> $distanceTotaleScenarioOptimalAvecContrainte,
+                        "scenarioOptimalSansContrainte"=> $distanceTotaleScenarioOptimalSansContrainte,
+                        "scenarioEquitableAvecContrainte"=> $distanceTotaleScenarioEquitableAvecContrainte,
+                        "scenarioEquitableSansContrainte"=> $distanceTotaleScenarioEquitableSansContrainte,
+                        "scenarioRef"=> $distanceTotaleScenarioRef,
+
+                    ),
+                    "duree"=> array(
+                        "scenarioOptimalAvecContrainte"=> $dureeScenarioOptimalAvecContrainte,
+                        "scenarioOptimalSansContrainte"=> $dureeScenarioOptimalSansContrainte,
+                        "scenarioEquitableAvecContrainte"=> $dureeScenarioEquitableAvecContrainte,
+                        "scenarioEquitableSansContrainte"=> $dureeScenarioEquitableSansContrainte,
+                        "scenarioRef"=> $dureeScenarioRef,
+
+                    ),
+                );
+
+
+
+            }
+
+//            error_log("\n Service: Poules, Function: parserComparaisonScenario, datetime: ".$dateTimeNow
+//                ."\n detailsEquipeComparaison: ".print_r($detailsEquipeComparaison , true), 3, $this->error_log_path);
+
+
+
+            return $detailsEquipeComparaison ;
+
+        } catch (Exception $e) {
+            error_log("\n erreur PDO, Service: Poules, Function: sauvegarderParamsEnDB, datetime: ".$dateTimeNow."\n"
+                ."erreur: ".print_r($e, true), 3, $this->error_log_path);
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
+
+    }
+
+
+
+
     # retourner un objet PDO qu'on peut utiliser dans d'autres fonctions
     private function getPdo(){
         # récupérer les parametres de connexion
