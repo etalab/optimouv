@@ -404,10 +404,14 @@ def get_host_names_from_combination(plateauDistributionPerPool, combination):
 	try:
 		hostNames = {}
 	
-		logging.debug("  combination: %s" %combination)
-
 		for day, contentDay in plateauDistributionPerPool.items():
-			hostNames[day] = []
+			hostNamesTmp = []
+			
+			for indexGroup, group in enumerate(contentDay):
+# 				logging.debug("  group: %s" %group)
+				hostNamesTmp.append(group[combination[day][indexGroup]])
+			
+			hostNames[day] = hostNamesTmp
 		
 		return hostNames 
 			
