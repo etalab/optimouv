@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2c84b145db88da5650cc99634b530a77",
-    "content-hash": "32beffcca5676142058a59f1df5c34f2",
+    "hash": "9365d3473119e88b4cdfafe5b2e7c449",
+    "content-hash": "2bed7872438436feaec6c306f350aa88",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1596,17 +1596,17 @@
         },
         {
             "name": "sensio/distribution-bundle",
-            "version": "v4.0.4",
+            "version": "v4.0.5",
             "target-dir": "Sensio/Bundle/DistributionBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioDistributionBundle.git",
-                "reference": "cc0c9478da84f051da4465cf3a67f537ae758b13"
+                "reference": "c89375c9d95fc5afaeb99e7a49b428b6e3beb9d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioDistributionBundle/zipball/cc0c9478da84f051da4465cf3a67f537ae758b13",
-                "reference": "cc0c9478da84f051da4465cf3a67f537ae758b13",
+                "url": "https://api.github.com/repos/sensiolabs/SensioDistributionBundle/zipball/c89375c9d95fc5afaeb99e7a49b428b6e3beb9d3",
+                "reference": "c89375c9d95fc5afaeb99e7a49b428b6e3beb9d3",
                 "shasum": ""
             },
             "require": {
@@ -1652,7 +1652,7 @@
                 "configuration",
                 "distribution"
             ],
-            "time": "2015-11-26 18:10:31"
+            "time": "2016-02-12 16:21:25"
         },
         {
             "name": "sensio/framework-extra-bundle",
@@ -1752,58 +1752,6 @@
             ],
             "description": "A security checker for your composer.lock",
             "time": "2015-11-07 08:07:40"
-        },
-        {
-            "name": "slik/dompdf-bundle",
-            "version": "dev-master",
-            "target-dir": "Slik/DompdfBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/SlikNL/DompdfBundle.git",
-                "reference": "c7d5b15d12d5c74f6844ffdee755df453f656098"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/SlikNL/DompdfBundle/zipball/c7d5b15d12d5c74f6844ffdee755df453f656098",
-                "reference": "c7d5b15d12d5c74f6844ffdee755df453f656098",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3",
-                "symfony/framework-bundle": "2.*",
-                "symfony/symfony": "2.*"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-0": {
-                    "Slik\\DompdfBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "All Rights Reserved"
-            ],
-            "authors": [
-                {
-                    "name": "Christian Vermeulen",
-                    "email": "info@christianvermeulen.net",
-                    "homepage": "http://christianvermeulen.net",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Slik Internetbureau Rotterdam",
-                    "email": "info@slik.eu",
-                    "homepage": "https://slik.eu",
-                    "role": "Copyright Owner"
-                }
-            ],
-            "description": "A wrapper for using DomPDF inside Symfony 2",
-            "keywords": [
-                "bundle",
-                "development",
-                "symfony"
-            ],
-            "time": "2015-10-30 15:48:22"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -2232,16 +2180,16 @@
         },
         {
             "name": "videlalvaro/php-amqplib",
-            "version": "v2.6.0",
+            "version": "v2.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-amqplib/php-amqplib.git",
-                "reference": "8a6e89ad46130eb365b7f57d313f2a795f5e3269"
+                "reference": "2acff762b2cd15e5a57fce7e3ea6e8d8fb3d7171"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-amqplib/php-amqplib/zipball/8a6e89ad46130eb365b7f57d313f2a795f5e3269",
-                "reference": "8a6e89ad46130eb365b7f57d313f2a795f5e3269",
+                "url": "https://api.github.com/repos/php-amqplib/php-amqplib/zipball/2acff762b2cd15e5a57fce7e3ea6e8d8fb3d7171",
+                "reference": "2acff762b2cd15e5a57fce7e3ea6e8d8fb3d7171",
                 "shasum": ""
             },
             "require": {
@@ -2249,8 +2197,12 @@
                 "ext-mbstring": "*",
                 "php": ">=5.3.0"
             },
+            "replace": {
+                "videlalvaro/php-amqplib": "self.version"
+            },
             "require-dev": {
-                "phpunit/phpunit": "3.7.*"
+                "phpunit/phpunit": "^3.7",
+                "scrutinizer/ocular": "^1.1"
             },
             "suggest": {
                 "ext-sockets": "Use AMQPSocketConnection"
@@ -2258,7 +2210,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.7-dev"
                 }
             },
             "autoload": {
@@ -2272,17 +2224,29 @@
             ],
             "authors": [
                 {
-                    "name": "Alvaro Videla"
+                    "name": "Alvaro Videla",
+                    "role": "Original Maintainer"
+                },
+                {
+                    "name": "John Kelly",
+                    "email": "johnmkelly86@gmail.com",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Raúl Araya",
+                    "email": "nubeiro@gmail.com",
+                    "role": "Maintainer"
                 }
             ],
-            "description": "This library is a pure PHP implementation of the AMQP protocol. It's been tested against RabbitMQ.",
-            "homepage": "https://github.com/videlalvaro/php-amqplib/",
+            "description": "Formerly videlalvaro/php-amqplib.  This library is a pure PHP implementation of the AMQP protocol. It's been tested against RabbitMQ.",
+            "homepage": "https://github.com/php-amqplib/php-amqplib/",
             "keywords": [
                 "message",
                 "queue",
                 "rabbitmq"
             ],
-            "time": "2015-09-23 02:25:31"
+            "abandoned": "php-amqplib/php-amqplib",
+            "time": "2016-02-12 16:54:39"
         },
         {
             "name": "zendframework/zend-code",
@@ -2338,16 +2302,16 @@
         },
         {
             "name": "zendframework/zend-eventmanager",
-            "version": "3.0.0",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-eventmanager.git",
-                "reference": "8c9917f1595ff260f289439bdeb1f46500c65d62"
+                "reference": "5c80bdee0e952be112dcec0968bad770082c3a6e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-eventmanager/zipball/8c9917f1595ff260f289439bdeb1f46500c65d62",
-                "reference": "8c9917f1595ff260f289439bdeb1f46500c65d62",
+                "url": "https://api.github.com/repos/zendframework/zend-eventmanager/zipball/5c80bdee0e952be112dcec0968bad770082c3a6e",
+                "reference": "5c80bdee0e952be112dcec0968bad770082c3a6e",
                 "shasum": ""
             },
             "require": {
@@ -2358,11 +2322,11 @@
                 "container-interop/container-interop": "^1.1.0",
                 "phpunit/phpunit": "~4.0",
                 "squizlabs/php_codesniffer": "^2.0",
-                "zendframework/zend-stdlib": "^2.7.3"
+                "zendframework/zend-stdlib": "^2.7.3 || ^3.0"
             },
             "suggest": {
                 "container-interop/container-interop": "^1.1.0, to use the lazy listeners feature",
-                "zendframework/zend-stdlib": "^2.7.3, to use the FilterChain feature"
+                "zendframework/zend-stdlib": "^2.7.3 || ^3.0, to use the FilterChain feature"
             },
             "type": "library",
             "extra": {
@@ -2388,7 +2352,7 @@
                 "events",
                 "zf2"
             ],
-            "time": "2016-01-12 23:27:48"
+            "time": "2016-02-18 20:53:00"
         }
     ],
     "packages-dev": [
@@ -2443,9 +2407,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "slik/dompdf-bundle": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
