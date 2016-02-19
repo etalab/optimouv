@@ -356,16 +356,41 @@ def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSi
 """
 Function to calculate distance plateau for a given 3x4 matrix (plateau distribution)
 """
-def calculate_distance_plateau_from_3_4_matrix(plateauDistribution):
+def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPool):
 	try:
-		logging.debug("  plateauDistribution: %s" %plateauDistribution)
+		logging.debug("  plateauDistribution: %s" %plateauDistributionPerPool)
 
-		distance = 0
+		bestDistance = 0
+		
+		# initialize combination
+		combination = {}
+		for day, contentDay in plateauDistributionPerPool.items():
+			combination[day] = []
+			for indexGroup, group in enumerate(contentDay, start=1):
+				combination[day].append(0)
+		
+		logging.debug("  combination: %s" %combination)
+		
+		# calculate combination number
+		combinationNbr = 1
+		for day, contentDay in plateauDistributionPerPool.items():
+			logging.debug("  day: %s" %day)
+			for indexGroup, group in enumerate(contentDay, start=1):
+				logging.debug("  indexGroup: %s group: %s" %(indexGroup, group))
+				combinationNbr *= len(group)
+		# find the shortest distance
+# 					
+# 					# increment combination
+					
 		
 		
-		logging.debug("  distance: %s" %distance)
+		logging.debug("  combinationNbr: %s" %combinationNbr)
+		logging.debug("  bestDistance: %s" %bestDistance)
+		logging.debug("  combination: %s" %combination)
 		
-		return distance
+		result = {	"bestDistance": bestDistance, 
+					"combination": combination}
+		return result
 		
 	except Exception as e:
 		show_exception_traceback()
@@ -383,6 +408,7 @@ def create_encounters_from_pool_distribution_plateau(poolDistribution):
 			logging.debug("  teams: %s" %teams)
 			encountersPlateau[pool] = {}
 
+			# assign random value for each team
 			teamRandomValues = [round(random.random() * 100) for i in range(len(teams))]
 # 			logging.debug("  teamRandomValues: %s" %teamRandomValues)
 
@@ -403,23 +429,30 @@ def create_encounters_from_pool_distribution_plateau(poolDistribution):
 			eighthTeamAssigned = teams[indexSortedTeamRandomValues.index(8)]
 			ninthTeamAssigned = teams[indexSortedTeamRandomValues.index(9)]
 
+			# temporary plateau distribution per pool
+			plateauDistributionPerPoolTmp = {	1: [ 	[ firstTeamAssigned, secondTeamAssigned, thirdTeamAssigned ], 
+														[ fourthTeamAssigned, fifthTeamAssigned, sixthTeamAssigned ], 
+														[ seventhTeamAssigned, eighthTeamAssigned, ninthTeamAssigned] ],
+												2: [ 	[ thirdTeamAssigned, fifthTeamAssigned, eighthTeamAssigned ],
+														[ firstTeamAssigned, sixthTeamAssigned, ninthTeamAssigned ], 
+														[ secondTeamAssigned, fourthTeamAssigned, seventhTeamAssigned] ],
+												3: [ 	[ firstTeamAssigned, fourthTeamAssigned, eighthTeamAssigned], 
+														[ thirdTeamAssigned, sixthTeamAssigned, seventhTeamAssigned], 
+														[ secondTeamAssigned, fifthTeamAssigned, ninthTeamAssigned] ],
+												4: [ 	[ thirdTeamAssigned, fourthTeamAssigned, ninthTeamAssigned], 
+														[ secondTeamAssigned, sixthTeamAssigned, eighthTeamAssigned], 
+														[ firstTeamAssigned, fifthTeamAssigned, seventhTeamAssigned] ],
+											}
+			logging.debug("  plateauDistributionPerPoolTmp: %s" %plateauDistributionPerPoolTmp)
 
-			objTmp = {	1: [ 	[ firstTeamAssigned, secondTeamAssigned, thirdTeamAssigned ], 
-								[ fourthTeamAssigned, fifthTeamAssigned, sixthTeamAssigned ], 
-								[ seventhTeamAssigned, eighthTeamAssigned, ninthTeamAssigned] ],
-						2: [ 	[ thirdTeamAssigned, fifthTeamAssigned, eighthTeamAssigned ],
-								[ firstTeamAssigned, sixthTeamAssigned, ninthTeamAssigned ], 
-								[ secondTeamAssigned, fourthTeamAssigned, seventhTeamAssigned] ],
-						3: [ 	[ firstTeamAssigned, fourthTeamAssigned, eighthTeamAssigned], 
-								[ thirdTeamAssigned, sixthTeamAssigned, seventhTeamAssigned], 
-								[ secondTeamAssigned, fifthTeamAssigned, ninthTeamAssigned] ],
-						4: [ 	[ thirdTeamAssigned, fourthTeamAssigned, ninthTeamAssigned], 
-								[ secondTeamAssigned, sixthTeamAssigned, eighthTeamAssigned], 
-								[ firstTeamAssigned, fifthTeamAssigned, seventhTeamAssigned] ],
-					}
-			logging.debug("  objTmp: %s" %objTmp)
-
-			distanceTmp = calculate_distance_plateau_from_3_4_matrix(objTmp)
+			returnShortestDistance = calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPoolTmp)
+			
+			sys.exit()
+			
+			bestDistance = returnShortestDistance["bestDistance"]
+			logging.debug("  bestDistance: %s" %bestDistance)
+			combination = returnShortestDistance["combination"]
+			logging.debug("  combination: %s" %combination)
 
 
 			encountersPlateau[pool] = objTmp
