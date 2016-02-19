@@ -372,7 +372,7 @@ def convert_decimal_to_base3 (n):
 """
 Function to get combination from base3
 """
-def get_combination_from_base3(combinationInput, base3Tmp):
+def get_host_combination_from_base3(combinationInput, base3Tmp):
 	try:
 
 		combinationOutput = {}
@@ -400,7 +400,7 @@ def get_combination_from_base3(combinationInput, base3Tmp):
 """
 Function to get host names from Plateau distribution Per pool
 """
-def get_host_names_from_combination(plateauDistributionPerPool, combination):
+def get_host_ids_from_host_combination(plateauDistributionPerPool, combination):
 	try:
 		hostNames = {}
 	
@@ -430,26 +430,25 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 
 		bestDistance = 0
 		
-		# initialize combination
-		combination = {}
+		# initialize host combination
+		hostCombination = {}
 		for day, contentDay in plateauDistributionPerPool.items():
-			combination[day] = []
+			hostCombination[day] = []
 			for indexGroup, group in enumerate(contentDay, start=1):
-				combination[day].append(0)
+				hostCombination[day].append(0)
 		
-		logging.debug("  combination: %s" %combination)
+		logging.debug("  hostCombination: %s" %hostCombination)
 		
-		# calculate combination number
-		combinationNbr = 1
+		# calculate the total number of  host combination
+		hostCombinationNbr = 1
 		for day, contentDay in plateauDistributionPerPool.items():
 			logging.debug("  day: %s" %day)
 			for indexGroup, group in enumerate(contentDay, start=1):
 				logging.debug("  indexGroup: %s group: %s" %(indexGroup, group))
-				combinationNbr *= len(group)
+				hostCombinationNbr *= len(group)
 
 		# find the shortest distance
-		bestDistanceCombinationNbr = 0
-		for i in range(combinationNbr):
+		for i in range(hostCombinationNbr):
 			logging.debug("  i: %s " %(i))
 			
 			base3Tmp = str(convert_decimal_to_base3(i))
@@ -460,24 +459,24 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 				base3Tmp = '0' + base3Tmp
 			logging.debug("  base3Tmp: %s" %base3Tmp)
 
-			combination = get_combination_from_base3(combination, base3Tmp)
-			logging.debug("  combination: %s" %combination)
+			hostCombination = get_host_combination_from_base3(hostCombination, base3Tmp)
+			logging.debug("  hostCombination: %s" %hostCombination)
 
 			# get host names from combination
-			hostNames = get_host_names_from_combination(plateauDistributionPerPool, combination)
-			logging.debug("  hostNames: %s" %hostNames)
+			hostIds = get_host_ids_from_host_combination(plateauDistributionPerPool, hostCombination)
+			logging.debug("  hostIds: %s" %hostIds)
 
 
 			if i == 100:
 				break
 
 		
-		logging.debug("  combinationNbr: %s" %combinationNbr)
+		logging.debug("  hostCombinationNbr: %s" %hostCombinationNbr)
 		logging.debug("  bestDistance: %s" %bestDistance)
-		logging.debug("  combination: %s" %combination)
+		logging.debug("  hostCombination: %s" %hostCombination)
 		
 		result = {	"bestDistance": bestDistance, 
-					"combination": combination}
+					"hostCombination": hostCombination}
 		return result
 		
 	except Exception as e:
