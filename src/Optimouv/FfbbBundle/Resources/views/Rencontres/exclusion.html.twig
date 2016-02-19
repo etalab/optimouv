@@ -267,7 +267,7 @@
                                                                 <strong>{{ (distanceTotale/9 * 1.31)|round|number_format(0, ',', ' ') }}</strong>
                                                                 € pour réaliser les trajets de l'ensemble du scénario en minibus
 
-                                                            </a>
+                                                            </p>
                                                             <p class="list-group-item">
                                                                 <img src="{{ asset('bundles/ffbb/images/icons/car-icon.png') }}" width="20px" height="20px"/>
                                                                 <i style="padding-right: 10px"></i> <strong>{{ (distanceTotale * 0.157)|round|number_format(0, ',', ' ') }}</strong>
@@ -647,18 +647,6 @@
     {% block javascript %}
         <!-- /#page-wrapper -->
         <script type="text/javascript" charset="UTF-8">
-            {#function typeLieu() {#}
-                {#var idGroupe = {{idGroupe}};#}
-                {#if (document.getElementById("meilleurLieuOption").checked == true) {#}
-                    {#window.location.href = "{{ path('ffbb_rencontres', {'idGroupe':idGroupe}) }}";#}
-                {#}#}
-                {#else {#}
-                    {#window.location.href = "{{ path('ffbb_barycentre', {'idRapport':idGroupe}) }}";#}
-
-                {#}#}
-
-            {#}#}
-
 
         </script>
     {% endblock %}
