@@ -402,7 +402,7 @@
                                                                              </tr>
                                                                              </thead>
                                                                              <tbody>
-
+                                                                             {% set dureeTotaleScOptContrainte = "" %}
                                                                              {% for key, estimationDetailOptContrainte in estimationDetailsOptContrainte %}
                                                                                  {% set distanceOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].distanceTotale // 1000 %}
                                                                                  {% set distanceTotaleOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}
@@ -439,12 +439,32 @@
                                                                                      <td style="text-align:right"> {{ ((distanceTotaleOptContrainteDetail /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
                                                                                      <td style="text-align:right"> {{ ((distanceTotaleOptContrainteDetail /9)*0.185)|round|number_format(0, ',', ' ') }} </td>
                                                                                  </tr>
-
+                                                                                 {% set dureeTotaleScOptContrainte = dureeTotaleScOptContrainte + dureeTotaleOptContrainteDetail %}
                                                                              {% endfor %}
                                                                              <tr>
                                                                                  <td><strong> Totaux </strong></td>
                                                                                  <td style="text-align:right"> {{ distanceMin|number_format(0, ',', ' ') }}</td>
-                                                                                 <td style="text-align:right"> {{ dureeTotale|date('d H:i') }}</td>
+                                                                                 <td style="text-align:right">
+                                                                                     {#{{ dureeTotaleScOptContrainte|date('d H:i') }}#}
+
+                                                                                     {# récupérer le nbr de jour #}
+                                                                                     {% set nbrJourScOptContrainte = (dureeTotaleScOptContrainte/86400)|round %}
+                                                                                     {% if nbrJourScOptContrainte <10 %}
+                                                                                         {% set nbrJourScOptContrainte = "0"~nbrJourScOptContrainte %}
+                                                                                     {% endif %}
+                                                                                     {# récupérer le nbr d heure #}
+                                                                                     {% set nbrHeureScOptContrainte = ((dureeTotaleScOptContrainte%86400)/3600)|round %}
+                                                                                     {% if nbrHeureScOptContrainte <10 %}
+                                                                                         {% set nbrHeureScOptContrainte = "0"~nbrHeureScOptContrainte %}
+                                                                                     {% endif %}
+                                                                                     {# récupérer le nbr de minute #}
+                                                                                     {% set nbrMinScOptContrainte = (((dureeTotaleScOptContrainte%86400)%3600)/60)|round %}
+                                                                                     {% if nbrMinScOptContrainte <10 %}
+                                                                                         {% set nbrMinScOptContrainte = "0"~nbrMinScOptContrainte %}
+                                                                                     {% endif %}
+                                                                                     {{ nbrJourScOptContrainte}} {{ nbrHeureScOptContrainte }}:{{ nbrMinScOptContrainte }}
+
+                                                                                 </td>
                                                                                  <td style="text-align:right"> {{ (distanceTotale  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                                  <td style="text-align:right"> {{ (distanceTotale /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                                  <td style="text-align:right"> {{ (distanceTotale /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -804,7 +824,7 @@
                                                                          </thead>
                                                                          <tbody>
 
-
+                                                                         {% set dureeTotaleScEqContrainte = "" %}
                                                                          {% for key, estimationDetailEqContrainte in estimationDetailsEqContrainte %}
                                                                              {% set distanceEqContrainteDetail = estimationDetailsEqContrainte[ loop.index ].distanceTotale // 1000 %}
                                                                              {% set distanceTotaleEqContrainteDetail = estimationDetailsEqContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}
@@ -815,7 +835,6 @@
                                                                                  <td><strong> Poule {{ lettre }} </strong></td>
                                                                                  <td style="text-align:right"> {{ distanceEqContrainteDetail|number_format(0, ',', ' ') }}</td>
                                                                                  <td style="text-align:right">
-                                                                                     {#{{ dureeTotaleEqContrainteDetail|date('d H:i') }}#}
 
                                                                                      {# récupérer le nbr de jour #}
                                                                                      {% set nbrJour = (dureeTotaleEqContrainteDetail/86400)|round %}
@@ -842,12 +861,32 @@
                                                                                  <td style="text-align:right"> {{ ((distanceTotaleEqContrainteDetail /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
                                                                                  <td style="text-align:right"> {{ ((distanceTotaleEqContrainteDetail /9)*0.185)|round|number_format(0, ',', ' ') }} </td>
                                                                              </tr>
-
+                                                                             {% set dureeTotaleScEqContrainte = dureeTotaleScEqContrainte + dureeTotaleEqContrainteDetail %}
                                                                          {% endfor %}
                                                                          <tr>
                                                                              <td><strong> Totaux </strong></td>
                                                                              <td style="text-align:right"> {{distanceMinEqContrainte|number_format(0, ',', ' ') }}</td>
-                                                                             <td style="text-align:right"> {{ dureeTotaleEqContrainte|date('d H:i') }}</td>
+                                                                             <td style="text-align:right">
+
+                                                                                 {# récupérer le nbr de jour #}
+                                                                                 {% set nbrJourScEqContrainte = (dureeTotaleScEqContrainte/86400)|round %}
+                                                                                 {% if nbrJourScEqContrainte <10 %}
+                                                                                     {% set nbrJourScEqContrainte = "0"~nbrJourScEqContrainte %}
+                                                                                 {% endif %}
+                                                                                 {# récupérer le nbr d heure #}
+                                                                                 {% set nbrHeureScEqContrainte = ((dureeTotaleScEqContrainte%86400)/3600)|round %}
+                                                                                 {% if nbrHeureScEqContrainte <10 %}
+                                                                                     {% set nbrHeureScEqContrainte = "0"~nbrHeureScEqContrainte %}
+                                                                                 {% endif %}
+                                                                                 {# récupérer le nbr de minute #}
+                                                                                 {% set nbrMinScEqContrainte = (((dureeTotaleScEqContrainte%86400)%3600)/60)|round %}
+                                                                                 {% if nbrMinScEqContrainte <10 %}
+                                                                                     {% set nbrMinScEqContrainte = "0"~nbrMinScEqContrainte %}
+                                                                                 {% endif %}
+                                                                                 {{ nbrJourScEqContrainte }} {{ nbrHeureScEqContrainte }}:{{ nbrMinScEqContrainte }}
+
+
+                                                                             </td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleEqContrainte  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleEqContrainte /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleEqContrainte /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -1215,7 +1254,7 @@
                                                                          </thead>
                                                                          <tbody>
 
-
+                                                                         {% set dureeTotaleScOptSansContrainte = "" %}
                                                                          {% for key, estimationDetailOpSansContrainte in estimationDetailsOpSansContrainte %}
                                                                              {% set distanceOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotale // 1000 %}
                                                                              {% set distanceTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}
@@ -1226,7 +1265,6 @@
                                                                                  <td><strong> Poule {{ lettre }} </strong></td>
                                                                                  <td style="text-align:right"> {{distanceOpSansContrainteDetail|number_format(0, ',', ' ') }}</td>
                                                                                  <td style="text-align:right">
-                                                                                     {#{{ dureeTotaleOpSansContrainteDetail|date('d H:i') }}#}
 
                                                                                      {# récupérer le nbr de jour #}
                                                                                      {% set nbrJourOpSansContrainteDetailC = (dureeTotaleOpSansContrainteDetailC/86400)|round %}
@@ -1253,12 +1291,30 @@
                                                                                  <td style="text-align:right"> {{ ((distanceTotaleOpSansContrainteDetail /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
                                                                                  <td style="text-align:right"> {{ ((distanceTotaleOpSansContrainteDetail /9)*0.185)|round|number_format(0, ',', ' ') }} </td>
                                                                              </tr>
+                                                                             {% set dureeTotaleScOptSansContrainte = dureeTotaleScOptSansContrainte + dureeTotaleOpSansContrainteDetailC %}
 
                                                                          {% endfor %}
                                                                          <tr>
                                                                              <td><strong> Totaux </strong></td>
                                                                              <td style="text-align:right"> {{distanceMinOpSansContrainte|number_format(0, ',', ' ') }}</td>
-                                                                             <td style="text-align:right"> {{ dureeTotaleOpSansContrainte|date('d H:i') }}</td>
+                                                                             <td style="text-align:right">
+                                                                                 {# récupérer le nbr de jour #}
+                                                                                 {% set nbrJourScOptSansContrainte = (dureeTotaleScOptSansContrainte/86400)|round %}
+                                                                                 {% if nbrJourScOptSansContrainte <10 %}
+                                                                                     {% set nbrJourScOptSansContrainte = "0"~nbrJourScOptSansContrainte %}
+                                                                                 {% endif %}
+                                                                                 {# récupérer le nbr d heure #}
+                                                                                 {% set nbrHeureScOptSansContrainte = ((dureeTotaleScOptSansContrainte%86400)/3600)|round %}
+                                                                                 {% if nbrHeureScOptSansContrainte <10 %}
+                                                                                     {% set nbrHeureScOptSansContrainte = "0"~nbrHeureScOptSansContrainte %}
+                                                                                 {% endif %}
+                                                                                 {# récupérer le nbr de minute #}
+                                                                                 {% set nbrMinScOptSansContrainte = (((dureeTotaleScOptSansContrainte%86400)%3600)/60)|round %}
+                                                                                 {% if nbrMinScOptSansContrainte <10 %}
+                                                                                     {% set nbrMinScOptSansContrainte = "0"~nbrMinScOptSansContrainte %}
+                                                                                 {% endif %}
+                                                                                 {{ nbrJourScOptSansContrainte}} {{ nbrHeureScOptSansContrainte }}:{{ nbrMinScOptSansContrainte }}
+                                                                             </td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -1324,13 +1380,6 @@
 
                                                                  <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
                                                              </form>
-
-
-
-                                                             {#<button type="button"#}
-                                                                     {#class="btn btn-primary  pull-right">Exporter#}
-                                                             {#</button>#}
-
 
                                                          </div>
                                                      </div>
@@ -1624,8 +1673,7 @@
                                                                          </thead>
                                                                          <tbody>
 
-
-
+                                                                         {% set dureeTotaleScRefContrainte = "" %}
                                                                          {% for key, estimationDetailRef in estimationDetailsRef %}
                                                                              {% set distanceRefDetail = estimationDetailsRef[ loop.index ].distanceTotale // 1000 %}
                                                                              {% set distanceTotaleRefDetail = estimationDetailsRef[ loop.index ].distanceTotaleTousParticipants // 1000 %}
@@ -1637,7 +1685,6 @@
                                                                                  <td><strong> Poule {{ lettre }} </strong></td>
                                                                                  <td style="text-align:right"> {{distanceRefDetail|number_format(0, ',', ' ') }}</td>
                                                                                  <td style="text-align:right">
-                                                                                     {#{{ dureeTotaleRefDetail|date('d H:i') }}#}
 
                                                                                      {# récupérer le nbr de jour #}
                                                                                      {% set nbrJourRefDetailContrainte = (dureeTotaleRefDetail/86400)|round %}
@@ -1664,12 +1711,31 @@
                                                                                  <td style="text-align:right"> {{ ((distanceTotaleRefDetail /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
                                                                                  <td style="text-align:right"> {{ ((distanceTotaleRefDetail /9)*0.185)|round|number_format(0, ',', ' ') }} </td>
                                                                              </tr>
-
+                                                                             {% set dureeTotaleScRefContrainte = dureeTotaleScRefContrainte + dureeTotaleRefDetail %}
                                                                          {% endfor %}
                                                                          <tr>
                                                                              <td><strong> Totaux </strong></td>
                                                                              <td style="text-align:right"> {{ distanceMinRef|number_format(0, ',', ' ') }}</td>
-                                                                             <td style="text-align:right"> {{ dureeTotaleRef|date('d H:i') }}</td>
+                                                                             <td style="text-align:right">
+
+                                                                                 {# récupérer le nbr de jour #}
+                                                                                 {% set nbrJourScRefContrainte = (dureeTotaleScRefContrainte/86400)|round %}
+                                                                                 {% if nbrJourScRefContrainte <10 %}
+                                                                                     {% set nbrJourScRefContrainte = "0"~nbrJourScRefContrainte %}
+                                                                                 {% endif %}
+                                                                                 {# récupérer le nbr d heure #}
+                                                                                 {% set nbrHeureScRefContrainte = ((dureeTotaleScRefContrainte%86400)/3600)|round %}
+                                                                                 {% if nbrHeureScRefContrainte <10 %}
+                                                                                     {% set nbrHeureScRefContrainte = "0"~nbrHeureScRefContrainte %}
+                                                                                 {% endif %}
+                                                                                 {# récupérer le nbr de minute #}
+                                                                                 {% set nbrMinScRefContrainte = (((dureeTotaleScRefContrainte%86400)%3600)/60)|round %}
+                                                                                 {% if nbrMinScRefContrainte <10 %}
+                                                                                     {% set nbrMinScRefContrainte = "0"~nbrMinScRefContrainte %}
+                                                                                 {% endif %}
+                                                                                 {{ nbrJourScRefContrainte}} {{ nbrHeureScRefContrainte }}:{{ nbrMinScRefContrainte }}
+
+                                                                             </td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleRef  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleRef /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleRef /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -1999,7 +2065,7 @@
                                                                      </tr>
                                                                      </thead>
                                                                      <tbody>
-
+                                                                     {% set dureeTotaleScOpSansContrainteDetail = "" %}
 
                                                                      {% for key, estimationDetailOpSansContrainte in estimationDetailsOpSansContrainte %}
                                                                          {% set distanceOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotale // 1000 %}
@@ -2039,14 +2105,32 @@
                                                                              <td style="text-align:right"> {{ ((distanceTotaleOpSansContrainteDetail /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
                                                                              <td style="text-align:right"> {{ ((distanceTotaleOpSansContrainteDetail/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
                                                                          </tr>
+                                                                         {% set dureeTotaleScOpSansContrainteDetail = dureeTotaleScOpSansContrainteDetail + dureeTotaleOpSansContrainteDetail %}
 
                                                                      {% endfor %}
                                                                      <tr>
                                                                          <td><strong> Totaux </strong></td>
                                                                          <td style="text-align:right"> {{ distanceMinOpSansContrainte|number_format(0, ',', ' ') }}</td>
-                                                                         <td style="text-align:right"> {{ dureeTotaleOpSansContrainte|date('d H:i') }}</td>
+                                                                         <td style="text-align:right">
 
+                                                                             {# récupérer le nbr de jour #}
+                                                                             {% set nbrJourScOpSansContrainteDetail = (dureeTotaleScOpSansContrainteDetail/86400)|round %}
+                                                                             {% if nbrJourScOpSansContrainteDetail <10 %}
+                                                                                 {% set nbrJourScOpSansContrainteDetail = "0"~nbrJourScOpSansContrainteDetail %}
+                                                                             {% endif %}
+                                                                             {# récupérer le nbr d heure #}
+                                                                             {% set nbrHeureScOpSansContrainteDetail = ((dureeTotaleScOpSansContrainteDetail%86400)/3600)|round %}
+                                                                             {% if nbrHeureScOpSansContrainteDetail <10 %}
+                                                                                 {% set nbrHeureScOpSansContrainteDetail = "0"~nbrHeureScOpSansContrainteDetail %}
+                                                                             {% endif %}
+                                                                             {# récupérer le nbr de minute #}
+                                                                             {% set nbrMinScOpSansContrainteDetail = (((dureeTotaleScOpSansContrainteDetail%86400)%3600)/60)|round %}
+                                                                             {% if nbrMinScOpSansContrainteDetail <10 %}
+                                                                                 {% set nbrMinScOpSansContrainteDetail = "0"~nbrMinScOpSansContrainteDetail %}
+                                                                             {% endif %}
+                                                                             {{ nbrJourScOpSansContrainteDetail}} {{ nbrHeureScOpSansContrainteDetail }}:{{ nbrMinScOpSansContrainteDetail }}
 
+                                                                         </td>
                                                                          <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                          <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                          <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -2413,7 +2497,7 @@
                                                                      </thead>
                                                                      <tbody>
 
-
+                                                                     {% set dureeTotaleScEqDetailContrainte = "" %}
                                                                      {% for key, estimationDetailEqContrainte in estimationDetailsEqContrainte %}
                                                                          {% set distanceEqDetailContrainte = estimationDetailsEqContrainte[ loop.index ].distanceTotale // 1000 %}
                                                                          {% set distanceTotaleEqDetailContrainte = estimationDetailsEqContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}
@@ -2425,8 +2509,6 @@
                                                                              <td><strong> Poule {{ lettre }} </strong></td>
                                                                              <td style="text-align:right"> {{ distanceEqDetailContrainte|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right">
-
-                                                                                 {#{{ dureeTotaleEqDetailContrainte|date('d H:i') }}#}
 
                                                                                  {# récupérer le nbr de jour #}
                                                                                  {% set nbrJourEqDetailContrainte = (dureeTotaleEqDetailContrainte/86400)|round %}
@@ -2455,12 +2537,31 @@
                                                                              <td style="text-align:right"> {{ ((distanceTotaleEqDetailContrainte/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
                                                                          </tr>
 
+                                                                         {% set dureeTotaleScEqDetailContrainte = dureeTotaleScEqDetailContrainte + dureeTotaleEqDetailContrainte %}
 
                                                                      {% endfor %}
                                                                      <tr>
                                                                          <td><strong> Totaux </strong></td>
                                                                          <td style="text-align:right"> {{distanceMinEqContrainte|number_format(0, ',', ' ') }}</td>
-                                                                         <td style="text-align:right"> {{ dureeTotaleEqContrainte|date('d H:i') }}</td>
+                                                                         <td style="text-align:right">
+
+                                                                             {# récupérer le nbr de jour #}
+                                                                             {% set nbrJourScEqDetailContrainte = (dureeTotaleScEqDetailContrainte/86400)|round %}
+                                                                             {% if nbrJourScEqDetailContrainte <10 %}
+                                                                                 {% set nbrJourScEqDetailContrainte = "0"~nbrJourScEqDetailContrainte %}
+                                                                             {% endif %}
+                                                                             {# récupérer le nbr d heure #}
+                                                                             {% set nbrHeureScEqDetailContrainte = ((dureeTotaleScEqDetailContrainte%86400)/3600)|round %}
+                                                                             {% if nbrHeureScEqDetailContrainte <10 %}
+                                                                                 {% set nbrHeureScEqDetailContrainte = "0"~nbrHeureScEqDetailContrainte %}
+                                                                             {% endif %}
+                                                                             {# récupérer le nbr de minute #}
+                                                                             {% set nbrMinScEqDetailContrainte = (((dureeTotaleScEqDetailContrainte%86400)%3600)/60)|round %}
+                                                                             {% if nbrMinScEqDetailContrainte <10 %}
+                                                                                 {% set nbrMinScEqDetailContrainte = "0"~nbrMinScEqDetailContrainte %}
+                                                                             {% endif %}
+                                                                             {{ nbrJourScEqDetailContrainte}} {{ nbrHeureScEqDetailContrainte }}:{{ nbrMinScEqDetailContrainte }}
+                                                                         </td>
                                                                          <td style="text-align:right"> {{ (distanceTotaleEqContrainte  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                          <td style="text-align:right"> {{ (distanceTotaleEqContrainte /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                          <td style="text-align:right"> {{ (distanceTotaleEqContrainte /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -2833,7 +2934,7 @@
                                                                      </thead>
                                                                      <tbody>
 
-
+                                                                     {% set dureeTotaleScRefPasContrainte = "" %}
 
                                                                      {% for key, estimationDetailRef in estimationDetailsRef %}
                                                                          {% set distanceDetailRef = estimationDetailsRef[ loop.index ].distanceTotale // 1000 %}
@@ -2846,7 +2947,6 @@
                                                                              <td><strong> Poule {{ lettre }} </strong></td>
                                                                              <td style="text-align:right"> {{distanceDetailRef|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right">
-                                                                                 {#{{ dureeTotaleDetailRef|date('d H:i') }}#}
 
                                                                                  {# récupérer le nbr de jour #}
                                                                                  {% set nbrJourDetailRef = (dureeTotaleDetailRef/86400)|round %}
@@ -2865,7 +2965,6 @@
                                                                                  {% endif %}
                                                                                  {{ nbrJourDetailRef}} {{ nbrHeureDetailRef }}:{{ nbrMinDetailRef }}
 
-
                                                                              </td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleDetailRef  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                              <td style="text-align:right"> {{ (distanceTotaleDetailRef /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
@@ -2874,6 +2973,7 @@
                                                                              <td style="text-align:right"> {{ ((distanceTotaleDetailRef /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
                                                                              <td style="text-align:right"> {{ ((distanceTotaleDetailRef/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
                                                                          </tr>
+                                                                         {% set dureeTotaleScRefPasContrainte = dureeTotaleScRefPasContrainte + dureeTotaleDetailRef %}
 
                                                                      {% endfor %}
 
@@ -2881,7 +2981,25 @@
                                                                      <tr>
                                                                          <td><strong> Totaux </strong></td>
                                                                          <td style="text-align:right"> {{ distanceMinRef|number_format(0, ',', ' ') }}</td>
-                                                                         <td style="text-align:right"> {{ dureeTotaleRef|date('d H:i') }}</td>
+                                                                         <td style="text-align:right">
+
+                                                                             {# récupérer le nbr de jour #}
+                                                                             {% set nbrJourScRefPasContrainte = (dureeTotaleScRefPasContrainte/86400)|round %}
+                                                                             {% if nbrJourScRefPasContrainte <10 %}
+                                                                                 {% set nbrJourScRefPasContrainte = "0"~nbrJourScRefPasContrainte %}
+                                                                             {% endif %}
+                                                                             {# récupérer le nbr d heure #}
+                                                                             {% set nbrHeureScRefPasContrainte = ((dureeTotaleScRefPasContrainte%86400)/3600)|round %}
+                                                                             {% if nbrHeureScRefPasContrainte <10 %}
+                                                                                 {% set nbrHeureScRefPasContrainte = "0"~nbrHeureScRefPasContrainte %}
+                                                                             {% endif %}
+                                                                             {# récupérer le nbr de minute #}
+                                                                             {% set nbrMinScRefPasContrainte = (((dureeTotaleScRefPasContrainte%86400)%3600)/60)|round %}
+                                                                             {% if nbrMinScRefPasContrainte <10 %}
+                                                                                 {% set nbrMinScRefPasContrainte = "0"~nbrMinScRefPasContrainte %}
+                                                                             {% endif %}
+                                                                             {{ nbrJourScRefPasContrainte}} {{ nbrHeureScRefPasContrainte }}:{{ nbrMinScRefPasContrainte }}
+                                                                         </td>
                                                                          <td style="text-align:right"> {{ (distanceTotaleRef * 0.80 )|round|number_format(0, ',', ' ')   }}</td>
                                                                          <td style="text-align:right"> {{ (distanceTotaleRef /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                          <td style="text-align:right"> {{ (distanceTotaleRef /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
