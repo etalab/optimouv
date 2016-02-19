@@ -353,6 +353,36 @@ def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSi
 	except Exception as e:
 		show_exception_traceback()
 
+
+"""
+Function to convert decimal to base 3
+"""
+def convertDecimalToBase3 (n):
+	try:
+		if n == 0:
+			return '0'
+		nums = []
+		while n:
+			n, r = divmod(n, 3)
+			nums.append(str(r))
+		return ''.join(reversed(nums))
+	except Exception as e:
+		show_exception_traceback()
+
+"""
+Function to get combination from base3
+"""
+def get_combination_from_base3(combinationInput, base3Tmp):
+	try:
+		combinationOutput = {}
+		for day in combinationInput.items():
+			combinationOutput[day] = []
+		
+		
+		return combinationOutput
+	except Exception as e:
+		show_exception_traceback()
+
 """
 Function to calculate distance plateau for a given 3x4 matrix (plateau distribution)
 """
@@ -378,11 +408,25 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 			for indexGroup, group in enumerate(contentDay, start=1):
 				logging.debug("  indexGroup: %s group: %s" %(indexGroup, group))
 				combinationNbr *= len(group)
+
 		# find the shortest distance
-# 					
-# 					# increment combination
-					
-		
+		bestDistanceCombinationNbr = 1
+		for i in range(combinationNbr):
+			logging.debug("  i: %s " %(i))
+			
+			base3Tmp = convertDecimalToBase3(i)
+			logging.debug("  base3Tmp: %s" %base3Tmp)
+
+			combination = get_combination_from_base3(combination, base3Tmp)
+			logging.debug("  combination: %s" %combination)
+
+			# increment combination
+			
+			
+			
+			if i == 100:
+				break
+
 		
 		logging.debug("  combinationNbr: %s" %combinationNbr)
 		logging.debug("  bestDistance: %s" %bestDistance)
