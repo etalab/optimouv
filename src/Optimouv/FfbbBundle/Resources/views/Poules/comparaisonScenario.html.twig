@@ -31,7 +31,7 @@
                             <thead>
 
                                 <tr>
-                                    <th rowspan="2" style="text-align:center; vertical-align: middle; max-width: 20%">Equipes</th>
+                                    <th rowspan="2" style="text-align:center; vertical-align: middle; width: 20%">Equipes</th>
 
                                     {%  if contraintsExiste and refExiste %}
                                         <th colspan="4" style="text-align:center">Kilomètres à parcourir</th>
@@ -386,68 +386,68 @@
                                 <thead>
                                 <tr>
 
-                                    <th rowspan="2" style="text-align:center; vertical-align: middle; max-width: 20%">Equipes</th>
+                                    <th rowspan="2" style="text-align:center; vertical-align: middle; width: 10%">Equipes</th>
 
                                     {%  if contraintsExiste and refExiste %}
-                                        <th colspan="4" style="text-align:center; max-width: 20%" >Coût du parcours en voiture (€) </th>
-                                        <th colspan="4" style="text-align:center ; max-width: 20%">Coût du parcours en covoiturage (€) </th>
-                                        <th colspan="4" style="text-align:center ; max-width: 20%">Coût du parcours en minibus (€) </th>
+                                        <th colspan="4" style="text-align:center ; width: 20% " >Coût du parcours en voiture (€) </th>
+                                        <th colspan="4" style="text-align:center ; width: 20% ">Coût du parcours en covoiturage (€) </th>
+                                        <th colspan="4" style="text-align:center ; width: 20% ">Coût du parcours en minibus (€) </th>
                                     {%  elseif contraintsExiste and not refExiste %}
-                                        <th colspan="3" style="text-align:center">Coût du parcours en voiture (€) </th>
-                                        <th colspan="3" style="text-align:center">Coût du parcours en covoiturage (€) </th>
-                                        <th colspan="3" style="text-align:center">Coût du parcours en minibus (€) </th>
+                                        <th colspan="3" style="text-align:center ; width: 20%" >Coût du parcours en voiture (€) </th>
+                                        <th colspan="3" style="text-align:center ; width: 20%">Coût du parcours en covoiturage (€) </th>
+                                        <th colspan="3" style="text-align:center ; width: 20%">Coût du parcours en minibus (€) </th>
                                     {%  elseif not contraintsExiste and refExiste %}
-                                        <th colspan="3" style="text-align:center">Coût du parcours en voiture (€) </th>
-                                        <th colspan="3" style="text-align:center">Coût du parcours en covoiturage (€) </th>
-                                        <th colspan="3" style="text-align:center">Coût du parcours en minibus (€) </th>
+                                        <th colspan="3" style="text-align:center ; width: 20%">Coût du parcours en voiture (€) </th>
+                                        <th colspan="3" style="text-align:center ; width: 20%">Coût du parcours en covoiturage (€) </th>
+                                        <th colspan="3" style="text-align:center ; width: 20%">Coût du parcours en minibus (€) </th>
                                     {% else %}
-                                        <th colspan="2" style="text-align:center">Coût du parcours en voiture (€) </th>
-                                        <th colspan="2" style="text-align:center">Coût du parcours en covoiturage (€) </th>
-                                        <th colspan="2" style="text-align:center">Coût du parcours en minibus (€) </th>
+                                        <th colspan="2" style="text-align:center ; width: 20%">Coût du parcours en voiture (€) </th>
+                                        <th colspan="2" style="text-align:center ; width: 20%">Coût du parcours en covoiturage (€) </th>
+                                        <th colspan="2" style="text-align:center ; width: 20%">Coût du parcours en minibus (€) </th>
                                     {%  endif %}
 
                                 </tr>
                                 <tr>
                                     {%  if contraintsExiste and refExiste %}
-                                        <th style="text-align:center ; max-width: 10%;  vertical-align: middle; ">Scénario optimal</th>
-                                        <th style="text-align:center ; max-width: 10%;  vertical-align: middle; ">Scénario équitable</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario de référence</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario équitable</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario de référence</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario équitable</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario de référence</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; width: 5% ;  vertical-align: middle; ">Scénario optimal</th>
+                                        <th style="text-align:center ; width: 5% ;  vertical-align: middle; ">Scénario équitable</th>
+                                        <th style="text-align:center ; width: 5% ; vertical-align: middle;">Scénario de référence</th>
+                                        <th style="text-align:center ; width: 5% ; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; width: 5%; vertical-align: middle;">Scénario optimal</th>
+                                        <th style="text-align:center ; width: 5%; vertical-align: middle;">Scénario équitable</th>
+                                        <th style="text-align:center ; width: 5%; vertical-align: middle;">Scénario de référence</th>
+                                        <th style="text-align:center ; width: 5%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; width: 5%; vertical-align: middle;">Scénario optimal</th>
+                                        <th style="text-align:center ; width: 5%; vertical-align: middle;">Scénario équitable</th>
+                                        <th style="text-align:center ; width: 5%; vertical-align: middle;">Scénario de référence</th>
+                                        <th style="text-align:center ; width: 5%; vertical-align: middle;">Scénario optimal sans contrainte</th>
                                     {%  elseif contraintsExiste and not refExiste %}
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario équitable</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario équitable</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario équitable</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario optimal</th>
+                                        <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario équitable</th>
+                                        <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario optimal</th>
+                                        <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario équitable</th>
+                                        <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario optimal</th>
+                                        <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario équitable</th>
+                                        <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario optimal sans contrainte</th>
                                     {%  elseif not contraintsExiste and refExiste %}
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario de référence</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario de référence</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario de référence</th>
+                                        <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario équitable sans contrainte</th>
+                                        <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario de référence</th>
+                                        <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario équitable sans contrainte</th>
+                                        <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario de référence</th>
+                                        <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario équitable sans contrainte</th>
+                                        <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario de référence</th>
                                     {%  else %}
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
+                                        <th style="text-align:center ; width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
+                                        <th style="text-align:center ; width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
+                                        <th style="text-align:center ; width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                        <th style="text-align:center ; width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
                                     {%  endif %}
 
 
@@ -548,53 +548,71 @@
                             <table class="table table-striped table-hover table-bordered table-fixed" id="tableEmission" >
                                 <thead>
                                     <tr>
-                                        <th rowspan="2" style="text-align:center; vertical-align: middle; max-width: 20%">Equipes</th>
-                                        <th colspan="4" style="text-align:center">Emission GES en voiture individuelle (kilos équivalent C02) </th>
-                                        <th colspan="4" style="text-align:center">Emission GES en covoiturage (kilos équivalent C02) </th>
-                                        <th colspan="4" style="text-align:center">Emission GES en minibus (kilos équivalent C02) </th>
+                                        <th rowspan="2" style="text-align:center; vertical-align: middle; width: 10%">Equipes</th>
+
+                                        {%  if contraintsExiste and refExiste %}
+                                            <th colspan="4" style="text-align:center ; width: 20% ">Emission GES en voiture individuelle (kilos équivalent C02) </th>
+                                            <th colspan="4" style="text-align:center ; width: 20% ">Emission GES en covoiturage (kilos équivalent C02) </th>
+                                            <th colspan="4" style="text-align:center ; width: 20% ">Emission GES en minibus (kilos équivalent C02) </th>
+
+                                        {%  elseif contraintsExiste and not refExiste %}
+                                            <th colspan="3" style="text-align:center ; width: 20% ">Emission GES en voiture individuelle (kilos équivalent C02) </th>
+                                            <th colspan="3" style="text-align:center ; width: 20% ">Emission GES en covoiturage (kilos équivalent C02) </th>
+                                            <th colspan="3" style="text-align:center ; width: 20% ">Emission GES en minibus (kilos équivalent C02) </th>
+                                        {%  elseif not contraintsExiste and refExiste %}
+                                            <th colspan="3" style="text-align:center ; width: 20% ">Emission GES en voiture individuelle (kilos équivalent C02) </th>
+                                            <th colspan="3" style="text-align:center ; width: 20% ">Emission GES en covoiturage (kilos équivalent C02) </th>
+                                            <th colspan="3" style="text-align:center ; width: 20% ">Emission GES en minibus (kilos équivalent C02) </th>
+                                        {% else %}
+                                            <th colspan="2" style="text-align:center ; width: 20% ">Emission GES en voiture individuelle (kilos équivalent C02) </th>
+                                            <th colspan="2" style="text-align:center ; width: 20% ">Emission GES en covoiturage (kilos équivalent C02) </th>
+                                            <th colspan="2" style="text-align:center ; width: 20% ">Emission GES en minibus (kilos équivalent C02) </th>
+
+                                        {%  endif %}
+
                                     </tr>
 
                                     <tr>
                                         {%  if contraintsExiste and refExiste %}
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario équitable</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario de référence</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario équitable</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario de référence</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario équitable</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario de référence</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; width: 5%; vertical-align: middle;">Scénario optimal</th>
+                                            <th style="text-align:center ; width: 5%; vertical-align: middle;">Scénario équitable</th>
+                                            <th style="text-align:center ; width: 5%; vertical-align: middle;">Scénario de référence</th>
+                                            <th style="text-align:center ; width: 5%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; width: 5%; vertical-align: middle;">Scénario optimal</th>
+                                            <th style="text-align:center ; width: 5%; vertical-align: middle;">Scénario équitable</th>
+                                            <th style="text-align:center ; width: 5%; vertical-align: middle;">Scénario de référence</th>
+                                            <th style="text-align:center ; width: 5%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; width: 5%; vertical-align: middle;">Scénario optimal</th>
+                                            <th style="text-align:center ; width: 5%; vertical-align: middle;">Scénario équitable</th>
+                                            <th style="text-align:center ; width: 5%; vertical-align: middle;">Scénario de référence</th>
+                                            <th style="text-align:center ; width: 5%; vertical-align: middle;">Scénario optimal sans contrainte</th>
                                         {%  elseif contraintsExiste and not refExiste %}
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario équitable</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario équitable</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario équitable</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario optimal</th>
+                                            <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario équitable</th>
+                                            <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario optimal</th>
+                                            <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario équitable</th>
+                                            <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario optimal</th>
+                                            <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario équitable</th>
+                                            <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario optimal sans contrainte</th>
                                         {%  elseif not contraintsExiste and refExiste %}
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario de référence</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario de référence</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario de référence</th>
+                                            <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario équitable sans contrainte</th>
+                                            <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario de référence</th>
+                                            <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario équitable sans contrainte</th>
+                                            <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario de référence</th>
+                                            <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario équitable sans contrainte</th>
+                                            <th style="text-align:center ; width: 6.66%; vertical-align: middle;">Scénario de référence</th>
                                         {%  else %}
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                            <th style="text-align:center ; max-width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
+                                            <th style="text-align:center ; width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
+                                            <th style="text-align:center ; width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
+                                            <th style="text-align:center ; width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                            <th style="text-align:center ; width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
                                         {%  endif %}
 
                                     </tr>
@@ -701,12 +719,14 @@
 
         // responsive table distance
         $('#tableCout').DataTable({
-            responsive: true
+            responsive: true,
+            "autoWidth": false
         });
 
         // responsive table distance
         $('#tableEmission').DataTable({
-            responsive: true
+            responsive: true,
+            "autoWidth": false
         });
     });
 
