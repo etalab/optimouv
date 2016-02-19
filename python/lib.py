@@ -374,9 +374,23 @@ Function to get combination from base3
 """
 def get_combination_from_base3(combinationInput, base3Tmp):
 	try:
+
 		combinationOutput = {}
-		for day in combinationInput.items():
-			combinationOutput[day] = []
+		for day, combinationPerDay in combinationInput.items():
+			
+# 			logging.debug("  day: %s" %day)
+			fromIndex = (day-1)*3
+# 			logging.debug("  fromIndex: %s" %fromIndex)
+			toIndex = ((day-1)*3)+2
+# 			logging.debug("  toIndex: %s" %toIndex)
+			
+			combinationPerDayInput = base3Tmp[fromIndex:toIndex+1]
+# 			logging.debug("  combinationPerDayInput: %s" %combinationPerDayInput)
+			
+			
+			combinationOutput[day] = [int(value) for value in combinationPerDayInput]
+		
+		logging.debug("  combinationOutput: %s" %combinationOutput)
 		
 		
 		return combinationOutput
@@ -414,11 +428,16 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 		for i in range(combinationNbr):
 			logging.debug("  i: %s " %(i))
 			
-			base3Tmp = convertDecimalToBase3(i)
+			base3Tmp = str(convertDecimalToBase3(i))
+# 			logging.debug("  base3Tmp: %s" %base3Tmp)
+
+			# complete base3 to 12 characters
+			for k in range(12-len(base3Tmp)):
+				base3Tmp += '0' 
 			logging.debug("  base3Tmp: %s" %base3Tmp)
 
 			combination = get_combination_from_base3(combination, base3Tmp)
-			logging.debug("  combination: %s" %combination)
+# 			logging.debug("  combination: %s" %combination)
 
 			# increment combination
 			
