@@ -70,22 +70,6 @@
 <h4>Contraintes : {{ contrainte }} </h4>
 
 
-
-{#{% set pathCarte = "https://image.maps.api.here.com/mia/1.6/mapview?poi=" %}#}
-
-{#{% for key,coordPouleOpSansContrainte in coordPoulesOpSansContrainte %}#}
-
-    {#{% for coordonneeVilleOpSansContrainte in coordPouleOpSansContrainte %}#}
-        {#{% set  x = coordonneeVilleOpSansContrainte[0] %}#}
-        {#{% set y =  coordonneeVilleOpSansContrainte[1] %}#}
-        {#{% set xy = x~"%2C"~y %}#}
-        {#{% set coordEq = coordEq~xy~"%2C" %}#}
-
-    {#{% endfor %}#}
-
-    {#{% set coordEq = coordEq[:-3] %}#}
-{#{% endfor %}#}
-
 {% set couleur = ['080830', 'd00c05', 'f1c62a', '0d5c35', 'd400ff', '5eb6dd', '8fcf3c', 'ff5900', 'ff73bf', '52251c', '0a1574', 'ff9300', '6b1a6a', '41ab7b','c2314e', '444459', 'b99654', 'a44906', '023548', 'b2b2b2', '616600', '790000', '147376', 'd4cd4a', '95b37c', '006d80' ] %}
 {% for key,coordPouleOpSansContrainte in coordPoulesOpSansContrainte %}
     {% set coordEq ="" %}
@@ -98,9 +82,8 @@
 
     {% endfor %}
     {% set coordEq = coordEq[:-3] %}
-    {#{{ key }}: {{ coordEq }}#}
     {% set Marker = couleur[key] %}
-    <img src="https://image.maps.api.here.com/mia/1.6/mapview?poi={{ coordEq }}&ml=fre&poitxs=16&poifc={{ Marker }}&app_id={{ app_id }}&amp;app_code={{ app_code }}&z=6&w=1024&h=600" style="margin-left: 40px">
+    <img src="https://image.maps.api.here.com/mia/1.6/mapview?poi={{ coordEq }}&ml=fre&poitxs=16&poifc={{ Marker }}&app_id={{ app_id }}&amp;app_code={{ app_code }}&z=6&w=400&h=200" style="margin-left: 40px">
     <div style="page-break-after:always;"></div>
 {% endfor %}
 
