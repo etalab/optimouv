@@ -357,7 +357,7 @@ def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSi
 """
 Function to convert decimal to base 3
 """
-def convertDecimalToBase3 (n):
+def convert_decimal_to_base3 (n):
 	try:
 		if n == 0:
 			return '0'
@@ -390,12 +390,32 @@ def get_combination_from_base3(combinationInput, base3Tmp):
 			
 			combinationOutput[day] = [int(value) for value in combinationPerDayInput]
 		
-		logging.debug("  combinationOutput: %s" %combinationOutput)
+# 		logging.debug("  combinationOutput: %s" %combinationOutput)
 		
 		
 		return combinationOutput
 	except Exception as e:
 		show_exception_traceback()
+
+"""
+Function to get host names from Plateau distribution Per pool
+"""
+def get_host_names_from_combination(plateauDistributionPerPool, combination):
+	try:
+		hostNames = {}
+	
+		logging.debug("  combination: %s" %combination)
+
+		for day, contentDay in plateauDistributionPerPool.items():
+			hostNames[day] = []
+		
+		return hostNames 
+			
+	except Exception as e:
+		show_exception_traceback()
+
+
+
 
 """
 Function to calculate distance plateau for a given 3x4 matrix (plateau distribution)
@@ -424,25 +444,26 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 				combinationNbr *= len(group)
 
 		# find the shortest distance
-		bestDistanceCombinationNbr = 1
+		bestDistanceCombinationNbr = 0
 		for i in range(combinationNbr):
 			logging.debug("  i: %s " %(i))
 			
-			base3Tmp = str(convertDecimalToBase3(i))
+			base3Tmp = str(convert_decimal_to_base3(i))
 # 			logging.debug("  base3Tmp: %s" %base3Tmp)
 
 			# complete base3 to 12 characters
 			for k in range(12-len(base3Tmp)):
-				base3Tmp += '0' 
+				base3Tmp = '0' + base3Tmp
 			logging.debug("  base3Tmp: %s" %base3Tmp)
 
 			combination = get_combination_from_base3(combination, base3Tmp)
-# 			logging.debug("  combination: %s" %combination)
+			logging.debug("  combination: %s" %combination)
 
-			# increment combination
-			
-			
-			
+			# get host names from combination
+			hostNames = get_host_names_from_combination(plateauDistributionPerPool, combination)
+			logging.debug("  hostNames: %s" %hostNames)
+
+
 			if i == 100:
 				break
 
