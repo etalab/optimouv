@@ -113,22 +113,22 @@ old_sound_rabbit_mq:
                rencontre:
                    connection: default
                    exchange_options:
-                       name: 'rencontre_exchange'
+                       name: "%mq_rencontre_exchange%"
                        type: direct
 
                poule:
                    connection: default
                    exchange_options:
-                       name: 'poule_exchange'
+                       name: "%mq_poule_exchange%"
                        type: direct
        consumers:
                rencontre:
                    connection: default
                    exchange_options:
-                       name: 'rencontre_exchange'
+                       name: "%mq_rencontre_exchange%"
                        type: direct
                    queue_options:
-                       name: 'rencontre_queue'
+                       name: "%mq_rencontre_queue%"
                    callback: service_calcul_rencontre
 
 knp_snappy:

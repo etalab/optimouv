@@ -20,4 +20,7 @@ parameters:
     error_log_path: error_log_optimouv.txt
     base_url: optimouv
     path_wkhtmltopdf: "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
+    mq_rencontre_exchange: rencontre_exchange
+    mq_poule_exchange: poule_exchange
+    mq_rencontre_queue: rencontre_queue
 
