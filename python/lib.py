@@ -535,6 +535,79 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 		show_exception_traceback()
 
 """
+Function to get encounters details from member combination ids
+"""
+def get_encounters_details_from_member_combination_ids(memberCombinationIds):
+	try:
+		encountersDetailsPlateau = {}
+
+		for day, contentDay in memberCombinationIds.items():
+			encountersDetailsPlateau[day] = []
+			
+			for group, contentGroup in contentDay.items():
+				groupTmp = {
+							"hoteId": contentGroup["hostId"],
+							"premierEquipeId": contentGroup["memberIds"][0],
+							"deuxiemeEquipeId": contentGroup["memberIds"][1],
+							"distanceGroupe": contentGroup["distanceGroup"],
+							
+						}
+				
+				# get city name and postal code of host
+				sql = "select ville, nom, code_postal from entite where id=%s"%contentGroup["hostId"]
+				hostCity, hostName, hostPostalCode =   db.fetchone_multi(sql)
+				groupTmp["hoteVille"] = hostCity
+				groupTmp["hoteNom"] = hostName
+				groupTmp["hoteCodePostal"] = hostPostalCode
+
+# 				logging.debug("  hostCity: %s" %hostCity)
+# 				logging.debug("  hostName: %s" %hostName)
+# 				logging.debug("  hostPostalCode: %s" %hostPostalCode)
+				
+				# get city name and postal code of first team
+				sql = "select ville, nom, code_postal, participants from entite where id=%s"%contentGroup["memberIds"][0]
+				firstTeamCity, firstTeamName, firstTeamPostalCode, firstTeamParticipantsNbr =   db.fetchone_multi(sql)
+				groupTmp["premierEquipeVille"] = firstTeamCity
+				groupTmp["premierEquipeNom"] = firstTeamName
+				groupTmp["premierEquipeCodePostal"] = firstTeamPostalCode
+				groupTmp["nbrParticipants"] = firstTeamParticipantsNbr
+				
+
+				# get city name and postal code of second team
+				sql = "select ville, nom, code_postal from entite where id=%s"%contentGroup["memberIds"][1]
+				secondTeamCity, secondTeamName, secondTeamPostalCode =   db.fetchone_multi(sql)
+				groupTmp["deuxiemeEquipeVille"] = secondTeamCity
+				groupTmp["deuxiemeEquipeNom"] = secondTeamName
+				groupTmp["deuxiemeEquipeCodePostal"] = secondTeamPostalCode
+
+				# get distance for all participants
+				groupTmp["distanceGroupeTousParticipants"] = groupTmp["distanceGroupe"] * groupTmp["nbrParticipants"]
+
+				# get travel time for the group
+				travelTime = 0
+				travelIds = []
+				travellNames = []
+				for memberId in contentGroup["memberIds"]:
+					sql = "select duree from trajet where depart=%s and destination=%s"%(memberId, contentGroup["hostId"])
+					travelTime += int(db.fetchone(sql))
+					travelIds.append([contentGroup["hostId"], memberId])
+
+					sql = "select ville from entite where id=%s"%memberId
+					memberName = db.fetchone(sql)
+					travellNames.append([hostName, memberName ] )
+				groupTmp["dureeGroupe"] = travelTime
+				groupTmp["deplacementsIds"] = travelIds
+				groupTmp["deplacementsNoms"] = travellNames
+
+				encountersDetailsPlateau[day].append(groupTmp)
+			
+		return encountersDetailsPlateau
+
+	except Exception as e:
+		show_exception_traceback()
+
+
+"""
 Function to create encounters from pool distribution for match plateau
 """
 def create_encounters_from_pool_distribution_plateau(poolDistribution):
@@ -543,12 +616,14 @@ def create_encounters_from_pool_distribution_plateau(poolDistribution):
 
 		logging.debug("")
 
+		bestDistancePerPool = {}
 		for pool, teams in poolDistribution.items():
 			logging.debug("  teams: %s" %teams)
 			encountersPlateau[pool] = {}
 
 			# init vars
-			bestDistance = 0
+			bestDistancePerPool[pool] = 0
+			bestMemberCombinationIds = {}
 			for i in range(config.INPUT.IterPlateau):
 				logging.debug(" ----------------------------------  iteration match plateau: %s ----------------------------------------" %i)
 
@@ -594,35 +669,34 @@ def create_encounters_from_pool_distribution_plateau(poolDistribution):
 				
 				# for first iteration
 				if i == 0:
-					bestDistance = returnShortestDistance["bestDistance"]
-					logging.debug("  bestDistance: %s" %bestDistance)
+					bestDistancePerPool[pool] = returnShortestDistance["bestDistance"]
+					logging.debug("  bestDistance: %s" %bestDistancePerPool[pool])
 
-# 					bestHostCombinationIndex = returnShortestDistance["bestHostCombinationIndex"]
-# 					logging.debug("  bestHostCombinationIndex: %s" %bestHostCombinationIndex)
-	
 					bestMemberCombinationIds = returnShortestDistance["bestMemberCombinationIds"]
-# 					logging.debug("  bestMemberCombinationIds: %s" %bestMemberCombinationIds)
-	
-					encountersPlateau[pool] = bestMemberCombinationIds
+# 					logging.debug("  bestMemberCombinationIds: %s" %bestMemberCombinationIds)	
 
 				# for second onward iterations
 				else:
-					if returnShortestDistance["bestDistance"] < bestDistance:
-						bestDistance = returnShortestDistance["bestDistance"]
-						logging.debug("  bestDistance: %s" %bestDistance)
+					if returnShortestDistance["bestDistance"] < bestDistancePerPool[pool]:
+						bestDistancePerPool[pool] = returnShortestDistance["bestDistance"]
+						logging.debug("  bestDistance: %s" %bestDistancePerPool[pool])
 				
 						bestMemberCombinationIds = returnShortestDistance["bestMemberCombinationIds"]
 # 						logging.debug("  bestMemberCombinationIds: %s" %bestMemberCombinationIds)
 		
-						encountersPlateau[pool] = bestMemberCombinationIds
-
 
 			logging.debug(" ----------------------------------  FINISHED ITERATION PLATEAU --------------------------------------------")
-	
+			logging.debug(" bestMemberCombinationIds: %s "%bestMemberCombinationIds)
+		
+			# get encounter details from member combination ids
+			encountersDetailsPlateauPerPool = get_encounters_details_from_member_combination_ids(bestMemberCombinationIds)
+# 			logging.debug(" encountersDetailsPlateauPerPool: \n%s "%json.dumps(encountersDetailsPlateauPerPool))
+			
+			encountersPlateau[pool] = encountersDetailsPlateauPerPool
+			
 		logging.debug(" ")
-		logging.debug(" bestDistance: %s "%bestDistance)
-		logging.debug("  encountersPlateau: \n%s" %json.dumps(encountersPlateau))
-		sys.exit()
+		logging.debug(" bestDistancePerPool: %s "%bestDistancePerPool)
+# 		logging.debug("  encountersPlateau: \n%s" %json.dumps(encountersPlateau))
 
 		return encountersPlateau 
 
