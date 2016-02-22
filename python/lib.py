@@ -419,13 +419,13 @@ def get_member_combination_ids_from_host_combination_index(plateauDistributionPe
 				if hostId in memberIds:
 					memberIds.remove(hostId)
 				
-				distance = 0
+				distanceGroup = 0
 				
 				for memberId in memberIds:
-					sql = "select distance from trajet where depart=%s and destination=%s"%(hostId, memberId)
-					distanceTmp = db.fetchone()
+					sql = "select distance from trajet where depart=%s and destination=%s"%(memberId, hostId)
+					distanceGroup += int(db.fetchone(sql))
 				
-				memberCombinationIds[day][indexGroup+1] = {"hostId": hostId, "memberIds": memberIds, "distance": distance}
+				memberCombinationIds[day][indexGroup+1] = {"hostId": hostId, "memberIds": memberIds, "distanceGroup": distanceGroup}
 			
 		
 		return memberCombinationIds
