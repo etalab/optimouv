@@ -433,7 +433,20 @@ def get_member_combination_ids_from_host_combination_index(plateauDistributionPe
 	except Exception as e:
 		show_exception_traceback()
 
-
+"""
+Function to get distance for a certain member combination ids
+"""
+def get_distance_for_member_combination_ids(memberCombinationIds):
+	try:
+		distanceMemberCombination = 0
+		
+		for day, contentDay in memberCombinationIds.items():
+			for group, contentGroup in contentDay.items():
+				distanceMemberCombination += contentGroup["distanceGroup"]
+		
+		return distanceMemberCombination
+	except Exception as e:
+		show_exception_traceback()
 
 
 """
@@ -480,7 +493,10 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 			# get host names from combination
 			memberCombinationIds = get_member_combination_ids_from_host_combination_index(plateauDistributionPerPool, hostCombinationIndex)
 			logging.debug("  memberCombinationIds: %s" %memberCombinationIds)
-
+			
+			# calculate distance total for a specific member combination
+			distanceMemberCombination = get_distance_for_member_combination_ids(memberCombinationIds)
+			logging.debug("  distanceMemberCombination: %s" %distanceMemberCombination)
 
 			if i == 100:
 				break
