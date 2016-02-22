@@ -1123,12 +1123,8 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			
 		else:
 			results["params"]["phantomExiste"] = 0
-			results["params"]["varEquipeParPoulePossible"] = 1
-			maxVarTeamNbrPerPool = poolSize - 2
-			results["params"]["varEquipeParPouleProposition"] = list(range(0, maxVarTeamNbrPerPool+1 ))
-			# limit variation of team member to max 2
-			if len(results["params"]["varEquipeParPouleProposition"]) > 3:
-				results["params"]["varEquipeParPouleProposition"] = results["params"]["varEquipeParPouleProposition"][:3]
+			results["params"]["varEquipeParPoulePossible"] = 0
+			results["params"]["varEquipeParPouleProposition"] = [0]
 
 		logging.debug(" ########################################## PLATEAU　MATCH ###############################################")
 
@@ -1320,24 +1316,111 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		logging.debug(" sumInfo_EquitableWithoutConstraint: \n%s" %sumInfo_EquitableWithoutConstraint)
 
 
+		if statusConstraints:
+			logging.debug("")
+			logging.debug(" ####################### RESULT OPTIMAL WITH CONSTRAINT #############################################")
+		
+			# optimize distance pool only if pool numer is more than 1
+			if poolNbr > 1:
+				# optimal scenario with constraint
+				for iterLaunch in range(config.INPUT.IterLaunchPlateau):
+					logging.debug(" -----------------------------   iterLaunch: %s -------------------------------------" %iterLaunch)
+					# launch calculation based on ref scenario only if the params are comparable
+					if iterLaunch == 0:
+						if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
+							P_Mat_OptimalWithConstraint = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr)#
+						else:
+		 					P_Mat_OptimalWithConstraint = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr)#
+					else:
+		 				P_Mat_OptimalWithConstraint = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_OptimalWithConstraint, D_Mat, iter, teamNbr)#
+	# 
+				chosenDistance_OptimalWithConstraint = calculate_V_value(P_Mat_OptimalWithConstraint, D_Mat)
+				logging.debug(" chosenDistance_OptimalWithConstraint: %s" %chosenDistance_OptimalWithConstraint)
+		
+				# get pool distribution
+				poolDistribution_OptimalWithConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithConstraint, teamNbr, poolNbr, poolSize, teams)
 
+	
+			# optimize distance pool only if pool numer is 1
+			elif poolNbr == 1:
+				poolDistribution_OptimalWithConstraint = {1: sorted(teams)}
+				logging.debug(" poolDistribution_OptimalWithConstraint: %s" %poolDistribution_OptimalWithConstraint)
+	
+			# eliminate phnatom teams
+			poolDistribution_OptimalWithConstraint = eliminate_phantom_in_pool_distribution(poolDistribution_OptimalWithConstraint)
+			results["scenarioOptimalAvecContrainte"]["poulesId"] = poolDistribution_OptimalWithConstraint
+			logging.debug(" poolDistribution_OptimalWithConstraint: %s" %poolDistribution_OptimalWithConstraint)
+	
+			# get coordinates for each point in the pools
+			poolDistributionCoords_OptimalWithConstraint = get_coords_pool_distribution(poolDistribution_OptimalWithConstraint)
+			results["scenarioOptimalAvecContrainte"]["poulesCoords"] = poolDistributionCoords_OptimalWithConstraint
+	
+			# optimize distance for each pool
+			encounters_OptimalWithConstraint_Plateau = create_encounters_from_pool_distribution_plateau(poolDistribution_OptimalWithConstraint)
+			results["scenarioOptimalAvecContrainte"]["rencontreDetails"] = encounters_OptimalWithConstraint_Plateau
+	
+			# get pool details from encounters
+			poolDetails_OptimalWithConstraint_Plateau = create_pool_details_from_encounters_plateau(encounters_OptimalWithConstraint_Plateau, poolDistribution_OptimalWithConstraint)
+			results["scenarioOptimalAvecContrainte"]["estimationDetails"] = poolDetails_OptimalWithConstraint_Plateau
+	# 		logging.debug(" poolDetailsRefPlateau: \n%s" %poolDetailsRefPlateau)
+	
+			# get sum info from pool details
+			sumInfo_OptimalWithConstraint = get_sum_info_from_pool_details(poolDetails_OptimalWithConstraint_Plateau)
+			results["scenarioOptimalAvecContrainte"]["estimationGenerale"] = sumInfo_OptimalWithConstraint
+			logging.debug(" sumInfo_OptimalWithConstraint: \n%s" %sumInfo_OptimalWithConstraint)
 
+			logging.debug("")
+			logging.debug(" ######################### RESULT EQUITABLE WITH CONSTRAINT ############################################")
+	
+			# optimize distance pool only if pool numer is more than 1
+			if poolNbr > 1:
+				# equitable scenario with constraint
+				for iterLaunch in range(config.INPUT.IterLaunchPlateau):
+					logging.debug(" -----------------------------   iterLaunch: %s -------------------------------------" %iterLaunch)
+					# launch calculation based on ref scenario only if the params are comparable
+					if iterLaunch == 0:
+						if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
+							P_Mat_EquitableWithConstraint = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr)#
+						else:
+		 					P_Mat_EquitableWithConstraint = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr)#
+					else:
+		 				P_Mat_EquitableWithConstraint = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_EquitableWithConstraint, D_Mat, iter, teamNbr)#
+	# 
+				chosenDistance_EquitableWithConstraint = calculate_V_value(P_Mat_EquitableWithConstraint, D_Mat)
+				logging.debug(" chosenDistance_EquitableWithConstraint: %s" %chosenDistance_EquitableWithConstraint)
+		
+				# get pool distribution
+				poolDistribution_EquitableWithConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithConstraint, teamNbr, poolNbr, poolSize, teams)
 
 	
-		logging.debug("")
-		logging.debug(" ####################### RESULT OPTIMAL WITH CONSTRAINT #############################################")
+			# optimize distance pool only if pool numer is 1
+			elif poolNbr == 1:
+				poolDistribution_EquitableWithConstraint = {1: sorted(teams)}
+				logging.debug(" poolDistribution_EquitableWithConstraint: %s" %poolDistribution_EquitableWithConstraint)
 	
-		logging.debug("")
-		logging.debug(" ######################### RESULT EQUITABLE WITH CONSTRAINT ############################################")
+			# eliminate phnatom teams
+			poolDistribution_EquitableWithConstraint = eliminate_phantom_in_pool_distribution(poolDistribution_EquitableWithConstraint)
+			results["scenarioEquitableAvecContrainte"]["poulesId"] = poolDistribution_EquitableWithConstraint
+			logging.debug(" poolDistribution_EquitableWithConstraint: %s" %poolDistribution_EquitableWithConstraint)
 	
+			# get coordinates for each point in the pools
+			poolDistributionCoords_EquitableWithConstraint = get_coords_pool_distribution(poolDistribution_EquitableWithConstraint)
+			results["scenarioEquitableAvecContrainte"]["poulesCoords"] = poolDistributionCoords_EquitableWithConstraint
 	
+			# optimize distance for each pool
+			encounters_EquitableWithConstraint_Plateau = create_encounters_from_pool_distribution_plateau(poolDistribution_EquitableWithConstraint)
+			results["scenarioEquitableAvecContrainte"]["rencontreDetails"] = encounters_EquitableWithConstraint_Plateau
 	
+			# get pool details from encounters
+			poolDetails_EquitableWithConstraint_Plateau = create_pool_details_from_encounters_plateau(encounters_EquitableWithConstraint_Plateau, poolDistribution_EquitableWithConstraint)
+			results["scenarioEquitableAvecContrainte"]["estimationDetails"] = poolDetails_EquitableWithConstraint_Plateau
+	# 		logging.debug(" poolDetailsRefPlateau: \n%s" %poolDetailsRefPlateau)
 	
+			# get sum info from pool details
+			sumInfo_EquitableWithConstraint = get_sum_info_from_pool_details(poolDetails_EquitableWithConstraint_Plateau)
+			results["scenarioEquitableAvecContrainte"]["estimationGenerale"] = sumInfo_EquitableWithConstraint
+			logging.debug(" sumInfo_EquitableWithConstraint: \n%s" %sumInfo_EquitableWithConstraint)
 	
-	
-	
-	
-# 		sys.exit()
 
 		return results
 
