@@ -456,8 +456,6 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 	try:
 		logging.debug("  plateauDistribution: %s" %plateauDistributionPerPool)
 
-		bestDistance = 0
-		
 		# initialize host combination
 		hostCombinationIndex = {}
 		for day, contentDay in plateauDistributionPerPool.items():
@@ -475,9 +473,19 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 				logging.debug("  indexGroup: %s group: %s" %(indexGroup, group))
 				hostCombinationNbr *= len(group)
 
+		logging.debug("  hostCombinationNbr: %s" %hostCombinationNbr)
+
 		# find the shortest distance
+		bestHostCombinationIndex = {}
+		bestMemberCombinationIds = {}
+		bestDistanceMemberCombination = 0
+		bestIterationNbr = 0
 		for i in range(hostCombinationNbr):
-			logging.debug("  i: %s " %(i))
+			if i%100 == 0:
+				logging.debug("  i: %s " %(i))
+
+			if i == 100:
+				break
 			
 			base3Tmp = str(convert_decimal_to_base3(i))
 # 			logging.debug("  base3Tmp: %s" %base3Tmp)
@@ -488,26 +496,39 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 # 			logging.debug("  base3Tmp: %s" %base3Tmp)
 
 			hostCombinationIndex = get_host_combination_index_from_base3(hostCombinationIndex, base3Tmp)
-			logging.debug("  hostCombinationIndex: %s" %hostCombinationIndex)
+# 			logging.debug("  hostCombinationIndex: %s" %hostCombinationIndex)
 
 			# get host names from combination
 			memberCombinationIds = get_member_combination_ids_from_host_combination_index(plateauDistributionPerPool, hostCombinationIndex)
-			logging.debug("  memberCombinationIds: %s" %memberCombinationIds)
+# 			logging.debug("  memberCombinationIds: %s" %memberCombinationIds)
 			
 			# calculate distance total for a specific member combination
 			distanceMemberCombination = get_distance_for_member_combination_ids(memberCombinationIds)
-			logging.debug("  distanceMemberCombination: %s" %distanceMemberCombination)
+# 			logging.debug("  distanceMemberCombination: %s" %distanceMemberCombination)
 
-			if i == 100:
-				break
+			# compare with current best value
+			if i == 0:
+				bestDistanceMemberCombination = distanceMemberCombination
+				bestHostCombinationIndex = hostCombinationIndex
+				bestMemberCombinationIds = memberCombinationIds
+				
+			if distanceMemberCombination < bestDistanceMemberCombination:
+				bestDistanceMemberCombination = distanceMemberCombination
+				bestHostCombinationIndex = hostCombinationIndex
+				bestMemberCombinationIds = memberCombinationIds
+				bestIterationNbr = i
+
 
 		
-		logging.debug("  hostCombinationNbr: %s" %hostCombinationNbr)
-		logging.debug("  bestDistance: %s" %bestDistance)
-		logging.debug("  hostCombinationIndex: %s" %hostCombinationIndex)
+		logging.debug("  bestIterationNbr: %s" %bestIterationNbr)
+		logging.debug("  bestDistanceMemberCombination: %s" %bestDistanceMemberCombination)
+		logging.debug("  bestHostCombinationIndex: %s" %bestHostCombinationIndex)
+		logging.debug("  bestMemberCombinationIds: %s" %bestMemberCombinationIds)
 		
-		result = {	"bestDistance": bestDistance, 
-					"hostCombinationIndex": hostCombinationIndex}
+		result = {	"bestDistance": bestDistanceMemberCombination, 
+					"bestHostCombinationIndex": bestHostCombinationIndex,
+					"bestMemberCombinationIds": bestMemberCombinationIds,
+					}
 		return result
 		
 	except Exception as e:
