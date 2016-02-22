@@ -556,8 +556,8 @@ def get_encounters_details_from_member_combination_ids(memberCombinationIds):
 				# get city name and postal code of host
 				sql = "select ville, nom, code_postal from entite where id=%s"%contentGroup["hostId"]
 				hostCity, hostName, hostPostalCode =   db.fetchone_multi(sql)
-				groupTmp["hoteVille"] = hostCity
-				groupTmp["hoteNom"] = hostName
+				groupTmp["hoteVille"] = hostCity.replace("'", u"''")
+				groupTmp["hoteNom"] = hostName.replace("'", u"''")
 				groupTmp["hoteCodePostal"] = hostPostalCode
 
 # 				logging.debug("  hostCity: %s" %hostCity)
@@ -567,8 +567,8 @@ def get_encounters_details_from_member_combination_ids(memberCombinationIds):
 				# get city name and postal code of first team
 				sql = "select ville, nom, code_postal, participants from entite where id=%s"%contentGroup["memberIds"][0]
 				firstTeamCity, firstTeamName, firstTeamPostalCode, firstTeamParticipantsNbr =   db.fetchone_multi(sql)
-				groupTmp["premierEquipeVille"] = firstTeamCity
-				groupTmp["premierEquipeNom"] = firstTeamName
+				groupTmp["premierEquipeVille"] = firstTeamCity.replace("'", u"''")
+				groupTmp["premierEquipeNom"] = firstTeamName.replace("'", u"''")
 				groupTmp["premierEquipeCodePostal"] = firstTeamPostalCode
 				groupTmp["nbrParticipants"] = firstTeamParticipantsNbr
 				
@@ -576,8 +576,8 @@ def get_encounters_details_from_member_combination_ids(memberCombinationIds):
 				# get city name and postal code of second team
 				sql = "select ville, nom, code_postal from entite where id=%s"%contentGroup["memberIds"][1]
 				secondTeamCity, secondTeamName, secondTeamPostalCode =   db.fetchone_multi(sql)
-				groupTmp["deuxiemeEquipeVille"] = secondTeamCity
-				groupTmp["deuxiemeEquipeNom"] = secondTeamName
+				groupTmp["deuxiemeEquipeVille"] = secondTeamCity.replace("'", u"''")
+				groupTmp["deuxiemeEquipeNom"] = secondTeamName.replace("'", u"''")
 				groupTmp["deuxiemeEquipeCodePostal"] = secondTeamPostalCode
 
 				# get distance for all participants
@@ -594,7 +594,7 @@ def get_encounters_details_from_member_combination_ids(memberCombinationIds):
 
 					sql = "select ville from entite where id=%s"%memberId
 					memberName = db.fetchone(sql)
-					travellNames.append([hostName, memberName ] )
+					travellNames.append([hostName.replace("'", u"''"), memberName.replace("'", u"''") ] )
 				groupTmp["dureeGroupe"] = travelTime
 				groupTmp["deplacementsIds"] = travelIds
 				groupTmp["deplacementsNoms"] = travellNames
