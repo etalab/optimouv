@@ -489,7 +489,7 @@
                                                                  <div class="tab-pane fade" id="listeRencontresScOpt">
                                                                      <div class="table-responsive" style="padding-top: 10px; max-height: 400px; overflow-y: scroll;">
 
-                                                                         <table id="exampleTerrain" class="display"
+                                                                         <table id="scOpAvecContrainte" class="display"
                                                                                 cellspacing="0"
                                                                                 width="100%">
 
@@ -532,10 +532,44 @@
                                                                              </tbody>
                                                                              {% elseif typeMatch == 'plateau' %}
 
+                                                                                 <thead>
+                                                                                 <tr>
+                                                                                     <th style="font-weight: bold !important;">Poules</th>
+                                                                                     <th>Journée</th>
+                                                                                     <th>Equipe Hôte</th>
+                                                                                     <th>Equipes Adverses</th>
+
+                                                                                 </tr>
+                                                                                 </thead>
+                                                                                 <tbody>
+
+                                                                                 {% for poule, contenuPoule in rencontreDetailsOptContrainte %}
+                                                                                     {% set lettre = alphabet[poule-1] %}
+                                                                                     {% for journee, contenuJournee in contenuPoule %}
+                                                                                         <tr>
+                                                                                             <td ><strong> Poule {{ lettre }}  </strong></td>
+                                                                                             <td>
+                                                                                                 {{ journee }}
+                                                                                             </td>
+                                                                                             <td>
+                                                                                                 {% for contenuGroup in contenuJournee %}
+                                                                                                     {{ contenuGroup.hoteNom }} <br/> <br/>
+                                                                                                 {% endfor %}
+                                                                                             </td>
+                                                                                             <td>
+                                                                                                 {% for contenuGroup in contenuJournee %}
+                                                                                                     {{ contenuGroup.premierEquipeNom }} <br/>
+                                                                                                     {{ contenuGroup.deuxiemeEquipeNom }} <br/>
+                                                                                                 {% endfor %}
+                                                                                             </td>
+
+                                                                                         </tr>
+
+                                                                                     {% endfor %}
 
 
-
-
+                                                                                 {% endfor %}
+                                                                                 </tbody>
 
 
 
@@ -966,6 +1000,49 @@
                                                                          </tbody>
                                                                          {% elseif typeMatch == 'plateau' %}
 
+
+                                                                             <thead>
+                                                                             <tr>
+                                                                                 <th style="font-weight: bold !important;">Poules</th>
+                                                                                 <th>Journée</th>
+                                                                                 <th>Equipe Hôte</th>
+                                                                                 <th>Equipes Adverses</th>
+
+                                                                             </tr>
+                                                                             </thead>
+                                                                             <tbody>
+
+                                                                             {% for poule, contenuPoule in rencontreDetailsEqContrainte %}
+                                                                                 {% set lettre = alphabet[poule-1] %}
+                                                                                 {% for journee, contenuJournee in contenuPoule %}
+                                                                                     <tr>
+                                                                                         <td ><strong> Poule {{ lettre }}  </strong></td>
+                                                                                         <td>
+                                                                                             {{ journee }}
+                                                                                         </td>
+                                                                                         <td>
+                                                                                             {% for contenuGroup in contenuJournee %}
+                                                                                                 {{ contenuGroup.hoteNom }} <br/> <br/>
+                                                                                             {% endfor %}
+                                                                                         </td>
+                                                                                         <td>
+                                                                                             {% for contenuGroup in contenuJournee %}
+                                                                                                 {{ contenuGroup.premierEquipeNom }} <br/>
+                                                                                                 {{ contenuGroup.deuxiemeEquipeNom }} <br/>
+                                                                                             {% endfor %}
+                                                                                         </td>
+
+                                                                                     </tr>
+
+                                                                                 {% endfor %}
+
+
+                                                                             {% endfor %}
+                                                                             </tbody>
+
+
+
+
                                                                          {% endif %}
 
                                                                      </table>
@@ -1356,7 +1433,7 @@
                                                              <div class="tab-pane fade" id="listeRencontresOptSansContrainte">
                                                                  <div class="table-responsive" style="padding-top: 10px; max-height: 400px; overflow-y: scroll;">
 
-                                                                     <table id="scEqSansContrainte" class="display"
+                                                                     <table id="scOpSansContrainte" class="display"
                                                                             cellspacing="0"
                                                                             width="100%">
                                                                          {% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}
@@ -1394,6 +1471,47 @@
 
                                                                          </tbody>
                                                                          {% elseif typeMatch == 'plateau' %}
+
+                                                                             <thead>
+                                                                             <tr>
+                                                                                 <th style="font-weight: bold !important;">Poules</th>
+                                                                                 <th>Journée</th>
+                                                                                 <th>Equipe Hôte</th>
+                                                                                 <th>Equipes Adverses</th>
+
+                                                                             </tr>
+                                                                             </thead>
+                                                                             <tbody>
+
+                                                                             {% for poule, contenuPoule in rencontreDetailsOpSansContrainte %}
+                                                                                 {% set lettre = alphabet[poule-1] %}
+                                                                                 {% for journee, contenuJournee in contenuPoule %}
+                                                                                     <tr>
+                                                                                         <td ><strong> Poule {{ lettre }}  </strong></td>
+                                                                                         <td>
+                                                                                             {{ journee }}
+                                                                                         </td>
+                                                                                         <td>
+                                                                                             {% for contenuGroup in contenuJournee %}
+                                                                                                 {{ contenuGroup.hoteNom }} <br/> <br/>
+                                                                                             {% endfor %}
+                                                                                         </td>
+                                                                                         <td>
+                                                                                             {% for contenuGroup in contenuJournee %}
+                                                                                                 {{ contenuGroup.premierEquipeNom }} <br/>
+                                                                                                 {{ contenuGroup.deuxiemeEquipeNom }} <br/>
+                                                                                             {% endfor %}
+                                                                                         </td>
+
+                                                                                     </tr>
+
+                                                                                 {% endfor %}
+
+
+                                                                             {% endfor %}
+                                                                             </tbody>
+
+
 
                                                                          {% endif %}
 
@@ -2197,7 +2315,6 @@
                                                                      </thead>
 
 
-
                                                                      <tbody >
                                                                          {% for key, rencontreDetailOpSansContrainte in rencontreDetailsOpSansContrainte %}
                                                                              {% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ loop.index ] %}
@@ -2658,7 +2775,7 @@
                                                          <div class="tab-pane fade" id="listeRencontresScEq">
                                                              <div class="table-responsive" style="padding-top: 10px; max-height: 400px; overflow-y: scroll;">
 
-                                                                 <table id="scEqAvecContrainte" class="display"
+                                                                 <table id="scEqSansContrainte" class="display"
                                                                         cellspacing="0"
                                                                         width="100%">
                                                                      {% if typeMatch == 'allerRetour' or typeMatch == 'allerSimple'  %}
@@ -2696,6 +2813,47 @@
                                                                          {% endfor %}
                                                                      </tbody>
                                                                      {% elseif typeMatch == 'plateau' %}
+
+                                                                         <thead>
+                                                                         <tr>
+                                                                             <th style="font-weight: bold !important;">Poules</th>
+                                                                             <th>Journée</th>
+                                                                             <th>Equipe Hôte</th>
+                                                                             <th>Equipes Adverses</th>
+
+                                                                         </tr>
+                                                                         </thead>
+                                                                         <tbody>
+
+                                                                         {% for poule, contenuPoule in rencontreDetailsEqContrainte %}
+                                                                             {% set lettre = alphabet[poule-1] %}
+                                                                             {% for journee, contenuJournee in contenuPoule %}
+                                                                                 <tr>
+                                                                                     <td ><strong> Poule {{ lettre }}  </strong></td>
+                                                                                     <td>
+                                                                                         {{ journee }}
+                                                                                     </td>
+                                                                                     <td>
+                                                                                         {% for contenuGroup in contenuJournee %}
+                                                                                             {{ contenuGroup.hoteNom }} <br/> <br/>
+                                                                                         {% endfor %}
+                                                                                     </td>
+                                                                                     <td>
+                                                                                         {% for contenuGroup in contenuJournee %}
+                                                                                             {{ contenuGroup.premierEquipeNom }} <br/>
+                                                                                             {{ contenuGroup.deuxiemeEquipeNom }} <br/>
+                                                                                         {% endfor %}
+                                                                                     </td>
+
+                                                                                 </tr>
+
+                                                                             {% endfor %}
+
+
+                                                                         {% endfor %}
+                                                                         </tbody>
+
+
 
                                                                      {% endif %}
 
