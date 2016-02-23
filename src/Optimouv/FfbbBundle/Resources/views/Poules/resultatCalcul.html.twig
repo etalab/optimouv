@@ -492,45 +492,56 @@
                                                                          <table id="exampleTerrain" class="display"
                                                                                 cellspacing="0"
                                                                                 width="100%">
-                                                                             <thead>
-                                                                             <tr>
-                                                                                 <th style="font-weight: bold !important;">
-                                                                                     Poules
-                                                                                 </th>
-                                                                                 <th>Rencontres</th>
 
-                                                                             </tr>
-                                                                             </thead>
-                                                                             <tbody>
 
                                                                              {% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}
 
-                                                                                 {% for key, rencontreDetailOptContrainte in rencontreDetailsOptContrainte %}
-                                                                                     {% set distanceOptContrainte = rencontreDetailsOptContrainte[ loop.index ] %}
-                                                                                     {% set lettre = alphabet[key-1] %}
-                                                                                     <tr>
-                                                                                         <td><strong> Poule {{ lettre }} </strong></td>
 
-                                                                                         <td>
-                                                                                             <ul>
-                                                                                                 {% for keyDetail, detailsRencontreOpContrainte in distanceOptContrainte %}
-                                                                                                     <li>
-                                                                                                         {#{{ distanceOptContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceOptContrainte[ loop.index ].equipeDestinationVille }}#}
-                                                                                                         {{ distanceOptContrainte[ loop.index ].equipeDepartNom }} ~ {{ distanceOptContrainte[ loop.index ].equipeDestinationNom }}
-                                                                                                     </li>
+                                                                             <thead>
+                                                                                 <tr>
+                                                                                     <th style="font-weight: bold !important;">
+                                                                                         Poules
+                                                                                     </th>
+                                                                                     <th>Rencontres</th>
 
-                                                                                                 {% endfor %}
-                                                                                             </ul>
-                                                                                         </td>
-                                                                                     </tr>
+                                                                                 </tr>
+                                                                             </thead>
+                                                                             <tbody>
 
-                                                                                 {% endfor %}
+
+                                                                             {% for key, rencontreDetailOptContrainte in rencontreDetailsOptContrainte %}
+                                                                                 {% set distanceOptContrainte = rencontreDetailsOptContrainte[ loop.index ] %}
+                                                                                 {% set lettre = alphabet[key-1] %}
+                                                                                 <tr>
+                                                                                     <td><strong> Poule {{ lettre }} </strong></td>
+
+                                                                                     <td>
+                                                                                         <ul>
+                                                                                             {% for keyDetail, detailsRencontreOpContrainte in distanceOptContrainte %}
+                                                                                                 <li>
+                                                                                                     {#{{ distanceOptContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceOptContrainte[ loop.index ].equipeDestinationVille }}#}
+                                                                                                     {{ distanceOptContrainte[ loop.index ].equipeDepartNom }} ~ {{ distanceOptContrainte[ loop.index ].equipeDestinationNom }}
+                                                                                                 </li>
+
+                                                                                             {% endfor %}
+                                                                                         </ul>
+                                                                                     </td>
+                                                                                 </tr>
+
+                                                                             {% endfor %}
+                                                                             </tbody>
                                                                              {% elseif typeMatch == 'plateau' %}
+
+
+
+
+
+
+
 
                                                                              {% endif %}
 
 
-                                                                             </tbody>
                                                                          </table>
 
                                                                      </div>
@@ -918,6 +929,7 @@
                                                                      <table id="scEqAvecContrainte" class="display"
                                                                             cellspacing="0"
                                                                             width="100%">
+                                                                         {% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}
                                                                          <thead>
                                                                          <tr>
                                                                              <th style="font-weight: bold !important;">
@@ -928,8 +940,6 @@
                                                                          </tr>
                                                                          </thead>
                                                                          <tbody>
-
-                                                                         {% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}
 
                                                                              {% for keyEqContrainte, rencontreDetailEqContrainte in rencontreDetailsEqContrainte %}
                                                                                  {% set distanceEqContrainte = rencontreDetailsEqContrainte[ loop.index ] %}
@@ -953,11 +963,11 @@
 
                                                                                  </tr>
                                                                              {% endfor %}
+                                                                         </tbody>
                                                                          {% elseif typeMatch == 'plateau' %}
 
                                                                          {% endif %}
 
-                                                                         </tbody>
                                                                      </table>
 
                                                                  </div>
@@ -1349,6 +1359,7 @@
                                                                      <table id="scEqSansContrainte" class="display"
                                                                             cellspacing="0"
                                                                             width="100%">
+                                                                         {% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}
                                                                          <thead>
                                                                          <tr>
                                                                              <th style="font-weight: bold !important;">
@@ -1360,7 +1371,6 @@
                                                                          </thead>
                                                                          <tbody>
 
-                                                                         {% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}
                                                                              {% for keyOptSansContrainte, rencontreDetailOpSansContrainte in rencontreDetailsOpSansContrainte %}
                                                                                  {% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ loop.index ] %}
                                                                                  {% set lettre = alphabet[keyOptSansContrainte-1] %}
@@ -1382,12 +1392,12 @@
 
                                                                              {% endfor %}
 
+                                                                         </tbody>
                                                                          {% elseif typeMatch == 'plateau' %}
 
                                                                          {% endif %}
 
 
-                                                                         </tbody>
                                                                      </table>
 
                                                                  </div>
@@ -2172,24 +2182,24 @@
                                                          <div class="tab-pane fade" id="listeRencontresOptSansContrainte">
                                                              <div class="table-responsive" style="padding-top: 10px; max-height: 400px; overflow-y: scroll;">
 
-                                                                 <table id="scEqSansContrainte" class="display"
+                                                                 <table id="scOpSansContrainte" class="display"
                                                                         cellspacing="0"
                                                                         width="100%">
 
-                                                                         <thead>
-                                                                     <tr>
-                                                                         <th style="font-weight: bold !important;">
-                                                                             Poules
-                                                                         </th>
-                                                                         <th>Rencontres</th>
-                                                                     </tr>
+                                                                     {% if typeMatch == 'allerRetour' or typeMatch == 'allerSimple'  %}
+                                                                     <thead>
+                                                                         <tr>
+                                                                             <th style="font-weight: bold !important;">
+                                                                                 Poules
+                                                                             </th>
+                                                                             <th>Rencontres</th>
+                                                                         </tr>
                                                                      </thead>
 
 
 
-                                                                         <tbody >
-                                                                         {% if typeMatch == 'allerRetour' or typeMatch == 'allerSimple'  %}
-                                                                             {% for key, rencontreDetailOpSansContrainte in rencontreDetailsOpSansContrainte %}
+                                                                     <tbody >
+                                                                         {% for key, rencontreDetailOpSansContrainte in rencontreDetailsOpSansContrainte %}
                                                                              {% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ loop.index ] %}
 
                                                                              <tr>
@@ -2197,26 +2207,64 @@
                                                                              <td><strong> Poule {{ lettre }} </strong></td>
 
                                                                              <td>
-                                                                             <ul>
-                                                                             {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
-                                                                             <li>
-                                                                             {#{{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }} ~  {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}#}
-                                                                             {{ distanceOptSansContrainte[ loop.index ].equipeDepartNom }} ~  {{ distanceOptSansContrainte[ loop.index ].equipeDestinationNom }}
-                                                                             </li>
-
-                                                                             {% endfor %}
-                                                                             </ul>
+                                                                                 <ul>
+                                                                                 {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
+                                                                                     <li>
+                                                                                     {#{{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }} ~  {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}#}
+                                                                                     {{ distanceOptSansContrainte[ loop.index ].equipeDepartNom }} ~  {{ distanceOptSansContrainte[ loop.index ].equipeDestinationNom }}
+                                                                                     </li>
+                                                                                 {% endfor %}
+                                                                                 </ul>
                                                                              </td>
 
                                                                              </tr>
+                                                                         {% endfor %}
+
+                                                                     </tbody>
+
+                                                                     {% elseif typeMatch == 'plateau' %}
+                                                                     <thead>
+                                                                         <tr>
+                                                                             <th style="font-weight: bold !important;">Poules</th>
+                                                                             <th>Journée</th>
+                                                                             <th>Equipe Hôte</th>
+                                                                             <th>Equipes Adverses</th>
+
+                                                                         </tr>
+                                                                     </thead>
+                                                                     <tbody>
+
+                                                                     {% for poule, contenuPoule in rencontreDetailsOpSansContrainte %}
+                                                                         {% set lettre = alphabet[poule-1] %}
+                                                                         {% for journee, contenuJournee in contenuPoule %}
+                                                                             <tr>
+                                                                                 <td ><strong> Poule {{ lettre }}  </strong></td>
+                                                                                 <td>
+                                                                                 {{ journee }}
+                                                                                 </td>
+                                                                                 <td>
+                                                                                 {% for contenuGroup in contenuJournee %}
+                                                                                 {{ contenuGroup.hoteNom }} <br/> <br/>
+                                                                                 {% endfor %}
+                                                                                 </td>
+                                                                                 <td>
+                                                                                 {% for contenuGroup in contenuJournee %}
+                                                                                 {{ contenuGroup.premierEquipeNom }} <br/>
+                                                                                 {{ contenuGroup.deuxiemeEquipeNom }} <br/>
+                                                                                 {% endfor %}
+                                                                                 </td>
+
+                                                                             </tr>
+
+                                                                         {% endfor %}
 
 
-                                                                             {% endfor %}
-                                                                         {% elseif typeMatch == 'plateau' %}
+                                                                     {% endfor %}
+                                                                     </tbody>
 
-                                                                         {%  endif %}
 
-                                                                         </tbody>
+                                                                     {%  endif %}
+
 
 
                                                                  </table>
@@ -2613,6 +2661,7 @@
                                                                  <table id="scEqAvecContrainte" class="display"
                                                                         cellspacing="0"
                                                                         width="100%">
+                                                                     {% if typeMatch == 'allerRetour' or typeMatch == 'allerSimple'  %}
                                                                      <thead>
                                                                      <tr>
                                                                          <th style="font-weight: bold !important;">
@@ -2625,7 +2674,6 @@
                                                                      </thead>
                                                                      <tbody>
 
-                                                                     {% if typeMatch == 'allerRetour' or typeMatch == 'allerSimple'  %}
                                                                          {% for keyEqContrainte, rencontreDetailEqContrainte in rencontreDetailsEqContrainte %}
                                                                          {% set distanceEqContrainte = rencontreDetailsEqContrainte[ loop.index ] %}
                                                                          {% set lettre = alphabet[keyEqContrainte-1] %}
@@ -2646,6 +2694,7 @@
 
                                                                          </tr>
                                                                          {% endfor %}
+                                                                     </tbody>
                                                                      {% elseif typeMatch == 'plateau' %}
 
                                                                      {% endif %}
@@ -2653,7 +2702,6 @@
 
 
 
-                                                                     </tbody>
                                                                  </table>
 
                                                              </div>
