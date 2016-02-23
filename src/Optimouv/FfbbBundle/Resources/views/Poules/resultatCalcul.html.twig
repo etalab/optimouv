@@ -3084,13 +3084,6 @@
                                                                              {% set lettre = alphabet[poule-1] %}
                                                                              {% for journee, contenuJournee in contenuPoule %}
                                                                                  <tr>
-                                                                                     {#{% if loop.index == 1 %}#}
-                                                                                         {#&#123;&#35;<td rowspan="4"><strong> Poule {{ lettre }}</strong></td>&#35;&#125;#}
-                                                                                         {#<td ><strong> Poule {{ lettre }}</strong></td>#}
-                                                                                         {#{% else %}#}
-                                                                                             {#<td ></td>#}
-                                                                                     {#{% endif %}#}
-
                                                                                          <td ><strong> Poule {{ lettre }}  </strong></td>
                                                                                          <td>
                                                                                              {{ journee }}
