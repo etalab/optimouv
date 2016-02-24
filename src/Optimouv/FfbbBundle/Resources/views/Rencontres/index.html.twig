@@ -91,7 +91,7 @@
                     </div>
 
                 </div>
-                <form style="padding-left:20px;"  action="{{ path('ffbb_lancer_producer', {'idGroupe':idGroupe}) }}" method="POST">
+                <form style="padding-left:20px;"  action="{{ path('ffbb_lancer_producer', {'idGroupe':idGroupe}) }}" method="POST" onsubmit="msgLancement()">
 
                     <input type="hidden" name="rencontre" value="terrainNeutre">
 
@@ -681,7 +681,9 @@
     {% block javascript %}
         <!-- /#page-wrapper -->
         <script type="text/javascript" charset="UTF-8">
-
+            function msgLancement(){
+                alert("Le calcul est en cours. Vous recevrez un mail pour vous avertir de la mise à disposition de vos résultats de calculs");
+            }
         </script>
     {% endblock %}
 
