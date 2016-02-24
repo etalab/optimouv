@@ -46,7 +46,7 @@
                             Type de lieu
                         </div>
 
-                        <form style="padding-left:20px;" action="{{ path('ffbb_lancer_producer', {'idGroupe':idGroupe}) }}" method="POST">
+                        <form style="padding-left:20px;" action="{{ path('ffbb_lancer_producer', {'idGroupe':idGroupe}) }}" method="POST" onsubmit="msgLancement()">
 
                             <div class="radio">
                                 <label>

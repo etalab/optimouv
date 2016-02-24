@@ -50,7 +50,7 @@
                         Type de lieu
                     </div>
                     {#{{ dump(meilleurLieuOption.value) }}#}
-                    <form name="typeLieux" style="padding-left:20px;"  action="{{ path('ffbb_lancer_producer', {'idGroupe':idGroupe}) }}" method="POST">
+                    <form name="typeLieux" style="padding-left:20px;"  action="{{ path('ffbb_lancer_producer', {'idGroupe':idGroupe}) }}" method="POST" onsubmit="msgLancement()">
 
                         <div class="radio">
                             <label>
