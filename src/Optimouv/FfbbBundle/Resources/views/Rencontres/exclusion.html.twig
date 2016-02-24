@@ -50,13 +50,13 @@
 
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="rencontre" id="meilleurLieuOption" value="meilleurLieu">
+                                    <input type="radio" name="rencontre" id="meilleurLieuOption" value="meilleurLieu" required>
                                     Lieux définis
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="rencontre" id="BarycentreOption" value="barycentre" checked>
+                                    <input type="radio" name="rencontre" id="BarycentreOption" value="barycentre" disabled>
                                     Barycentre
                                 </label>
                             </div>
@@ -83,7 +83,7 @@
                             </div>
                             <div class="form-group">
                                 {#<label>Text Input with Placeholder</label>#}
-                                <input name="valeurExclusion" id="valeurExclusion" type="number" class="form-control" min="1000" value="{{ valeurExclusion }}">
+                                <input name="valeurExclusion" id="valeurExclusion" type="number" class="form-control" min="1000" value="{{ valeurExclusion }}" required>
                             </div>
                             <input type="hidden" name="rencontre" value="exclusion">
                             <button type="submit" class="btn btn-default-rencontre  pull-right" >Lancer le calcul

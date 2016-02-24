@@ -55,13 +55,13 @@
                         <div class="radio">
                             <label>
                                 <input type="radio" name="rencontre" id="meilleurLieuOption" value="meilleurLieu"
-                                       checked disabled>
+                                       disabled>
                                 Lieux définis
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="rencontre" id="BarycentreOption" value="barycentre">
+                                <input type="radio" name="rencontre" id="BarycentreOption" value="barycentre" required>
                                 Barycentre
                             </label>
                         </div>
@@ -682,7 +682,14 @@
         <!-- /#page-wrapper -->
         <script type="text/javascript" charset="UTF-8">
             function msgLancement(){
-                alert("Le calcul est en cours. Vous recevrez un mail pour vous avertir de la mise à disposition de vos résultats de calculs");
+                var BarycentreOption = document.getElementById("BarycentreOption").checked;
+                if(BarycentreOption == false){
+                    alert("Veuillez choisir une opération");
+                }
+                else{
+                    alert("Le calcul est en cours. Vous recevrez un mail pour vous avertir de la mise à disposition de vos résultats de calculs");
+
+                }
             }
         </script>
     {% endblock %}
