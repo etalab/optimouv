@@ -2401,14 +2401,14 @@
                                                              du calcul</a>
 
 
-                                                         {% if typeMatch = "allerRetour" or typeMatch="plateau" %}
+                                                         {% if typeMatch == "allerRetour" or typeMatch == "plateau" %}
 
                                                          <form name="submitParams" action="{{ path('ffbb_previsualisation_pdf')}}" method="post">
                                                              <input type="hidden" value="{{ idResultat }}" name="params" id="params">
 
                                                              <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
                                                          </form>
-                                                         {% elseif typeMatch = "plateau" %}
+                                                         {% elseif typeMatch == "plateau" %}
                                                              <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
                                                          {% endif %}
 
