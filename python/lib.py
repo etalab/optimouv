@@ -484,9 +484,10 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 			if i%100 == 0:
 				logging.debug("  i: %s " %(i))
 
-			if i == 500:
+			if i == config.INPUT.IterShortestDistancePlateau:
 				break
 			
+			# convert iteration number to base 3
 			base3Tmp = str(convert_decimal_to_base3(i))
 # 			logging.debug("  base3Tmp: %s" %base3Tmp)
 
@@ -495,6 +496,7 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 				base3Tmp = '0' + base3Tmp
 # 			logging.debug("  base3Tmp: %s" %base3Tmp)
 
+			# get combination of index host for each day  
 			hostCombinationIndex = get_host_combination_index_from_base3(hostCombinationIndex, base3Tmp)
 # 			logging.debug("  hostCombinationIndex: %s" %hostCombinationIndex)
 
