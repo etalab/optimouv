@@ -359,11 +359,25 @@ class Listes{
                                     $projection = $donnéesLigne[9];
                                     $licencies = $donnéesLigne[10];
 
-                                    //test si on traite une equipe qui appartient à une poule
 
-                                    if(count($donnéesLigne) == 12){
+                                    // test de l'import pour l'optimisation des poules
+                                    if(count($donnéesLigne) == 18){
 
                                         $poule = $donnéesLigne[11];
+
+                                        // controler la presence de valeur pour le champ 'POULE'
+                                        if(empty($poule)){
+                                            $retour = array(
+                                                "success" => false,
+                                                "msg" => "Erreur ligne :".$nbrLigne."!"
+                                                    ."Le champ poule doit être rempli. Veuillez corriger et importer de nouveau votre fichier"
+                                            );
+                                            array_push($lignesErronees, $retour["msg"]);
+                                            continue;
+                                        }
+
+
+                                        // controler si les valeurs fournies pour le champ 'POULE' sont des alphabets
                                         $alphabet = ['','A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ];
                                         if (!in_array($poule, $alphabet))
                                         {
@@ -376,26 +390,6 @@ class Listes{
                                             continue;
                                         }
 
-                                    }
-
-                                    // test poules manquantes pour match aller retour et match plateau
-                                    if( count($donnéesLigne) == 12 || count($donnéesLigne) == 18  ){
-                                        $poule = $donnéesLigne[11];
-
-                                        if(empty($poule)){
-                                            $retour = array(
-                                                "success" => false,
-                                                "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                    ."Le champ poule doit être rempli. Veuillez corriger et importer de nouveau votre fichier"
-                                            );
-                                            array_push($lignesErronees, $retour["msg"]);
-                                            continue;
-                                        }
-
-                                    };
-
-                                    // test si le fichier est adapté pour le match plateau
-                                    if(count($donnéesLigne) == 18){
 
                                         # ajouter les noms dans la liste
                                         array_push($tousNomsEquipes, $donnéesLigne[1]);
@@ -709,9 +703,6 @@ class Listes{
                                 }
 
 
-
-
-
                                 # controler les doublons pour tous les types
                                 # ajouter la ligne courante dans le répértoire des lignes si ce n'est pas un doublon
                                 $donneesLigneEquipe = [$nom, $codePostal, $ville];
@@ -731,10 +722,6 @@ class Listes{
                                 }
 
 
-
-
-
-
                             }
 
                         }
@@ -742,7 +729,6 @@ class Listes{
                     }
 
 //                    error_log("service: listes, function: controlerEntites, status: ".print_r($tousNomsEquipes, True), 3, $this->error_log_path);
-
 
 
                     // controler equipe 1 et equipe 2, elles doivent figurer dans les lignes importées (match plateau)
