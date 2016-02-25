@@ -4,8 +4,7 @@ namespace Optimouv\FfbbBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use Slik\DompdfBundle\Wrapper\DompdfWrapper;
-class RencontresController extends Controller
+ class RencontresController extends Controller
 {
 
     public function indexAction($idRapport)
@@ -18,21 +17,8 @@ class RencontresController extends Controller
         /************Optimal********/
         ///////////////////////////////
 
-//        $retour = $this->get('service_rencontres')->meilleurLieuRencontre($idGroupe);
 
         $participants = [];
-
-//        $typeAction = "meilleurLieu";
-//        $idTache = $this->get('service_rencontres')->Producer($idGroupe, $typeAction);
-//
-//        $this->get('old_sound_rabbit_mq.rencontre_producer')->publish($idTache);
-//
-//        do {
-//            sleep(5);
-//            $statutTache = $em->getRepository('FfbbBundle:Rapport')->getStatut($idTache);
-//
-//        } while ($statutTache == 2);
-
 
         $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idRapport);
         $idGroupe = $idGroupe[0]['idGroupe'];

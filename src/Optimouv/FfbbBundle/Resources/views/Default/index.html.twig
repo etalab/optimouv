@@ -46,25 +46,25 @@
                              Type de lieu
                          </div>
                          {#{{ dump(meilleurLieuOption.value) }}#}
-                         <form name="typeLieux" style="padding-left:20px;" action="{{ path('ffbb_lancer_producer', {'idGroupe':idGroupe}) }}" method="post">
+                         <form name="typeLieux" style="padding-left:20px;" action="{{ path('ffbb_lancer_producer', {'idGroupe':idGroupe}) }}" method="post" onsubmit="msgLancement()">
 
                              <div class="radio">
                                  <label>
-                                     <input type="radio" name="rencontre" id="rencontre" value="meilleurLieu">
+                                     <input type="radio" name="rencontre" id="rencontre" value="meilleurLieu" onchange="showBtn()">
                                      Lieux définis
                                  </label>
                              </div>
 
                              <div class="radio">
                                  <label>
-                                     <input type="radio" name="rencontre" id="rencontre" value="barycentre">
+                                     <input type="radio" name="rencontre" id="rencontre" value="barycentre" onchange="showBtn()">
                                      Barycentre
                                  </label>
                              </div>
 
 
                              {#<button type="submit" class="btn btn-default-rencontre pull-right" onclick="typeLieu()">Lancer le#}
-                             <button type="submit" class="btn btn-default-rencontre pull-right">Lancer le
+                             <button type="submit" class="btn btn-default-rencontre pull-right" style="visibility: hidden"  id="bntLancerCalcul" >Lancer le
                                  calcul
                                  sans contrainte
                              </button>
@@ -198,19 +198,16 @@
          {% block javascript %}
              <!-- /#page-wrapper -->
              <script type="text/javascript" charset="UTF-8">
-                 {#function typeLieu() {#}
 
-                     {#var idGroupe = {{ idGroupe }};#}
-                     {#if (document.getElementById("meilleurLieuOption").checked == true) {#}
-                         {#window.location.href = "{{ path('ffbb_rencontres', {'idGroupe':idGroupe}) }}";#}
+                 function showBtn(){
 
-                     {#}#}
-                     {#else {#}
-                         {#window.location.href = "{{ path('ffbb_barycentre', {'idGroupe':idGroupe})}}";#}
 
-                     {#}#}
+                     document.getElementById('bntLancerCalcul').style.visibility="visible";
+                 }
 
-                 {#}#}
+                 function msgLancement(){
+                     alert("Le calcul est en cours. Vous recevrez un mail pour vous avertir de la mise à disposition de vos résultats de calculs");
+                 }
              </script>
          {% endblock %}
      {% endblock %}
