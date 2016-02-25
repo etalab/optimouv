@@ -180,23 +180,6 @@ class Listes{
                             if($donnéesLigne != array(null)){
 
 
-//                                # controler des doublons # FIXME
-//                                # ajouter la ligne courante dans le répértoire des lignes si ce n'est pas un doublon
-//                                if(!in_array($donnéesLigne, $toutesLignes )){
-//                                    array_push($toutesLignes, $donnéesLigne);
-//                                }
-//                                else{
-//                                    $retour = array(
-//                                        "success" => false,
-//                                        "msg" => "Erreur ligne :".$nbrLigne."!"
-//                                            ." Le fichier comporte des lignes en double.!"
-//                                            ." Veuillez supprimer cette ligne et effectuer à nouveau l’import"
-//                                    );
-//                                    array_push($lignesErronees, $retour["msg"]);
-//                                    continue;
-//                                }
-
-
                                 // obtenir la valeur pour chaque paramètre
                                 $typeEntite = $donnéesLigne[0];
 
