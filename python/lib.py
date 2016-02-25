@@ -450,6 +450,8 @@ def get_distance_for_member_combination_ids(memberCombinationIds):
 
 """
 Function to check if all teams welcome at least one time 
+@return: 0 if false
+@return: 1 if true
 """
 def check_welcome_constraint_match_plateau(memberCombinationIds, teams):
 	try:
@@ -532,28 +534,30 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 
 			# get host names from combination
 			memberCombinationIds = get_member_combination_ids_from_host_combination_index(plateauDistributionPerPool, hostCombinationIndex)
-			logging.debug("  memberCombinationIds: %s" %memberCombinationIds)
+# 			logging.debug("  memberCombinationIds: %s" %memberCombinationIds)
 			
 			# if the flag of welcome constraint is checked
 			if(int(welcomeConstraintExistMatchPlateau) == 1):
 				# check welcome constraint for match plateau 
 				
 				statusCheckWelcomeConstraintMatchPlateau = check_welcome_constraint_match_plateau(memberCombinationIds, teams)
-				logging.debug("  statusCheckWelcomeConstraintMatchPlateau: %s" %statusCheckWelcomeConstraintMatchPlateau)
+# 				logging.debug("  statusCheckWelcomeConstraintMatchPlateau: %s" %statusCheckWelcomeConstraintMatchPlateau)
 				
-				sys.exit()
+				if statusCheckWelcomeConstraintMatchPlateau == 0:
+					continue
 			
 			
 			# calculate distance total for a specific member combination
 			distanceMemberCombination = get_distance_for_member_combination_ids(memberCombinationIds)
 # 			logging.debug("  distanceMemberCombination: %s" %distanceMemberCombination)
 
-			# compare with current best value
-			if i == 0:
+			# assign the value for the first time
+			if bestDistanceMemberCombination == 0:
 				bestDistanceMemberCombination = distanceMemberCombination
 				bestHostCombinationIndex = hostCombinationIndex
 				bestMemberCombinationIds = memberCombinationIds
 				
+			# compare with current best value
 			if distanceMemberCombination < bestDistanceMemberCombination:
 				bestDistanceMemberCombination = distanceMemberCombination
 				bestHostCombinationIndex = hostCombinationIndex
@@ -567,7 +571,7 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 # 		logging.debug("  bestHostCombinationIndex: %s" %bestHostCombinationIndex)
 # 		logging.debug("  bestMemberCombinationIds: %s" %bestMemberCombinationIds)
 		
-		sys.exit()
+# 		sys.exit()
 		
 		result = {	"bestDistance": bestDistanceMemberCombination, 
 					"bestHostCombinationIndex": bestHostCombinationIndex,
