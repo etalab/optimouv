@@ -668,6 +668,14 @@ class PoulesController extends Controller
             $infoPoule = array($taillePoule => $nombrePoule);
         }
 
+        # récupérer la contrainte d'accueil pour le match plateau
+        if(array_key_exists("contrainteAccueilPlateauExiste", $detailsCalcul["params"])){
+            $contrainteAccueilPlateauExiste = $detailsCalcul["params"]["contrainteAccueilPlateauExiste"];
+        }
+        else{
+            $contrainteAccueilPlateauExiste = 0;;
+        }
+
 
 //        error_log("\n infoPoule : ".print_r($infoPoule , true), 3, "error_log_optimouv.txt");
 
@@ -726,6 +734,7 @@ class PoulesController extends Controller
             'finalStatut' => $finalStatut,
             'phantomExiste' => $phantomExiste,
             'infoPoule' => $infoPoule,
+            'contrainteAccueilPlateauExiste' => $contrainteAccueilPlateauExiste,
 
 
         ));

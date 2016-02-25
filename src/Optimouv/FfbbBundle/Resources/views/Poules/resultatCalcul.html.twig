@@ -80,6 +80,12 @@
                                  <td> Contraintes : {{ contrainte  }} </td>
                              </tr>
 
+                             {% if contrainteAccueilPlateauExiste == 1 %}
+                                 <tr>
+                                     <td> Toutes les équipes doivent accueillir au moins une fois </td>
+                                 </tr>
+                             {% endif %}
+
                              {% if refExiste == 1 %}
                              <tr>
 
