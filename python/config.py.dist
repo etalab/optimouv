@@ -4,6 +4,7 @@ class INPUT:
 	IterConstraint=10000 # maximum number of iteration before error constraint
     IterLaunch=20 # number of launch iteration for round trip and one way match
     IterLaunchPlateau=10 # number of launch iteration for plateau match
+    IterShortestDistancePlateau=540000 # max iteration number is 531441 to be exaxt
     MainUrl= "http://ffbb" # 
 # 	MainUrl= "http://dev.ffbb.it4pme.fr/" # 
 	
