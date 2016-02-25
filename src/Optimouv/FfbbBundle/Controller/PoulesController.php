@@ -192,11 +192,19 @@ class PoulesController extends Controller
         # récupérer idListe pour le breadcrump
         $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListeParticipants)->getNom();
 
+        # decoder les refs pour le match plateau
+        for($i=0; $i<count($detailsEntites); $i++){
+            $detailsEntites[$i]["refPlateauDecoder"] =  json_decode($detailsEntites[$i]["refPlateau"], true) ;
+        }
+
+
+//        error_log("\n detailsEntites: ".print_r($detailsEntites , true), 3, "error_log_optimouv.txt");
+
+
         return $this->render('FfbbBundle:Poules:visualiserListeEquipes.html.twig', array(
             'idListeParticipants' => $idListeParticipants,
             'detailsEntites' => $detailsEntites,
-            'nomListe' =>$nomListe,
-
+            'nomListe' => $nomListe,
         ));
 
     }
