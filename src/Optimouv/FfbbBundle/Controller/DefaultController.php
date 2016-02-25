@@ -129,26 +129,5 @@ class DefaultController extends Controller
 
     }
 
-    public function sendMailAction()
-    {
-
-//        $email = $this->getUser()->getEmail();
-        $email = "oussema.ghodbane@it4pme.fr";
-        $username =  $this->getUser()->getUsername();
-        $body = $this->renderView('FfbbBundle:Mails:confirmationCalcul.html.twig', array('username' => $username));
-
-            $message = \Swift_Message::newInstance()
-            ->setSubject('Calcul terminé')
-            ->setFrom('serviceclients@it4pme.fr')
-            ->setTo($email)
-            ->setBody($body)
-        ;
-        $this->get('mailer')->send($message);
-
-//        return $this->redirect($this->generateUrl('ffbb_accueil'));
-        return true;
-
-    }
-
 
 }
