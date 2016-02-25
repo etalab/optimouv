@@ -221,11 +221,11 @@ class Listes{
                                 if (strtolower($typeEntite) == "equipe") {
 
                                     # controler le nombre de colonnes
-                                    if(count($donnéesLigne) != 11 && count($donnéesLigne) != 12 && count($donnéesLigne) != 18){
+                                    if(count($donnéesLigne) != 11 && count($donnéesLigne) != 18){
                                         $retour = array(
                                             "success" => false,
                                             "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." La ligne doit contenir 11 valeurs. Donné: ".count($donnéesLigne)." valeurs"
+                                                ." La ligne doit contenir 11 valeurs (meilleur lieu) ou 18 valeurs (optimisation de poule). Donné: ".count($donnéesLigne)." valeurs"
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -1425,8 +1425,10 @@ class Listes{
         $genericMsg = "Veuillez utiliser les formats de fichier mis à disposition dans Télécharger les formats de fichiers d’import ";
 
         // tester le nombre de colonnes
-        // nombreColonnesEntetes (11 pour liste d'équipes, 10 pour liste de personnes, 13 pour liste de lieux)
-        $nombreColonnesEntetes = [11,10,13,12, 18];
+        // nombreColonnesEntetes (11 pour liste d'équipes, 10 pour liste de personnes, 13 pour liste de lieux ce sont pour le cas de meuilleur lieux)
+        // nombreColonnesEntetes (18 pour l'optimisation de poules)
+//        $nombreColonnesEntetes = [11,10,13,12, 18];
+        $nombreColonnesEntetes = [11,10,13, 18];
         if(!in_array(count($entete), $nombreColonnesEntetes)){
             $retour["msg"] = "Veuillez vérifier le nombre des colonnes.!"
                 .$genericMsg;
@@ -1447,7 +1449,8 @@ class Listes{
 //            error_log("service: listes, function: controlerEntites, count entete: ".print_r(count($entete), True), 3, $this->error_log_path);
 
             // pour la liste d'équipes
-            if(count($entete) == 11 || count($entete) == 12 || count($entete) == 18){
+//            if(count($entete) == 11 || count($entete) == 12 || count($entete) == 18){
+            if(count($entete) == 11 || count($entete) == 18){
                 if($entete[2] != "CODE POSTAL" ){
                     $retour["msg"] = "Veuillez vérifier que le nom de la colonne 3 de l'en-tête correspond au template donné (CODE POSTAL).!"
                         .$genericMsg;
