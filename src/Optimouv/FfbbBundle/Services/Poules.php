@@ -86,13 +86,21 @@ class Poules{
                 $idAncienResultat = -1;
             }
 
+            # controler l'existence de la contrainte d'accueil pour le match plateau
+            if(array_key_exists("contrainteAccueilPlateauExiste", $_POST)){
+                $contrainteAccueilPlateauExiste = intval($_POST["contrainteAccueilPlateauExiste"]);
+
+            }
+            else{
+                $contrainteAccueilPlateauExiste = 0;
+            }
 
 
             $nom = "rapport_groupe_".$idGroupe."_action_".$typeAction;
             $statut = 0;
             $params = json_encode(array("nbrPoule" => $poulesNbr, "interdictions"=> $interdictions,
                 "repartitionHomogene"=> $repartitionsHomogenes, "varEquipeParPoule"=> $varEquipeParPoule,
-                "idAncienResultat"=> $idAncienResultat
+                "idAncienResultat"=> $idAncienResultat, "contrainteAccueilPlateauExiste" => $contrainteAccueilPlateauExiste
             ));
 
             # insérer dans la base de données
