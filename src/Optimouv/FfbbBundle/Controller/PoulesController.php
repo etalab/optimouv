@@ -802,12 +802,17 @@ class PoulesController extends Controller
         # obtenir le détail des équipes
         $detailsVilles = $em->getRepository('FfbbBundle:Entite')->getEntities($equipes);
 
+        # obtenir le type de match
+        $typeMatch = $detailsCalcul["typeMatch"];
+
+//        error_log("\n detailsCalcul : ".print_r($detailsCalcul , true), 3, "error_log_optimouv.txt");
+
 
         # parser les données pour l'affichage
-        $donneesComparison = $this->get('service_poules')->parserComparaisonScenario($detailsVilles, $scenarioOptimalAvecContrainte, $scenarioOptimalSansContrainte, $scenarioEquitableAvecContrainte, $scenarioEquitableSansContrainte, $scenarioRef, $refExiste, $contraintsExiste );
+        $donneesComparison = $this->get('service_poules')->parserComparaisonScenario($detailsVilles, $scenarioOptimalAvecContrainte, $scenarioOptimalSansContrainte, $scenarioEquitableAvecContrainte, $scenarioEquitableSansContrainte, $scenarioRef, $refExiste, $contraintsExiste, $typeMatch );
 
 
-//        error_log("\n donneesComparison : ".print_r($donneesComparison , true), 3, "error_log_optimouv.txt");
+
 
         return $this->render('FfbbBundle:Poules:comparaisonScenario.html.twig', array(
             'idResultat' => $idResultat,

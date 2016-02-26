@@ -137,7 +137,7 @@ class Poules{
 
     }
 
-    public function parserComparaisonScenario($detailsVilles, $scenarioOptimalAvecContrainte, $scenarioOptimalSansContrainte, $scenarioEquitableAvecContrainte, $scenarioEquitableSansContrainte, $scenarioRef, $refExiste, $contraintsExiste )
+    public function parserComparaisonScenario($detailsVilles, $scenarioOptimalAvecContrainte, $scenarioOptimalSansContrainte, $scenarioEquitableAvecContrainte, $scenarioEquitableSansContrainte, $scenarioRef, $refExiste, $contraintsExiste, $typeMatch  )
     {
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
@@ -169,76 +169,107 @@ class Poules{
                 $dureeScenarioEquitableSansContrainte = 0;
                 $dureeScenarioRef = 0;
 
-                # scenario optimal sans contrainte
+                # calcul données pour comparaison depuis rencontre details pour scenario optimal sans contrainte
                 $rencontreDetails = $scenarioOptimalSansContrainte["rencontreDetails"];
-                foreach($rencontreDetails as $poule => $contenuPoule){
-                    foreach($contenuPoule as $rencontre => $contenuRencontre){
+                if($typeMatch == "allerRetour" or $typeMatch == "allerSimple"){
+                    foreach($rencontreDetails as $poule => $contenuPoule){
+                        foreach($contenuPoule as $rencontre => $contenuRencontre){
 
-                        if($contenuRencontre["equipeDepartId"] == $idEquipe){
-                            $distanceScenarioOptimalSansContrainte += $contenuRencontre["distance"];
-                            $distanceTotaleScenarioOptimalSansContrainte += $contenuRencontre["distanceTousParticipants"];
-                            $dureeScenarioOptimalSansContrainte += $contenuRencontre["duree"];
+                            if($contenuRencontre["equipeDepartId"] == $idEquipe){
+                                $distanceScenarioOptimalSansContrainte += $contenuRencontre["distance"];
+                                $distanceTotaleScenarioOptimalSansContrainte += $contenuRencontre["distanceTousParticipants"];
+                                $dureeScenarioOptimalSansContrainte += $contenuRencontre["duree"];
 
+                            }
                         }
                     }
+
+                }
+                elseif($typeMatch == "plateau"){
+
                 }
 
-                # scenario équitable sans contrainte
-                $rencontreDetails = $scenarioEquitableSansContrainte["rencontreDetails"];
-                foreach($rencontreDetails as $poule => $contenuPoule){
-                    foreach($contenuPoule as $rencontre => $contenuRencontre){
-                        if($contenuRencontre["equipeDepartId"] == $idEquipe){
-                            $distanceScenarioEquitableSansContrainte += $contenuRencontre["distance"];
-                            $distanceTotaleScenarioEquitableSansContrainte += $contenuRencontre["distanceTousParticipants"];
-                            $dureeScenarioEquitableSansContrainte += $contenuRencontre["duree"];
 
+                # calcul données pour comparaison depuis rencontre details pour scenario équitable sans contrainte
+                $rencontreDetails = $scenarioEquitableSansContrainte["rencontreDetails"];
+                if($typeMatch == "allerRetour" or $typeMatch == "allerSimple"){
+                    foreach($rencontreDetails as $poule => $contenuPoule){
+                        foreach($contenuPoule as $rencontre => $contenuRencontre){
+                            if($contenuRencontre["equipeDepartId"] == $idEquipe){
+                                $distanceScenarioEquitableSansContrainte += $contenuRencontre["distance"];
+                                $distanceTotaleScenarioEquitableSansContrainte += $contenuRencontre["distanceTousParticipants"];
+                                $dureeScenarioEquitableSansContrainte += $contenuRencontre["duree"];
+
+                            }
                         }
                     }
+
+                }
+                elseif($typeMatch == "plateau"){
+
                 }
 
 
                 if($contraintsExiste){
-                    # scenario optimal avec contrainte
+                    # calcul données pour comparaison depuis rencontre details pour scenario optimal avec contrainte
                     $rencontreDetails = $scenarioOptimalAvecContrainte["rencontreDetails"];
-                    foreach($rencontreDetails as $poule => $contenuPoule){
-                        foreach($contenuPoule as $rencontre => $contenuRencontre){
-                            if($contenuRencontre["equipeDepartId"] == $idEquipe){
-                                $distanceScenarioOptimalAvecContrainte += $contenuRencontre["distance"];
-                                $distanceTotaleScenarioOptimalAvecContrainte += $contenuRencontre["distanceTousParticipants"];
-                                $dureeScenarioOptimalAvecContrainte += $contenuRencontre["duree"];
+                    if($typeMatch == "allerRetour" or $typeMatch == "allerSimple"){
+                        foreach($rencontreDetails as $poule => $contenuPoule){
+                            foreach($contenuPoule as $rencontre => $contenuRencontre){
+                                if($contenuRencontre["equipeDepartId"] == $idEquipe){
+                                    $distanceScenarioOptimalAvecContrainte += $contenuRencontre["distance"];
+                                    $distanceTotaleScenarioOptimalAvecContrainte += $contenuRencontre["distanceTousParticipants"];
+                                    $dureeScenarioOptimalAvecContrainte += $contenuRencontre["duree"];
 
+                                }
                             }
                         }
+
+                    }
+                    elseif($typeMatch == "plateau"){
+
                     }
 
-                    # scenario équitable avec contrainte
+                    # calcul données pour comparaison depuis rencontre details pour scenario équitable avec contrainte
                     $rencontreDetails = $scenarioEquitableAvecContrainte["rencontreDetails"];
-                    foreach($rencontreDetails as $poule => $contenuPoule){
-                        foreach($contenuPoule as $rencontre => $contenuRencontre){
-                            if($contenuRencontre["equipeDepartId"] == $idEquipe){
-                                $distanceScenarioEquitableAvecContrainte += $contenuRencontre["distance"];
-                                $distanceTotaleScenarioEquitableAvecContrainte += $contenuRencontre["distanceTousParticipants"];
-                                $dureeScenarioEquitableAvecContrainte += $contenuRencontre["duree"];
+                    if($typeMatch == "allerRetour" or $typeMatch == "allerSimple"){
+                        foreach($rencontreDetails as $poule => $contenuPoule){
+                            foreach($contenuPoule as $rencontre => $contenuRencontre){
+                                if($contenuRencontre["equipeDepartId"] == $idEquipe){
+                                    $distanceScenarioEquitableAvecContrainte += $contenuRencontre["distance"];
+                                    $distanceTotaleScenarioEquitableAvecContrainte += $contenuRencontre["distanceTousParticipants"];
+                                    $dureeScenarioEquitableAvecContrainte += $contenuRencontre["duree"];
 
+                                }
                             }
                         }
+
+                    }
+                    elseif($typeMatch == "plateau"){
+
                     }
                 }
 
 
 
                 if($refExiste){
-                    # scenario ref
+                    # calcul données pour comparaison depuis rencontre details pour scenario ref
                     $rencontreDetails = $scenarioRef["rencontreDetails"];
-                    foreach($rencontreDetails as $poule => $contenuPoule){
-                        foreach($contenuPoule as $rencontre => $contenuRencontre){
-                            if($contenuRencontre["equipeDepartId"] == $idEquipe){
-                                $distanceScenarioRef += $contenuRencontre["distance"];
-                                $distanceTotaleScenarioRef += $contenuRencontre["distanceTousParticipants"];
-                                $dureeScenarioRef += $contenuRencontre["duree"];
+                    if($typeMatch == "allerRetour" or $typeMatch == "allerSimple"){
+                        foreach($rencontreDetails as $poule => $contenuPoule){
+                            foreach($contenuPoule as $rencontre => $contenuRencontre){
+                                if($contenuRencontre["equipeDepartId"] == $idEquipe){
+                                    $distanceScenarioRef += $contenuRencontre["distance"];
+                                    $distanceTotaleScenarioRef += $contenuRencontre["distanceTousParticipants"];
+                                    $dureeScenarioRef += $contenuRencontre["duree"];
 
+                                }
                             }
                         }
+
+                    }
+                    elseif($typeMatch == "plateau"){
+
                     }
                 }
 

@@ -121,7 +121,8 @@
                                  {% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}
                                      <a href="{{ path('ffbb_poules_comparaison_scenario', {'idResultat': idResultat}) }}" class="btn btn-primary">Comparer les scénarios</a>
                                  {% elseif typeMatch == "plateau" %}
-                                     <a class="btn btn-primary">Comparer les scénarios</a>
+                                     {#<a class="btn btn-primary">Comparer les scénarios</a>#}
+                                     <a href="{{ path('ffbb_poules_comparaison_scenario', {'idResultat': idResultat}) }}" class="btn btn-primary">Comparer les scénarios</a>
                                  {% endif %}
 
 
