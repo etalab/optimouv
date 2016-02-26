@@ -734,7 +734,7 @@ def create_encounters_from_pool_distribution_plateau(poolDistribution, welcomeCo
 # 						logging.debug("  bestMemberCombinationIds: %s" %bestMemberCombinationIds)
 		
 
-			logging.debug(" ----------------------------------  FINISHED ITERATION PLATEAU --------------------------------------------")
+			logging.debug(" -----------------------  FINISHED ITERATION PLATEAU FOR POOL: %s  ----------------------------------------"%pool)
 			logging.debug(" bestMemberCombinationIds: %s "%bestMemberCombinationIds)
 		
 			# get encounter details from member combination ids
