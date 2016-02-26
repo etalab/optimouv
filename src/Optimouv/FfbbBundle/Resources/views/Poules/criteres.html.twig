@@ -193,7 +193,8 @@
 
                                      <tr>
                                          <td width="50%">
-                                             <select id="equipe1" class="equipe1" onchange="selectEquipe(this,this.parentNode.parentNode.getElementsByClassName('equipe2'))">
+                                             {#<select id="equipe1" class="equipe1" onchange="selectEquipe(this,this.parentNode.parentNode.getElementsByClassName('equipe2'))">#}
+                                             <select id="equipe1" class="equipe1" >
                                                  <option value="vide" selected> -- selectionnez une option -- </option>
                                                  {% for detailsVille in detailsVilles %}
                                                      <option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>
