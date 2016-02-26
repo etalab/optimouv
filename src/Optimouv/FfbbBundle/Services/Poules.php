@@ -171,8 +171,10 @@ class Poules{
 
                 # calcul données pour comparaison depuis rencontre details pour scenario optimal sans contrainte
                 $rencontreDetails = $scenarioOptimalSansContrainte["rencontreDetails"];
-                if($typeMatch == "allerRetour" or $typeMatch == "allerSimple"){
-                    foreach($rencontreDetails as $poule => $contenuPoule){
+
+                foreach($rencontreDetails as $poule => $contenuPoule){
+
+                    if($typeMatch == "allerRetour" or $typeMatch == "allerSimple"){
                         foreach($contenuPoule as $rencontre => $contenuRencontre){
 
                             if($contenuRencontre["equipeDepartId"] == $idEquipe){
@@ -183,17 +185,20 @@ class Poules{
                             }
                         }
                     }
+                    elseif($typeMatch == "plateau"){
+
+                    }
+
 
                 }
-                elseif($typeMatch == "plateau"){
 
-                }
+
 
 
                 # calcul données pour comparaison depuis rencontre details pour scenario équitable sans contrainte
                 $rencontreDetails = $scenarioEquitableSansContrainte["rencontreDetails"];
-                if($typeMatch == "allerRetour" or $typeMatch == "allerSimple"){
-                    foreach($rencontreDetails as $poule => $contenuPoule){
+                foreach($rencontreDetails as $poule => $contenuPoule){
+                    if($typeMatch == "allerRetour" or $typeMatch == "allerSimple"){
                         foreach($contenuPoule as $rencontre => $contenuRencontre){
                             if($contenuRencontre["equipeDepartId"] == $idEquipe){
                                 $distanceScenarioEquitableSansContrainte += $contenuRencontre["distance"];
@@ -202,19 +207,20 @@ class Poules{
 
                             }
                         }
+
                     }
+                    elseif($typeMatch == "plateau"){
 
-                }
-                elseif($typeMatch == "plateau"){
-
+                    }
                 }
 
 
                 if($contraintsExiste){
                     # calcul données pour comparaison depuis rencontre details pour scenario optimal avec contrainte
                     $rencontreDetails = $scenarioOptimalAvecContrainte["rencontreDetails"];
-                    if($typeMatch == "allerRetour" or $typeMatch == "allerSimple"){
-                        foreach($rencontreDetails as $poule => $contenuPoule){
+                    foreach($rencontreDetails as $poule => $contenuPoule){
+
+                        if($typeMatch == "allerRetour" or $typeMatch == "allerSimple"){
                             foreach($contenuPoule as $rencontre => $contenuRencontre){
                                 if($contenuRencontre["equipeDepartId"] == $idEquipe){
                                     $distanceScenarioOptimalAvecContrainte += $contenuRencontre["distance"];
@@ -223,17 +229,17 @@ class Poules{
 
                                 }
                             }
+
                         }
+                        elseif($typeMatch == "plateau"){
 
-                    }
-                    elseif($typeMatch == "plateau"){
-
+                        }
                     }
 
                     # calcul données pour comparaison depuis rencontre details pour scenario équitable avec contrainte
                     $rencontreDetails = $scenarioEquitableAvecContrainte["rencontreDetails"];
-                    if($typeMatch == "allerRetour" or $typeMatch == "allerSimple"){
-                        foreach($rencontreDetails as $poule => $contenuPoule){
+                    foreach($rencontreDetails as $poule => $contenuPoule){
+                        if($typeMatch == "allerRetour" or $typeMatch == "allerSimple"){
                             foreach($contenuPoule as $rencontre => $contenuRencontre){
                                 if($contenuRencontre["equipeDepartId"] == $idEquipe){
                                     $distanceScenarioEquitableAvecContrainte += $contenuRencontre["distance"];
@@ -242,12 +248,13 @@ class Poules{
 
                                 }
                             }
+
                         }
+                        elseif($typeMatch == "plateau"){
 
+                        }
                     }
-                    elseif($typeMatch == "plateau"){
 
-                    }
                 }
 
 
@@ -255,8 +262,8 @@ class Poules{
                 if($refExiste){
                     # calcul données pour comparaison depuis rencontre details pour scenario ref
                     $rencontreDetails = $scenarioRef["rencontreDetails"];
-                    if($typeMatch == "allerRetour" or $typeMatch == "allerSimple"){
-                        foreach($rencontreDetails as $poule => $contenuPoule){
+                    foreach($rencontreDetails as $poule => $contenuPoule){
+                        if($typeMatch == "allerRetour" or $typeMatch == "allerSimple"){
                             foreach($contenuPoule as $rencontre => $contenuRencontre){
                                 if($contenuRencontre["equipeDepartId"] == $idEquipe){
                                     $distanceScenarioRef += $contenuRencontre["distance"];
@@ -265,11 +272,11 @@ class Poules{
 
                                 }
                             }
+
                         }
+                        elseif($typeMatch == "plateau"){
 
-                    }
-                    elseif($typeMatch == "plateau"){
-
+                        }
                     }
                 }
 
