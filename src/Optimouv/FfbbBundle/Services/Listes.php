@@ -78,6 +78,23 @@ class Listes{
         $extensionFichier = explode(".", $_FILES["file-0"]["name"]);
         $extensionFichier = end($extensionFichier);
 
+        # controler l'existence du nom de fichier dans la table des listes de participants et des listes de lieux
+        $retourControlerExistenceNomFichier = $this->verifierExistenceNomFichier($nomFichier);
+
+
+//        error_log("\n Function: verifierExistenceCodePostalNomVille, \n"
+//            ."retourControlerExistenceNomFichier: ".print_r($retourControlerExistenceNomFichier, true), 3, $this->error_log_path);
+
+        if(!$retourControlerExistenceNomFichier["success"]){
+            $retour = array(
+                "success" => false,
+                "msg" => "Une liste avec le même nom a déjà été importée. Veuillez renommer votre liste si vous souhaitez tout de même l'importer."
+            );
+
+
+            return $retour;
+        }
+
         // Dès qu'un fichier a été reçu par le serveur
         if (file_exists($cheminFichierTemp) || is_uploaded_file($cheminFichierTemp)) {
 
@@ -1382,6 +1399,67 @@ class Listes{
 
         return $retour;
 
+
+    }
+
+    # vérifier l'existence du nom fichier dans la table liste de participants et liste de lieux
+    private function verifierExistenceNomFichier($nomFichier){
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+        $nomFichier = explode(".", $nomFichier)[0];
+
+        try{
+            # obtenir l'objet PDO
+            $bdd = $this->getPdo();
+
+            if (!$bdd) {
+                //erreur de connexion
+                error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: verifierExistenceNomFichier, datetime: ".$dateTimeNow, 3, $this->error_log_path);
+                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+            }
+
+            # controler les listes de participants
+            $sql = "SELECT nom from liste_participants;";
+            $stmt = $bdd->prepare($sql);
+            $stmt->execute();
+            $resultatListeParticipants = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            for($i=0; $i<count($resultatListeParticipants); $i++){
+                $nomListeParticipantsTmp = $resultatListeParticipants[$i]["nom"];
+
+                if($nomListeParticipantsTmp == $nomFichier){
+                    return array("success" => false);
+                }
+            }
+
+            # controler les listes de lieux
+            $sql = "SELECT nom from liste_lieux;";
+            $stmt = $bdd->prepare($sql);
+            $stmt->execute();
+            $resultatListeLieux = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            for($i=0; $i<count($resultatListeLieux); $i++){
+                $nomListeLieuxTmp = $resultatListeLieux[$i]["nom"];
+
+                if($nomListeLieuxTmp == $nomFichier){
+                    return array("success" => false);
+                }
+
+            }
+
+//            error_log("\n Function: verifierExistenceCodePostalNomVille, \n"
+//                ."resultatListeParticipants: ".print_r($resultatListeParticipants, true), 3, $this->error_log_path);
+
+
+            return array("success" => true);
+        }
+        catch (Exception $e) {
+            error_log("\n erreur générique, Service: Listes, Function: verifierExistenceNomFichier, \n"
+                . "erreur: " . print_r($e, true), 3, $this->error_log_path);
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
 
     }
 
