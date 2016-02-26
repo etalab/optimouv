@@ -1922,63 +1922,67 @@
                                                              </div>
 
 
-                                                             <div class="tab-pane fade" id="listeRencontresRef">
-                                                                 <div class="table-responsive" style="padding-top: 10px; max-height: 400px; overflow-y: scroll;">
+                                                             {% if typeMatch == "plateau" %}
+                                                                 <div class="tab-pane fade" id="listeRencontresRef">
+                                                                     <div class="table-responsive" style="padding-top: 10px; max-height: 400px; overflow-y: scroll;">
 
-                                                                     {#<table id="exampleTerrain" class="display"#}
-                                                                     <table id="exampleTerrain" class="cell-border"
-                                                                            cellspacing="0"
-                                                                            width="100%">
+                                                                         {#<table id="exampleTerrain" class="display"#}
+                                                                         <table id="exampleTerrain" class="cell-border"
+                                                                                cellspacing="0"
+                                                                                width="100%">
 
-                                                                         <thead>
-                                                                         <tr>
-                                                                             <th style="font-weight: bold !important;">
-                                                                                 Poules
-                                                                             </th>
-                                                                             <th>Journée</th>
-                                                                             <th>Equipe Hôte</th>
-                                                                             <th>Equipes Adverses</th>
+                                                                             <thead>
+                                                                             <tr>
+                                                                                 <th style="font-weight: bold !important;">
+                                                                                     Poules
+                                                                                 </th>
+                                                                                 <th>Journée</th>
+                                                                                 <th>Equipe Hôte</th>
+                                                                                 <th>Equipes Adverses</th>
 
-                                                                         </tr>
-                                                                         </thead>
-                                                                         <tbody>
+                                                                             </tr>
+                                                                             </thead>
+                                                                             <tbody>
 
-                                                                         {% for poule, contenuPoule in rencontreDetailsRef %}
-                                                                             {% set lettre = alphabet[poule-1] %}
-                                                                             {% for journee, contenuJournee in contenuPoule %}
-                                                                                 <tr>
-                                                                                     <td ><strong> Poule {{ lettre }}  </strong></td>
-                                                                                     <td>
-                                                                                         {{ journee }}
-                                                                                     </td>
-                                                                                     <td>
-                                                                                         {% for contenuGroup in contenuJournee %}
-                                                                                             {{ contenuGroup.hoteNom }} <br/> <br/>
-                                                                                         {% endfor %}
-                                                                                     </td>
-                                                                                     <td>
-                                                                                         {% for contenuGroup in contenuJournee %}
-                                                                                             * {{ contenuGroup.premierEquipeNom }} <br/>
-                                                                                             * {{ contenuGroup.deuxiemeEquipeNom }} <br/>
-                                                                                         {% endfor %}
-                                                                                     </td>
+                                                                             {% for poule, contenuPoule in rencontreDetailsRef %}
+                                                                                 {% set lettre = alphabet[poule-1] %}
+                                                                                 {% for journee, contenuJournee in contenuPoule %}
+                                                                                     <tr>
+                                                                                         <td ><strong> Poule {{ lettre }}  </strong></td>
+                                                                                         <td>
+                                                                                             {{ journee }}
+                                                                                         </td>
+                                                                                         <td>
+                                                                                             {% for contenuGroup in contenuJournee %}
+                                                                                                 {{ contenuGroup.hoteNom }} <br/> <br/>
+                                                                                             {% endfor %}
+                                                                                         </td>
+                                                                                         <td>
+                                                                                             {% for contenuGroup in contenuJournee %}
+                                                                                                 * {{ contenuGroup.premierEquipeNom }} <br/>
+                                                                                                 * {{ contenuGroup.deuxiemeEquipeNom }} <br/>
+                                                                                             {% endfor %}
+                                                                                         </td>
 
 
 
-                                                                                 </tr>
+                                                                                     </tr>
+
+                                                                                 {% endfor %}
+
 
                                                                              {% endfor %}
 
 
-                                                                         {% endfor %}
+                                                                             </tbody>
+                                                                         </table>
 
-
-                                                                         </tbody>
-                                                                     </table>
-
+                                                                     </div>
+                                                                     <!-- /.table-responsive -->
                                                                  </div>
-                                                                 <!-- /.table-responsive -->
-                                                             </div>
+
+                                                             {% endif %}
+
 
 
 
@@ -3346,48 +3350,47 @@
                                                              <!-- /.table-responsive -->
                                                          </div>
 
+                                                         {% if typeMatch == "plateau" %}
+                                                             <div class="tab-pane fade" id="listeRencontresRef">
+                                                                 <div class="table-responsive" style="padding-top: 10px; max-height: 400px; overflow-y: scroll;">
 
+                                                                     {#<table id="exampleTerrain" class="display"#}
+                                                                     <table id="exampleTerrain" class="cell-border"
+                                                                            cellspacing="0"
+                                                                            width="100%">
 
-                                                         <div class="tab-pane fade" id="listeRencontresRef">
-                                                             <div class="table-responsive" style="padding-top: 10px; max-height: 400px; overflow-y: scroll;">
+                                                                         <thead>
+                                                                         <tr>
+                                                                             <th style="font-weight: bold !important;">
+                                                                                 Poules
+                                                                             </th>
+                                                                             <th>Journée</th>
+                                                                             <th>Equipe Hôte</th>
+                                                                             <th>Equipes Adverses</th>
 
-                                                                 {#<table id="exampleTerrain" class="display"#}
-                                                                 <table id="exampleTerrain" class="cell-border"
-                                                                        cellspacing="0"
-                                                                        width="100%">
-
-                                                                     <thead>
-                                                                     <tr>
-                                                                         <th style="font-weight: bold !important;">
-                                                                             Poules
-                                                                         </th>
-                                                                         <th>Journée</th>
-                                                                         <th>Equipe Hôte</th>
-                                                                         <th>Equipes Adverses</th>
-
-                                                                     </tr>
-                                                                     </thead>
-                                                                     <tbody>
+                                                                         </tr>
+                                                                         </thead>
+                                                                         <tbody>
 
                                                                          {% for poule, contenuPoule in rencontreDetailsRef %}
                                                                              {% set lettre = alphabet[poule-1] %}
                                                                              {% for journee, contenuJournee in contenuPoule %}
                                                                                  <tr>
-                                                                                         <td ><strong> Poule {{ lettre }}  </strong></td>
-                                                                                         <td>
-                                                                                             {{ journee }}
-                                                                                         </td>
-                                                                                         <td>
-                                                                                             {% for contenuGroup in contenuJournee %}
-                                                                                                 {{ contenuGroup.hoteNom }} <br/> <br/>
-                                                                                             {% endfor %}
-                                                                                         </td>
-                                                                                         <td>
-                                                                                             {% for contenuGroup in contenuJournee %}
-                                                                                                 * {{ contenuGroup.premierEquipeNom }} <br/>
-                                                                                                 * {{ contenuGroup.deuxiemeEquipeNom }} <br/>
-                                                                                             {% endfor %}
-                                                                                         </td>
+                                                                                     <td ><strong> Poule {{ lettre }}  </strong></td>
+                                                                                     <td>
+                                                                                         {{ journee }}
+                                                                                     </td>
+                                                                                     <td>
+                                                                                         {% for contenuGroup in contenuJournee %}
+                                                                                             {{ contenuGroup.hoteNom }} <br/> <br/>
+                                                                                         {% endfor %}
+                                                                                     </td>
+                                                                                     <td>
+                                                                                         {% for contenuGroup in contenuJournee %}
+                                                                                             * {{ contenuGroup.premierEquipeNom }} <br/>
+                                                                                             * {{ contenuGroup.deuxiemeEquipeNom }} <br/>
+                                                                                         {% endfor %}
+                                                                                     </td>
 
 
 
@@ -3399,12 +3402,19 @@
                                                                          {% endfor %}
 
 
-                                                                     </tbody>
-                                                                 </table>
+                                                                         </tbody>
+                                                                     </table>
 
+                                                                 </div>
+                                                                 <!-- /.table-responsive -->
                                                              </div>
-                                                             <!-- /.table-responsive -->
-                                                         </div>
+
+
+                                                         {% endif %}
+
+
+
+
 
 
 
