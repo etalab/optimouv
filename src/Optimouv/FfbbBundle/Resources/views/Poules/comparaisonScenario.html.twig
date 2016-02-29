@@ -34,16 +34,16 @@
                                     <th rowspan="2" style="text-align:center; vertical-align: middle; width: 20%">Equipes</th>
 
                                     {%  if contraintsExiste and refExiste %}
-                                        <th colspan="4" style="text-align:center">Kilomètres à parcourir</th>
+                                        <th colspan="4" style="text-align:center">Kms à parcourir</th>
                                         <th colspan="4" style="text-align:center">Temps de parcours (J H:M) </th>
                                     {%  elseif contraintsExiste and not refExiste %}
-                                        <th colspan="3" style="text-align:center">Kilomètres à parcourir</th>
+                                        <th colspan="3" style="text-align:center">Kms à parcourir</th>
                                         <th colspan="3" style="text-align:center">Temps de parcours (J H:M)</th>
                                     {%  elseif not contraintsExiste and refExiste %}
-                                        <th colspan="3" style="text-align:center">Kilomètres à parcourir</th>
+                                        <th colspan="3" style="text-align:center">Kms à parcourir</th>
                                         <th colspan="3" style="text-align:center">Temps de parcours (J H:M)</th>
                                     {% else %}
-                                        <th colspan="2" style="text-align:center">Kilomètres à parcourir</th>
+                                        <th colspan="2" style="text-align:center">Kms à parcourir</th>
                                         <th colspan="2" style="text-align:center">Temps de parcours (J H:M)</th>
                                     {%  endif %}
                                 </tr>

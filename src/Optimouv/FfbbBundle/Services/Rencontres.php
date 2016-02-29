@@ -296,6 +296,7 @@ class Rencontres
         $retour[8] = $dureeVille;
         $retour[9] = $nomsTerrainsNeutres;
         $retour[10] = $nbrParticipants;
+        $retour['nbrParticipants'] = $nbrParticipants;
 
 
         // obtenir la distance totale pour toutes équipes
@@ -610,6 +611,7 @@ class Rencontres
         $retour[7] = $distVille;
         $retour[8] = $dureeVille;
         $retour[9] = $nbrParticipants;
+        $retour['nbrParticipants'] = $nbrParticipants;
 
 
         // obtenir la distance totale pour toutes équipes
@@ -701,6 +703,7 @@ class Rencontres
         $retour[8] = $dureeEquipe;
         $retour[9] = $nbrParticipants;
         $retour[10] = $distanceTotale;
+        $retour['nbrParticipants'] = $nbrParticipants;
 
 
         return $retour;
@@ -808,6 +811,7 @@ class Rencontres
         $retour[8] = $dureeTotale;
         $retour[9] = $listeTerrain;
         $retour[10] = $nbrParticipants;
+        $retour['nbrParticipants'] = $nbrParticipants;
 
 
         // obtenir la distance totale pour toutes équipes
@@ -917,6 +921,7 @@ class Rencontres
         $retour[7] = $distanceVilles;
         $retour[8] = $dureeTotale;
         $retour[9] = $nbrParticipants;
+        $retour['nbrParticipants'] = $nbrParticipants;
 
         // obtenir la distance totale pour toutes équipes
         $distanceTotale = Rencontres::getDistanceTotale($distanceVilles, $nbrParticipants);
