@@ -88,25 +88,6 @@
                      </div>
                      <!-- /. Nombre de journées bloc -->
 
-                     <!-- Nombre de rencontres par journée bloc -->
-                     <div class="col-lg-3" id="nbrRencontre" style="display: none">
-                         <div class="panel panel-default">
-                             <div class="panel-heading">
-                                 Nombre de rencontres par journée
-                             </div>
-                             <!-- /.panel-heading -->
-                             <div class="panel-body">
-                                 <div class="form-group">
-                                     <input type="number" min="0" class="form-control">
-                                 </div>
-
-                             </div>
-                             <!-- /.panel-body -->
-                         </div>
-                     </div>
-
-                     <!-- /. Nombre de rencontres par journée bloc -->
-
                      <!-- Ajouter une contrainte bloc -->
                      <div class="col-lg-3" id="ajoutContrainte" style="display: none">
                          <div class="panel panel-default">
@@ -117,7 +98,7 @@
                              <div class="panel-body">
                                  <div class="form-group">
                                      <label class="checkbox-inline">
-                                         <input type="checkbox">Toutes les équipes doivent accueillir au moins une fois
+                                         <input id="checkboxPlateauContrainteAccueil" type="checkbox">Toutes les équipes doivent accueillir au moins une fois
                                      </label>
 
                                  </div>
@@ -127,6 +108,26 @@
                          </div>
                      </div>
                      <!-- /. Ajouter une contrainte bloc -->
+
+                     <!-- Nombre de rencontres par journée bloc -->
+                     {#<div class="col-lg-3" id="nbrRencontre" style="display: none">#}
+                         {#<div class="panel panel-default">#}
+                             {#<div class="panel-heading">#}
+                                 {#Nombre de rencontres par journée#}
+                             {#</div>#}
+                             {#<!-- /.panel-heading -->#}
+                             {#<div class="panel-body">#}
+                                 {#<div class="form-group">#}
+                                     {#<input type="number" min="0" class="form-control">#}
+                                 {#</div>#}
+
+                             {#</div>#}
+                             <!-- /.panel-body -->
+                         {#</div>#}
+                     {#</div>#}
+
+                     <!-- /. Nombre de rencontres par journée bloc -->
+
 
 
                  </div>
@@ -151,8 +152,11 @@
                          </div>
                      </div>
                      <!-- /. Ajouter une contrainte bloc -->
-
                  </div>
+
+
+
+
                  <div class="row">
                      <div class="panel panel-default">
                          <div class="panel-heading">
@@ -189,7 +193,8 @@
 
                                      <tr>
                                          <td width="50%">
-                                             <select id="equipe1" class="equipe1" onchange="selectEquipe(this,this.parentNode.parentNode.getElementsByClassName('equipe2'))">
+                                             {#<select id="equipe1" class="equipe1" onchange="selectEquipe(this,this.parentNode.parentNode.getElementsByClassName('equipe2'))">#}
+                                             <select id="equipe1" class="equipe1" >
                                                  <option value="vide" selected> -- selectionnez une option -- </option>
                                                  {% for detailsVille in detailsVilles %}
                                                      <option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>
@@ -306,7 +311,7 @@
                      var plateau = document.getElementById("typeRencontre3").checked;
                      if (plateau) {
                          document.getElementById("nbrJournee").style.display = "block";
-                         document.getElementById("nbrRencontre").style.display = "block";
+//                         document.getElementById("nbrRencontre").style.display = "block";
                          document.getElementById("ajoutContrainte").style.display = "block";
                      }
 
@@ -317,7 +322,7 @@
                      var allerRetour = document.getElementById("typeRencontre1").checked;
                      if (allerRetour) {
                          document.getElementById("nbrJournee").style.display = "none";
-                         document.getElementById("nbrRencontre").style.display = "none";
+//                         document.getElementById("nbrRencontre").style.display = "none";
                          document.getElementById("ajoutContrainte").style.display = "none";
                      }
 
@@ -328,7 +333,7 @@
                      var aller = document.getElementById("typeRencontre2").checked;
                      if (aller) {
                          document.getElementById("nbrJournee").style.display = "none";
-                         document.getElementById("nbrRencontre").style.display = "none";
+//                         document.getElementById("nbrRencontre").style.display = "none";
                          document.getElementById("ajoutContrainte").style.display = "none";
 
                      }
@@ -373,7 +378,8 @@
 
                          console.log("------------------------------------ debug bouton ajouter des interdictions  ---------------------------------------");
 
-                         var ligneNbr = $('#mesContraintes tr').length;
+                         // obtenir le nombre des interdictions présentes
+                         var ligneNbr = $('#tbodyInterdictions tr').length;
                          console.log("ligneNbr : " + ligneNbr);
 
                          // obtenir les valeurs séléctionnées
@@ -382,6 +388,50 @@
 
                          console.log("interdictionEquipe1Id : " + interdictionEquipe1Id );
                          console.log("interdictionEquipe2Id : " + interdictionEquipe2Id );
+
+                         // controler si l'id du premier equipe et celui du deuxième équipe sont équivalents
+                         if(interdictionEquipe1Id == interdictionEquipe2Id ){
+                             alert("Veuillez vérifier que le premier equipe est différent du deuxième équipe");
+                             return;
+
+                         }
+
+                         // controler doublons dans un sens ou l'autre
+                         // controler s'il y a déjà des interdictions présentes
+                         if(ligneNbr> 0){
+                             var listeInterdictions = [];
+
+                             // obtenir la liste de toutes interdictions
+                             $('#tbodyInterdictions tr').each(function(i, el){
+                                 var $tds = $(this).find('td');
+                                 var premierEquipeId = $tds.eq(1).find("span").text();
+//                                 console.log("premierEquipeId: " + premierEquipeId);
+                                 var deuxiemeEquipeId = $tds.eq(2).find("span").text();
+//                                 console.log("deuxiemeEquipeId: " + deuxiemeEquipeId);
+
+                                 listeInterdictions.push({premierEquipeId: premierEquipeId, deuxiemeEquipeId: deuxiemeEquipeId} );
+                                 listeInterdictions.push({premierEquipeId: deuxiemeEquipeId, deuxiemeEquipeId: premierEquipeId} );
+
+                             });
+
+                             console.log("listeInterdictions: " + JSON.stringify(listeInterdictions));
+
+                             // controler pour chaque interdiction présente
+                            for(var i=0; i<listeInterdictions.length; i++){
+                                var premierEquipeInterdiction = listeInterdictions[i]["premierEquipeId"] ;
+//                                console.log("premierEquipeInterdiction: " + premierEquipeInterdiction);
+                                var deuxiemeEquipeInterdiction = listeInterdictions[i]["deuxiemeEquipeId"] ;
+//                                console.log("deuxiemeEquipeInterdiction: " + deuxiemeEquipeInterdiction);
+
+                                if(premierEquipeInterdiction == interdictionEquipe1Id && deuxiemeEquipeInterdiction == interdictionEquipe2Id){
+                                    alert("L'interdiction existe déjà. Veuillez choisir une autre interdiction");
+                                    return;
+                                }
+
+                            }
+                         }
+
+
 
                          // ajouter une nouvelle ligne dans la table d'interdictions
                          if(interdictionEquipe1Id != "vide" && interdictionEquipe2Id  != "vide"){
@@ -438,6 +488,17 @@
                          var poulesNbr = $("#inputPoulesNbr").val();
                          console.log("poulesNbr : " + poulesNbr );
 
+                         // controler le statut du checkbox contrainte d'accueil pour match plateau
+                         if($("#checkboxPlateauContrainteAccueil").is(":checked")){
+                             var contrainteAccueilPlateauExiste = 1;
+                         }
+                         else{
+                             var contrainteAccueilPlateauExiste = 0;
+
+                         }
+                         console.log("contrainteAccueilPlateauExiste : " + contrainteAccueilPlateauExiste );
+
+
                          // controler le champ obligatoire (le nombre de poules)
 //                         if (typeMatch == "plateau"){
 //                             alert("Ce type de match n'est pas encore supporté. Veuillez choisir un autre type de match");
@@ -468,7 +529,8 @@
 
 
                             // agréger les input params
-                            var inputParams = {typeMatch: typeMatch, poulesNbr: poulesNbr, idGroupe: idGroupe, interdictions: interdictions, repartitionsHomogenes  : repartitionsHomogenes };
+                            var inputParams = {typeMatch: typeMatch, poulesNbr: poulesNbr, idGroupe: idGroupe, interdictions: interdictions,
+                                repartitionsHomogenes  : repartitionsHomogenes, contrainteAccueilPlateauExiste: contrainteAccueilPlateauExiste };
                             console.log("inputParams : " + JSON.stringify(inputParams));
 
 

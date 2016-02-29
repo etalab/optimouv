@@ -448,12 +448,41 @@ def get_distance_for_member_combination_ids(memberCombinationIds):
 	except Exception as e:
 		show_exception_traceback()
 
+"""
+Function to check if all teams welcome at least one time 
+@return: 0 if false
+@return: 1 if true
+"""
+def check_welcome_constraint_match_plateau(memberCombinationIds, teams):
+	try:
+		statusCheckWelcomeConstraint = 0
+		welcomingTeams = []
+		
+		for day, contentDay in memberCombinationIds.items():
+			for group, contentGroup in contentDay.items():
+				hostIdTmp = int(contentGroup["hostId"])
+# 				logging.debug("hostIdTmp: %s" %hostIdTmp)
+				if hostIdTmp not in welcomingTeams:
+					welcomingTeams.append(hostIdTmp) 
+		
+# 		logging.debug("welcomingTeams: %s" %welcomingTeams)
+# 		logging.debug("teams: %s" %teams)
+
+		# compare list of welcoming teams with all teams
+		if sorted(welcomingTeams) == teams:
+			statusCheckWelcomeConstraint = 1
+
+		return statusCheckWelcomeConstraint
+	except Exception as e:
+		show_exception_traceback()
 
 """
 Function to calculate distance plateau for a given 3x4 matrix (plateau distribution)
 """
-def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPool):
+def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPool, welcomeConstraintExistMatchPlateau, teams):
 	try:
+
+		
 # 		logging.debug("  plateauDistribution: %s" %plateauDistributionPerPool)
 
 		# initialize host combination
@@ -474,6 +503,9 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 				hostCombinationNbr *= len(group)
 
 		logging.debug("  hostCombinationNbr: %s" %hostCombinationNbr)
+		logging.debug("  plateauDistributionPerPool:%s"%plateauDistributionPerPool)
+		logging.debug("  welcomeConstraintExistMatchPlateau:%s"%welcomeConstraintExistMatchPlateau)
+		logging.debug("  teams:%s"%teams)
 
 		# find the shortest distance
 		bestHostCombinationIndex = {}
@@ -484,9 +516,10 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 			if i%100 == 0:
 				logging.debug("  i: %s " %(i))
 
-			if i == 500:
+			if i == config.INPUT.IterShortestDistancePlateau:
 				break
 			
+			# convert iteration number to base 3
 			base3Tmp = str(convert_decimal_to_base3(i))
 # 			logging.debug("  base3Tmp: %s" %base3Tmp)
 
@@ -495,6 +528,7 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 				base3Tmp = '0' + base3Tmp
 # 			logging.debug("  base3Tmp: %s" %base3Tmp)
 
+			# get combination of index host for each day  
 			hostCombinationIndex = get_host_combination_index_from_base3(hostCombinationIndex, base3Tmp)
 # 			logging.debug("  hostCombinationIndex: %s" %hostCombinationIndex)
 
@@ -502,16 +536,28 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 			memberCombinationIds = get_member_combination_ids_from_host_combination_index(plateauDistributionPerPool, hostCombinationIndex)
 # 			logging.debug("  memberCombinationIds: %s" %memberCombinationIds)
 			
+			# if the flag of welcome constraint is checked
+			if(int(welcomeConstraintExistMatchPlateau) == 1):
+				# check welcome constraint for match plateau 
+				
+				statusCheckWelcomeConstraintMatchPlateau = check_welcome_constraint_match_plateau(memberCombinationIds, teams)
+# 				logging.debug("  statusCheckWelcomeConstraintMatchPlateau: %s" %statusCheckWelcomeConstraintMatchPlateau)
+				
+				if statusCheckWelcomeConstraintMatchPlateau == 0:
+					continue
+			
+			
 			# calculate distance total for a specific member combination
 			distanceMemberCombination = get_distance_for_member_combination_ids(memberCombinationIds)
 # 			logging.debug("  distanceMemberCombination: %s" %distanceMemberCombination)
 
-			# compare with current best value
-			if i == 0:
+			# assign the value for the first time
+			if bestDistanceMemberCombination == 0:
 				bestDistanceMemberCombination = distanceMemberCombination
 				bestHostCombinationIndex = hostCombinationIndex
 				bestMemberCombinationIds = memberCombinationIds
 				
+			# compare with current best value
 			if distanceMemberCombination < bestDistanceMemberCombination:
 				bestDistanceMemberCombination = distanceMemberCombination
 				bestHostCombinationIndex = hostCombinationIndex
@@ -524,6 +570,8 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 # 		logging.debug("  bestDistanceMemberCombination: %s" %bestDistanceMemberCombination)
 # 		logging.debug("  bestHostCombinationIndex: %s" %bestHostCombinationIndex)
 # 		logging.debug("  bestMemberCombinationIds: %s" %bestMemberCombinationIds)
+		
+# 		sys.exit()
 		
 		result = {	"bestDistance": bestDistanceMemberCombination, 
 					"bestHostCombinationIndex": bestHostCombinationIndex,
@@ -610,11 +658,12 @@ def get_encounters_details_from_member_combination_ids(memberCombinationIds):
 """
 Function to create encounters from pool distribution for match plateau
 """
-def create_encounters_from_pool_distribution_plateau(poolDistribution):
+def create_encounters_from_pool_distribution_plateau(poolDistribution, welcomeConstraintExistMatchPlateau):
 	try:
 		encountersPlateau = {}
 
 		logging.debug("")
+
 
 		bestDistancePerPool = {}
 		for pool, teams in poolDistribution.items():
@@ -664,7 +713,7 @@ def create_encounters_from_pool_distribution_plateau(poolDistribution):
 												}
 				logging.debug("  plateauDistributionPerPoolTmp: %s" %plateauDistributionPerPoolTmp)
 	
-				returnShortestDistance = calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPoolTmp)
+				returnShortestDistance = calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPoolTmp, welcomeConstraintExistMatchPlateau, teams)
 	# 			logging.debug("  returnShortestDistance: %s" %returnShortestDistance)
 				
 				# for first iteration
@@ -685,7 +734,7 @@ def create_encounters_from_pool_distribution_plateau(poolDistribution):
 # 						logging.debug("  bestMemberCombinationIds: %s" %bestMemberCombinationIds)
 		
 
-			logging.debug(" ----------------------------------  FINISHED ITERATION PLATEAU --------------------------------------------")
+			logging.debug(" -----------------------  FINISHED ITERATION PLATEAU FOR POOL: %s  ----------------------------------------"%pool)
 			logging.debug(" bestMemberCombinationIds: %s "%bestMemberCombinationIds)
 		
 			# get encounter details from member combination ids

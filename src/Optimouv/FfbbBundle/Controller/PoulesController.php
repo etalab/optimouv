@@ -192,11 +192,19 @@ class PoulesController extends Controller
         # récupérer idListe pour le breadcrump
         $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListeParticipants)->getNom();
 
+        # decoder les refs pour le match plateau
+        for($i=0; $i<count($detailsEntites); $i++){
+            $detailsEntites[$i]["refPlateauDecoder"] =  json_decode($detailsEntites[$i]["refPlateau"], true) ;
+        }
+
+
+//        error_log("\n detailsEntites: ".print_r($detailsEntites , true), 3, "error_log_optimouv.txt");
+
+
         return $this->render('FfbbBundle:Poules:visualiserListeEquipes.html.twig', array(
             'idListeParticipants' => $idListeParticipants,
             'detailsEntites' => $detailsEntites,
-            'nomListe' =>$nomListe,
-
+            'nomListe' => $nomListe,
         ));
 
     }
@@ -668,6 +676,14 @@ class PoulesController extends Controller
             $infoPoule = array($taillePoule => $nombrePoule);
         }
 
+        # récupérer la contrainte d'accueil pour le match plateau
+        if(array_key_exists("contrainteAccueilPlateauExiste", $detailsCalcul["params"])){
+            $contrainteAccueilPlateauExiste = $detailsCalcul["params"]["contrainteAccueilPlateauExiste"];
+        }
+        else{
+            $contrainteAccueilPlateauExiste = 0;;
+        }
+
 
 //        error_log("\n infoPoule : ".print_r($infoPoule , true), 3, "error_log_optimouv.txt");
 
@@ -726,6 +742,7 @@ class PoulesController extends Controller
             'finalStatut' => $finalStatut,
             'phantomExiste' => $phantomExiste,
             'infoPoule' => $infoPoule,
+            'contrainteAccueilPlateauExiste' => $contrainteAccueilPlateauExiste,
 
 
         ));
@@ -785,12 +802,17 @@ class PoulesController extends Controller
         # obtenir le détail des équipes
         $detailsVilles = $em->getRepository('FfbbBundle:Entite')->getEntities($equipes);
 
+        # obtenir le type de match
+        $typeMatch = $detailsCalcul["typeMatch"];
+
+//        error_log("\n detailsCalcul : ".print_r($detailsCalcul , true), 3, "error_log_optimouv.txt");
+
 
         # parser les données pour l'affichage
-        $donneesComparison = $this->get('service_poules')->parserComparaisonScenario($detailsVilles, $scenarioOptimalAvecContrainte, $scenarioOptimalSansContrainte, $scenarioEquitableAvecContrainte, $scenarioEquitableSansContrainte, $scenarioRef, $refExiste, $contraintsExiste );
+        $donneesComparison = $this->get('service_poules')->parserComparaisonScenario($detailsVilles, $scenarioOptimalAvecContrainte, $scenarioOptimalSansContrainte, $scenarioEquitableAvecContrainte, $scenarioEquitableSansContrainte, $scenarioRef, $refExiste, $contraintsExiste, $typeMatch );
 
 
-//        error_log("\n donneesComparison : ".print_r($donneesComparison , true), 3, "error_log_optimouv.txt");
+
 
         return $this->render('FfbbBundle:Poules:comparaisonScenario.html.twig', array(
             'idResultat' => $idResultat,

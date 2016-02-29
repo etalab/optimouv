@@ -78,6 +78,23 @@ class Listes{
         $extensionFichier = explode(".", $_FILES["file-0"]["name"]);
         $extensionFichier = end($extensionFichier);
 
+        # controler l'existence du nom de fichier dans la table des listes de participants et des listes de lieux
+        $retourControlerExistenceNomFichier = $this->verifierExistenceNomFichier($nomFichier);
+
+
+//        error_log("\n Function: verifierExistenceCodePostalNomVille, \n"
+//            ."retourControlerExistenceNomFichier: ".print_r($retourControlerExistenceNomFichier, true), 3, $this->error_log_path);
+
+        if(!$retourControlerExistenceNomFichier["success"]){
+            $retour = array(
+                "success" => false,
+                "msg" => "Une liste avec le même nom a déjà été importée. Veuillez renommer votre liste si vous souhaitez tout de même l'importer."
+            );
+
+
+            return $retour;
+        }
+
         // Dès qu'un fichier a été reçu par le serveur
         if (file_exists($cheminFichierTemp) || is_uploaded_file($cheminFichierTemp)) {
 
@@ -180,23 +197,6 @@ class Listes{
                             if($donnéesLigne != array(null)){
 
 
-//                                # controler des doublons # FIXME
-//                                # ajouter la ligne courante dans le répértoire des lignes si ce n'est pas un doublon
-//                                if(!in_array($donnéesLigne, $toutesLignes )){
-//                                    array_push($toutesLignes, $donnéesLigne);
-//                                }
-//                                else{
-//                                    $retour = array(
-//                                        "success" => false,
-//                                        "msg" => "Erreur ligne :".$nbrLigne."!"
-//                                            ." Le fichier comporte des lignes en double.!"
-//                                            ." Veuillez supprimer cette ligne et effectuer à nouveau l’import"
-//                                    );
-//                                    array_push($lignesErronees, $retour["msg"]);
-//                                    continue;
-//                                }
-
-
                                 // obtenir la valeur pour chaque paramètre
                                 $typeEntite = $donnéesLigne[0];
 
@@ -238,11 +238,11 @@ class Listes{
                                 if (strtolower($typeEntite) == "equipe") {
 
                                     # controler le nombre de colonnes
-                                    if(count($donnéesLigne) != 11 && count($donnéesLigne) != 12 && count($donnéesLigne) != 18){
+                                    if(count($donnéesLigne) != 11 && count($donnéesLigne) != 18){
                                         $retour = array(
                                             "success" => false,
                                             "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." La ligne doit contenir 11 valeurs. Donné: ".count($donnéesLigne)." valeurs"
+                                                ." La ligne doit contenir 11 valeurs (meilleur lieu) ou 18 valeurs (optimisation de poule). Donné: ".count($donnéesLigne)." valeurs"
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -376,11 +376,25 @@ class Listes{
                                     $projection = $donnéesLigne[9];
                                     $licencies = $donnéesLigne[10];
 
-                                    //test si on traite une equipe qui appartient à une poule
 
-                                    if(count($donnéesLigne) == 12){
+                                    // test de l'import pour l'optimisation des poules
+                                    if(count($donnéesLigne) == 18){
 
                                         $poule = $donnéesLigne[11];
+
+                                        // controler la presence de valeur pour le champ 'POULE'
+                                        if(empty($poule)){
+                                            $retour = array(
+                                                "success" => false,
+                                                "msg" => "Erreur ligne :".$nbrLigne."!"
+                                                    ."Le champ poule doit être rempli. Veuillez corriger et importer de nouveau votre fichier"
+                                            );
+                                            array_push($lignesErronees, $retour["msg"]);
+                                            continue;
+                                        }
+
+
+                                        // controler si les valeurs fournies pour le champ 'POULE' sont des alphabets
                                         $alphabet = ['','A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ];
                                         if (!in_array($poule, $alphabet))
                                         {
@@ -393,26 +407,6 @@ class Listes{
                                             continue;
                                         }
 
-                                    }
-
-                                    // test poules manquantes pour match aller retour et match plateau
-                                    if( count($donnéesLigne) == 12 || count($donnéesLigne) == 18  ){
-                                        $poule = $donnéesLigne[11];
-
-                                        if(empty($poule)){
-                                            $retour = array(
-                                                "success" => false,
-                                                "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                    ."Le champ poule doit être rempli. Veuillez corriger et importer de nouveau votre fichier"
-                                            );
-                                            array_push($lignesErronees, $retour["msg"]);
-                                            continue;
-                                        }
-
-                                    };
-
-                                    // test si le fichier est adapté pour le match plateau
-                                    if(count($donnéesLigne) == 18){
 
                                         # ajouter les noms dans la liste
                                         array_push($tousNomsEquipes, $donnéesLigne[1]);
@@ -433,13 +427,25 @@ class Listes{
                                         array_push($premierJourReceptionListe, $premierJourReception);
                                         array_push($deuxiemeJourReceptionListe, $deuxiemeJourReception);
 
-                                        // controle les champs des jours de reception
-                                        if( ($premierJourReception == "" ) or  ($deuxiemeJourReception == "") or !(is_numeric($premierJourReception))  or !(is_numeric($deuxiemeJourReception)) ){
+                                        // controle le champ 'PREMIER JOUR DE RECEPTION'
+                                        if( ($premierJourReception == "" ) or  !(is_numeric($premierJourReception))   ){
 
                                             $retour = array(
                                                 "success" => false,
                                                 "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                    ."Le champ 'PREMIER JOUR DE RECEPTION' (colonne 13) et Le champ 'DEUXIEME JOUR DE RECEPTION' (colonne 16) doivent être rempli and avoir la valeur de type entier à partir de 0!"
+                                                    ."Le champ 'PREMIER JOUR DE RECEPTION' (colonne 13) doit être rempli and avoir la valeur de type entier à partir de 0!"
+                                                    ."Veuillez corriger et importer de nouveau votre fichier"
+                                            );
+                                            array_push($lignesErronees, $retour["msg"]);
+                                            continue;
+                                        }
+                                        // controle le champ 'DEUXIEME JOUR DE RECEPTION'
+                                        if( ($deuxiemeJourReception == "" ) or  !(is_numeric($deuxiemeJourReception))   ){
+
+                                            $retour = array(
+                                                "success" => false,
+                                                "msg" => "Erreur ligne :".$nbrLigne."!"
+                                                    ."Le champ 'DEUXIEME JOUR DE RECEPTION' (colonne 16) doit être rempli and avoir la valeur de type entier à partir de 0!"
                                                     ."Veuillez corriger et importer de nouveau votre fichier"
                                             );
                                             array_push($lignesErronees, $retour["msg"]);
@@ -726,9 +732,6 @@ class Listes{
                                 }
 
 
-
-
-
                                 # controler les doublons pour tous les types
                                 # ajouter la ligne courante dans le répértoire des lignes si ce n'est pas un doublon
                                 $donneesLigneEquipe = [$nom, $codePostal, $ville];
@@ -748,10 +751,6 @@ class Listes{
                                 }
 
 
-
-
-
-
                             }
 
                         }
@@ -759,7 +758,6 @@ class Listes{
                     }
 
 //                    error_log("service: listes, function: controlerEntites, status: ".print_r($tousNomsEquipes, True), 3, $this->error_log_path);
-
 
 
                     // controler equipe 1 et equipe 2, elles doivent figurer dans les lignes importées (match plateau)
@@ -1416,6 +1414,67 @@ class Listes{
 
     }
 
+    # vérifier l'existence du nom fichier dans la table liste de participants et liste de lieux
+    private function verifierExistenceNomFichier($nomFichier){
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+        $nomFichier = explode(".", $nomFichier)[0];
+
+        try{
+            # obtenir l'objet PDO
+            $bdd = $this->getPdo();
+
+            if (!$bdd) {
+                //erreur de connexion
+                error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: verifierExistenceNomFichier, datetime: ".$dateTimeNow, 3, $this->error_log_path);
+                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+            }
+
+            # controler les listes de participants
+            $sql = "SELECT nom from liste_participants;";
+            $stmt = $bdd->prepare($sql);
+            $stmt->execute();
+            $resultatListeParticipants = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            for($i=0; $i<count($resultatListeParticipants); $i++){
+                $nomListeParticipantsTmp = $resultatListeParticipants[$i]["nom"];
+
+                if($nomListeParticipantsTmp == $nomFichier){
+                    return array("success" => false);
+                }
+            }
+
+            # controler les listes de lieux
+            $sql = "SELECT nom from liste_lieux;";
+            $stmt = $bdd->prepare($sql);
+            $stmt->execute();
+            $resultatListeLieux = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            for($i=0; $i<count($resultatListeLieux); $i++){
+                $nomListeLieuxTmp = $resultatListeLieux[$i]["nom"];
+
+                if($nomListeLieuxTmp == $nomFichier){
+                    return array("success" => false);
+                }
+
+            }
+
+//            error_log("\n Function: verifierExistenceCodePostalNomVille, \n"
+//                ."resultatListeParticipants: ".print_r($resultatListeParticipants, true), 3, $this->error_log_path);
+
+
+            return array("success" => true);
+        }
+        catch (Exception $e) {
+            error_log("\n erreur générique, Service: Listes, Function: verifierExistenceNomFichier, \n"
+                . "erreur: " . print_r($e, true), 3, $this->error_log_path);
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
+
+    }
+
 
     # corriger le code postal
     private  function corrigerCodePostal($codePostal){
@@ -1442,8 +1501,10 @@ class Listes{
         $genericMsg = "Veuillez utiliser les formats de fichier mis à disposition dans Télécharger les formats de fichiers d’import ";
 
         // tester le nombre de colonnes
-        // nombreColonnesEntetes (11 pour liste d'équipes, 10 pour liste de personnes, 13 pour liste de lieux)
-        $nombreColonnesEntetes = [11,10,13,12, 18];
+        // nombreColonnesEntetes (11 pour liste d'équipes, 10 pour liste de personnes, 13 pour liste de lieux ce sont pour le cas de meuilleur lieux)
+        // nombreColonnesEntetes (18 pour l'optimisation de poules)
+//        $nombreColonnesEntetes = [11,10,13,12, 18];
+        $nombreColonnesEntetes = [11,10,13, 18];
         if(!in_array(count($entete), $nombreColonnesEntetes)){
             $retour["msg"] = "Veuillez vérifier le nombre des colonnes.!"
                 .$genericMsg;
@@ -1464,7 +1525,8 @@ class Listes{
 //            error_log("service: listes, function: controlerEntites, count entete: ".print_r(count($entete), True), 3, $this->error_log_path);
 
             // pour la liste d'équipes
-            if(count($entete) == 11 || count($entete) == 12 || count($entete) == 18){
+//            if(count($entete) == 11 || count($entete) == 12 || count($entete) == 18){
+            if(count($entete) == 11 || count($entete) == 18){
                 if($entete[2] != "CODE POSTAL" ){
                     $retour["msg"] = "Veuillez vérifier que le nom de la colonne 3 de l'en-tête correspond au template donné (CODE POSTAL).!"
                         .$genericMsg;

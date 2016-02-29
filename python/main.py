@@ -1069,12 +1069,14 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 """
 Function to optimize pool for Plateau Match (Match Plateau)
 """
-def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom):
+def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom, welcomeConstraintExistMatchPlateau):
 	try:
 		results = {"typeMatch": "plateau", "nombrePoule": poolNbr, "taillePoule": poolSize, 
 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
-					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, "params": {}
+					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
+					"params": {"contrainteAccueilPlateauExiste" : welcomeConstraintExistMatchPlateau}
 				}
+		
 		
 # 		# get list of ids, names and cities from entity table for prohibition constraints
 		for indexProhibition, members in enumerate(prohibitionConstraints, start=1):
@@ -1247,7 +1249,7 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		results["scenarioOptimalSansContrainte"]["poulesCoords"] = poolDistributionCoords_OptimalWithoutConstraint
 
 		# optimize distance for each pool
-		encounters_OptimalWithoutConstraint_Plateau = create_encounters_from_pool_distribution_plateau(poolDistribution_OptimalWithoutConstraint)
+		encounters_OptimalWithoutConstraint_Plateau = create_encounters_from_pool_distribution_plateau(poolDistribution_OptimalWithoutConstraint, welcomeConstraintExistMatchPlateau)
 		results["scenarioOptimalSansContrainte"]["rencontreDetails"] = encounters_OptimalWithoutConstraint_Plateau
 
 		# get pool details from encounters
@@ -1302,7 +1304,7 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 
 
 		# optimize distance for each pool
-		encounters_EquitableWithoutConstraint_Plateau = create_encounters_from_pool_distribution_plateau(poolDistribution_EquitableWithoutConstraint)
+		encounters_EquitableWithoutConstraint_Plateau = create_encounters_from_pool_distribution_plateau(poolDistribution_EquitableWithoutConstraint, welcomeConstraintExistMatchPlateau)
 		results["scenarioEquitableSansContrainte"]["rencontreDetails"] = encounters_EquitableWithoutConstraint_Plateau
 
 		# get pool details from encounters
@@ -1356,7 +1358,7 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			results["scenarioOptimalAvecContrainte"]["poulesCoords"] = poolDistributionCoords_OptimalWithConstraint
 	
 			# optimize distance for each pool
-			encounters_OptimalWithConstraint_Plateau = create_encounters_from_pool_distribution_plateau(poolDistribution_OptimalWithConstraint)
+			encounters_OptimalWithConstraint_Plateau = create_encounters_from_pool_distribution_plateau(poolDistribution_OptimalWithConstraint, welcomeConstraintExistMatchPlateau)
 			results["scenarioOptimalAvecContrainte"]["rencontreDetails"] = encounters_OptimalWithConstraint_Plateau
 	
 			# get pool details from encounters
@@ -1408,7 +1410,7 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			results["scenarioEquitableAvecContrainte"]["poulesCoords"] = poolDistributionCoords_EquitableWithConstraint
 	
 			# optimize distance for each pool
-			encounters_EquitableWithConstraint_Plateau = create_encounters_from_pool_distribution_plateau(poolDistribution_EquitableWithConstraint)
+			encounters_EquitableWithConstraint_Plateau = create_encounters_from_pool_distribution_plateau(poolDistribution_EquitableWithConstraint, welcomeConstraintExistMatchPlateau)
 			results["scenarioEquitableAvecContrainte"]["rencontreDetails"] = encounters_EquitableWithConstraint_Plateau
 	
 			# get pool details from encounters
@@ -1436,14 +1438,6 @@ def callback(ch, method, properties, body):
 		beginTime = datetime.datetime.now()
 		logging.debug("\n")
 		logging.debug("starting current time : %s" %beginTime.strftime('%Y-%m-%d %H:%M:%S'))
-		
-# 		# consume one message at a time
-# 		consumer.stop_consuming()
-# 		ch.stop_consuming()
-# 		print('Sending a Basic.Cancel RPC command to RabbitMQ')
-# 		ch.basic_cancel(self.on_cancelok, self._consumer_tag)
-# 		ch.basic_cancel()
-# 		ch.close()
 
 		body = body.decode('utf-8')
 		# get report id from RabbitMQ
@@ -1482,6 +1476,12 @@ def callback(ch, method, properties, body):
 
 		# flag to indicate if there are phantom teams (used if the pool size is a float instead of an int)
 		flagPhantom = 0
+		
+		# get welcome constraint for match plateau
+		if "contrainteAccueilPlateauExiste" in params:
+			welcomeConstraintExistMatchPlateau = params["contrainteAccueilPlateauExiste"]
+		else:
+			welcomeConstraintExistMatchPlateau = 0
 
 		logging.debug("########################################### READ DATA FROM DB ##############################################")
 		# get user id 
@@ -1503,7 +1503,6 @@ def callback(ch, method, properties, body):
 		
 		# check team number and pool number for match plateau
 		if launchType == "plateau":
-# 			control_params_match_plateau(userId, teamNbr, poolNbr)
 			control_params_match_plateau(userId, teamNbr, poolNbr, reportId)
 		
 		
@@ -1621,7 +1620,7 @@ def callback(ch, method, properties, body):
 		elif launchType == "allerSimple" and varTeamNbrPerPool == 0:
 			results = optimize_pool_one_way_match(P_InitMat_oneWaywithoutConstraint, P_InitMat_oneWayWithConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom)
 		elif launchType == "plateau" and varTeamNbrPerPool == 0:
-			results = optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom)
+			results = optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom, welcomeConstraintExistMatchPlateau)
 
 		### Post treatment
 		if varTeamNbrPerPool > 0 and ( launchType in  ["allerRetour", "allerSimple"] ):
