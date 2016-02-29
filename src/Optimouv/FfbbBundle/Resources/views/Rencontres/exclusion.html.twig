@@ -101,11 +101,30 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <p>Les scénarios ci-dessous présentent les résultats les plus écoresponsables correspondant
-                            à votre recherche </p>
+                        <div class="panel-heading col-lg-12">
+                            <div class="col-lg-10" >
+                                Les scénarios ci-dessous présentent les résultats les plus écoresponsables correspondant
+                                à votre recherche
+                                {% if villeDepart == villeDepartEq %}
+                                    <p style="text-indent:10px;"><i>Pour vos critères de recherche, le scénario optimal et le
+                                            scénario équitable sont équivalents.</i></p>
+                                {% else %}
+                                    <p></p>
+                                {% endif %}
 
+                            </div>
+                            {#<div style="float:left; position:relative; width: 10%">#}
+                            <div class="col-lg-1">
+                                {#<a href="{{ path('ffbb_comparaison_sc_rencontre', {'idRapport': idRapport}) }}" class="btn btn-default-rencontre">Comparer les scénarios</a>#}
+                                <form action="{{ path('ffbb_comparaison_sc_rencontre', {'idRapport': idRapport}) }}" method="post">
+                                    <input type="hidden" name="scenario" value="exclusion">
+                                    <button type="submit" class="btn btn-default-rencontre">Comparer les scénarios</button>
+                                </form>
+                            </div>
                         </div>
+
+
+
 
                         <!-- .panel-heading -->
                         <div class="panel-body">
@@ -245,7 +264,7 @@
                                                                 est <strong>{{ villeDepart }}</strong>
                                                             </p>
                                                             <p class="list-group-item">
-                                                                <i class="fa fa-road fa-fw" style="padding-right: 30px"></i> <strong>{{ distanceMin|number_format(0, ',', ' ') }}</strong> kilomètres au total
+                                                                <i class="fa fa-road fa-fw" style="padding-right: 30px"></i> <strong>{{ distanceMin|number_format(0, ',', ' ') }}</strong> Kms au total
                                                                 à parcourir pour l'ensemble du scénario
                                                             </p>
                                                             <p href="#" class="list-group-item">
@@ -304,7 +323,7 @@
                                                                 <thead>
                                                                 <tr >
                                                                     <th style="font-weight: bold !important;">Participants</th>
-                                                                    <th style="text-align:right">Kilomètres à parcourir</th>
+                                                                    <th style="text-align:right">Kms à parcourir</th>
                                                                     <th style="text-align:right">Temps de parcours (H:M)</th>
                                                                     <th style="text-align:right">Coût du parcours en voiture(€)</th>
                                                                     <th style="text-align:right">Coût du parcours en covoiturage(€)</th>
@@ -507,7 +526,7 @@
                                                                 est <strong>{{ villeDepartEq }}</strong>
                                                             </p>
                                                             <p   class="list-group-item">
-                                                                <i class="fa fa-road fa-fw" style="padding-right: 30px"></i> <strong>{{ distanceMinEq|number_format(0, ',', ' ') }}</strong> kilomètres au total
+                                                                <i class="fa fa-road fa-fw" style="padding-right: 30px"></i> <strong>{{ distanceMinEq|number_format(0, ',', ' ') }}</strong> Kms au total
                                                                 à parcourir pour l'ensemble du scénario
                                                             </p>
                                                             <p   class="list-group-item">
@@ -568,7 +587,7 @@
                                                                 <thead>
                                                                 <tr >
                                                                     <th style="font-weight: bold !important;">Participants</th>
-                                                                    <th style="text-align:right">Kilomètres à parcourir</th>
+                                                                    <th style="text-align:right">Kms à parcourir</th>
                                                                     <th style="text-align:right">Temps de parcours (H:M)</th>
                                                                     <th style="text-align:right">Coût du parcours en voiture(€)</th>
                                                                     <th style="text-align:right">Coût du parcours en covoiturage(€)</th>

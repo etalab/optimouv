@@ -20,6 +20,9 @@ use Symfony\Component\HttpFoundation\Response;
 
         $participants = [];
 
+
+
+
         $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idRapport);
         $idGroupe = $idGroupe[0]['idGroupe'];
 
@@ -29,7 +32,6 @@ use Symfony\Component\HttpFoundation\Response;
         $retour = json_decode($retour[0]["detailsCalcul"], true);
 
         $retourOp = $retour[0];
-
         $retourEq = $retour[1];
 
         //Donn�es du sc�nario optimal
@@ -52,27 +54,6 @@ use Symfony\Component\HttpFoundation\Response;
         /************Equitable********/
         ///////////////////////////////
 
-//
-//
-//        //Donn�es du sc�nario �quitable
-//        //$retourEq = $this->get('service_rencontres')->scenarioEquitable($idGroupe);
-//
-//        $typeAction = "meilleurLieuEq";
-//        $idTache = $this->get('service_rencontres')->Producer($idGroupe, $typeAction);
-//
-//        $this->get('old_sound_rabbit_mq.rencontre_producer')->publish($idTache);
-//
-//        do {
-//            sleep(2);
-//            $statutTache = $em->getRepository('FfbbBundle:Rapport')->getStatut($idTache);
-//
-//        } while ($statutTache == 2);
-//
-//
-//        $retourEq = $em->getRepository('FfbbBundle:Scenario')->getDetailsCalcul($idTache);
-//
-//        $retourEq = $retourEq[0]["detailsCalcul"];
-//        $retourEq = json_decode($retourEq, true);
 
         $villeDepartEq = $retourEq[0];
         $longPtDepEq = $retourEq[1];
