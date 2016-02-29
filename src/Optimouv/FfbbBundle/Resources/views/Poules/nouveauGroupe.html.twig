@@ -31,14 +31,14 @@
                                               margin-bottom: 10px !important;" required x-moz-errormessage="Veuillez donner un nom à votre groupe" >
                       <input type="hidden" name="idListeParticipants" value="{{ idListeParticipants }}">
 
-                       <select multiple="multiple" size="10" name="duallistbox_demo1[]">
+                       <select multiple="multiple" size="10" name="duallistbox_demo1[]" id="duallistbox_demo1">
                          {% for entite in entites %}
                               <option value="{{ entite.id }}"> {{ entite.codePostal }} | {{ entite.nom }} |  {{ entite.ville }} </option>
                          {% endfor %}
                      </select>
 
                      <br>
-                     <button type="submit" class="btn btn-primary pull-right">Lancer</button>
+                     <button type="submit" class="btn btn-primary pull-right"  id="creerGroupe"  style="visibility: hidden">Lancer</button>
                  </form>
 
              </div>
@@ -56,6 +56,22 @@
              <!-- code interne dual list box -->
              <script type="text/javascript" charset="UTF-8">
                  var demo1 = $('select[name="duallistbox_demo1[]"]').bootstrapDualListbox();
+
+
+                 $("#duallistbox_demo1").change(function(){
+
+                     var valeur = document.getElementById("duallistbox_demo1").value;
+                     if (valeur != '') {
+
+                         document.getElementById('creerGroupe').style.visibility = "visible";
+                     }
+                     else {
+                         document.getElementById('creerGroupe').style.visibility = "hidden";
+                         alert('Merci de sélectionner des équipes pour créer votre groupe.');
+
+                     }
+                 });
+
 
              </script>
          {% endblock %}
