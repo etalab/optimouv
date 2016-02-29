@@ -33,14 +33,14 @@
                      {% if idListeLieux is defined %}
                          <input type="hidden" name="idListeLieux" value="{{ idListeLieux }}">
                      {% endif %}
-                       <select multiple="multiple" size="10" name="duallistbox_demo1[]">
+                       <select multiple="multiple" size="10" name="duallistbox_demo1[]" onchange="verifForm()" id="duallistbox_demo1">
                          {% for entite in entites %}
                               <option value="{{ entite.id }}"> {{ entite.codePostal }} | {{ entite.nom }} |  {{ entite.ville }} </option>
                          {% endfor %}
                      </select>
 
                      <br>
-                     <button type="submit" class="btn btn-default-rencontre pull-right">Lancer</button>
+                     <button type="submit" class="btn btn-default-rencontre pull-right" id="creerGroupe"  style="visibility: hidden">Lancer</button>
                  </form>
 
              </div>
@@ -58,7 +58,22 @@
              <!-- code interne dual list box -->
              <script type="text/javascript" charset="UTF-8">
                  var demo1 = $('select[name="duallistbox_demo1[]"]').bootstrapDualListbox();
+                 function verifForm(){
 
+                     var valeur = document.getElementById("duallistbox_demo1").value;
+                     if(valeur != ''){
+
+                         document.getElementById('creerGroupe').style.visibility="visible";
+                     }
+                     else{
+                         document.getElementById('creerGroupe').style.visibility="hidden";
+                         alert('Merci de sélectionner des équipes pour créer votre groupe.');
+
+                     }
+
+
+
+                 }
              </script>
          {% endblock %}
 
