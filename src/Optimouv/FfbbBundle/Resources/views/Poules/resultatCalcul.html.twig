@@ -2471,8 +2471,109 @@
                                                              </div>
                                                              <!-- /.table-responsive -->
                                                          </div>
-                                                         <a href="{{ path('ffbb_poules_details_calcul') }}" class="pull-left">Détails
-                                                             du calcul</a>
+
+
+
+
+
+
+
+
+
+                                                         {% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}
+                                                             {#<div class="row">#}
+                                                                 {#<div class="panel panel-default">#}
+                                                                     {#<div class="panel-heading">#}
+                                                                         {#<span id="changeAffectationOptSc" style="cursor:pointer"> Ajouter des changements d'affectation d'équipes par poule </span>#}
+                                                                     {#</div>#}
+                                                                     {#<!-- /.panel-heading -->#}
+                                                                     {#<div class="panel-body" id="changeAffectationOptScBody" style="display: none">#}
+
+                                                                         {#<table id="tableChangeAffectationOptSc" class="table table-striped table-bordered table-hover">#}
+                                                                             {#<thead>#}
+                                                                             {#<tr>#}
+                                                                                 {#<th width="20%" style="text-align:center"><h4>Equipes de départ</h4></th>#}
+                                                                                 {#<th width="20%" style="text-align:center"><h4>Equipes de destination</h4></th>#}
+                                                                                 {#<th width="10%"><h4></h4></th>#}
+                                                                             {#</tr>#}
+                                                                             {#</thead>#}
+
+                                                                             {#<tbody id="tbodyChangeAffectationOptSc">#}
+                                                                             {#</tbody>#}
+                                                                         {#</table>#}
+
+
+                                                                         {#<br>#}
+                                                                         {#<table class="table table-striped table-bordered table-hover">#}
+                                                                             {#<thead>#}
+                                                                             {#<tr>#}
+                                                                                 {#<th width="15%" style="text-align:center">Poule de départ</th>#}
+                                                                                 {#<th width="20%" style="text-align:center">Equipe de départ</th>#}
+                                                                                 {#<th width="15%" style="text-align:center">Poule de destination</th>#}
+                                                                                 {#<th width="20%" style="text-align:center">Equipe de destination</th>#}
+                                                                             {#</tr>#}
+                                                                             {#</thead>#}
+
+                                                                             {#<tbody>#}
+
+                                                                             {#<tr>#}
+                                                                                 {#<td width="15%">#}
+                                                                                     {#<select id="pouleDepartOptSc" class="pouleDepart">#}
+                                                                                         {#&#123;&#35;{% for detailsVille in detailsVilles %}&#35;&#125;#}
+                                                                                             {#&#123;&#35;<option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>&#35;&#125;#}
+                                                                                         {#&#123;&#35;{% endfor %}&#35;&#125;#}
+                                                                                     {#</select>#}
+                                                                                 {#</td>#}
+
+                                                                                 {#<td width="20%">#}
+                                                                                     {#<select id="equipeDepartOptSc" class="equipeDepart">#}
+                                                                                         {#&#123;&#35;{% for detailsVille in detailsVilles %}&#35;&#125;#}
+                                                                                             {#&#123;&#35;<option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>&#35;&#125;#}
+                                                                                         {#&#123;&#35;{% endfor %}&#35;&#125;#}
+                                                                                     {#</select>#}
+                                                                                 {#</td>#}
+
+                                                                                 {#<td width="15%">#}
+                                                                                     {#<select id="pouleDestinationOptSc" class="pouleDestination">#}
+                                                                                     {#</select>#}
+                                                                                 {#</td>#}
+
+                                                                                 {#<td width="20%">#}
+                                                                                     {#<select id="equipeDestinationOptSc" class="equipeDestination" >#}
+                                                                                         {#&#123;&#35;{% for detailsVille in detailsVilles %}&#35;&#125;#}
+                                                                                         {#&#123;&#35;<option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>&#35;&#125;#}
+                                                                                         {#&#123;&#35;{% endfor %}&#35;&#125;#}
+                                                                                     {#</select>#}
+                                                                                 {#</td>#}
+                                                                             {#</tr>#}
+
+                                                                             {#</tbody>#}
+                                                                         {#</table>#}
+
+
+                                                                         {#<br>#}
+
+                                                                         {#<button id="btnAjouterChangementAffectation" class="btn btn-primary ">Ajouter</button>#}
+
+                                                                     {#</div>#}
+
+
+                                                                     {#<!-- /.panel-body -->#}
+
+
+                                                                 {#</div>#}
+
+                                                             {#</div>#}
+
+                                                             {#<br/>#}
+                                                             {#<br/>#}
+                                                         {% endif %}
+
+
+
+
+
+                                                         <a href="{{ path('ffbb_poules_details_calcul') }}" class="pull-left">Détails du calcul</a>
 
 
                                                          {% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}
@@ -2482,6 +2583,7 @@
 
                                                              <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
                                                          </form>
+
                                                          {% elseif typeMatch == "plateau" %}
                                                              <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
                                                          {% endif %}
@@ -3945,6 +4047,12 @@
                          $("#contrainteRepartitionBody").toggle();
                      });
 
+                     // toggle bouton changement d'affectation
+                     $("#changeAffectationOptSc").click(function(){
+                         $("#changeAffectationOptScBody").toggle();
+
+                     })
+
                      // remplir les valeurs de repartitions homogenes
                      var repartitionsHomogenes = {{ repartitionsHomogenes| json_encode | raw }};
                      for (var type in repartitionsHomogenes){
@@ -3968,11 +4076,23 @@
                  });
 
 
-                 // select js plugin
+                 ///// select js plugin
                  $(".equipe1").select2({
                      width:'100%'
                  });
                  $(".equipe2").select2({
+                     width:'100%'
+                 });
+                 $(".pouleDepart").select2({
+                     width:'100%'
+                 });
+                 $(".equipeDepart").select2({
+                     width:'100%'
+                 });
+                 $(".pouleDestination").select2({
+                     width:'100%'
+                 });
+                 $(".equipeDestination").select2({
                      width:'100%'
                  });
 

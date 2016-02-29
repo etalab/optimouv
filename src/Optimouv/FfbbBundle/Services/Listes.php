@@ -757,15 +757,15 @@ class Listes{
 
                     }
 
-//                    error_log("service: listes, function: controlerEntites, status: ".print_r($tousNomsEquipes, True), 3, $this->error_log_path);
+
+//                    error_log("service: listes, function: controlerEntites, donneesEntete: ".print_r($donneesEntete, True), 3, $this->error_log_path);
 
 
                     // controler equipe 1 et equipe 2, elles doivent figurer dans les lignes importées (match plateau)
-//                    error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
-//                        ."\n premierJourEquipesAdverses1 : ".print_r($premierJourEquipesAdverses1 , true), 3, $this->error_log_path);
-                    if($toutesLignes != [] && count($toutesLignes[0]) == 18){
+                    if($donneesEntete != [] && count($donneesEntete) == 18){
+
                         for($k = 0; $k < count($toutesLignes); $k ++){
-                            $nbrLigne = $k + 1;
+                            $nbrLigne = $k + 2;
 
                             // premier jour
                             $premierJourEquipe1 = $premierJourEquipesAdverses1[$k];
@@ -805,8 +805,6 @@ class Listes{
                             }
                             if( $deuxiemeJourReception> 0 && !in_array($deuxiemeJourEquipe1, $tousNomsEquipes) ) {
 
-//                            error_log("service: listes, function: controlerEntites, status: ".print_r($deuxiemeJourEquipe1."\n", True), 3, $this->error_log_path);
-
                                 $retour = array(
                                     "success" => false,
                                     "msg" => "Erreur ligne :" . $nbrLigne . "!"
@@ -817,8 +815,6 @@ class Listes{
                                 continue;
                             }
                             if( $deuxiemeJourReception> 0 && !in_array($deuxiemeJourEquipe2, $tousNomsEquipes) ) {
-
-//                            error_log("service: listes, function: controlerEntites, status: ".print_r($deuxiemeJourEquipe1."\n", True), 3, $this->error_log_path);
 
                                 $retour = array(
                                     "success" => false,
@@ -834,8 +830,6 @@ class Listes{
                         }
 
                     }
-
-
 
                     // controler s'il y a des lignes erronées
                     if(count($lignesErronees) > 0){
