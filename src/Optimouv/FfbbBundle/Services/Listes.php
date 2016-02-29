@@ -427,13 +427,25 @@ class Listes{
                                         array_push($premierJourReceptionListe, $premierJourReception);
                                         array_push($deuxiemeJourReceptionListe, $deuxiemeJourReception);
 
-                                        // controle les champs des jours de reception
-                                        if( ($premierJourReception == "" ) or  ($deuxiemeJourReception == "") or !(is_numeric($premierJourReception))  or !(is_numeric($deuxiemeJourReception)) ){
+                                        // controle le champ 'PREMIER JOUR DE RECEPTION'
+                                        if( ($premierJourReception == "" ) or  !(is_numeric($premierJourReception))   ){
 
                                             $retour = array(
                                                 "success" => false,
                                                 "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                    ."Le champ 'PREMIER JOUR DE RECEPTION' (colonne 13) et Le champ 'DEUXIEME JOUR DE RECEPTION' (colonne 16) doivent être rempli and avoir la valeur de type entier à partir de 0!"
+                                                    ."Le champ 'PREMIER JOUR DE RECEPTION' (colonne 13) doit être rempli and avoir la valeur de type entier à partir de 0!"
+                                                    ."Veuillez corriger et importer de nouveau votre fichier"
+                                            );
+                                            array_push($lignesErronees, $retour["msg"]);
+                                            continue;
+                                        }
+                                        // controle le champ 'DEUXIEME JOUR DE RECEPTION'
+                                        if( ($deuxiemeJourReception == "" ) or  !(is_numeric($deuxiemeJourReception))   ){
+
+                                            $retour = array(
+                                                "success" => false,
+                                                "msg" => "Erreur ligne :".$nbrLigne."!"
+                                                    ."Le champ 'DEUXIEME JOUR DE RECEPTION' (colonne 16) doit être rempli and avoir la valeur de type entier à partir de 0!"
                                                     ."Veuillez corriger et importer de nouveau votre fichier"
                                             );
                                             array_push($lignesErronees, $retour["msg"]);
