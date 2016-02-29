@@ -786,8 +786,8 @@ class Listes{
                                 $retour = array(
                                     "success" => false,
                                     "msg" => "Erreur ligne :".$nbrLigne."!"
-                                        ." La valeur pour le champs 'EQUIPE ADVERSE 1 (colonne 14) n'est pas reconnue'.!"
-                                        ." Veuillez supprimer cette ligne et effectuer à nouveau l’import"
+                                        ." Le champ \"EQUIPE ADVERSE 1\" (colonne 14) est erroné et ne correspond pas à un nom d'équipe contenu dans votre fichier d'import .!"
+                                        ." Veuillez corriger les champs indiqués et effectuer à nouveau l'import"
                                 );
                                 array_push($lignesErronees, $retour["msg"]);
                                 continue;
@@ -797,8 +797,8 @@ class Listes{
                                 $retour = array(
                                     "success" => false,
                                     "msg" => "Erreur ligne :" . $nbrLigne . "!"
-                                        . " La valeur pour le champs 'EQUIPE ADVERSE 2 (colonne 15) n'est pas reconnue'.!"
-                                        . " Veuillez supprimer cette ligne et effectuer à nouveau l’import"
+                                        ." Le champ \"EQUIPE ADVERSE 2\" (colonne 15) est erroné et ne correspond pas à un nom d'équipe contenu dans votre fichier d'import .!"
+                                        ." Veuillez corriger les champs indiqués et effectuer à nouveau l'import"
                                 );
                                 array_push($lignesErronees, $retour["msg"]);
                                 continue;
@@ -808,8 +808,8 @@ class Listes{
                                 $retour = array(
                                     "success" => false,
                                     "msg" => "Erreur ligne :" . $nbrLigne . "!"
-                                        . " La valeur pour le champs 'EQUIPE ADVERSE 1 (colonne 17) n'est pas reconnue'.!"
-                                        . " Veuillez supprimer cette ligne et effectuer à nouveau l’import"
+                                        ." Le champ \"EQUIPE ADVERSE 1\" (colonne 17) est erroné et ne correspond pas à un nom d'équipe contenu dans votre fichier d'import .!"
+                                        ." Veuillez corriger les champs indiqués et effectuer à nouveau l'import"
                                 );
                                 array_push($lignesErronees, $retour["msg"]);
                                 continue;
@@ -819,8 +819,8 @@ class Listes{
                                 $retour = array(
                                     "success" => false,
                                     "msg" => "Erreur ligne :" . $nbrLigne . "!"
-                                        . " La valeur pour le champs 'EQUIPE ADVERSE 2 (colonne 18) n'est pas reconnue'.!"
-                                        . " Veuillez supprimer cette ligne et effectuer à nouveau l’import"
+                                        ." Le champ \"EQUIPE ADVERSE 2\" (colonne 18) est erroné et ne correspond pas à un nom d'équipe contenu dans votre fichier d'import .!"
+                                        ." Veuillez corriger les champs indiqués et effectuer à nouveau l'import"
                                 );
                                 array_push($lignesErronees, $retour["msg"]);
                                 continue;
