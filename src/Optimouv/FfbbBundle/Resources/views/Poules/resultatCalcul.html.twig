@@ -4056,7 +4056,7 @@
                              $("#trRepartitionHomogeneIdVille" + entiteId).find("td select").val(type);
                          }
                      }
-                     
+
                      // obtenir le nombre des interdictions présentes
                      var ligneNbr = $('#mesContraintes tr').length;
                      console.log("ligneNbr : " + ligneNbr);
@@ -4106,8 +4106,6 @@
                  // javascript quand on clique sur le bouton 'lancer le calcul'
                  $(document).ready(function(){
 
-
-
                      // ajouter des nouvelles lignes pour les contraintes d'interdiction
                      $("#btnAjouterInterdiction").click(function(){
 
@@ -4122,6 +4120,15 @@
 
                          console.log("interdictionEquipe1Id : " + interdictionEquipe1Id );
                          console.log("interdictionEquipe2Id : " + interdictionEquipe2Id );
+
+
+                         // controler si l'id du premier equipe et celui du deuxième équipe sont équivalents
+                         if(interdictionEquipe1Id == interdictionEquipe2Id ){
+                             alert("Cette interdiction ne peut pas être prise en compte. Veuillez corriger votre sélection");
+                             return;
+
+                         }
+
 
                          // ajouter une nouvelle ligne dans la table d'interdictions
                          if(interdictionEquipe1Id != "vide" && interdictionEquipe2Id  != "vide"){
