@@ -21,13 +21,18 @@ use Symfony\Component\HttpFoundation\Response;
         $participants = [];
 
 
-
-
         $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idRapport);
         $idGroupe = $idGroupe[0]['idGroupe'];
 
-        $retour = $em->getRepository('FfbbBundle:Scenario')->getDetailsCalcul($idRapport);
+        //récupération du nom du rapport
 
+        $nomRapport = $em->getRepository('FfbbBundle:Rapport')->findOneById($idRapport)->getNom();
+
+        print_r($nomRapport);
+        exit;
+
+        //récupération des détails de calculs
+        $retour = $em->getRepository('FfbbBundle:Scenario')->getDetailsCalcul($idRapport);
 
         $retour = json_decode($retour[0]["detailsCalcul"], true);
 
@@ -114,6 +119,7 @@ use Symfony\Component\HttpFoundation\Response;
             'nomListe' => $nomListe,
             'nomGroupe' => $nomGroupe,
             'idRapport' => $idRapport,
+            'nomRapport' => $nomRapport,
 
         ));
     }
@@ -125,6 +131,9 @@ use Symfony\Component\HttpFoundation\Response;
         # obtenir entity manager
         $em = $this->getDoctrine()->getManager();
 
+        //récupération du nom du rapport
+
+        $nomRapport = $em->getRepository('FfbbBundle:Rapport')->findOneById($idRapport)->getNom();
 
         $participants = [];
 
@@ -186,6 +195,7 @@ use Symfony\Component\HttpFoundation\Response;
             'nomListe' => $nomListe,
             'nomGroupe' => $nomGroupe,
             'idRapport' => $idRapport,
+            'nomRapport' => $nomRapport,
 
         ));
 
@@ -197,6 +207,10 @@ use Symfony\Component\HttpFoundation\Response;
 
         # obtenir entity manager
         $em = $this->getDoctrine()->getManager();
+
+        //récupération du nom du rapport
+
+        $nomRapport = $em->getRepository('FfbbBundle:Rapport')->findOneById($idRapport)->getNom();
 
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
@@ -297,6 +311,7 @@ use Symfony\Component\HttpFoundation\Response;
             'nomListe' => $nomListe,
             'nomGroupe' => $nomGroupe,
             'idRapport' => $idRapport,
+            'nomRapport' => $nomRapport,
 
         ));
 
@@ -308,6 +323,11 @@ use Symfony\Component\HttpFoundation\Response;
 
         # obtenir entity manager
         $em = $this->getDoctrine()->getManager();
+
+        //récupération du nom du rapport
+
+        $nomRapport = $em->getRepository('FfbbBundle:Rapport')->findOneById($idRapport)->getNom();
+
         /////////////////////////////////
         /************Optimal********/
         ///////////////////////////////
@@ -330,7 +350,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 
         //R�cup�ration du r�sultat du calcul du terrain neutre
-        //$retour = $this->get('service_rencontres')->terrainNeutre($idGroupe);
 
         //Donn�es du sc�nario optimal
         $villeDepart = $retourOp[0];
@@ -353,30 +372,6 @@ use Symfony\Component\HttpFoundation\Response;
         /************Equitable********/
         ///////////////////////////////
 
-
-
-        //Donn�es du sc�nario �quitable
-
-//        $typeAction = "terrainNeutreEq";
-//        $idTache = $this->get('service_rencontres')->Producer($idGroupe, $typeAction);
-//
-//        $this->get('old_sound_rabbit_mq.rencontre_producer')->publish($idTache);
-//
-//        do {
-//            sleep(2);
-//            $statutTache = $em->getRepository('FfbbBundle:Rapport')->getStatut($idTache);
-//
-//        } while ($statutTache == 2);
-//
-//
-//        $retourEq = $em->getRepository('FfbbBundle:Scenario')->getDetailsCalcul($idTache);
-//
-//        $retourEq = $retourEq[0]["detailsCalcul"];
-//        $retourEq = json_decode($retourEq, true);
-
-
-        //R�cup�ration du r�sultat du calcul du terrain neutre Equitable
-       // $retourEq = $this->get('service_rencontres')->terrainNeutreEquitable($idGroupe);
 
         //Donn�es du sc�nario �quitable
 
@@ -432,7 +427,7 @@ use Symfony\Component\HttpFoundation\Response;
             'nomListe' => $nomListe,
             'nomGroupe' => $nomGroupe,
             'idRapport' => $idRapport,
-
+            'nomRapport' => $nomRapport,
 
         ));
 
