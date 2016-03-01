@@ -4093,17 +4093,10 @@
                  $(document).ready(function(){
 
                      // obtenir le nombre des interdictions présentes
-                     var ligneNbr = $('#tbodyInterdictions tr').length;
+                     var ligneNbr = $('#mesContraintes tr').length;
                      console.log("ligneNbr : " + ligneNbr);
 
-
-
-
-
-
-
-
-
+                     // binding jquery bouton supprimer pour chaque interdiction ajoutée
                      for(var j=1; j< ligneNbr; j++){
                          // binding jquery bouton supprimer
                          $("#btnSupprimerInterdiction" + j).click(function(){
@@ -4157,6 +4150,10 @@
 
                      });
 
+
+
+
+                     ////////////////////////////////////////////////////////////////   Lancer Le Calcul //////////////////////////////////////////////////////////
                      // selectionner la valeur pour la variation du nombre d'équipes par poule
                      $("#variationNbrEquipe").val({{ varEquipeParPouleChoisi }});
 
