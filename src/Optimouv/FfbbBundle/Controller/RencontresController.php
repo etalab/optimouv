@@ -28,9 +28,6 @@ use Symfony\Component\HttpFoundation\Response;
 
         $nomRapport = $em->getRepository('FfbbBundle:Rapport')->findOneById($idRapport)->getNom();
 
-        print_r($nomRapport);
-        exit;
-
         //récupération des détails de calculs
         $retour = $em->getRepository('FfbbBundle:Scenario')->getDetailsCalcul($idRapport);
 
@@ -78,18 +75,8 @@ use Symfony\Component\HttpFoundation\Response;
         $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
         $nomGroupe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getNom();
 
-//
-//        # créer un rapport exclusion
-//        $idRapport = $this->get('service_rencontres')->creerRapport($idGroupe, "meilleurLieu", -1);
-//
-//        # créer un scénario barycentre
-//        if($idRapport != -1){
-//            $this->get('service_rencontres')->creerScenario($idRapport, "optimal",  $distanceMin, $dureeTrajet);
-//            $this->get('service_rencontres')->creerScenario($idRapport, "equitable",  $distanceMinEq, $dureeTrajetEq);
-//        }
-
-        //envoie de mail de notification pour la fin des calculs
-//        $this->sendMailAction();
+        print_r($nomRapport);
+        exit;
 
         return $this->render('FfbbBundle:Rencontres:index.html.twig', array(
 
