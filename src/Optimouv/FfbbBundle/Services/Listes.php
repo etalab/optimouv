@@ -433,7 +433,7 @@ class Listes{
                                             $retour = array(
                                                 "success" => false,
                                                 "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                    ."Le champ 'PREMIER JOUR DE RECEPTION' (colonne 13) doit être rempli and avoir la valeur de type entier à partir de 0!"
+                                                    ."Le champ 'PREMIER JOUR DE RECEPTION' (colonne 13) doit être rempli et avoir une valeur de type entier égale ou supérieure à 0!"
                                                     ."Veuillez corriger et importer de nouveau votre fichier"
                                             );
                                             array_push($lignesErronees, $retour["msg"]);
@@ -445,7 +445,7 @@ class Listes{
                                             $retour = array(
                                                 "success" => false,
                                                 "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                    ."Le champ 'DEUXIEME JOUR DE RECEPTION' (colonne 16) doit être rempli and avoir la valeur de type entier à partir de 0!"
+                                                    ."Le champ 'DEUXIEME JOUR DE RECEPTION' (colonne 16) doit être rempli et avoir une valeur de type entier égale ou supérieure à 0!"
                                                     ."Veuillez corriger et importer de nouveau votre fichier"
                                             );
                                             array_push($lignesErronees, $retour["msg"]);

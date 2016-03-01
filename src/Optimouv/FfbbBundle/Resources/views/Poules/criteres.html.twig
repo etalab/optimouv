@@ -306,35 +306,29 @@
              <script language="javascript">
 
                  function typePlateau() {
-
                      var plateau = document.getElementById("typeRencontre3").checked;
                      if (plateau) {
                          document.getElementById("nbrJournee").style.display = "block";
 //                         document.getElementById("nbrRencontre").style.display = "block";
                          document.getElementById("ajoutContrainte").style.display = "block";
                      }
-
                  }
 
                  function typeAllerRetour() {
-
                      var allerRetour = document.getElementById("typeRencontre1").checked;
                      if (allerRetour) {
                          document.getElementById("nbrJournee").style.display = "none";
 //                         document.getElementById("nbrRencontre").style.display = "none";
                          document.getElementById("ajoutContrainte").style.display = "none";
                      }
-
                  }
 
                  function typeAller() {
-
                      var aller = document.getElementById("typeRencontre2").checked;
                      if (aller) {
                          document.getElementById("nbrJournee").style.display = "none";
 //                         document.getElementById("nbrRencontre").style.display = "none";
                          document.getElementById("ajoutContrainte").style.display = "none";
-
                      }
                  }
 
@@ -390,7 +384,7 @@
 
                          // controler si l'id du premier equipe et celui du deuxième équipe sont équivalents
                          if(interdictionEquipe1Id == interdictionEquipe2Id ){
-                             alert("Veuillez vérifier que le premier equipe est différent du deuxième équipe");
+                             alert("Cette interdiction ne peut pas être prise en compte. Veuillez corriger votre sélection");
                              return;
 
                          }
@@ -423,7 +417,7 @@
 //                                console.log("deuxiemeEquipeInterdiction: " + deuxiemeEquipeInterdiction);
 
                                 if(premierEquipeInterdiction == interdictionEquipe1Id && deuxiemeEquipeInterdiction == interdictionEquipe2Id){
-                                    alert("L'interdiction existe déjà. Veuillez choisir une autre interdiction");
+                                    alert("Cette interdiction existe déjà. Veuillez corriger votre sélection");
                                     return;
                                 }
 
@@ -654,11 +648,6 @@
                  //////////traitement de la répartition homogène////////////
 
                  function verifRepartitionHomogene(){
-
-
-
-
-
                      var length = document.getElementById("tableContrainteRepartitionHomogene").rows.length;
 //                     var ligne = document.getElementById("tableContrainteRepartitionHomogene").rows;
 

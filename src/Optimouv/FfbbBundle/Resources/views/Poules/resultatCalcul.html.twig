@@ -44,7 +44,7 @@
                                  {% elseif typeMatch == "allerSimple" %}
                                      <td>  Type de rencontre : Optimisation de poules - match aller simple </td>
                                  {% elseif typeMatch == "plateau" %}
-                                     <td>  Type de rencontre : Optimisation de poules - match aller plateau </td>
+                                     <td>  Type de rencontre : Optimisation de poules - plateau </td>
                                  {% else %}
                                      <td> Type de rencontre : {{ typeMatch }} </td>
                                  {% endif %}
@@ -3877,7 +3877,8 @@
 
                                  <tr>
                                      <td width="50%">
-                                         <select id="equipe1" class="equipe1" onchange="selectEquipe(this,this.parentNode.parentNode.getElementsByClassName('equipe2'))">
+                                         {#<select id="equipe1" class="equipe1" onchange="selectEquipe(this,this.parentNode.parentNode.getElementsByClassName('equipe2'))">#}
+                                         <select id="equipe1" class="equipe1">
                                              <option value="vide" selected> -- selectionnez une option -- </option>
                                              {% for detailsVille in detailsVilles %}
                                                  <option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>
@@ -3994,39 +3995,29 @@
              <script language="javascript">
 
                  function typePlateau() {
-
                      var plateau = document.getElementById("typeRencontre3").checked;
-
                      if (plateau) {
-
-
                          document.getElementById("nbrJournee").style.display = "block";
                          document.getElementById("nbrRencontre").style.display = "block";
                          document.getElementById("ajoutContrainte").style.display = "block";
                      }
-
                  }
 
                  function typeAllerRetour() {
-
                      var allerRetour = document.getElementById("typeRencontre1").checked;
                      if (allerRetour) {
                          document.getElementById("nbrJournee").style.display = "none";
                          document.getElementById("nbrRencontre").style.display = "none";
                          document.getElementById("ajoutContrainte").style.display = "none";
                      }
-
                  }
 
                  function typeAller() {
-
                      var aller = document.getElementById("typeRencontre2").checked;
-
                      if (aller) {
                          document.getElementById("nbrJournee").style.display = "none";
                          document.getElementById("nbrRencontre").style.display = "none";
                          document.getElementById("ajoutContrainte").style.display = "none";
-
                      }
                  }
 
@@ -4065,6 +4056,20 @@
                              $("#trRepartitionHomogeneIdVille" + entiteId).find("td select").val(type);
                          }
                      }
+
+                     // obtenir le nombre des interdictions présentes
+                     var ligneNbr = $('#mesContraintes tr').length;
+                     console.log("ligneNbr : " + ligneNbr);
+
+                     // binding jquery bouton supprimer pour chaque interdiction ajoutée
+                     for(var j=1; j< ligneNbr; j++){
+                         // binding jquery bouton supprimer
+                         $("#btnSupprimerInterdiction" + j).click(function(){
+                             $(this).closest('tr').remove();
+                         });
+
+                     }
+
                  });
 
 
@@ -4101,19 +4106,6 @@
                  // javascript quand on clique sur le bouton 'lancer le calcul'
                  $(document).ready(function(){
 
-                     // js pour boutons supprimer les contraintes d'interdictions présentes
-                     var ligneNbr = $('#mesContraintes tr').length;
-                     console.log("ligneNbr : " + ligneNbr);
-
-                     for(var j=1; j< ligneNbr; j++){
-                         // binding jquery bouton supprimer
-                         $("#btnSupprimerInterdiction" + j).click(function(){
-                             $(this).closest('tr').remove();
-                         });
-
-                     }
-
-
                      // ajouter des nouvelles lignes pour les contraintes d'interdiction
                      $("#btnAjouterInterdiction").click(function(){
 
@@ -4128,6 +4120,15 @@
 
                          console.log("interdictionEquipe1Id : " + interdictionEquipe1Id );
                          console.log("interdictionEquipe2Id : " + interdictionEquipe2Id );
+
+
+                         // controler si l'id du premier equipe et celui du deuxième équipe sont équivalents
+                         if(interdictionEquipe1Id == interdictionEquipe2Id ){
+                             alert("Cette interdiction ne peut pas être prise en compte. Veuillez corriger votre sélection");
+                             return;
+
+                         }
+
 
                          // ajouter une nouvelle ligne dans la table d'interdictions
                          if(interdictionEquipe1Id != "vide" && interdictionEquipe2Id  != "vide"){
@@ -4158,6 +4159,10 @@
 
                      });
 
+
+
+
+                     ////////////////////////////////////////////////////////////////   Lancer Le Calcul //////////////////////////////////////////////////////////
                      // selectionner la valeur pour la variation du nombre d'équipes par poule
                      $("#variationNbrEquipe").val({{ varEquipeParPouleChoisi }});
 
@@ -4277,13 +4282,11 @@
                  });
 
                  function ajouterInterdiction(){
-
                      var interdiction = document.getElementById("interdiction");
                      interdiction.style.display = "block";
                  }
 
                  function ajouterRepartition(){
-
                      var repartitionHomogene = document.getElementById("repartitionHomogene");
                      repartitionHomogene.style.display = "block";
                  }
@@ -4293,8 +4296,6 @@
                              //partie contraintes//
                  /**********************************************/
 
-
-
                  function myCreateFunction() {
                      var table = $('#mesContraintes tbody');
                      var children = table.find('tr');
@@ -4302,7 +4303,6 @@
                      var lastChild = children.last();
                      console.log(lastChild);
                      table.append(lastChild[0].outerHTML);
-
                  }
 
 
@@ -4320,23 +4320,6 @@
                      select2.options[x].disabled = true;
                  }
 
-                 //                 function selectEquipe2() {
-                 //
-                 //
-                 //                     var interdictionTab = [];
-                 //                     var x = document.getElementById("equipe1").selectedIndex;
-                 //                     if(!x){
-                 //                         alert("Veuillez choisir une équipe de la première liste SVP")
-                 //                     }
-                 //                     else{
-                 //                         interdictionTab[0] = 1;
-                 //                         interdictionTab[1] = document.getElementById("equipe1").value;
-                 //                         interdictionTab[2] = document.getElementById("equipe2").value;
-                 //
-                 //                     }
-                 //                     alert(interdictionTab);
-                 //
-                 //                 }
 
                  ///////////récupération contraintes /////////////
 
