@@ -3995,39 +3995,29 @@
              <script language="javascript">
 
                  function typePlateau() {
-
                      var plateau = document.getElementById("typeRencontre3").checked;
-
                      if (plateau) {
-
-
                          document.getElementById("nbrJournee").style.display = "block";
                          document.getElementById("nbrRencontre").style.display = "block";
                          document.getElementById("ajoutContrainte").style.display = "block";
                      }
-
                  }
 
                  function typeAllerRetour() {
-
                      var allerRetour = document.getElementById("typeRencontre1").checked;
                      if (allerRetour) {
                          document.getElementById("nbrJournee").style.display = "none";
                          document.getElementById("nbrRencontre").style.display = "none";
                          document.getElementById("ajoutContrainte").style.display = "none";
                      }
-
                  }
 
                  function typeAller() {
-
                      var aller = document.getElementById("typeRencontre2").checked;
-
                      if (aller) {
                          document.getElementById("nbrJournee").style.display = "none";
                          document.getElementById("nbrRencontre").style.display = "none";
                          document.getElementById("ajoutContrainte").style.display = "none";
-
                      }
                  }
 
@@ -4102,9 +4092,17 @@
                  // javascript quand on clique sur le bouton 'lancer le calcul'
                  $(document).ready(function(){
 
-                     // js pour boutons supprimer les contraintes d'interdictions présentes
-                     var ligneNbr = $('#mesContraintes tr').length;
+                     // obtenir le nombre des interdictions présentes
+                     var ligneNbr = $('#tbodyInterdictions tr').length;
                      console.log("ligneNbr : " + ligneNbr);
+
+
+
+
+
+
+
+
 
                      for(var j=1; j< ligneNbr; j++){
                          // binding jquery bouton supprimer
@@ -4278,13 +4276,11 @@
                  });
 
                  function ajouterInterdiction(){
-
                      var interdiction = document.getElementById("interdiction");
                      interdiction.style.display = "block";
                  }
 
                  function ajouterRepartition(){
-
                      var repartitionHomogene = document.getElementById("repartitionHomogene");
                      repartitionHomogene.style.display = "block";
                  }
@@ -4294,8 +4290,6 @@
                              //partie contraintes//
                  /**********************************************/
 
-
-
                  function myCreateFunction() {
                      var table = $('#mesContraintes tbody');
                      var children = table.find('tr');
@@ -4303,7 +4297,6 @@
                      var lastChild = children.last();
                      console.log(lastChild);
                      table.append(lastChild[0].outerHTML);
-
                  }
 
 
@@ -4321,23 +4314,6 @@
                      select2.options[x].disabled = true;
                  }
 
-                 //                 function selectEquipe2() {
-                 //
-                 //
-                 //                     var interdictionTab = [];
-                 //                     var x = document.getElementById("equipe1").selectedIndex;
-                 //                     if(!x){
-                 //                         alert("Veuillez choisir une équipe de la première liste SVP")
-                 //                     }
-                 //                     else{
-                 //                         interdictionTab[0] = 1;
-                 //                         interdictionTab[1] = document.getElementById("equipe1").value;
-                 //                         interdictionTab[2] = document.getElementById("equipe2").value;
-                 //
-                 //                     }
-                 //                     alert(interdictionTab);
-                 //
-                 //                 }
 
                  ///////////récupération contraintes /////////////
 
