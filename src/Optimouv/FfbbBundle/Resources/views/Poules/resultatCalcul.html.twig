@@ -4056,6 +4056,20 @@
                              $("#trRepartitionHomogeneIdVille" + entiteId).find("td select").val(type);
                          }
                      }
+                     
+                     // obtenir le nombre des interdictions présentes
+                     var ligneNbr = $('#mesContraintes tr').length;
+                     console.log("ligneNbr : " + ligneNbr);
+
+                     // binding jquery bouton supprimer pour chaque interdiction ajoutée
+                     for(var j=1; j< ligneNbr; j++){
+                         // binding jquery bouton supprimer
+                         $("#btnSupprimerInterdiction" + j).click(function(){
+                             $(this).closest('tr').remove();
+                         });
+
+                     }
+
                  });
 
 
@@ -4092,18 +4106,6 @@
                  // javascript quand on clique sur le bouton 'lancer le calcul'
                  $(document).ready(function(){
 
-                     // obtenir le nombre des interdictions présentes
-                     var ligneNbr = $('#mesContraintes tr').length;
-                     console.log("ligneNbr : " + ligneNbr);
-
-                     // binding jquery bouton supprimer pour chaque interdiction ajoutée
-                     for(var j=1; j< ligneNbr; j++){
-                         // binding jquery bouton supprimer
-                         $("#btnSupprimerInterdiction" + j).click(function(){
-                             $(this).closest('tr').remove();
-                         });
-
-                     }
 
 
                      // ajouter des nouvelles lignes pour les contraintes d'interdiction
