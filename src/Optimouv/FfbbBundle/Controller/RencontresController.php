@@ -75,8 +75,6 @@ use Symfony\Component\HttpFoundation\Response;
         $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
         $nomGroupe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getNom();
 
-        print_r($nomRapport);
-        exit;
 
         return $this->render('FfbbBundle:Rencontres:index.html.twig', array(
 
