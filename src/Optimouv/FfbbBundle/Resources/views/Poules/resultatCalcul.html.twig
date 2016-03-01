@@ -4058,11 +4058,11 @@
                      }
 
                      // obtenir le nombre des interdictions présentes
-                     var ligneNbr = $('#mesContraintes tr').length;
+                     var ligneNbr = $('#tbodyInterdictions tr').length;
                      console.log("ligneNbr : " + ligneNbr);
 
                      // binding jquery bouton supprimer pour chaque interdiction ajoutée
-                     for(var j=1; j< ligneNbr; j++){
+                     for(var j=1; j< ligneNbr+1; j++){
                          // binding jquery bouton supprimer
                          $("#btnSupprimerInterdiction" + j).click(function(){
                              $(this).closest('tr').remove();
