@@ -4128,7 +4128,40 @@
 
                          }
 
+                         // controler doublons dans un sens ou l'autre
+                         // controler s'il y a déjà des interdictions présentes
+                         if(ligneNbr> 0){
+                             var listeInterdictions = [];
 
+                             // obtenir la liste de toutes interdictions
+                             $('#tbodyInterdictions tr').each(function(i, el){
+                                 var $tds = $(this).find('td');
+                                 var premierEquipeId = $tds.eq(1).find("span").text();
+//                                 console.log("premierEquipeId: " + premierEquipeId);
+                                 var deuxiemeEquipeId = $tds.eq(2).find("span").text();
+//                                 console.log("deuxiemeEquipeId: " + deuxiemeEquipeId);
+
+                                 listeInterdictions.push({premierEquipeId: premierEquipeId, deuxiemeEquipeId: deuxiemeEquipeId} );
+                                 listeInterdictions.push({premierEquipeId: deuxiemeEquipeId, deuxiemeEquipeId: premierEquipeId} );
+
+                             });
+
+                             console.log("listeInterdictions: " + JSON.stringify(listeInterdictions));
+
+                             // controler pour chaque interdiction présente
+                             for(var i=0; i<listeInterdictions.length; i++){
+                                 var premierEquipeInterdiction = listeInterdictions[i]["premierEquipeId"] ;
+//                                console.log("premierEquipeInterdiction: " + premierEquipeInterdiction);
+                                 var deuxiemeEquipeInterdiction = listeInterdictions[i]["deuxiemeEquipeId"] ;
+//                                console.log("deuxiemeEquipeInterdiction: " + deuxiemeEquipeInterdiction);
+
+                                 if(premierEquipeInterdiction == interdictionEquipe1Id && deuxiemeEquipeInterdiction == interdictionEquipe2Id){
+                                     alert("Cette interdiction existe déjà. Veuillez corriger votre sélection");
+                                     return;
+                                 }
+
+                             }
+                         }
 
 
 
