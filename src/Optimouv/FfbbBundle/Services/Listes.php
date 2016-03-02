@@ -457,7 +457,7 @@ class Listes{
                                             $retour = array(
                                                 "success" => false,
                                                 "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                    ."Le champ 'EQUIPE ADVERSE 1' (colonne 14) et Le champ 'EQUIPE ADVERSE 2' (colonne 15) doivent être rempli!"
+                                                    ."Le champ 'EQUIPE ADVERSE 1' (colonne 14) et le champ 'EQUIPE ADVERSE 2' (colonne 15) doivent être remplis!"
                                                     ."Veuillez corriger et importer de nouveau votre fichier"
                                             );
                                             array_push($lignesErronees, $retour["msg"]);
@@ -468,7 +468,7 @@ class Listes{
                                             $retour = array(
                                                 "success" => false,
                                                 "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                    ."Le champ 'EQUIPE ADVERSE 1' (colonne 17) et Le champ 'EQUIPE ADVERSE 2' (colonne 18) doivent être rempli!"
+                                                    ."Le champ 'EQUIPE ADVERSE 1' (colonne 17) et le champ 'EQUIPE ADVERSE 2' (colonne 18) doivent être remplis!"
                                                     ."Veuillez corriger et importer de nouveau votre fichier"
                                             );
                                             array_push($lignesErronees, $retour["msg"]);
