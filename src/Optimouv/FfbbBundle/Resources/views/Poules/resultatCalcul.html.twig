@@ -3836,22 +3836,23 @@
                              <tbody id="tbodyInterdictions">
                              {%  if interdictions %}
                                  {% for interdictionNbr, interdictionInfo in interdictions%}
-                                     <tr id="interdiction{{ interdictionNbr }}" >
+                                     {% set interdictionNbrMod =  interdictionNbr-1 %}
+                                     <tr id="interdiction{{ interdictionNbrMod }}" >
                                          <td width="10%" > Interdiction</td>
                                          <td width="20%">
                                              {{ interdictionInfo.noms[0] }}
-                                             <span id="interdiction{{ interdictionNbr }}equipe1" style="display:none" >  {{ interdictionInfo.ids[0] }} </span>
+                                             <span id="interdiction{{ interdictionNbrMod }}equipe1" style="display:none" >  {{ interdictionInfo.ids[0] }} </span>
                                          </td>
 
                                          <td width="20%">
                                              {{ interdictionInfo.noms[1] }}
-                                             <span id="interdiction{{ interdictionNbr }}equipe2" style="display:none" > {{ interdictionInfo.ids[1] }} </span>
+                                             <span id="interdiction{{ interdictionNbrMod }}equipe2" style="display:none" > {{ interdictionInfo.ids[1] }} </span>
 
                                          </td>
 
 
                                          <td width="10%">
-                                             <button id="btnSupprimerInterdiction{{ interdictionNbr }}" class="btn btn-primary"> Supprimer </button>
+                                             <button id="btnSupprimerInterdiction{{ interdictionNbrMod }}" class="btn btn-primary"> Supprimer </button>
                                          </td>
                                      </tr>
                                  {%  endfor %}
@@ -3904,8 +3905,6 @@
 
                          <button id="btnAjouterInterdiction" class="btn btn-primary ">Ajouter</button>
 
-                         {#<button onclick="myCreateFunction()" class="btn btn-primary ">Ajouter</button>#}
-                         {#<button onclick="getContraintes()" class="btn btn-primary">mes contraintes</button>#}
 
                      </div>
 
@@ -4062,7 +4061,7 @@
                      console.log("ligneNbr : " + ligneNbr);
 
                      // binding jquery bouton supprimer pour chaque interdiction ajoutée
-                     for(var j=1; j< ligneNbr+1; j++){
+                     for(var j=0; j< ligneNbr; j++){
                          // binding jquery bouton supprimer
                          $("#btnSupprimerInterdiction" + j).click(function(){
                              $(this).closest('tr').remove();
@@ -4111,7 +4110,7 @@
 
                          console.log("------------------------------------ debug bouton ajouter des interdictions  ---------------------------------------");
 
-                         var ligneNbr = $('#mesContraintes tr').length;
+                         var ligneNbr = $('#tbodyInterdictions tr').length;
                          console.log("ligneNbr : " + ligneNbr);
 
                          // obtenir les valeurs séléctionnées
