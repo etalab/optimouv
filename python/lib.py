@@ -477,6 +477,47 @@ def check_welcome_constraint_match_plateau(memberCombinationIds, teams):
 		show_exception_traceback()
 
 """
+Function to check if each team receives max two times (three times is an error) 
+@return: 0 if false
+@return: 1 if true
+"""
+def check_max_times_host_match_plateau(memberCombinationIds):
+	try:
+		statusMaxTimesHost = 0
+
+
+		receivingHosts = {}
+		
+		# get the statistics about the receiving hosts
+		for day, contentDay in memberCombinationIds.items():
+			for group, contentGroup in contentDay.items():
+				if "hostId" in contentGroup:
+					hostId = contentGroup["hostId"]
+					
+					if hostId not in receivingHosts:
+						receivingHosts[hostId] = 1
+					else:
+						receivingHosts[hostId] += 1
+						
+						# return false if there is any member who receives more than two times
+						if receivingHosts[hostId] > 2:
+# 							logging.debug("memberCombinationIds: \n%s" %json.dumps(memberCombinationIds))
+# 							logging.debug("receivingHosts: \n%s" %json.dumps(receivingHosts))
+# 							logging.debug("")
+							return statusMaxTimesHost
+		
+		# set status to true
+		statusMaxTimesHost = 1
+
+# 		logging.debug("memberCombinationIds: \n%s" %json.dumps(memberCombinationIds))
+# 		logging.debug("receivingHosts: \n%s" %json.dumps(receivingHosts))
+# 		logging.debug("")
+		return statusMaxTimesHost
+
+	except Exception as e:
+		show_exception_traceback()
+
+"""
 Function to calculate distance plateau for a given 3x4 matrix (plateau distribution)
 """
 def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPool, welcomeConstraintExistMatchPlateau, teams):
@@ -545,6 +586,13 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 				
 				if statusCheckWelcomeConstraintMatchPlateau == 0:
 					continue
+			
+			# each member can only become host at most txo times (two days)
+			statusCheckMaxTimesHost = check_max_times_host_match_plateau(memberCombinationIds)
+			logging.debug("  statusCheckMaxTimesHost: %s" %statusCheckMaxTimesHost)
+			
+			if statusCheckMaxTimesHost == 0:
+				continue
 			
 			
 			# calculate distance total for a specific member combination
