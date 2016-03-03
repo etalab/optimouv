@@ -1201,18 +1201,6 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 		logging.debug("  T_Value initial: %s" %T_Value)
 		
 		logging.debug("  iterConstraint: %s" %iterConstraint)
-
-
-# 		logging.debug("  teams: %s" %teams)
-
-		# get indexes of prohibition constraints
-# 		indexesProhibitionConstraints = getIndexesProhibitionConstraints(prohibitionConstraints, teams)
-# 		logging.debug("  indexesProhibitionConstraints: %s" %indexesProhibitionConstraints)
-		
-		# get indexes of type distribution constraints
-# 		indexesTypeDistributionConstraints = getIndexesTypeDistributionConstraints(typeDistributionConstraints, teams)
-# 		logging.debug("  indexesTypeDistributionConstraints: %s" %indexesTypeDistributionConstraints)
-		
 		logging.debug("	 prohibitionConstraints: \n%s" %json.dumps(prohibitionConstraints))
 		logging.debug("  typeDistributionConstraints: \n%s" %json.dumps(typeDistributionConstraints))
 
@@ -1228,15 +1216,6 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 			poolDistributionInit = create_pool_distribution_from_matrix(P_InitMat, teamNbr, poolNbr, poolSize, teams)
 			logging.debug("  poolDistributionInit: \n%s" %poolDistributionInit)
 
-			# list of prohibited constraints
-# 			rulesProhibitionConstraints = create_rules_for_prohibition_constraints(indexesProhibitionConstraints, P_InitMat)
-# 			logging.debug("  rulesProhibitionConstraints: %s" %(rulesProhibitionConstraints))
-
-			# list of type distribution constraints
-# 			rulesTypeDistributionConstraints = []
-# 			for type, indexConstraint in indexesTypeDistributionConstraints.items():
-# 				rulesTypeDistributionConstraints += indexConstraint
-# 			logging.debug("  rulesTypeDistributionConstraints: %s" %(rulesTypeDistributionConstraints))
 
 			### get index to change row and column
 			while True:
@@ -1262,37 +1241,30 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 				# P_ij == 0 means that both teams are in different pool 
 				if i <= j and int(P_ij) == 0:
 					# apply prohibition constraints
-# 					if transIndex not in rulesProhibitionConstraints:
 						
-						##### apply type distribution constraints #####
-						# create temporary P matrix if the transIndex is applied 
-						P_TransMatTmp = np.copy(P_InitMat)
-						P_TransMatTmp[transIndex,:] = P_TransMatTmp[list(reversed(transIndex)),:]  # change two columns according to transIndex
-						P_TransMatTmp[:,transIndex] = P_TransMatTmp[:,list(reversed(transIndex))] # change two rows according to transIndex
+					##### apply type distribution constraints #####
+					# create temporary P matrix if the transIndex is applied 
+					
+					P_TransMatTmp = np.copy(P_InitMat)
+					P_TransMatTmp[transIndex,:] = P_TransMatTmp[list(reversed(transIndex)),:]  # change two columns according to transIndex
+					P_TransMatTmp[:,transIndex] = P_TransMatTmp[:,list(reversed(transIndex))] # change two rows according to transIndex
 
-						poolDistributionTmp = create_pool_distribution_from_matrix(P_TransMatTmp, teamNbr, poolNbr, poolSize, teams)
-						logging.debug("  poolDistributionTmp: \n%s" %poolDistributionTmp)
-						
-						
+					poolDistributionTmp = create_pool_distribution_from_matrix(P_TransMatTmp, teamNbr, poolNbr, poolSize, teams)
+# 					logging.debug("  poolDistributionTmp: \n%s" %poolDistributionTmp)
 
-						statusProhibitionConstraints = check_prohibition_constraints(prohibitionConstraints, poolDistributionTmp)
-						logging.debug("	statusProhibitionConstraints: %s" %statusProhibitionConstraints)
-						
+					statusProhibitionConstraints = check_prohibition_constraints(prohibitionConstraints, poolDistributionTmp)
+					logging.debug("	statusProhibitionConstraints: %s" %statusProhibitionConstraints)
+					
 
-						statusTypeDistributionConstraints = check_type_distribution_constraints(typeDistributionConstraints, poolDistributionTmp)
-						logging.debug("	statusTypeDistributionConstraints: %s" %statusTypeDistributionConstraints)
+					statusTypeDistributionConstraints = check_type_distribution_constraints(typeDistributionConstraints, poolDistributionTmp)
+					logging.debug("	statusTypeDistributionConstraints: %s" %statusTypeDistributionConstraints)
 
-						# if the transformed matrix fulfills the type distribution constraints
-						if statusProhibitionConstraints == 0 and statusTypeDistributionConstraints == 0:
-							logging.debug("  i: %s, j: %s" %(i, j))
-							logging.debug("  iterConstraint: %s" %(iterConstraint))
-							break
+					# if the transformed matrix fulfills the type distribution constraints
+					if statusProhibitionConstraints == 0 and statusTypeDistributionConstraints == 0:
+						logging.debug("  i: %s, j: %s" %(i, j))
+						logging.debug("  iterConstraint: %s" %(iterConstraint))
+						break
 		
-# 						if i not in rulesTypeDistributionConstraints and j not in rulesTypeDistributionConstraints:
-# 							logging.debug("  i: %s, j: %s" %(i, j))
-# 							logging.debug("  iterConstraint: %s" %(iterConstraint))
-# 							break
-	# 			
 
 			
 			P_TransMat = np.copy(P_InitMat)
@@ -1303,8 +1275,7 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 			P_TransMat[:,transIndex] = P_TransMat[:,list(reversed(transIndex))]
 	# 		logging.debug("  P_InitMat: \n%s" %P_InitMat)
 
-	
-	# 
+
 			V_oriValue = calculate_V_value(P_InitMat, D_Mat)
 			logging.debug("  V_oriValue: %s" %V_oriValue)
 	
@@ -1326,15 +1297,15 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 				pass
 			else:
 				randValue = random.random()
-	# 			logging.debug("randValue: %s" %randValue)
+# 				logging.debug("randValue: %s" %randValue)
 	
 				expValue = math.exp(-deltaV/T_Value)
-	# 			logging.debug("expValue: %s" %expValue)
+# 				logging.debug("expValue: %s" %expValue)
 	
 				if randValue <= expValue:
 					pass
 				else:
-					P_InitMat = np.copy(P_TransMat)
+					P_InitMat = P_TransMat
 
 		logging.debug("")
 
@@ -1342,10 +1313,10 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 # 		logging.debug("  P_TransMat: \n%s" %P_TransMat)
 # 		logging.debug("  P_TransMatTmp: \n%s" %P_TransMatTmp)
 
+		poolDistributionTest = create_pool_distribution_from_matrix(P_InitMat, teamNbr, poolNbr, poolSize, teams)
+		logging.debug("  poolDistributionTest: \n%s" %poolDistributionTest)
 
 
-		sys.exit()
-		
 		return P_InitMat
 		
 	except Exception as e:
@@ -2129,7 +2100,7 @@ def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterCo
 		logging.debug("-------------------------------------- CREATE INIT MATRIX WITH CONSTRAINT --------------------------------" )
 
 		logging.debug("prohibitionConstraints: %s" %prohibitionConstraints)
-# 		logging.debug("typeDistributionConstraints: %s" %typeDistributionConstraints)
+		logging.debug("typeDistributionConstraints: %s" %typeDistributionConstraints)
 		
 		for iterNbr in range(iterConstraint):
 
@@ -2175,7 +2146,6 @@ def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterCo
 					poolDistribution[pool].append(team)
 
 			logging.debug("	poolDistribution: %s" %poolDistribution)
-			logging.debug("	prohibitionConstraints: %s" %prohibitionConstraints)
 			
 			# apply prohibition constraints to the pool distribution
 			statusProhibitionConstraints = check_prohibition_constraints(prohibitionConstraints, poolDistribution)
