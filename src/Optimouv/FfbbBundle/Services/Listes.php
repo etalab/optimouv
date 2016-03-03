@@ -60,11 +60,6 @@ class Listes{
         ini_set('auto_detect_line_endings', TRUE);
 
 
-//        error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
-//            ."\n _SERVER: ".print_r($_SERVER, true), 3, $this->error_log_path);
-
-
-
         # obtenir le chemin d'upload du fichier
         $cheminFichierTemp = $_FILES["file-0"]["tmp_name"];
 
@@ -238,11 +233,12 @@ class Listes{
                                 if (strtolower($typeEntite) == "equipe") {
 
                                     # controler le nombre de colonnes
-                                    if(count($donnéesLigne) != 11 && count($donnéesLigne) != 18){
+//                                    if(count($donnéesLigne) != 11 && count($donnéesLigne) != 18){
+                                    if(count($donnéesLigne) != 11 && count($donnéesLigne) != 12 && count($donnéesLigne) != 18 ){
                                         $retour = array(
                                             "success" => false,
                                             "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." La ligne doit contenir 11 valeurs (meilleur lieu) ou 18 valeurs (optimisation de poule). Donné: ".count($donnéesLigne)." valeurs"
+                                                ." La ligne doit contenir 11 valeurs (meilleur lieu), 12 ou 18 valeurs (optimisation de poule). Donné: ".count($donnéesLigne)." valeurs"
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -377,9 +373,8 @@ class Listes{
                                     $licencies = $donnéesLigne[10];
 
 
-                                    // test de l'import pour l'optimisation des poules
-                                    if(count($donnéesLigne) == 18){
-
+                                    // controler le champ 'POULE' pour l'ancien et le nouveau format csv (12 et 18 colonnes)
+                                    if(count($donnéesLigne) == 12 || count($donnéesLigne) == 18 ){
                                         $poule = $donnéesLigne[11];
 
                                         // controler la presence de valeur pour le champ 'POULE'
@@ -392,7 +387,6 @@ class Listes{
                                             array_push($lignesErronees, $retour["msg"]);
                                             continue;
                                         }
-
 
                                         // controler si les valeurs fournies pour le champ 'POULE' sont des alphabets
                                         $alphabet = ['','A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ];
@@ -407,7 +401,11 @@ class Listes{
                                             continue;
                                         }
 
+                                    }
 
+                                    // test de l'import pour l'optimisation des poules
+                                    if(count($donnéesLigne) == 18){
+                                        
                                         # ajouter les noms dans la liste
                                         array_push($tousNomsEquipes, $donnéesLigne[1]);
 
