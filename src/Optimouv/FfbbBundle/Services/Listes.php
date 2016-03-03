@@ -1496,9 +1496,8 @@ class Listes{
 
         // tester le nombre de colonnes
         // nombreColonnesEntetes (11 pour liste d'équipes, 10 pour liste de personnes, 13 pour liste de lieux ce sont pour le cas de meuilleur lieux)
-        // nombreColonnesEntetes (18 pour l'optimisation de poules)
-//        $nombreColonnesEntetes = [11,10,13,12, 18];
-        $nombreColonnesEntetes = [11,10,13, 18];
+        // nombreColonnesEntetes (12, 18 pour l'optimisation de poules)
+        $nombreColonnesEntetes = [11,10,13,12, 18];
         if(!in_array(count($entete), $nombreColonnesEntetes)){
             $retour["msg"] = "Veuillez vérifier le nombre des colonnes.!"
                 .$genericMsg;
@@ -1519,8 +1518,8 @@ class Listes{
 //            error_log("service: listes, function: controlerEntites, count entete: ".print_r(count($entete), True), 3, $this->error_log_path);
 
             // pour la liste d'équipes
-//            if(count($entete) == 11 || count($entete) == 12 || count($entete) == 18){
-            if(count($entete) == 11 || count($entete) == 18){
+            if(count($entete) == 11 || count($entete) == 12 || count($entete) == 18){
+//            if(count($entete) == 11 || count($entete) == 18){
                 if($entete[2] != "CODE POSTAL" ){
                     $retour["msg"] = "Veuillez vérifier que le nom de la colonne 3 de l'en-tête correspond au template donné (CODE POSTAL).!"
                         .$genericMsg;
@@ -1567,13 +1566,17 @@ class Listes{
                     return $retour;
                 }
 
-                # controle supplementaire pour le fichier plateau
-                if(count($entete) == 18){
+                # controle supplementaire pour le fichier de l'optimisation de poule
+                if(count($entete) == 12 || count($entete) == 18) {
                     if($entete[11] != "POULE" ){
                         $retour["msg"] = "Veuillez vérifier que le nom de la colonne 12 de l'en-tête correspond au template donné (POULE).!"
                             .$genericMsg;
                         return $retour;
                     }
+                }
+
+                # controle supplementaire pour le fichier de l'optimisation de poule du type match plateau
+                if(count($entete) == 18){
                     if($entete[12] != "PREMIER JOUR DE RECEPTION" ){
                         $retour["msg"] = "Veuillez vérifier que le nom de la colonne 13 de l'en-tête correspond au template donné (PREMIER JOUR DE RECEPTION).!"
                             .$genericMsg;
