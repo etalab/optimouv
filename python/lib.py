@@ -247,8 +247,8 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 		# calculate efficiency of the algorithm
 		efficiency = round((performanceCounter*100/teamNbr/teamNbr), 2)
 	
-		logging.debug("  performanceCounter: %s" %performanceCounter)
-		logging.debug("  efficiency: %s %%" %(efficiency))
+# 		logging.debug("  performanceCounter: %s" %performanceCounter)
+# 		logging.debug("  efficiency: %s %%" %(efficiency))
 # 		logging.debug("  tempPools: %s" %tempPools)
 # 		logging.debug("  len tempPools: %s" %len(tempPools))
 
@@ -1978,8 +1978,8 @@ def get_prohibition_constraints(prohibitionDict):
 			
 			for constraintNbr, constraint in prohibitionDict.items():
 				# remove white spaces
-				team1 = constraint[0].strip()
-				team2 = constraint[1].strip()
+				team1 = int(constraint[0].strip())
+				team2 = int(constraint[1].strip())
 				
 				prohibitionConstraints["data"].append([team1, team2])
 			
@@ -2022,8 +2022,8 @@ Return 0 if success (pass the prohibition constraints)
 def check_prohibition_constraints(prohibitionConstraints, poolDistribution):
 	try:
 		for constraint in prohibitionConstraints:
-			constraintFirstTeam = constraint[0]
-			constraintSecondTeam = constraint[1]
+			constraintFirstTeam = int(constraint[0])
+			constraintSecondTeam = int(constraint[1])
 		
 			for pool, poolMembers in poolDistribution.items():
 				if constraintFirstTeam in poolMembers and constraintSecondTeam in poolMembers:
@@ -2128,7 +2128,7 @@ def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterCo
 	try:
 		logging.debug("-------------------------------------- CREATE INIT MATRIX WITH CONSTRAINT --------------------------------" )
 
-# 		logging.debug("prohibitionConstraints: %s" %prohibitionConstraints)
+		logging.debug("prohibitionConstraints: %s" %prohibitionConstraints)
 # 		logging.debug("typeDistributionConstraints: %s" %typeDistributionConstraints)
 		
 		for iterNbr in range(iterConstraint):
@@ -2163,15 +2163,6 @@ def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterCo
 			logging.debug("	teamPoolResult: %s" %teamPoolResult)
 	# 		logging.debug("teams: %s" %teams)
 
-
-			#####################################################################################################
-			# take into account variation of team number in a pool
-			#####################################################################################################
-# 			teamPoolResult = adjust_pool_attribution_based_on_pool_variation(teamPoolResult, poolNbr, poolSize, varTeamNbrPerPool)
-# 			logging.debug("teamPoolResult: %s" %teamPoolResult)
-
-			#####################################################################################################
-
 			# create pool distribution
 			poolDistribution = {}
 			for i in range(teamNbr):
@@ -2182,7 +2173,9 @@ def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterCo
 					poolDistribution[pool] = [team]
 				else:
 					poolDistribution[pool].append(team)
-# 			logging.debug("	poolDistribution: %s" %poolDistribution)
+
+			logging.debug("	poolDistribution: %s" %poolDistribution)
+			logging.debug("	prohibitionConstraints: %s" %prohibitionConstraints)
 			
 			# apply prohibition constraints to the pool distribution
 			statusProhibitionConstraints = check_prohibition_constraints(prohibitionConstraints, poolDistribution)
@@ -2197,6 +2190,7 @@ def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterCo
 			if statusProhibitionConstraints == 0 and statusTypeDistributionConstraints == 0:
 				break
 		
+
 		# create P Init Matrix only if both status constraints are 0 (success)
 		if statusProhibitionConstraints == 0 and statusTypeDistributionConstraints == 0:
 			# get index of the teams with the same pool number (create 2D Matrix from list)
@@ -2206,6 +2200,7 @@ def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterCo
 			
 				P_InitMat[indexCurPool, sameCurValueIndex] = 1
 				
+
 			np.savetxt("/tmp/p_init_mat_with_constraint.csv", P_InitMat, delimiter=",", fmt='%d')
 			return {"success": True, "data": P_InitMat}
 		else:
