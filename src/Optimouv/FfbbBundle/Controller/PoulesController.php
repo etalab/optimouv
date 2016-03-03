@@ -197,6 +197,14 @@ class PoulesController extends Controller
             $detailsEntites[$i]["refPlateauDecoder"] =  json_decode($detailsEntites[$i]["refPlateau"], true) ;
         }
 
+        # boolean pour indiquer si le csv est pour match aller retour ou plateau
+        if($detailsEntites != [] && $detailsEntites[0] != [] && $detailsEntites[0]["refPlateauDecoder"] != []  ){
+            $typeMatchPlateau = 1;
+        }
+        else{
+            $typeMatchPlateau = 0;
+
+        }
 
 //        error_log("\n detailsEntites: ".print_r($detailsEntites , true), 3, "error_log_optimouv.txt");
 
@@ -205,6 +213,7 @@ class PoulesController extends Controller
             'idListeParticipants' => $idListeParticipants,
             'detailsEntites' => $detailsEntites,
             'nomListe' => $nomListe,
+            'typeMatchPlateau' => $typeMatchPlateau,
         ));
 
     }
