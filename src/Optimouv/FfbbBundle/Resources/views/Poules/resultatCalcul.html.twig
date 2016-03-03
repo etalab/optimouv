@@ -4136,9 +4136,9 @@
                              // obtenir la liste de toutes interdictions
                              $('#tbodyInterdictions tr').each(function(i, el){
                                  var $tds = $(this).find('td');
-                                 var premierEquipeId = $tds.eq(1).find("span").text();
+                                 var premierEquipeId = $tds.eq(1).find("span").text().trim();
 //                                 console.log("premierEquipeId: " + premierEquipeId);
-                                 var deuxiemeEquipeId = $tds.eq(2).find("span").text();
+                                 var deuxiemeEquipeId = $tds.eq(2).find("span").text().trim();
 //                                 console.log("deuxiemeEquipeId: " + deuxiemeEquipeId);
 
                                  listeInterdictions.push({premierEquipeId: premierEquipeId, deuxiemeEquipeId: deuxiemeEquipeId} );
@@ -4253,8 +4253,9 @@
                              }
                              else{
                                  var interdictions = getContraintes();
-                                 var repartitionsHomogenes = verifRepartitionHomogene();
+                                 console.log("interdictions: " + JSON.stringify(interdictions));
 
+                                 var repartitionsHomogenes = verifRepartitionHomogene();
                                  console.log("repartitionsHomogenes: " + repartitionsHomogenes );
 
                                  // si la vérification des répartitions homogenes retourne une erreur
@@ -4358,8 +4359,8 @@
 
                      var compteur = 1;
                      $('#tbodyInterdictions tr').each(function() {
-                         var equipe1Id = $(this).find("td").eq(1).find("span").text();
-                         var equipe2Id = $(this).find("td").eq(2).find("span").text();
+                         var equipe1Id = $(this).find("td").eq(1).find("span").text().trim();
+                         var equipe2Id = $(this).find("td").eq(2).find("span").text().trim();
                          var interdictionContrainte = [equipe1Id, equipe2Id];
                          console.log("interdictionContrainte: " + interdictionContrainte);
                          tabContraintes[compteur] = interdictionContrainte;
@@ -4376,7 +4377,6 @@
                  function verifRepartitionHomogene(){
 
                      var length = document.getElementById("tableContrainteRepartitionHomogene").rows.length;
-//                     var ligne = document.getElementById("tableContrainteRepartitionHomogene").rows;
 
                      var mesRepartitions = [];
                      for (i = 0; i < length-1; i++) {
@@ -4470,8 +4470,6 @@
 
                          if(categorie !="Aucun"){
 
-//                             maRepartition = ville+':'+categorie;
-//                             mesRepartitionsHomogenes.push(maRepartition);
 
                              if(categorie in mesRepartitionsHomogenes){
                                  mesRepartitionsHomogenes[categorie].push(ville);
