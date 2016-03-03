@@ -343,8 +343,8 @@ def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSi
 		# calculate efficiency of the algorithm
 		efficiency = round((performanceCounter*100/teamNbr/teamNbr), 2)
 	
-		logging.debug("  performanceCounter: %s" %performanceCounter)
-		logging.debug("  efficiency: %s %%" %(efficiency))
+# 		logging.debug("  performanceCounter: %s" %performanceCounter)
+# 		logging.debug("  efficiency: %s %%" %(efficiency))
 # 		logging.debug("  tempPools: %s" %tempPools)
 # 		logging.debug("  len tempPools: %s" %len(tempPools))
 
@@ -1202,8 +1202,8 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 		
 		logging.debug("  iterConstraint: %s" %iterConstraint)
 
+
 # 		logging.debug("  teams: %s" %teams)
-# 		logging.debug("  prohibitionConstraints: %s" %prohibitionConstraints)
 
 		# get indexes of prohibition constraints
 # 		indexesProhibitionConstraints = getIndexesProhibitionConstraints(prohibitionConstraints, teams)
@@ -1213,7 +1213,8 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 # 		indexesTypeDistributionConstraints = getIndexesTypeDistributionConstraints(typeDistributionConstraints, teams)
 # 		logging.debug("  indexesTypeDistributionConstraints: %s" %indexesTypeDistributionConstraints)
 		
-		logging.debug("  typeDistributionConstraints: \n%s" %typeDistributionConstraints)
+		logging.debug("	 prohibitionConstraints: \n%s" %json.dumps(prohibitionConstraints))
+		logging.debug("  typeDistributionConstraints: \n%s" %json.dumps(typeDistributionConstraints))
 
 		for nbIter in range(iter):
 			logging.debug("  ----------------------------------------------------------------------------------------------------")
@@ -1224,7 +1225,9 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 			T_Value *= 0.99
 			logging.debug("  T_Value current: %s" %T_Value)
 	
-	
+			poolDistributionInit = create_pool_distribution_from_matrix(P_InitMat, teamNbr, poolNbr, poolSize, teams)
+			logging.debug("  poolDistributionInit: \n%s" %poolDistributionInit)
+
 			# list of prohibited constraints
 # 			rulesProhibitionConstraints = create_rules_for_prohibition_constraints(indexesProhibitionConstraints, P_InitMat)
 # 			logging.debug("  rulesProhibitionConstraints: %s" %(rulesProhibitionConstraints))
@@ -1271,6 +1274,7 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 						logging.debug("  poolDistributionTmp: \n%s" %poolDistributionTmp)
 						
 						
+
 						statusProhibitionConstraints = check_prohibition_constraints(prohibitionConstraints, poolDistributionTmp)
 						logging.debug("	statusProhibitionConstraints: %s" %statusProhibitionConstraints)
 						
@@ -1298,7 +1302,8 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 			# change two rows according to transIndex
 			P_TransMat[:,transIndex] = P_TransMat[:,list(reversed(transIndex))]
 	# 		logging.debug("  P_InitMat: \n%s" %P_InitMat)
-	# 		logging.debug("  P_TransMat: \n%s" %P_TransMat)
+
+	
 	# 
 			V_oriValue = calculate_V_value(P_InitMat, D_Mat)
 			logging.debug("  V_oriValue: %s" %V_oriValue)
@@ -1329,12 +1334,18 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 				if randValue <= expValue:
 					pass
 				else:
-					P_InitMat = P_TransMat
+					P_InitMat = np.copy(P_TransMat)
 
 		logging.debug("")
 
+# 		logging.debug("  P_InitMat: \n%s" %P_InitMat)
+# 		logging.debug("  P_TransMat: \n%s" %P_TransMat)
+# 		logging.debug("  P_TransMatTmp: \n%s" %P_TransMatTmp)
 
 
+
+		sys.exit()
+		
 		return P_InitMat
 		
 	except Exception as e:
@@ -1966,7 +1977,11 @@ def get_prohibition_constraints(prohibitionDict):
 			prohibitionConstraints = {"status": "yes", "data": []} 
 			
 			for constraintNbr, constraint in prohibitionDict.items():
-				prohibitionConstraints["data"].append(constraint)
+				# remove white spaces
+				team1 = constraint[0].strip()
+				team2 = constraint[1].strip()
+				
+				prohibitionConstraints["data"].append([team1, team2])
 			
 		else:
 			prohibitionConstraints = {"status": "no", "data": []} 
