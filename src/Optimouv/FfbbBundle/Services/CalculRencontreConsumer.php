@@ -75,14 +75,14 @@ class CalculRencontreConsumer implements ConsumerInterface
         $statut = 1;
 
         //TODO: changer le nom de la table rapport en parametres
-        $update = $bdd->prepare("UPDATE rapport SET statut = :statut WHERE id = :id");
+        $update = $bdd->prepare("UPDATE parametres SET statut = :statut WHERE id = :id");
         $update->bindParam(':id', $msg);
         $update->bindParam(':statut', $statut);
         $update->execute();
 
 
         //recupere les details de l operation
-        $req = $bdd->prepare("SELECT * from rapport where id = :id ");
+        $req = $bdd->prepare("SELECT * from parametres where id = :id ");
         $req->bindParam(':id', $msg);
         $req->execute();
         $res = $req->fetchAll(PDO::FETCH_ASSOC);
@@ -211,7 +211,7 @@ class CalculRencontreConsumer implements ConsumerInterface
 
         //TODO: changer le nom de la table à resultats
 
-        $insert = $bdd->prepare("INSERT INTO  scenario (id_rapport, details_calcul, date_creation) VALUES ( :idTache, :detailsCalcul, :dateCreation);");
+        $insert = $bdd->prepare("INSERT INTO  resultats (id_rapport, details_calcul, date_creation) VALUES ( :idTache, :detailsCalcul, :dateCreation);");
         $insert->bindParam(':idTache', $idTache);
         $insert->bindParam(':detailsCalcul', $resultats);
         $insert->bindParam(':dateCreation', $dateCreation);
@@ -228,7 +228,7 @@ class CalculRencontreConsumer implements ConsumerInterface
         $bdd= $this->connexion();
 
         //TODO: changer le nom de la table rapport en parametres
-        $update = $bdd->prepare("UPDATE rapport SET statut = :statut WHERE id = :id");
+        $update = $bdd->prepare("UPDATE parametres SET statut = :statut WHERE id = :id");
         $update->bindParam(':id', $id);
         $update->bindParam(':statut', $statut);
         $update->execute();
@@ -280,7 +280,7 @@ class CalculRencontreConsumer implements ConsumerInterface
         //on recupere les parametres de connexion
         $bdd= $this->connexion();
 
-        $stmt1 = $bdd->prepare("select email from fos_user where id = (select id_utilisateur from groupe where id = (SELECT id_groupe FROM rapport where id = :id));");
+        $stmt1 = $bdd->prepare("select email from fos_user where id = (select id_utilisateur from groupe where id = (SELECT id_groupe FROM parametres where id = :id));");
 
         $stmt1->bindParam(':id', $idRapport);
         $stmt1->execute();

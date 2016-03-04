@@ -1276,7 +1276,7 @@ class Rencontres
 
         # controler si le rapport est déjà dans la table rapport
         try {
-            $sql = "SELECT id FROM rapport WHERE id_groupe = :id_groupe and type_action = :type_action and valeur_exclusion = :valeur_exclusion " ;
+            $sql = "SELECT id FROM parametres WHERE id_groupe = :id_groupe and type_action = :type_action and params = :valeur_exclusion " ;
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':id_groupe', $idGroupe);
             $stmt->bindParam(':type_action', $typeAction);
@@ -1288,10 +1288,6 @@ class Rencontres
             # obtenir le résultat
             $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-//            error_log("\n Service: Rencontres, Function: creerRapport, datetime: ".$dateTimeNow
-//                    ."\n sql: ".print_r($sql, true), 3, $this->error_log_path);
-//            error_log("\n Service: Rencontres, Function: creerRapport, datetime: ".$dateTimeNow
-//                ."\n valeurExclusion: ".print_r($valeurExclusion, true), 3, $this->error_log_path);
 
             # insérer dans la table rapport si le rapport est nouveau
             if(!$resultat){
@@ -1299,7 +1295,7 @@ class Rencontres
                 $nom = "rapport_groupe_".$idGroupe."_action_".$typeAction;
 
 
-                $sql = "INSERT INTO rapport (nom, id_groupe, type_action, valeur_exclusion, date_creation)
+                $sql = "INSERT INTO parametres (nom, id_groupe, params, date_creation)
                           VALUES (:nom, :id_groupe, :type_action, :valeur_exclusion, :date_creation)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindParam(':nom', $nom);
@@ -1350,7 +1346,7 @@ class Rencontres
         try {
                 $nom = "scenario_".$typeScenario."_rapport_".$idRapport;
 
-                $sql = "INSERT INTO scenario (id_rapport, nom, kilometres, duree, date_creation, date_modification)
+                $sql = "INSERT INTO resultats (id_rapport, nom, kilometres, duree, date_creation, date_modification)
                           VALUES (:id_rapport, :nom, :kilometres, :duree, :date_creation, :date_modification)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindParam(':id_rapport', $idRapport);
@@ -1361,11 +1357,9 @@ class Rencontres
                 $stmt->bindParam(':date_modification', $dateTimeNow);
 
                 # executer la requete
-                $stmt->execute();
-
-                # afficher le statut de la requete executée
+                       # afficher le statut de la requete executée
 //                error_log("\n Service: Rencontres, Function: creerRapport, datetime: ".$dateTimeNow
-//                    ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, $this->error_log_path);
+//                    ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, $this->error_log_path);, 3, $this->error_log_path);
 
                 # obtenir l'id de l"entité créée
                 $idScenario = $pdo->lastInsertId();
@@ -1534,7 +1528,7 @@ class Rencontres
 
         //on ajoute un job dans la table parametres
         //TODO:changer le nom de la table rapport en paramètres
-        $insert = $bdd->prepare("INSERT INTO  rapport (nom, id_groupe, type_action, statut, date_creation) VALUES (:nomRapport, :idGroupe, :typeAction, :statut, :dateCreation );");
+        $insert = $bdd->prepare("INSERT INTO  parametres (nom, id_groupe, type_action, statut, date_creation) VALUES (:nomRapport, :idGroupe, :typeAction, :statut, :dateCreation );");
         $insert->bindParam(':nomRapport', $nomRapport);
         $insert->bindParam(':idGroupe', $idGroupe);
         $insert->bindParam(':typeAction', $typeAction);
@@ -1566,7 +1560,7 @@ class Rencontres
 
         //on ajoute un job dans la table parametres
         //TODO:changer le nom de la table rapport en paramètres
-        $insert = $bdd->prepare("INSERT INTO  rapport (nom, id_groupe, type_action, statut, params, date_creation) VALUES (:nomRapport, :idGroupe, :typeAction, :statut, :params, :dateCreation );");
+        $insert = $bdd->prepare("INSERT INTO  parametres (nom, id_groupe, type_action, statut, params, date_creation) VALUES (:nomRapport, :idGroupe, :typeAction, :statut, :params, :dateCreation );");
         $insert->bindParam(':nomRapport', $nomRapport);
         $insert->bindParam(':idGroupe', $idGroupe);
         $insert->bindParam(':typeAction', $typeAction);

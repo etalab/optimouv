@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Scenario
  *
- * @ORM\Table(name="scenario", indexes={@ORM\Index(name="id_rapport_idx", columns={"id_rapport"})})
+ * @ORM\Table(name="resultats", indexes={@ORM\Index(name="id_rapport_idx", columns={"id_rapport"})})
  * @ORM\Entity(repositoryClass="ScenarioRepository")
  */
 class Scenario
@@ -103,7 +103,7 @@ class Scenario
     /**
      * @var \Optimouv\FfbbBundle\Entity\Rapport
      *
-     * @ORM\ManyToOne(targetEntity="Optimouv\FfbbBundle\Entity\Rapport")
+     * @ORM\ManyToOne(targetEntity="Optimouv\FfbbBundle\Entity\Rapport", cascade={"remove"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_rapport", referencedColumnName="id")
      * })

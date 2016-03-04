@@ -685,13 +685,11 @@ class PoulesController extends Controller
         }
 
 
-//        error_log("\n infoPoule : ".print_r($infoPoule , true), 3, "error_log_optimouv.txt");
-
 
         //récupération du nom du rapport
         $connection = $em->getConnection();
 
-        $statement = $connection->prepare("SELECT  b.id as idRapport, b.nom as nomRapport, b.id_groupe as idGroupe FROM scenario as a, rapport as b where a.id_rapport = b.id and a.id = :id");
+        $statement = $connection->prepare("SELECT  b.id as idRapport, b.nom as nomRapport, b.id_groupe as idGroupe FROM resultats as a, parametres as b where a.id_rapport = b.id and a.id = :id");
         $statement->bindParam(':id', $idResultat);
         $statement->execute();
         $statement = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -805,8 +803,6 @@ class PoulesController extends Controller
         # obtenir le type de match
         $typeMatch = $detailsCalcul["typeMatch"];
 
-//        error_log("\n detailsCalcul : ".print_r($detailsCalcul , true), 3, "error_log_optimouv.txt");
-
 
         # parser les données pour l'affichage
         $donneesComparison = $this->get('service_poules')->parserComparaisonScenario($detailsVilles, $scenarioOptimalAvecContrainte, $scenarioOptimalSansContrainte, $scenarioEquitableAvecContrainte, $scenarioEquitableSansContrainte, $scenarioRef, $refExiste, $contraintsExiste, $typeMatch );
@@ -845,9 +841,6 @@ class PoulesController extends Controller
 
         //recuperation des donnees relatives au scenario
         $infoPdf = $this->getInfoPdfAction($params);
-
-//        echo '<pre>',print_r($infoPdf,1),'</pre>';exit;
-
 
         $nombrePoule = $infoPdf[0];
         $taillePoule = $infoPdf[1];
@@ -969,7 +962,7 @@ class PoulesController extends Controller
         //récupération du nom du rapport
         $connection = $em->getConnection();
 
-        $statement = $connection->prepare("SELECT  b.id as idRapport, b.nom as nomRapport, b.id_groupe as idGroupe FROM scenario as a, rapport as b where a.id_rapport = b.id and a.id = :id");
+        $statement = $connection->prepare("SELECT  b.id as idRapport, b.nom as nomRapport, b.id_groupe as idGroupe FROM resultats as a, parametres as b where a.id_rapport = b.id and a.id = :id");
         $statement->bindParam(':id', $idResultat);
         $statement->execute();
         $statement = $statement->fetchAll(PDO::FETCH_ASSOC);

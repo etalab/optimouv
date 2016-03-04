@@ -104,7 +104,7 @@ class Poules{
             ));
 
             # insérer dans la base de données
-            $sql = "INSERT INTO  rapport (nom, id_groupe, type_action, date_creation, statut, params) VALUES ( :nom, :id_groupe, :type_action, :date_creation, :statut, :params);";
+            $sql = "INSERT INTO  parametres (nom, id_groupe, type_action, date_creation, statut, params) VALUES ( :nom, :id_groupe, :type_action, :date_creation, :statut, :params);";
             $stmt = $bdd->prepare($sql);
             $stmt->bindParam(':nom', $nom);
             $stmt->bindParam(':id_groupe', $idGroupe);
@@ -508,7 +508,7 @@ class Poules{
 
 
             # obtenir le statut depuis la db
-            $sql = "SELECT statut from rapport where id=:id;";
+            $sql = "SELECT statut from parametres where id=:id;";
             $stmt = $bdd->prepare($sql);
             $stmt->bindParam(':id', $idResultat);
             $stmt->execute();

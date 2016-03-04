@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Rapport
  *
- * @ORM\Table(name="rapport")
+ * @ORM\Table(name="parametres")
  * @ORM\Entity(repositoryClass="Optimouv\FfbbBundle\Entity\RapportRepository")
  */
 class Rapport
@@ -31,7 +31,7 @@ class Rapport
     /**
      * @var \Optimouv\FfbbBundle\Entity\Groupe
      *
-     * @ORM\ManyToOne(targetEntity="Optimouv\FfbbBundle\Entity\Groupe")
+     * @ORM\ManyToOne(targetEntity="Optimouv\FfbbBundle\Entity\Groupe", cascade={"remove"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_groupe", referencedColumnName="id")
      * })
@@ -45,14 +45,6 @@ class Rapport
      * @ORM\Column(name="type_action", type="string", length=50)
      */
     private $typeAction;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="valeur_exclusion", type="integer")
-     */
-    private $valeurExclusion;
-
 
     /**
      * @var \DateTime
@@ -156,30 +148,6 @@ class Rapport
     public function getTypeAction()
     {
         return $this->typeAction;
-    }
-
-    /**
-     * Set valeurExclusion
-     *
-     * @param integer $valeurExclusion
-     *
-     * @return Rapport
-     */
-    public function setValeurExclusion($valeurExclusion)
-    {
-        $this->valeurExclusion = $valeurExclusion;
-
-        return $this;
-    }
-
-    /**
-     * Get valeurExclusion
-     *
-     * @return integer
-     */
-    public function getValeurExclusion()
-    {
-        return $this->valeurExclusion;
     }
 
 

@@ -43,7 +43,7 @@
                                     {% for infoRapport in infoRapports %}
                                         <tr id="{{ infoRapport.id }}">
 
-                                            <td> {{ loop.index }} </td>
+                                            <td> {{ infoRapport.id }} </td>
                                             <td> {{ infoRapport.nom }} </td>
 
                                             {% if infoRapport.typeAction == "allerRetour" %}
@@ -102,24 +102,6 @@
 
                                             </td>
 
-                                            {#<td>#}
-
-                                            {#{%  if (infoRapport.typeAction == "barycentre") or (infoRapport.typeAction == "meilleurLieu")  or (infoRapport.typeAction == "terrainNeutre") %}#}
-                                            {#<button id="btn_rejouer_{{ infoRapport.id  }}"  type="submit" class="btn btn-info">Consulter</button>#}
-
-                                            {#{% elseif (infoRapport.typeAction == "exclusion") %}#}
-
-                                            {#<form action="{{ path('ffbb_exclusion', {'idGroupe':infoRapport.idGroupe}) }}" method="POST">#}
-                                            {#<button id="btn_rejouer_{{ infoRapport.id  }}"  type="submit" class="btn btn-info">Consulter</button>#}
-                                            {#<input name="valeurExclusion" id="valeurExclusion_{{ infoRapport.id }}" type="hidden" value={{ infoRapport.valeurExclusion }}>#}
-                                            {#</form>#}
-                                            {#{% else %}#}
-                                            {#<button id="btn_rejouer_{{ infoRapport.id  }}"  type="button" class="btn btn-info">Consulter</button>#}
-
-                                            {#{% endif %}#}
-
-                                            {##}
-                                            {#</td>#}
 
                                         </tr>
 
@@ -154,37 +136,6 @@
             $('#tableRapport').DataTable({
                 responsive: true
             });
-
-
-            // Action javascript pour le bouton rejour de chaque rapport
-            {% for infoRapport in infoRapports %}
-
-            $("#btn_rejouer_{{ infoRapport.id }}").click(function () {
-                var id = {{ infoRapport.id }};
-                var idGroupe = {{ infoRapport.idGroupe }};
-                var typeAction = "{{ infoRapport.typeAction }}";
-                var valeurExclusion = {{ infoRapport.valeurExclusion }};
-
-//                    console.log("id: " + id);
-//                    console.log("idGroupe: " + idGroupe);
-//                    console.log("typeAction: " + typeAction);
-//                    console.log("valeurExclusion: " + valeurExclusion);
-
-                {#if(typeAction == "barycentre"){#}
-                {#window.location.href = "{{ path('ffbb_barycentre', {'idGroupe':infoRapport.idGroupe}) }}";#}
-                {#}#}
-                {#else if(typeAction == "meilleurLieu"){#}
-                {#window.location.href = "{{ path('ffbb_rencontres', {'idGroupe':infoRapport.idGroupe}) }}";#}
-                {#}#}
-                {#else if(typeAction == "terrainNeutre"){#}
-                {#window.location.href = "{{ path('ffbb_terrain', {'idGroupe':infoRapport.idGroupe}) }}";#}
-
-                {#}#}
-
-            });
-
-            {% endfor %}
-
 
         });
     </script>

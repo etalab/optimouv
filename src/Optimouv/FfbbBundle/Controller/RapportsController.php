@@ -34,6 +34,7 @@ class RapportsController extends Controller
         # récupérer tous les rapports de tous les groupes
         $infoRapports = $em->getRepository('FfbbBundle:Rapport')->getRapportsParIdGroupe($idGroupes);
 
+
         # récupérer l'id du rapport (résultat)
         # BUG sur Symphony quand on récupère le statut directement en utilisant le repository du rapport
         for($i=0; $i<count($infoRapports); $i++){
