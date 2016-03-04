@@ -4078,9 +4078,6 @@
                          });
                      }
 
-
-
-
                  });
 
 
@@ -4103,6 +4100,28 @@
                      width:'100%'
                  });
 
+
+
+
+
+                 function getPoulesFromInfoChangeAffectation(infoChangeAffectation){
+                     var poules = [];
+
+                     var alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ];
+                     $.each(infoChangeAffectation, function(key, value){
+                        var poule = alphabet[key-1];
+
+                         poules.push(poule);
+                     });
+//                     console.log("poules: " + JSON.stringify(poules));
+
+
+
+
+                     return poules;
+                 }
+
+
                  // JS pour changement d'affectation d'équipes par poule
                  $("#scenarioChangeAffectation").select2({
                      width:'100%'
@@ -4110,6 +4129,31 @@
                      // mostly used event, fired to the original element when the value changes
                      var scenarioChangeAffectation = $(this).val();
                      console.log("scenarioChangeAffectation: " + scenarioChangeAffectation);
+
+                     if(scenarioChangeAffectation === "optimalSansContrainte"){
+                         var infoChangeAffectation = {{ infoChangeAffectation.optimalSansContrainte | json_encode | raw}};
+                         console.log("infoChangeAffectation: " + JSON.stringify(infoChangeAffectation));
+
+                         // obtenir poules
+                         var poules = getPoulesFromInfoChangeAffectation(infoChangeAffectation);
+                         console.log("poules: " + JSON.stringify(poules));
+
+
+
+                     }
+                     else if(scenarioChangeAffectation === "equitableSansContrainte"){
+                         console.log("eq sans");
+
+                     }
+                     else if(scenarioChangeAffectation === "optimalAvecContrainte"){
+                         console.log("optimal avec");
+
+                     }
+                     else if(scenarioChangeAffectation === "equitableAvecContrainte"){
+                         console.log("eq avec");
+
+                     }
+
                  })
 
 
@@ -4175,9 +4219,6 @@
 
                              }
                          }
-
-
-
 
 
                          // ajouter une nouvelle ligne dans la table d'interdictions
