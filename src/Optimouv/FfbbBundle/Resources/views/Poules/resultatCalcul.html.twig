@@ -3918,7 +3918,6 @@
 
                                  <tr>
                                      <td width="15%" >
-                                         {#<select id="scenarioChangeAffectation" class="selectChangeAffectation">#}
                                          <select id="scenarioChangeAffectation" >
                                          {% if contraintsExiste %}
                                              <option value="vide" selected> -- selectionnez une option -- </option>
@@ -3942,7 +3941,7 @@
                                      </td>
 
                                      <td width="20%">
-                                         <select id="equipeDepartc" class="selectChangeAffectation">
+                                         <select id="equipeDepart" class="selectChangeAffectation">
                                              <option value="vide" selected> -- selectionnez une option -- </option>
                                          </select>
                                      </td>
@@ -4102,8 +4101,6 @@
 
 
 
-
-
                  function getPoulesFromInfoChangeAffectation(infoChangeAffectation){
                      var poules = [];
 
@@ -4134,12 +4131,12 @@
                      }
 
 
-
                  }
 
 
 
-                 // JS pour changement d'affectation d'équipes par poule
+                 //// JS pour changement d'affectation d'équipes par poule
+                 // JS pour changement de scénario
                  $("#scenarioChangeAffectation").select2({
                      width:'100%'
                  }).on("change", function(e) {
@@ -4154,10 +4151,7 @@
                          // obtenir poules
                          var poules = getPoulesFromInfoChangeAffectation(infoChangeAffectation);
                          console.log("poules: " + JSON.stringify(poules));
-
                          remplirSelectPouleDepartEtDestination(poules);
-
-
 
                      }
                      else if(scenarioChangeAffectation === "equitableSansContrainte"){
@@ -4167,9 +4161,10 @@
                          // obtenir poules
                          var poules = getPoulesFromInfoChangeAffectation(infoChangeAffectation);
                          console.log("poules: " + JSON.stringify(poules));
-
                          remplirSelectPouleDepartEtDestination(poules);
+
                      }
+
                      else if(scenarioChangeAffectation === "optimalAvecContrainte"){
                          var infoChangeAffectation = {{ infoChangeAffectation.optimalAvecContrainte | json_encode | raw}};
                          console.log("infoChangeAffectation op avec: " + JSON.stringify(infoChangeAffectation));
@@ -4177,8 +4172,8 @@
                          // obtenir poules
                          var poules = getPoulesFromInfoChangeAffectation(infoChangeAffectation);
                          console.log("poules: " + JSON.stringify(poules));
-
                          remplirSelectPouleDepartEtDestination(poules);
+
                      }
                      else if(scenarioChangeAffectation === "equitableAvecContrainte"){
                          var infoChangeAffectation = {{ infoChangeAffectation.equitableAvecContrainte | json_encode | raw}};
@@ -4187,14 +4182,36 @@
                          // obtenir poules
                          var poules = getPoulesFromInfoChangeAffectation(infoChangeAffectation);
                          console.log("poules: " + JSON.stringify(poules));
-
                          remplirSelectPouleDepartEtDestination(poules);
 
                      }
 
                  })
 
+                 // JS pour changement de poule de départ
+                 $("#pouleDepart").select2({
+                     width:'100%'
+                 }).on("change", function(e) {
+                     var scenariochoisi= $("#scenarioChangeAffectation").val();
+                     console.log("scenariochoisi: " + scenariochoisi);
+                     var pouleDepart = $(this).val();
+                     console.log("pouleDepart: " + pouleDepart);
 
+
+                     
+                 })
+
+
+                 // JS pour changement de poule de destination
+                 $("#pouleDestination").select2({
+                     width:'100%'
+                 }).on("change", function(e) {
+                     var scenariochoisi= $("#scenarioChangeAffectation").val();
+                     console.log("scenariochoisi: " + scenariochoisi);
+                     var pouleDestination = $(this).val();
+                     console.log("pouleDestination: " + pouleDestination);
+
+                 })
 
 
                  // javascript quand on clique sur le bouton 'lancer le calcul'

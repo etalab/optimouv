@@ -428,10 +428,13 @@ class Poules{
 
         try{
             $infoChangeAffectation = [];
+            $infoChangeAffectation["optimalSansContrainte"] = array();
+            $infoChangeAffectation["equitableSansContrainte"] = array();
+            $infoChangeAffectation["optimalAvecContrainte"] = array();
+            $infoChangeAffectation["equitableAvecContrainte"] = array();
 
 
             if($scenarioOptimalSansContrainte != []){
-                $infoChangeAffectation["optimalSansContrainte"] = array();
                 foreach($scenarioOptimalSansContrainte["poulesId"] as $poule => $contenuPoule){
 
                     $listeTmp = [];
@@ -451,7 +454,6 @@ class Poules{
 
             }
             if($scenarioEquitableSansContrainte != []){
-                $infoChangeAffectation["equitableSansContrainte"] = array();
 
                 foreach($scenarioEquitableSansContrainte["poulesId"] as $poule => $contenuPoule){
 
@@ -468,7 +470,6 @@ class Poules{
                 }
             }
             if($scenarioOptimalAvecContrainte != []){
-                $infoChangeAffectation["optimalAvecContrainte"] = array();
 
                 foreach($scenarioOptimalAvecContrainte["poulesId"] as $poule => $contenuPoule){
 
@@ -485,7 +486,6 @@ class Poules{
                 }
             }
             if($scenarioEquitableAvecContrainte != []){
-                $infoChangeAffectation["equitableAvecContrainte"] = array();
 
                 foreach($scenarioEquitableAvecContrainte["poulesId"] as $poule => $contenuPoule){
 
