@@ -202,21 +202,15 @@ class Poules{
                                     $distanceTotaleScenarioOptimalSansContrainte += ($resultat["distance"] * $contenuGroupe["nbrParticipants"]  );
                                     $dureeScenarioOptimalSansContrainte += $resultat["duree"];
 
-
                                 }
-
 
                             }
 
-
                         }
-
 
                     }
 
-
                 }
-
 
                 # calcul données pour comparaison depuis rencontre details pour scenario équitable sans contrainte
                 $rencontreDetails = $scenarioEquitableSansContrainte["rencontreDetails"];
@@ -250,13 +244,9 @@ class Poules{
 
                                 }
 
-
                             }
 
-
                         }
-
-
 
                     }
                 }
@@ -379,8 +369,6 @@ class Poules{
                                 }
                             }
 
-
-
                         }
                     }
                 }
@@ -432,6 +420,133 @@ class Poules{
 
     }
 
+    # retourner les infos pour changement d'affectation d'équipes par poule
+    public function getInfoChangeAffectation($scenarioOptimalSansContrainte, $scenarioEquitableSansContrainte, $scenarioOptimalAvecContrainte, $scenarioEquitableAvecContrainte){
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+        try{
+            $infoChangeAffectation = [];
+
+
+            if($scenarioOptimalSansContrainte != []){
+                $infoChangeAffectation["optimalSansContrainte"] = array();
+                foreach($scenarioOptimalSansContrainte["poulesId"] as $poule => $contenuPoule){
+
+                    $listeTmp = [];
+                    foreach($contenuPoule as $equipeId){
+                        $detailEntite = $this->getDetailsEntite($equipeId);
+
+                        $infoEquipe = array("equipeId" => $equipeId, "equipeNom" => $detailEntite["nom"]);
+                        array_push($listeTmp, $infoEquipe);
+                    }
+
+                    $infoChangeAffectation["optimalSansContrainte"][$poule] = $listeTmp;
+
+                }
+
+
+
+
+            }
+            if($scenarioEquitableSansContrainte != []){
+                $infoChangeAffectation["equitableSansContrainte"] = array();
+
+                foreach($scenarioEquitableSansContrainte["poulesId"] as $poule => $contenuPoule){
+
+                    $listeTmp = [];
+                    foreach($contenuPoule as $equipeId){
+                        $detailEntite = $this->getDetailsEntite($equipeId);
+
+                        $infoEquipe = array("equipeId" => $equipeId, "equipeNom" => $detailEntite["nom"]);
+                        array_push($listeTmp, $infoEquipe);
+                    }
+
+                    $infoChangeAffectation["equitableSansContrainte"][$poule] = $listeTmp;
+
+                }
+            }
+            if($scenarioOptimalAvecContrainte != []){
+                $infoChangeAffectation["optimalAvecContrainte"] = array();
+
+                foreach($scenarioOptimalAvecContrainte["poulesId"] as $poule => $contenuPoule){
+
+                    $listeTmp = [];
+                    foreach($contenuPoule as $equipeId){
+                        $detailEntite = $this->getDetailsEntite($equipeId);
+
+                        $infoEquipe = array("equipeId" => $equipeId, "equipeNom" => $detailEntite["nom"]);
+                        array_push($listeTmp, $infoEquipe);
+                    }
+
+                    $infoChangeAffectation["optimalAvecContrainte"][$poule] = $listeTmp;
+
+                }
+            }
+            if($scenarioEquitableAvecContrainte != []){
+                $infoChangeAffectation["equitableAvecContrainte"] = array();
+
+                foreach($scenarioEquitableAvecContrainte["poulesId"] as $poule => $contenuPoule){
+
+                    $listeTmp = [];
+                    foreach($contenuPoule as $equipeId){
+                        $detailEntite = $this->getDetailsEntite($equipeId);
+
+                        $infoEquipe = array("equipeId" => $equipeId, "equipeNom" => $detailEntite["nom"]);
+                        array_push($listeTmp, $infoEquipe);
+                    }
+
+                    $infoChangeAffectation["equitableAvecContrainte"][$poule] = $listeTmp;
+
+                }
+            }
+
+
+            return $infoChangeAffectation;
+
+        } catch (Exception $e) {
+            error_log("\n erreur générique, Service: Poules, Function: getInfoChangeAffectation, datetime: ".$dateTimeNow."\n"
+                ."erreur: ".print_r($e, true), 3, $this->error_log_path);
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
+    }
+
+
+    # retourner les détails d'une entité
+    private function getDetailsEntite($id){
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+        try{
+            # obtenir l'objet PDO
+            $bdd = $this->getPdo();
+
+            if (!$bdd) {
+                //erreur de connexion
+                error_log("\n erreur récupération de l'objet PDO, Service: Poules, Function: sauvegarderParamsEnDB, datetime: ".$dateTimeNow, 3, $this->error_log_path);
+                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+            }
+
+            $sql = "SELECT nom from entite where id=:id;";
+            $stmt = $bdd->prepare($sql);
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            $resultat = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return $resultat;
+
+        }
+        catch (Exception $e) {
+            error_log("\n erreur PDO, Service: Poules, Function: getDetailsEntite, datetime: ".$dateTimeNow."\n"
+                ."erreur: ".print_r($e, true), 3, $this->error_log_path);
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
+
+    }
+
+
     # retourner la distance et la dureer pour un trajet donné
     private function getDetailsTrajet($departId, $destinationId){
         # obtenir la date courante du système
@@ -462,7 +577,7 @@ class Poules{
             error_log("\n erreur PDO, Service: Poules, Function: getDetailsTrajet, datetime: ".$dateTimeNow."\n"
             ."erreur: ".print_r($e, true), 3, $this->error_log_path);
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
-}
+        }
 
 }
 
