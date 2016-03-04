@@ -4110,16 +4110,33 @@
                      var alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ];
                      $.each(infoChangeAffectation, function(key, value){
                         var poule = alphabet[key-1];
-
-                         poules.push(poule);
+                         poules.push([key, poule]);
                      });
-//                     console.log("poules: " + JSON.stringify(poules));
-
-
-
 
                      return poules;
                  }
+
+                 function remplirSelectPouleDepartEtDestination(poules){
+                     // remplir poule départ et destination pour la premiere fois
+
+                     if($("#pouleDepart option").size() == 1){
+                         for(var i=0; i<poules.length; i++){
+                             console.log(poules[i]);
+                             $('#pouleDepart').append($('<option>', {
+                                 value: poules[i][0],
+                                 text : poules[i][1]
+                             }));
+                             $('#pouleDestination').append($('<option>', {
+                                 value: poules[i][0],
+                                 text : poules[i][1]
+                             }));
+                         }
+                     }
+
+
+
+                 }
+
 
 
                  // JS pour changement d'affectation d'équipes par poule
@@ -4132,25 +4149,46 @@
 
                      if(scenarioChangeAffectation === "optimalSansContrainte"){
                          var infoChangeAffectation = {{ infoChangeAffectation.optimalSansContrainte | json_encode | raw}};
-                         console.log("infoChangeAffectation: " + JSON.stringify(infoChangeAffectation));
+                         console.log("infoChangeAffectation op sans: " + JSON.stringify(infoChangeAffectation));
 
                          // obtenir poules
                          var poules = getPoulesFromInfoChangeAffectation(infoChangeAffectation);
                          console.log("poules: " + JSON.stringify(poules));
 
+                         remplirSelectPouleDepartEtDestination(poules);
+
 
 
                      }
                      else if(scenarioChangeAffectation === "equitableSansContrainte"){
-                         console.log("eq sans");
+                         var infoChangeAffectation = {{ infoChangeAffectation.equitableSansContrainte | json_encode | raw}};
+                         console.log("infoChangeAffectation eq sans: " + JSON.stringify(infoChangeAffectation));
 
+                         // obtenir poules
+                         var poules = getPoulesFromInfoChangeAffectation(infoChangeAffectation);
+                         console.log("poules: " + JSON.stringify(poules));
+
+                         remplirSelectPouleDepartEtDestination(poules);
                      }
                      else if(scenarioChangeAffectation === "optimalAvecContrainte"){
-                         console.log("optimal avec");
+                         var infoChangeAffectation = {{ infoChangeAffectation.optimalAvecContrainte | json_encode | raw}};
+                         console.log("infoChangeAffectation op avec: " + JSON.stringify(infoChangeAffectation));
 
+                         // obtenir poules
+                         var poules = getPoulesFromInfoChangeAffectation(infoChangeAffectation);
+                         console.log("poules: " + JSON.stringify(poules));
+
+                         remplirSelectPouleDepartEtDestination(poules);
                      }
                      else if(scenarioChangeAffectation === "equitableAvecContrainte"){
-                         console.log("eq avec");
+                         var infoChangeAffectation = {{ infoChangeAffectation.equitableAvecContrainte | json_encode | raw}};
+                         console.log("infoChangeAffectation eq avec: " + JSON.stringify(infoChangeAffectation));
+
+                         // obtenir poules
+                         var poules = getPoulesFromInfoChangeAffectation(infoChangeAffectation);
+                         console.log("poules: " + JSON.stringify(poules));
+
+                         remplirSelectPouleDepartEtDestination(poules);
 
                      }
 
