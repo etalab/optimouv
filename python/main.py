@@ -1452,7 +1452,8 @@ def callback(ch, method, properties, body):
 		
 		logging.debug("####################################### READ PARAMS FROM USER ##############################################")
 		# get params from DB
-		sql = "select id_groupe, type_action, params from rapport where id=%s"%reportId
+# 		sql = "select id_groupe, type_action, params from rapport where id=%s"%reportId
+		sql = "select id_groupe, type_action, params from parametres where id=%s"%reportId
 		logging.debug("sql: %s" %sql)
 		groupId, launchType, params = db.fetchone_multi(sql)
 		
@@ -1629,7 +1630,8 @@ def callback(ch, method, properties, body):
 			oldResultId = params["idAncienResultat"]
 			logging.debug("oldResultId : %s" %oldResultId)
 			
-			sql = "select details_calcul from scenario where id=%s"%oldResultId
+# 			sql = "select details_calcul from scenario where id=%s"%oldResultId
+			sql = "select details_calcul from resultats where id=%s"%oldResultId
 			calculatedResult = json.loads(db.fetchone(sql))
 # 			logging.debug("calculatedResult : %s" %calculatedResult)
 			
