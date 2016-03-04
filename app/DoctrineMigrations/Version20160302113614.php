@@ -24,6 +24,7 @@ class Version20160302113614 extends AbstractMigration
         $this->addSql('ALTER TABLE parametres ADD CONSTRAINT FK_1A79799D228E39CC FOREIGN KEY (id_groupe) REFERENCES groupe (id)');
         $this->addSql('ALTER TABLE resultats ADD CONSTRAINT FK_55ED970260A909EC FOREIGN KEY (id_rapport) REFERENCES parametres (id)');
         $this->addSql('DROP TABLE rapport');
+        $this->addSql('set foreign_key_checks=0');
         $this->addSql('DROP TABLE scenario');
 //        $this->addSql('ALTER TABLE poule ADD CONSTRAINT FK_FA1FEB406E9E244D FOREIGN KEY (id_scenario) REFERENCES resultats (id)');
     }
@@ -42,6 +43,7 @@ class Version20160302113614 extends AbstractMigration
         $this->addSql('CREATE TABLE scenario (id INT AUTO_INCREMENT NOT NULL, id_rapport INT DEFAULT NULL, nom VARCHAR(50) NOT NULL COLLATE utf8_unicode_ci, kilometres INT NOT NULL, duree INT NOT NULL, date_creation DATE NOT NULL, date_modification DATE NOT NULL, co2_voiture DOUBLE PRECISION NOT NULL, co2_covoiturage DOUBLE PRECISION NOT NULL, co2_minibus DOUBLE PRECISION NOT NULL, cout_voiture DOUBLE PRECISION NOT NULL, cout_covoiturage DOUBLE PRECISION NOT NULL, cout_minibus DOUBLE PRECISION NOT NULL, details_calcul LONGTEXT DEFAULT NULL COLLATE utf8_unicode_ci, INDEX id_rapport_idx (id_rapport), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB');
         $this->addSql('ALTER TABLE rapport ADD CONSTRAINT FK_BE34A09C228E39CC FOREIGN KEY (id_groupe) REFERENCES groupe (id) ON UPDATE CASCADE ON DELETE CASCADE');
         $this->addSql('ALTER TABLE scenario ADD CONSTRAINT FK_id_rapport FOREIGN KEY (id_rapport) REFERENCES rapport (id)');
+        $this->addSql('set foreign_key_checks=0');
         $this->addSql('DROP TABLE parametres');
         $this->addSql('DROP TABLE resultats');
     }
