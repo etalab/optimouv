@@ -545,8 +545,8 @@
                                                                                  <tr>
                                                                                      <th style="font-weight: bold !important;">Poules</th>
                                                                                      <th>Journée</th>
-                                                                                     <th>Equipe Hôte</th>
-                                                                                     <th>Equipes Adverses</th>
+                                                                                     <th>Equipe hôte</th>
+                                                                                     <th>Equipes adverses</th>
 
                                                                                  </tr>
                                                                                  </thead>
@@ -1014,8 +1014,8 @@
                                                                              <tr>
                                                                                  <th style="font-weight: bold !important;">Poules</th>
                                                                                  <th>Journée</th>
-                                                                                 <th>Equipe Hôte</th>
-                                                                                 <th>Equipes Adverses</th>
+                                                                                 <th>Equipe hôte</th>
+                                                                                 <th>Equipes adverses</th>
 
                                                                              </tr>
                                                                              </thead>
@@ -1485,8 +1485,8 @@
                                                                              <tr>
                                                                                  <th style="font-weight: bold !important;">Poules</th>
                                                                                  <th>Journée</th>
-                                                                                 <th>Equipe Hôte</th>
-                                                                                 <th>Equipes Adverses</th>
+                                                                                 <th>Equipe hôte</th>
+                                                                                 <th>Equipes adverses</th>
 
                                                                              </tr>
                                                                              </thead>
@@ -1938,8 +1938,8 @@
                                                                                      Poules
                                                                                  </th>
                                                                                  <th>Journée</th>
-                                                                                 <th>Equipe Hôte</th>
-                                                                                 <th>Equipes Adverses</th>
+                                                                                 <th>Equipe hôte</th>
+                                                                                 <th>Equipes adverses</th>
 
                                                                              </tr>
                                                                              </thead>
@@ -2427,8 +2427,8 @@
                                                                          <tr>
                                                                              <th style="font-weight: bold !important;">Poules</th>
                                                                              <th>Journée</th>
-                                                                             <th>Equipe Hôte</th>
-                                                                             <th>Equipes Adverses</th>
+                                                                             <th>Equipe hôte</th>
+                                                                             <th>Equipes adverses</th>
 
                                                                          </tr>
                                                                      </thead>
@@ -3008,8 +3008,8 @@
                                                                          <tr>
                                                                              <th style="font-weight: bold !important;">Poules</th>
                                                                              <th>Journée</th>
-                                                                             <th>Equipe Hôte</th>
-                                                                             <th>Equipes Adverses</th>
+                                                                             <th>Equipe hôte</th>
+                                                                             <th>Equipes adverses</th>
 
                                                                          </tr>
                                                                          </thead>
@@ -3468,8 +3468,8 @@
                                                                                  Poules
                                                                              </th>
                                                                              <th>Journée</th>
-                                                                             <th>Equipe Hôte</th>
-                                                                             <th>Equipes Adverses</th>
+                                                                             <th>Equipe hôte</th>
+                                                                             <th>Equipes adverses</th>
 
                                                                          </tr>
                                                                          </thead>
@@ -3836,22 +3836,23 @@
                              <tbody id="tbodyInterdictions">
                              {%  if interdictions %}
                                  {% for interdictionNbr, interdictionInfo in interdictions%}
-                                     <tr id="interdiction{{ interdictionNbr }}" >
+                                     {% set interdictionNbrMod =  interdictionNbr-1 %}
+                                     <tr id="interdiction{{ interdictionNbrMod }}" >
                                          <td width="10%" > Interdiction</td>
                                          <td width="20%">
                                              {{ interdictionInfo.noms[0] }}
-                                             <span id="interdiction{{ interdictionNbr }}equipe1" style="display:none" >  {{ interdictionInfo.ids[0] }} </span>
+                                             <span id="interdiction{{ interdictionNbrMod }}equipe1" style="display:none" >  {{ interdictionInfo.ids[0] }} </span>
                                          </td>
 
                                          <td width="20%">
                                              {{ interdictionInfo.noms[1] }}
-                                             <span id="interdiction{{ interdictionNbr }}equipe2" style="display:none" > {{ interdictionInfo.ids[1] }} </span>
+                                             <span id="interdiction{{ interdictionNbrMod }}equipe2" style="display:none" > {{ interdictionInfo.ids[1] }} </span>
 
                                          </td>
 
 
                                          <td width="10%">
-                                             <button id="btnSupprimerInterdiction{{ interdictionNbr }}" class="btn btn-primary"> Supprimer </button>
+                                             <button id="btnSupprimerInterdiction{{ interdictionNbrMod }}" class="btn btn-primary"> Supprimer </button>
                                          </td>
                                      </tr>
                                  {%  endfor %}
@@ -3904,8 +3905,6 @@
 
                          <button id="btnAjouterInterdiction" class="btn btn-primary ">Ajouter</button>
 
-                         {#<button onclick="myCreateFunction()" class="btn btn-primary ">Ajouter</button>#}
-                         {#<button onclick="getContraintes()" class="btn btn-primary">mes contraintes</button>#}
 
                      </div>
 
@@ -4058,11 +4057,11 @@
                      }
 
                      // obtenir le nombre des interdictions présentes
-                     var ligneNbr = $('#mesContraintes tr').length;
+                     var ligneNbr = $('#tbodyInterdictions tr').length;
                      console.log("ligneNbr : " + ligneNbr);
 
                      // binding jquery bouton supprimer pour chaque interdiction ajoutée
-                     for(var j=1; j< ligneNbr; j++){
+                     for(var j=0; j< ligneNbr; j++){
                          // binding jquery bouton supprimer
                          $("#btnSupprimerInterdiction" + j).click(function(){
                              $(this).closest('tr').remove();
@@ -4111,7 +4110,7 @@
 
                          console.log("------------------------------------ debug bouton ajouter des interdictions  ---------------------------------------");
 
-                         var ligneNbr = $('#mesContraintes tr').length;
+                         var ligneNbr = $('#tbodyInterdictions tr').length;
                          console.log("ligneNbr : " + ligneNbr);
 
                          // obtenir les valeurs séléctionnées
@@ -4128,6 +4127,44 @@
                              return;
 
                          }
+
+                         // controler doublons dans un sens ou l'autre
+                         // controler s'il y a déjà des interdictions présentes
+                         if(ligneNbr> 0){
+                             var listeInterdictions = [];
+
+                             // obtenir la liste de toutes interdictions
+                             $('#tbodyInterdictions tr').each(function(i, el){
+                                 var $tds = $(this).find('td');
+                                 var premierEquipeId = $tds.eq(1).find("span").text().trim();
+//                                 console.log("premierEquipeId: " + premierEquipeId);
+                                 var deuxiemeEquipeId = $tds.eq(2).find("span").text().trim();
+//                                 console.log("deuxiemeEquipeId: " + deuxiemeEquipeId);
+
+                                 listeInterdictions.push({premierEquipeId: premierEquipeId, deuxiemeEquipeId: deuxiemeEquipeId} );
+                                 listeInterdictions.push({premierEquipeId: deuxiemeEquipeId, deuxiemeEquipeId: premierEquipeId} );
+
+                             });
+
+                             console.log("listeInterdictions: " + JSON.stringify(listeInterdictions));
+
+                             // controler pour chaque interdiction présente
+                             for(var i=0; i<listeInterdictions.length; i++){
+                                 var premierEquipeInterdiction = listeInterdictions[i]["premierEquipeId"] ;
+//                                console.log("premierEquipeInterdiction: " + premierEquipeInterdiction);
+                                 var deuxiemeEquipeInterdiction = listeInterdictions[i]["deuxiemeEquipeId"] ;
+//                                console.log("deuxiemeEquipeInterdiction: " + deuxiemeEquipeInterdiction);
+
+                                 if(premierEquipeInterdiction == interdictionEquipe1Id && deuxiemeEquipeInterdiction == interdictionEquipe2Id){
+                                     alert("Cette interdiction existe déjà. Veuillez corriger votre sélection");
+                                     return;
+                                 }
+
+                             }
+                         }
+
+
+
 
 
                          // ajouter une nouvelle ligne dans la table d'interdictions
@@ -4208,13 +4245,6 @@
                              console.log("idResultat: " + idResultat );
 
 
-                            // controler le champ obligatoire (le nombre de poules)
-//                                 if (typeMatch == "plateau"){
-//                                     alert("Ce type de match n'est pas encore supporté. Veuillez choisir un autre type de match");
-//
-//                                 }
-
-
                              if(  (typeMatch == "allerRetour" || typeMatch == "allerSimple") && (poulesNbr == "" || parseInt(poulesNbr)<2 ) ){
                                  alert("Veuillez vérifier que le nombre de poules donné est valide");
                              }
@@ -4223,8 +4253,9 @@
                              }
                              else{
                                  var interdictions = getContraintes();
-                                 var repartitionsHomogenes = verifRepartitionHomogene();
+                                 console.log("interdictions: " + JSON.stringify(interdictions));
 
+                                 var repartitionsHomogenes = verifRepartitionHomogene();
                                  console.log("repartitionsHomogenes: " + repartitionsHomogenes );
 
                                  // si la vérification des répartitions homogenes retourne une erreur
@@ -4328,33 +4359,13 @@
 
                      var compteur = 1;
                      $('#tbodyInterdictions tr').each(function() {
-                         var equipe1Id = $(this).find("td").eq(1).find("span").text();
-                         var equipe2Id = $(this).find("td").eq(2).find("span").text();
+                         var equipe1Id = $(this).find("td").eq(1).find("span").text().trim();
+                         var equipe2Id = $(this).find("td").eq(2).find("span").text().trim();
                          var interdictionContrainte = [equipe1Id, equipe2Id];
                          console.log("interdictionContrainte: " + interdictionContrainte);
                          tabContraintes[compteur] = interdictionContrainte;
                          compteur ++;
                      });
-
-//                     var mesLignes = document.getElementById("mesContraintes").rows;
-//                     var tabContraintes = {};
-//                     for (i = 1; i < mesLignes.length; i++) {
-//                         var maLigne = mesLignes[i];
-//                         var td1 = maLigne.getElementsByTagName("td")[1];
-//                         var td2 = maLigne.getElementsByTagName("td")[2];
-//                         var monEquipe1 = parseInt(td1.getElementsByClassName("equipe1")[0].value);
-//                         var monEquipe2 = parseInt(td2.getElementsByClassName("equipe2")[0].value);
-//
-//                         console.log("monEquipe1: " + monEquipe1);
-//                         console.log("monEquipe2: " + monEquipe2);
-//
-//                         if ((monEquipe1) && (monEquipe2 )){
-//                             var maContrainte = [monEquipe1, monEquipe2];
-//                             tabContraintes[i] = maContrainte;
-//
-//                         };
-//
-//                     }
 
 
                      return tabContraintes;
@@ -4366,7 +4377,6 @@
                  function verifRepartitionHomogene(){
 
                      var length = document.getElementById("tableContrainteRepartitionHomogene").rows.length;
-//                     var ligne = document.getElementById("tableContrainteRepartitionHomogene").rows;
 
                      var mesRepartitions = [];
                      for (i = 0; i < length-1; i++) {
@@ -4460,8 +4470,6 @@
 
                          if(categorie !="Aucun"){
 
-//                             maRepartition = ville+':'+categorie;
-//                             mesRepartitionsHomogenes.push(maRepartition);
 
                              if(categorie in mesRepartitionsHomogenes){
                                  mesRepartitionsHomogenes[categorie].push(ville);

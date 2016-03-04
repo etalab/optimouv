@@ -60,11 +60,6 @@ class Listes{
         ini_set('auto_detect_line_endings', TRUE);
 
 
-//        error_log("\n Service: Listes, Function: controlerEntites, datetime: ".$dateTimeNow
-//            ."\n _SERVER: ".print_r($_SERVER, true), 3, $this->error_log_path);
-
-
-
         # obtenir le chemin d'upload du fichier
         $cheminFichierTemp = $_FILES["file-0"]["tmp_name"];
 
@@ -238,11 +233,12 @@ class Listes{
                                 if (strtolower($typeEntite) == "equipe") {
 
                                     # controler le nombre de colonnes
-                                    if(count($donnéesLigne) != 11 && count($donnéesLigne) != 18){
+//                                    if(count($donnéesLigne) != 11 && count($donnéesLigne) != 18){
+                                    if(count($donnéesLigne) != 11 && count($donnéesLigne) != 12 && count($donnéesLigne) != 18 ){
                                         $retour = array(
                                             "success" => false,
                                             "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." La ligne doit contenir 11 valeurs (meilleur lieu) ou 18 valeurs (optimisation de poule). Donné: ".count($donnéesLigne)." valeurs"
+                                                ." La ligne doit contenir 11 valeurs (meilleur lieu), 12 ou 18 valeurs (optimisation de poule). Donné: ".count($donnéesLigne)." valeurs"
                                         );
                                         array_push($lignesErronees, $retour["msg"]);
                                         continue;
@@ -377,9 +373,8 @@ class Listes{
                                     $licencies = $donnéesLigne[10];
 
 
-                                    // test de l'import pour l'optimisation des poules
-                                    if(count($donnéesLigne) == 18){
-
+                                    // controler le champ 'POULE' pour l'ancien et le nouveau format csv (12 et 18 colonnes)
+                                    if(count($donnéesLigne) == 12 || count($donnéesLigne) == 18 ){
                                         $poule = $donnéesLigne[11];
 
                                         // controler la presence de valeur pour le champ 'POULE'
@@ -392,7 +387,6 @@ class Listes{
                                             array_push($lignesErronees, $retour["msg"]);
                                             continue;
                                         }
-
 
                                         // controler si les valeurs fournies pour le champ 'POULE' sont des alphabets
                                         $alphabet = ['','A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ];
@@ -407,7 +401,11 @@ class Listes{
                                             continue;
                                         }
 
+                                    }
 
+                                    // test de l'import pour l'optimisation des poules
+                                    if(count($donnéesLigne) == 18){
+                                        
                                         # ajouter les noms dans la liste
                                         array_push($tousNomsEquipes, $donnéesLigne[1]);
 
@@ -457,7 +455,7 @@ class Listes{
                                             $retour = array(
                                                 "success" => false,
                                                 "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                    ."Le champ 'EQUIPE ADVERSE 1' (colonne 14) et Le champ 'EQUIPE ADVERSE 2' (colonne 15) doivent être rempli!"
+                                                    ."Le champ 'EQUIPE ADVERSE 1' (colonne 14) et le champ 'EQUIPE ADVERSE 2' (colonne 15) doivent être remplis!"
                                                     ."Veuillez corriger et importer de nouveau votre fichier"
                                             );
                                             array_push($lignesErronees, $retour["msg"]);
@@ -468,7 +466,7 @@ class Listes{
                                             $retour = array(
                                                 "success" => false,
                                                 "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                    ."Le champ 'EQUIPE ADVERSE 1' (colonne 17) et Le champ 'EQUIPE ADVERSE 2' (colonne 18) doivent être rempli!"
+                                                    ."Le champ 'EQUIPE ADVERSE 1' (colonne 17) et le champ 'EQUIPE ADVERSE 2' (colonne 18) doivent être remplis!"
                                                     ."Veuillez corriger et importer de nouveau votre fichier"
                                             );
                                             array_push($lignesErronees, $retour["msg"]);
@@ -1496,9 +1494,8 @@ class Listes{
 
         // tester le nombre de colonnes
         // nombreColonnesEntetes (11 pour liste d'équipes, 10 pour liste de personnes, 13 pour liste de lieux ce sont pour le cas de meuilleur lieux)
-        // nombreColonnesEntetes (18 pour l'optimisation de poules)
-//        $nombreColonnesEntetes = [11,10,13,12, 18];
-        $nombreColonnesEntetes = [11,10,13, 18];
+        // nombreColonnesEntetes (12, 18 pour l'optimisation de poules)
+        $nombreColonnesEntetes = [11,10,13,12, 18];
         if(!in_array(count($entete), $nombreColonnesEntetes)){
             $retour["msg"] = "Veuillez vérifier le nombre des colonnes.!"
                 .$genericMsg;
@@ -1519,8 +1516,8 @@ class Listes{
 //            error_log("service: listes, function: controlerEntites, count entete: ".print_r(count($entete), True), 3, $this->error_log_path);
 
             // pour la liste d'équipes
-//            if(count($entete) == 11 || count($entete) == 12 || count($entete) == 18){
-            if(count($entete) == 11 || count($entete) == 18){
+            if(count($entete) == 11 || count($entete) == 12 || count($entete) == 18){
+//            if(count($entete) == 11 || count($entete) == 18){
                 if($entete[2] != "CODE POSTAL" ){
                     $retour["msg"] = "Veuillez vérifier que le nom de la colonne 3 de l'en-tête correspond au template donné (CODE POSTAL).!"
                         .$genericMsg;
@@ -1567,13 +1564,17 @@ class Listes{
                     return $retour;
                 }
 
-                # controle supplementaire pour le fichier plateau
-                if(count($entete) == 18){
+                # controle supplementaire pour le fichier de l'optimisation de poule
+                if(count($entete) == 12 || count($entete) == 18) {
                     if($entete[11] != "POULE" ){
                         $retour["msg"] = "Veuillez vérifier que le nom de la colonne 12 de l'en-tête correspond au template donné (POULE).!"
                             .$genericMsg;
                         return $retour;
                     }
+                }
+
+                # controle supplementaire pour le fichier de l'optimisation de poule du type match plateau
+                if(count($entete) == 18){
                     if($entete[12] != "PREMIER JOUR DE RECEPTION" ){
                         $retour["msg"] = "Veuillez vérifier que le nom de la colonne 13 de l'en-tête correspond au template donné (PREMIER JOUR DE RECEPTION).!"
                             .$genericMsg;

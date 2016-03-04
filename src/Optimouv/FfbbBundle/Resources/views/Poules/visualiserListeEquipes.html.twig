@@ -45,13 +45,15 @@
                                         <th>Licenciés</th>
                                         <th>Poule</th>
 
-                                        {#pour match plateu#}
-                                        <th> Premier Jour de Réception</th>
-                                        <th> Equipe Adverse 1</th>
-                                        <th> Equipe Adverse 2</th>
-                                        <th> Deuxième Jour de Réception</th>
-                                        <th> Equipe Adverse 1</th>
-                                        <th> Equipe Adverse 2</th>
+                                        {% if typeMatchPlateau == 1 %}
+                                            {#pour match plateu#}
+                                            <th> Premier Jour de Réception</th>
+                                            <th> Equipe Adverse 1</th>
+                                            <th> Equipe Adverse 2</th>
+                                            <th> Deuxième Jour de Réception</th>
+                                            <th> Equipe Adverse 1</th>
+                                            <th> Equipe Adverse 2</th>
+                                        {% endif %}
 
                                 </tr>
                             </thead>
@@ -95,7 +97,8 @@
                                         {% endif %}
                                        <td> {{ detailsEntite.poule   }}</td>
 
-                                        {% if detailsEntite.refPlateauDecoder %}
+
+                                        {% if typeMatchPlateau == 1 %}
                                             <td> {{ detailsEntite.refPlateauDecoder.premierJourReception }} </td>
                                             <td> {{ detailsEntite.refPlateauDecoder.premierJourEquipe1 }}  </td>
                                             <td> {{ detailsEntite.refPlateauDecoder.premierJourEquipe2 }} </td>
@@ -103,14 +106,6 @@
                                             <td> {{ detailsEntite.refPlateauDecoder.deuxiemeJourReception }} </td>
                                             <td> {{ detailsEntite.refPlateauDecoder.deuxiemeJourEquipe1 }}  </td>
                                             <td> {{ detailsEntite.refPlateauDecoder.deuxiemeJourEquipe2 }} </td>
-                                        {% else %}
-                                            <td> </td>
-                                            <td> </td>
-                                            <td> </td>
-
-                                            <td> </td>
-                                            <td> </td>
-                                            <td> </td>
                                         {% endif %}
 
                                 </tr>
