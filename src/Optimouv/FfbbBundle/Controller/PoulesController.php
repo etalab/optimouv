@@ -606,7 +606,6 @@ class PoulesController extends Controller
         }
 
 
-//        $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idResultat);
         $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idRapport);
 
         if($idGroupe != []){
@@ -724,6 +723,15 @@ class PoulesController extends Controller
         $statement = $statement->fetchAll(PDO::FETCH_ASSOC);
         $nomListe = $statement[0]['nomListe'];
 
+
+
+        // info pour changement d'affectation d'équipe par poule
+        $infoChangeAffectation = $this->get('service_poules')->getInfoChangeAffectation($scenarioOptimalSansContrainte, $scenarioEquitableSansContrainte,  $scenarioOptimalAvecContrainte, $scenarioEquitableAvecContrainte);
+
+//        error_log("\n infoChangeAffectation: ".print_r($infoChangeAffectation , true), 3, "error_log_optimouv.txt");
+
+//        exit();
+
         return $this->render('FfbbBundle:Poules:resultatCalcul.html.twig' , array(
 
             'nombrePoule' => $nombrePoule,
@@ -750,6 +758,8 @@ class PoulesController extends Controller
             'phantomExiste' => $phantomExiste,
             'infoPoule' => $infoPoule,
             'contrainteAccueilPlateauExiste' => $contrainteAccueilPlateauExiste,
+            'infoChangeAffectation' => $infoChangeAffectation,
+
 
 
         ));
