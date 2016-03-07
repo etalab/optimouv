@@ -4117,7 +4117,7 @@
                      // remplir poule départ et destination pour la premiere fois
                      if($("#pouleDepart option").size() == 1){
                          for(var i=0; i<poules.length; i++){
-                             console.log(poules[i]);
+//                             console.log(poules[i]);
                              $('#pouleDepart').append($('<option>', {
                                  value: poules[i][0],
                                  text : poules[i][1]
@@ -4143,71 +4143,66 @@
 
                      if(scenarioChangeAffectation === "optimalSansContrainte"){
                          var infoChangeAffectation = {{ infoChangeAffectation.optimalSansContrainte | json_encode | raw}};
-                         console.log("infoChangeAffectation op sans: " + JSON.stringify(infoChangeAffectation));
 
                          // obtenir poules
                          var poules = getPoulesFromInfoChangeAffectation(infoChangeAffectation);
-                         console.log("poules: " + JSON.stringify(poules));
                          remplirSelectPouleDepartEtDestination(poules);
 
                      }
                      else if(scenarioChangeAffectation === "equitableSansContrainte"){
                          var infoChangeAffectation = {{ infoChangeAffectation.equitableSansContrainte | json_encode | raw}};
-                         console.log("infoChangeAffectation eq sans: " + JSON.stringify(infoChangeAffectation));
 
                          // obtenir poules
                          var poules = getPoulesFromInfoChangeAffectation(infoChangeAffectation);
-                         console.log("poules: " + JSON.stringify(poules));
                          remplirSelectPouleDepartEtDestination(poules);
 
                      }
 
                      else if(scenarioChangeAffectation === "optimalAvecContrainte"){
                          var infoChangeAffectation = {{ infoChangeAffectation.optimalAvecContrainte | json_encode | raw}};
-                         console.log("infoChangeAffectation op avec: " + JSON.stringify(infoChangeAffectation));
 
                          // obtenir poules
                          var poules = getPoulesFromInfoChangeAffectation(infoChangeAffectation);
-                         console.log("poules: " + JSON.stringify(poules));
                          remplirSelectPouleDepartEtDestination(poules);
 
                      }
                      else if(scenarioChangeAffectation === "equitableAvecContrainte"){
                          var infoChangeAffectation = {{ infoChangeAffectation.equitableAvecContrainte | json_encode | raw}};
-                         console.log("infoChangeAffectation eq avec: " + JSON.stringify(infoChangeAffectation));
 
                          // obtenir poules
                          var poules = getPoulesFromInfoChangeAffectation(infoChangeAffectation);
-                         console.log("poules: " + JSON.stringify(poules));
                          remplirSelectPouleDepartEtDestination(poules);
 
                      }
 
                  })
 
-                 function remplirSelectEquipeDepart(scenario, poule){
-
-                     console.log("remplirSelectEquipeDepart: " );
-                     console.log("scenario: " + scenario );
-                     console.log("poule: " + poule );
+                 function remplirSelectEquipe(scenario, poule, equipeDesignation){
 
                      var infoChangeAffectation = {{ infoChangeAffectation | json_encode | raw }};
-//                     console.log("infoChangeAffectation: " + JSON.stringify(infoChangeAffectation ));
-
                      var infoEquipe = infoChangeAffectation[scenario][poule];
-                     console.log("infoEquipe: " + JSON.stringify(infoEquipe ));
 
                      // supprimer toutes les options
-                     var selectEquipeDepart = $("#equipeDepart")
-                             .find("option")
-                             .remove()
-                             .end();
+                     if(equipeDesignation == "depart" ){
+                         var selectEquipe = $("#equipeDepart")
+                                 .find("option")
+                                 .remove()
+                                 .end();
+                     }
+                     else if (equipeDesignation == "destination"){
+                         var selectEquipe = $("#equipeDestination")
+                                 .find("option")
+                                 .remove()
+                                 .end();
+                     }
+
+                     // ajouter une ligne 'selectionnez une option'
+                     selectEquipe.append('<option>   -- selectionnez une option --  </option>');
 
                      for(var i=0; i<infoEquipe.length; i++){
                          var equipeNom = infoEquipe[i]["equipeNom"];
                          var equipeId = infoEquipe[i]["equipeId"];
-
-                         selectEquipeDepart.append('<option value="'+ equipeId  +'">' + equipeNom +'</option>');
+                         selectEquipe.append('<option value="'+ equipeId  +'">' + equipeNom +'</option>');
                      }
 
 
@@ -4218,11 +4213,9 @@
                      width:'100%'
                  }).on("change", function(e) {
                      var scenariochoisi= $("#scenarioChangeAffectation").val();
-//                     console.log("scenariochoisi: " + scenariochoisi);
                      var pouleDepart = $(this).val();
-//                     console.log("pouleDepart: " + pouleDepart);
 
-                     remplirSelectEquipeDepart(scenariochoisi, pouleDepart);
+                     remplirSelectEquipe(scenariochoisi, pouleDepart, "depart");
 
                  })
 
@@ -4232,10 +4225,9 @@
                      width:'100%'
                  }).on("change", function(e) {
                      var scenariochoisi= $("#scenarioChangeAffectation").val();
-                     console.log("scenariochoisi: " + scenariochoisi);
                      var pouleDestination = $(this).val();
-                     console.log("pouleDestination: " + pouleDestination);
 
+                     remplirSelectEquipe(scenariochoisi, pouleDestination, "destination");
                  })
 
 
@@ -4244,7 +4236,6 @@
 
                      // ajouter des nouvelles lignes pour les contraintes d'interdiction
                      $("#btnAjouterInterdiction").click(function(){
-
                          console.log("------------------------------------ debug bouton ajouter des interdictions  ---------------------------------------");
 
                          var ligneNbr = $('#tbodyInterdictions tr').length;
@@ -4331,6 +4322,15 @@
                      });
 
 
+                     // ajouter des nouvelles lignes pour les changements d'affectation d'équipes par poule
+                     $("#btnAjouterChangementAffectation").click(function(){
+                         console.log("------------------------------------ debug bouton ajouter des changements d'affectation  -------------------------------");
+
+                         // obtenir valeurs renseignées par l'utilisateur
+                         var scenario = $("#scenarioChangeAffectation").val();
+                         console.log("scenario: " + scenario);
+
+                     });
 
 
                      ////////////////////////////////////////////////////////////////   Lancer Le Calcul //////////////////////////////////////////////////////////
