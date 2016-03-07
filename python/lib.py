@@ -2983,7 +2983,6 @@ def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, pro
 	try:
 		errorStatus = False
 		
-# 		sql = "select nom from rapport where id=%s"%reportId
 		sql = "select nom from parametres where id=%s"%reportId
 		reportName = db.fetchone(sql)
 		
@@ -3035,6 +3034,23 @@ def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, pro
 	except Exception as e:
 		show_exception_traceback()
 
+
+"""
+Function to check request validity (post treatment can only launch variation of team number per pool or team transfer to other pool)
+"""
+def check_request_validity_post_treatment(teamTransfers, varTeamNbrPerPool, userId, reportId):
+	try:		
+		sql = "select nom from parametres where id=%s"%reportId
+		reportName = db.fetchone(sql)
+
+		if int(varTeamNbrPerPool)> 1 and teamTransfers:
+			TEXT = u"Bonjour,\n\n" 
+			TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
+			TEXT += u"Veuillez choisir soit la variation du nombre d'équipes par poule soit le changement d'affectation d'équipes par poule . " 
+			send_email_to_user_failure_with_text(userId, TEXT)
+		
+	except Exception as e:
+		show_exception_traceback()
 
 """
 Function to save result into DB
