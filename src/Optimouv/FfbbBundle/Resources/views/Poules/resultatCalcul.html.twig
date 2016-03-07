@@ -4564,7 +4564,10 @@
                                  }
 
                                  // il faut choisir soit la variation du nombre d'équipe par poule ou le changement d'affectation d'équipes par poule
-
+                                if(varEquipeParPoule > 0 && !$.isEmptyObject(changeAffectEquipes)){
+                                    alert("Nous ne pouvons pas traiter la variation du nombre d'équipes par poule avec le changement d'affectation d'équipes par poule. Veuillez lancer avec seulement une option");
+                                    return
+                                }
 
 
                                  alert("Le calcul est en cours. Vous recevrez un mail pour vous avertir de la mise à disposition de vos résultats de calculs");
@@ -4580,28 +4583,28 @@
 
 
                                  // AJAX requete
-//                                 $.ajax({
-//                                     url: '/admin/poules/lancer-calcul/',
-//                                     type: 'POST',
-//                                     data: inputParams,
-//                                     dataType : "json",
-//                                     success: function(data, textStatus, jqXHR)
-//                                     {
-//                                         console.log('data: ' + JSON.stringify(data));
-//
-//                                         var urlRedirect = window.location.origin + "/admin/rapports";
-//                                         console.log('urlRedirect: ' + urlRedirect);
-//
-//                                         // redirect à la page rapport
-//                                         window.location = urlRedirect;
-//
-//                                     },
-//                                     error: function(jqXHR, textStatus, errorThrown)
-//                                     {
-//                                         // Handle errors here
-//                                         console.log('ERRORS: ' + textStatus);
-//                                     }
-//                                 });
+                                 $.ajax({
+                                     url: '/admin/poules/lancer-calcul/',
+                                     type: 'POST',
+                                     data: inputParams,
+                                     dataType : "json",
+                                     success: function(data, textStatus, jqXHR)
+                                     {
+                                         console.log('data: ' + JSON.stringify(data));
+
+                                         var urlRedirect = window.location.origin + "/admin/rapports";
+                                         console.log('urlRedirect: ' + urlRedirect);
+
+                                         // redirect à la page rapport
+                                         window.location = urlRedirect;
+
+                                     },
+                                     error: function(jqXHR, textStatus, errorThrown)
+                                     {
+                                         // Handle errors here
+                                         console.log('ERRORS: ' + textStatus);
+                                     }
+                                 });
 
                              }
 
