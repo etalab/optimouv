@@ -1472,6 +1472,14 @@ def callback(ch, method, properties, body):
 		else:
 			varTeamNbrPerPool = 0
 
+		# get team transfer params per pool
+		if "changeAffectEquipes" in params:
+			teamTransfers = params["changeAffectEquipes"]
+		else:
+			teamTransfers = {}
+		logging.debug("teamTransfers: %s" %teamTransfers)
+		
+
 		iterConstraint = config.INPUT.IterConstraint
 		logging.debug("iterConstraint: %s" %iterConstraint)
 
@@ -1614,23 +1622,23 @@ def callback(ch, method, properties, body):
 
 		logging.debug("############################################# OPTIMIZE POOL #################################################")
 		### Pre treatment
-# 		if launchType == "match_aller_retour":
-		if launchType == "allerRetour" and varTeamNbrPerPool == 0:
+		if launchType == "allerRetour" and varTeamNbrPerPool == 0 and not teamTransfers:
 			results = optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom)
-# 		elif launchType == "match_aller_simple":
-		elif launchType == "allerSimple" and varTeamNbrPerPool == 0:
+		elif launchType == "allerSimple" and varTeamNbrPerPool == 0 and not teamTransfers:
 			results = optimize_pool_one_way_match(P_InitMat_oneWaywithoutConstraint, P_InitMat_oneWayWithConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom)
-		elif launchType == "plateau" and varTeamNbrPerPool == 0:
+		elif launchType == "plateau" and varTeamNbrPerPool == 0 and not teamTransfers:
 			results = optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom, welcomeConstraintExistMatchPlateau)
 
-		### Post treatment
-		if varTeamNbrPerPool > 0 and ( launchType in  ["allerRetour", "allerSimple"] ):
+		### check values for params teamTransfer and varTeamNbrPerPool
+		check_request_validity_post_treatment(teamTransfers, varTeamNbrPerPool, userId, reportId)
+
+		### Post treatment variation of team number
+		if varTeamNbrPerPool > 0 and ( launchType in  ["allerRetour", "allerSimple"] and not teamTransfers):
 			logging.debug("############################################# POST TREATMENT #########################################")
 			# get old result id 
 			oldResultId = params["idAncienResultat"]
 			logging.debug("oldResultId : %s" %oldResultId)
 			
-# 			sql = "select details_calcul from scenario where id=%s"%oldResultId
 			sql = "select details_calcul from resultats where id=%s"%oldResultId
 			calculatedResult = json.loads(db.fetchone(sql))
 # 			logging.debug("calculatedResult : %s" %calculatedResult)
@@ -1645,6 +1653,9 @@ def callback(ch, method, properties, body):
 			results = optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, oldResultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult)
 # 			logging.debug("results : \n%s" %json.dumps(results))
 
+		### Post treatment team transfers between pools
+		if varTeamNbrPerPool == 0 and ( launchType in  ["allerRetour", "allerSimple"] and  teamTransfers):
+			pass
 
 		if varTeamNbrPerPool == 0:
 			logging.debug("############################################# INSERT RESULT INTO DB #########################################")
