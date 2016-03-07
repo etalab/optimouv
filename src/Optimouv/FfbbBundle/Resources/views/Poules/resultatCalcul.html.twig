@@ -4185,7 +4185,7 @@
                      // supprimer toutes les options
                      if(equipeDesignation == "depart" ){
                          $("#select2-equipeDepart-container").text("-- selectionnez une option --");
-                         
+
                          var selectEquipe = $("#equipeDepart")
                                  .find("option")
                                  .remove()
@@ -4268,9 +4268,7 @@
                              $('#tbodyInterdictions tr').each(function(i, el){
                                  var $tds = $(this).find('td');
                                  var premierEquipeId = $tds.eq(1).find("span").text().trim();
-//                                 console.log("premierEquipeId: " + premierEquipeId);
                                  var deuxiemeEquipeId = $tds.eq(2).find("span").text().trim();
-//                                 console.log("deuxiemeEquipeId: " + deuxiemeEquipeId);
 
                                  listeInterdictions.push({premierEquipeId: premierEquipeId, deuxiemeEquipeId: deuxiemeEquipeId} );
                                  listeInterdictions.push({premierEquipeId: deuxiemeEquipeId, deuxiemeEquipeId: premierEquipeId} );
@@ -4282,9 +4280,7 @@
                              // controler pour chaque interdiction présente
                              for(var i=0; i<listeInterdictions.length; i++){
                                  var premierEquipeInterdiction = listeInterdictions[i]["premierEquipeId"] ;
-//                                console.log("premierEquipeInterdiction: " + premierEquipeInterdiction);
                                  var deuxiemeEquipeInterdiction = listeInterdictions[i]["deuxiemeEquipeId"] ;
-//                                console.log("deuxiemeEquipeInterdiction: " + deuxiemeEquipeInterdiction);
 
                                  if(premierEquipeInterdiction == interdictionEquipe1Id && deuxiemeEquipeInterdiction == interdictionEquipe2Id){
                                      alert("Cette interdiction existe déjà. Veuillez corriger votre sélection");
@@ -4363,29 +4359,35 @@
 
                              // ajouter un nouveau changement d'affectation sur la liste
                              var scenarioNom = $("#scenarioChangeAffectation option:selected").text();
-                             console.log("scenarioNom: " + scenarioNom);
+                             var pouleDepartNom = $("#pouleDepart option:selected").text();
+                             var pouleDestinationNom = $("#pouleDestination option:selected").text();
+                             var equipeDepartNom = $("#equipeDepart option:selected").text();
+                             var equipeDestinationNom = $("#equipeDestination option:selected").text();
 
-//                             console.log("interdictionEquipe1Nom : " + interdictionEquipe1Nom  );
-//
-//                             var interdictionEquipe2Nom = $("#equipe2 option:selected").text();
-//                             console.log("interdictionEquipe2Nom : " + interdictionEquipe2Nom  );
-//
-//                             var newLigneInterdiction = "\
-//                             <tr id=\"interdiction" + ligneNbr + "\"> \
-//                                 <td width=\"10%\" > Interdiction </td> \
-//                                 <td width=\"20%\"> " + interdictionEquipe1Nom + "  <span id=\"interdiction" + ligneNbr + "equipe1\" style=\"display:none\" >" +  interdictionEquipe1Id + "</span>  </td> \
-//                                 <td width=\"20%\"> " + interdictionEquipe2Nom + "  <span id=\"interdiction" + ligneNbr + "equipe2\" style=\"display:none\" >" +  interdictionEquipe2Id + "</span> </td> \
-//                                 <td width=\"10%\"> \
-//                                     <button id=\"btnSupprimerInterdiction" +  ligneNbr + "\"  class=\"btn btn-primary\"> Supprimer </button> \
-//                                 </td> \
-//                             </tr>";
-//
-//                             $("#tbodyInterdictions").append(newLigneInterdiction);
-//
-//                             // binding jquery bouton supprimer
-//                             $("#btnSupprimerInterdiction" + ligneNbr).click(function(){
-//                                 $(this).closest('tr').remove();
-//                             });
+                             console.log("scenarioNom: " + scenarioNom);
+                             console.log("pouleDepartNom: " + pouleDepartNom);
+                             console.log("pouleDestinationNom: " + pouleDestinationNom);
+                             console.log("equipeDepartNom: " + equipeDepartNom);
+                             console.log("equipeDestinationNom: " + equipeDestinationNom);
+
+                             var newLigneChangeAffect = "\
+                             <tr id=\"changementAffectation" + ligneNbr + "\"> \
+                                 <td width=\"15%\" align=\"center\"> " + scenarioNom + "  <span id=\"changementAffectation" + ligneNbr + "scenario\" style=\"display:none\" >" +  scenario + "</span>  </td> \
+                                 <td width=\"10%\" align=\"center\"> " + pouleDepartNom + "  <span id=\"changementAffectation" + ligneNbr + "pouleDepart\" style=\"display:none\" >" +  pouleDepart + "</span>  </td> \
+                                 <td width=\"15%\" align=\"center\"> " + equipeDepartNom + "  <span id=\"changementAffectation" + ligneNbr + "equipeDepart\" style=\"display:none\" >" +  equipeDepart + "</span>  </td> \
+                                 <td width=\"10%\" align=\"center\"> " + pouleDestinationNom + "  <span id=\"changementAffectation" + ligneNbr + "pouleDestination\" style=\"display:none\" >" +  pouleDestination + "</span>  </td> \
+                                 <td width=\"15%\" align=\"center\"> " + equipeDestinationNom + "  <span id=\"changementAffectation" + ligneNbr + "equipeDestination\" style=\"display:none\" >" +  equipeDestination + "</span>  </td> \
+                                 <td width=\"10%\" align=\"center\"> \
+                                     <button id=\"btnSupprimerChangeAffect" +  ligneNbr + "\"  class=\"btn btn-primary\"> Supprimer </button> \
+                                 </td> \
+                             </tr>";
+
+                             $("#tbodyChangeAffectation").append(newLigneChangeAffect);
+
+                             // binding jquery bouton supprimer
+                             $("#btnSupprimerChangeAffect" + ligneNbr).click(function(){
+                                 $(this).closest('tr').remove();
+                             });
 
 
                          }
