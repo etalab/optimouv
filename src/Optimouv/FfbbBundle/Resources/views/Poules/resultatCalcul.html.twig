@@ -4354,11 +4354,11 @@
                          console.log("------------------------------------ debug bouton ajouter des changements d'affectation  -------------------------------");
 
                          // obtenir valeurs renseignées par l'utilisateur
-                         var scenario = $("#scenarioChangeAffectation").val();
-                         var pouleDepart = $("#pouleDepart").val();
-                         var equipeDepart = $("#equipeDepart").val();
-                         var pouleDestination = $("#pouleDestination").val();
-                         var equipeDestination = $("#equipeDestination").val();
+                         var scenario = $("#scenarioChangeAffectation option:selected").val();
+                         var pouleDepart = $("#pouleDepart option:selected").val();
+                         var equipeDepart = $("#equipeDepart option:selected").val();
+                         var pouleDestination = $("#pouleDestination option:selected").val();
+                         var equipeDestination = $("#equipeDestination option:selected").val();
 
                          console.log("scenario: " + scenario);
                          console.log("pouleDepart: " + pouleDepart);
@@ -4377,6 +4377,7 @@
                                  return;
                              }
 
+                             var statutErreur = 0;
                              if(ligneNbr > 0){
                                  // controle team départ ou team destination ne doit pas figurer sur la liste de changements présente
 
@@ -4385,79 +4386,85 @@
                                  // obtenir la liste de tous changement d'affectation
                                  $('#tbodyChangeAffectation tr').each(function(i, el){
                                      var $tds = $(this).find('td');
-                                     var scenario = $tds.eq(0).find("span").text().trim();
+                                     var scenarioTmp = $tds.eq(0).find("span").text().trim();
                                      console.log("----------------------------------------------------------------------- ");
-                                     console.log("scenario: " + scenario);
-                                     var pouleDepart = $tds.eq(1).find("span").text().trim();
-                                     console.log("pouleDepart: " + pouleDepart);
-                                     var equipeDepart = $tds.eq(2).find("span").text().trim();
-                                     console.log("equipeDepart: " + equipeDepart);
+                                     var pouleDepartTmp = $tds.eq(1).find("span").text().trim();
+                                     var equipeDepartTmp = $tds.eq(2).find("span").text().trim();
                                      var pouleDestination = $tds.eq(3).find("span").text().trim();
-                                     console.log("pouleDestination: " + pouleDestination);
-                                     var equipeDestination = $tds.eq(4).find("span").text().trim();
-                                     console.log("equipeDestination: " + equipeDestination);
-
-                                     var equipes = [equipeDepart, equipeDestination];
+                                     var equipeDestinationTmp = $tds.eq(4).find("span").text().trim();
+                                     var equipesTmp = [equipeDepartTmp, equipeDestinationTmp];
 
                                      if (scenario in listeChangeAffect){
-                                         listeChangeAffect[scenario].push(equipeDepart);
-                                         listeChangeAffect[scenario].push(equipeDestination);
+                                         listeChangeAffect[scenarioTmp].push(equipeDepartTmp);
+                                         listeChangeAffect[scenarioTmp].push(equipeDestinationTmp);
                                      }
                                      else{
-                                         listeChangeAffect[scenario] = equipes;
+                                         listeChangeAffect[scenarioTmp] = equipesTmp;
                                      }
 
                                  });
 
                                  console.log("listeChangeAffect: " + JSON.stringify(listeChangeAffect));
 
-//                                 // controler pour chaque interdiction présente
-//                                 for(var i=0; i<listeInterdictions.length; i++){
-//                                     var premierEquipeInterdiction = listeInterdictions[i]["premierEquipeId"] ;
-//                                     var deuxiemeEquipeInterdiction = listeInterdictions[i]["deuxiemeEquipeId"] ;
-//
-//                                     if(premierEquipeInterdiction == interdictionEquipe1Id && deuxiemeEquipeInterdiction == interdictionEquipe2Id){
-//                                         alert("Cette interdiction existe déjà. Veuillez corriger votre sélection");
-//                                         return;
-//                                     }
-//
-//                                 }
+                                 // controler pour chaque changement d'affectation présent
+                                 $.each(listeChangeAffect, function(scenarioExiste, listeEquipesExiste){
+                                     console.log("scenarioExiste: " + scenarioExiste);
+                                     console.log("listeEquipesExiste: " + listeEquipesExiste);
+                                     console.log("equipeDepart: " + equipeDepart);
+                                     console.log("equipeDestination: " + equipeDestination);
+
+                                     var testEquipeDepart = $.inArray(equipeDepart, listeEquipesExiste);
+                                     console.log("testEquipeDepart: " + testEquipeDepart);
+                                     var testEquipeDestination = $.inArray(equipeDestination, listeEquipesExiste);
+                                     console.log("testEquipeDestination: " + testEquipeDestination);
+
+                                     if(scenarioExiste == scenario && (   $.inArray(equipeDepart, listeEquipesExiste) != -1 ) ){
+                                         alert("L'équipe de départ ne doit pas figurer parmi les équipes existantes. Veuillez corriger votre sélection");
+                                         statutErreur = 1;
+                                         return;
+                                     }
+                                     if(scenarioExiste == scenario && (  $.inArray(equipeDestination, listeEquipesExiste) != -1 ) ){
+                                         alert("L'équipe de destination ne doit pas figurer parmi les équipes existantes. Veuillez corriger votre sélection");
+                                         statutErreur = 1;
+                                         return;
+                                     }
+                                 });
+
+
 
                              }
 
 
+                             console.log("statutErreur: " + statutErreur);
+                             if(statutErreur == 0){
+                                 // ajouter un nouveau changement d'affectation sur la liste
+                                 var scenarioNom = $("#scenarioChangeAffectation option:selected").text();
+                                 var pouleDepartNom = $("#pouleDepart option:selected").text();
+                                 var pouleDestinationNom = $("#pouleDestination option:selected").text();
+                                 var equipeDepartNom = $("#equipeDepart option:selected").text();
+                                 var equipeDestinationNom = $("#equipeDestination option:selected").text();
 
-                             // ajouter un nouveau changement d'affectation sur la liste
-                             var scenarioNom = $("#scenarioChangeAffectation option:selected").text();
-                             var pouleDepartNom = $("#pouleDepart option:selected").text();
-                             var pouleDestinationNom = $("#pouleDestination option:selected").text();
-                             var equipeDepartNom = $("#equipeDepart option:selected").text();
-                             var equipeDestinationNom = $("#equipeDestination option:selected").text();
+                                 var newLigneChangeAffect = "\
+                                     <tr id=\"changementAffectation" + ligneNbr + "\"> \
+                                         <td width=\"15%\" align=\"center\"> " + scenarioNom + "  <span id=\"changementAffectation" + ligneNbr + "scenario\" style=\"display:none\" >" +  scenario + "</span>  </td> \
+                                         <td width=\"10%\" align=\"center\"> " + pouleDepartNom + "  <span id=\"changementAffectation" + ligneNbr + "pouleDepart\" style=\"display:none\" >" +  pouleDepart + "</span>  </td> \
+                                         <td width=\"15%\" align=\"center\"> " + equipeDepartNom + "  <span id=\"changementAffectation" + ligneNbr + "equipeDepart\" style=\"display:none\" >" +  equipeDepart + "</span>  </td> \
+                                         <td width=\"10%\" align=\"center\"> " + pouleDestinationNom + "  <span id=\"changementAffectation" + ligneNbr + "pouleDestination\" style=\"display:none\" >" +  pouleDestination + "</span>  </td> \
+                                         <td width=\"15%\" align=\"center\"> " + equipeDestinationNom + "  <span id=\"changementAffectation" + ligneNbr + "equipeDestination\" style=\"display:none\" >" +  equipeDestination + "</span>  </td> \
+                                         <td width=\"10%\" align=\"center\"> \
+                                             <button id=\"btnSupprimerChangeAffect" +  ligneNbr + "\"  class=\"btn btn-primary\"> Supprimer </button> \
+                                         </td> \
+                                     </tr>";
 
-                             console.log("scenarioNom: " + scenarioNom);
-                             console.log("pouleDepartNom: " + pouleDepartNom);
-                             console.log("pouleDestinationNom: " + pouleDestinationNom);
-                             console.log("equipeDepartNom: " + equipeDepartNom);
-                             console.log("equipeDestinationNom: " + equipeDestinationNom);
+                                 $("#tbodyChangeAffectation").append(newLigneChangeAffect);
 
-                             var newLigneChangeAffect = "\
-                             <tr id=\"changementAffectation" + ligneNbr + "\"> \
-                                 <td width=\"15%\" align=\"center\"> " + scenarioNom + "  <span id=\"changementAffectation" + ligneNbr + "scenario\" style=\"display:none\" >" +  scenario + "</span>  </td> \
-                                 <td width=\"10%\" align=\"center\"> " + pouleDepartNom + "  <span id=\"changementAffectation" + ligneNbr + "pouleDepart\" style=\"display:none\" >" +  pouleDepart + "</span>  </td> \
-                                 <td width=\"15%\" align=\"center\"> " + equipeDepartNom + "  <span id=\"changementAffectation" + ligneNbr + "equipeDepart\" style=\"display:none\" >" +  equipeDepart + "</span>  </td> \
-                                 <td width=\"10%\" align=\"center\"> " + pouleDestinationNom + "  <span id=\"changementAffectation" + ligneNbr + "pouleDestination\" style=\"display:none\" >" +  pouleDestination + "</span>  </td> \
-                                 <td width=\"15%\" align=\"center\"> " + equipeDestinationNom + "  <span id=\"changementAffectation" + ligneNbr + "equipeDestination\" style=\"display:none\" >" +  equipeDestination + "</span>  </td> \
-                                 <td width=\"10%\" align=\"center\"> \
-                                     <button id=\"btnSupprimerChangeAffect" +  ligneNbr + "\"  class=\"btn btn-primary\"> Supprimer </button> \
-                                 </td> \
-                             </tr>";
+                                 // binding jquery bouton supprimer
+                                 $("#btnSupprimerChangeAffect" + ligneNbr).click(function(){
+                                     $(this).closest('tr').remove();
+                                 });
 
-                             $("#tbodyChangeAffectation").append(newLigneChangeAffect);
+                             }
 
-                             // binding jquery bouton supprimer
-                             $("#btnSupprimerChangeAffect" + ligneNbr).click(function(){
-                                 $(this).closest('tr').remove();
-                             });
 
 
                          }
