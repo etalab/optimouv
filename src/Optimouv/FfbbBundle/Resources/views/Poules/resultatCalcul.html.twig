@@ -4184,12 +4184,15 @@
 
                      // supprimer toutes les options
                      if(equipeDesignation == "depart" ){
+                         $("#select2-equipeDepart-container").text("-- selectionnez une option --");
+                         
                          var selectEquipe = $("#equipeDepart")
                                  .find("option")
                                  .remove()
                                  .end();
                      }
                      else if (equipeDesignation == "destination"){
+                         $("#select2-equipeDestination-container").text("-- selectionnez une option --");
                          var selectEquipe = $("#equipeDestination")
                                  .find("option")
                                  .remove()
@@ -4350,7 +4353,40 @@
                                  return;
                              }
 
-                             
+                             if(ligneNbr > 0){
+                                 // controle team départ ou team destination ne doit pas figurer sur la liste de changements présente
+
+
+                             }
+
+
+
+                             // ajouter un nouveau changement d'affectation sur la liste
+                             var scenarioNom = $("#scenarioChangeAffectation option:selected").text();
+                             console.log("scenarioNom: " + scenarioNom);
+
+//                             console.log("interdictionEquipe1Nom : " + interdictionEquipe1Nom  );
+//
+//                             var interdictionEquipe2Nom = $("#equipe2 option:selected").text();
+//                             console.log("interdictionEquipe2Nom : " + interdictionEquipe2Nom  );
+//
+//                             var newLigneInterdiction = "\
+//                             <tr id=\"interdiction" + ligneNbr + "\"> \
+//                                 <td width=\"10%\" > Interdiction </td> \
+//                                 <td width=\"20%\"> " + interdictionEquipe1Nom + "  <span id=\"interdiction" + ligneNbr + "equipe1\" style=\"display:none\" >" +  interdictionEquipe1Id + "</span>  </td> \
+//                                 <td width=\"20%\"> " + interdictionEquipe2Nom + "  <span id=\"interdiction" + ligneNbr + "equipe2\" style=\"display:none\" >" +  interdictionEquipe2Id + "</span> </td> \
+//                                 <td width=\"10%\"> \
+//                                     <button id=\"btnSupprimerInterdiction" +  ligneNbr + "\"  class=\"btn btn-primary\"> Supprimer </button> \
+//                                 </td> \
+//                             </tr>";
+//
+//                             $("#tbodyInterdictions").append(newLigneInterdiction);
+//
+//                             // binding jquery bouton supprimer
+//                             $("#btnSupprimerInterdiction" + ligneNbr).click(function(){
+//                                 $(this).closest('tr').remove();
+//                             });
+
 
                          }
 
