@@ -4114,8 +4114,11 @@
                  }
 
                  function remplirSelectPouleDepartEtDestination(poules){
+                     var tailleOptionPoule = $("#pouleDepart option").size();
+                     console.log("tailleOptionPoule: " + tailleOptionPoule);
+
                      // remplir poule départ et destination pour la premiere fois
-                     if($("#pouleDepart option").size() == 1){
+                     if($("#pouleDepart option").size() <= 1){
                          for(var i=0; i<poules.length; i++){
 //                             console.log(poules[i]);
                              $('#pouleDepart').append($('<option>', {
@@ -4172,9 +4175,34 @@
                          // obtenir poules
                          var poules = getPoulesFromInfoChangeAffectation(infoChangeAffectation);
                          remplirSelectPouleDepartEtDestination(poules);
-
+                     }
+                     else if (scenarioChangeAffectation === "vide"){
+                         // supprimer les options
+                         var selectPoule = $("#pouleDepart")
+                                 .find("option")
+                                 .remove()
+                                 .end();
+                         var selectPoule = $("#pouleDestination")
+                                 .find("option")
+                                 .remove()
+                                 .end();
                      }
 
+                     // reinitialiser les autres champs
+                     $("#select2-pouleDepart-container").text("-- selectionnez une option --");
+                     $("#select2-equipeDepart-container").text("-- selectionnez une option --");
+                     $("#select2-pouleDestination-container").text("-- selectionnez une option --");
+                     $("#select2-equipeDestination-container").text("-- selectionnez une option --");
+
+                     // supprimer les options
+                     var selectEquipe = $("#equipeDepart")
+                             .find("option")
+                             .remove()
+                             .end();
+                     var selectEquipe = $("#equipeDestination")
+                             .find("option")
+                             .remove()
+                             .end();
                  })
 
                  function remplirSelectEquipe(scenario, poule, equipeDesignation){
@@ -4352,6 +4380,48 @@
                              if(ligneNbr > 0){
                                  // controle team départ ou team destination ne doit pas figurer sur la liste de changements présente
 
+                                 var listeChangeAffect = {};
+
+                                 // obtenir la liste de tous changement d'affectation
+                                 $('#tbodyChangeAffectation tr').each(function(i, el){
+                                     var $tds = $(this).find('td');
+                                     var scenario = $tds.eq(0).find("span").text().trim();
+                                     console.log("----------------------------------------------------------------------- ");
+                                     console.log("scenario: " + scenario);
+                                     var pouleDepart = $tds.eq(1).find("span").text().trim();
+                                     console.log("pouleDepart: " + pouleDepart);
+                                     var equipeDepart = $tds.eq(2).find("span").text().trim();
+                                     console.log("equipeDepart: " + equipeDepart);
+                                     var pouleDestination = $tds.eq(3).find("span").text().trim();
+                                     console.log("pouleDestination: " + pouleDestination);
+                                     var equipeDestination = $tds.eq(4).find("span").text().trim();
+                                     console.log("equipeDestination: " + equipeDestination);
+
+                                     var equipes = [equipeDepart, equipeDestination];
+
+                                     if (scenario in listeChangeAffect){
+                                         listeChangeAffect[scenario].push(equipeDepart);
+                                         listeChangeAffect[scenario].push(equipeDestination);
+                                     }
+                                     else{
+                                         listeChangeAffect[scenario] = equipes;
+                                     }
+
+                                 });
+
+                                 console.log("listeChangeAffect: " + JSON.stringify(listeChangeAffect));
+
+//                                 // controler pour chaque interdiction présente
+//                                 for(var i=0; i<listeInterdictions.length; i++){
+//                                     var premierEquipeInterdiction = listeInterdictions[i]["premierEquipeId"] ;
+//                                     var deuxiemeEquipeInterdiction = listeInterdictions[i]["deuxiemeEquipeId"] ;
+//
+//                                     if(premierEquipeInterdiction == interdictionEquipe1Id && deuxiemeEquipeInterdiction == interdictionEquipe2Id){
+//                                         alert("Cette interdiction existe déjà. Veuillez corriger votre sélection");
+//                                         return;
+//                                     }
+//
+//                                 }
 
                              }
 
