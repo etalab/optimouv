@@ -83,9 +83,24 @@ def init_log_file():
 	logging.basicConfig(filename=config.LOG.Path, level=logging.DEBUG)
 
 """
-Functio to optimize pool post treatment
+Function to optimize pool post treatment for team transfers between pool
+"""
+def optimize_pool_post_treatment_team_transfers(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, oldResultId, userId, teamTransfers, flagPhantom, calculatedResult):
+	try:
+		# duplicate results
+		results = calculatedResult
+		
+			
+		return results
+
+	except Exception as e:
+		show_exception_traceback()
+
+
+"""
+Function to optimize pool post treatment for variation of team number per pool
 """	
-def optimize_pool_post_treatment_match(D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult):
+def optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult):
 	try:
 		# duplicate results
 		results = calculatedResult
@@ -1634,7 +1649,7 @@ def callback(ch, method, properties, body):
 
 		### Post treatment variation of team number
 		if varTeamNbrPerPool > 0 and ( launchType in  ["allerRetour", "allerSimple"] and not teamTransfers):
-			logging.debug("############################################# POST TREATMENT #########################################")
+			logging.debug("############################################# POST TREATMENT VARIATION OF TEAM NUMBER #########################################")
 			# get old result id 
 			oldResultId = params["idAncienResultat"]
 			logging.debug("oldResultId : %s" %oldResultId)
@@ -1649,13 +1664,32 @@ def callback(ch, method, properties, body):
 			# check given params if they are the same or not as the stocked params
 			check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints, userId, reportId)
 
-# 			results = optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult)
-			results = optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, oldResultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult)
+			results = optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, oldResultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult)
 # 			logging.debug("results : \n%s" %json.dumps(results))
 
 		### Post treatment team transfers between pools
 		if varTeamNbrPerPool == 0 and ( launchType in  ["allerRetour", "allerSimple"] and  teamTransfers):
-			pass
+			logging.debug("############################################# POST TREATMENT TEAM TRANSFERS #########################################")
+
+			# get old result id 
+			oldResultId = params["idAncienResultat"]
+			logging.debug("oldResultId : %s" %oldResultId)
+			
+			sql = "select details_calcul from resultats where id=%s"%oldResultId
+			calculatedResult = json.loads(db.fetchone(sql))
+# 			logging.debug("calculatedResult : %s" %calculatedResult)
+
+			# check whether it is a final result (the variation of team members per pool has already been performed)
+			check_final_result(calculatedResult, userId, reportId)
+
+			# check given params if they are the same or not as the stocked params
+			check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints, userId, reportId)
+
+			results = optimize_pool_post_treatment_team_transfers(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, oldResultId, userId, teamTransfers, flagPhantom, calculatedResult)
+# 			logging.debug("results : \n%s" %json.dumps(results))
+			
+
+
 
 		if varTeamNbrPerPool == 0:
 			logging.debug("############################################# INSERT RESULT INTO DB #########################################")
