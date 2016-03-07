@@ -4197,7 +4197,7 @@
                      }
 
                      // ajouter une ligne 'selectionnez une option'
-                     selectEquipe.append('<option>   -- selectionnez une option --  </option>');
+                     selectEquipe.append('<option value="vide">   -- selectionnez une option --  </option>');
 
                      for(var i=0; i<infoEquipe.length; i++){
                          var equipeNom = infoEquipe[i]["equipeNom"];
@@ -4328,7 +4328,31 @@
 
                          // obtenir valeurs renseignées par l'utilisateur
                          var scenario = $("#scenarioChangeAffectation").val();
+                         var pouleDepart = $("#pouleDepart").val();
+                         var equipeDepart = $("#equipeDepart").val();
+                         var pouleDestination = $("#pouleDestination").val();
+                         var equipeDestination = $("#equipeDestination").val();
+
                          console.log("scenario: " + scenario);
+                         console.log("pouleDepart: " + pouleDepart);
+                         console.log("equipeDepart: " + equipeDepart);
+                         console.log("pouleDestination: " + pouleDestination);
+                         console.log("equipeDestination: " + equipeDestination);
+
+                         // ajouter une ligne si toutes les valeurs sont remplies
+                         if(scenario != "vide" && pouleDepart != "vide" && equipeDepart != "vide" && pouleDestination != "vide" && equipeDestination != "vide"){
+                             var ligneNbr = $('#tbodyChangeAffectation tr').length;
+                             console.log("ligneNbr : " + ligneNbr);
+
+                             // controle la poule de départ est égale à la poule de destination
+                             if(pouleDepart == pouleDestination){
+                                 alert("La poule de départ doit etre différente de la poule de destination. Veuillez corriger votre sélection");
+                                 return;
+                             }
+
+                             
+
+                         }
 
                      });
 
