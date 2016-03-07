@@ -77,6 +77,15 @@ class Poules{
             else{
                 $varEquipeParPoule   = 0;
             }
+            # changement d'affectation d'equipes par poule
+            if(array_key_exists("changeAffectEquipes", $_POST)){
+                $changeAffectEquipes = $_POST["changeAffectEquipes"];
+            }
+            else{
+                $changeAffectEquipes   = [];
+            }
+
+
 
             # id de l'ancien résultat
             if(array_key_exists("idAncienResultat", $_POST)){
@@ -100,7 +109,8 @@ class Poules{
             $statut = 0;
             $params = json_encode(array("nbrPoule" => $poulesNbr, "interdictions"=> $interdictions,
                 "repartitionHomogene"=> $repartitionsHomogenes, "varEquipeParPoule"=> $varEquipeParPoule,
-                "idAncienResultat"=> $idAncienResultat, "contrainteAccueilPlateauExiste" => $contrainteAccueilPlateauExiste
+                "idAncienResultat"=> $idAncienResultat, "contrainteAccueilPlateauExiste" => $contrainteAccueilPlateauExiste,
+                "changeAffectEquipes"=> $changeAffectEquipes
             ));
 
             # insérer dans la base de données
