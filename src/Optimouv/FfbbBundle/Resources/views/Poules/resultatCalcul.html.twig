@@ -4115,7 +4115,6 @@
 
                  function remplirSelectPouleDepartEtDestination(poules){
                      // remplir poule départ et destination pour la premiere fois
-
                      if($("#pouleDepart option").size() == 1){
                          for(var i=0; i<poules.length; i++){
                              console.log(poules[i]);
@@ -4130,9 +4129,7 @@
                          }
                      }
 
-
                  }
-
 
 
                  //// JS pour changement d'affectation d'équipes par poule
@@ -4188,17 +4185,45 @@
 
                  })
 
+                 function remplirSelectEquipeDepart(scenario, poule){
+
+                     console.log("remplirSelectEquipeDepart: " );
+                     console.log("scenario: " + scenario );
+                     console.log("poule: " + poule );
+
+                     var infoChangeAffectation = {{ infoChangeAffectation | json_encode | raw }};
+//                     console.log("infoChangeAffectation: " + JSON.stringify(infoChangeAffectation ));
+
+                     var infoEquipe = infoChangeAffectation[scenario][poule];
+                     console.log("infoEquipe: " + JSON.stringify(infoEquipe ));
+
+                     // supprimer toutes les options
+                     var selectEquipeDepart = $("#equipeDepart")
+                             .find("option")
+                             .remove()
+                             .end();
+
+                     for(var i=0; i<infoEquipe.length; i++){
+                         var equipeNom = infoEquipe[i]["equipeNom"];
+                         var equipeId = infoEquipe[i]["equipeId"];
+
+                         selectEquipeDepart.append('<option value="'+ equipeId  +'">' + equipeNom +'</option>');
+                     }
+
+
+                 }
+
                  // JS pour changement de poule de départ
                  $("#pouleDepart").select2({
                      width:'100%'
                  }).on("change", function(e) {
                      var scenariochoisi= $("#scenarioChangeAffectation").val();
-                     console.log("scenariochoisi: " + scenariochoisi);
+//                     console.log("scenariochoisi: " + scenariochoisi);
                      var pouleDepart = $(this).val();
-                     console.log("pouleDepart: " + pouleDepart);
+//                     console.log("pouleDepart: " + pouleDepart);
 
+                     remplirSelectEquipeDepart(scenariochoisi, pouleDepart);
 
-                     
                  })
 
 
