@@ -3728,7 +3728,7 @@
                          <!-- /.panel-heading -->
                          <div class="panel-body">
                              <div class="form-group">
-                                 <input type="number" min="1" class="form-control">
+                                 <input type="number" min="1" class="form-control" value="4" disabled>
 
                              </div>
 
@@ -3737,25 +3737,6 @@
                      </div>
                  </div>
                  <!-- /. Nombre de journées bloc -->
-
-                 <!-- Nombre de rencontres par journée bloc -->
-                 <div class="col-lg-4" id="nbrRencontre" style="display: none">
-                     <div class="panel panel-default">
-                         <div class="panel-heading">
-                             Nombre de rencontres par journée
-                         </div>
-                         <!-- /.panel-heading -->
-                         <div class="panel-body">
-                             <div class="form-group">
-                                 <input type="number" min="0" class="form-control">
-                             </div>
-
-                         </div>
-                         <!-- /.panel-body -->
-                     </div>
-                 </div>
-
-                 <!-- /. Nombre de rencontres par journée bloc -->
 
                  <!-- Ajouter une contrainte bloc -->
                  <div class="col-lg-4" id="ajoutContrainte" style="display: none">
@@ -3777,6 +3758,8 @@
                      </div>
                  </div>
                  <!-- /. Ajouter une contrainte bloc -->
+
+
              </div>
 
              <!-- Ajouter des contraintes d'interdiction -->
@@ -4071,7 +4054,7 @@
                      var plateau = document.getElementById("typeRencontre3").checked;
                      if (plateau) {
                          document.getElementById("nbrJournee").style.display = "block";
-                         document.getElementById("nbrRencontre").style.display = "block";
+//                         document.getElementById("nbrRencontre").style.display = "block";
                          document.getElementById("ajoutContrainte").style.display = "block";
                      }
                  }
@@ -4080,7 +4063,7 @@
                      var allerRetour = document.getElementById("typeRencontre1").checked;
                      if (allerRetour) {
                          document.getElementById("nbrJournee").style.display = "none";
-                         document.getElementById("nbrRencontre").style.display = "none";
+//                         document.getElementById("nbrRencontre").style.display = "none";
                          document.getElementById("ajoutContrainte").style.display = "none";
                      }
                  }
@@ -4089,7 +4072,7 @@
                      var aller = document.getElementById("typeRencontre2").checked;
                      if (aller) {
                          document.getElementById("nbrJournee").style.display = "none";
-                         document.getElementById("nbrRencontre").style.display = "none";
+//                         document.getElementById("nbrRencontre").style.display = "none";
                          document.getElementById("ajoutContrainte").style.display = "none";
                      }
                  }
