@@ -132,10 +132,10 @@ def optimize_pool_post_treatment_team_transfers(D_Mat, teamNbr, poolNbr, poolSiz
 
 			resultsScenario = results[scenarioName]
 
-			logging.debug(" before resultsScenario: \n%s" %(json.dumps(resultsScenario),))
+# 			logging.debug(" before resultsScenario: \n%s" %(json.dumps(resultsScenario),))
 
 			poulesIdOri  = resultsScenario["poulesId"]
-			logging.debug(" poulesIdOri: %s" %(poulesIdOri,))
+# 			logging.debug(" poulesIdOri: %s" %(poulesIdOri,))
 			
 			poulesIdResult = dict(poulesIdOri)
 			
@@ -155,7 +155,7 @@ def optimize_pool_post_treatment_team_transfers(D_Mat, teamNbr, poolNbr, poolSiz
 				poulesIdResult[teamTransfer["pouleDepart"]].sort()
 				
 			
-			logging.debug(" poulesIdResult: %s" %(poulesIdResult,))
+# 			logging.debug(" poulesIdResult: %s" %(poulesIdResult,))
 			
 			# update pool ids
 			resultsScenario["poulesId"] = poulesIdResult
@@ -164,7 +164,7 @@ def optimize_pool_post_treatment_team_transfers(D_Mat, teamNbr, poolNbr, poolSiz
 			# get coordinates for each point in the pools
 			poolDistributionCoords_scenario = get_coords_pool_distribution(poulesIdResult)
 			results[scenarioName]["poulesCoords"] = poolDistributionCoords_scenario
-			logging.debug(" poolDistributionCoords_scenario: %s" %(poolDistributionCoords_scenario,))
+# 			logging.debug(" poolDistributionCoords_scenario: %s" %(poolDistributionCoords_scenario,))
 		
 			# get encounter list from pool distribution dict
 			encounters_scenario = create_encounters_from_pool_distribution(poulesIdResult)
@@ -181,7 +181,6 @@ def optimize_pool_post_treatment_team_transfers(D_Mat, teamNbr, poolNbr, poolSiz
 			
 			
 			
-			logging.debug(" after resultsScenario: \n%s" %(json.dumps(resultsScenario),))
 
 		logging.debug("" )
 
