@@ -1772,7 +1772,7 @@ def callback(ch, method, properties, body):
 
 
 
-		if varTeamNbrPerPool == 0:
+		if varTeamNbrPerPool == 0 and not teamTransfers:
 			logging.debug("############################################# INSERT RESULT INTO DB #########################################")
 			resultId = save_result_to_db(launchType, reportId, groupId, results)
 			logging.debug("resultId : %s" %resultId)
