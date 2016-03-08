@@ -230,7 +230,7 @@
                                                                      var points = [];
                                                                      var incrementIcons = 0;
 
-                                                                     {%  for coordPoule in coordPoules %}
+                                                                     {%  for poule, coordPoule in coordPoules %}
 
                                                                         //tracer dynamiquement les points de villes
                                                                          {% for coordonneeVille in coordPoule %}
@@ -238,10 +238,9 @@
                                                                          var y = '{{ coordonneeVille[1]}}';
 //
                                                                          var xy = x+y;
-//                                                                         var x = xy[0];
-//                                                                         var y = xy[1];
 
-                                                                     var icon = 'icons' + incrementIcons;
+//                                                                         var icon = 'icons' + incrementIcons;
+                                                                         var icon = 'icons{{ poule-1 }}';
                                                                          var marker = 'marker' + incrment;
                                                                          window[marker] = new H.map.Marker({
                                                                              lat: parseFloat(x),
@@ -520,6 +519,7 @@
 
                                                                              {% for key, rencontreDetailOptContrainte in rencontreDetailsOptContrainte %}
                                                                                  {% set distanceOptContrainte = rencontreDetailsOptContrainte[ loop.index ] %}
+                                                                                 {#{% set distanceOptContrainte = rencontreDetailsOptContrainte[ key ] %}#}
                                                                                  {% set lettre = alphabet[key-1] %}
                                                                                  <tr>
                                                                                      <td><strong> Poule {{ lettre }} </strong></td>
@@ -699,7 +699,7 @@
                                                                  var incrment = 1;
                                                                  var points = [];
                                                                  var incrementIcons = 0;
-                                                                 {%  for coordPouleEqAvecContrainte in coordPoulesEqAvecContrainte %}
+                                                                 {%  for poule, coordPouleEqAvecContrainte in coordPoulesEqAvecContrainte %}
 
                                                                  //tracer dynamiquement les points de villes
                                                                  {% for coordonneeVilleEqAvecContrainte in coordPouleEqAvecContrainte %}
@@ -707,9 +707,9 @@
                                                                  var y = '{{ coordonneeVilleEqAvecContrainte[1]}}';
 //
                                                                  var xy = x+y;
-//                                                                         var x = xy[0];
-//                                                                         var y = xy[1];
-                                                                 var icon = 'icons' + incrementIcons;
+
+//                                                                 var icon = 'icons' + incrementIcons;
+                                                                 var icon = 'icons{{ poule-1 }}' ;
 
                                                                  var marker = 'marker' + incrment;
                                                                  window[marker] = new H.map.Marker({
@@ -1176,7 +1176,7 @@
                                                                  var incrment = 1;
                                                                  var points = [];
                                                                  var incrementIcons = 0;
-                                                                 {%  for coordPouleOpSansContrainte in coordPoulesOpSansContrainte %}
+                                                                 {%  for poule,  coordPouleOpSansContrainte in coordPoulesOpSansContrainte %}
 
                                                                  //tracer dynamiquement les points de villes
                                                                  {% for coordonneeVilleOpSansContrainte in coordPouleOpSansContrainte %}
@@ -1184,10 +1184,9 @@
                                                                  var y = '{{ coordonneeVilleOpSansContrainte[1]}}';
 //
                                                                  var xy = x+y;
-//                                                                         var x = xy[0];
-//                                                                         var y = xy[1];
 
-                                                                 var icon = 'icons' + incrementIcons;
+//                                                                 var icon = 'icons' + incrementIcons;
+                                                                 var icon = 'icons{{ poule-1 }}' ;
                                                                  var marker = 'marker' + incrment;
                                                                  window[marker] = new H.map.Marker({
                                                                      lat: parseFloat(x),
@@ -1651,7 +1650,7 @@
                                                                  var incrment = 1;
                                                                  var points = [];
                                                                  var incrementIcons = 0;
-                                                                 {%  for coordPouleRef in coordPoulesRef %}
+                                                                 {%  for poule, coordPouleRef in coordPoulesRef %}
 
                                                                  //tracer dynamiquement les points de villes
                                                                  {% for coordonneeVilleRef in coordPouleRef %}
@@ -1659,10 +1658,9 @@
                                                                  var y = '{{ coordonneeVilleRef[1]}}';
 //
                                                                  var xy = x+y;
-//                                                                         var x = xy[0];
-//                                                                         var y = xy[1];
 
-                                                                 var icon = 'icons' + incrementIcons;
+//                                                                 var icon = 'icons' + incrementIcons;
+                                                                 var icon = 'icons{{ poule-1 }}' ;
                                                                  var marker = 'marker' + incrment;
                                                                  window[marker] = new H.map.Marker({
                                                                      lat: parseFloat(x),
