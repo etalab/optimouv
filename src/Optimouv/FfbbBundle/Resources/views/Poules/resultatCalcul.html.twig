@@ -522,8 +522,8 @@
 
 
                                                                              {% for key, rencontreDetailOptContrainte in rencontreDetailsOptContrainte %}
-                                                                                 {% set distanceOptContrainte = rencontreDetailsOptContrainte[ loop.index ] %}
-                                                                                 {#{% set distanceOptContrainte = rencontreDetailsOptContrainte[ key ] %}#}
+                                                                                 {#{% set distanceOptContrainte = rencontreDetailsOptContrainte[ loop.index ] %}#}
+                                                                                 {% set distanceOptContrainte = rencontreDetailsOptContrainte[ key ] %}
                                                                                  {% set lettre = alphabet[key-1] %}
                                                                                  <tr>
                                                                                      <td><strong> Poule {{ lettre }} </strong></td>
@@ -993,7 +993,8 @@
                                                                          <tbody>
 
                                                                              {% for keyEqContrainte, rencontreDetailEqContrainte in rencontreDetailsEqContrainte %}
-                                                                                 {% set distanceEqContrainte = rencontreDetailsEqContrainte[ loop.index ] %}
+                                                                                 {#{% set distanceEqContrainte = rencontreDetailsEqContrainte[ loop.index ] %}#}
+                                                                                 {% set distanceEqContrainte = rencontreDetailsEqContrainte[ keyEqContrainte ] %}
                                                                                  {% set lettre = alphabet[keyEqContrainte-1] %}
 
                                                                                  <tr>
@@ -1469,7 +1470,8 @@
                                                                          <tbody>
 
                                                                              {% for keyOptSansContrainte, rencontreDetailOpSansContrainte in rencontreDetailsOpSansContrainte %}
-                                                                                 {% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ loop.index ] %}
+                                                                                 {#{% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ loop.index ] %}#}
+                                                                                 {% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ keyOptSansContrainte ] %}
                                                                                  {% set lettre = alphabet[keyOptSansContrainte-1] %}
                                                                                  <tr>
                                                                                      <td><strong> Poule {{ lettre }} </strong></td>
