@@ -692,6 +692,13 @@ class PoulesController extends Controller
             $contrainteAccueilPlateauExiste = 0;;
         }
 
+        # récupérer les changements d'affectation d'équipes entre les poules
+        if(array_key_exists("changeAffectEquipes", $detailsCalcul["params"])){
+            $changeAffectEquipes = $detailsCalcul["params"]["changeAffectEquipes"];
+        }
+        else{
+            $changeAffectEquipes = [];;
+        }
 
 
         //récupération du nom du rapport
@@ -759,6 +766,7 @@ class PoulesController extends Controller
             'infoPoule' => $infoPoule,
             'contrainteAccueilPlateauExiste' => $contrainteAccueilPlateauExiste,
             'infoChangeAffectation' => $infoChangeAffectation,
+            'changeAffectEquipes' => $changeAffectEquipes,
 
 
 
