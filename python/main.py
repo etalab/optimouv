@@ -105,6 +105,9 @@ def optimize_pool_post_treatment_team_transfers(D_Mat, teamNbrWithPhantom, poolN
 			# change values concerning variation of team members per pool
 			results["params"]["varEquipeParPoulePossible"] = 0
 			
+			# add team transfers to params
+			results["params"]["changeAffectEquipes"] = teamTransfers
+			
 			
 		########################################### Transfer team between pools #######################################
 		for scenario, teamTransfers in teamTransfers.items():
@@ -124,25 +127,32 @@ def optimize_pool_post_treatment_team_transfers(D_Mat, teamNbrWithPhantom, poolN
 			poulesIdOri  = resultsScenario["poulesId"]
 			logging.debug(" poulesIdOri: %s" %(poulesIdOri,))
 			
-			poulesResult = dict(poulesIdOri)
+			poulesIdResult = dict(poulesIdOri)
 			
 			for teamTransfer in teamTransfers:
 				logging.debug(" teamTransfer: %s" %(teamTransfer,))
 			
 				# remove and add parting team
-				poulesResult[teamTransfer["pouleDepart"]].remove(int(teamTransfer["equipeDepart"]))
-				poulesResult[teamTransfer["pouleDestination"]].append(int(teamTransfer["equipeDepart"]))
+				poulesIdResult[teamTransfer["pouleDepart"]].remove(int(teamTransfer["equipeDepart"]))
+				poulesIdResult[teamTransfer["pouleDestination"]].append(int(teamTransfer["equipeDepart"]))
 				
 				# remove and add entering team
-				poulesResult[teamTransfer["pouleDestination"]].remove(int(teamTransfer["equipeDestination"]))
-				poulesResult[teamTransfer["pouleDepart"]].append(int(teamTransfer["equipeDestination"]))
+				poulesIdResult[teamTransfer["pouleDestination"]].remove(int(teamTransfer["equipeDestination"]))
+				poulesIdResult[teamTransfer["pouleDepart"]].append(int(teamTransfer["equipeDestination"]))
 
 				# sort leaving and destinatio pool
-				poulesResult[teamTransfer["pouleDestination"]].sort()
-				poulesResult[teamTransfer["pouleDepart"]].sort()
+				poulesIdResult[teamTransfer["pouleDestination"]].sort()
+				poulesIdResult[teamTransfer["pouleDepart"]].sort()
 				
 			
-			logging.debug(" poulesResult: %s" %(poulesResult,))
+			logging.debug(" poulesIdResult: %s" %(poulesIdResult,))
+			
+			# update pool ids
+			resultsScenario["poulesId"] = poulesIdResult
+			
+			# create P Matrix from pool distribution
+			P_Mat_OptimalWithoutConstraint = create_matrix_from_pool_distribution(poolDistribution_OptimalWithoutConstraint, teamNbr, teams)
+			
 			
 		logging.debug("" )
 # 		logging.debug(" resultsScenario: \n%s" %(json.dumps(resultsScenario),))
@@ -567,18 +577,6 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 					P_Mat_OptimalWithoutConstraint = get_p_matrix_for_round_trip_match_optimal_without_constraint(P_InitMat_withoutConstraint, D_Mat, iter, teamNbr)#
 			else:
 				P_Mat_OptimalWithoutConstraint = get_p_matrix_for_round_trip_match_optimal_without_constraint(P_Mat_OptimalWithoutConstraint, D_Mat, iter, teamNbr)#
-# 				if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
-# 					P_Mat_OptimalWithoutConstraint = get_p_matrix_for_round_trip_match_optimal_without_constraint(P_Mat_ref, D_Mat, iter, teamNbr)#
-# 				else:
-# 					P_Mat_OptimalWithoutConstraint = get_p_matrix_for_round_trip_match_optimal_without_constraint(P_InitMat_withoutConstraint, D_Mat, iter, teamNbr)#
-				
-				
-# 			P_Mats_OptimalWithoutConstraint.append(P_Mat_OptimalWithoutConstraint)	
-# 			chosenDistance_OptimalWithoutConstraint = calculate_V_value(P_Mat_OptimalWithoutConstraint, D_Mat)
-# 			chosenDistances_OptimalWithoutConstraint.append(chosenDistance_OptimalWithoutConstraint)
-	
-# 		P_Mat_chosenIndex = chosenDistances_OptimalWithoutConstraint.index(min(chosenDistances_OptimalWithoutConstraint))
-# 		logging.debug(" P_Mat_chosenIndex: %s" %P_Mat_chosenIndex)
 # 
 # 		P_Mat_OptimalWithoutConstraint = P_Mats_OptimalWithoutConstraint[P_Mat_chosenIndex]
 		chosenDistance_OptimalWithoutConstraint = calculate_V_value(P_Mat_OptimalWithoutConstraint, D_Mat)
