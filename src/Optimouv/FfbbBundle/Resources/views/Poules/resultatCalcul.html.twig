@@ -3,6 +3,7 @@
      {% block pagewrapper %}
 
          <div id="page-wrapper">
+             {% set alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ] %}
 
 
                  <div class="row">
@@ -80,6 +81,37 @@
                                  <td> Contraintes : {{ contrainte  }} </td>
                              </tr>
 
+                             {% if changeAffectEquipes %}
+                                 <tr>
+                                     <td> Liste de changements d'affectation d'équipes : </td>
+                                 </tr>
+                                 {% for scenario, contenuScenario in changeAffectEquipes %}
+                                         {% if scenario == "optimalSansContrainte" %}
+                                            {% set scenarioAffichage = "Optimal sans contrainte" %}
+                                         {% elseif scenario == "equitableSansContrainte" %}
+                                             {% set scenarioAffichage = "Equitable sans contrainte" %}
+                                         {% elseif scenario == "optimalAvecContrainte" %}
+                                             {% set scenarioAffichage = "Optimal sans contrainte" %}
+                                         {% elseif scenario == "equitableAvecContrainte" %}
+                                             {% set scenarioAffichage = "Equitable sans contrainte" %}
+                                         {% endif %}
+
+                                         {% for changeAffect in contenuScenario %}
+                                             <tr>
+                                                 <td> * {{ scenarioAffichage }} :
+                                                        {{ changeAffect.equipeDepartNom   }} (Poule {{ alphabet[changeAffect.pouleDepart-1]  }} ) -
+                                                        {{ changeAffect.equipeDestinationNom }} (Poule {{ alphabet[changeAffect.pouleDestination-1]   }}  )
+
+
+                                                 </td>
+                                             </tr>
+
+                                         {% endfor %}
+
+
+                                 {% endfor %}
+                             {% endif %}
+
                              {% if contrainteAccueilPlateauExiste == 1 %}
                                  <tr>
                                      <td> Toutes les équipes doivent accueillir au moins une fois </td>
@@ -105,7 +137,6 @@
 
              <!-- Affichage des résultats sur les cartes -->
              <div class="row">
-                 {% set alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ] %}
 
                  <div class="col-lg-12">
                      <div class="panel panel-default">
