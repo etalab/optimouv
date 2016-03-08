@@ -1939,6 +1939,20 @@ def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize):
 	return P_InitMat
 
 """
+Function to get team name from team Id (with escaped single apostrophe)
+"""
+def get_team_name_escaped_from_team_id(teamId):
+	try:
+		teamName = ""
+		
+		sql = "select nom from entite where id=%s"%teamId
+		teamName = db.fetchone(sql).replace("'", u"''")
+
+		return teamName
+	except Exception as e:
+		show_exception_traceback()
+
+"""
 Function to get prohibition constraints
 """
 def get_prohibition_constraints(prohibitionDict):
