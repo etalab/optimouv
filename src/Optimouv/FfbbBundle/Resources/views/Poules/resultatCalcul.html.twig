@@ -2593,19 +2593,23 @@
                                                              var points = [];
                                                              var incrementIcons = 0;
 
-                                                             {%  for coordPouleEquitableSansContrainte in coordPoulesEquitableSansContrainte %}
+//                                                             console.log("--------------------- debug eq sans contrainte ----------------------")
+                                                             {%  for poule, coordPouleEquitableSansContrainte in coordPoulesEquitableSansContrainte %}
+                                                             {#console.log("poule: " + {{ poule }});#}
 
                                                              //tracer dynamiquement les points de villes
                                                              {% for coordonneeVilleEquitableSansContrainte in coordPouleEquitableSansContrainte %}
                                                              var x = '{{ coordonneeVilleEquitableSansContrainte[0]}}';
                                                              var y = '{{ coordonneeVilleEquitableSansContrainte[1]}}';
-//
-                                                             var xy = x+y;
-//                                                                         var x = xy[0];
-//                                                                         var y = xy[1];
 
-                                                             var icon = 'icons' + incrementIcons;
+                                                             var xy = x+y;
+                                                             console.log("xy: " + xy)
+
+//                                                             var icon = 'icons' + incrementIcons;
+                                                             var icon = 'icons{{ poule-1 }}' ;
+//                                                             console.log("icon: " + icon)
                                                              var marker = 'marker' + incrment;
+
                                                              window[marker] = new H.map.Marker({
                                                                  lat: parseFloat(x),
                                                                  lng: parseFloat(y)
@@ -2784,10 +2788,14 @@
 
                                                                      {% set dureeTotaleScEqDetailContrainte = "" %}
                                                                      {% for key, estimationDetailEqContrainte in estimationDetailsEqContrainte %}
-                                                                         {% set distanceEqDetailContrainte = estimationDetailsEqContrainte[ loop.index ].distanceTotale // 1000 %}
-                                                                         {% set distanceTotaleEqDetailContrainte = estimationDetailsEqContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}
-                                                                         {% set dureeTotaleEqDetailContrainte = estimationDetailsEqContrainte[ loop.index ].dureeTotale  %}
-                                                                         {% set nbrParticipantsEqDetailContrainte = estimationDetailsEqContrainte[ loop.index ].nbrParticipantsTotal  %}
+                                                                         {#{% set distanceEqDetailContrainte = estimationDetailsEqContrainte[ loop.index ].distanceTotale // 1000 %}#}
+                                                                         {#{% set distanceTotaleEqDetailContrainte = estimationDetailsEqContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
+                                                                         {#{% set dureeTotaleEqDetailContrainte = estimationDetailsEqContrainte[ loop.index ].dureeTotale  %}#}
+                                                                         {#{% set nbrParticipantsEqDetailContrainte = estimationDetailsEqContrainte[ loop.index ].nbrParticipantsTotal  %}#}
+                                                                         {% set distanceEqDetailContrainte = estimationDetailsEqContrainte[ key ].distanceTotale // 1000 %}
+                                                                         {% set distanceTotaleEqDetailContrainte = estimationDetailsEqContrainte[ key ].distanceTotaleTousParticipants // 1000 %}
+                                                                         {% set dureeTotaleEqDetailContrainte = estimationDetailsEqContrainte[ key ].dureeTotale  %}
+                                                                         {% set nbrParticipantsEqDetailContrainte = estimationDetailsEqContrainte[ key ].nbrParticipantsTotal  %}
                                                                          {% set lettre = alphabet[key-1] %}
 
                                                                          <tr>
@@ -2882,7 +2890,8 @@
                                                                      <tbody>
 
                                                                          {% for keyEqContrainte, rencontreDetailEqContrainte in rencontreDetailsEqContrainte %}
-                                                                         {% set distanceEqContrainte = rencontreDetailsEqContrainte[ loop.index ] %}
+                                                                         {#{% set distanceEqContrainte = rencontreDetailsEqContrainte[ loop.index ] %}#}
+                                                                         {% set distanceEqContrainte = rencontreDetailsEqContrainte[ keyEqContrainte ] %}
                                                                          {% set lettre = alphabet[keyEqContrainte-1] %}
                                                                          <tr>
                                                                          <td><strong> Poule {{ lettre }} </strong></td>
@@ -2891,7 +2900,6 @@
                                                                          <ul>
                                                                          {% for detailsRencontreEqContrainte in distanceEqContrainte %}
                                                                          <li>
-                                                                         {#{{ distanceEqContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceEqContrainte[ loop.index ].equipeDestinationVille }}#}
                                                                          {{ distanceEqContrainte[ loop.index ].equipeDepartNom }} ~ {{ distanceEqContrainte[ loop.index ].equipeDestinationNom }}
                                                                          </li>
 
