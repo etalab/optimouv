@@ -2113,7 +2113,8 @@
                                                              var incrment = 1;
                                                              var points = [];
                                                              var incrementIcons = 0;
-                                                             {%  for key,coordPouleOpSansContrainte in coordPoulesOpSansContrainte %}
+                                                             {#{%  for key,coordPouleOpSansContrainte in coordPoulesOpSansContrainte %}#}
+                                                             {%  for poule, coordPouleOpSansContrainte in coordPoulesOpSansContrainte %}
 
                                                              //tracer dynamiquement les points de villes
                                                              {% for coordonneeVilleOpSansContrainte in coordPouleOpSansContrainte %}
@@ -2124,7 +2125,8 @@
 //                                                                         var x = xy[0];
 //                                                                         var y = xy[1];
 
-                                                            var icon = 'icons' + incrementIcons;
+//                                                            var icon = 'icons' + incrementIcons;
+                                                             var icon = 'icons{{ poule-1 }}' ;
                                                              var marker = 'marker' + incrment;
                                                              window[marker] = new H.map.Marker({
                                                                  lat: parseFloat(x),
@@ -2304,10 +2306,14 @@
                                                                      {% set dureeTotaleScOpSansContrainteDetail = "" %}
 
                                                                      {% for key, estimationDetailOpSansContrainte in estimationDetailsOpSansContrainte %}
-                                                                         {% set distanceOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotale // 1000 %}
-                                                                         {% set distanceTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}
-                                                                         {% set dureeTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].dureeTotale  %}
-                                                                         {% set nbrParticipantsOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].nbrParticipantsTotal  %}
+                                                                         {#{% set distanceOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotale // 1000 %}#}
+                                                                         {#{% set distanceTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
+                                                                         {#{% set dureeTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].dureeTotale  %}#}
+                                                                         {#{% set nbrParticipantsOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].nbrParticipantsTotal  %}#}
+                                                                         {% set distanceOpSansContrainteDetail = estimationDetailsOpSansContrainte[ key ].distanceTotale // 1000 %}
+                                                                         {% set distanceTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ key ].distanceTotaleTousParticipants // 1000 %}
+                                                                         {% set dureeTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ key ].dureeTotale  %}
+                                                                         {% set nbrParticipantsOpSansContrainteDetail = estimationDetailsOpSansContrainte[ key ].nbrParticipantsTotal  %}
                                                                          {% set lettre = alphabet[key-1] %}
 
                                                                          <tr>
@@ -2400,7 +2406,8 @@
 
                                                                      <tbody >
                                                                          {% for key, rencontreDetailOpSansContrainte in rencontreDetailsOpSansContrainte %}
-                                                                             {% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ loop.index ] %}
+                                                                             {#{% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ loop.index ] %}#}
+                                                                             {% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ key ] %}
 
                                                                              <tr>
                                                                              {% set lettre = alphabet[key-1] %}
@@ -2410,7 +2417,6 @@
                                                                                  <ul>
                                                                                  {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
                                                                                      <li>
-                                                                                     {#{{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }} ~  {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}#}
                                                                                      {{ distanceOptSansContrainte[ loop.index ].equipeDepartNom }} ~  {{ distanceOptSansContrainte[ loop.index ].equipeDestinationNom }}
                                                                                      </li>
                                                                                  {% endfor %}
@@ -2603,7 +2609,7 @@
                                                              var y = '{{ coordonneeVilleEquitableSansContrainte[1]}}';
 
                                                              var xy = x+y;
-                                                             console.log("xy: " + xy)
+//                                                             console.log("xy: " + xy)
 
 //                                                             var icon = 'icons' + incrementIcons;
                                                              var icon = 'icons{{ poule-1 }}' ;
@@ -3086,7 +3092,8 @@
                                                              var points = [];
                                                              var incrementIcons = 0;
 
-                                                             {%  for coordPouleRef in coordPoulesRef %}
+                                                             {#{%  for coordPouleRef in coordPoulesRef %}#}
+                                                             {%  for poule, coordPouleRef in coordPoulesRef %}
 
                                                              //tracer dynamiquement les points de villes
                                                              {% for coordonneeVilleRef in coordPouleRef %}
@@ -3094,10 +3101,9 @@
                                                              var y = '{{ coordonneeVilleRef[1]}}';
 //
                                                              var xy = x+y;
-//                                                                         var x = xy[0];
-//                                                                         var y = xy[1];
 
-                                                             var icon = 'icons' + incrementIcons;
+//                                                             var icon = 'icons' + incrementIcons;
+                                                             var icon = 'icons{{ poule-1 }}' ;
                                                              var marker = 'marker' + incrment;
                                                              window[marker] = new H.map.Marker({
                                                                  lat: parseFloat(x),
@@ -3282,10 +3288,14 @@
                                                                      {% set dureeTotaleScRefPasContrainte = "" %}
 
                                                                      {% for key, estimationDetailRef in estimationDetailsRef %}
-                                                                         {% set distanceDetailRef = estimationDetailsRef[ loop.index ].distanceTotale // 1000 %}
-                                                                         {% set distanceTotaleDetailRef = estimationDetailsRef[ loop.index ].distanceTotaleTousParticipants // 1000 %}
-                                                                         {% set dureeTotaleDetailRef = estimationDetailsRef[ loop.index ].dureeTotale  %}
-                                                                         {% set nbrParticipantsDetailRef = estimationDetailsRef[ loop.index ].nbrParticipantsTotal  %}
+                                                                         {#{% set distanceDetailRef = estimationDetailsRef[ loop.index ].distanceTotale // 1000 %}#}
+                                                                         {#{% set distanceTotaleDetailRef = estimationDetailsRef[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
+                                                                         {#{% set dureeTotaleDetailRef = estimationDetailsRef[ loop.index ].dureeTotale  %}#}
+                                                                         {#{% set nbrParticipantsDetailRef = estimationDetailsRef[ loop.index ].nbrParticipantsTotal  %}#}
+                                                                         {% set distanceDetailRef = estimationDetailsRef[ key ].distanceTotale // 1000 %}
+                                                                         {% set distanceTotaleDetailRef = estimationDetailsRef[ key ].distanceTotaleTousParticipants // 1000 %}
+                                                                         {% set dureeTotaleDetailRef = estimationDetailsRef[ key ].dureeTotale  %}
+                                                                         {% set nbrParticipantsDetailRef = estimationDetailsRef[ key ].nbrParticipantsTotal  %}
                                                                          {% set lettre = alphabet[key-1] %}
 
                                                                          <tr>
