@@ -85,7 +85,7 @@ def init_log_file():
 """
 Function to optimize pool post treatment for team transfers between pool
 """
-def optimize_pool_post_treatment_team_transfers(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, oldResultId, userId, teamTransfers, flagPhantom, calculatedResult):
+def optimize_pool_post_treatment_team_transfers(D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, oldResultId, userId, teamTransfers, flagPhantom, calculatedResult):
 	try:
 		# duplicate results
 		results = calculatedResult
@@ -116,14 +116,18 @@ def optimize_pool_post_treatment_team_transfers(D_Mat, teamNbrWithPhantom, poolN
 			
 			# get the corresponding data from the previous calculated result
 			if scenario == "optimalSansContrainte":
-				resultsScenario = results["scenarioOptimalSansContrainte"]
+				scenarioName = "scenarioOptimalSansContrainte"
 			elif scenario == "equitableSansContrainte":
-				resultsScenario = results["scenarioEquitableSansContrainte"]
+				scenarioName = "scenarioEquitableSansContrainte"
 			elif scenario == "optimalAvecContrainte":
-				resultsScenario = results["scenarioOptimalAvecContrainte"]
+				scenarioName = "scenarioOptimalAvecContrainte"
 			elif scenario == "equitableAvecContrainte":
-				resultsScenario = results["scenarioEquitableAvecContrainte"]
-			
+				scenarioName = "scenarioEquitableAvecContrainte"
+
+			resultsScenario = results[scenarioName]
+
+			logging.debug(" before resultsScenario: \n%s" %(json.dumps(resultsScenario),))
+
 			poulesIdOri  = resultsScenario["poulesId"]
 			logging.debug(" poulesIdOri: %s" %(poulesIdOri,))
 			
@@ -150,14 +154,30 @@ def optimize_pool_post_treatment_team_transfers(D_Mat, teamNbrWithPhantom, poolN
 			# update pool ids
 			resultsScenario["poulesId"] = poulesIdResult
 			
-			# create P Matrix from pool distribution
-			P_Mat_OptimalWithoutConstraint = create_matrix_from_pool_distribution(poolDistribution_OptimalWithoutConstraint, teamNbr, teams)
-			
-			
-		logging.debug("" )
-# 		logging.debug(" resultsScenario: \n%s" %(json.dumps(resultsScenario),))
 
-		sys.exit()
+			# get coordinates for each point in the pools
+			poolDistributionCoords_scenario = get_coords_pool_distribution(poulesIdResult)
+			results[scenarioName]["poulesCoords"] = poolDistributionCoords_scenario
+			logging.debug(" poolDistributionCoords_scenario: %s" %(poolDistributionCoords_scenario,))
+		
+			# get encounter list from pool distribution dict
+			encounters_scenario = create_encounters_from_pool_distribution(poulesIdResult)
+			results[scenarioName]["rencontreDetails"] = encounters_scenario
+	 		
+			# get pool details from encounters
+			poolDetails_scenario = create_pool_details_from_encounters(encounters_scenario, poulesIdResult)
+			results[scenarioName]["estimationDetails"] = poolDetails_scenario
+		
+			# get sum info from pool details
+			sumInfo_scenario = get_sum_info_from_pool_details(poolDetails_scenario)
+			results[scenarioName]["estimationGenerale"] = sumInfo_scenario
+			
+			
+			
+			
+			logging.debug(" after resultsScenario: \n%s" %(json.dumps(resultsScenario),))
+
+		logging.debug("" )
 
 			
 		return results
@@ -252,7 +272,6 @@ def optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbr, poolNbr, poolSize,
 		logging.debug("")
 		logging.debug(" ####################### RESULT EQUITABLE WITHOUT CONSTRAINT ############################################")
 		if resultsEquitableWithoutConstraint:
-
 
 			poolDistribution_EquitableWithoutConstraint = variation_team_number_per_pool(resultsEquitableWithoutConstraint["poulesId"], varTeamNbrPerPool)
 			logging.debug(" poolDistribution_EquitableWithoutConstraint: %s" %(poolDistribution_EquitableWithoutConstraint,))
