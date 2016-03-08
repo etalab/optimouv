@@ -105,6 +105,12 @@ def optimize_pool_post_treatment_team_transfers(D_Mat, teamNbr, poolNbr, poolSiz
 			# change values concerning variation of team members per pool
 			results["params"]["varEquipeParPoulePossible"] = 0
 			
+			# get team names 
+			for scenario, contentScenario in teamTransfers.items():
+				for teamTransfer in contentScenario:
+					teamTransfer["equipeDepartNom"] = get_team_name_escaped_from_team_id(teamTransfer["equipeDepart"])
+					teamTransfer["equipeDestinationNom"] = get_team_name_escaped_from_team_id(teamTransfer["equipeDestination"])
+			
 			# add team transfers to params
 			results["params"]["changeAffectEquipes"] = teamTransfers
 			
