@@ -417,10 +417,14 @@
                                                                              <tbody>
                                                                              {% set dureeTotaleScOptContrainte = "" %}
                                                                              {% for key, estimationDetailOptContrainte in estimationDetailsOptContrainte %}
-                                                                                 {% set distanceOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].distanceTotale // 1000 %}
-                                                                                 {% set distanceTotaleOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}
-                                                                                 {% set dureeTotaleOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].dureeTotale  %}
-                                                                                 {% set nbrParticipantsOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].nbrParticipantsTotal  %}
+                                                                                 {#{% set distanceOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].distanceTotale // 1000 %}#}
+                                                                                 {#{% set distanceTotaleOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
+                                                                                 {#{% set dureeTotaleOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].dureeTotale  %}#}
+                                                                                 {#{% set nbrParticipantsOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].nbrParticipantsTotal  %}#}
+                                                                                 {% set distanceOptContrainteDetail = estimationDetailsOptContrainte[ key ].distanceTotale // 1000 %}
+                                                                                 {% set distanceTotaleOptContrainteDetail = estimationDetailsOptContrainte[ key ].distanceTotaleTousParticipants // 1000 %}
+                                                                                 {% set dureeTotaleOptContrainteDetail = estimationDetailsOptContrainte[ key ].dureeTotale  %}
+                                                                                 {% set nbrParticipantsOptContrainteDetail = estimationDetailsOptContrainte[ key ].nbrParticipantsTotal  %}
                                                                                  {% set lettre = alphabet[key-1] %}
                                                                                  <tr>
                                                                                      <td><strong> Poule {{ lettre }} </strong></td>
@@ -890,10 +894,14 @@
 
                                                                          {% set dureeTotaleScEqContrainte = "" %}
                                                                          {% for key, estimationDetailEqContrainte in estimationDetailsEqContrainte %}
-                                                                             {% set distanceEqContrainteDetail = estimationDetailsEqContrainte[ loop.index ].distanceTotale // 1000 %}
-                                                                             {% set distanceTotaleEqContrainteDetail = estimationDetailsEqContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}
-                                                                             {% set dureeTotaleEqContrainteDetail = estimationDetailsEqContrainte[ loop.index ].dureeTotale  %}
-                                                                             {% set nbrParticipantsEqContrainteDetail = estimationDetailsEqContrainte[ loop.index ].nbrParticipantsTotal  %}
+                                                                             {#{% set distanceEqContrainteDetail = estimationDetailsEqContrainte[ loop.index ].distanceTotale // 1000 %}#}
+                                                                             {#{% set distanceTotaleEqContrainteDetail = estimationDetailsEqContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
+                                                                             {#{% set dureeTotaleEqContrainteDetail = estimationDetailsEqContrainte[ loop.index ].dureeTotale  %}#}
+                                                                             {#{% set nbrParticipantsEqContrainteDetail = estimationDetailsEqContrainte[ loop.index ].nbrParticipantsTotal  %}#}
+                                                                             {% set distanceEqContrainteDetail = estimationDetailsEqContrainte[ key ].distanceTotale // 1000 %}
+                                                                             {% set distanceTotaleEqContrainteDetail = estimationDetailsEqContrainte[ key ].distanceTotaleTousParticipants // 1000 %}
+                                                                             {% set dureeTotaleEqContrainteDetail = estimationDetailsEqContrainte[ key ].dureeTotale  %}
+                                                                             {% set nbrParticipantsEqContrainteDetail = estimationDetailsEqContrainte[ key ].nbrParticipantsTotal  %}
                                                                              {% set lettre = alphabet[key-1] %}
                                                                              <tr>
                                                                                  <td><strong> Poule {{ lettre }} </strong></td>
@@ -1366,10 +1374,14 @@
 
                                                                          {% set dureeTotaleScOptSansContrainte = "" %}
                                                                          {% for key, estimationDetailOpSansContrainte in estimationDetailsOpSansContrainte %}
-                                                                             {% set distanceOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotale // 1000 %}
-                                                                             {% set distanceTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}
-                                                                             {% set dureeTotaleOpSansContrainteDetailC = estimationDetailsOpSansContrainte[ loop.index ].dureeTotale  %}
-                                                                             {% set nbrParticipantsOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].nbrParticipantsTotal  %}
+                                                                             {#{% set distanceOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotale // 1000 %}#}
+                                                                             {#{% set distanceTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
+                                                                             {#{% set dureeTotaleOpSansContrainteDetailC = estimationDetailsOpSansContrainte[ loop.index ].dureeTotale  %}#}
+                                                                             {#{% set nbrParticipantsOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].nbrParticipantsTotal  %}#}
+                                                                             {% set distanceOpSansContrainteDetail = estimationDetailsOpSansContrainte[ key ].distanceTotale // 1000 %}
+                                                                             {% set distanceTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ key ].distanceTotaleTousParticipants // 1000 %}
+                                                                             {% set dureeTotaleOpSansContrainteDetailC = estimationDetailsOpSansContrainte[ key ].dureeTotale  %}
+                                                                             {% set nbrParticipantsOpSansContrainteDetail = estimationDetailsOpSansContrainte[ key ].nbrParticipantsTotal  %}
                                                                              {% set lettre = alphabet[key-1] %}
                                                                              <tr>
                                                                                  <td><strong> Poule {{ lettre }} </strong></td>
@@ -1843,10 +1855,14 @@
 
                                                                          {% set dureeTotaleScRefContrainte = "" %}
                                                                          {% for key, estimationDetailRef in estimationDetailsRef %}
-                                                                             {% set distanceRefDetail = estimationDetailsRef[ loop.index ].distanceTotale // 1000 %}
-                                                                             {% set distanceTotaleRefDetail = estimationDetailsRef[ loop.index ].distanceTotaleTousParticipants // 1000 %}
-                                                                             {% set dureeTotaleRefDetail = estimationDetailsRef[ loop.index ].dureeTotale  %}
-                                                                             {% set nbrParticipantsRefDetail = estimationDetailsRef[ loop.index ].nbrParticipantsTotal  %}
+                                                                             {#{% set distanceRefDetail = estimationDetailsRef[ loop.index ].distanceTotale // 1000 %}#}
+                                                                             {#{% set distanceTotaleRefDetail = estimationDetailsRef[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
+                                                                             {#{% set dureeTotaleRefDetail = estimationDetailsRef[ loop.index ].dureeTotale  %}#}
+                                                                             {#{% set nbrParticipantsRefDetail = estimationDetailsRef[ loop.index ].nbrParticipantsTotal  %}#}
+                                                                             {% set distanceRefDetail = estimationDetailsRef[ key ].distanceTotale // 1000 %}
+                                                                             {% set distanceTotaleRefDetail = estimationDetailsRef[ key ].distanceTotaleTousParticipants // 1000 %}
+                                                                             {% set dureeTotaleRefDetail = estimationDetailsRef[ key ].dureeTotale  %}
+                                                                             {% set nbrParticipantsRefDetail = estimationDetailsRef[ key ].nbrParticipantsTotal  %}
                                                                              {% set lettre = alphabet[key-1] %}
 
                                                                              <tr>
