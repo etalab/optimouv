@@ -90,6 +90,65 @@ def optimize_pool_post_treatment_team_transfers(D_Mat, teamNbrWithPhantom, poolN
 		# duplicate results
 		results = calculatedResult
 		
+# 		logging.debug(" results: %s" %(json.dumps(results),))
+
+		typeMatch = results["typeMatch"]
+		logging.debug(" typeMatch: %s" %(typeMatch,))
+
+		iter = config.INPUT.Iter
+		logging.debug(" iter: %s" %iter)
+
+		# add final flag to results
+		if "params" in results:
+			results["params"]["final"] = "oui"
+
+			# change values concerning variation of team members per pool
+			results["params"]["varEquipeParPoulePossible"] = 0
+			
+			
+		########################################### Transfer team between pools #######################################
+		for scenario, teamTransfers in teamTransfers.items():
+			logging.debug(" scenario: %s" %(scenario,))
+# 			logging.debug(" teamTransfers: %s" %(teamTransfers,))
+			
+			# get the corresponding data from the previous calculated result
+			if scenario == "optimalSansContrainte":
+				resultsScenario = results["scenarioOptimalSansContrainte"]
+			elif scenario == "equitableSansContrainte":
+				resultsScenario = results["scenarioEquitableSansContrainte"]
+			elif scenario == "optimalAvecContrainte":
+				resultsScenario = results["scenarioOptimalAvecContrainte"]
+			elif scenario == "equitableAvecContrainte":
+				resultsScenario = results["scenarioEquitableAvecContrainte"]
+			
+			poulesIdOri  = resultsScenario["poulesId"]
+			logging.debug(" poulesIdOri: %s" %(poulesIdOri,))
+			
+			poulesResult = dict(poulesIdOri)
+			
+			for teamTransfer in teamTransfers:
+				logging.debug(" teamTransfer: %s" %(teamTransfer,))
+			
+				# remove and add parting team
+				poulesResult[teamTransfer["pouleDepart"]].remove(int(teamTransfer["equipeDepart"]))
+				poulesResult[teamTransfer["pouleDestination"]].append(int(teamTransfer["equipeDepart"]))
+				
+				# remove and add entering team
+				poulesResult[teamTransfer["pouleDestination"]].remove(int(teamTransfer["equipeDestination"]))
+				poulesResult[teamTransfer["pouleDepart"]].append(int(teamTransfer["equipeDestination"]))
+
+				# sort leaving and destinatio pool
+				poulesResult[teamTransfer["pouleDestination"]].sort()
+				poulesResult[teamTransfer["pouleDepart"]].sort()
+				
+			
+			logging.debug(" poulesResult: %s" %(poulesResult,))
+			
+		logging.debug("" )
+# 		logging.debug(" resultsScenario: \n%s" %(json.dumps(resultsScenario),))
+
+		sys.exit()
+
 			
 		return results
 
@@ -117,11 +176,11 @@ def optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbr, poolNbr, poolSize,
 		if "params" in results:
 			results["params"]["final"] = "oui"
 
- 			# change values concerning variation of team members per pool
+			# change values concerning variation of team members per pool
 # 			results["params"]["varEquipeParPouleProposition"] = [0]
 			results["params"]["varEquipeParPouleChoisi"] = varTeamNbrPerPool
 			results["params"]["varEquipeParPoulePossible"] = 0
- 			
+			
 
 		############# optimal scenario without constraint #################
 		logging.debug("")
