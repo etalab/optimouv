@@ -4288,8 +4288,8 @@
                          }
                      }
 
-
                  }
+
 
                  // JS pour changement de poule de départ
                  $("#pouleDepart").select2({
@@ -4511,11 +4511,58 @@
 
                              }
 
+                             // reinitialiser tous les elements select
+                             reinitialiserSelectValeurs();
+
 
 
                          }
 
                      });
+
+
+                     function reinitialiserSelectValeurs(){
+//                     console.log("DEBUG reinitialiserSelectValeurs");
+
+                         // reinitialiser les scénarios
+                         $("#select2-scenarioChangeAffectation-container").text("-- selectionnez une option --");
+                         $("#scenarioChangeAffectation").val("vide");
+
+                         // reinitialiser les poules de départ
+                         $("#select2-pouleDepart-container").text("-- selectionnez une option --");
+                         var selectPouleDepart = $("#pouleDepart")
+                                 .find("option")
+                                 .remove()
+                                 .end();
+                         selectPouleDepart.append('<option value="vide">   -- selectionnez une option --  </option>');
+
+
+                         // reinitialiser les équipes de départ
+                         $("#select2-equipeDepart-container").text("-- selectionnez une option --");
+                         var selectEquipeDepart = $("#equipeDepart")
+                                 .find("option")
+                                 .remove()
+                                 .end();
+                         selectEquipeDepart.append('<option value="vide">   -- selectionnez une option --  </option>');
+
+                         // reinitialiser les poules de destination
+                         $("#select2-pouleDestination-container").text("-- selectionnez une option --");
+                         var selectPouleDestination = $("#pouleDestination")
+                                 .find("option")
+                                 .remove()
+                                 .end();
+                         selectPouleDestination.append('<option value="vide">   -- selectionnez une option --  </option>');
+
+                         // reinitialiser les équipes de destination
+                         $("#select2-equipeDestination-container").text("-- selectionnez une option --");
+                         var selectEquipeDestination = $("#equipeDestination")
+                                 .find("option")
+                                 .remove()
+                                 .end();
+                         selectEquipeDestination.append('<option value="vide">   -- selectionnez une option --  </option>');
+
+                     }
+
 
 
                      function getChangeAffectations(){
