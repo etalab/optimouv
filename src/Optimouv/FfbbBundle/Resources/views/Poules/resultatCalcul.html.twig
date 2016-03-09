@@ -4280,10 +4280,12 @@
                      // ajouter une ligne 'selectionnez une option'
                      selectEquipe.append('<option value="vide">   -- selectionnez une option --  </option>');
 
-                     for(var i=0; i<infoEquipe.length; i++){
-                         var equipeNom = infoEquipe[i]["equipeNom"];
-                         var equipeId = infoEquipe[i]["equipeId"];
-                         selectEquipe.append('<option value="'+ equipeId  +'">' + equipeNom +'</option>');
+                     if(poule !== "vide"){
+                         for(var i=0; i<infoEquipe.length; i++){
+                             var equipeNom = infoEquipe[i]["equipeNom"];
+                             var equipeId = infoEquipe[i]["equipeId"];
+                             selectEquipe.append('<option value="'+ equipeId  +'">' + equipeNom +'</option>');
+                         }
                      }
 
 
