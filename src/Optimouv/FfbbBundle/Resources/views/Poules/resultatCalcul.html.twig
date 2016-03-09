@@ -3925,7 +3925,7 @@
 
 
 
-             {% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}
+             {% if (typeMatch == "allerRetour" or typeMatch == "allerSimple") and not changeAffectEquipes %}
              <div class="row">
                  <div class="panel panel-default">
                      <div class="panel-heading">
