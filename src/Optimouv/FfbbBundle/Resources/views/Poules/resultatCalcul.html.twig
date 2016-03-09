@@ -81,36 +81,6 @@
                                  <td> Contraintes : {{ contrainte  }} </td>
                              </tr>
 
-                             {% if changeAffectEquipes %}
-                                 <tr>
-                                     <td> Liste de changements d'affectation d'équipes : </td>
-                                 </tr>
-                                 {% for scenario, contenuScenario in changeAffectEquipes %}
-                                         {% if scenario == "optimalSansContrainte" %}
-                                            {% set scenarioAffichage = "Optimal sans contrainte" %}
-                                         {% elseif scenario == "equitableSansContrainte" %}
-                                             {% set scenarioAffichage = "Equitable sans contrainte" %}
-                                         {% elseif scenario == "optimalAvecContrainte" %}
-                                             {% set scenarioAffichage = "Optimal sans contrainte" %}
-                                         {% elseif scenario == "equitableAvecContrainte" %}
-                                             {% set scenarioAffichage = "Equitable sans contrainte" %}
-                                         {% endif %}
-
-                                         {% for changeAffect in contenuScenario %}
-                                             <tr>
-                                                 <td> * {{ scenarioAffichage }} :
-                                                        {{ changeAffect.equipeDepartNom   }} (Poule {{ alphabet[changeAffect.pouleDepart-1]  }} ) -
-                                                        {{ changeAffect.equipeDestinationNom }} (Poule {{ alphabet[changeAffect.pouleDestination-1]   }}  )
-
-
-                                                 </td>
-                                             </tr>
-
-                                         {% endfor %}
-
-
-                                 {% endfor %}
-                             {% endif %}
 
                              {% if contrainteAccueilPlateauExiste == 1 %}
                                  <tr>
@@ -126,6 +96,37 @@
                              </tr>
                              {% endif %}
 
+                             {% if changeAffectEquipes %}
+                                 <tr><td>&nbsp</td></tr>
+                                 <tr>
+                                     <td> Liste de changements d'affectation d'équipes : </td>
+                                 </tr>
+                                 {% for scenario, contenuScenario in changeAffectEquipes %}
+                                     {% if scenario == "optimalSansContrainte" %}
+                                         {% set scenarioAffichage = "Scénario optimal sans contrainte" %}
+                                     {% elseif scenario == "equitableSansContrainte" %}
+                                         {% set scenarioAffichage = "Scénario équitable sans contrainte" %}
+                                     {% elseif scenario == "optimalAvecContrainte" %}
+                                         {% set scenarioAffichage = "Scénario optimal sans contrainte" %}
+                                     {% elseif scenario == "equitableAvecContrainte" %}
+                                         {% set scenarioAffichage = "Scénario équitable sans contrainte" %}
+                                     {% endif %}
+
+                                     {% for changeAffect in contenuScenario %}
+                                         <tr>
+                                             <td> * {{ scenarioAffichage }} :
+                                                 {{ changeAffect.equipeDepartNom   }} (Poule d'origine : {{ alphabet[changeAffect.pouleDepart-1]  }} ) -
+                                                 {{ changeAffect.equipeDestinationNom }} (Poule d'origine : {{ alphabet[changeAffect.pouleDestination-1]   }}  )
+
+
+                                             </td>
+                                         </tr>
+
+                                     {% endfor %}
+
+
+                                 {% endfor %}
+                             {% endif %}
 
                              </tbody>
                          </table>
