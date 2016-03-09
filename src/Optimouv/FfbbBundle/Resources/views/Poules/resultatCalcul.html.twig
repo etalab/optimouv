@@ -6,22 +6,22 @@
              {% set alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ] %}
 
 
-                 <div class="row">
-                     <div class="bs-example">
-                         <ul class="breadcrumb">
-                             <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
-                             <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Choix de la liste d'équipes</a></li>
-                             {#<li><a href="{{ path('ffbb_poule_choisir_groupe', {'idListe': idListe}) }}">Choix de groupes</a></li>#}
-                             <li class="active">Participants</li>
-                         </ul>
-                     </div>
-
-                     <div class="col-lg-12">
-                         <h3 class="page-header">Vos résultats </h3>
-                      </div>
-                     <!-- /.col-lg-12 -->
+             <div class="row">
+                 <div class="bs-example">
+                     <ul class="breadcrumb">
+                         <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
+                         <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Choix de la liste d'équipes</a></li>
+                         {#<li><a href="{{ path('ffbb_poule_choisir_groupe', {'idListe': idListe}) }}">Choix de groupes</a></li>#}
+                         <li class="active">Participants</li>
+                     </ul>
                  </div>
-                 <!-- /.row -->
+
+                 <div class="col-lg-12">
+                     <h3 class="page-header">Vos résultats </h3>
+                  </div>
+                 <!-- /.col-lg-12 -->
+             </div>
+             <!-- /.row -->
 
              <div class="row">
                  <div class="panel-body">
@@ -3933,7 +3933,7 @@
              <div class="row">
                  <div class="panel panel-default">
                      <div class="panel-heading">
-                         <span id="changeAffectation" style="cursor:pointer">  Changer l’affectation de vos équipes aux poules </span>
+                         <span id="changeAffectation" style="cursor:pointer"> Changer l’affectation de vos équipes aux poules </span>
                      </div>
                      <!-- /.panel-heading -->
                      <div class="panel-body" id="changeAffectationBody" style="display: none">
@@ -3941,11 +3941,11 @@
                          <table id="tableChangeAffectation" class="table table-striped table-bordered table-hover">
                              <thead>
                                  <tr>
-                                     <th width="18%" style="text-align:center"><h4>Scénario</h4></th>
-                                     <th width="18%" style="text-align:center"><h4>Poule de la première équipe à intervertir</h4></th>
-                                     <th width="18%" style="text-align:center"><h4>Première équipe à intervertir</h4></th>
-                                     <th width="18%" style="text-align:center"><h4>Poule de la seconde équipe à intervertir</h4></th>
-                                     <th width="18%" style="text-align:center"><h4>Seconde équipe à intervertir</h4></th>
+                                     <th width="18%" ><h4>Scénario</h4></th>
+                                     <th width="18%" ><h4>Poule de la première équipe à intervertir</h4></th>
+                                     <th width="18%" ><h4>Première équipe à intervertir</h4></th>
+                                     <th width="18%" ><h4>Poule de la seconde équipe à intervertir</h4></th>
+                                     <th width="18%" ><h4>Seconde équipe à intervertir</h4></th>
                                      <th width="10%"><h4></h4></th>
                                  </tr>
                              </thead>
@@ -3959,11 +3959,11 @@
                          <table class="table table-striped table-bordered table-hover">
                              <thead>
                                  <tr>
-                                     <th width="18%" style="text-align:center; vertical-align: middle">Scénario</th>
-                                     <th width="18%" style="text-align:center; vertical-align: middle">Poule de la première équipe à intervertir</th>
-                                     <th width="18%" style="text-align:center; vertical-align: middle">Première équipe à intervertir</th>
-                                     <th width="18%" style="text-align:center; vertical-align: middle">Poule de la seconde équipe à intervertir</th>
-                                     <th width="18%" style="text-align:center; vertical-align: middle">Seconde équipe à intervertir</th>
+                                     <th width="18%" >Scénario</th>
+                                     <th width="18%" >Poule de la première équipe à intervertir</th>
+                                     <th width="18%" >Première équipe à intervertir</th>
+                                     <th width="18%" >Poule de la seconde équipe à intervertir</th>
+                                     <th width="18%" >Seconde équipe à intervertir</th>
                                      <th width="10%"><h4></h4></th>
                                  </tr>
                              </thead>
@@ -4011,7 +4011,7 @@
                                              <option value="vide" selected> -- selectionnez une option -- </option>
                                          </select>
                                      </td>
-                                     <td width="10%" align="center">
+                                     <td width="10%">
                                          <button id="btnAjouterChangementAffectation" class="btn btn-primary ">Ajouter</button>
                                      </td>
                                  </tr>
@@ -4514,12 +4514,12 @@
 
                                  var newLigneChangeAffect = "\
                                      <tr id=\"changementAffectation" + ligneNbr + "\"> \
-                                         <td width=\"15%\" align=\"center\"> " + scenarioNom + "  <span id=\"changementAffectation" + ligneNbr + "scenario\" style=\"display:none\" >" +  scenario + "</span>  </td> \
-                                         <td width=\"10%\" align=\"center\"> " + pouleDepartNom + "  <span id=\"changementAffectation" + ligneNbr + "pouleDepart\" style=\"display:none\" >" +  pouleDepart + "</span>  </td> \
-                                         <td width=\"15%\" align=\"center\"> " + equipeDepartNom + "  <span id=\"changementAffectation" + ligneNbr + "equipeDepart\" style=\"display:none\" >" +  equipeDepart + "</span>  </td> \
-                                         <td width=\"10%\" align=\"center\"> " + pouleDestinationNom + "  <span id=\"changementAffectation" + ligneNbr + "pouleDestination\" style=\"display:none\" >" +  pouleDestination + "</span>  </td> \
-                                         <td width=\"15%\" align=\"center\"> " + equipeDestinationNom + "  <span id=\"changementAffectation" + ligneNbr + "equipeDestination\" style=\"display:none\" >" +  equipeDestination + "</span>  </td> \
-                                         <td width=\"10%\" align=\"center\"> \
+                                         <td width=\"15%\" > " + scenarioNom + "  <span id=\"changementAffectation" + ligneNbr + "scenario\" style=\"display:none\" >" +  scenario + "</span>  </td> \
+                                         <td width=\"10%\" > " + pouleDepartNom + "  <span id=\"changementAffectation" + ligneNbr + "pouleDepart\" style=\"display:none\" >" +  pouleDepart + "</span>  </td> \
+                                         <td width=\"15%\" > " + equipeDepartNom + "  <span id=\"changementAffectation" + ligneNbr + "equipeDepart\" style=\"display:none\" >" +  equipeDepart + "</span>  </td> \
+                                         <td width=\"10%\" > " + pouleDestinationNom + "  <span id=\"changementAffectation" + ligneNbr + "pouleDestination\" style=\"display:none\" >" +  pouleDestination + "</span>  </td> \
+                                         <td width=\"15%\" > " + equipeDestinationNom + "  <span id=\"changementAffectation" + ligneNbr + "equipeDestination\" style=\"display:none\" >" +  equipeDestination + "</span>  </td> \
+                                         <td width=\"10%\" > \
                                              <button id=\"btnSupprimerChangeAffect" +  ligneNbr + "\"  class=\"btn btn-primary\"> Supprimer </button> \
                                          </td> \
                                      </tr>";
