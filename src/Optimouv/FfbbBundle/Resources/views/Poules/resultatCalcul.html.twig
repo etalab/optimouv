@@ -4423,7 +4423,7 @@
 
                              // controle la poule de départ est égale à la poule de destination
                              if(pouleDepart == pouleDestination){
-                                 alert("La poule de départ doit etre différente de la poule de destination. Veuillez corriger votre sélection");
+                                 alert("La poule d’origine doit être différente de la poule de destination. Veuillez corriger votre sélection.");
                                  return;
                              }
 
@@ -4463,12 +4463,12 @@
                                      console.log("testEquipeDestination: " + testEquipeDestination);
 
                                      if(scenarioExiste == scenario && (   $.inArray(equipeDepart, listeEquipesExiste) != -1 ) ){
-                                         alert("L'équipe de départ ne doit pas figurer parmi les équipes existantes. Veuillez corriger votre sélection");
+                                         alert("Cette équipe a déjà été sélectionnée pour un changement d’affectation à une poule. Veuillez corriger votre sélection.");
                                          statutErreur = 1;
                                          return;
                                      }
                                      if(scenarioExiste == scenario && (  $.inArray(equipeDestination, listeEquipesExiste) != -1 ) ){
-                                         alert("L'équipe de destination ne doit pas figurer parmi les équipes existantes. Veuillez corriger votre sélection");
+                                         alert("Cette équipe a déjà été sélectionnée pour un changement d’affectation à une poule. Veuillez corriger votre sélection.");
                                          statutErreur = 1;
                                          return;
                                      }
