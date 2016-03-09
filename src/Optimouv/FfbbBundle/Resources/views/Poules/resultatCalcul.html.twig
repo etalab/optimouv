@@ -4042,7 +4042,6 @@
              <!-- bouton lancemenet de calcul -->
              <div class="row">
                  <div class="col-lg-12">
-                     {#<label id="lancerCalculBtn" class="btn btn-primary pull-right"> Relancer le calcul</label>#}
                      <button id="lancerCalculBtn" class="btn btn-primary pull-right"> Relancer le calcul</button>
                  </div>
              </div>
@@ -4130,6 +4129,23 @@
                              $(this).closest('tr').remove();
                          });
                      }
+
+                     // cacher le bouton relancer
+                     $("#lancerCalculBtn").hide();
+
+                     // faire appaitre le bouton relancer pour chaque changement de valeur par l'utilisateur
+                     $("input").change(function(){
+                         $("#lancerCalculBtn").show();
+                     });
+                     $("select").change(function(){
+                         $("#lancerCalculBtn").show();
+                     });
+                     $("#btnAjouterChangementAffectation").click(function(){
+                         $("#lancerCalculBtn").show();
+                     });
+                     $("#btnAjouterInterdiction").click(function(){
+                         $("#lancerCalculBtn").show();
+                     });
 
                  });
 
