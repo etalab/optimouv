@@ -1014,7 +1014,8 @@ def get_sum_info_from_pool_details(poolDetails):
 """
 Function to get indexes of prohibition constraints
 """
-def getIndexesProhibitionConstraints(prohibitionConstraints, teams):
+# def getIndexesProhibitionConstraints(prohibitionConstraints, teams):
+def get_indexes_prohibition_constraints(prohibitionConstraints, teams):
 	try:
 		indexesProhibitionConstraints = []
 
@@ -1034,7 +1035,8 @@ def getIndexesProhibitionConstraints(prohibitionConstraints, teams):
 """
 Function to get indexes of type distribution constraints
 """
-def getIndexesTypeDistributionConstraints(typeDistributionConstraints, teams):
+# def getIndexesTypeDistributionConstraints(typeDistributionConstraints, teams):
+def get_indexes_type_distribution_constraints(typeDistributionConstraints, teams):
 	try:
 		indexesTypeDistributionConstraints = {}
 		
