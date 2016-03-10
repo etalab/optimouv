@@ -89,10 +89,13 @@
                              {% endif %}
 
                              {% if refExiste == 1 %}
-                                 {%  set pourcentage = (100 - (scenarioRef.estimationGenerale.distanceTotale/scenarioOptimalSansContrainte.estimationGenerale.distanceTotale *100))|round %}
+                                 {#{%  set pourcentage = (100 - (scenarioRef.estimationGenerale.distanceTotale/scenarioOptimalSansContrainte.estimationGenerale.distanceTotale *100))|round %}#}
+                                 {%  set distanceRef = scenarioRef.estimationGenerale.distanceTotale %}
+                                 {%  set distanceOptimalSc = scenarioOptimalSansContrainte.estimationGenerale.distanceTotale %}
+                                 {%  set pourcentage = ( (distanceRef-distanceOptimalSc)/distanceRef*100)|round %}
                                  {% if pourcentage > 0 %}
                                      <tr>
-                                         <td> Avec le scénario optimal, vous réduisez de {{ pourcentage }} % le nombre de kilomètres à parcourir, par rapport au scénario de référence </td>
+                                         <td> Avec le scénario optimal sans contrainte, vous réduisez de {{ pourcentage }} % le nombre de kilomètres à parcourir, par rapport au scénario de référence </td>
                                      </tr>
 
                                  {% endif %}
