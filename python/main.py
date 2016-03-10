@@ -100,7 +100,7 @@ def optimize_pool_post_treatment_team_transfers(D_Mat, teamNbr, poolNbr, poolSiz
 
 		# add final flag to results
 		if "params" in results:
-			results["params"]["final"] = "oui"
+# 			results["params"]["final"] = "oui"
 
 			# change values concerning variation of team members per pool
 			results["params"]["varEquipeParPoulePossible"] = 0
