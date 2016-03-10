@@ -3017,27 +3017,32 @@ def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, pro
 
 		if "params" in calculatedResult:
 			# check prohibition constraints
+			prohibitionConstraintsSaved = []
 			if "interdictions" in calculatedResult["params"]:
 				prohibitionConstraintsSavedUnformatted = calculatedResult["params"]["interdictions"]
-				prohibitionConstraintsSaved = []
 				for prohibitionNbr, prohibitionConstraintSavedUnformatted in prohibitionConstraintsSavedUnformatted.items():
 					prohibitionConstraintsSaved.append(sorted(prohibitionConstraintSavedUnformatted["ids"]))
-				if prohibitionConstraintsInput != prohibitionConstraintsSaved: 
-					errorStatus = True
+				logging.debug("prohibitionConstraintsSaved: %s" %(prohibitionConstraintsSaved))
+			if prohibitionConstraintsInput != prohibitionConstraintsSaved: 
+				errorStatus = True
 # 				logging.debug("prohibitionConstraintsInput == prohibitionConstraintsSaved : %s" %(prohibitionConstraintsInput == prohibitionConstraintsSaved))
 			# check type distribution constraints
+			typeDistributionConstraintsSaved = {}
 			if "repartitionsHomogenes" in calculatedResult["params"]:
 				typeDistributionConstraintsSavedUnformatted = calculatedResult["params"]["repartitionsHomogenes"]
-				typeDistributionConstraintsSaved = {}
 				for type, typeDistributionConstraintSavedUnformatted in typeDistributionConstraintsSavedUnformatted.items():
 					typeDistributionConstraintsSaved[type] = sorted(typeDistributionConstraintSavedUnformatted["ids"])
-				if typeDistributionConstraintsInput != typeDistributionConstraintsSaved: 
-					errorStatus = True
+			if typeDistributionConstraintsInput != typeDistributionConstraintsSaved: 
+				errorStatus = True
 # 				logging.debug("typeDistributionConstraintsSaved : %s" %typeDistributionConstraintsSaved)
 # 				logging.debug("typeDistributionConstraintsInput : %s" %typeDistributionConstraintsInput)
 # 				logging.debug("typeDistributionConstraintsInput == typeDistributionConstraintsSaved : %s" %(typeDistributionConstraintsInput == typeDistributionConstraintsSaved))
 				
 		
+		logging.debug("errorStatus : %s" %(errorStatus))
+
+# 		sys.exit()
+
 		# send email if errorStatus is true
 		if errorStatus:
 			TEXT = u"Bonjour,\n\n" 
