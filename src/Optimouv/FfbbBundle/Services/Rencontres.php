@@ -399,6 +399,8 @@ class Rencontres
     //Calcul exclusion géographique
     public function Exclusion($valeurExclusion, $idGroupe)
     {
+
+
         $bdd= Rencontres::connexion();
 
         if ($valeurExclusion) {
@@ -426,7 +428,7 @@ class Rencontres
             $latY = $lat / $length;
 
 
-            $stmt1 = $bdd->prepare("SELECT ville_longitude_deg, ville_latitude_deg,ville_code_postal, ville_population_2012,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
+            $stmt1 = $bdd->prepare("SELECT ville_longitude_deg, ville_latitude_deg,ville_code_postal,ville_nom_reel, ville_population_2012,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
                           from villes_france_free
                           where ville_population_2012 < :valeurExclusion
                           order by Proximite limit 1;");
@@ -438,7 +440,8 @@ class Rencontres
             $lanX = $result['ville_latitude_deg'];
             $latY = $result['ville_longitude_deg'];
             $coord = $latY . '%2C' . $lanX;
-
+            $ville = $result['ville_nom_reel'];
+            $codePostal = $result['ville_code_postal'];
 
             //vérifier si le barycentre existe deja
             $barycentre = $bdd->prepare("SELECT id from entite where longitude = :longitude AND latitude = :latitude");
