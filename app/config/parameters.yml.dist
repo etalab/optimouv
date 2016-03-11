@@ -23,4 +23,4 @@ parameters:
     mq_rencontre_exchange: rencontre_exchange
     mq_poule_exchange: poule_exchange
     mq_rencontre_queue: rencontre_queue
-
+    locale: fr
