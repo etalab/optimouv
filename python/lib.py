@@ -1948,7 +1948,8 @@ def get_team_name_escaped_from_team_id(teamId):
 		teamName = ""
 		
 		sql = "select nom from entite where id=%s"%teamId
-		teamName = db.fetchone(sql).replace("'", u"''")
+# 		teamName = db.fetchone(sql).replace("'", u"''")
+		teamName = db.fetchone(sql)
 
 		return teamName
 	except Exception as e:
@@ -3073,54 +3074,54 @@ def check_request_validity_post_treatment(teamTransfers, varTeamNbrPerPool, user
 	except Exception as e:
 		show_exception_traceback()
 
-"""
-Function to save result into DB
-"""
-def update_result_to_db(resultId, results):
-	try:
-		# escape single apostrophe for city names
-		# ref scenario
-		resultsRef = results["scenarioRef"]
-		if resultsRef:
-			replace_single_quote_for_result(resultsRef["rencontreDetails"])
-# 		logging.debug("resultsRef : %s" %resultsRef)
-
-		# optimal scenario
-		resultsOptimalWithoutConstraint = results["scenarioOptimalSansContrainte"]
-		if resultsOptimalWithoutConstraint:
-			replace_single_quote_for_result(resultsOptimalWithoutConstraint["rencontreDetails"])
-		
-		resultsOptimalWithConstraint = results["scenarioOptimalAvecContrainte"]
-		if resultsOptimalWithConstraint:
-			replace_single_quote_for_result(resultsOptimalWithConstraint["rencontreDetails"])
-			
-		# equitable scenario
-		resultsEquitableWithoutConstraint = results["scenarioEquitableSansContrainte"]
-		if resultsEquitableWithoutConstraint:
-			replace_single_quote_for_result(resultsEquitableWithoutConstraint["rencontreDetails"])
-			
-		
-		resultsEquitableWithConstraint = results["scenarioEquitableAvecContrainte"]
-		if resultsEquitableWithConstraint:
-			replace_single_quote_for_result(resultsEquitableWithoutConstraint["rencontreDetails"])
-
-
-		# mark the final result
-# 		results["params"]["final"] = "yes"
-		results["params"]["final"] = "oui"
-
-# 		sql = """update scenario set details_calcul='%(results)s' where id=%(resultId)s
-		sql = """update resultats set details_calcul='%(results)s' where id=%(resultId)s
-			"""%{	"resultId": resultId, 
-					"results": json.dumps(results),
-				}
-# 		logging.debug("sql: %s" %sql)
-		db.execute(sql)
-		db.commit()
-		
-		return resultId
-	except Exception as e:
-		show_exception_traceback()
+# """
+# Function to save result into DB
+# """
+# def update_result_to_db(resultId, results):
+# 	try:
+# 		# escape single apostrophe for city names
+# 		# ref scenario
+# 		resultsRef = results["scenarioRef"]
+# 		if resultsRef:
+# 			replace_single_quote_for_result(resultsRef["rencontreDetails"])
+# # 		logging.debug("resultsRef : %s" %resultsRef)
+# 
+# 		# optimal scenario
+# 		resultsOptimalWithoutConstraint = results["scenarioOptimalSansContrainte"]
+# 		if resultsOptimalWithoutConstraint:
+# 			replace_single_quote_for_result(resultsOptimalWithoutConstraint["rencontreDetails"])
+# 		
+# 		resultsOptimalWithConstraint = results["scenarioOptimalAvecContrainte"]
+# 		if resultsOptimalWithConstraint:
+# 			replace_single_quote_for_result(resultsOptimalWithConstraint["rencontreDetails"])
+# 			
+# 		# equitable scenario
+# 		resultsEquitableWithoutConstraint = results["scenarioEquitableSansContrainte"]
+# 		if resultsEquitableWithoutConstraint:
+# 			replace_single_quote_for_result(resultsEquitableWithoutConstraint["rencontreDetails"])
+# 			
+# 		
+# 		resultsEquitableWithConstraint = results["scenarioEquitableAvecContrainte"]
+# 		if resultsEquitableWithConstraint:
+# 			replace_single_quote_for_result(resultsEquitableWithoutConstraint["rencontreDetails"])
+# 
+# 
+# 		# mark the final result
+# # 		results["params"]["final"] = "yes"
+# 		results["params"]["final"] = "oui"
+# 
+# # 		sql = """update scenario set details_calcul='%(results)s' where id=%(resultId)s
+# 		sql = """update resultats set details_calcul='%(results)s' where id=%(resultId)s
+# 			"""%{	"resultId": resultId, 
+# 					"results": json.dumps(results),
+# 				}
+# # 		logging.debug("sql: %s" %sql)
+# 		db.execute(sql)
+# 		db.commit()
+# 		
+# 		return resultId
+# 	except Exception as e:
+# 		show_exception_traceback()
 
 """
 Function to insert params to DB
