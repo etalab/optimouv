@@ -1014,7 +1014,8 @@ def get_sum_info_from_pool_details(poolDetails):
 """
 Function to get indexes of prohibition constraints
 """
-def getIndexesProhibitionConstraints(prohibitionConstraints, teams):
+# def getIndexesProhibitionConstraints(prohibitionConstraints, teams):
+def get_indexes_prohibition_constraints(prohibitionConstraints, teams):
 	try:
 		indexesProhibitionConstraints = []
 
@@ -1034,7 +1035,8 @@ def getIndexesProhibitionConstraints(prohibitionConstraints, teams):
 """
 Function to get indexes of type distribution constraints
 """
-def getIndexesTypeDistributionConstraints(typeDistributionConstraints, teams):
+# def getIndexesTypeDistributionConstraints(typeDistributionConstraints, teams):
+def get_indexes_type_distribution_constraints(typeDistributionConstraints, teams):
 	try:
 		indexesTypeDistributionConstraints = {}
 		
@@ -1939,6 +1941,20 @@ def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize):
 	return P_InitMat
 
 """
+Function to get team name from team Id (with escaped single apostrophe)
+"""
+def get_team_name_escaped_from_team_id(teamId):
+	try:
+		teamName = ""
+		
+		sql = "select nom from entite where id=%s"%teamId
+		teamName = db.fetchone(sql).replace("'", u"''")
+
+		return teamName
+	except Exception as e:
+		show_exception_traceback()
+
+"""
 Function to get prohibition constraints
 """
 def get_prohibition_constraints(prohibitionDict):
@@ -2398,7 +2414,8 @@ Function to send email to user when there is no results (there are too many cons
 # def send_email_to_user_failure(userId):
 def send_email_to_user_failure(userId, reportId):
 	try:
-		sql = "select nom from rapport where id=%s"%reportId
+# 		sql = "select nom from rapport where id=%s"%reportId
+		sql = "select nom from parametres where id=%s"%reportId
 		reportName = db.fetchone(sql)
 		
 		# get user's email from user id
@@ -2445,7 +2462,8 @@ Function control provided params by user
 # def control_params_match_plateau(userId, teamNbr, poolNbr):
 def control_params_match_plateau(userId, teamNbr, poolNbr, reportId):
 	try:
-		sql = "select nom from rapport where id=%s"%reportId
+# 		sql = "select nom from rapport where id=%s"%reportId
+		sql = "select nom from parametres where id=%s"%reportId
 		reportName = db.fetchone(sql)
 
 		TEXT = u"Bonjour,\n\n" 
@@ -2549,7 +2567,8 @@ def save_result_to_db(launchType, reportId, groupId, results):
 		costSharedCar = 0
 		costBus = 0
 		
-		sql = """insert into scenario (id_rapport, nom, kilometres, duree, date_creation, date_modification, 
+# 		sql = """insert into scenario (id_rapport, nom, kilometres, duree, date_creation, date_modification, 
+		sql = """insert into resultats (id_rapport, nom, kilometres, duree, date_creation, date_modification, 
 					co2_voiture, co2_covoiturage, co2_minibus, cout_voiture, cout_covoiturage, cout_minibus, details_calcul ) 
 			values ( %(reportId)s , '%(name)s', %(km)s, %(travelTime)s,' %(creationDate)s', '%(modificationDate)s',
 					%(co2Car)s, %(co2SharedCar)s, %(co2Bus)s, %(costCar)s, %(costSharedCar)s, %(costBus)s, '%(results)s' )
@@ -2647,7 +2666,8 @@ def save_result_to_db_post_treatment(launchType, reportId, groupId, results):
 		costSharedCar = 0
 		costBus = 0
 		
-		sql = """insert into scenario (id_rapport, nom, kilometres, duree, date_creation, date_modification, 
+# 		sql = """insert into scenario (id_rapport, nom, kilometres, duree, date_creation, date_modification, 
+		sql = """insert into resultats (id_rapport, nom, kilometres, duree, date_creation, date_modification, 
 					co2_voiture, co2_covoiturage, co2_minibus, cout_voiture, cout_covoiturage, cout_minibus, details_calcul ) 
 			values ( %(reportId)s , '%(name)s', %(km)s, %(travelTime)s,' %(creationDate)s', '%(modificationDate)s',
 					%(co2Car)s, %(co2SharedCar)s, %(co2Bus)s, %(costCar)s, %(costSharedCar)s, %(costBus)s, '%(results)s' )
@@ -2954,7 +2974,8 @@ final result flag is set when user tries to play the variation of team number in
 # def check_final_result(calculatedResult, userId):
 def check_final_result(calculatedResult, userId, reportId):
 	try:
-		sql = "select nom from rapport where id=%s"%reportId
+# 		sql = "select nom from rapport where id=%s"%reportId
+		sql = "select nom from parametres where id=%s"%reportId
 		reportName = db.fetchone(sql)
 
 		if "params" in calculatedResult:
@@ -2978,7 +2999,7 @@ def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, pro
 	try:
 		errorStatus = False
 		
-		sql = "select nom from rapport where id=%s"%reportId
+		sql = "select nom from parametres where id=%s"%reportId
 		reportName = db.fetchone(sql)
 		
 		if ( calculatedResult["typeMatch"] != launchType) or (int(calculatedResult["nombrePoule"]) != int(poolNbr)):
@@ -2998,27 +3019,32 @@ def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, pro
 
 		if "params" in calculatedResult:
 			# check prohibition constraints
+			prohibitionConstraintsSaved = []
 			if "interdictions" in calculatedResult["params"]:
 				prohibitionConstraintsSavedUnformatted = calculatedResult["params"]["interdictions"]
-				prohibitionConstraintsSaved = []
 				for prohibitionNbr, prohibitionConstraintSavedUnformatted in prohibitionConstraintsSavedUnformatted.items():
 					prohibitionConstraintsSaved.append(sorted(prohibitionConstraintSavedUnformatted["ids"]))
-				if prohibitionConstraintsInput != prohibitionConstraintsSaved: 
-					errorStatus = True
+				logging.debug("prohibitionConstraintsSaved: %s" %(prohibitionConstraintsSaved))
+			if prohibitionConstraintsInput != prohibitionConstraintsSaved: 
+				errorStatus = True
 # 				logging.debug("prohibitionConstraintsInput == prohibitionConstraintsSaved : %s" %(prohibitionConstraintsInput == prohibitionConstraintsSaved))
 			# check type distribution constraints
+			typeDistributionConstraintsSaved = {}
 			if "repartitionsHomogenes" in calculatedResult["params"]:
 				typeDistributionConstraintsSavedUnformatted = calculatedResult["params"]["repartitionsHomogenes"]
-				typeDistributionConstraintsSaved = {}
 				for type, typeDistributionConstraintSavedUnformatted in typeDistributionConstraintsSavedUnformatted.items():
 					typeDistributionConstraintsSaved[type] = sorted(typeDistributionConstraintSavedUnformatted["ids"])
-				if typeDistributionConstraintsInput != typeDistributionConstraintsSaved: 
-					errorStatus = True
+			if typeDistributionConstraintsInput != typeDistributionConstraintsSaved: 
+				errorStatus = True
 # 				logging.debug("typeDistributionConstraintsSaved : %s" %typeDistributionConstraintsSaved)
 # 				logging.debug("typeDistributionConstraintsInput : %s" %typeDistributionConstraintsInput)
 # 				logging.debug("typeDistributionConstraintsInput == typeDistributionConstraintsSaved : %s" %(typeDistributionConstraintsInput == typeDistributionConstraintsSaved))
 				
 		
+		logging.debug("errorStatus : %s" %(errorStatus))
+
+# 		sys.exit()
+
 		# send email if errorStatus is true
 		if errorStatus:
 			TEXT = u"Bonjour,\n\n" 
@@ -3029,6 +3055,23 @@ def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, pro
 	except Exception as e:
 		show_exception_traceback()
 
+
+"""
+Function to check request validity (post treatment can only launch variation of team number per pool or team transfer to other pool)
+"""
+def check_request_validity_post_treatment(teamTransfers, varTeamNbrPerPool, userId, reportId):
+	try:		
+		sql = "select nom from parametres where id=%s"%reportId
+		reportName = db.fetchone(sql)
+
+		if int(varTeamNbrPerPool)> 1 and teamTransfers:
+			TEXT = u"Bonjour,\n\n" 
+			TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
+			TEXT += u"Veuillez choisir soit la variation du nombre d'équipes par poule soit le changement d'affectation d'équipes par poule . " 
+			send_email_to_user_failure_with_text(userId, TEXT)
+		
+	except Exception as e:
+		show_exception_traceback()
 
 """
 Function to save result into DB
@@ -3066,7 +3109,8 @@ def update_result_to_db(resultId, results):
 # 		results["params"]["final"] = "yes"
 		results["params"]["final"] = "oui"
 
-		sql = """update scenario set details_calcul='%(results)s' where id=%(resultId)s
+# 		sql = """update scenario set details_calcul='%(results)s' where id=%(resultId)s
+		sql = """update resultats set details_calcul='%(results)s' where id=%(resultId)s
 			"""%{	"resultId": resultId, 
 					"results": json.dumps(results),
 				}
@@ -3111,7 +3155,8 @@ def test_insert_params_to_db():
 					"repartitionHomogene": {}
 				}
 		
-		sql = """insert into rapport (nom, id_groupe, type_action, valeur_exclusion , date_creation, params, statut)
+# 		sql = """insert into rapport (nom, id_groupe, type_action, valeur_exclusion , date_creation, params, statut)
+		sql = """insert into parametres (nom, id_groupe, type_action, valeur_exclusion , date_creation, params, statut)
 				values ( '%(name)s', %(groupId)s, '%(actionType)s', %(exclusionValue)s , '%(creationDate)s', '%(params)s', %(statut)s
 					)
 			"""%{	"name": name,
@@ -3139,7 +3184,8 @@ Function to update job status
 """
 def update_job_status(jobId, status):
 	try:
-		sql = "update rapport set statut=%(status)s where id=%(jobId)s"%{"status": int(status), "jobId": int(jobId)}
+# 		sql = "update rapport set statut=%(status)s where id=%(jobId)s"%{"status": int(status), "jobId": int(jobId)}
+		sql = "update parametres set statut=%(status)s where id=%(jobId)s"%{"status": int(status), "jobId": int(jobId)}
 		logging.debug("sql: %s" %sql)
 		db.execute(sql)
 		db.commit()

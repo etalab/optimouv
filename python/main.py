@@ -83,9 +83,118 @@ def init_log_file():
 	logging.basicConfig(filename=config.LOG.Path, level=logging.DEBUG)
 
 """
-Functio to optimize pool post treatment
+Function to optimize pool post treatment for team transfers between pool
+"""
+def optimize_pool_post_treatment_team_transfers(D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, oldResultId, userId, teamTransfers, flagPhantom, calculatedResult):
+	try:
+		# duplicate results
+		results = calculatedResult
+		
+# 		logging.debug(" results: %s" %(json.dumps(results),))
+
+		typeMatch = results["typeMatch"]
+		logging.debug(" typeMatch: %s" %(typeMatch,))
+
+		iter = config.INPUT.Iter
+		logging.debug(" iter: %s" %iter)
+
+		# add final flag to results
+		if "params" in results:
+# 			results["params"]["final"] = "oui"
+
+			# change values concerning variation of team members per pool
+			results["params"]["varEquipeParPoulePossible"] = 0
+			
+			# get team names 
+			for scenario, contentScenario in teamTransfers.items():
+				for teamTransfer in contentScenario:
+					teamTransfer["equipeDepartNom"] = get_team_name_escaped_from_team_id(teamTransfer["equipeDepart"])
+					teamTransfer["equipeDestinationNom"] = get_team_name_escaped_from_team_id(teamTransfer["equipeDestination"])
+			
+			# add team transfers to params
+			results["params"]["changeAffectEquipes"] = teamTransfers
+			
+			
+		########################################### Transfer team between pools #######################################
+		for scenario, teamTransfers in teamTransfers.items():
+			logging.debug(" scenario: %s" %(scenario,))
+# 			logging.debug(" teamTransfers: %s" %(teamTransfers,))
+			
+			# get the corresponding data from the previous calculated result
+			if scenario == "optimalSansContrainte":
+				scenarioName = "scenarioOptimalSansContrainte"
+			elif scenario == "equitableSansContrainte":
+				scenarioName = "scenarioEquitableSansContrainte"
+			elif scenario == "optimalAvecContrainte":
+				scenarioName = "scenarioOptimalAvecContrainte"
+			elif scenario == "equitableAvecContrainte":
+				scenarioName = "scenarioEquitableAvecContrainte"
+
+			resultsScenario = results[scenarioName]
+
+# 			logging.debug(" before resultsScenario: \n%s" %(json.dumps(resultsScenario),))
+
+			poulesIdOri  = resultsScenario["poulesId"]
+# 			logging.debug(" poulesIdOri: %s" %(poulesIdOri,))
+			
+			poulesIdResult = dict(poulesIdOri)
+			
+			for teamTransfer in teamTransfers:
+				logging.debug(" teamTransfer: %s" %(teamTransfer,))
+			
+				# remove and add parting team
+				poulesIdResult[teamTransfer["pouleDepart"]].remove(int(teamTransfer["equipeDepart"]))
+				poulesIdResult[teamTransfer["pouleDestination"]].append(int(teamTransfer["equipeDepart"]))
+				
+				# remove and add entering team
+				poulesIdResult[teamTransfer["pouleDestination"]].remove(int(teamTransfer["equipeDestination"]))
+				poulesIdResult[teamTransfer["pouleDepart"]].append(int(teamTransfer["equipeDestination"]))
+
+				# sort leaving and destinatio pool
+				poulesIdResult[teamTransfer["pouleDestination"]].sort()
+				poulesIdResult[teamTransfer["pouleDepart"]].sort()
+				
+			
+# 			logging.debug(" poulesIdResult: %s" %(poulesIdResult,))
+			
+			# update pool ids
+			resultsScenario["poulesId"] = poulesIdResult
+			
+
+			# get coordinates for each point in the pools
+			poolDistributionCoords_scenario = get_coords_pool_distribution(poulesIdResult)
+			results[scenarioName]["poulesCoords"] = poolDistributionCoords_scenario
+# 			logging.debug(" poolDistributionCoords_scenario: %s" %(poolDistributionCoords_scenario,))
+		
+			# get encounter list from pool distribution dict
+			encounters_scenario = create_encounters_from_pool_distribution(poulesIdResult)
+			results[scenarioName]["rencontreDetails"] = encounters_scenario
+	 		
+			# get pool details from encounters
+			poolDetails_scenario = create_pool_details_from_encounters(encounters_scenario, poulesIdResult)
+			results[scenarioName]["estimationDetails"] = poolDetails_scenario
+		
+			# get sum info from pool details
+			sumInfo_scenario = get_sum_info_from_pool_details(poolDetails_scenario)
+			results[scenarioName]["estimationGenerale"] = sumInfo_scenario
+			
+			
+			
+			
+
+		logging.debug("" )
+
+			
+		return results
+
+	except Exception as e:
+		show_exception_traceback()
+
+
+"""
+Function to optimize pool post treatment for variation of team number per pool
 """	
-def optimize_pool_post_treatment_match(D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult):
+def optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult):
 	try:
 		# duplicate results
 		results = calculatedResult
@@ -102,11 +211,11 @@ def optimize_pool_post_treatment_match(D_Mat, teamNbr, poolNbr, poolSize, teams,
 		if "params" in results:
 			results["params"]["final"] = "oui"
 
- 			# change values concerning variation of team members per pool
+			# change values concerning variation of team members per pool
 # 			results["params"]["varEquipeParPouleProposition"] = [0]
 			results["params"]["varEquipeParPouleChoisi"] = varTeamNbrPerPool
 			results["params"]["varEquipeParPoulePossible"] = 0
- 			
+			
 
 		############# optimal scenario without constraint #################
 		logging.debug("")
@@ -168,7 +277,6 @@ def optimize_pool_post_treatment_match(D_Mat, teamNbr, poolNbr, poolSize, teams,
 		logging.debug("")
 		logging.debug(" ####################### RESULT EQUITABLE WITHOUT CONSTRAINT ############################################")
 		if resultsEquitableWithoutConstraint:
-
 
 			poolDistribution_EquitableWithoutConstraint = variation_team_number_per_pool(resultsEquitableWithoutConstraint["poulesId"], varTeamNbrPerPool)
 			logging.debug(" poolDistribution_EquitableWithoutConstraint: %s" %(poolDistribution_EquitableWithoutConstraint,))
@@ -493,18 +601,6 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 					P_Mat_OptimalWithoutConstraint = get_p_matrix_for_round_trip_match_optimal_without_constraint(P_InitMat_withoutConstraint, D_Mat, iter, teamNbr)#
 			else:
 				P_Mat_OptimalWithoutConstraint = get_p_matrix_for_round_trip_match_optimal_without_constraint(P_Mat_OptimalWithoutConstraint, D_Mat, iter, teamNbr)#
-# 				if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
-# 					P_Mat_OptimalWithoutConstraint = get_p_matrix_for_round_trip_match_optimal_without_constraint(P_Mat_ref, D_Mat, iter, teamNbr)#
-# 				else:
-# 					P_Mat_OptimalWithoutConstraint = get_p_matrix_for_round_trip_match_optimal_without_constraint(P_InitMat_withoutConstraint, D_Mat, iter, teamNbr)#
-				
-				
-# 			P_Mats_OptimalWithoutConstraint.append(P_Mat_OptimalWithoutConstraint)	
-# 			chosenDistance_OptimalWithoutConstraint = calculate_V_value(P_Mat_OptimalWithoutConstraint, D_Mat)
-# 			chosenDistances_OptimalWithoutConstraint.append(chosenDistance_OptimalWithoutConstraint)
-	
-# 		P_Mat_chosenIndex = chosenDistances_OptimalWithoutConstraint.index(min(chosenDistances_OptimalWithoutConstraint))
-# 		logging.debug(" P_Mat_chosenIndex: %s" %P_Mat_chosenIndex)
 # 
 # 		P_Mat_OptimalWithoutConstraint = P_Mats_OptimalWithoutConstraint[P_Mat_chosenIndex]
 		chosenDistance_OptimalWithoutConstraint = calculate_V_value(P_Mat_OptimalWithoutConstraint, D_Mat)
@@ -1452,7 +1548,8 @@ def callback(ch, method, properties, body):
 		
 		logging.debug("####################################### READ PARAMS FROM USER ##############################################")
 		# get params from DB
-		sql = "select id_groupe, type_action, params from rapport where id=%s"%reportId
+# 		sql = "select id_groupe, type_action, params from rapport where id=%s"%reportId
+		sql = "select id_groupe, type_action, params from parametres where id=%s"%reportId
 		logging.debug("sql: %s" %sql)
 		groupId, launchType, params = db.fetchone_multi(sql)
 		
@@ -1470,6 +1567,14 @@ def callback(ch, method, properties, body):
 			varTeamNbrPerPool = int(params["varEquipeParPoule"])
 		else:
 			varTeamNbrPerPool = 0
+
+		# get team transfer params per pool
+		if "changeAffectEquipes" in params:
+			teamTransfers = params["changeAffectEquipes"]
+		else:
+			teamTransfers = {}
+		logging.debug("teamTransfers: %s" %teamTransfers)
+		
 
 		iterConstraint = config.INPUT.IterConstraint
 		logging.debug("iterConstraint: %s" %iterConstraint)
@@ -1613,23 +1718,24 @@ def callback(ch, method, properties, body):
 
 		logging.debug("############################################# OPTIMIZE POOL #################################################")
 		### Pre treatment
-# 		if launchType == "match_aller_retour":
-		if launchType == "allerRetour" and varTeamNbrPerPool == 0:
+		if launchType == "allerRetour" and varTeamNbrPerPool == 0 and not teamTransfers:
 			results = optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom)
-# 		elif launchType == "match_aller_simple":
-		elif launchType == "allerSimple" and varTeamNbrPerPool == 0:
+		elif launchType == "allerSimple" and varTeamNbrPerPool == 0 and not teamTransfers:
 			results = optimize_pool_one_way_match(P_InitMat_oneWaywithoutConstraint, P_InitMat_oneWayWithConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom)
-		elif launchType == "plateau" and varTeamNbrPerPool == 0:
+		elif launchType == "plateau" and varTeamNbrPerPool == 0 and not teamTransfers:
 			results = optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom, welcomeConstraintExistMatchPlateau)
 
-		### Post treatment
-		if varTeamNbrPerPool > 0 and ( launchType in  ["allerRetour", "allerSimple"] ):
-			logging.debug("############################################# POST TREATMENT #########################################")
+		### check values for params teamTransfer and varTeamNbrPerPool
+		check_request_validity_post_treatment(teamTransfers, varTeamNbrPerPool, userId, reportId)
+
+		### Post treatment variation of team number
+		if varTeamNbrPerPool > 0 and ( launchType in  ["allerRetour", "allerSimple"] and not teamTransfers):
+			logging.debug("############################################# POST TREATMENT VARIATION OF TEAM NUMBER #########################################")
 			# get old result id 
 			oldResultId = params["idAncienResultat"]
 			logging.debug("oldResultId : %s" %oldResultId)
 			
-			sql = "select details_calcul from scenario where id=%s"%oldResultId
+			sql = "select details_calcul from resultats where id=%s"%oldResultId
 			calculatedResult = json.loads(db.fetchone(sql))
 # 			logging.debug("calculatedResult : %s" %calculatedResult)
 			
@@ -1639,12 +1745,34 @@ def callback(ch, method, properties, body):
 			# check given params if they are the same or not as the stocked params
 			check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints, userId, reportId)
 
-# 			results = optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult)
-			results = optimize_pool_post_treatment_match(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, oldResultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult)
+			results = optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, oldResultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult)
 # 			logging.debug("results : \n%s" %json.dumps(results))
 
+		### Post treatment team transfers between pools
+		if varTeamNbrPerPool == 0 and ( launchType in  ["allerRetour", "allerSimple"] and  teamTransfers):
+			logging.debug("############################################# POST TREATMENT TEAM TRANSFERS #########################################")
 
-		if varTeamNbrPerPool == 0:
+			# get old result id 
+			oldResultId = params["idAncienResultat"]
+			logging.debug("oldResultId : %s" %oldResultId)
+			
+			sql = "select details_calcul from resultats where id=%s"%oldResultId
+			calculatedResult = json.loads(db.fetchone(sql))
+# 			logging.debug("calculatedResult : %s" %calculatedResult)
+
+			# check whether it is a final result (the variation of team members per pool has already been performed)
+			check_final_result(calculatedResult, userId, reportId)
+
+			# check given params if they are the same or not as the stocked params
+			check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints, userId, reportId)
+
+			results = optimize_pool_post_treatment_team_transfers(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, oldResultId, userId, teamTransfers, flagPhantom, calculatedResult)
+# 			logging.debug("results : \n%s" %json.dumps(results))
+			
+
+
+
+		if varTeamNbrPerPool == 0 and not teamTransfers:
 			logging.debug("############################################# INSERT RESULT INTO DB #########################################")
 			resultId = save_result_to_db(launchType, reportId, groupId, results)
 			logging.debug("resultId : %s" %resultId)

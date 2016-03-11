@@ -559,18 +559,6 @@
 
 
 
-
-//                 function myCreateFunction() {
-//                     var table = $('#mesContraintes tbody');
-//                     var children = table.find('tr');
-//                     var numberChilds = children.length;
-//                     var lastChild = children.last();
-//                     console.log(lastChild);
-//                     table.append(lastChild[0].outerHTML);
-//                 }
-
-
-
                  ////////traitement des interdictions///////////////
                  function selectEquipe(select1,select2) {
                      select2 = select2[0];
@@ -584,23 +572,6 @@
                      select2.options[x].disabled = true;
                  }
 
-//                 function selectEquipe2() {
-//
-//
-//                     var interdictionTab = [];
-//                     var x = document.getElementById("equipe1").selectedIndex;
-//                     if(!x){
-//                         alert("Veuillez choisir une équipe de la première liste SVP")
-//                     }
-//                     else{
-//                         interdictionTab[0] = 1;
-//                         interdictionTab[1] = document.getElementById("equipe1").value;
-//                         interdictionTab[2] = document.getElementById("equipe2").value;
-//
-//                     }
-//                     alert(interdictionTab);
-//
-//                 }
 
                  ///////////récupération contraintes /////////////
 
@@ -618,27 +589,6 @@
                          compteur ++;
                      });
 
-//                     var mesLignes = document.getElementById("mesContraintes").rows;
-//                     for (i = 1; i < mesLignes.length; i++) {
-//                         var maLigne = mesLignes[i];
-//                         console.log("maLigne: " + maLigne);
-//
-//
-//                         var td1 = maLigne.getElementsByTagName("td")[1];
-//                         var td2 = maLigne.getElementsByTagName("td")[2];
-//                         var monEquipe1 = parseInt(td1.getElementsByClassName("equipe1")[0].value);
-//                         var monEquipe2 = parseInt(td2.getElementsByClassName("equipe2")[0].value);
-//
-//                         console.log("monEquipe1: " + monEquipe1);
-//                         console.log("monEquipe2: " + monEquipe2);
-//
-//                         if ((monEquipe1) && (monEquipe2 )){
-//                             var maContrainte = [monEquipe1, monEquipe2];
-//                             tabContraintes[i] = maContrainte;
-//
-//                         };
-//
-//                     }
 
 
                      return tabContraintes;

@@ -3,24 +3,25 @@
      {% block pagewrapper %}
 
          <div id="page-wrapper">
+             {% set alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ] %}
 
 
-                 <div class="row">
-                     <div class="bs-example">
-                         <ul class="breadcrumb">
-                             <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
-                             <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Choix de la liste d'équipes</a></li>
-                             {#<li><a href="{{ path('ffbb_poule_choisir_groupe', {'idListe': idListe}) }}">Choix de groupes</a></li>#}
-                             <li class="active">Participants</li>
-                         </ul>
-                     </div>
-
-                     <div class="col-lg-12">
-                         <h3 class="page-header">Vos résultats </h3>
-                      </div>
-                     <!-- /.col-lg-12 -->
+             <div class="row">
+                 <div class="bs-example">
+                     <ul class="breadcrumb">
+                         <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
+                         <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Choix de la liste d'équipes</a></li>
+                         {#<li><a href="{{ path('ffbb_poule_choisir_groupe', {'idListe': idListe}) }}">Choix de groupes</a></li>#}
+                         <li class="active">Participants</li>
+                     </ul>
                  </div>
-                 <!-- /.row -->
+
+                 <div class="col-lg-12">
+                     <h3 class="page-header">Vos résultats </h3>
+                  </div>
+                 <!-- /.col-lg-12 -->
+             </div>
+             <!-- /.row -->
 
              <div class="row">
                  <div class="panel-body">
@@ -80,6 +81,7 @@
                                  <td> Contraintes : {{ contrainte  }} </td>
                              </tr>
 
+
                              {% if contrainteAccueilPlateauExiste == 1 %}
                                  <tr>
                                      <td> Toutes les équipes doivent accueillir au moins une fois </td>
@@ -87,13 +89,51 @@
                              {% endif %}
 
                              {% if refExiste == 1 %}
-                             <tr>
+                                 {#{%  set pourcentage = (100 - (scenarioRef.estimationGenerale.distanceTotale/scenarioOptimalSansContrainte.estimationGenerale.distanceTotale *100))|round %}#}
+                                 {%  set distanceRef = scenarioRef.estimationGenerale.distanceTotale %}
+                                 {%  set distanceOptimalSc = scenarioOptimalSansContrainte.estimationGenerale.distanceTotale %}
+                                 {%  set pourcentage = ( (distanceRef-distanceOptimalSc)/distanceRef*100)|round %}
+                                 {% if pourcentage > 0 %}
+                                     <tr>
+                                         <td> Avec le scénario optimal sans contrainte, vous réduisez de {{ pourcentage }} % le nombre de kilomètres à parcourir, par rapport au scénario de référence </td>
+                                     </tr>
 
-                                    {%  set pourcentage = (100 - (scenarioRef.estimationGenerale.distanceTotale/scenarioOptimalSansContrainte.estimationGenerale.distanceTotale *100))|round %}
-                                    <td> Avec le scénario optimal, vous réduisez de {{ pourcentage|abs }} % le nombre de kilomètres à parcourir, par rapport au scénario de référence </td>
-                             </tr>
+                                 {% endif %}
+
+
                              {% endif %}
 
+                             {% if changeAffectEquipes %}
+                                 <tr><td>&nbsp</td></tr>
+                                 <tr>
+                                     <td> Liste de changements d'affectation d'équipes : </td>
+                                 </tr>
+                                 {% for scenario, contenuScenario in changeAffectEquipes %}
+                                     {% if scenario == "optimalSansContrainte" %}
+                                         {% set scenarioAffichage = "Scénario optimal sans contrainte" %}
+                                     {% elseif scenario == "equitableSansContrainte" %}
+                                         {% set scenarioAffichage = "Scénario équitable sans contrainte" %}
+                                     {% elseif scenario == "optimalAvecContrainte" %}
+                                         {% set scenarioAffichage = "Scénario optimal avec contrainte" %}
+                                     {% elseif scenario == "equitableAvecContrainte" %}
+                                         {% set scenarioAffichage = "Scénario équitable avec contrainte" %}
+                                     {% endif %}
+
+                                     {% for changeAffect in contenuScenario %}
+                                         <tr>
+                                             <td> - {{ scenarioAffichage }} :
+                                                 {{ changeAffect.equipeDepartNom   }} (Poule d'origine : {{ alphabet[changeAffect.pouleDepart-1]  }}) -
+                                                 {{ changeAffect.equipeDestinationNom }} (Poule d'origine : {{ alphabet[changeAffect.pouleDestination-1] }})
+
+
+                                             </td>
+                                         </tr>
+
+                                     {% endfor %}
+
+
+                                 {% endfor %}
+                             {% endif %}
 
                              </tbody>
                          </table>
@@ -105,7 +145,6 @@
 
              <!-- Affichage des résultats sur les cartes -->
              <div class="row">
-                 {% set alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ] %}
 
                  <div class="col-lg-12">
                      <div class="panel panel-default">
@@ -230,7 +269,7 @@
                                                                      var points = [];
                                                                      var incrementIcons = 0;
 
-                                                                     {%  for coordPoule in coordPoules %}
+                                                                     {%  for poule, coordPoule in coordPoules %}
 
                                                                         //tracer dynamiquement les points de villes
                                                                          {% for coordonneeVille in coordPoule %}
@@ -238,10 +277,9 @@
                                                                          var y = '{{ coordonneeVille[1]}}';
 //
                                                                          var xy = x+y;
-//                                                                         var x = xy[0];
-//                                                                         var y = xy[1];
 
-                                                                     var icon = 'icons' + incrementIcons;
+//                                                                         var icon = 'icons' + incrementIcons;
+                                                                         var icon = 'icons{{ poule-1 }}';
                                                                          var marker = 'marker' + incrment;
                                                                          window[marker] = new H.map.Marker({
                                                                              lat: parseFloat(x),
@@ -418,10 +456,14 @@
                                                                              <tbody>
                                                                              {% set dureeTotaleScOptContrainte = "" %}
                                                                              {% for key, estimationDetailOptContrainte in estimationDetailsOptContrainte %}
-                                                                                 {% set distanceOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].distanceTotale // 1000 %}
-                                                                                 {% set distanceTotaleOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}
-                                                                                 {% set dureeTotaleOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].dureeTotale  %}
-                                                                                 {% set nbrParticipantsOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].nbrParticipantsTotal  %}
+                                                                                 {#{% set distanceOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].distanceTotale // 1000 %}#}
+                                                                                 {#{% set distanceTotaleOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
+                                                                                 {#{% set dureeTotaleOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].dureeTotale  %}#}
+                                                                                 {#{% set nbrParticipantsOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].nbrParticipantsTotal  %}#}
+                                                                                 {% set distanceOptContrainteDetail = estimationDetailsOptContrainte[ key ].distanceTotale // 1000 %}
+                                                                                 {% set distanceTotaleOptContrainteDetail = estimationDetailsOptContrainte[ key ].distanceTotaleTousParticipants // 1000 %}
+                                                                                 {% set dureeTotaleOptContrainteDetail = estimationDetailsOptContrainte[ key ].dureeTotale  %}
+                                                                                 {% set nbrParticipantsOptContrainteDetail = estimationDetailsOptContrainte[ key ].nbrParticipantsTotal  %}
                                                                                  {% set lettre = alphabet[key-1] %}
                                                                                  <tr>
                                                                                      <td><strong> Poule {{ lettre }} </strong></td>
@@ -519,7 +561,8 @@
 
 
                                                                              {% for key, rencontreDetailOptContrainte in rencontreDetailsOptContrainte %}
-                                                                                 {% set distanceOptContrainte = rencontreDetailsOptContrainte[ loop.index ] %}
+                                                                                 {#{% set distanceOptContrainte = rencontreDetailsOptContrainte[ loop.index ] %}#}
+                                                                                 {% set distanceOptContrainte = rencontreDetailsOptContrainte[ key ] %}
                                                                                  {% set lettre = alphabet[key-1] %}
                                                                                  <tr>
                                                                                      <td><strong> Poule {{ lettre }} </strong></td>
@@ -699,7 +742,7 @@
                                                                  var incrment = 1;
                                                                  var points = [];
                                                                  var incrementIcons = 0;
-                                                                 {%  for coordPouleEqAvecContrainte in coordPoulesEqAvecContrainte %}
+                                                                 {%  for poule, coordPouleEqAvecContrainte in coordPoulesEqAvecContrainte %}
 
                                                                  //tracer dynamiquement les points de villes
                                                                  {% for coordonneeVilleEqAvecContrainte in coordPouleEqAvecContrainte %}
@@ -707,9 +750,9 @@
                                                                  var y = '{{ coordonneeVilleEqAvecContrainte[1]}}';
 //
                                                                  var xy = x+y;
-//                                                                         var x = xy[0];
-//                                                                         var y = xy[1];
-                                                                 var icon = 'icons' + incrementIcons;
+
+//                                                                 var icon = 'icons' + incrementIcons;
+                                                                 var icon = 'icons{{ poule-1 }}' ;
 
                                                                  var marker = 'marker' + incrment;
                                                                  window[marker] = new H.map.Marker({
@@ -890,10 +933,14 @@
 
                                                                          {% set dureeTotaleScEqContrainte = "" %}
                                                                          {% for key, estimationDetailEqContrainte in estimationDetailsEqContrainte %}
-                                                                             {% set distanceEqContrainteDetail = estimationDetailsEqContrainte[ loop.index ].distanceTotale // 1000 %}
-                                                                             {% set distanceTotaleEqContrainteDetail = estimationDetailsEqContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}
-                                                                             {% set dureeTotaleEqContrainteDetail = estimationDetailsEqContrainte[ loop.index ].dureeTotale  %}
-                                                                             {% set nbrParticipantsEqContrainteDetail = estimationDetailsEqContrainte[ loop.index ].nbrParticipantsTotal  %}
+                                                                             {#{% set distanceEqContrainteDetail = estimationDetailsEqContrainte[ loop.index ].distanceTotale // 1000 %}#}
+                                                                             {#{% set distanceTotaleEqContrainteDetail = estimationDetailsEqContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
+                                                                             {#{% set dureeTotaleEqContrainteDetail = estimationDetailsEqContrainte[ loop.index ].dureeTotale  %}#}
+                                                                             {#{% set nbrParticipantsEqContrainteDetail = estimationDetailsEqContrainte[ loop.index ].nbrParticipantsTotal  %}#}
+                                                                             {% set distanceEqContrainteDetail = estimationDetailsEqContrainte[ key ].distanceTotale // 1000 %}
+                                                                             {% set distanceTotaleEqContrainteDetail = estimationDetailsEqContrainte[ key ].distanceTotaleTousParticipants // 1000 %}
+                                                                             {% set dureeTotaleEqContrainteDetail = estimationDetailsEqContrainte[ key ].dureeTotale  %}
+                                                                             {% set nbrParticipantsEqContrainteDetail = estimationDetailsEqContrainte[ key ].nbrParticipantsTotal  %}
                                                                              {% set lettre = alphabet[key-1] %}
                                                                              <tr>
                                                                                  <td><strong> Poule {{ lettre }} </strong></td>
@@ -985,7 +1032,8 @@
                                                                          <tbody>
 
                                                                              {% for keyEqContrainte, rencontreDetailEqContrainte in rencontreDetailsEqContrainte %}
-                                                                                 {% set distanceEqContrainte = rencontreDetailsEqContrainte[ loop.index ] %}
+                                                                                 {#{% set distanceEqContrainte = rencontreDetailsEqContrainte[ loop.index ] %}#}
+                                                                                 {% set distanceEqContrainte = rencontreDetailsEqContrainte[ keyEqContrainte ] %}
                                                                                  {% set lettre = alphabet[keyEqContrainte-1] %}
 
                                                                                  <tr>
@@ -1176,7 +1224,7 @@
                                                                  var incrment = 1;
                                                                  var points = [];
                                                                  var incrementIcons = 0;
-                                                                 {%  for coordPouleOpSansContrainte in coordPoulesOpSansContrainte %}
+                                                                 {%  for poule,  coordPouleOpSansContrainte in coordPoulesOpSansContrainte %}
 
                                                                  //tracer dynamiquement les points de villes
                                                                  {% for coordonneeVilleOpSansContrainte in coordPouleOpSansContrainte %}
@@ -1184,10 +1232,9 @@
                                                                  var y = '{{ coordonneeVilleOpSansContrainte[1]}}';
 //
                                                                  var xy = x+y;
-//                                                                         var x = xy[0];
-//                                                                         var y = xy[1];
 
-                                                                 var icon = 'icons' + incrementIcons;
+//                                                                 var icon = 'icons' + incrementIcons;
+                                                                 var icon = 'icons{{ poule-1 }}' ;
                                                                  var marker = 'marker' + incrment;
                                                                  window[marker] = new H.map.Marker({
                                                                      lat: parseFloat(x),
@@ -1367,10 +1414,14 @@
 
                                                                          {% set dureeTotaleScOptSansContrainte = "" %}
                                                                          {% for key, estimationDetailOpSansContrainte in estimationDetailsOpSansContrainte %}
-                                                                             {% set distanceOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotale // 1000 %}
-                                                                             {% set distanceTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}
-                                                                             {% set dureeTotaleOpSansContrainteDetailC = estimationDetailsOpSansContrainte[ loop.index ].dureeTotale  %}
-                                                                             {% set nbrParticipantsOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].nbrParticipantsTotal  %}
+                                                                             {#{% set distanceOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotale // 1000 %}#}
+                                                                             {#{% set distanceTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
+                                                                             {#{% set dureeTotaleOpSansContrainteDetailC = estimationDetailsOpSansContrainte[ loop.index ].dureeTotale  %}#}
+                                                                             {#{% set nbrParticipantsOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].nbrParticipantsTotal  %}#}
+                                                                             {% set distanceOpSansContrainteDetail = estimationDetailsOpSansContrainte[ key ].distanceTotale // 1000 %}
+                                                                             {% set distanceTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ key ].distanceTotaleTousParticipants // 1000 %}
+                                                                             {% set dureeTotaleOpSansContrainteDetailC = estimationDetailsOpSansContrainte[ key ].dureeTotale  %}
+                                                                             {% set nbrParticipantsOpSansContrainteDetail = estimationDetailsOpSansContrainte[ key ].nbrParticipantsTotal  %}
                                                                              {% set lettre = alphabet[key-1] %}
                                                                              <tr>
                                                                                  <td><strong> Poule {{ lettre }} </strong></td>
@@ -1458,7 +1509,8 @@
                                                                          <tbody>
 
                                                                              {% for keyOptSansContrainte, rencontreDetailOpSansContrainte in rencontreDetailsOpSansContrainte %}
-                                                                                 {% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ loop.index ] %}
+                                                                                 {#{% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ loop.index ] %}#}
+                                                                                 {% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ keyOptSansContrainte ] %}
                                                                                  {% set lettre = alphabet[keyOptSansContrainte-1] %}
                                                                                  <tr>
                                                                                      <td><strong> Poule {{ lettre }} </strong></td>
@@ -1651,7 +1703,7 @@
                                                                  var incrment = 1;
                                                                  var points = [];
                                                                  var incrementIcons = 0;
-                                                                 {%  for coordPouleRef in coordPoulesRef %}
+                                                                 {%  for poule, coordPouleRef in coordPoulesRef %}
 
                                                                  //tracer dynamiquement les points de villes
                                                                  {% for coordonneeVilleRef in coordPouleRef %}
@@ -1659,10 +1711,9 @@
                                                                  var y = '{{ coordonneeVilleRef[1]}}';
 //
                                                                  var xy = x+y;
-//                                                                         var x = xy[0];
-//                                                                         var y = xy[1];
 
-                                                                 var icon = 'icons' + incrementIcons;
+//                                                                 var icon = 'icons' + incrementIcons;
+                                                                 var icon = 'icons{{ poule-1 }}' ;
                                                                  var marker = 'marker' + incrment;
                                                                  window[marker] = new H.map.Marker({
                                                                      lat: parseFloat(x),
@@ -1845,10 +1896,14 @@
 
                                                                          {% set dureeTotaleScRefContrainte = "" %}
                                                                          {% for key, estimationDetailRef in estimationDetailsRef %}
-                                                                             {% set distanceRefDetail = estimationDetailsRef[ loop.index ].distanceTotale // 1000 %}
-                                                                             {% set distanceTotaleRefDetail = estimationDetailsRef[ loop.index ].distanceTotaleTousParticipants // 1000 %}
-                                                                             {% set dureeTotaleRefDetail = estimationDetailsRef[ loop.index ].dureeTotale  %}
-                                                                             {% set nbrParticipantsRefDetail = estimationDetailsRef[ loop.index ].nbrParticipantsTotal  %}
+                                                                             {#{% set distanceRefDetail = estimationDetailsRef[ loop.index ].distanceTotale // 1000 %}#}
+                                                                             {#{% set distanceTotaleRefDetail = estimationDetailsRef[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
+                                                                             {#{% set dureeTotaleRefDetail = estimationDetailsRef[ loop.index ].dureeTotale  %}#}
+                                                                             {#{% set nbrParticipantsRefDetail = estimationDetailsRef[ loop.index ].nbrParticipantsTotal  %}#}
+                                                                             {% set distanceRefDetail = estimationDetailsRef[ key ].distanceTotale // 1000 %}
+                                                                             {% set distanceTotaleRefDetail = estimationDetailsRef[ key ].distanceTotaleTousParticipants // 1000 %}
+                                                                             {% set dureeTotaleRefDetail = estimationDetailsRef[ key ].dureeTotale  %}
+                                                                             {% set nbrParticipantsRefDetail = estimationDetailsRef[ key ].nbrParticipantsTotal  %}
                                                                              {% set lettre = alphabet[key-1] %}
 
                                                                              <tr>
@@ -2113,7 +2168,8 @@
                                                              var incrment = 1;
                                                              var points = [];
                                                              var incrementIcons = 0;
-                                                             {%  for key,coordPouleOpSansContrainte in coordPoulesOpSansContrainte %}
+                                                             {#{%  for key,coordPouleOpSansContrainte in coordPoulesOpSansContrainte %}#}
+                                                             {%  for poule, coordPouleOpSansContrainte in coordPoulesOpSansContrainte %}
 
                                                              //tracer dynamiquement les points de villes
                                                              {% for coordonneeVilleOpSansContrainte in coordPouleOpSansContrainte %}
@@ -2124,7 +2180,8 @@
 //                                                                         var x = xy[0];
 //                                                                         var y = xy[1];
 
-                                                            var icon = 'icons' + incrementIcons;
+//                                                            var icon = 'icons' + incrementIcons;
+                                                             var icon = 'icons{{ poule-1 }}' ;
                                                              var marker = 'marker' + incrment;
                                                              window[marker] = new H.map.Marker({
                                                                  lat: parseFloat(x),
@@ -2304,10 +2361,14 @@
                                                                      {% set dureeTotaleScOpSansContrainteDetail = "" %}
 
                                                                      {% for key, estimationDetailOpSansContrainte in estimationDetailsOpSansContrainte %}
-                                                                         {% set distanceOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotale // 1000 %}
-                                                                         {% set distanceTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}
-                                                                         {% set dureeTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].dureeTotale  %}
-                                                                         {% set nbrParticipantsOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].nbrParticipantsTotal  %}
+                                                                         {#{% set distanceOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotale // 1000 %}#}
+                                                                         {#{% set distanceTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
+                                                                         {#{% set dureeTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].dureeTotale  %}#}
+                                                                         {#{% set nbrParticipantsOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].nbrParticipantsTotal  %}#}
+                                                                         {% set distanceOpSansContrainteDetail = estimationDetailsOpSansContrainte[ key ].distanceTotale // 1000 %}
+                                                                         {% set distanceTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ key ].distanceTotaleTousParticipants // 1000 %}
+                                                                         {% set dureeTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ key ].dureeTotale  %}
+                                                                         {% set nbrParticipantsOpSansContrainteDetail = estimationDetailsOpSansContrainte[ key ].nbrParticipantsTotal  %}
                                                                          {% set lettre = alphabet[key-1] %}
 
                                                                          <tr>
@@ -2400,7 +2461,8 @@
 
                                                                      <tbody >
                                                                          {% for key, rencontreDetailOpSansContrainte in rencontreDetailsOpSansContrainte %}
-                                                                             {% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ loop.index ] %}
+                                                                             {#{% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ loop.index ] %}#}
+                                                                             {% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ key ] %}
 
                                                                              <tr>
                                                                              {% set lettre = alphabet[key-1] %}
@@ -2410,7 +2472,6 @@
                                                                                  <ul>
                                                                                  {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
                                                                                      <li>
-                                                                                     {#{{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }} ~  {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}#}
                                                                                      {{ distanceOptSansContrainte[ loop.index ].equipeDepartNom }} ~  {{ distanceOptSansContrainte[ loop.index ].equipeDestinationNom }}
                                                                                      </li>
                                                                                  {% endfor %}
@@ -2471,106 +2532,6 @@
                                                              </div>
                                                              <!-- /.table-responsive -->
                                                          </div>
-
-
-
-
-
-
-
-
-
-                                                         {% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}
-                                                             {#<div class="row">#}
-                                                                 {#<div class="panel panel-default">#}
-                                                                     {#<div class="panel-heading">#}
-                                                                         {#<span id="changeAffectationOptSc" style="cursor:pointer"> Ajouter des changements d'affectation d'équipes par poule </span>#}
-                                                                     {#</div>#}
-                                                                     {#<!-- /.panel-heading -->#}
-                                                                     {#<div class="panel-body" id="changeAffectationOptScBody" style="display: none">#}
-
-                                                                         {#<table id="tableChangeAffectationOptSc" class="table table-striped table-bordered table-hover">#}
-                                                                             {#<thead>#}
-                                                                             {#<tr>#}
-                                                                                 {#<th width="20%" style="text-align:center"><h4>Equipes de départ</h4></th>#}
-                                                                                 {#<th width="20%" style="text-align:center"><h4>Equipes de destination</h4></th>#}
-                                                                                 {#<th width="10%"><h4></h4></th>#}
-                                                                             {#</tr>#}
-                                                                             {#</thead>#}
-
-                                                                             {#<tbody id="tbodyChangeAffectationOptSc">#}
-                                                                             {#</tbody>#}
-                                                                         {#</table>#}
-
-
-                                                                         {#<br>#}
-                                                                         {#<table class="table table-striped table-bordered table-hover">#}
-                                                                             {#<thead>#}
-                                                                             {#<tr>#}
-                                                                                 {#<th width="15%" style="text-align:center">Poule de départ</th>#}
-                                                                                 {#<th width="20%" style="text-align:center">Equipe de départ</th>#}
-                                                                                 {#<th width="15%" style="text-align:center">Poule de destination</th>#}
-                                                                                 {#<th width="20%" style="text-align:center">Equipe de destination</th>#}
-                                                                             {#</tr>#}
-                                                                             {#</thead>#}
-
-                                                                             {#<tbody>#}
-
-                                                                             {#<tr>#}
-                                                                                 {#<td width="15%">#}
-                                                                                     {#<select id="pouleDepartOptSc" class="pouleDepart">#}
-                                                                                         {#&#123;&#35;{% for detailsVille in detailsVilles %}&#35;&#125;#}
-                                                                                             {#&#123;&#35;<option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>&#35;&#125;#}
-                                                                                         {#&#123;&#35;{% endfor %}&#35;&#125;#}
-                                                                                     {#</select>#}
-                                                                                 {#</td>#}
-
-                                                                                 {#<td width="20%">#}
-                                                                                     {#<select id="equipeDepartOptSc" class="equipeDepart">#}
-                                                                                         {#&#123;&#35;{% for detailsVille in detailsVilles %}&#35;&#125;#}
-                                                                                             {#&#123;&#35;<option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>&#35;&#125;#}
-                                                                                         {#&#123;&#35;{% endfor %}&#35;&#125;#}
-                                                                                     {#</select>#}
-                                                                                 {#</td>#}
-
-                                                                                 {#<td width="15%">#}
-                                                                                     {#<select id="pouleDestinationOptSc" class="pouleDestination">#}
-                                                                                     {#</select>#}
-                                                                                 {#</td>#}
-
-                                                                                 {#<td width="20%">#}
-                                                                                     {#<select id="equipeDestinationOptSc" class="equipeDestination" >#}
-                                                                                         {#&#123;&#35;{% for detailsVille in detailsVilles %}&#35;&#125;#}
-                                                                                         {#&#123;&#35;<option value={{ detailsVille.id }}>{{ detailsVille.nom }}</option>&#35;&#125;#}
-                                                                                         {#&#123;&#35;{% endfor %}&#35;&#125;#}
-                                                                                     {#</select>#}
-                                                                                 {#</td>#}
-                                                                             {#</tr>#}
-
-                                                                             {#</tbody>#}
-                                                                         {#</table>#}
-
-
-                                                                         {#<br>#}
-
-                                                                         {#<button id="btnAjouterChangementAffectation" class="btn btn-primary ">Ajouter</button>#}
-
-                                                                     {#</div>#}
-
-
-                                                                     {#<!-- /.panel-body -->#}
-
-
-                                                                 {#</div>#}
-
-                                                             {#</div>#}
-
-                                                             {#<br/>#}
-                                                             {#<br/>#}
-                                                         {% endif %}
-
-
-
 
 
                                                          <a href="{{ path('ffbb_poules_details_calcul') }}" class="pull-left">Détails du calcul</a>
@@ -2693,19 +2654,23 @@
                                                              var points = [];
                                                              var incrementIcons = 0;
 
-                                                             {%  for coordPouleEquitableSansContrainte in coordPoulesEquitableSansContrainte %}
+//                                                             console.log("--------------------- debug eq sans contrainte ----------------------")
+                                                             {%  for poule, coordPouleEquitableSansContrainte in coordPoulesEquitableSansContrainte %}
+                                                             {#console.log("poule: " + {{ poule }});#}
 
                                                              //tracer dynamiquement les points de villes
                                                              {% for coordonneeVilleEquitableSansContrainte in coordPouleEquitableSansContrainte %}
                                                              var x = '{{ coordonneeVilleEquitableSansContrainte[0]}}';
                                                              var y = '{{ coordonneeVilleEquitableSansContrainte[1]}}';
-//
-                                                             var xy = x+y;
-//                                                                         var x = xy[0];
-//                                                                         var y = xy[1];
 
-                                                             var icon = 'icons' + incrementIcons;
+                                                             var xy = x+y;
+//                                                             console.log("xy: " + xy)
+
+//                                                             var icon = 'icons' + incrementIcons;
+                                                             var icon = 'icons{{ poule-1 }}' ;
+//                                                             console.log("icon: " + icon)
                                                              var marker = 'marker' + incrment;
+
                                                              window[marker] = new H.map.Marker({
                                                                  lat: parseFloat(x),
                                                                  lng: parseFloat(y)
@@ -2884,10 +2849,14 @@
 
                                                                      {% set dureeTotaleScEqDetailContrainte = "" %}
                                                                      {% for key, estimationDetailEqContrainte in estimationDetailsEqContrainte %}
-                                                                         {% set distanceEqDetailContrainte = estimationDetailsEqContrainte[ loop.index ].distanceTotale // 1000 %}
-                                                                         {% set distanceTotaleEqDetailContrainte = estimationDetailsEqContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}
-                                                                         {% set dureeTotaleEqDetailContrainte = estimationDetailsEqContrainte[ loop.index ].dureeTotale  %}
-                                                                         {% set nbrParticipantsEqDetailContrainte = estimationDetailsEqContrainte[ loop.index ].nbrParticipantsTotal  %}
+                                                                         {#{% set distanceEqDetailContrainte = estimationDetailsEqContrainte[ loop.index ].distanceTotale // 1000 %}#}
+                                                                         {#{% set distanceTotaleEqDetailContrainte = estimationDetailsEqContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
+                                                                         {#{% set dureeTotaleEqDetailContrainte = estimationDetailsEqContrainte[ loop.index ].dureeTotale  %}#}
+                                                                         {#{% set nbrParticipantsEqDetailContrainte = estimationDetailsEqContrainte[ loop.index ].nbrParticipantsTotal  %}#}
+                                                                         {% set distanceEqDetailContrainte = estimationDetailsEqContrainte[ key ].distanceTotale // 1000 %}
+                                                                         {% set distanceTotaleEqDetailContrainte = estimationDetailsEqContrainte[ key ].distanceTotaleTousParticipants // 1000 %}
+                                                                         {% set dureeTotaleEqDetailContrainte = estimationDetailsEqContrainte[ key ].dureeTotale  %}
+                                                                         {% set nbrParticipantsEqDetailContrainte = estimationDetailsEqContrainte[ key ].nbrParticipantsTotal  %}
                                                                          {% set lettre = alphabet[key-1] %}
 
                                                                          <tr>
@@ -2982,7 +2951,8 @@
                                                                      <tbody>
 
                                                                          {% for keyEqContrainte, rencontreDetailEqContrainte in rencontreDetailsEqContrainte %}
-                                                                         {% set distanceEqContrainte = rencontreDetailsEqContrainte[ loop.index ] %}
+                                                                         {#{% set distanceEqContrainte = rencontreDetailsEqContrainte[ loop.index ] %}#}
+                                                                         {% set distanceEqContrainte = rencontreDetailsEqContrainte[ keyEqContrainte ] %}
                                                                          {% set lettre = alphabet[keyEqContrainte-1] %}
                                                                          <tr>
                                                                          <td><strong> Poule {{ lettre }} </strong></td>
@@ -2991,7 +2961,6 @@
                                                                          <ul>
                                                                          {% for detailsRencontreEqContrainte in distanceEqContrainte %}
                                                                          <li>
-                                                                         {#{{ distanceEqContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceEqContrainte[ loop.index ].equipeDestinationVille }}#}
                                                                          {{ distanceEqContrainte[ loop.index ].equipeDepartNom }} ~ {{ distanceEqContrainte[ loop.index ].equipeDestinationNom }}
                                                                          </li>
 
@@ -3178,7 +3147,8 @@
                                                              var points = [];
                                                              var incrementIcons = 0;
 
-                                                             {%  for coordPouleRef in coordPoulesRef %}
+                                                             {#{%  for coordPouleRef in coordPoulesRef %}#}
+                                                             {%  for poule, coordPouleRef in coordPoulesRef %}
 
                                                              //tracer dynamiquement les points de villes
                                                              {% for coordonneeVilleRef in coordPouleRef %}
@@ -3186,10 +3156,9 @@
                                                              var y = '{{ coordonneeVilleRef[1]}}';
 //
                                                              var xy = x+y;
-//                                                                         var x = xy[0];
-//                                                                         var y = xy[1];
 
-                                                             var icon = 'icons' + incrementIcons;
+//                                                             var icon = 'icons' + incrementIcons;
+                                                             var icon = 'icons{{ poule-1 }}' ;
                                                              var marker = 'marker' + incrment;
                                                              window[marker] = new H.map.Marker({
                                                                  lat: parseFloat(x),
@@ -3374,10 +3343,14 @@
                                                                      {% set dureeTotaleScRefPasContrainte = "" %}
 
                                                                      {% for key, estimationDetailRef in estimationDetailsRef %}
-                                                                         {% set distanceDetailRef = estimationDetailsRef[ loop.index ].distanceTotale // 1000 %}
-                                                                         {% set distanceTotaleDetailRef = estimationDetailsRef[ loop.index ].distanceTotaleTousParticipants // 1000 %}
-                                                                         {% set dureeTotaleDetailRef = estimationDetailsRef[ loop.index ].dureeTotale  %}
-                                                                         {% set nbrParticipantsDetailRef = estimationDetailsRef[ loop.index ].nbrParticipantsTotal  %}
+                                                                         {#{% set distanceDetailRef = estimationDetailsRef[ loop.index ].distanceTotale // 1000 %}#}
+                                                                         {#{% set distanceTotaleDetailRef = estimationDetailsRef[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
+                                                                         {#{% set dureeTotaleDetailRef = estimationDetailsRef[ loop.index ].dureeTotale  %}#}
+                                                                         {#{% set nbrParticipantsDetailRef = estimationDetailsRef[ loop.index ].nbrParticipantsTotal  %}#}
+                                                                         {% set distanceDetailRef = estimationDetailsRef[ key ].distanceTotale // 1000 %}
+                                                                         {% set distanceTotaleDetailRef = estimationDetailsRef[ key ].distanceTotaleTousParticipants // 1000 %}
+                                                                         {% set dureeTotaleDetailRef = estimationDetailsRef[ key ].dureeTotale  %}
+                                                                         {% set nbrParticipantsDetailRef = estimationDetailsRef[ key ].nbrParticipantsTotal  %}
                                                                          {% set lettre = alphabet[key-1] %}
 
                                                                          <tr>
@@ -3763,7 +3736,7 @@
                          <!-- /.panel-heading -->
                          <div class="panel-body">
                              <div class="form-group">
-                                 <input type="number" min="1" class="form-control">
+                                 <input type="number" min="1" class="form-control" value="4" disabled>
 
                              </div>
 
@@ -3772,25 +3745,6 @@
                      </div>
                  </div>
                  <!-- /. Nombre de journées bloc -->
-
-                 <!-- Nombre de rencontres par journée bloc -->
-                 <div class="col-lg-4" id="nbrRencontre" style="display: none">
-                     <div class="panel panel-default">
-                         <div class="panel-heading">
-                             Nombre de rencontres par journée
-                         </div>
-                         <!-- /.panel-heading -->
-                         <div class="panel-body">
-                             <div class="form-group">
-                                 <input type="number" min="0" class="form-control">
-                             </div>
-
-                         </div>
-                         <!-- /.panel-body -->
-                     </div>
-                 </div>
-
-                 <!-- /. Nombre de rencontres par journée bloc -->
 
                  <!-- Ajouter une contrainte bloc -->
                  <div class="col-lg-4" id="ajoutContrainte" style="display: none">
@@ -3812,6 +3766,8 @@
                      </div>
                  </div>
                  <!-- /. Ajouter une contrainte bloc -->
+
+
              </div>
 
              <!-- Ajouter des contraintes d'interdiction -->
@@ -3878,7 +3834,6 @@
 
                                  <tr>
                                      <td width="50%">
-                                         {#<select id="equipe1" class="equipe1" onchange="selectEquipe(this,this.parentNode.parentNode.getElementsByClassName('equipe2'))">#}
                                          <select id="equipe1" class="equipe1">
                                              <option value="vide" selected> -- selectionnez une option -- </option>
                                              {% for detailsVille in detailsVilles %}
@@ -3888,7 +3843,6 @@
                                      </td>
 
                                      <td width="50%">
-                                         {#<select id="equipe2" class="equipe2" onchange="selectEquipe2()">#}
                                          <select id="equipe2" class="equipe2">
                                              <option value = "vide" selected> -- selectionnez une option -- </option>
                                              {% for detailsVille in detailsVilles %}
@@ -3976,10 +3930,122 @@
              </div>
 
 
+
+
+             {#{% if (typeMatch == "allerRetour" or typeMatch == "allerSimple") and not changeAffectEquipes %}#}
+             {% if (typeMatch == "allerRetour" or typeMatch == "allerSimple") %}
+             <div class="row">
+                 <div class="panel panel-default">
+                     <div class="panel-heading">
+                         <span id="changeAffectation" style="cursor:pointer"> Changer l’affectation de vos équipes aux poules </span>
+                     </div>
+                     <!-- /.panel-heading -->
+                     <div class="panel-body" id="changeAffectationBody" style="display: none">
+
+                         <table id="tableChangeAffectation" class="table table-striped table-bordered table-hover">
+                             <thead>
+                                 <tr>
+                                     <th width="18%" ><h4>Scénario</h4></th>
+                                     <th width="18%" ><h4>Poule de la première équipe à intervertir</h4></th>
+                                     <th width="18%" ><h4>Première équipe à intervertir</h4></th>
+                                     <th width="18%" ><h4>Poule de la seconde équipe à intervertir</h4></th>
+                                     <th width="18%" ><h4>Seconde équipe à intervertir</h4></th>
+                                     <th width="10%"><h4></h4></th>
+                                 </tr>
+                             </thead>
+
+                             <tbody id="tbodyChangeAffectation">
+                             </tbody>
+                         </table>
+
+
+                         <br>
+                         <table class="table table-striped table-bordered table-hover">
+                             <thead>
+                                 <tr>
+                                     <th width="18%" >Scénario</th>
+                                     <th width="18%" >Poule de la première équipe à intervertir</th>
+                                     <th width="18%" >Première équipe à intervertir</th>
+                                     <th width="18%" >Poule de la seconde équipe à intervertir</th>
+                                     <th width="18%" >Seconde équipe à intervertir</th>
+                                     <th width="10%"><h4></h4></th>
+                                 </tr>
+                             </thead>
+
+                             <tbody>
+
+                                 <tr>
+                                     <td width="18%" >
+                                         <select id="scenarioChangeAffectation" >
+                                         {% if contraintsExiste %}
+                                             <option value="vide" selected> -- selectionnez une option -- </option>
+                                             <option value="optimalAvecContrainte"> Optimal avec contrainte</option>
+                                             <option value="equitableAvecContrainte"> Equitable avec contrainte</option>
+                                             <option value="optimalSansContrainte"> Optimal sans contrainte</option>
+
+                                         {% else %}
+                                             <option value="vide" selected> -- selectionnez une option -- </option>
+                                             <option value="optimalSansContrainte"> Optimal sans contrainte</option>
+                                             <option value="equitableSansContrainte"> Equitable sans contrainte</option>
+
+                                         {% endif %}
+
+                                         </select>
+                                     </td>
+                                     <td width="18%">
+                                         <select id="pouleDepart" class="selectChangeAffectation">
+                                             <option value="vide" selected> -- selectionnez une option -- </option>
+                                         </select>
+                                     </td>
+
+                                     <td width="18%">
+                                         <select id="equipeDepart" class="selectChangeAffectation">
+                                             <option value="vide" selected> -- selectionnez une option -- </option>
+                                         </select>
+                                     </td>
+
+                                     <td width="10%" style="max-width: 10%;">
+                                         <select id="pouleDestination" class="selectChangeAffectation">
+                                             <option value="vide" selected> -- selectionnez une option -- </option>
+                                         </select>
+                                     </td>
+
+                                     <td width="18%">
+                                         <select id="equipeDestination" class="selectChangeAffectation" >
+                                             <option value="vide" selected> -- selectionnez une option -- </option>
+                                         </select>
+                                     </td>
+                                     <td width="10%">
+                                         <button id="btnAjouterChangementAffectation" class="btn btn-primary ">Ajouter</button>
+                                     </td>
+                                 </tr>
+
+                             </tbody>
+                         </table>
+
+
+
+                     </div>
+
+
+                 <!-- /.panel-body -->
+
+
+                 </div>
+
+             </div>
+
+             {% elseif typeMatch == "plateau" %}
+             {% endif %}
+
+
+
+
+
+
              <!-- bouton lancemenet de calcul -->
              <div class="row">
                  <div class="col-lg-12">
-                     {#<label id="lancerCalculBtn" class="btn btn-primary pull-right"> Relancer le calcul</label>#}
                      <button id="lancerCalculBtn" class="btn btn-primary pull-right"> Relancer le calcul</button>
                  </div>
              </div>
@@ -3997,7 +4063,7 @@
                      var plateau = document.getElementById("typeRencontre3").checked;
                      if (plateau) {
                          document.getElementById("nbrJournee").style.display = "block";
-                         document.getElementById("nbrRencontre").style.display = "block";
+//                         document.getElementById("nbrRencontre").style.display = "block";
                          document.getElementById("ajoutContrainte").style.display = "block";
                      }
                  }
@@ -4006,7 +4072,7 @@
                      var allerRetour = document.getElementById("typeRencontre1").checked;
                      if (allerRetour) {
                          document.getElementById("nbrJournee").style.display = "none";
-                         document.getElementById("nbrRencontre").style.display = "none";
+//                         document.getElementById("nbrRencontre").style.display = "none";
                          document.getElementById("ajoutContrainte").style.display = "none";
                      }
                  }
@@ -4015,7 +4081,7 @@
                      var aller = document.getElementById("typeRencontre2").checked;
                      if (aller) {
                          document.getElementById("nbrJournee").style.display = "none";
-                         document.getElementById("nbrRencontre").style.display = "none";
+//                         document.getElementById("nbrRencontre").style.display = "none";
                          document.getElementById("ajoutContrainte").style.display = "none";
                      }
                  }
@@ -4038,8 +4104,8 @@
                      });
 
                      // toggle bouton changement d'affectation
-                     $("#changeAffectationOptSc").click(function(){
-                         $("#changeAffectationOptScBody").toggle();
+                     $("#changeAffectation").click(function(){
+                         $("#changeAffectationBody").toggle();
 
                      })
 
@@ -4066,8 +4132,24 @@
                          $("#btnSupprimerInterdiction" + j).click(function(){
                              $(this).closest('tr').remove();
                          });
-
                      }
+
+                     // cacher le bouton relancer
+                     $("#lancerCalculBtn").hide();
+
+                     // faire appaitre le bouton relancer pour chaque changement de valeur par l'utilisateur
+                     $("input").change(function(){
+                         $("#lancerCalculBtn").show();
+                     });
+                     $("select").change(function(){
+                         $("#lancerCalculBtn").show();
+                     });
+                     $("#btnAjouterChangementAffectation").click(function(){
+                         $("#lancerCalculBtn").show();
+                     });
+                     $("#btnAjouterInterdiction").click(function(){
+                         $("#lancerCalculBtn").show();
+                     });
 
                  });
 
@@ -4087,19 +4169,175 @@
                  $(".equipe2").select2({
                      width:'100%'
                  });
-                 $(".pouleDepart").select2({
-                     width:'100%'
-                 });
-                 $(".equipeDepart").select2({
-                     width:'100%'
-                 });
-                 $(".pouleDestination").select2({
-                     width:'100%'
-                 });
-                 $(".equipeDestination").select2({
+                 $(".selectChangeAffectation").select2({
                      width:'100%'
                  });
 
+
+
+                 function getPoulesFromInfoChangeAffectation(infoChangeAffectation){
+                     var poules = [];
+
+                     var alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ];
+                     $.each(infoChangeAffectation, function(key, value){
+                        var poule = alphabet[key-1];
+                         poules.push([key, poule]);
+                     });
+
+                     return poules;
+                 }
+
+                 function remplirSelectPouleDepartEtDestination(poules){
+                     var tailleOptionPoule = $("#pouleDepart option").size();
+                     console.log("tailleOptionPoule: " + tailleOptionPoule);
+
+                     // remplir poule départ et destination pour la premiere fois
+                     if($("#pouleDepart option").size() <= 1){
+                         for(var i=0; i<poules.length; i++){
+//                             console.log(poules[i]);
+                             $('#pouleDepart').append($('<option>', {
+                                 value: poules[i][0],
+                                 text : poules[i][1]
+                             }));
+                             $('#pouleDestination').append($('<option>', {
+                                 value: poules[i][0],
+                                 text : poules[i][1]
+                             }));
+                         }
+                     }
+
+                 }
+
+
+                 //// JS pour changement d'affectation d'équipes par poule
+                 // JS pour changement de scénario
+                 $("#scenarioChangeAffectation").select2({
+                     width:'100%'
+                 }).on("change", function(e) {
+                     // mostly used event, fired to the original element when the value changes
+                     var scenarioChangeAffectation = $(this).val();
+                     console.log("scenarioChangeAffectation: " + scenarioChangeAffectation);
+
+                     if(scenarioChangeAffectation === "optimalSansContrainte"){
+                         var infoChangeAffectation = {{ infoChangeAffectation.optimalSansContrainte | json_encode | raw}};
+
+                         // obtenir poules
+                         var poules = getPoulesFromInfoChangeAffectation(infoChangeAffectation);
+                         remplirSelectPouleDepartEtDestination(poules);
+
+                     }
+                     else if(scenarioChangeAffectation === "equitableSansContrainte"){
+                         var infoChangeAffectation = {{ infoChangeAffectation.equitableSansContrainte | json_encode | raw}};
+
+                         // obtenir poules
+                         var poules = getPoulesFromInfoChangeAffectation(infoChangeAffectation);
+                         remplirSelectPouleDepartEtDestination(poules);
+
+                     }
+
+                     else if(scenarioChangeAffectation === "optimalAvecContrainte"){
+                         var infoChangeAffectation = {{ infoChangeAffectation.optimalAvecContrainte | json_encode | raw}};
+
+                         // obtenir poules
+                         var poules = getPoulesFromInfoChangeAffectation(infoChangeAffectation);
+                         remplirSelectPouleDepartEtDestination(poules);
+
+                     }
+                     else if(scenarioChangeAffectation === "equitableAvecContrainte"){
+                         var infoChangeAffectation = {{ infoChangeAffectation.equitableAvecContrainte | json_encode | raw}};
+
+                         // obtenir poules
+                         var poules = getPoulesFromInfoChangeAffectation(infoChangeAffectation);
+                         remplirSelectPouleDepartEtDestination(poules);
+                     }
+                     else if (scenarioChangeAffectation === "vide"){
+                         // supprimer les options
+                         var selectPoule = $("#pouleDepart")
+                                 .find("option")
+                                 .remove()
+                                 .end();
+                         var selectPoule = $("#pouleDestination")
+                                 .find("option")
+                                 .remove()
+                                 .end();
+                     }
+
+                     // reinitialiser les autres champs
+                     $("#select2-pouleDepart-container").text("-- selectionnez une option --");
+                     $("#select2-equipeDepart-container").text("-- selectionnez une option --");
+                     $("#select2-pouleDestination-container").text("-- selectionnez une option --");
+                     $("#select2-equipeDestination-container").text("-- selectionnez une option --");
+
+                     // supprimer les options
+                     var selectEquipe = $("#equipeDepart")
+                             .find("option")
+                             .remove()
+                             .end();
+                     selectEquipe.append('<option value="vide">   -- selectionnez une option --  </option>');
+                     var selectEquipe = $("#equipeDestination")
+                             .find("option")
+                             .remove()
+                             .end();
+                     selectEquipe.append('<option value="vide">   -- selectionnez une option --  </option>');
+                 })
+
+                 function remplirSelectEquipe(scenario, poule, equipeDesignation){
+
+                     var infoChangeAffectation = {{ infoChangeAffectation | json_encode | raw }};
+                     var infoEquipe = infoChangeAffectation[scenario][poule];
+
+                     // supprimer toutes les options
+                     if(equipeDesignation == "depart" ){
+                         $("#select2-equipeDepart-container").text("-- selectionnez une option --");
+
+                         var selectEquipe = $("#equipeDepart")
+                                 .find("option")
+                                 .remove()
+                                 .end();
+                     }
+                     else if (equipeDesignation == "destination"){
+                         $("#select2-equipeDestination-container").text("-- selectionnez une option --");
+                         var selectEquipe = $("#equipeDestination")
+                                 .find("option")
+                                 .remove()
+                                 .end();
+                     }
+
+                     // ajouter une ligne 'selectionnez une option'
+                     selectEquipe.append('<option value="vide">   -- selectionnez une option --  </option>');
+
+                     if(poule !== "vide"){
+                         for(var i=0; i<infoEquipe.length; i++){
+                             var equipeNom = infoEquipe[i]["equipeNom"];
+                             var equipeId = infoEquipe[i]["equipeId"];
+                             selectEquipe.append('<option value="'+ equipeId  +'">' + equipeNom +'</option>');
+                         }
+                     }
+
+                 }
+
+
+                 // JS pour changement de poule de départ
+                 $("#pouleDepart").select2({
+                     width:'100%'
+                 }).on("change", function(e) {
+                     var scenariochoisi= $("#scenarioChangeAffectation").val();
+                     var pouleDepart = $(this).val();
+
+                     remplirSelectEquipe(scenariochoisi, pouleDepart, "depart");
+
+                 })
+
+
+                 // JS pour changement de poule de destination
+                 $("#pouleDestination").select2({
+                     width:'100%'
+                 }).on("change", function(e) {
+                     var scenariochoisi= $("#scenarioChangeAffectation").val();
+                     var pouleDestination = $(this).val();
+
+                     remplirSelectEquipe(scenariochoisi, pouleDestination, "destination");
+                 })
 
 
                  // javascript quand on clique sur le bouton 'lancer le calcul'
@@ -4107,7 +4345,6 @@
 
                      // ajouter des nouvelles lignes pour les contraintes d'interdiction
                      $("#btnAjouterInterdiction").click(function(){
-
                          console.log("------------------------------------ debug bouton ajouter des interdictions  ---------------------------------------");
 
                          var ligneNbr = $('#tbodyInterdictions tr').length;
@@ -4137,9 +4374,7 @@
                              $('#tbodyInterdictions tr').each(function(i, el){
                                  var $tds = $(this).find('td');
                                  var premierEquipeId = $tds.eq(1).find("span").text().trim();
-//                                 console.log("premierEquipeId: " + premierEquipeId);
                                  var deuxiemeEquipeId = $tds.eq(2).find("span").text().trim();
-//                                 console.log("deuxiemeEquipeId: " + deuxiemeEquipeId);
 
                                  listeInterdictions.push({premierEquipeId: premierEquipeId, deuxiemeEquipeId: deuxiemeEquipeId} );
                                  listeInterdictions.push({premierEquipeId: deuxiemeEquipeId, deuxiemeEquipeId: premierEquipeId} );
@@ -4151,9 +4386,7 @@
                              // controler pour chaque interdiction présente
                              for(var i=0; i<listeInterdictions.length; i++){
                                  var premierEquipeInterdiction = listeInterdictions[i]["premierEquipeId"] ;
-//                                console.log("premierEquipeInterdiction: " + premierEquipeInterdiction);
                                  var deuxiemeEquipeInterdiction = listeInterdictions[i]["deuxiemeEquipeId"] ;
-//                                console.log("deuxiemeEquipeInterdiction: " + deuxiemeEquipeInterdiction);
 
                                  if(premierEquipeInterdiction == interdictionEquipe1Id && deuxiemeEquipeInterdiction == interdictionEquipe2Id){
                                      alert("Cette interdiction existe déjà. Veuillez corriger votre sélection");
@@ -4162,9 +4395,6 @@
 
                              }
                          }
-
-
-
 
 
                          // ajouter une nouvelle ligne dans la table d'interdictions
@@ -4197,7 +4427,199 @@
                      });
 
 
+                     // ajouter des nouvelles lignes pour les changements d'affectation d'équipes par poule
+                     $("#btnAjouterChangementAffectation").click(function(){
+                         console.log("------------------------------------ debug bouton ajouter des changements d'affectation  -------------------------------");
 
+                         // obtenir valeurs renseignées par l'utilisateur
+                         var scenario = $("#scenarioChangeAffectation option:selected").val();
+                         var pouleDepart = $("#pouleDepart option:selected").val();
+                         var equipeDepart = $("#equipeDepart option:selected").val();
+                         var pouleDestination = $("#pouleDestination option:selected").val();
+                         var equipeDestination = $("#equipeDestination option:selected").val();
+
+                         console.log("scenario: " + scenario);
+                         console.log("pouleDepart: " + pouleDepart);
+                         console.log("equipeDepart: " + equipeDepart);
+                         console.log("pouleDestination: " + pouleDestination);
+                         console.log("equipeDestination: " + equipeDestination);
+
+                         // ajouter une ligne si toutes les valeurs sont remplies
+                         if(scenario != "vide" && pouleDepart != "vide" && equipeDepart != "vide" && pouleDestination != "vide" && equipeDestination != "vide"){
+                             var ligneNbr = $('#tbodyChangeAffectation tr').length;
+                             console.log("ligneNbr : " + ligneNbr);
+
+                             // controle la poule de départ est égale à la poule de destination
+                             if(pouleDepart == pouleDestination){
+                                 alert("La poule d’origine doit être différente de la poule de destination. Veuillez corriger votre sélection.");
+                                 return;
+                             }
+
+                             var statutErreur = 0;
+                             if(ligneNbr > 0){
+                                 // controle team départ ou team destination ne doit pas figurer sur la liste de changements présente
+
+                                 var listeChangeAffect = {};
+
+                                 // obtenir la liste de tous changement d'affectation
+                                 $('#tbodyChangeAffectation tr').each(function(i, el){
+                                     var $tds = $(this).find('td');
+                                     var scenarioTmp = $tds.eq(0).find("span").text().trim();
+                                     console.log("----------------------------------------------------------------------- ");
+                                     var equipeDepartTmp = $tds.eq(2).find("span").text().trim();
+                                     var equipeDestinationTmp = $tds.eq(4).find("span").text().trim();
+                                     var equipesTmp = [equipeDepartTmp, equipeDestinationTmp];
+
+                                     if (scenarioTmp in listeChangeAffect){
+                                         listeChangeAffect[scenarioTmp].push(equipeDepartTmp);
+                                         listeChangeAffect[scenarioTmp].push(equipeDestinationTmp);
+                                     }
+                                     else{
+                                         listeChangeAffect[scenarioTmp] = equipesTmp;
+                                     }
+
+                                 });
+
+                                 console.log("listeChangeAffect: " + JSON.stringify(listeChangeAffect));
+
+                                 // controler pour chaque changement d'affectation présent
+                                 $.each(listeChangeAffect, function(scenarioExiste, listeEquipesExiste){
+
+                                     var testEquipeDepart = $.inArray(equipeDepart, listeEquipesExiste);
+                                     console.log("testEquipeDepart: " + testEquipeDepart);
+                                     var testEquipeDestination = $.inArray(equipeDestination, listeEquipesExiste);
+                                     console.log("testEquipeDestination: " + testEquipeDestination);
+
+                                     if(scenarioExiste == scenario && (   $.inArray(equipeDepart, listeEquipesExiste) != -1 ) ){
+                                         alert("Cette équipe a déjà été sélectionnée pour un changement d’affectation à une poule. Veuillez corriger votre sélection.");
+                                         statutErreur = 1;
+                                         return;
+                                     }
+                                     if(scenarioExiste == scenario && (  $.inArray(equipeDestination, listeEquipesExiste) != -1 ) ){
+                                         alert("Cette équipe a déjà été sélectionnée pour un changement d’affectation à une poule. Veuillez corriger votre sélection.");
+                                         statutErreur = 1;
+                                         return;
+                                     }
+                                 });
+
+
+
+                             }
+
+
+                             console.log("statutErreur: " + statutErreur);
+                             if(statutErreur == 0){
+                                 // ajouter un nouveau changement d'affectation sur la liste
+                                 var scenarioNom = $("#scenarioChangeAffectation option:selected").text();
+                                 var pouleDepartNom = $("#pouleDepart option:selected").text();
+                                 var pouleDestinationNom = $("#pouleDestination option:selected").text();
+                                 var equipeDepartNom = $("#equipeDepart option:selected").text();
+                                 var equipeDestinationNom = $("#equipeDestination option:selected").text();
+
+                                 var newLigneChangeAffect = "\
+                                     <tr id=\"changementAffectation" + ligneNbr + "\"> \
+                                         <td width=\"15%\" > " + scenarioNom + "  <span id=\"changementAffectation" + ligneNbr + "scenario\" style=\"display:none\" >" +  scenario + "</span>  </td> \
+                                         <td width=\"10%\" > " + pouleDepartNom + "  <span id=\"changementAffectation" + ligneNbr + "pouleDepart\" style=\"display:none\" >" +  pouleDepart + "</span>  </td> \
+                                         <td width=\"15%\" > " + equipeDepartNom + "  <span id=\"changementAffectation" + ligneNbr + "equipeDepart\" style=\"display:none\" >" +  equipeDepart + "</span>  </td> \
+                                         <td width=\"10%\" > " + pouleDestinationNom + "  <span id=\"changementAffectation" + ligneNbr + "pouleDestination\" style=\"display:none\" >" +  pouleDestination + "</span>  </td> \
+                                         <td width=\"15%\" > " + equipeDestinationNom + "  <span id=\"changementAffectation" + ligneNbr + "equipeDestination\" style=\"display:none\" >" +  equipeDestination + "</span>  </td> \
+                                         <td width=\"10%\" > \
+                                             <button id=\"btnSupprimerChangeAffect" +  ligneNbr + "\"  class=\"btn btn-primary\"> Supprimer </button> \
+                                         </td> \
+                                     </tr>";
+
+                                 $("#tbodyChangeAffectation").append(newLigneChangeAffect);
+
+                                 // binding jquery bouton supprimer
+                                 $("#btnSupprimerChangeAffect" + ligneNbr).click(function(){
+                                     $(this).closest('tr').remove();
+                                 });
+
+                             }
+
+                             // reinitialiser tous les elements select
+                             reinitialiserSelectValeurs();
+
+
+
+                         }
+
+                     });
+
+
+                     function reinitialiserSelectValeurs(){
+//                     console.log("DEBUG reinitialiserSelectValeurs");
+
+                         // reinitialiser les scénarios
+                         $("#select2-scenarioChangeAffectation-container").text("-- selectionnez une option --");
+                         $("#scenarioChangeAffectation").val("vide");
+
+                         // reinitialiser les poules de départ
+                         $("#select2-pouleDepart-container").text("-- selectionnez une option --");
+                         var selectPouleDepart = $("#pouleDepart")
+                                 .find("option")
+                                 .remove()
+                                 .end();
+                         selectPouleDepart.append('<option value="vide">   -- selectionnez une option --  </option>');
+
+
+                         // reinitialiser les équipes de départ
+                         $("#select2-equipeDepart-container").text("-- selectionnez une option --");
+                         var selectEquipeDepart = $("#equipeDepart")
+                                 .find("option")
+                                 .remove()
+                                 .end();
+                         selectEquipeDepart.append('<option value="vide">   -- selectionnez une option --  </option>');
+
+                         // reinitialiser les poules de destination
+                         $("#select2-pouleDestination-container").text("-- selectionnez une option --");
+                         var selectPouleDestination = $("#pouleDestination")
+                                 .find("option")
+                                 .remove()
+                                 .end();
+                         selectPouleDestination.append('<option value="vide">   -- selectionnez une option --  </option>');
+
+                         // reinitialiser les équipes de destination
+                         $("#select2-equipeDestination-container").text("-- selectionnez une option --");
+                         var selectEquipeDestination = $("#equipeDestination")
+                                 .find("option")
+                                 .remove()
+                                 .end();
+                         selectEquipeDestination.append('<option value="vide">   -- selectionnez une option --  </option>');
+
+                     }
+
+
+
+                     function getChangeAffectations(){
+                         var tabChangeAffectation = {};
+
+                         $('#tbodyChangeAffectation tr').each(function() {
+
+                             var scenarioChangeAffect = $(this).find("td").eq(0).find("span").text().trim();
+                             var pouleDepartChangeAffect = $(this).find("td").eq(1).find("span").text().trim();
+                             var equipeDepartChangeAffect = $(this).find("td").eq(2).find("span").text().trim();
+                             var pouleDestinationChangeAffect = $(this).find("td").eq(3).find("span").text().trim();
+                             var equipeDestinationChangeAffect = $(this).find("td").eq(4).find("span").text().trim();
+                             var objTmp = {"pouleDepart" : pouleDepartChangeAffect,
+                                 "equipeDepart": equipeDepartChangeAffect, "pouleDestination" : pouleDestinationChangeAffect,
+                                 "equipeDestination" : equipeDestinationChangeAffect
+                             };
+//                             console.log("objTmp: " + JSON.stringify(objTmp));
+
+                             if( scenarioChangeAffect in tabChangeAffectation ){
+                                 tabChangeAffectation[scenarioChangeAffect].push(objTmp);
+                             }
+                             else{
+                                 tabChangeAffectation[scenarioChangeAffect] = [objTmp];
+                             }
+
+                         });
+
+
+                         return tabChangeAffectation;
+
+                     }
 
                      ////////////////////////////////////////////////////////////////   Lancer Le Calcul //////////////////////////////////////////////////////////
                      // selectionner la valeur pour la variation du nombre d'équipes par poule
@@ -4256,21 +4678,32 @@
                                  console.log("interdictions: " + JSON.stringify(interdictions));
 
                                  var repartitionsHomogenes = verifRepartitionHomogene();
-                                 console.log("repartitionsHomogenes: " + repartitionsHomogenes );
+                                 console.log("repartitionsHomogenes: " + JSON.stringify(repartitionsHomogenes) );
+
+                                 var changeAffectEquipes = getChangeAffectations();
+                                 console.log("changeAffectEquipes: " + JSON.stringify(changeAffectEquipes) );
 
                                  // si la vérification des répartitions homogenes retourne une erreur
                                  if(repartitionsHomogenes == "erreur" ){
                                      return;
                                  }
 
+                                 // il faut choisir soit la variation du nombre d'équipe par poule ou le changement d'affectation d'équipes par poule
+                                if(varEquipeParPoule > 0 && !$.isEmptyObject(changeAffectEquipes)){
+                                    alert("Nous ne pouvons pas traiter la variation du nombre d'équipes par poule avec le changement d'affectation d'équipes par poule. Veuillez lancer avec seulement une option");
+                                    return
+                                }
+
 
                                  alert("Le calcul est en cours. Vous recevrez un mail pour vous avertir de la mise à disposition de vos résultats de calculs");
 
 
                                  // agréger les input params
-                                 var inputParams = {typeMatch: typeMatch, poulesNbr: poulesNbr, idGroupe: idGroupe,
-                                     interdictions: interdictions, repartitionsHomogenes  : repartitionsHomogenes,
-                                     varEquipeParPoule: varEquipeParPoule, idAncienResultat: idResultat };
+                                 var inputParams = {"typeMatch": typeMatch, "poulesNbr": poulesNbr, "idGroupe": idGroupe,
+                                     "interdictions": interdictions, "repartitionsHomogenes"  : repartitionsHomogenes,
+                                     "varEquipeParPoule": varEquipeParPoule, "idAncienResultat": idResultat,
+                                     "changeAffectEquipes": changeAffectEquipes
+                                 };
                                  console.log("inputParams : " + JSON.stringify(inputParams));
 
 
@@ -4312,15 +4745,6 @@
 
                  });
 
-                 function ajouterInterdiction(){
-                     var interdiction = document.getElementById("interdiction");
-                     interdiction.style.display = "block";
-                 }
-
-                 function ajouterRepartition(){
-                     var repartitionHomogene = document.getElementById("repartitionHomogene");
-                     repartitionHomogene.style.display = "block";
-                 }
 
 
                  /**********************************************/
@@ -4339,18 +4763,18 @@
 
 
                  ////////traitement des interdictions///////////////
-                 function selectEquipe(select1,select2) {
-                     select2 = select2[0];
-                     var lengthEquipe2 = select2.options.length;
-                     for (var i= 0 ; i< lengthEquipe2 ; i++ ){
-
-                         select2.options[i].disabled = false;
-
-                     }
-                     var x = select1.selectedIndex;
-                     select2.options[x].disabled = true;
-                 }
-
+//                 function selectEquipe(select1,select2) {
+//                     select2 = select2[0];
+//                     var lengthEquipe2 = select2.options.length;
+//                     for (var i= 0 ; i< lengthEquipe2 ; i++ ){
+//
+//                         select2.options[i].disabled = false;
+//
+//                     }
+//                     var x = select1.selectedIndex;
+//                     select2.options[x].disabled = true;
+//                 }
+//
 
                  ///////////récupération contraintes /////////////
 
