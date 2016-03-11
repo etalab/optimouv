@@ -2623,7 +2623,7 @@ def save_result_to_db_post_treatment(launchType, reportId, groupId, results):
 					for indexCity, city in enumerate(contentTypeDistribution["villes"]):
 						results["params"]["repartitionsHomogenes"][teamType]["villes"][indexCity] = city.replace("'", u"''") 
 # 						logging.debug(" city: %s" %(city,))
-		
+				
 		
 		# escape single apostrophe for city names
 		# ref scenario
@@ -2649,7 +2649,7 @@ def save_result_to_db_post_treatment(launchType, reportId, groupId, results):
 		
 		resultsEquitableWithConstraint = results["scenarioEquitableAvecContrainte"]
 		if resultsEquitableWithConstraint:
-			replace_single_quote_for_result(resultsEquitableWithoutConstraint["rencontreDetails"])
+			replace_single_quote_for_result(resultsEquitableWithConstraint["rencontreDetails"])
 
 		
 		
@@ -2666,11 +2666,10 @@ def save_result_to_db_post_treatment(launchType, reportId, groupId, results):
 		costSharedCar = 0
 		costBus = 0
 		
-# 		sql = """insert into scenario (id_rapport, nom, kilometres, duree, date_creation, date_modification, 
 		sql = """insert into resultats (id_rapport, nom, kilometres, duree, date_creation, date_modification, 
 					co2_voiture, co2_covoiturage, co2_minibus, cout_voiture, cout_covoiturage, cout_minibus, details_calcul ) 
-			values ( %(reportId)s , '%(name)s', %(km)s, %(travelTime)s,' %(creationDate)s', '%(modificationDate)s',
-					%(co2Car)s, %(co2SharedCar)s, %(co2Bus)s, %(costCar)s, %(costSharedCar)s, %(costBus)s, '%(results)s' )
+			values ( %(reportId)s , '%(name)s', %(km)s, %(travelTime)s, '%(creationDate)s', '%(modificationDate)s',
+ 					%(co2Car)s, %(co2SharedCar)s, %(co2Bus)s, %(costCar)s, %(costSharedCar)s, %(costBus)s, '%(results)s' )
 			"""%{	"reportId": reportId, 
 					"name": name,
 					"km": km,
@@ -3073,54 +3072,54 @@ def check_request_validity_post_treatment(teamTransfers, varTeamNbrPerPool, user
 	except Exception as e:
 		show_exception_traceback()
 
-"""
-Function to save result into DB
-"""
-def update_result_to_db(resultId, results):
-	try:
-		# escape single apostrophe for city names
-		# ref scenario
-		resultsRef = results["scenarioRef"]
-		if resultsRef:
-			replace_single_quote_for_result(resultsRef["rencontreDetails"])
-# 		logging.debug("resultsRef : %s" %resultsRef)
-
-		# optimal scenario
-		resultsOptimalWithoutConstraint = results["scenarioOptimalSansContrainte"]
-		if resultsOptimalWithoutConstraint:
-			replace_single_quote_for_result(resultsOptimalWithoutConstraint["rencontreDetails"])
-		
-		resultsOptimalWithConstraint = results["scenarioOptimalAvecContrainte"]
-		if resultsOptimalWithConstraint:
-			replace_single_quote_for_result(resultsOptimalWithConstraint["rencontreDetails"])
-			
-		# equitable scenario
-		resultsEquitableWithoutConstraint = results["scenarioEquitableSansContrainte"]
-		if resultsEquitableWithoutConstraint:
-			replace_single_quote_for_result(resultsEquitableWithoutConstraint["rencontreDetails"])
-			
-		
-		resultsEquitableWithConstraint = results["scenarioEquitableAvecContrainte"]
-		if resultsEquitableWithConstraint:
-			replace_single_quote_for_result(resultsEquitableWithoutConstraint["rencontreDetails"])
-
-
-		# mark the final result
-# 		results["params"]["final"] = "yes"
-		results["params"]["final"] = "oui"
-
-# 		sql = """update scenario set details_calcul='%(results)s' where id=%(resultId)s
-		sql = """update resultats set details_calcul='%(results)s' where id=%(resultId)s
-			"""%{	"resultId": resultId, 
-					"results": json.dumps(results),
-				}
-# 		logging.debug("sql: %s" %sql)
-		db.execute(sql)
-		db.commit()
-		
-		return resultId
-	except Exception as e:
-		show_exception_traceback()
+# """
+# Function to save result into DB
+# """
+# def update_result_to_db(resultId, results):
+# 	try:
+# 		# escape single apostrophe for city names
+# 		# ref scenario
+# 		resultsRef = results["scenarioRef"]
+# 		if resultsRef:
+# 			replace_single_quote_for_result(resultsRef["rencontreDetails"])
+# # 		logging.debug("resultsRef : %s" %resultsRef)
+# 
+# 		# optimal scenario
+# 		resultsOptimalWithoutConstraint = results["scenarioOptimalSansContrainte"]
+# 		if resultsOptimalWithoutConstraint:
+# 			replace_single_quote_for_result(resultsOptimalWithoutConstraint["rencontreDetails"])
+# 		
+# 		resultsOptimalWithConstraint = results["scenarioOptimalAvecContrainte"]
+# 		if resultsOptimalWithConstraint:
+# 			replace_single_quote_for_result(resultsOptimalWithConstraint["rencontreDetails"])
+# 			
+# 		# equitable scenario
+# 		resultsEquitableWithoutConstraint = results["scenarioEquitableSansContrainte"]
+# 		if resultsEquitableWithoutConstraint:
+# 			replace_single_quote_for_result(resultsEquitableWithoutConstraint["rencontreDetails"])
+# 			
+# 		
+# 		resultsEquitableWithConstraint = results["scenarioEquitableAvecContrainte"]
+# 		if resultsEquitableWithConstraint:
+# 			replace_single_quote_for_result(resultsEquitableWithoutConstraint["rencontreDetails"])
+# 
+# 
+# 		# mark the final result
+# # 		results["params"]["final"] = "yes"
+# 		results["params"]["final"] = "oui"
+# 
+# # 		sql = """update scenario set details_calcul='%(results)s' where id=%(resultId)s
+# 		sql = """update resultats set details_calcul='%(results)s' where id=%(resultId)s
+# 			"""%{	"resultId": resultId, 
+# 					"results": json.dumps(results),
+# 				}
+# # 		logging.debug("sql: %s" %sql)
+# 		db.execute(sql)
+# 		db.commit()
+# 		
+# 		return resultId
+# 	except Exception as e:
+# 		show_exception_traceback()
 
 """
 Function to insert params to DB
