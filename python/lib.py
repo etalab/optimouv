@@ -1948,8 +1948,7 @@ def get_team_name_escaped_from_team_id(teamId):
 		teamName = ""
 		
 		sql = "select nom from entite where id=%s"%teamId
-# 		teamName = db.fetchone(sql).replace("'", u"''")
-		teamName = db.fetchone(sql)
+		teamName = db.fetchone(sql).replace("'", u"''")
 
 		return teamName
 	except Exception as e:
@@ -2624,7 +2623,7 @@ def save_result_to_db_post_treatment(launchType, reportId, groupId, results):
 					for indexCity, city in enumerate(contentTypeDistribution["villes"]):
 						results["params"]["repartitionsHomogenes"][teamType]["villes"][indexCity] = city.replace("'", u"''") 
 # 						logging.debug(" city: %s" %(city,))
-		
+				
 		
 		# escape single apostrophe for city names
 		# ref scenario
@@ -2650,7 +2649,7 @@ def save_result_to_db_post_treatment(launchType, reportId, groupId, results):
 		
 		resultsEquitableWithConstraint = results["scenarioEquitableAvecContrainte"]
 		if resultsEquitableWithConstraint:
-			replace_single_quote_for_result(resultsEquitableWithoutConstraint["rencontreDetails"])
+			replace_single_quote_for_result(resultsEquitableWithConstraint["rencontreDetails"])
 
 		
 		
@@ -2667,11 +2666,10 @@ def save_result_to_db_post_treatment(launchType, reportId, groupId, results):
 		costSharedCar = 0
 		costBus = 0
 		
-# 		sql = """insert into scenario (id_rapport, nom, kilometres, duree, date_creation, date_modification, 
 		sql = """insert into resultats (id_rapport, nom, kilometres, duree, date_creation, date_modification, 
 					co2_voiture, co2_covoiturage, co2_minibus, cout_voiture, cout_covoiturage, cout_minibus, details_calcul ) 
-			values ( %(reportId)s , '%(name)s', %(km)s, %(travelTime)s,' %(creationDate)s', '%(modificationDate)s',
-					%(co2Car)s, %(co2SharedCar)s, %(co2Bus)s, %(costCar)s, %(costSharedCar)s, %(costBus)s, '%(results)s' )
+			values ( %(reportId)s , '%(name)s', %(km)s, %(travelTime)s, '%(creationDate)s', '%(modificationDate)s',
+ 					%(co2Car)s, %(co2SharedCar)s, %(co2Bus)s, %(costCar)s, %(costSharedCar)s, %(costBus)s, '%(results)s' )
 			"""%{	"reportId": reportId, 
 					"name": name,
 					"km": km,
