@@ -84,7 +84,7 @@ class Listes{
         if(strlen($nomFichierSansExt) > 100){
             $retour = array(
                 "success" => false,
-                "msg" => "Le nom de votre liste est trop long. Veuillez renommer votre liste si vous souhaitez tout de même l'importer."
+                "msg" => "Le nom du fichier importé est trop long. Veuillez corriger le nom du fichier et l'importer de nouveau."
             );
 
 
