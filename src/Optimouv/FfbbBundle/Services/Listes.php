@@ -760,7 +760,32 @@ class Listes{
                 }
 
 
-//                    error_log("service: listes, function: controlerEntites, donneesEntete: ".print_r($donneesEntete, True), 3, $this->error_log_path);
+
+                // controler le champ 'poule'
+                $statutErreurPoule = 0;
+                // controler s'il y a des valeurs vides pour le champ 'poule'
+                if(in_array("", $poules)){
+                    $elementsCount = array_count_values($poules);
+
+                    if(count($poules) != $elementsCount[""] ){
+                        $statutErreurPoule = 1;
+                    }
+                }
+
+
+
+//                error_log("service: listes, function: controlerEntites, statutErreurPoule: ".print_r($statutErreurPoule, True), 3, $this->error_log_path);
+
+                if($statutErreurPoule == 1){
+                    $retour = array(
+                        "success" => false,
+                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                            ." Le champ \"POULE\" (colonne 12) être rempli pour toutes les lignes ou vide pour toutes les lignes de votre fichier.!"
+                            ."Veuillez corriger votre fichier et effectuer à nouveau l'import"
+                    );
+                    array_push($lignesErronees, $retour["msg"]);
+
+                }
 
 
                 // controler equipe 1 et equipe 2, elles doivent figurer dans les lignes importées (match plateau)
