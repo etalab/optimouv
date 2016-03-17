@@ -77,17 +77,23 @@ class Listes{
         # prendre juste le nom de fichier (supprimer la partie '.csv' dans le nom de fichier)
         $nomFichierSansExt = explode(".", $nomFichier)[0];
 
-        # vérifier la longueur max du nom de fichier
-
 //        error_log("\n Function: controlerEntites, \n"
-//            ."nomFichier: ".print_r($nomFichier, true), 3, $this->error_log_path);
-//
-//        exit();
+//            ."length nomFichierSansExt: ".print_r(strlen($nomFichierSansExt), true), 3, $this->error_log_path);
 
+        # vérifier la longueur max du nom de fichier
+        if(strlen($nomFichierSansExt) > 100){
+            $retour = array(
+                "success" => false,
+                "msg" => "Le nom de votre liste est trop long. Veuillez renommer votre liste si vous souhaitez tout de même l'importer."
+            );
+
+
+            return $retour;
+
+        }
 
         # controler l'existence du nom de fichier dans la table des listes de participants et des listes de lieux
         $retourControlerExistenceNomFichier = $this->verifierExistenceNomFichier($nomFichierSansExt);
-
 
 
         if(!$retourControlerExistenceNomFichier["success"]){
