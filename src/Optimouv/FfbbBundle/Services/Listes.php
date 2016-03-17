@@ -73,12 +73,22 @@ class Listes{
         $extensionFichier = explode(".", $_FILES["file-0"]["name"]);
         $extensionFichier = end($extensionFichier);
 
+
+        # prendre juste le nom de fichier (supprimer la partie '.csv' dans le nom de fichier)
+        $nomFichierSansExt = explode(".", $nomFichier)[0];
+
+        # vérifier la longueur max du nom de fichier
+
+//        error_log("\n Function: controlerEntites, \n"
+//            ."nomFichier: ".print_r($nomFichier, true), 3, $this->error_log_path);
+//
+//        exit();
+
+
         # controler l'existence du nom de fichier dans la table des listes de participants et des listes de lieux
-        $retourControlerExistenceNomFichier = $this->verifierExistenceNomFichier($nomFichier);
+        $retourControlerExistenceNomFichier = $this->verifierExistenceNomFichier($nomFichierSansExt);
 
 
-//        error_log("\n Function: verifierExistenceCodePostalNomVille, \n"
-//            ."retourControlerExistenceNomFichier: ".print_r($retourControlerExistenceNomFichier, true), 3, $this->error_log_path);
 
         if(!$retourControlerExistenceNomFichier["success"]){
             $retour = array(
@@ -1412,7 +1422,6 @@ class Listes{
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
-        $nomFichier = explode(".", $nomFichier)[0];
 
         try{
             # obtenir l'objet PDO
