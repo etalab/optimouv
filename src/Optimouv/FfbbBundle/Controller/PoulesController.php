@@ -78,8 +78,17 @@ class PoulesController extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $idUtilisateur = $user->getId();
 
+        # flag rencontre
+        $rencontre = 0;
+
+        # flag type équipe
+        $typeEquipe = 1;
+
+
+//        error_log("\n typeEquipe: ".print_r($typeEquipe , true), 3, "error_log_optimouv.txt");
+
         # controler toutes le fichier uploadé
-        $statutUpload = $this->get('service_listes')->controlerEntites("participants", $idUtilisateur);
+        $statutUpload = $this->get('service_listes')->controlerEntites("participants", $idUtilisateur, $rencontre, $typeEquipe);
 
 
         if($statutUpload["success"]){
@@ -88,7 +97,6 @@ class PoulesController extends Controller
             $retourEntites = $this->get('service_listes')->creerEntites($idUtilisateur);
             $idsEntite = $retourEntites["idsEntite"];
             $nomFichier = $retourEntites["nomFichier"];
-            $rencontre = 0;
 
 
             # créer une liste dans la table liste_participants
@@ -206,7 +214,6 @@ class PoulesController extends Controller
 
         }
 
-//        error_log("\n detailsEntites: ".print_r($detailsEntites , true), 3, "error_log_optimouv.txt");
 
 
         return $this->render('FfbbBundle:Poules:visualiserListeEquipes.html.twig', array(

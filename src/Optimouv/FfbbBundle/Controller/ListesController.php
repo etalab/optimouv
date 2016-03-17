@@ -38,9 +38,14 @@ class ListesController extends Controller
 
 //        error_log("\n Function: controlerEntites, \n"
 //            ."idUtilisateur: ".print_r($idUtilisateur, true), 3, "error_log_optimouv.txt");
+        # flag rencontre
+        $rencontre = 1;
+
+        # flag type équipe
+        $typeEquipe = 1;
 
         # controler toutes le fichier uploadé
-        $statutUpload = $this->get('service_listes')->controlerEntites("participants", $idUtilisateur);
+        $statutUpload = $this->get('service_listes')->controlerEntites("participants", $idUtilisateur, $rencontre, $typeEquipe);
 
 
         if($statutUpload["success"]){
@@ -49,7 +54,6 @@ class ListesController extends Controller
             $retourEntites = $this->get('service_listes')->creerEntites($idUtilisateur);
             $idsEntite = $retourEntites["idsEntite"];
             $nomFichier = $retourEntites["nomFichier"];
-            $rencontre = 1;
 
             # créer une liste dans la table liste_participants
             $retourListe = $this->get('service_listes')->creerListeParticipants($idsEntite, $nomFichier, $idUtilisateur, $rencontre);
@@ -170,8 +174,15 @@ class ListesController extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $idUtilisateur = $user->getId();
 
+        # flag rencontre
+        $rencontre = 1;
+
+        # flag type équipe
+        $typeEquipe = 0;
+
+
         # controler toutes le fichier uploadé
-        $statutUpload = $this->get('service_listes')->controlerEntites("lieux", $idUtilisateur);
+        $statutUpload = $this->get('service_listes')->controlerEntites("lieux", $idUtilisateur, $rencontre, $typeEquipe);
 
 
         if($statutUpload["success"]){

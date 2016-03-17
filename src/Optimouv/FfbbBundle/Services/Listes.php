@@ -31,7 +31,7 @@ class Listes{
         $this->error_log_path = $error_log_path;
     }
 
-    public function controlerEntites($typeEntiteAttendu, $idUtilisateur){
+    public function controlerEntites($typeEntiteAttendu, $idUtilisateur, $rencontre, $typeEquipe){
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
         $dateCreation = date('Y-m-d', time());
@@ -77,8 +77,6 @@ class Listes{
         # prendre juste le nom de fichier (supprimer la partie '.csv' dans le nom de fichier)
         $nomFichierSansExt = explode(".", $nomFichier)[0];
 
-//        error_log("\n Function: controlerEntites, \n"
-//            ."idUtilisateur: ".print_r($idUtilisateur, true), 3, $this->error_log_path);
 
         # vérifier la longueur max du nom de fichier
         if(strlen($nomFichierSansExt) > 100){
@@ -92,9 +90,11 @@ class Listes{
 
         }
 
+
         # controler l'existence du nom de fichier dans la table des listes de participants et des listes de lieux
-//        $retourControlerExistenceNomFichier = $this->verifierExistenceNomFichier($nomFichierSansExt);
-        $retourControlerExistenceNomFichier = $this->verifierExistenceNomFichier($nomFichierSansExt, $idUtilisateur);
+        $retourControlerExistenceNomFichier = $this->verifierExistenceNomFichier($nomFichierSansExt, $idUtilisateur, $rencontre, $typeEquipe);
+//        error_log("\n Function: controlerEntites, \n"
+//            ."nomFichierSansExt: ".print_r($nomFichierSansExt, true), 3, $this->error_log_path);
 
 
         if(!$retourControlerExistenceNomFichier["success"]){
@@ -1424,7 +1424,7 @@ class Listes{
     }
 
     # vérifier l'existence du nom fichier dans la table liste de participants et liste de lieux
-    private function verifierExistenceNomFichier($nomFichier, $idUtilisateur){
+    private function verifierExistenceNomFichier($nomFichier, $idUtilisateur, $rencontre, $typeEquipe){
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
@@ -1440,36 +1440,46 @@ class Listes{
                 die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
             }
 
-            # controler les listes de participants
-            $sql = "SELECT nom from liste_participants where id_utilisateur=:id_utilisateur;";
-            $stmt = $bdd->prepare($sql);
-            $stmt->bindParam(':id_utilisateur', $idUtilisateur);
-            $stmt->execute();
-            $resultatListeParticipants = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            # control pour les équipes
+            if($typeEquipe == 1){
+                # controler les listes de participants
+                $sql = "SELECT nom from liste_participants where id_utilisateur=:id_utilisateur and rencontre=:rencontre;";
+                $stmt = $bdd->prepare($sql);
+                $stmt->bindParam(':id_utilisateur', $idUtilisateur);
+                $stmt->bindParam(':rencontre', $rencontre);
+                $stmt->execute();
+                $resultatListeParticipants = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            for($i=0; $i<count($resultatListeParticipants); $i++){
-                $nomListeParticipantsTmp = $resultatListeParticipants[$i]["nom"];
+                for($i=0; $i<count($resultatListeParticipants); $i++){
+                    $nomListeParticipantsTmp = $resultatListeParticipants[$i]["nom"];
 
-                if($nomListeParticipantsTmp == $nomFichier){
-                    return array("success" => false);
-                }
-            }
-
-            # controler les listes de lieux
-            $sql = "SELECT nom from liste_lieux where id_utilisateur=:id_utilisateur;";
-            $stmt = $bdd->prepare($sql);
-            $stmt->bindParam(':id_utilisateur', $idUtilisateur);
-            $stmt->execute();
-            $resultatListeLieux = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            for($i=0; $i<count($resultatListeLieux); $i++){
-                $nomListeLieuxTmp = $resultatListeLieux[$i]["nom"];
-
-                if($nomListeLieuxTmp == $nomFichier){
-                    return array("success" => false);
+                    if($nomListeParticipantsTmp == $nomFichier){
+                        return array("success" => false);
+                    }
                 }
 
             }
+            # control pour les lieux
+            elseif($typeEquipe == 0){
+                # controler les listes de lieux
+                $sql = "SELECT nom from liste_lieux where id_utilisateur=:id_utilisateur;";
+                $stmt = $bdd->prepare($sql);
+                $stmt->bindParam(':id_utilisateur', $idUtilisateur);
+                $stmt->execute();
+                $resultatListeLieux = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                for($i=0; $i<count($resultatListeLieux); $i++){
+                    $nomListeLieuxTmp = $resultatListeLieux[$i]["nom"];
+
+                    if($nomListeLieuxTmp == $nomFichier){
+                        return array("success" => false);
+                    }
+
+                }
+
+            }
+
+
 
 //            error_log("\n Function: verifierExistenceCodePostalNomVille, \n"
 //                ."resultatListeParticipants: ".print_r($resultatListeParticipants, true), 3, $this->error_log_path);
