@@ -34,8 +34,6 @@ class Listes{
     public function controlerEntites($typeEntiteAttendu, $idUtilisateur, $rencontre, $isEquipe){
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
-        $dateCreation = date('Y-m-d', time());
-        $dateModification = date('Y-m-d', time());
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
         # afficher le statut de la requete executée
@@ -156,6 +154,8 @@ class Listes{
                     $premierJourReceptionListe = [];
                     $deuxiemeJourReceptionListe = [];
 
+                    # tableau des poules
+                    $poules = [];
 
                     // msg d'erreur générique
                     $genericMsg = "Veuillez corriger les champs indiqués et effectuer à nouveau l’import";
@@ -164,570 +164,172 @@ class Listes{
                         //erreur de connexion
                         error_log("\n erreur récupération de l'objet PDO, Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow, 3, $this->error_log_path);
                         die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
-                    } else {
-                        $idsEntite = [];
-                        // obtenir les données pour chaque ligne
-                        $nbrLigne = 1;
+                    }
 
-                        while (!$file->eof()) {
-                            $donnéesLigne = $file->fgetcsv();
-                            $nbrLigne++;
+                    $idsEntite = [];
+                    // obtenir les données pour chaque ligne
+                    $nbrLigne = 1;
 
-                            # controler si on a atteint le max nombre des erreurs
-                            if(count($lignesErronees) == $maxLignesErronees){
-                                break;
-                            }
+                    while (!$file->eof()) {
+                        $donnéesLigne = $file->fgetcsv();
+                        $nbrLigne++;
 
-                            // controler le fichier vide (sans données)
-                            if($donnéesLigne == array(null) and $nbrLigne == 2){
-                                $retour = array(
-                                    "success" => false,
-                                    "msg" => "Erreur ligne :".$nbrLigne."!"
-                                        ." Il n'y a pas de données dans le fichier csv!"
-                                        ." Veuillez uploader un fichier csv qui contient des données"
-                                );
-                                array_push($lignesErronees, $retour["msg"]);
-                                continue;
-                            }
+                        # controler si on a atteint le max nombre des erreurs
+                        if(count($lignesErronees) == $maxLignesErronees){
+                            break;
+                        }
 
+                        // controler le fichier vide (sans données)
+                        if($donnéesLigne == array(null) and $nbrLigne == 2){
+                            $retour = array(
+                                "success" => false,
+                                "msg" => "Erreur ligne :".$nbrLigne."!"
+                                    ." Il n'y a pas de données dans le fichier csv!"
+                                    ." Veuillez uploader un fichier csv qui contient des données"
+                            );
+                            array_push($lignesErronees, $retour["msg"]);
+                            continue;
+                        }
 
 
 
-                            // tester s'il y a des données
-                            if($donnéesLigne != array(null)){
 
+                        // tester s'il y a des données
+                        if($donnéesLigne != array(null)){
 
-                                // obtenir la valeur pour chaque paramètre
-                                $typeEntite = $donnéesLigne[0];
 
+                            // obtenir la valeur pour chaque paramètre
+                            $typeEntite = $donnéesLigne[0];
 
-                                // controler si le type d'entité attendu correspond au type donné dans le fichier
-                                if($typeEntiteAttendu == "participants"){
-                                    if(!in_array(strtolower($typeEntite), ["equipe", "personne"])){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le type d'entité donné: $typeEntite ne correspond pas au type attendu"
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
 
-                                    }
-                                }
-                                elseif($typeEntiteAttendu == "lieux") {
-                                    if (strtolower($typeEntite) != "lieu") {
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :" . $nbrLigne . "!"
-                                                . " Le type d'entité donné: $typeEntite ne correspond pas au type attendu (LIEU)  "
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-
-                                    }
-                                }
-                                else{
-                                    error_log("service: listes, function: controlerEntites", 3, $this->error_log_path);
-                                    die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
-
-                                }
-
-
-
-                                // obtenir les valeurs selon le type d'entité
-                                if (strtolower($typeEntite) == "equipe") {
-
-                                    # controler le nombre de colonnes
-//                                    if(count($donnéesLigne) != 11 && count($donnéesLigne) != 18){
-                                    if(count($donnéesLigne) != 11 && count($donnéesLigne) != 12 && count($donnéesLigne) != 18 ){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." La ligne doit contenir 11 valeurs (meilleur lieu), 12 ou 18 valeurs (optimisation de poule). Donné: ".count($donnéesLigne)." valeurs"
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-
-                                    # les champs obligatoires
-                                    $nom = $donnéesLigne[1];
-                                    $codePostal = $donnéesLigne[2];
-                                    $ville = $donnéesLigne[3];
-                                    $participants = $donnéesLigne[4];
-                                    $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
-
-                                    # controler tous les champs obligatoires
-                                    if(empty($nom)){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'nom' (colonne 2) doit être rempli!"
-                                                .$genericMsg
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-                                    if(empty($codePostal)){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'code postal' (colonne 3) doit être rempli!"
-                                                .$genericMsg
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    };
-                                    if(empty($ville)){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'ville' (colonne 4) doit être rempli!"
-                                                .$genericMsg
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    };
-                                    if(empty($participants)){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'nombre de participants' (colonne 5) doit être rempli!"
-                                                .$genericMsg
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    };
-                                    # controler le champ 'lieu de rencontre possible'
-                                    if( empty($donnéesLigne[5]) ){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'lieu de rencontre possible' (colonne 6) doit être rempli!"
-                                                .$genericMsg
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-
-                                    # controler le champ 'participants'
-                                    # il faut que la valeur soit une valeur numeric
-                                    if(!is_numeric($participants)){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'nombre de participants' (colonne 5) doit avoir une valeur numérique!"
-                                                .$genericMsg
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-
-                                    # controler le champ 'lieu de rencontre possible'
-                                    # il faut que la valeur soit 'OUI' ou 'NON'
-                                    if((strtolower($donnéesLigne[5]) != 'non') and (strtolower($donnéesLigne[5]) != 'oui')){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'lieu de rencontre possible' (colonne 6) doit avoir la valeur 'OUI' ou 'NON'!"
-                                                .$genericMsg
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-
-
-
-                                    # corriger le code postal si un zéro est manquant dans le premier chiffre
-                                    $codePostal = $this->corrigerCodePostal($codePostal);
-
-                                    # controler le champ 'code postal'
-                                    # il faut que la valeur contient 5 chiffres
-                                    if(strlen($codePostal) != 5){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'code postal' (colonne 3) doit contenir 5 chiffres!"
-                                                .$genericMsg
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-
-                                    # controler le code postal et la ville
-                                    # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
-                                    $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
-
-                                    if(!$statutControlCodePostalVille["success"]){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Veuillez corriger le code postal (colonne 3) et la ville (colonne 4) et effectuer à nouveau l'import "
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-
-
-
-
-                                    # les champs optionnels
-                                    $adresse = $donnéesLigne[6];
-                                    $longitude = $donnéesLigne[7];
-                                    $latitude = $donnéesLigne[8];
-                                    $projection = $donnéesLigne[9];
-                                    $licencies = $donnéesLigne[10];
-
-
-                                    // controler le champ 'POULE' pour l'ancien et le nouveau format csv (12 et 18 colonnes)
-                                    if(count($donnéesLigne) == 12 || count($donnéesLigne) == 18 ){
-                                        $poule = $donnéesLigne[11];
-
-                                        // controler la presence de valeur pour le champ 'POULE'
-                                        if(empty($poule)){
-                                            $retour = array(
-                                                "success" => false,
-                                                "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                    ."Le champ poule doit être rempli. Veuillez corriger et importer de nouveau votre fichier"
-                                            );
-                                            array_push($lignesErronees, $retour["msg"]);
-                                            continue;
-                                        }
-
-                                        // controler si les valeurs fournies pour le champ 'POULE' sont des alphabets
-                                        $alphabet = ['','A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ];
-                                        if (!in_array($poule, $alphabet))
-                                        {
-                                            $retour = array(
-                                                "success" => false,
-                                                "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                    ."Le champ poule doit contenir une lettre. Veuillez corriger et importer de nouveau votre fichier"
-                                            );
-                                            array_push($lignesErronees, $retour["msg"]);
-                                            continue;
-                                        }
-
-                                    }
-
-                                    // test de l'import pour l'optimisation des poules
-                                    if(count($donnéesLigne) == 18){
-                                        
-                                        # ajouter les noms dans la liste
-                                        array_push($tousNomsEquipes, $donnéesLigne[1]);
-
-                                        $premierJourReception = $donnéesLigne[12];
-                                        $premierJourEquipe1 = $donnéesLigne[13];
-                                        $premierJourEquipe2 = $donnéesLigne[14];
-
-                                        $deuxiemeJourReception = $donnéesLigne[15];
-                                        $deuxiemeJourEquipe1 = $donnéesLigne[16];
-                                        $deuxiemeJourEquipe2 = $donnéesLigne[17];
-
-                                        # ajouter les equipes adverses les listes
-                                        array_push($premierJourEquipesAdverses1, $premierJourEquipe1);
-                                        array_push($premierJourEquipesAdverses2, $premierJourEquipe2);
-                                        array_push($deuxiemeJourEquipesAdverses1, $deuxiemeJourEquipe1);
-                                        array_push($deuxiemeJourEquipesAdverses2, $deuxiemeJourEquipe2);
-                                        array_push($premierJourReceptionListe, $premierJourReception);
-                                        array_push($deuxiemeJourReceptionListe, $deuxiemeJourReception);
-
-                                        // controle le champ 'PREMIER JOUR DE RECEPTION'
-                                        if( ($premierJourReception == "" ) or  !(is_numeric($premierJourReception))   ){
-
-                                            $retour = array(
-                                                "success" => false,
-                                                "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                    ."Le champ 'PREMIER JOUR DE RECEPTION' (colonne 13) doit être rempli et avoir une valeur de type entier égale ou supérieure à 0!"
-                                                    ."Veuillez corriger et importer de nouveau votre fichier"
-                                            );
-                                            array_push($lignesErronees, $retour["msg"]);
-                                            continue;
-                                        }
-                                        // controle le champ 'DEUXIEME JOUR DE RECEPTION'
-                                        if( ($deuxiemeJourReception == "" ) or  !(is_numeric($deuxiemeJourReception))   ){
-
-                                            $retour = array(
-                                                "success" => false,
-                                                "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                    ."Le champ 'DEUXIEME JOUR DE RECEPTION' (colonne 16) doit être rempli et avoir une valeur de type entier égale ou supérieure à 0!"
-                                                    ."Veuillez corriger et importer de nouveau votre fichier"
-                                            );
-                                            array_push($lignesErronees, $retour["msg"]);
-                                            continue;
-                                        }
-
-                                        // controler equipe 1 et equipe 2, elles doivent être renseignées
-                                        if( ($premierJourReception > 0 ) && ( $premierJourEquipe1 == "" || $premierJourEquipe2 == "" )  ){
-                                            $retour = array(
-                                                "success" => false,
-                                                "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                    ."Le champ 'EQUIPE ADVERSE 1' (colonne 14) et le champ 'EQUIPE ADVERSE 2' (colonne 15) doivent être remplis!"
-                                                    ."Veuillez corriger et importer de nouveau votre fichier"
-                                            );
-                                            array_push($lignesErronees, $retour["msg"]);
-                                            continue;
-                                        }
-
-                                        if( ($deuxiemeJourReception > 0 ) && ( $deuxiemeJourEquipe1 == "" || $deuxiemeJourEquipe2 == "" )  ){
-                                            $retour = array(
-                                                "success" => false,
-                                                "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                    ."Le champ 'EQUIPE ADVERSE 1' (colonne 17) et le champ 'EQUIPE ADVERSE 2' (colonne 18) doivent être remplis!"
-                                                    ."Veuillez corriger et importer de nouveau votre fichier"
-                                            );
-                                            array_push($lignesErronees, $retour["msg"]);
-                                            continue;
-                                        }
-
-                                    }
-
-                                }
-                                elseif (strtolower($typeEntite) == "personne") {
-
-                                    # controler le nombre de colonnes
-                                    if(count($donnéesLigne) != 10){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." La ligne doit contenir 10 valeurs. Donné: ".count($donnéesLigne)." valeurs"
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-
-                                    # les champs obligatoires
-                                    $nom = $donnéesLigne[1];
-                                    $prenom = $donnéesLigne[2];
-                                    $codePostal = $donnéesLigne[3];
-                                    $ville = $donnéesLigne[4];
-                                    $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
-
-                                    # controler tous les champs obligatoires
-                                    if(empty($nom)){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'nom' (colonne 2) doit être rempli!"
-                                                .$genericMsg
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-                                    if(empty($prenom)){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'prenom' (colonne 3) doit être rempli!"
-                                                .$genericMsg
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-                                    if(empty($codePostal)){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'code postal' (colonne 4) doit être rempli!"
-                                                .$genericMsg
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-                                    if(empty($ville)){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'ville' (colonne 5) doit être rempli!"
-                                                .$genericMsg
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-                                    # controler le champ 'lieu de rencontre possible'
-                                    if( empty($donnéesLigne[5]) ){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'lieu de rencontre possible' (colonne 6) doit être rempli!"
-                                                .$genericMsg
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-
-                                    # controler le champ '$lieuRencontrePossible'
-                                    # il faut que la valeur soit 'OUI' ou 'NON'
-                                    if((strtolower($donnéesLigne[5]) != 'non') and (strtolower($donnéesLigne[5]) != 'oui')){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'lieu de rencontre possible' (colonne 6) doit avoir la valeur 'OUI' ou 'NON'!"
-                                                .$genericMsg
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-
-                                    # corriger le code postal si un zéro est manquant dans le premier chiffre
-                                    $codePostal = $this->corrigerCodePostal($codePostal);
-
-                                    # controler le champ 'code postal'
-                                    # il faut que la valeur contient 5 chiffres
-                                    if(strlen($codePostal) != 5){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'code postal' (colonne 4) doit contenir 5 chiffres!"
-                                                .$genericMsg
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-
-                                    # controler le code postal et la ville
-                                    # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
-                                    $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
-
-                                    if(!$statutControlCodePostalVille["success"]){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Les valeurs du couple 'code postal' (colonne 4) et 'ville' (colonne 5) ne sont pas reconnues!"
-                                                .$genericMsg
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-
-                                    # les champs optionnels
-                                    $adresse = $donnéesLigne[6];
-                                    $longitude = $donnéesLigne[7];
-                                    $latitude = $donnéesLigne[8];
-                                    $projection = $donnéesLigne[9];
-
-                                }
-                                elseif ($typeEntite == "LIEU") {
-                                    # les champs obligatoires
-                                    $nom = $donnéesLigne[1];
-                                    $codePostal = $donnéesLigne[2];
-                                    $ville = $donnéesLigne[3];
-
-                                    # controler le nombre de colonnes
-                                    if(count($donnéesLigne) != 13){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." La ligne doit contenir 13 valeurs. Donné: ".count($donnéesLigne)." valeurs"
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-
-                                    $lieuRencontrePossible = $this->getBoolean($donnéesLigne[4]);
-
-
-                                    # controler tous les champs obligatoires
-                                    if(empty($nom)){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'nom' (colonne 2) doit être rempli!"
-                                                .$genericMsg
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-                                    if(empty($codePostal)){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'code postal' (colonne 3) doit être rempli!"
-                                                .$genericMsg
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-                                    if(empty($ville)){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'ville' (colonne 4) doit être rempli!"
-                                                .$genericMsg
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-                                    # controler le champ 'lieu de rencontre possible'
-                                    if( empty($donnéesLigne[4]) ){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'lieu de rencontre possible' (colonne 5) doit être rempli!"
-                                                .$genericMsg
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-
-                                    # controler le champ 'lieu de rencontre possible'
-                                    # il faut que la valeur soit 'OUI'
-                                    if((strtolower($donnéesLigne[4]) != 'oui')){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'lieu de rencontre possible' (colonne 5) doit avoir la valeur 'OUI' pour la liste de lieux !"
-                                                .$genericMsg
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-
-                                    # corriger le code postal si un zéro est manquant dans le premier chiffre
-                                    $codePostal = $this->corrigerCodePostal($codePostal);
-
-                                    # controler le champ 'code postal'
-                                    # il faut que la valeur contient 5 chiffres
-                                    if(strlen($codePostal) != 5){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Le champ 'code postal' (colonne 3) doit contenir 5 chiffres!"
-                                                .$genericMsg
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-
-                                    # controler le code postal et la ville
-                                    # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
-                                    $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
-
-                                    if(!$statutControlCodePostalVille["success"]){
-                                        $retour = array(
-                                            "success" => false,
-                                            "msg" => "Erreur ligne :".$nbrLigne."!"
-                                                ." Les valeurs du couple 'code postal' (colonne 3) et 'ville' (colonne 4) ne sont pas reconnues!"
-                                                .$genericMsg
-                                        );
-                                        array_push($lignesErronees, $retour["msg"]);
-                                        continue;
-                                    }
-
-                                    # les champs optionnels
-                                    $adresse = $donnéesLigne[5];
-                                    $longitude = $donnéesLigne[6];
-                                    $latitude = $donnéesLigne[7];
-                                    $projection = $donnéesLigne[8];
-                                    $typeEquipement = $donnéesLigne[9];
-                                    $nombreEquipement = $donnéesLigne[10];
-                                    $capaciteRencontre = $this->getBoolean($donnéesLigne[11]);
-                                    $capacitePhaseFinale = $this->getBoolean($donnéesLigne[12]);
-                                }
-                                else{
+                            // controler si le type d'entité attendu correspond au type donné dans le fichier
+                            if($typeEntiteAttendu == "participants"){
+                                if(!in_array(strtolower($typeEntite), ["equipe", "personne"])){
                                     $retour = array(
                                         "success" => false,
                                         "msg" => "Erreur ligne :".$nbrLigne."!"
-                                            ." Le type d'entité n'est pas reconnu!"
-                                            ." Veuillez s'assurer que le type d'entité est parmi 'EQUIPE', 'PERSONNE' ou 'LIEU'!"
+                                            ." Le type d'entité donné: $typeEntite ne correspond pas au type attendu"
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+
+                                }
+                            }
+                            elseif($typeEntiteAttendu == "lieux") {
+                                if (strtolower($typeEntite) != "lieu") {
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :" . $nbrLigne . "!"
+                                            . " Le type d'entité donné: $typeEntite ne correspond pas au type attendu (LIEU)  "
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+
+                                }
+                            }
+                            else{
+                                error_log("service: listes, function: controlerEntites", 3, $this->error_log_path);
+                                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+
+                            }
+
+
+
+                            // obtenir les valeurs selon le type d'entité
+                            if (strtolower($typeEntite) == "equipe") {
+
+                                # controler le nombre de colonnes
+//                                    if(count($donnéesLigne) != 11 && count($donnéesLigne) != 18){
+                                if(count($donnéesLigne) != 11 && count($donnéesLigne) != 12 && count($donnéesLigne) != 18 ){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." La ligne doit contenir 11 valeurs (meilleur lieu), 12 ou 18 valeurs (optimisation de poule). Donné: ".count($donnéesLigne)." valeurs"
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                }
+
+                                # les champs obligatoires
+                                $nom = $donnéesLigne[1];
+                                $codePostal = $donnéesLigne[2];
+                                $ville = $donnéesLigne[3];
+                                $participants = $donnéesLigne[4];
+                                $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
+
+                                # controler tous les champs obligatoires
+                                if(empty($nom)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Le champ 'nom' (colonne 2) doit être rempli!"
+                                            .$genericMsg
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                }
+                                if(empty($codePostal)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Le champ 'code postal' (colonne 3) doit être rempli!"
+                                            .$genericMsg
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                };
+                                if(empty($ville)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Le champ 'ville' (colonne 4) doit être rempli!"
+                                            .$genericMsg
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                };
+                                if(empty($participants)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Le champ 'nombre de participants' (colonne 5) doit être rempli!"
+                                            .$genericMsg
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                };
+                                # controler le champ 'lieu de rencontre possible'
+                                if( empty($donnéesLigne[5]) ){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Le champ 'lieu de rencontre possible' (colonne 6) doit être rempli!"
+                                            .$genericMsg
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                }
+
+                                # controler le champ 'participants'
+                                # il faut que la valeur soit une valeur numeric
+                                if(!is_numeric($participants)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Le champ 'nombre de participants' (colonne 5) doit avoir une valeur numérique!"
+                                            .$genericMsg
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                }
+
+                                # controler le champ 'lieu de rencontre possible'
+                                # il faut que la valeur soit 'OUI' ou 'NON'
+                                if((strtolower($donnéesLigne[5]) != 'non') and (strtolower($donnéesLigne[5]) != 'oui')){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Le champ 'lieu de rencontre possible' (colonne 6) doit avoir la valeur 'OUI' ou 'NON'!"
                                             .$genericMsg
                                     );
                                     array_push($lignesErronees, $retour["msg"]);
@@ -735,26 +337,427 @@ class Listes{
                                 }
 
 
-                                # controler les doublons pour tous les types
-                                # ajouter la ligne courante dans le répértoire des lignes si ce n'est pas un doublon
-                                $donneesLigneEquipe = [$nom, $codePostal, $ville];
 
-                                if(!in_array($donneesLigneEquipe, $toutesLignes )){
-                                    array_push($toutesLignes, $donneesLigneEquipe);
-                                }
-                                else{
+                                # corriger le code postal si un zéro est manquant dans le premier chiffre
+                                $codePostal = $this->corrigerCodePostal($codePostal);
+
+                                # controler le champ 'code postal'
+                                # il faut que la valeur contient 5 chiffres
+                                if(strlen($codePostal) != 5){
                                     $retour = array(
                                         "success" => false,
                                         "msg" => "Erreur ligne :".$nbrLigne."!"
-                                            ." Le fichier comporte des lignes en double.!"
-                                            ." Veuillez supprimer cette ligne et effectuer à nouveau l’import"
+                                            ." Le champ 'code postal' (colonne 3) doit contenir 5 chiffres!"
+                                            .$genericMsg
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                }
+
+                                # controler le code postal et la ville
+                                # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
+                                $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
+
+                                if(!$statutControlCodePostalVille["success"]){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Veuillez corriger le code postal (colonne 3) et la ville (colonne 4) et effectuer à nouveau l'import "
                                     );
                                     array_push($lignesErronees, $retour["msg"]);
                                     continue;
                                 }
 
 
+
+
+                                # les champs optionnels
+                                $adresse = $donnéesLigne[6];
+                                $longitude = $donnéesLigne[7];
+                                $latitude = $donnéesLigne[8];
+                                $projection = $donnéesLigne[9];
+                                $licencies = $donnéesLigne[10];
+
+
+                                // controler le champ 'POULE' pour l'ancien et le nouveau format csv (12 et 18 colonnes)
+                                if(count($donnéesLigne) == 12 || count($donnéesLigne) == 18 ){
+                                    $poule = $donnéesLigne[11];
+
+                                    // controler la presence de valeur pour le champ 'POULE'
+//                                        if(empty($poule)){
+//                                            $retour = array(
+//                                                "success" => false,
+//                                                "msg" => "Erreur ligne :".$nbrLigne."!"
+//                                                    ."Le champ poule doit être rempli. Veuillez corriger et importer de nouveau votre fichier"
+//                                            );
+//                                            array_push($lignesErronees, $retour["msg"]);
+//                                            continue;
+//                                        }
+
+                                    // controler si les valeurs fournies pour le champ 'POULE' sont des alphabets
+                                    $alphabet = ['','A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ];
+                                    if (!in_array($poule, $alphabet))
+                                    {
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
+                                                ."Le champ poule doit contenir une lettre. Veuillez corriger et importer de nouveau votre fichier"
+                                        );
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
+                                    }
+
+                                    // ajouter la poule dans le tableau des poules
+                                    array_push($poules, $poule);
+
+                                }
+
+                                // test de l'import pour l'optimisation des poules
+                                if(count($donnéesLigne) == 18){
+
+                                    # ajouter les noms dans la liste
+                                    array_push($tousNomsEquipes, $donnéesLigne[1]);
+
+                                    $premierJourReception = $donnéesLigne[12];
+                                    $premierJourEquipe1 = $donnéesLigne[13];
+                                    $premierJourEquipe2 = $donnéesLigne[14];
+
+                                    $deuxiemeJourReception = $donnéesLigne[15];
+                                    $deuxiemeJourEquipe1 = $donnéesLigne[16];
+                                    $deuxiemeJourEquipe2 = $donnéesLigne[17];
+
+                                    # ajouter les equipes adverses les listes
+                                    array_push($premierJourEquipesAdverses1, $premierJourEquipe1);
+                                    array_push($premierJourEquipesAdverses2, $premierJourEquipe2);
+                                    array_push($deuxiemeJourEquipesAdverses1, $deuxiemeJourEquipe1);
+                                    array_push($deuxiemeJourEquipesAdverses2, $deuxiemeJourEquipe2);
+                                    array_push($premierJourReceptionListe, $premierJourReception);
+                                    array_push($deuxiemeJourReceptionListe, $deuxiemeJourReception);
+
+                                    // controle le champ 'PREMIER JOUR DE RECEPTION'
+                                    if( ($premierJourReception == "" ) or  !(is_numeric($premierJourReception))   ){
+
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
+                                                ."Le champ 'PREMIER JOUR DE RECEPTION' (colonne 13) doit être rempli et avoir une valeur de type entier égale ou supérieure à 0!"
+                                                ."Veuillez corriger et importer de nouveau votre fichier"
+                                        );
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
+                                    }
+                                    // controle le champ 'DEUXIEME JOUR DE RECEPTION'
+                                    if( ($deuxiemeJourReception == "" ) or  !(is_numeric($deuxiemeJourReception))   ){
+
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
+                                                ."Le champ 'DEUXIEME JOUR DE RECEPTION' (colonne 16) doit être rempli et avoir une valeur de type entier égale ou supérieure à 0!"
+                                                ."Veuillez corriger et importer de nouveau votre fichier"
+                                        );
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
+                                    }
+
+                                    // controler equipe 1 et equipe 2, elles doivent être renseignées
+                                    if( ($premierJourReception > 0 ) && ( $premierJourEquipe1 == "" || $premierJourEquipe2 == "" )  ){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
+                                                ."Le champ 'EQUIPE ADVERSE 1' (colonne 14) et le champ 'EQUIPE ADVERSE 2' (colonne 15) doivent être remplis!"
+                                                ."Veuillez corriger et importer de nouveau votre fichier"
+                                        );
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
+                                    }
+
+                                    if( ($deuxiemeJourReception > 0 ) && ( $deuxiemeJourEquipe1 == "" || $deuxiemeJourEquipe2 == "" )  ){
+                                        $retour = array(
+                                            "success" => false,
+                                            "msg" => "Erreur ligne :".$nbrLigne."!"
+                                                ."Le champ 'EQUIPE ADVERSE 1' (colonne 17) et le champ 'EQUIPE ADVERSE 2' (colonne 18) doivent être remplis!"
+                                                ."Veuillez corriger et importer de nouveau votre fichier"
+                                        );
+                                        array_push($lignesErronees, $retour["msg"]);
+                                        continue;
+                                    }
+
+                                }
+
                             }
+                            elseif (strtolower($typeEntite) == "personne") {
+
+                                # controler le nombre de colonnes
+                                if(count($donnéesLigne) != 10){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." La ligne doit contenir 10 valeurs. Donné: ".count($donnéesLigne)." valeurs"
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                }
+
+                                # les champs obligatoires
+                                $nom = $donnéesLigne[1];
+                                $prenom = $donnéesLigne[2];
+                                $codePostal = $donnéesLigne[3];
+                                $ville = $donnéesLigne[4];
+                                $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
+
+                                # controler tous les champs obligatoires
+                                if(empty($nom)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Le champ 'nom' (colonne 2) doit être rempli!"
+                                            .$genericMsg
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                }
+                                if(empty($prenom)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Le champ 'prenom' (colonne 3) doit être rempli!"
+                                            .$genericMsg
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                }
+                                if(empty($codePostal)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Le champ 'code postal' (colonne 4) doit être rempli!"
+                                            .$genericMsg
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                }
+                                if(empty($ville)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Le champ 'ville' (colonne 5) doit être rempli!"
+                                            .$genericMsg
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                }
+                                # controler le champ 'lieu de rencontre possible'
+                                if( empty($donnéesLigne[5]) ){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Le champ 'lieu de rencontre possible' (colonne 6) doit être rempli!"
+                                            .$genericMsg
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                }
+
+                                # controler le champ '$lieuRencontrePossible'
+                                # il faut que la valeur soit 'OUI' ou 'NON'
+                                if((strtolower($donnéesLigne[5]) != 'non') and (strtolower($donnéesLigne[5]) != 'oui')){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Le champ 'lieu de rencontre possible' (colonne 6) doit avoir la valeur 'OUI' ou 'NON'!"
+                                            .$genericMsg
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                }
+
+                                # corriger le code postal si un zéro est manquant dans le premier chiffre
+                                $codePostal = $this->corrigerCodePostal($codePostal);
+
+                                # controler le champ 'code postal'
+                                # il faut que la valeur contient 5 chiffres
+                                if(strlen($codePostal) != 5){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Le champ 'code postal' (colonne 4) doit contenir 5 chiffres!"
+                                            .$genericMsg
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                }
+
+                                # controler le code postal et la ville
+                                # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
+                                $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
+
+                                if(!$statutControlCodePostalVille["success"]){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Les valeurs du couple 'code postal' (colonne 4) et 'ville' (colonne 5) ne sont pas reconnues!"
+                                            .$genericMsg
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                }
+
+                                # les champs optionnels
+                                $adresse = $donnéesLigne[6];
+                                $longitude = $donnéesLigne[7];
+                                $latitude = $donnéesLigne[8];
+                                $projection = $donnéesLigne[9];
+
+                            }
+                            elseif ($typeEntite == "LIEU") {
+                                # les champs obligatoires
+                                $nom = $donnéesLigne[1];
+                                $codePostal = $donnéesLigne[2];
+                                $ville = $donnéesLigne[3];
+
+                                # controler le nombre de colonnes
+                                if(count($donnéesLigne) != 13){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." La ligne doit contenir 13 valeurs. Donné: ".count($donnéesLigne)." valeurs"
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                }
+
+                                $lieuRencontrePossible = $this->getBoolean($donnéesLigne[4]);
+
+
+                                # controler tous les champs obligatoires
+                                if(empty($nom)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Le champ 'nom' (colonne 2) doit être rempli!"
+                                            .$genericMsg
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                }
+                                if(empty($codePostal)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Le champ 'code postal' (colonne 3) doit être rempli!"
+                                            .$genericMsg
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                }
+                                if(empty($ville)){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Le champ 'ville' (colonne 4) doit être rempli!"
+                                            .$genericMsg
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                }
+                                # controler le champ 'lieu de rencontre possible'
+                                if( empty($donnéesLigne[4]) ){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Le champ 'lieu de rencontre possible' (colonne 5) doit être rempli!"
+                                            .$genericMsg
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                }
+
+                                # controler le champ 'lieu de rencontre possible'
+                                # il faut que la valeur soit 'OUI'
+                                if((strtolower($donnéesLigne[4]) != 'oui')){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Le champ 'lieu de rencontre possible' (colonne 5) doit avoir la valeur 'OUI' pour la liste de lieux !"
+                                            .$genericMsg
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                }
+
+                                # corriger le code postal si un zéro est manquant dans le premier chiffre
+                                $codePostal = $this->corrigerCodePostal($codePostal);
+
+                                # controler le champ 'code postal'
+                                # il faut que la valeur contient 5 chiffres
+                                if(strlen($codePostal) != 5){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Le champ 'code postal' (colonne 3) doit contenir 5 chiffres!"
+                                            .$genericMsg
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                }
+
+                                # controler le code postal et la ville
+                                # il faut que la valeur est incluse dans la liste des codes postaux de la table villes_france_free
+                                $statutControlCodePostalVille = $this->verifierExistenceCodePostalNomVille($codePostal, $ville);
+
+                                if(!$statutControlCodePostalVille["success"]){
+                                    $retour = array(
+                                        "success" => false,
+                                        "msg" => "Erreur ligne :".$nbrLigne."!"
+                                            ." Les valeurs du couple 'code postal' (colonne 3) et 'ville' (colonne 4) ne sont pas reconnues!"
+                                            .$genericMsg
+                                    );
+                                    array_push($lignesErronees, $retour["msg"]);
+                                    continue;
+                                }
+
+                                # les champs optionnels
+                                $adresse = $donnéesLigne[5];
+                                $longitude = $donnéesLigne[6];
+                                $latitude = $donnéesLigne[7];
+                                $projection = $donnéesLigne[8];
+                                $typeEquipement = $donnéesLigne[9];
+                                $nombreEquipement = $donnéesLigne[10];
+                                $capaciteRencontre = $this->getBoolean($donnéesLigne[11]);
+                                $capacitePhaseFinale = $this->getBoolean($donnéesLigne[12]);
+                            }
+                            else{
+                                $retour = array(
+                                    "success" => false,
+                                    "msg" => "Erreur ligne :".$nbrLigne."!"
+                                        ." Le type d'entité n'est pas reconnu!"
+                                        ." Veuillez s'assurer que le type d'entité est parmi 'EQUIPE', 'PERSONNE' ou 'LIEU'!"
+                                        .$genericMsg
+                                );
+                                array_push($lignesErronees, $retour["msg"]);
+                                continue;
+                            }
+
+
+                            # controler les doublons pour tous les types
+                            # ajouter la ligne courante dans le répértoire des lignes si ce n'est pas un doublon
+                            $donneesLigneEquipe = [$nom, $codePostal, $ville];
+
+                            if(!in_array($donneesLigneEquipe, $toutesLignes )){
+                                array_push($toutesLignes, $donneesLigneEquipe);
+                            }
+                            else{
+                                $retour = array(
+                                    "success" => false,
+                                    "msg" => "Erreur ligne :".$nbrLigne."!"
+                                        ." Le fichier comporte des lignes en double.!"
+                                        ." Veuillez supprimer cette ligne et effectuer à nouveau l’import"
+                                );
+                                array_push($lignesErronees, $retour["msg"]);
+                                continue;
+                            }
+
+
 
                         }
 
