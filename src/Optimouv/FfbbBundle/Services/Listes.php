@@ -45,16 +45,6 @@ class Listes{
         # controler si la taille limite du fichier à été atteinte
         $tailleFichier = $_SERVER["CONTENT_LENGTH"];
 
-        # la taille dépasse 2M (limite du fichier par défaut de PHP) // TODO
-        # une erreur bizarre du parseur json ajax
-//        if($tailleFichier > 2097152){
-//            $retour = array(
-//                "success" => false,
-//                "msg" => "Le fichier uploadé a dépassé la limite autorisée.!"
-//                    ."Veuillez réduire la taille du fichier"
-//            );
-//            return $retour;
-//        }
 
         // PHP setting pour détecter la fin de ligne correctement pour Windows, Linux et Mac
         ini_set('auto_detect_line_endings', TRUE);
@@ -178,8 +168,6 @@ class Listes{
                         $idsEntite = [];
                         // obtenir les données pour chaque ligne
                         $nbrLigne = 1;
-
-
 
                         while (!$file->eof()) {
                             $donnéesLigne = $file->fgetcsv();
@@ -867,8 +855,6 @@ class Listes{
                 $retour = array(
                     "success" => false,
                     "msg" => "Veuillez convertir votre fichier au format csv et effectuer à nouveau l'import."
-//                            ."Nom de fichier: ".$nomFichier."!"
-//                            ."Type de fichier: ".$typeFichier
                 );
             }
 
