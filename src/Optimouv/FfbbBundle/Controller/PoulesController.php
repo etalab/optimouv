@@ -74,13 +74,13 @@ class PoulesController extends Controller
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
-
-        # controler toutes le fichier uploadé
-        $statutUpload = $this->get('service_listes')->controlerEntites("participants");
-
         # récupérer idUtilisateur
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $idUtilisateur = $user->getId();
+
+        # controler toutes le fichier uploadé
+        $statutUpload = $this->get('service_listes')->controlerEntites("participants", $idUtilisateur);
+
 
         if($statutUpload["success"]){
 
@@ -898,6 +898,37 @@ class PoulesController extends Controller
         ));
 
     }
+
+    public function testExportPdfAction()
+    {
+
+        return $this->render('FfbbBundle:Poules:testExportPdf.html.twig', [
+        ]);
+
+        $html = $this->renderView('FfbbBundle:Poules:testExportPdf.html.twig', [
+        ]);
+
+
+
+
+
+
+        return new Response(
+            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+            200,
+            array(
+                'Content-Type'          => 'application/pdf',
+                'Content-Disposition'   => 'attachment; filename="mon_rapport.pdf"',
+                'print-media-type'      => false,
+                'outline'               => true,
+
+            )
+        );
+
+
+
+    }
+
 
     public function exportScenarioAction()
     {

@@ -32,12 +32,16 @@ class ListesController extends Controller
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
-        # controler toutes le fichier uploadé
-        $statutUpload = $this->get('service_listes')->controlerEntites("participants");
-
         # récupérer idUtilisateur
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $idUtilisateur = $user->getId();
+
+//        error_log("\n Function: controlerEntites, \n"
+//            ."idUtilisateur: ".print_r($idUtilisateur, true), 3, "error_log_optimouv.txt");
+
+        # controler toutes le fichier uploadé
+        $statutUpload = $this->get('service_listes')->controlerEntites("participants", $idUtilisateur);
+
 
         if($statutUpload["success"]){
 
@@ -162,12 +166,13 @@ class ListesController extends Controller
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
-        # controler toutes le fichier uploadé
-        $statutUpload = $this->get('service_listes')->controlerEntites("lieux");
-
         # récupérer idUtilisateur
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $idUtilisateur = $user->getId();
+
+        # controler toutes le fichier uploadé
+        $statutUpload = $this->get('service_listes')->controlerEntites("lieux", $idUtilisateur);
+
 
         if($statutUpload["success"]){
             # créer des entités dans la table entite

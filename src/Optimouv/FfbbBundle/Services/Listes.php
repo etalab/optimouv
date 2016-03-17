@@ -31,7 +31,7 @@ class Listes{
         $this->error_log_path = $error_log_path;
     }
 
-    public function controlerEntites($typeEntiteAttendu){
+    public function controlerEntites($typeEntiteAttendu, $idUtilisateur){
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
         $dateCreation = date('Y-m-d', time());
@@ -78,7 +78,7 @@ class Listes{
         $nomFichierSansExt = explode(".", $nomFichier)[0];
 
 //        error_log("\n Function: controlerEntites, \n"
-//            ."length nomFichierSansExt: ".print_r(strlen($nomFichierSansExt), true), 3, $this->error_log_path);
+//            ."idUtilisateur: ".print_r($idUtilisateur, true), 3, $this->error_log_path);
 
         # vérifier la longueur max du nom de fichier
         if(strlen($nomFichierSansExt) > 100){
@@ -93,7 +93,8 @@ class Listes{
         }
 
         # controler l'existence du nom de fichier dans la table des listes de participants et des listes de lieux
-        $retourControlerExistenceNomFichier = $this->verifierExistenceNomFichier($nomFichierSansExt);
+//        $retourControlerExistenceNomFichier = $this->verifierExistenceNomFichier($nomFichierSansExt);
+        $retourControlerExistenceNomFichier = $this->verifierExistenceNomFichier($nomFichierSansExt, $idUtilisateur);
 
 
         if(!$retourControlerExistenceNomFichier["success"]){
@@ -1423,7 +1424,7 @@ class Listes{
     }
 
     # vérifier l'existence du nom fichier dans la table liste de participants et liste de lieux
-    private function verifierExistenceNomFichier($nomFichier){
+    private function verifierExistenceNomFichier($nomFichier, $idUtilisateur){
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
@@ -1440,8 +1441,9 @@ class Listes{
             }
 
             # controler les listes de participants
-            $sql = "SELECT nom from liste_participants;";
+            $sql = "SELECT nom from liste_participants where id_utilisateur=:id_utilisateur;";
             $stmt = $bdd->prepare($sql);
+            $stmt->bindParam(':id_utilisateur', $idUtilisateur);
             $stmt->execute();
             $resultatListeParticipants = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -1454,8 +1456,9 @@ class Listes{
             }
 
             # controler les listes de lieux
-            $sql = "SELECT nom from liste_lieux;";
+            $sql = "SELECT nom from liste_lieux where id_utilisateur=:id_utilisateur;";
             $stmt = $bdd->prepare($sql);
+            $stmt->bindParam(':id_utilisateur', $idUtilisateur);
             $stmt->execute();
             $resultatListeLieux = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
