@@ -82,13 +82,13 @@ class PoulesController extends Controller
         $rencontre = 0;
 
         # flag type équipe
-        $typeEquipe = 1;
+        $isEquipe = 1;
 
 
-//        error_log("\n typeEquipe: ".print_r($typeEquipe , true), 3, "error_log_optimouv.txt");
+//        error_log("\n typeEquipe: ".print_r($isEquipe , true), 3, "error_log_optimouv.txt");
 
         # controler toutes le fichier uploadé
-        $statutUpload = $this->get('service_listes')->controlerEntites("participants", $idUtilisateur, $rencontre, $typeEquipe);
+        $statutUpload = $this->get('service_listes')->controlerEntites("participants", $idUtilisateur, $rencontre, $isEquipe);
 
 
         if($statutUpload["success"]){

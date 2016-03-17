@@ -42,10 +42,10 @@ class ListesController extends Controller
         $rencontre = 1;
 
         # flag type équipe
-        $typeEquipe = 1;
+        $isEquipe = 1;
 
         # controler toutes le fichier uploadé
-        $statutUpload = $this->get('service_listes')->controlerEntites("participants", $idUtilisateur, $rencontre, $typeEquipe);
+        $statutUpload = $this->get('service_listes')->controlerEntites("participants", $idUtilisateur, $rencontre, $isEquipe);
 
 
         if($statutUpload["success"]){
@@ -178,11 +178,11 @@ class ListesController extends Controller
         $rencontre = 1;
 
         # flag type équipe
-        $typeEquipe = 0;
+        $isEquipe = 0;
 
 
         # controler toutes le fichier uploadé
-        $statutUpload = $this->get('service_listes')->controlerEntites("lieux", $idUtilisateur, $rencontre, $typeEquipe);
+        $statutUpload = $this->get('service_listes')->controlerEntites("lieux", $idUtilisateur, $rencontre, $isEquipe);
 
 
         if($statutUpload["success"]){

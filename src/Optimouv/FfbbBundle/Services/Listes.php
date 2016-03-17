@@ -31,7 +31,7 @@ class Listes{
         $this->error_log_path = $error_log_path;
     }
 
-    public function controlerEntites($typeEntiteAttendu, $idUtilisateur, $rencontre, $typeEquipe){
+    public function controlerEntites($typeEntiteAttendu, $idUtilisateur, $rencontre, $isEquipe){
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
         $dateCreation = date('Y-m-d', time());
@@ -82,7 +82,7 @@ class Listes{
 
 
         # controler l'existence du nom de fichier dans la table des listes de participants et des listes de lieux
-        $retourControlerExistenceNomFichier = $this->verifierExistenceNomFichier($nomFichierSansExt, $idUtilisateur, $rencontre, $typeEquipe);
+        $retourControlerExistenceNomFichier = $this->verifierExistenceNomFichier($nomFichierSansExt, $idUtilisateur, $rencontre, $isEquipe);
 //        error_log("\n Function: controlerEntites, \n"
 //            ."nomFichierSansExt: ".print_r($nomFichierSansExt, true), 3, $this->error_log_path);
 
@@ -123,7 +123,7 @@ class Listes{
 
                 // Controler les colonnes des en-têtes avec les formats fixés
                 // Fichier equipes, personnes, lieux
-                $resultatBooleanControlEntete = $this->controlerEntete($donneesEntete);
+                $resultatBooleanControlEntete = $this->controlerEntete($donneesEntete, $rencontre, $isEquipe);
 
 
                 if(!$resultatBooleanControlEntete["success"]){
@@ -1410,7 +1410,7 @@ class Listes{
     }
 
     # vérifier l'existence du nom fichier dans la table liste de participants et liste de lieux
-    private function verifierExistenceNomFichier($nomFichier, $idUtilisateur, $rencontre, $typeEquipe){
+    private function verifierExistenceNomFichier($nomFichier, $idUtilisateur, $rencontre, $isEquipe){
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
@@ -1427,7 +1427,7 @@ class Listes{
             }
 
             # control pour les équipes
-            if($typeEquipe == 1){
+            if($isEquipe == 1){
                 # controler les listes de participants
                 $sql = "SELECT nom from liste_participants where id_utilisateur=:id_utilisateur and rencontre=:rencontre;";
                 $stmt = $bdd->prepare($sql);
@@ -1446,7 +1446,7 @@ class Listes{
 
             }
             # control pour les lieux
-            elseif($typeEquipe == 0){
+            elseif($isEquipe == 0){
                 # controler les listes de lieux
                 $sql = "SELECT nom from liste_lieux where id_utilisateur=:id_utilisateur;";
                 $stmt = $bdd->prepare($sql);
@@ -1495,7 +1495,8 @@ class Listes{
 
 
     # controler les données d'en-têtes
-    private function controlerEntete($entete){
+    private function controlerEntete($entete, $rencontre, $isEquipe ){
+
         $retour = array(
             "success" => false,
             "msg" => ""
@@ -1508,10 +1509,21 @@ class Listes{
 
         // tester le nombre de colonnes
         // nombreColonnesEntetes (11 pour liste d'équipes, 10 pour liste de personnes, 13 pour liste de lieux ce sont pour le cas de meuilleur lieux)
-        // nombreColonnesEntetes (12, 18 pour l'optimisation de poules)
-        $nombreColonnesEntetes = [11,10,13,12, 18];
+        // nombreColonnesEntetes (12 (match aller retour et aller simple), 18 (match plateau) pour l'optimisation de poules)
+//        $nombreColonnesEntetes = [11, 10, 13, 12, 18];
+
+        if($rencontre == 1 && $isEquipe == 1){
+            $nombreColonnesEntetes = [11, 10];
+        }
+        elseif($rencontre == 1 & $isEquipe == 0){
+            $nombreColonnesEntetes = [13];
+        }
+        elseif($rencontre == 0 & $isEquipe == 1){
+            $nombreColonnesEntetes = [12, 18];
+        }
+
         if(!in_array(count($entete), $nombreColonnesEntetes)){
-            $retour["msg"] = "Veuillez vérifier le nombre des colonnes.!"
+            $retour["msg"] = "Veuillez vérifier que le nombre des colonnes dans votre fichier correspond aux templates données.!"
                 .$genericMsg;
             return $retour;
         }
@@ -1531,7 +1543,6 @@ class Listes{
 
             // pour la liste d'équipes
             if(count($entete) == 11 || count($entete) == 12 || count($entete) == 18){
-//            if(count($entete) == 11 || count($entete) == 18){
                 if($entete[2] != "CODE POSTAL" ){
                     $retour["msg"] = "Veuillez vérifier que le nom de la colonne 3 de l'en-tête correspond au template donné (CODE POSTAL).!"
                         .$genericMsg;
