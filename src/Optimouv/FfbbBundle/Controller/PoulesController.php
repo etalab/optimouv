@@ -870,11 +870,12 @@ class PoulesController extends Controller
     public function previsualisationPdfAction()
     {
 
-        $params = $_POST['params'];
+        $idResultat = $_POST['idResultat'];
 
+//        error_log("\n params: ".print_r($_POST , true), 3, "error_log_optimouv.txt");
 
         //recuperation des donnees relatives au scenario
-        $infoPdf = $this->getInfoPdfAction($params);
+        $infoPdf = $this->getInfoPdfAction($idResultat);
 
         $nombrePoule = $infoPdf[0];
         $taillePoule = $infoPdf[1];
@@ -902,7 +903,7 @@ class PoulesController extends Controller
             'idRapport' => $idRapport,
             'detailsVilles' => $detailsVilles,
             'idGroupe' => $idGroupe,
-            'idResultat' => $params,
+            'idResultat' => $idResultat,
             'nomUtilisateur' => $nomUtilisateur,
         ));
 
@@ -913,10 +914,10 @@ class PoulesController extends Controller
     public function exportScenarioAction()
     {
 
-        $params = $_POST['params'];
+        $idResultat = $_POST['idResultat'];
 
         //recuperation des donnees relatives au scenario
-        $infoPdf = $this->getInfoPdfAction($params);
+        $infoPdf = $this->getInfoPdfAction($idResultat);
 
         $nombrePoule = $infoPdf[0];
         $taillePoule = $infoPdf[1];
@@ -944,7 +945,7 @@ class PoulesController extends Controller
             'idRapport' => $idRapport,
             'detailsVilles' => $detailsVilles,
             'idGroupe' => $idGroupe,
-            'idResultat' => $params,
+            'idResultat' => $idResultat,
             'nomUtilisateur' => $nomUtilisateur,
 
         ));
@@ -1018,7 +1019,6 @@ class PoulesController extends Controller
         //récupérer le nom d'utilisateur
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $nomUtilisateur = $user->getUsername();
-//        error_log("\n nomUtilisateur: ".print_r($nomUtilisateur , true), 3, "error_log_optimouv.txt");
 
         $equipes = $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getEquipes();
         //$equipes de string a array
