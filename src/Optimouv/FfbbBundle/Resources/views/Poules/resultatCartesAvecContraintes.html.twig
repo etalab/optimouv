@@ -1,6 +1,7 @@
 <!-- .panel-heading -->
 <div class="panel-body">
 
+    <!--  Scénarios avec contraintes -->
     <div class="row">
 
         <!--  Scénario optimal avec contrainte -->
@@ -471,7 +472,6 @@
         <!-- /.col-lg-6 -->
 
         <!-- Scénario équitable avec contrainte -->
-
         <div class="col-lg-6">
 
             <!-- declaration de variables -->
@@ -941,13 +941,13 @@
             <!-- .panel-body -->
             <!-- /.panel -->
         </div>
-
         <!-- /.col-lg-6 -->
-    </div>  <!-- Avec contraintes -->
 
-    {# Deuxieme partie de cartes #}
+    </div>
 
 
+
+    <!--  Scénarios optimal sans contrainte et scénario de réference -->
     <div class="row">
         <!-- Scénario optimal sans contrainte -->
         <div class="col-lg-6">
@@ -1399,6 +1399,7 @@
 
                                         <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
                                     </form>
+
                                 {% elseif typeMatch == "plateau"  %}
                                     <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
 
@@ -1420,7 +1421,6 @@
 
 
         <!-- Scénario de référence -->
-
         {% if refExiste == 1 %}
             <div class="col-lg-6">
 
