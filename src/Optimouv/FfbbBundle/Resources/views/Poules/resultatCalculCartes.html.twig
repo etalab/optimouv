@@ -3,18 +3,14 @@
     <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading col-lg-12">
-                {#<div style="float:left; position:relative; width: 90%">#}
                 <div class="col-lg-10" >
                     <p>Les scénarios ci-dessous présentent les résultats les plus écoresponsables correspondant à votre recherche </p>
 
                 </div>
-                {#<div style="float:left; position:relative; width: 10%">#}
                 <div class="col-lg-1">
-                    {#<button type="button" class="btn btn-primary"> Comparer les scénarios</button>#}
                     {% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}
                         <a href="{{ path('ffbb_poules_comparaison_scenario', {'idResultat': idResultat}) }}" class="btn btn-primary">Comparer les scénarios</a>
                     {% elseif typeMatch == "plateau" %}
-                        {#<a class="btn btn-primary">Comparer les scénarios</a>#}
                         <a href="{{ path('ffbb_poules_comparaison_scenario', {'idResultat': idResultat}) }}" class="btn btn-primary">Comparer les scénarios</a>
                     {% endif %}
 
@@ -310,10 +306,6 @@
                                                                 <tbody>
                                                                 {% set dureeTotaleScOptContrainte = "" %}
                                                                 {% for key, estimationDetailOptContrainte in estimationDetailsOptContrainte %}
-                                                                    {#{% set distanceOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].distanceTotale // 1000 %}#}
-                                                                    {#{% set distanceTotaleOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
-                                                                    {#{% set dureeTotaleOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].dureeTotale  %}#}
-                                                                    {#{% set nbrParticipantsOptContrainteDetail = estimationDetailsOptContrainte[ loop.index ].nbrParticipantsTotal  %}#}
                                                                     {% set distanceOptContrainteDetail = estimationDetailsOptContrainte[ key ].distanceTotale // 1000 %}
                                                                     {% set distanceTotaleOptContrainteDetail = estimationDetailsOptContrainte[ key ].distanceTotaleTousParticipants // 1000 %}
                                                                     {% set dureeTotaleOptContrainteDetail = estimationDetailsOptContrainte[ key ].dureeTotale  %}
@@ -323,7 +315,6 @@
                                                                         <td><strong> Poule {{ lettre }} </strong></td>
                                                                         <td style="text-align:right"> {{ distanceOptContrainteDetail|number_format(0, ',', ' ') }}</td>
                                                                         <td style="text-align:right">
-                                                                            {#{{ dureeTotaleOptContrainteDetail|date('d H:i') }}#}
 
                                                                             {# récupérer le nbr de jour #}
                                                                             {% set nbrJourOptContrainteDetail = (dureeTotaleOptContrainteDetail/86400)|round %}
@@ -355,7 +346,6 @@
                                                                     <td><strong> Totaux </strong></td>
                                                                     <td style="text-align:right"> {{ distanceMin|number_format(0, ',', ' ') }}</td>
                                                                     <td style="text-align:right">
-                                                                        {#{{ dureeTotaleScOptContrainte|date('d H:i') }}#}
 
                                                                         {# récupérer le nbr de jour #}
                                                                         {% set nbrJourScOptContrainte = (dureeTotaleScOptContrainte/86400)|round %}
@@ -415,7 +405,6 @@
 
 
                                                                     {% for key, rencontreDetailOptContrainte in rencontreDetailsOptContrainte %}
-                                                                        {#{% set distanceOptContrainte = rencontreDetailsOptContrainte[ loop.index ] %}#}
                                                                         {% set distanceOptContrainte = rencontreDetailsOptContrainte[ key ] %}
                                                                         {% set lettre = alphabet[key-1] %}
                                                                         <tr>
@@ -425,7 +414,6 @@
                                                                                 <ul>
                                                                                     {% for keyDetail, detailsRencontreOpContrainte in distanceOptContrainte %}
                                                                                         <li>
-                                                                                            {#{{ distanceOptContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceOptContrainte[ loop.index ].equipeDestinationVille }}#}
                                                                                             {{ distanceOptContrainte[ loop.index ].equipeDepartNom }} ~ {{ distanceOptContrainte[ loop.index ].equipeDestinationNom }}
                                                                                         </li>
 
@@ -787,10 +775,6 @@
 
                                                             {% set dureeTotaleScEqContrainte = "" %}
                                                             {% for key, estimationDetailEqContrainte in estimationDetailsEqContrainte %}
-                                                                {#{% set distanceEqContrainteDetail = estimationDetailsEqContrainte[ loop.index ].distanceTotale // 1000 %}#}
-                                                                {#{% set distanceTotaleEqContrainteDetail = estimationDetailsEqContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
-                                                                {#{% set dureeTotaleEqContrainteDetail = estimationDetailsEqContrainte[ loop.index ].dureeTotale  %}#}
-                                                                {#{% set nbrParticipantsEqContrainteDetail = estimationDetailsEqContrainte[ loop.index ].nbrParticipantsTotal  %}#}
                                                                 {% set distanceEqContrainteDetail = estimationDetailsEqContrainte[ key ].distanceTotale // 1000 %}
                                                                 {% set distanceTotaleEqContrainteDetail = estimationDetailsEqContrainte[ key ].distanceTotaleTousParticipants // 1000 %}
                                                                 {% set dureeTotaleEqContrainteDetail = estimationDetailsEqContrainte[ key ].dureeTotale  %}
@@ -886,7 +870,6 @@
                                                                 <tbody>
 
                                                                 {% for keyEqContrainte, rencontreDetailEqContrainte in rencontreDetailsEqContrainte %}
-                                                                    {#{% set distanceEqContrainte = rencontreDetailsEqContrainte[ loop.index ] %}#}
                                                                     {% set distanceEqContrainte = rencontreDetailsEqContrainte[ keyEqContrainte ] %}
                                                                     {% set lettre = alphabet[keyEqContrainte-1] %}
 
@@ -897,7 +880,6 @@
                                                                             <ul>
                                                                                 {% for detailsRencontreEqContrainte in distanceEqContrainte %}
                                                                                     <li>
-                                                                                        {#{{ distanceEqContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceEqContrainte[ loop.index ].equipeDestinationVille }}#}
                                                                                         {{ distanceEqContrainte[ loop.index ].equipeDepartNom }} ~ {{ distanceEqContrainte[ loop.index ].equipeDestinationNom }}
                                                                                     </li>
 
@@ -1268,10 +1250,6 @@
 
                                                             {% set dureeTotaleScOptSansContrainte = "" %}
                                                             {% for key, estimationDetailOpSansContrainte in estimationDetailsOpSansContrainte %}
-                                                                {#{% set distanceOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotale // 1000 %}#}
-                                                                {#{% set distanceTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
-                                                                {#{% set dureeTotaleOpSansContrainteDetailC = estimationDetailsOpSansContrainte[ loop.index ].dureeTotale  %}#}
-                                                                {#{% set nbrParticipantsOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].nbrParticipantsTotal  %}#}
                                                                 {% set distanceOpSansContrainteDetail = estimationDetailsOpSansContrainte[ key ].distanceTotale // 1000 %}
                                                                 {% set distanceTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ key ].distanceTotaleTousParticipants // 1000 %}
                                                                 {% set dureeTotaleOpSansContrainteDetailC = estimationDetailsOpSansContrainte[ key ].dureeTotale  %}
@@ -1363,7 +1341,6 @@
                                                                 <tbody>
 
                                                                 {% for keyOptSansContrainte, rencontreDetailOpSansContrainte in rencontreDetailsOpSansContrainte %}
-                                                                    {#{% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ loop.index ] %}#}
                                                                     {% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ keyOptSansContrainte ] %}
                                                                     {% set lettre = alphabet[keyOptSansContrainte-1] %}
                                                                     <tr>
@@ -1372,7 +1349,6 @@
                                                                             <ul>
                                                                                 {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
                                                                                     <li>
-                                                                                        {#{{ distanceOptSansContrainte[ loop.index ].equipeDepartVille }} ~ {{ distanceOptSansContrainte[ loop.index ].equipeDestinationVille }}#}
                                                                                         {{ distanceOptSansContrainte[ loop.index ].equipeDepartNom }} ~ {{ distanceOptSansContrainte[ loop.index ].equipeDestinationNom }}
                                                                                     </li>
 
@@ -1750,10 +1726,6 @@
 
                                                                 {% set dureeTotaleScRefContrainte = "" %}
                                                                 {% for key, estimationDetailRef in estimationDetailsRef %}
-                                                                    {#{% set distanceRefDetail = estimationDetailsRef[ loop.index ].distanceTotale // 1000 %}#}
-                                                                    {#{% set distanceTotaleRefDetail = estimationDetailsRef[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
-                                                                    {#{% set dureeTotaleRefDetail = estimationDetailsRef[ loop.index ].dureeTotale  %}#}
-                                                                    {#{% set nbrParticipantsRefDetail = estimationDetailsRef[ loop.index ].nbrParticipantsTotal  %}#}
                                                                     {% set distanceRefDetail = estimationDetailsRef[ key ].distanceTotale // 1000 %}
                                                                     {% set distanceTotaleRefDetail = estimationDetailsRef[ key ].distanceTotaleTousParticipants // 1000 %}
                                                                     {% set dureeTotaleRefDetail = estimationDetailsRef[ key ].dureeTotale  %}
@@ -2215,10 +2187,6 @@
                                                             {% set dureeTotaleScOpSansContrainteDetail = "" %}
 
                                                             {% for key, estimationDetailOpSansContrainte in estimationDetailsOpSansContrainte %}
-                                                                {#{% set distanceOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotale // 1000 %}#}
-                                                                {#{% set distanceTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
-                                                                {#{% set dureeTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].dureeTotale  %}#}
-                                                                {#{% set nbrParticipantsOpSansContrainteDetail = estimationDetailsOpSansContrainte[ loop.index ].nbrParticipantsTotal  %}#}
                                                                 {% set distanceOpSansContrainteDetail = estimationDetailsOpSansContrainte[ key ].distanceTotale // 1000 %}
                                                                 {% set distanceTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ key ].distanceTotaleTousParticipants // 1000 %}
                                                                 {% set dureeTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ key ].dureeTotale  %}
@@ -2228,7 +2196,6 @@
                                                                 <tr>
                                                                     <td><strong> Poule {{ lettre }} </strong></td>
                                                                     <td style="text-align:right"> {{distanceOpSansContrainteDetail|number_format(0, ',', ' ') }}</td>
-                                                                    {#<td style="text-align:right"> {{ dureeTotaleOpSansContrainteDetail|date('d H:i') }}</td>#}
                                                                     <td style="text-align:right">
                                                                         {# récupérer le nbr de jour #}
                                                                         {% set nbrJour = (dureeTotaleOpSansContrainteDetail/86400)|round %}
@@ -2315,7 +2282,6 @@
 
                                                                 <tbody >
                                                                 {% for key, rencontreDetailOpSansContrainte in rencontreDetailsOpSansContrainte %}
-                                                                    {#{% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ loop.index ] %}#}
                                                                     {% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ key ] %}
 
                                                                     <tr>
@@ -2703,10 +2669,6 @@
 
                                                             {% set dureeTotaleScEqDetailContrainte = "" %}
                                                             {% for key, estimationDetailEqContrainte in estimationDetailsEqContrainte %}
-                                                                {#{% set distanceEqDetailContrainte = estimationDetailsEqContrainte[ loop.index ].distanceTotale // 1000 %}#}
-                                                                {#{% set distanceTotaleEqDetailContrainte = estimationDetailsEqContrainte[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
-                                                                {#{% set dureeTotaleEqDetailContrainte = estimationDetailsEqContrainte[ loop.index ].dureeTotale  %}#}
-                                                                {#{% set nbrParticipantsEqDetailContrainte = estimationDetailsEqContrainte[ loop.index ].nbrParticipantsTotal  %}#}
                                                                 {% set distanceEqDetailContrainte = estimationDetailsEqContrainte[ key ].distanceTotale // 1000 %}
                                                                 {% set distanceTotaleEqDetailContrainte = estimationDetailsEqContrainte[ key ].distanceTotaleTousParticipants // 1000 %}
                                                                 {% set dureeTotaleEqDetailContrainte = estimationDetailsEqContrainte[ key ].dureeTotale  %}
@@ -2805,7 +2767,6 @@
                                                                 <tbody>
 
                                                                 {% for keyEqContrainte, rencontreDetailEqContrainte in rencontreDetailsEqContrainte %}
-                                                                    {#{% set distanceEqContrainte = rencontreDetailsEqContrainte[ loop.index ] %}#}
                                                                     {% set distanceEqContrainte = rencontreDetailsEqContrainte[ keyEqContrainte ] %}
                                                                     {% set lettre = alphabet[keyEqContrainte-1] %}
                                                                     <tr>
@@ -3197,10 +3158,6 @@
                                                                 {% set dureeTotaleScRefPasContrainte = "" %}
 
                                                                 {% for key, estimationDetailRef in estimationDetailsRef %}
-                                                                    {#{% set distanceDetailRef = estimationDetailsRef[ loop.index ].distanceTotale // 1000 %}#}
-                                                                    {#{% set distanceTotaleDetailRef = estimationDetailsRef[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
-                                                                    {#{% set dureeTotaleDetailRef = estimationDetailsRef[ loop.index ].dureeTotale  %}#}
-                                                                    {#{% set nbrParticipantsDetailRef = estimationDetailsRef[ loop.index ].nbrParticipantsTotal  %}#}
                                                                     {% set distanceDetailRef = estimationDetailsRef[ key ].distanceTotale // 1000 %}
                                                                     {% set distanceTotaleDetailRef = estimationDetailsRef[ key ].distanceTotaleTousParticipants // 1000 %}
                                                                     {% set dureeTotaleDetailRef = estimationDetailsRef[ key ].dureeTotale  %}
