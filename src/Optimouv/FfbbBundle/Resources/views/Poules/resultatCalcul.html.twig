@@ -144,7 +144,47 @@
              </div>
 
              <!-- Affichage des résultats sur les cartes -->
-             {% include 'FfbbBundle:Poules:resultatCalculCartes.html.twig' %}
+             {#{% include 'FfbbBundle:Poules:resultatCartes.html.twig' %}#}
+
+             <div class="row">
+
+                 <div class="col-lg-12">
+                     <div class="panel panel-default">
+                         <div class="panel-heading col-lg-12">
+                             <div class="col-lg-10" >
+                                 <p>Les scénarios ci-dessous présentent les résultats les plus écoresponsables correspondant à votre recherche </p>
+
+                             </div>
+                             <div class="col-lg-1">
+                                 {% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}
+                                     <a href="{{ path('ffbb_poules_comparaison_scenario', {'idResultat': idResultat}) }}" class="btn btn-primary">Comparer les scénarios</a>
+                                 {% elseif typeMatch == "plateau" %}
+                                     <a href="{{ path('ffbb_poules_comparaison_scenario', {'idResultat': idResultat}) }}" class="btn btn-primary">Comparer les scénarios</a>
+                                 {% endif %}
+
+
+                             </div>
+
+                         </div>
+
+                         {% if contraintsExiste == 1 %}
+
+                             {% include 'FfbbBundle:Poules:resultatCartesAvecContraintes.html.twig' %}
+
+                         {% else %} <!-- Pas de contrainte -->
+
+                             {% include 'FfbbBundle:Poules:resultatCartesSansContrainte.html.twig' %}
+
+
+                         {% endif %}
+
+                     </div>
+                     <!-- /.panel -->
+                 </div>
+                 <!-- /.col-lg-12 -->
+             </div>
+
+
 
 
              <!-- Input utilisateur -->

@@ -1,0 +1,1433 @@
+<!-- .panel-heading -->
+<div class="panel-body">
+    <div class="row">
+        <!-- Scénario optimal sans contraintes -->
+        <div class="col-lg-6">
+
+            <!-- declaration de variables -->
+            <!-- distanceMin -->
+            {% set distanceMinOpSansContrainte = scenarioOptimalSansContrainte.estimationGenerale.distanceTotale %}
+            {% set distanceMinOpSansContrainte = (distanceMinOpSansContrainte / 1000)|round %}
+            <!-- distanceTotale -->
+            {% set distanceTotaleOpSansContrainte = scenarioOptimalSansContrainte.estimationGenerale.distanceTotaleTousParticipants %}
+            {% set distanceTotaleOpSansContrainte = (distanceTotaleOpSansContrainte / 1000)|round %}
+            <!-- nbrParticipantsTotal -->
+            {% set nbrParticipantsTotalOpSansContrainte = scenarioOptimalSansContrainte.estimationGenerale.nbrParticipantsTotal %}
+            <!-- dureeTotale -->
+            {% set dureeTotaleOpSansContrainte = scenarioOptimalSansContrainte.estimationGenerale.dureeTotale %}
+            <!-- estimationDetails -->
+            {% set estimationDetailsOpSansContrainte = scenarioOptimalSansContrainte.estimationDetails %}
+            <!-- rencontreDetails -->
+            {% set rencontreDetailsOpSansContrainte = scenarioOptimalSansContrainte.rencontreDetails %}
+            <!-- coordPoules -->
+            {% set coordPoulesOpSansContrainte = scenarioOptimalSansContrainte.poulesCoords %}
+            <div class="panel-body">
+                <div class="panel-group" id="scOptimalSansContrainte">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                Scénario optimal sans contrainte
+                            </h4>
+                        </div>
+                        <div class="panel-body"> <!-- premier scÃ©nario -->
+                            <div id="mapOptSansContrainte"
+                                 style="width: 100%; height: 500px; background: grey"></div>
+
+                            <script type="text/javascript" charset="UTF-8">
+
+                                /**
+                                 *
+                                 * Changer la langue de la carte
+                                 */
+                                function switchMapLanguage(map, platform) {
+                                    var mapTileService = platform.getMapTileService({
+                                                type: 'base'
+                                            }),
+                                            frenchMapLayer = mapTileService.createTileLayer(
+                                                    'maptile',
+                                                    'normal.day',
+                                                    256,
+                                                    'png8',
+                                                    {lg: 'fre'}
+                                            );
+                                    map.setBaseLayer(frenchMapLayer);
+
+
+                                }
+                                /*
+                                 Fin fn changer langue
+                                 */
+
+                                // Create a marker icon from an image URL:
+
+                                var icons0 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon0.png') }}');
+                                var icons1 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon1.png') }}');
+                                var icons2 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon2.png') }}');
+                                var icons3 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon3.png') }}');
+                                var icons4 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon4.png') }}');
+                                var icons5 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon5.png') }}');
+                                var icons6 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon6.png') }}');
+                                var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
+                                var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
+                                var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
+                                var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon10.png') }}');
+                                var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon11.png') }}');
+                                var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon12.png') }}');
+                                var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon13.png') }}');
+                                var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon14.png') }}');
+                                var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon15.png') }}');
+                                var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon16.png') }}');
+                                var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon17.png') }}');
+                                var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon18.png') }}');
+                                var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon19.png') }}');
+                                var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon20.png') }}');
+                                var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon21.png') }}');
+                                var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon22.png') }}');
+                                var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon23.png') }}');
+                                var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon24.png') }}');
+                                var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon25.png') }}');
+
+                                //construction des points de differentes villes
+                                function addMarkersAndSetViewBounds() {
+                                    var incrment = 1;
+                                    var points = [];
+                                    var incrementIcons = 0;
+                                    {#{%  for key,coordPouleOpSansContrainte in coordPoulesOpSansContrainte %}#}
+                                    {%  for poule, coordPouleOpSansContrainte in coordPoulesOpSansContrainte %}
+
+                                    //tracer dynamiquement les points de villes
+                                    {% for coordonneeVilleOpSansContrainte in coordPouleOpSansContrainte %}
+                                    var x = '{{ coordonneeVilleOpSansContrainte[0]}}';
+                                    var y = '{{ coordonneeVilleOpSansContrainte[1]}}';
+//
+                                    var xy = x+y;
+//                                                                         var x = xy[0];
+//                                                                         var y = xy[1];
+
+//                                                            var icon = 'icons' + incrementIcons;
+                                    var icon = 'icons{{ poule-1 }}' ;
+                                    var marker = 'marker' + incrment;
+                                    window[marker] = new H.map.Marker({
+                                        lat: parseFloat(x),
+                                        lng: parseFloat(y)
+                                    }, {icon: window[icon]} );
+
+
+                                    points.push(window[marker]);
+
+                                    var incrment = incrment + 1;
+
+                                    {% endfor %}
+                                    incrementIcons++;
+                                    {% endfor %}
+                                    group = new H.map.Group();
+                                    // add markers to the group
+                                    group.addObjects(points);
+                                    map.addObject(group);
+                                    // get geo bounding box for the group and set it to the map
+                                    map.setViewBounds(group.getBounds());
+                                }
+
+
+
+                                /**
+                                 * Boilerplate map initialization code starts below:
+                                 */
+
+                                //Step 1: initialize communication with the platform
+                                var platform = new H.service.Platform({
+                                    app_id: '{{ app_id }}',
+                                    app_code: '{{ app_code }}',
+                                    useCIT: true,
+                                    useHTTPS: true
+                                });
+                                var defaultLayers = platform.createDefaultLayers();
+
+                                //Step 2: initialize a map - this map is centered over Europe
+                                var map = new H.Map(document.getElementById('mapOptSansContrainte'),
+                                        defaultLayers.normal.map, {
+                                            center: {lat: 48.8567, lng: 2.3508},
+                                            zoom: 3
+                                        });
+
+                                var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+                                // Create the default UI components
+                                //    var ui = H.ui.UI.createDefault(map, defaultLayers);
+                                var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
+
+                                // Now use the map as required...
+                                // Add the marker to the map:
+                                // map.addObject(markerPrincipal);
+                                addMarkersAndSetViewBounds(map);
+                                switchMapLanguage(map, platform);
+
+                            </script>
+
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#EstimationsOpSansContrainte" data-toggle="tab">Estimations</a>
+                                </li>
+                                <li><a href="#DetailsOpSansContrainte" data-toggle="tab">Détails</a>
+                                </li>
+                                <li><a href="#listeRencontresOptSansContrainte" data-toggle="tab">Liste des rencontres</a></li>
+
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div class="tab-pane fade in active" id="EstimationsOpSansContrainte">
+
+                                    <div class="list-group">
+
+                                        <p class="list-group-item">
+                                            <i class="fa fa-road fa-fw"
+                                               style="padding-right: 30px"></i> <strong>{{ distanceMinOpSansContrainte|number_format(0, ',', ' ') }} </strong>
+                                            Kms au total
+                                            à parcourir pour l'ensemble du scénario
+                                        </p>
+                                        <p class="list-group-item">
+                                            <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}"
+                                                 width="20px" height="20px"/>
+                                            <i style="padding-right: 10px"></i> <strong> {{ (distanceTotaleOpSansContrainte * 0.80 )|round|number_format(0, ',', ' ') }}</strong>
+                                            € pour réaliser les trajets de l'ensemble du scénario
+                                            en voiture
+
+                                        </p>
+                                        <p class="list-group-item">
+                                            <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}"
+                                                 width="20px" height="20px"/>
+                                            <i style="padding-right: 10px"></i> <strong> {{ (distanceTotaleOpSansContrainte /4 * 0.80 )|round|number_format(0, ',', ' ') }}</strong>
+                                            € pour réaliser les trajets de l'ensemble du scénario
+                                            en covoiturage
+
+                                        </p>
+                                        <p class="list-group-item">
+                                            <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}"
+                                                 width="20px" height="20px"/>
+                                            <i style="padding-right: 10px"></i>
+                                            <strong>{{ (distanceTotaleOpSansContrainte /9 * 1.31)|round|number_format(0, ',', ' ') }} </strong>
+                                            € pour réaliser les trajets de l'ensemble du scénario
+                                            en minibus
+
+                                        </p>
+
+                                        <p class="list-group-item">
+                                            <img src="{{ asset('bundles/ffbb/images/icons/car-icon.png') }}"
+                                                 width="20px" height="20px"/>
+                                            <i style="padding-right: 10px"></i> <strong> {{ (distanceTotaleOpSansContrainte * 0.157)|round|number_format(0, ',', ' ') }}</strong>
+                                            KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalOpSansContrainte }}
+                                            joueurs en voiture individuelle
+                                            pour le scénario
+
+                                        </p>
+                                        <p class="list-group-item">
+                                            <img src="{{ asset('bundles/ffbb/images/icons/covoiturage-icon.png') }}"
+                                                 width="20px" height="20px"/>
+                                            <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleOpSansContrainte/4 * 0.157)|round|number_format(0, ',', ' ') }} </strong>
+                                            KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalOpSansContrainte }}
+                                            joueurs en co-voiturage pour le scénario
+
+                                        </p>
+
+                                        <p class="list-group-item">
+                                            <img src="{{ asset('bundles/ffbb/images/icons/bus-icon.png') }}"
+                                                 width="20px" height="15px"/>
+                                            <i style="padding-right: 10px"></i>
+                                            <strong>{{ (distanceTotaleOpSansContrainte/9 * 0.185)|round|number_format(0, ',', ' ') }} </strong>
+                                            KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalOpSansContrainte }}
+                                            joueurs en minibus pour le scénario
+
+                                        </p>
+
+                                    </div>
+
+
+                                </div>
+                                <div class="tab-pane fade" id="DetailsOpSansContrainte">
+                                    <div class="table-responsive" style="padding-top: 10px">
+
+                                        <table id="exampleRencontreEq" class="display"
+                                               cellspacing="0"
+                                               width="100%">
+                                            <thead>
+                                            <tr>
+                                                <th style="font-weight: bold !important;">
+                                                    Participants
+                                                </th>
+                                                <th style="text-align:right">Kms à
+                                                    parcourir
+                                                </th>
+                                                <th style="text-align:right">Temps de parcours
+                                                    (J H:M)
+                                                </th>
+                                                <th style="text-align:right">Coût du parcours en
+                                                    voiture(€)
+                                                </th>
+                                                <th style="text-align:right">Coût du parcours en
+                                                    covoiturage(€)
+                                                </th>
+                                                <th style="text-align:right">Coût du parcours en
+                                                    minibus(€)
+                                                </th>
+                                                <th style="text-align:right">Emissions GES voiture
+                                                    individuelle (en KG eq CO2)
+                                                </th>
+                                                <th style="text-align:right">Emissions GES
+                                                    covoiturage (en KG eq CO2)
+                                                </th>
+
+                                                <th style="text-align:right">Emissions GES minibus
+                                                    (en KG eq CO2)
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% set dureeTotaleScOpSansContrainteDetail = "" %}
+
+                                            {% for key, estimationDetailOpSansContrainte in estimationDetailsOpSansContrainte %}
+                                                {% set distanceOpSansContrainteDetail = estimationDetailsOpSansContrainte[ key ].distanceTotale // 1000 %}
+                                                {% set distanceTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ key ].distanceTotaleTousParticipants // 1000 %}
+                                                {% set dureeTotaleOpSansContrainteDetail = estimationDetailsOpSansContrainte[ key ].dureeTotale  %}
+                                                {% set nbrParticipantsOpSansContrainteDetail = estimationDetailsOpSansContrainte[ key ].nbrParticipantsTotal  %}
+                                                {% set lettre = alphabet[key-1] %}
+
+                                                <tr>
+                                                    <td><strong> Poule {{ lettre }} </strong></td>
+                                                    <td style="text-align:right"> {{distanceOpSansContrainteDetail|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right">
+                                                        {# récupérer le nbr de jour #}
+                                                        {% set nbrJour = (dureeTotaleOpSansContrainteDetail/86400)|round %}
+                                                        {% if nbrJour <10 %}
+                                                            {% set nbrJour = "0"~nbrJour %}
+                                                        {% endif %}
+                                                        {# récupérer le nbr d heure #}
+                                                        {% set nbrHeure = ((dureeTotaleOpSansContrainteDetail%86400)/3600)|round %}
+                                                        {% if nbrHeure <10 %}
+                                                            {% set nbrHeure = "0"~nbrHeure %}
+                                                        {% endif %}
+                                                        {# récupérer le nbr de minute #}
+                                                        {% set nbrMin = (((dureeTotaleOpSansContrainteDetail%86400)%3600)/60)|round %}
+                                                        {% if nbrMin <10 %}
+                                                            {% set nbrMin = "0"~nbrMin %}
+                                                        {% endif %}
+                                                        {{ nbrJour}} {{ nbrHeure }}:{{ nbrMin }}
+
+                                                    </td>
+
+                                                    <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail  * 0.80)|round|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail * 0.157)|round|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right"> {{ ((distanceTotaleOpSansContrainteDetail /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
+                                                    <td style="text-align:right"> {{ ((distanceTotaleOpSansContrainteDetail/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
+                                                </tr>
+                                                {% set dureeTotaleScOpSansContrainteDetail = dureeTotaleScOpSansContrainteDetail + dureeTotaleOpSansContrainteDetail %}
+
+                                            {% endfor %}
+                                            <tr>
+                                                <td><strong> Totaux </strong></td>
+                                                <td style="text-align:right"> {{ distanceMinOpSansContrainte|number_format(0, ',', ' ') }}</td>
+                                                <td style="text-align:right">
+
+                                                    {# récupérer le nbr de jour #}
+                                                    {% set nbrJourScOpSansContrainteDetail = (dureeTotaleScOpSansContrainteDetail/86400)|round %}
+                                                    {% if nbrJourScOpSansContrainteDetail <10 %}
+                                                        {% set nbrJourScOpSansContrainteDetail = "0"~nbrJourScOpSansContrainteDetail %}
+                                                    {% endif %}
+                                                    {# récupérer le nbr d heure #}
+                                                    {% set nbrHeureScOpSansContrainteDetail = ((dureeTotaleScOpSansContrainteDetail%86400)/3600)|round %}
+                                                    {% if nbrHeureScOpSansContrainteDetail <10 %}
+                                                        {% set nbrHeureScOpSansContrainteDetail = "0"~nbrHeureScOpSansContrainteDetail %}
+                                                    {% endif %}
+                                                    {# récupérer le nbr de minute #}
+                                                    {% set nbrMinScOpSansContrainteDetail = (((dureeTotaleScOpSansContrainteDetail%86400)%3600)/60)|round %}
+                                                    {% if nbrMinScOpSansContrainteDetail <10 %}
+                                                        {% set nbrMinScOpSansContrainteDetail = "0"~nbrMinScOpSansContrainteDetail %}
+                                                    {% endif %}
+                                                    {{ nbrJourScOpSansContrainteDetail}} {{ nbrHeureScOpSansContrainteDetail }}:{{ nbrMinScOpSansContrainteDetail }}
+
+                                                </td>
+                                                <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte  * 0.80)|round|number_format(0, ',', ' ') }}</td>
+                                                <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
+                                                <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
+                                                <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte * 0.157)|round|number_format(0, ',', ' ') }}</td>
+                                                <td style="text-align:right"> {{ ((distanceTotaleOpSansContrainte /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
+                                                <td style="text-align:right"> {{ ((distanceTotaleOpSansContrainte/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <!-- /.table-responsive -->
+                                </div>
+                                <div class="tab-pane fade" id="listeRencontresOptSansContrainte">
+                                    <div class="table-responsive" style="padding-top: 10px; max-height: 400px; overflow-y: scroll;">
+
+                                        <table id="scOpSansContrainte" class="display"
+                                               cellspacing="0"
+                                               width="100%">
+
+                                            {% if typeMatch == 'allerRetour' or typeMatch == 'allerSimple'  %}
+                                                <thead>
+                                                <tr>
+                                                    <th style="font-weight: bold !important;">
+                                                        Poules
+                                                    </th>
+                                                    <th>Rencontres</th>
+                                                </tr>
+                                                </thead>
+
+
+                                                <tbody >
+                                                {% for key, rencontreDetailOpSansContrainte in rencontreDetailsOpSansContrainte %}
+                                                    {% set distanceOptSansContrainte = rencontreDetailsOpSansContrainte[ key ] %}
+
+                                                    <tr>
+                                                        {% set lettre = alphabet[key-1] %}
+                                                        <td><strong> Poule {{ lettre }} </strong></td>
+
+                                                        <td>
+                                                            <ul>
+                                                                {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
+                                                                    <li>
+                                                                        {{ distanceOptSansContrainte[ loop.index ].equipeDepartNom }} ~  {{ distanceOptSansContrainte[ loop.index ].equipeDestinationNom }}
+                                                                    </li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </td>
+
+                                                    </tr>
+                                                {% endfor %}
+
+                                                </tbody>
+
+                                            {% elseif typeMatch == 'plateau' %}
+                                                <thead>
+                                                <tr>
+                                                    <th style="font-weight: bold !important;">Poules</th>
+                                                    <th>Journée</th>
+                                                    <th>Equipe hôte</th>
+                                                    <th>Equipes adverses</th>
+
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                {% for poule, contenuPoule in rencontreDetailsOpSansContrainte %}
+                                                    {% set lettre = alphabet[poule-1] %}
+                                                    {% for journee, contenuJournee in contenuPoule %}
+                                                        <tr>
+                                                            <td ><strong> Poule {{ lettre }}  </strong></td>
+                                                            <td>
+                                                                {{ journee }}
+                                                            </td>
+                                                            <td>
+                                                                {% for contenuGroup in contenuJournee %}
+                                                                    {{ contenuGroup.hoteNom }} <br/> <br/>
+                                                                {% endfor %}
+                                                            </td>
+                                                            <td>
+                                                                {% for contenuGroup in contenuJournee %}
+                                                                    * {{ contenuGroup.premierEquipeNom }} <br/>
+                                                                    * {{ contenuGroup.deuxiemeEquipeNom }} <br/>
+                                                                {% endfor %}
+                                                            </td>
+
+                                                        </tr>
+
+                                                    {% endfor %}
+
+
+                                                {% endfor %}
+                                                </tbody>
+
+
+                                            {%  endif %}
+
+
+
+                                        </table>
+                                    </div>
+                                    <!-- /.table-responsive -->
+                                </div>
+
+
+                                <a href="{{ path('ffbb_poules_details_calcul') }}" class="pull-left">Détails du calcul</a>
+
+
+                                {% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}
+
+                                    <form name="submitParams" action="{{ path('ffbb_previsualisation_pdf')}}" method="post">
+                                        <input type="hidden" value="{{ idResultat }}" name="params" id="params">
+
+                                        <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
+                                    </form>
+
+                                {% elseif typeMatch == "plateau" %}
+                                    <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <!-- .panel-body -->
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-6 -->
+
+        <!-- Scénario équitable sans contrainte -->
+
+        <div class="col-lg-6">
+
+            <!-- declaration de variables -->
+            <!-- distanceMin -->
+            {% set distanceMinEqContrainte = scenarioEquitableSansContrainte.estimationGenerale.distanceTotale %}
+            {% set distanceMinEqContrainte = (distanceMinEqContrainte / 1000)|round %}
+            <!-- distanceTotale -->
+            {% set distanceTotaleEqContrainte = scenarioEquitableSansContrainte.estimationGenerale.distanceTotaleTousParticipants %}
+            {% set distanceTotaleEqContrainte = (distanceTotaleEqContrainte / 1000)|round %}
+            <!-- nbrParticipantsTotal -->
+            {% set nbrParticipantsTotalEqContrainte = scenarioEquitableSansContrainte.estimationGenerale.nbrParticipantsTotal %}
+            <!-- nbrParticipantsTotal -->
+            {% set dureeTotaleEqContrainte = scenarioEquitableSansContrainte.estimationGenerale.dureeTotale %}
+            <!-- estimationDetails -->
+            {% set estimationDetailsEqContrainte = scenarioEquitableSansContrainte.estimationDetails %}
+            <!-- rencontreDetails -->
+            {% set rencontreDetailsEqContrainte = scenarioEquitableSansContrainte.rencontreDetails %}
+            <!-- coordPoules -->
+            {% set coordPoulesEquitableSansContrainte = scenarioEquitableSansContrainte.poulesCoords %}
+
+            <div class="panel-body">
+                <div class="panel-group" id="scEquitableAvecContrainte">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                Scénario équitable sans contrainte
+                            </h4>
+                        </div>
+                        <div class="panel-body"> <!-- premier scÃ©nario -->
+                            <div id="mapEquitableSansContrainte"
+                                 style="width: 100%; height: 500px; background: grey"></div>
+                            <script type="text/javascript" charset="UTF-8">
+
+                                /**
+                                 *
+                                 * Changer la langue de la carte
+                                 */
+                                function switchMapLanguage(map, platform) {
+                                    var mapTileService = platform.getMapTileService({
+                                                type: 'base'
+                                            }),
+                                            frenchMapLayer = mapTileService.createTileLayer(
+                                                    'maptile',
+                                                    'normal.day',
+                                                    256,
+                                                    'png8',
+                                                    {lg: 'fre'}
+                                            );
+                                    map.setBaseLayer(frenchMapLayer);
+
+
+                                }
+                                /*
+                                 Fin fn changer langue
+                                 */
+
+                                // Create a marker icon from an image URL:
+
+                                var icons0 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon0.png') }}');
+                                var icons1 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon1.png') }}');
+                                var icons2 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon2.png') }}');
+                                var icons3 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon3.png') }}');
+                                var icons4 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon4.png') }}');
+                                var icons5 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon5.png') }}');
+                                var icons6 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon6.png') }}');
+                                var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
+                                var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
+                                var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
+                                var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon10.png') }}');
+                                var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon11.png') }}');
+                                var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon12.png') }}');
+                                var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon13.png') }}');
+                                var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon14.png') }}');
+                                var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon15.png') }}');
+                                var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon16.png') }}');
+                                var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon17.png') }}');
+                                var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon18.png') }}');
+                                var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon19.png') }}');
+                                var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon20.png') }}');
+                                var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon21.png') }}');
+                                var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon22.png') }}');
+                                var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon23.png') }}');
+                                var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon24.png') }}');
+                                var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon25.png') }}');
+
+                                //construction des points de differentes villes
+                                function addMarkersAndSetViewBounds() {
+                                    var incrment = 1;
+                                    var points = [];
+                                    var incrementIcons = 0;
+
+//                                                             console.log("--------------------- debug eq sans contrainte ----------------------")
+                                    {%  for poule, coordPouleEquitableSansContrainte in coordPoulesEquitableSansContrainte %}
+                                    {#console.log("poule: " + {{ poule }});#}
+
+                                    //tracer dynamiquement les points de villes
+                                    {% for coordonneeVilleEquitableSansContrainte in coordPouleEquitableSansContrainte %}
+                                    var x = '{{ coordonneeVilleEquitableSansContrainte[0]}}';
+                                    var y = '{{ coordonneeVilleEquitableSansContrainte[1]}}';
+
+                                    var xy = x+y;
+//                                                             console.log("xy: " + xy)
+
+//                                                             var icon = 'icons' + incrementIcons;
+                                    var icon = 'icons{{ poule-1 }}' ;
+//                                                             console.log("icon: " + icon)
+                                    var marker = 'marker' + incrment;
+
+                                    window[marker] = new H.map.Marker({
+                                        lat: parseFloat(x),
+                                        lng: parseFloat(y)
+                                    } , {icon: window[icon]} );
+
+
+                                    points.push(window[marker]);
+
+                                    var incrment = incrment + 1;
+
+                                    {% endfor %}
+                                    incrementIcons++;
+                                    {% endfor %}
+                                    group = new H.map.Group();
+                                    // add markers to the group
+                                    group.addObjects(points);
+                                    map.addObject(group);
+                                    // get geo bounding box for the group and set it to the map
+                                    map.setViewBounds(group.getBounds());
+                                }
+
+
+
+                                /**
+                                 * Boilerplate map initialization code starts below:
+                                 */
+
+                                //Step 1: initialize communication with the platform
+                                var platform = new H.service.Platform({
+                                    app_id: '{{ app_id }}',
+                                    app_code: '{{ app_code }}',
+                                    useCIT: true,
+                                    useHTTPS: true
+                                });
+                                var defaultLayers = platform.createDefaultLayers();
+
+                                //Step 2: initialize a map - this map is centered over Europe
+                                var map = new H.Map(document.getElementById('mapEquitableSansContrainte'),
+                                        defaultLayers.normal.map, {
+                                            center: {lat: 48.8567, lng: 2.3508},
+                                            zoom: 3
+                                        });
+
+                                var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+                                // Create the default UI components
+                                //    var ui = H.ui.UI.createDefault(map, defaultLayers);
+                                var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
+
+                                // Now use the map as required...
+                                // Add the marker to the map:
+                                // map.addObject(markerPrincipal);
+                                addMarkersAndSetViewBounds(map);
+                                switchMapLanguage(map, platform);
+
+                            </script>
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#EstimationsEq" data-toggle="tab">Estimations</a>
+                                </li>
+                                <li><a href="#DetailsEq" data-toggle="tab">Détails</a>
+                                </li>
+                                <li><a href="#listeRencontresScEq" data-toggle="tab">Liste des rencontres</a>
+                                </li>
+
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div class="tab-pane fade in active" id="EstimationsEq">
+
+                                    <div class="list-group">
+
+                                        <p class="list-group-item">
+                                            <i class="fa fa-road fa-fw"
+                                               style="padding-right: 30px"></i> <strong> {{ distanceMinEqContrainte|number_format(0, ',', ' ') }} </strong>
+                                            Kms au total
+                                            à parcourir pour l'ensemble du scénario
+                                        </p>
+                                        <p class="list-group-item">
+                                            <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}"
+                                                 width="20px" height="20px"/>
+                                            <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleEqContrainte * 0.80 )|round|number_format(0, ',', ' ') }} </strong>
+                                            € pour réaliser les trajets de l'ensemble du scénario
+                                            en voiture
+
+                                        </p>
+                                        <p class="list-group-item">
+                                            <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}"
+                                                 width="20px" height="20px"/>
+                                            <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleEqContrainte /4 * 0.80 )|round|number_format(0, ',', ' ') }} </strong>
+                                            € pour réaliser les trajets de l'ensemble du scénario
+                                            en covoiturage
+
+                                        </p>
+                                        <p class="list-group-item">
+                                            <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}"
+                                                 width="20px" height="20px"/>
+                                            <i style="padding-right: 10px"></i>
+                                            <strong>{{ (distanceTotaleEqContrainte /9 * 1.31)|round|number_format(0, ',', ' ') }} </strong>
+                                            € pour réaliser les trajets de l'ensemble du scénario
+                                            en minibus
+
+                                        </p>
+
+                                        <p class="list-group-item">
+                                            <img src="{{ asset('bundles/ffbb/images/icons/car-icon.png') }}"
+                                                 width="20px" height="20px"/>
+                                            <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleEqContrainte * 0.157)|round|number_format(0, ',', ' ') }} </strong>
+                                            KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalEqContrainte }}
+                                            joueurs en voiture individuelle
+                                            pour le scénario
+
+                                        </p>
+                                        <p class="list-group-item">
+                                            <img src="{{ asset('bundles/ffbb/images/icons/covoiturage-icon.png') }}"
+                                                 width="20px" height="20px"/>
+                                            <i style="padding-right: 10px"></i> <strong> {{ (distanceTotaleEqContrainte/4 * 0.157)|round|number_format(0, ',', ' ') }} </strong>
+                                            KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalEqContrainte }}
+                                            joueurs en co-voiturage pour le scénario
+
+                                        </p>
+
+                                        <p class="list-group-item">
+                                            <img src="{{ asset('bundles/ffbb/images/icons/bus-icon.png') }}"
+                                                 width="20px" height="15px"/>
+                                            <i style="padding-right: 10px"></i>
+                                            <strong> {{ (distanceTotaleEqContrainte/9 * 0.185)|round|number_format(0, ',', ' ') }}</strong>
+                                            KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalEqContrainte }}
+                                            joueurs en minibus pour le scénario
+
+                                        </p>
+
+                                    </div>
+
+
+                                </div>
+                                <div class="tab-pane fade" id="DetailsEq">
+                                    <div class="table-responsive" style="padding-top: 10px">
+
+                                        <table id="exampleExclusion" class="display"
+                                               cellspacing="0"
+                                               width="100%">
+                                            <thead>
+                                            <tr>
+                                                <th style="font-weight: bold !important;">
+                                                    Participants
+                                                </th>
+                                                <th style="text-align:right">Kms à
+                                                    parcourir
+                                                </th>
+                                                <th style="text-align:right">Temps de parcours
+                                                    (J H:M)
+                                                </th>
+                                                <th style="text-align:right">Coût du parcours en
+                                                    voiture(€)
+                                                </th>
+                                                <th style="text-align:right">Coût du parcours en
+                                                    covoiturage(€)
+                                                </th>
+                                                <th style="text-align:right">Coût du parcours en
+                                                    minibus(€)
+                                                </th>
+                                                <th style="text-align:right">Emissions GES voiture
+                                                    individuelle (en KG eq CO2)
+                                                </th>
+                                                <th style="text-align:right">Emissions GES
+                                                    covoiturage (en KG eq CO2)
+                                                </th>
+
+                                                <th style="text-align:right">Emissions GES minibus
+                                                    (en KG eq CO2)
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+
+                                            {% set dureeTotaleScEqDetailContrainte = "" %}
+                                            {% for key, estimationDetailEqContrainte in estimationDetailsEqContrainte %}
+                                                {% set distanceEqDetailContrainte = estimationDetailsEqContrainte[ key ].distanceTotale // 1000 %}
+                                                {% set distanceTotaleEqDetailContrainte = estimationDetailsEqContrainte[ key ].distanceTotaleTousParticipants // 1000 %}
+                                                {% set dureeTotaleEqDetailContrainte = estimationDetailsEqContrainte[ key ].dureeTotale  %}
+                                                {% set nbrParticipantsEqDetailContrainte = estimationDetailsEqContrainte[ key ].nbrParticipantsTotal  %}
+                                                {% set lettre = alphabet[key-1] %}
+
+                                                <tr>
+                                                    <td><strong> Poule {{ lettre }} </strong></td>
+                                                    <td style="text-align:right"> {{ distanceEqDetailContrainte|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right">
+
+                                                        {# récupérer le nbr de jour #}
+                                                        {% set nbrJourEqDetailContrainte = (dureeTotaleEqDetailContrainte/86400)|round %}
+                                                        {% if nbrJourEqDetailContrainte <10 %}
+                                                            {% set nbrJourEqDetailContrainte = "0"~nbrJourEqDetailContrainte %}
+                                                        {% endif %}
+                                                        {# récupérer le nbr d heure #}
+                                                        {% set nbrHeureEqDetailContrainte = ((dureeTotaleEqDetailContrainte%86400)/3600)|round %}
+                                                        {% if nbrHeureEqDetailContrainte <10 %}
+                                                            {% set nbrHeureEqDetailContrainte = "0"~nbrHeureEqDetailContrainte %}
+                                                        {% endif %}
+                                                        {# récupérer le nbr de minute #}
+                                                        {% set nbrMinEqDetailContrainte = (((dureeTotaleEqDetailContrainte%86400)%3600)/60)|round %}
+                                                        {% if nbrMinEqDetailContrainte <10 %}
+                                                            {% set nbrMinEqDetailContrainte = "0"~nbrMinEqDetailContrainte %}
+                                                        {% endif %}
+                                                        {{ nbrJourEqDetailContrainte}} {{ nbrHeureEqDetailContrainte }}:{{ nbrMinEqDetailContrainte }}
+
+                                                    </td>
+
+                                                    <td style="text-align:right"> {{ (distanceTotaleEqDetailContrainte  * 0.80)|round|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right"> {{ (distanceTotaleEqDetailContrainte /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right"> {{ (distanceTotaleEqDetailContrainte /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right"> {{ (distanceTotaleEqDetailContrainte * 0.157)|round|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right"> {{ ((distanceTotaleEqDetailContrainte /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
+                                                    <td style="text-align:right"> {{ ((distanceTotaleEqDetailContrainte/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
+                                                </tr>
+
+                                                {% set dureeTotaleScEqDetailContrainte = dureeTotaleScEqDetailContrainte + dureeTotaleEqDetailContrainte %}
+
+                                            {% endfor %}
+                                            <tr>
+                                                <td><strong> Totaux </strong></td>
+                                                <td style="text-align:right"> {{distanceMinEqContrainte|number_format(0, ',', ' ') }}</td>
+                                                <td style="text-align:right">
+
+                                                    {# récupérer le nbr de jour #}
+                                                    {% set nbrJourScEqDetailContrainte = (dureeTotaleScEqDetailContrainte/86400)|round %}
+                                                    {% if nbrJourScEqDetailContrainte <10 %}
+                                                        {% set nbrJourScEqDetailContrainte = "0"~nbrJourScEqDetailContrainte %}
+                                                    {% endif %}
+                                                    {# récupérer le nbr d heure #}
+                                                    {% set nbrHeureScEqDetailContrainte = ((dureeTotaleScEqDetailContrainte%86400)/3600)|round %}
+                                                    {% if nbrHeureScEqDetailContrainte <10 %}
+                                                        {% set nbrHeureScEqDetailContrainte = "0"~nbrHeureScEqDetailContrainte %}
+                                                    {% endif %}
+                                                    {# récupérer le nbr de minute #}
+                                                    {% set nbrMinScEqDetailContrainte = (((dureeTotaleScEqDetailContrainte%86400)%3600)/60)|round %}
+                                                    {% if nbrMinScEqDetailContrainte <10 %}
+                                                        {% set nbrMinScEqDetailContrainte = "0"~nbrMinScEqDetailContrainte %}
+                                                    {% endif %}
+                                                    {{ nbrJourScEqDetailContrainte}} {{ nbrHeureScEqDetailContrainte }}:{{ nbrMinScEqDetailContrainte }}
+                                                </td>
+                                                <td style="text-align:right"> {{ (distanceTotaleEqContrainte  * 0.80)|round|number_format(0, ',', ' ') }}</td>
+                                                <td style="text-align:right"> {{ (distanceTotaleEqContrainte /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
+                                                <td style="text-align:right"> {{ (distanceTotaleEqContrainte /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
+                                                <td style="text-align:right"> {{ (distanceTotaleEqContrainte * 0.157)|round|number_format(0, ',', ' ') }}</td>
+                                                <td style="text-align:right"> {{ ((distanceTotaleEqContrainte /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
+                                                <td style="text-align:right"> {{ ((distanceTotaleEqContrainte/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
+                                            </tr>
+
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <!-- /.table-responsive -->
+                                </div>
+
+                                <div class="tab-pane fade" id="listeRencontresScEq">
+                                    <div class="table-responsive" style="padding-top: 10px; max-height: 400px; overflow-y: scroll;">
+
+                                        <table id="scEqSansContrainte" class="display"
+                                               cellspacing="0"
+                                               width="100%">
+                                            {% if typeMatch == 'allerRetour' or typeMatch == 'allerSimple'  %}
+                                                <thead>
+                                                <tr>
+                                                    <th style="font-weight: bold !important;">
+                                                        Poules
+                                                    </th>
+                                                    <th>Rencontres</th>
+
+
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                {% for keyEqContrainte, rencontreDetailEqContrainte in rencontreDetailsEqContrainte %}
+                                                    {% set distanceEqContrainte = rencontreDetailsEqContrainte[ keyEqContrainte ] %}
+                                                    {% set lettre = alphabet[keyEqContrainte-1] %}
+                                                    <tr>
+                                                        <td><strong> Poule {{ lettre }} </strong></td>
+
+                                                        <td>
+                                                            <ul>
+                                                                {% for detailsRencontreEqContrainte in distanceEqContrainte %}
+                                                                    <li>
+                                                                        {{ distanceEqContrainte[ loop.index ].equipeDepartNom }} ~ {{ distanceEqContrainte[ loop.index ].equipeDestinationNom }}
+                                                                    </li>
+
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </td>
+
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            {% elseif typeMatch == 'plateau' %}
+
+                                                <thead>
+                                                <tr>
+                                                    <th style="font-weight: bold !important;">Poules</th>
+                                                    <th>Journée</th>
+                                                    <th>Equipe hôte</th>
+                                                    <th>Equipes adverses</th>
+
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                {% for poule, contenuPoule in rencontreDetailsEqContrainte %}
+                                                    {% set lettre = alphabet[poule-1] %}
+                                                    {% for journee, contenuJournee in contenuPoule %}
+                                                        <tr>
+                                                            <td ><strong> Poule {{ lettre }}  </strong></td>
+                                                            <td>
+                                                                {{ journee }}
+                                                            </td>
+                                                            <td>
+                                                                {% for contenuGroup in contenuJournee %}
+                                                                    {{ contenuGroup.hoteNom }} <br/> <br/>
+                                                                {% endfor %}
+                                                            </td>
+                                                            <td>
+                                                                {% for contenuGroup in contenuJournee %}
+                                                                    * {{ contenuGroup.premierEquipeNom }} <br/>
+                                                                    * {{ contenuGroup.deuxiemeEquipeNom }} <br/>
+                                                                {% endfor %}
+                                                            </td>
+
+                                                        </tr>
+
+                                                    {% endfor %}
+
+
+                                                {% endfor %}
+                                                </tbody>
+
+
+
+                                            {% endif %}
+
+
+
+
+                                        </table>
+
+                                    </div>
+                                    <!-- /.table-responsive -->
+                                </div>
+                                <a href="{{ path('ffbb_poules_details_calcul') }}" class="pull-left">Détails
+                                    du calcul</a>
+
+                                <button type="button"
+                                        class="btn btn-primary  pull-right">Exporter
+                                </button>
+
+
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <!-- .panel-body -->
+            <!-- /.panel -->
+        </div>
+
+        <!-- /.col-lg-6 -->
+
+
+    </div>
+
+
+    <div class="row">
+        <!-- Scénario de référence -->
+
+
+        {% if refExiste == 1 %}
+            <div class="col-lg-6">
+
+                <!-- declaration de variables -->
+                <!-- distanceMin -->
+                {% set distanceMinRef = scenarioRef.estimationGenerale.distanceTotale %}
+                {% set distanceMinRef = (distanceMinRef / 1000)|round %}
+                <!-- distanceTotale -->
+                {% set distanceTotaleRef = scenarioRef.estimationGenerale.distanceTotaleTousParticipants %}
+                {% set distanceTotaleRef = (distanceTotaleRef / 1000)|round %}
+                <!-- nbrParticipantsTotal -->
+                {% set nbrParticipantsTotalRef = scenarioRef.estimationGenerale.nbrParticipantsTotal %}
+                <!-- dureeTotale -->
+                {% set dureeTotaleRef = scenarioRef.estimationGenerale.dureeTotale %}
+                <!-- estimationDetails -->
+                {% set estimationDetailsRef = scenarioRef.estimationDetails %}
+                <!-- rencontreDetails -->
+                {% set rencontreDetailsRef = scenarioRef.rencontreDetails %}
+                <!-- coordPoules -->
+                {% set coordPoulesRef = scenarioRef.poulesCoords %}
+                <div class="panel-body">
+                    <div class="panel-group" id="scOptimalSansContrainte">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    Scénario de référence
+                                </h4>
+                            </div>
+                            <div class="panel-body"> <!-- premier scÃ©nario -->
+                                <div id="mapScRef"
+                                     style="width: 100%; height: 500px; background: grey"></div>
+                                <script type="text/javascript" charset="UTF-8">
+
+                                    /**
+                                     *
+                                     * Changer la langue de la carte
+                                     */
+                                    function switchMapLanguage(map, platform) {
+                                        var mapTileService = platform.getMapTileService({
+                                                    type: 'base'
+                                                }),
+                                                frenchMapLayer = mapTileService.createTileLayer(
+                                                        'maptile',
+                                                        'normal.day',
+                                                        256,
+                                                        'png8',
+                                                        {lg: 'fre'}
+                                                );
+                                        map.setBaseLayer(frenchMapLayer);
+
+
+                                    }
+                                    /*
+                                     Fin fn changer langue
+                                     */
+
+                                    // Create a marker icon from an image URL:
+
+                                    var icons0 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon0.png') }}');
+                                    var icons1 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon1.png') }}');
+                                    var icons2 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon2.png') }}');
+                                    var icons3 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon3.png') }}');
+                                    var icons4 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon4.png') }}');
+                                    var icons5 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon5.png') }}');
+                                    var icons6 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon6.png') }}');
+                                    var icons7 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon7.png') }}');
+                                    var icons8 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon8.png') }}');
+                                    var icons9 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon9.png') }}');
+                                    var icons10 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon10.png') }}');
+                                    var icons11 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon11.png') }}');
+                                    var icons12 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon12.png') }}');
+                                    var icons13 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon13.png') }}');
+                                    var icons14 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon14.png') }}');
+                                    var icons15 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon15.png') }}');
+                                    var icons16 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon16.png') }}');
+                                    var icons17 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon17.png') }}');
+                                    var icons18 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon18.png') }}');
+                                    var icons19 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon19.png') }}');
+                                    var icons20 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon20.png') }}');
+                                    var icons21 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon21.png') }}');
+                                    var icons22 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon22.png') }}');
+                                    var icons23 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon23.png') }}');
+                                    var icons24 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon24.png') }}');
+                                    var icons25 = new H.map.Icon('{{ asset('bundles/ffbb/images/icon25.png') }}');
+
+                                    //construction des points de differentes villes
+                                    function addMarkersAndSetViewBounds() {
+                                        var incrment = 1;
+                                        var points = [];
+                                        var incrementIcons = 0;
+
+                                        {#{%  for coordPouleRef in coordPoulesRef %}#}
+                                        {%  for poule, coordPouleRef in coordPoulesRef %}
+
+                                        //tracer dynamiquement les points de villes
+                                        {% for coordonneeVilleRef in coordPouleRef %}
+                                        var x = '{{ coordonneeVilleRef[0]}}';
+                                        var y = '{{ coordonneeVilleRef[1]}}';
+//
+                                        var xy = x+y;
+
+//                                                             var icon = 'icons' + incrementIcons;
+                                        var icon = 'icons{{ poule-1 }}' ;
+                                        var marker = 'marker' + incrment;
+                                        window[marker] = new H.map.Marker({
+                                            lat: parseFloat(x),
+                                            lng: parseFloat(y)
+                                        } , {icon: window[icon]} );
+
+
+                                        points.push(window[marker]);
+
+                                        var incrment = incrment + 1;
+
+                                        {% endfor %}
+                                        incrementIcons++;
+                                        {% endfor %}
+                                        group = new H.map.Group();
+                                        // add markers to the group
+                                        group.addObjects(points);
+                                        map.addObject(group);
+                                        // get geo bounding box for the group and set it to the map
+                                        map.setViewBounds(group.getBounds());
+                                    }
+
+
+
+                                    /**
+                                     * Boilerplate map initialization code starts below:
+                                     */
+
+                                    //Step 1: initialize communication with the platform
+                                    var platform = new H.service.Platform({
+                                        app_id: '{{ app_id }}',
+                                        app_code: '{{ app_code }}',
+                                        useCIT: true,
+                                        useHTTPS: true
+                                    });
+                                    var defaultLayers = platform.createDefaultLayers();
+
+                                    //Step 2: initialize a map - this map is centered over Europe
+                                    var map = new H.Map(document.getElementById('mapScRef'),
+                                            defaultLayers.normal.map, {
+                                                center: {lat: 48.8567, lng: 2.3508},
+                                                zoom: 3
+                                            });
+
+                                    var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+                                    // Create the default UI components
+                                    //    var ui = H.ui.UI.createDefault(map, defaultLayers);
+                                    var ui = H.ui.UI.createDefault(map, defaultLayers, 'fr-FR');
+
+                                    // Now use the map as required...
+                                    // Add the marker to the map:
+                                    // map.addObject(markerPrincipal);
+                                    addMarkersAndSetViewBounds(map);
+                                    switchMapLanguage(map, platform);
+
+                                </script>
+
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#EstimationsRef" data-toggle="tab">Estimations</a>
+                                    </li>
+                                    <li><a href="#DetailsRef" data-toggle="tab">Détails</a>
+                                    </li>
+                                    {% if typeMatch == "plateau" %}
+                                        <li><a href="#listeRencontresRef" data-toggle="tab">Liste des rencontres</a>
+                                        </li>
+                                    {% endif %}
+
+
+                                </ul>
+
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div class="tab-pane fade in active" id="EstimationsRef">
+
+                                        <div class="list-group">
+
+                                            <p class="list-group-item">
+                                                <i class="fa fa-road fa-fw"
+                                                   style="padding-right: 30px"></i> <strong>{{ distanceMinRef|number_format(0, ',', ' ') }} </strong>
+                                                Kms au total
+                                                à parcourir pour l'ensemble du scénario
+                                            </p>
+                                            <p href="#" class="list-group-item">
+                                                <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}"
+                                                     width="20px" height="20px"/>
+                                                <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleRef * 0.80 )|round|number_format(0, ',', ' ')   }}</strong>
+                                                € pour réaliser les trajets de l'ensemble du scénario
+                                                en voiture
+
+                                            </p>
+                                            <p href="#" class="list-group-item">
+                                                <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}"
+                                                     width="20px" height="20px"/>
+                                                <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleRef /4 * 0.80 )|round|number_format(0, ',', ' ')   }} </strong>
+                                                € pour réaliser les trajets de l'ensemble du scénario
+                                                covoiturage
+
+                                            </p>
+
+                                            <p class="list-group-item">
+                                                <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}"
+                                                     width="20px" height="20px"/>
+                                                <i style="padding-right: 10px"></i>
+                                                <strong> {{ (distanceTotaleRef /9 * 1.31)|round|number_format(0, ',', ' ') }}</strong>
+                                                € pour réaliser les trajets de l'ensemble du scénario
+                                                en minibus
+
+                                            </p>
+                                            <p class="list-group-item">
+                                                <img src="{{ asset('bundles/ffbb/images/icons/car-icon.png') }}"
+                                                     width="20px" height="20px"/>
+                                                <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleRef * 0.157)|round|number_format(0, ',', ' ') }} </strong>
+                                                KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalRef }}
+                                                joueurs en voiture individuelle
+                                                pour le scénario
+
+                                            </p>
+                                            <p class="list-group-item">
+                                                <img src="{{ asset('bundles/ffbb/images/icons/covoiturage-icon.png') }}"
+                                                     width="20px" height="20px"/>
+                                                <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleRef/4 * 0.157)|round|number_format(0, ',', ' ') }} </strong>
+                                                KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalRef }}
+                                                joueurs en co-voiturage pour le scénario
+
+                                            </p>
+
+                                            <p class="list-group-item">
+                                                <img src="{{ asset('bundles/ffbb/images/icons/bus-icon.png') }}"
+                                                     width="20px" height="15px"/>
+                                                <i style="padding-right: 10px"></i>
+                                                <strong>{{ (distanceTotaleRef/9 * 0.185)|round|number_format(0, ',', ' ') }} </strong>
+                                                KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalRef }}
+                                                joueurs en minibus pour le scénario
+
+                                            </p>
+
+                                        </div>
+
+
+                                    </div>
+                                    <div class="tab-pane fade" id="DetailsRef">
+                                        <div class="table-responsive" style="padding-top: 10px">
+
+                                            <table id="scReference" class="display"
+                                                   cellspacing="0"
+                                                   width="100%">
+                                                <thead>
+                                                <tr>
+                                                    <th style="font-weight: bold !important;">
+                                                        Participants
+                                                    </th>
+                                                    <th style="text-align:right">Kms à
+                                                        parcourir
+                                                    </th>
+                                                    <th style="text-align:right">Temps de parcours
+                                                        (J H:M)
+                                                    </th>
+                                                    <th style="text-align:right">Coût du parcours en
+                                                        voiture(€)
+                                                    </th>
+                                                    <th style="text-align:right">Coût du parcours en
+                                                        covoiturage(€)
+                                                    </th>
+                                                    <th style="text-align:right">Coût du parcours en
+                                                        minibus(€)
+                                                    </th>
+                                                    <th style="text-align:right">Emissions GES voiture
+                                                        individuelle (en KG eq CO2)
+                                                    </th>
+                                                    <th style="text-align:right">Emissions GES
+                                                        covoiturage (en KG eq CO2)
+                                                    </th>
+
+                                                    <th style="text-align:right">Emissions GES minibus
+                                                        (en KG eq CO2)
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                {% set dureeTotaleScRefPasContrainte = "" %}
+
+                                                {% for key, estimationDetailRef in estimationDetailsRef %}
+                                                    {% set distanceDetailRef = estimationDetailsRef[ key ].distanceTotale // 1000 %}
+                                                    {% set distanceTotaleDetailRef = estimationDetailsRef[ key ].distanceTotaleTousParticipants // 1000 %}
+                                                    {% set dureeTotaleDetailRef = estimationDetailsRef[ key ].dureeTotale  %}
+                                                    {% set nbrParticipantsDetailRef = estimationDetailsRef[ key ].nbrParticipantsTotal  %}
+                                                    {% set lettre = alphabet[key-1] %}
+
+                                                    <tr>
+                                                        <td><strong> Poule {{ lettre }} </strong></td>
+                                                        <td style="text-align:right"> {{distanceDetailRef|number_format(0, ',', ' ') }}</td>
+                                                        <td style="text-align:right">
+
+                                                            {# récupérer le nbr de jour #}
+                                                            {% set nbrJourDetailRef = (dureeTotaleDetailRef/86400)|round %}
+                                                            {% if nbrJourDetailRef <10 %}
+                                                                {% set nbrJourDetailRef = "0"~nbrJourDetailRef %}
+                                                            {% endif %}
+                                                            {# récupérer le nbr d heure #}
+                                                            {% set nbrHeureDetailRef = ((dureeTotaleDetailRef%86400)/3600)|round %}
+                                                            {% if nbrHeureDetailRef <10 %}
+                                                                {% set nbrHeureDetailRef = "0"~nbrHeureDetailRef %}
+                                                            {% endif %}
+                                                            {# récupérer le nbr de minute #}
+                                                            {% set nbrMinDetailRef = (((dureeTotaleDetailRef%86400)%3600)/60)|round %}
+                                                            {% if nbrMinDetailRef <10 %}
+                                                                {% set nbrMinDetailRef = "0"~nbrMinDetailRef %}
+                                                            {% endif %}
+                                                            {{ nbrJourDetailRef}} {{ nbrHeureDetailRef }}:{{ nbrMinDetailRef }}
+
+                                                        </td>
+                                                        <td style="text-align:right"> {{ (distanceTotaleDetailRef  * 0.80)|round|number_format(0, ',', ' ') }}</td>
+                                                        <td style="text-align:right"> {{ (distanceTotaleDetailRef /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
+                                                        <td style="text-align:right"> {{ (distanceTotaleDetailRef /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
+                                                        <td style="text-align:right"> {{ (distanceTotaleDetailRef * 0.157)|round|number_format(0, ',', ' ') }}</td>
+                                                        <td style="text-align:right"> {{ ((distanceTotaleDetailRef /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
+                                                        <td style="text-align:right"> {{ ((distanceTotaleDetailRef/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
+                                                    </tr>
+                                                    {% set dureeTotaleScRefPasContrainte = dureeTotaleScRefPasContrainte + dureeTotaleDetailRef %}
+
+                                                {% endfor %}
+
+                                                {# ajouter les totaux #}
+                                                <tr>
+                                                    <td><strong> Totaux </strong></td>
+                                                    <td style="text-align:right"> {{ distanceMinRef|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right">
+
+                                                        {# récupérer le nbr de jour #}
+                                                        {% set nbrJourScRefPasContrainte = (dureeTotaleScRefPasContrainte/86400)|round %}
+                                                        {% if nbrJourScRefPasContrainte <10 %}
+                                                            {% set nbrJourScRefPasContrainte = "0"~nbrJourScRefPasContrainte %}
+                                                        {% endif %}
+                                                        {# récupérer le nbr d heure #}
+                                                        {% set nbrHeureScRefPasContrainte = ((dureeTotaleScRefPasContrainte%86400)/3600)|round %}
+                                                        {% if nbrHeureScRefPasContrainte <10 %}
+                                                            {% set nbrHeureScRefPasContrainte = "0"~nbrHeureScRefPasContrainte %}
+                                                        {% endif %}
+                                                        {# récupérer le nbr de minute #}
+                                                        {% set nbrMinScRefPasContrainte = (((dureeTotaleScRefPasContrainte%86400)%3600)/60)|round %}
+                                                        {% if nbrMinScRefPasContrainte <10 %}
+                                                            {% set nbrMinScRefPasContrainte = "0"~nbrMinScRefPasContrainte %}
+                                                        {% endif %}
+                                                        {{ nbrJourScRefPasContrainte}} {{ nbrHeureScRefPasContrainte }}:{{ nbrMinScRefPasContrainte }}
+                                                    </td>
+                                                    <td style="text-align:right"> {{ (distanceTotaleRef * 0.80 )|round|number_format(0, ',', ' ')   }}</td>
+                                                    <td style="text-align:right"> {{ (distanceTotaleRef /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right"> {{ (distanceTotaleRef /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right"> {{ (distanceTotaleRef * 0.157)|round|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right"> {{ ((distanceTotaleRef /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
+                                                    <td style="text-align:right"> {{ ((distanceTotaleRef/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
+                                                </tr>
+
+
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                        <!-- /.table-responsive -->
+                                    </div>
+
+                                    {% if typeMatch == "plateau" %}
+                                        <div class="tab-pane fade" id="listeRencontresRef">
+                                            <div class="table-responsive" style="padding-top: 10px; max-height: 400px; overflow-y: scroll;">
+
+                                                {#<table id="exampleTerrain" class="display"#}
+                                                <table id="exampleTerrain" class="cell-border"
+                                                       cellspacing="0"
+                                                       width="100%">
+
+                                                    <thead>
+                                                    <tr>
+                                                        <th style="font-weight: bold !important;">
+                                                            Poules
+                                                        </th>
+                                                        <th>Journée</th>
+                                                        <th>Equipe hôte</th>
+                                                        <th>Equipes adverses</th>
+
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                    {% for poule, contenuPoule in rencontreDetailsRef %}
+                                                        {% set lettre = alphabet[poule-1] %}
+                                                        {% for journee, contenuJournee in contenuPoule %}
+                                                            <tr>
+                                                                <td ><strong> Poule {{ lettre }}  </strong></td>
+                                                                <td>
+                                                                    {{ journee }}
+                                                                </td>
+                                                                <td>
+                                                                    {% for contenuGroup in contenuJournee %}
+                                                                        {{ contenuGroup.hoteNom }} <br/> <br/>
+                                                                    {% endfor %}
+                                                                </td>
+                                                                <td>
+                                                                    {% for contenuGroup in contenuJournee %}
+                                                                        * {{ contenuGroup.premierEquipeNom }} <br/>
+                                                                        * {{ contenuGroup.deuxiemeEquipeNom }} <br/>
+                                                                    {% endfor %}
+                                                                </td>
+
+
+
+                                                            </tr>
+
+                                                        {% endfor %}
+
+
+                                                    {% endfor %}
+
+
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                            <!-- /.table-responsive -->
+                                        </div>
+
+
+                                    {% endif %}
+
+
+
+
+
+
+
+
+
+
+                                    <a href="{{ path('ffbb_poules_details_calcul') }}" class="pull-left">Détails
+                                        du calcul</a>
+
+                                    <button type="button"
+                                            class="btn btn-primary  pull-right">Exporter
+                                    </button>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <!-- .panel-body -->
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-6 -->
+        {% endif %}
+
+    </div>
+
+</div>
+<!-- .panel-body -->
