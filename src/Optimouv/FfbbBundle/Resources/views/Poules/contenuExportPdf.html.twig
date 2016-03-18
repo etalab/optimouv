@@ -19,7 +19,15 @@
 
 
 {% set kernelRootDir = kernelRootDir[:-3] %}
-<img src="{{ asset('bundles/ffbb/accueil/img/Logo-Optimouv.jpg') }}" >
+
+{% if typeInclude == "export" %}
+    <img src="{{ kernelRootDir }}web\bundles\ffbb\accueil\img\Logo-Optimouv.jpg">
+
+{% elseif typeInclude == "previsualisation" %}
+    <img src="{{ asset('bundles/ffbb/accueil/img/Logo-Optimouv.jpg') }}" >
+
+{% endif %}
+
 
 <br><br>
 

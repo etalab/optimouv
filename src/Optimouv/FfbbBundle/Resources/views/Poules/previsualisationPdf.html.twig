@@ -15,7 +15,7 @@
 </head>
 <body>
 
-{% include 'FfbbBundle:Poules:contenuExportPdf.html.twig' %}
+{% include 'FfbbBundle:Poules:contenuExportPdf.html.twig' with  {'typeInclude' : 'previsualisation'} %}
 
 <form name="submitParams" action="{{ path('ffbb_export_pdf')}}" method="post">
     <input type="hidden" value="{{ idResultat }}" name="params" id="params">
