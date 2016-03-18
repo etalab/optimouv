@@ -35,10 +35,9 @@
 {% set coordPoulesOpSansContrainte = scenarioOptimalSansContrainte.poulesCoords %}
 
 
-{#<img src="{{app.request.scheme ~'://'~ app.request.httpHost ~  asset('bundles/ffbb/accueil/img/Logo-Optimouv.jpg') }}" />#}
 
 {% set kernelRootDir = kernelRootDir[:-3] %}
- <img src="{{ kernelRootDir }}web\bundles\ffbb\accueil\img\Logo-Optimouv.jpg">
+ <img src="{{ asset('bundles/ffbb/accueil/img/Logo-Optimouv.jpg') }}" >
 
 <br><br>
 
