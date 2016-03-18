@@ -2,6 +2,7 @@
 
 namespace Optimouv\FfbbBundle\Controller;
 
+use Optimouv\FfbbBundle\Entity\Groupe;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Optimouv\FfbbBundle\Entity\Entite;
@@ -85,7 +86,6 @@ class PoulesController extends Controller
         $isEquipe = 1;
 
 
-//        error_log("\n typeEquipe: ".print_r($isEquipe , true), 3, "error_log_optimouv.txt");
 
         # controler toutes le fichier uploadé
         $statutUpload = $this->get('service_listes')->controlerEntites("participants", $idUtilisateur, $rencontre, $isEquipe);
@@ -887,6 +887,7 @@ class PoulesController extends Controller
         $detailsVilles = $infoPdf[8];
         $idGroupe = $infoPdf[9];
         $idRapport = $infoPdf[10];
+        $nomUtilisateur = $infoPdf[11];
 
 
         return $this->render('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
@@ -902,8 +903,64 @@ class PoulesController extends Controller
             'detailsVilles' => $detailsVilles,
             'idGroupe' => $idGroupe,
             'idResultat' => $params,
+            'nomUtilisateur' => $nomUtilisateur,
         ));
 
+    }
+
+
+
+    public function exportScenarioAction()
+    {
+
+        $params = $_POST['params'];
+
+        //recuperation des donnees relatives au scenario
+        $infoPdf = $this->getInfoPdfAction($params);
+
+        $nombrePoule = $infoPdf[0];
+        $taillePoule = $infoPdf[1];
+        $contraintsExiste = $infoPdf[2];
+        $typeMatch = $infoPdf[3];
+        $scenarioOptimalSansContrainte = $infoPdf[4];
+        $nomRapport = $infoPdf[5];
+        $nomGroupe = $infoPdf[6];
+        $nomListe = $infoPdf[7];
+        $detailsVilles = $infoPdf[8];
+        $idGroupe = $infoPdf[9];
+        $idRapport = $infoPdf[10];
+        $nomUtilisateur = $infoPdf[11];
+
+
+        $html = $this->renderView('FfbbBundle:Poules:exportPdf.html.twig', array(
+            'nomRapport' => $nomRapport,
+            'typeMatch' => $typeMatch,
+            'nombrePoule' => $nombrePoule,
+            'nomListe' => $nomListe,
+            'nomGroupe' => $nomGroupe,
+            'taillePoule' => $taillePoule,
+            'contraintsExiste' => $contraintsExiste,
+            'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
+            'idRapport' => $idRapport,
+            'detailsVilles' => $detailsVilles,
+            'idGroupe' => $idGroupe,
+            'idResultat' => $params,
+            'nomUtilisateur' => $nomUtilisateur,
+
+        ));
+
+
+        return new Response(
+            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+            200,
+            array(
+                'Content-Type'          => 'application/pdf',
+                'Content-Disposition'   => 'attachment; filename="mon_rapport.pdf"',
+                'print-media-type'      => false,
+                'outline'               => true,
+
+            )
+        );
     }
 
     public function testExportPdfAction()
@@ -936,58 +993,6 @@ class PoulesController extends Controller
 
     }
 
-
-    public function exportScenarioAction()
-    {
-
-        $params = $_POST['params'];
-
-        //recuperation des donnees relatives au scenario
-        $infoPdf = $this->getInfoPdfAction($params);
-
-        $nombrePoule = $infoPdf[0];
-        $taillePoule = $infoPdf[1];
-        $contraintsExiste = $infoPdf[2];
-        $typeMatch = $infoPdf[3];
-        $scenarioOptimalSansContrainte = $infoPdf[4];
-        $nomRapport = $infoPdf[5];
-        $nomGroupe = $infoPdf[6];
-        $nomListe = $infoPdf[7];
-        $detailsVilles = $infoPdf[8];
-        $idGroupe = $infoPdf[9];
-        $idRapport = $infoPdf[10];
-
-
-        $html = $this->renderView('FfbbBundle:Poules:exportPdf.html.twig', array(
-            'nomRapport' => $nomRapport,
-            'typeMatch' => $typeMatch,
-            'nombrePoule' => $nombrePoule,
-            'nomListe' => $nomListe,
-            'nomGroupe' => $nomGroupe,
-            'taillePoule' => $taillePoule,
-            'contraintsExiste' => $contraintsExiste,
-            'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
-            'idRapport' => $idRapport,
-            'detailsVilles' => $detailsVilles,
-            'idGroupe' => $idGroupe,
-            'idResultat' => $params,
-
-        ));
-
-
-        return new Response(
-            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
-            200,
-            array(
-                'Content-Type'          => 'application/pdf',
-                'Content-Disposition'   => 'attachment; filename="mon_rapport.pdf"',
-                'print-media-type'      => false,
-                'outline'               => true,
-
-            )
-        );
-    }
-
 //    function qui ramene toutes les infos necessaires à la view
 
     public function getInfoPdfAction($idResultat)
@@ -1009,6 +1014,11 @@ class PoulesController extends Controller
             $idGroupe = $idGroupe[0]['idGroupe'];
         }
 
+
+        //récupérer le nom d'utilisateur
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $nomUtilisateur = $user->getUsername();
+//        error_log("\n nomUtilisateur: ".print_r($nomUtilisateur , true), 3, "error_log_optimouv.txt");
 
         $equipes = $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getEquipes();
         //$equipes de string a array
@@ -1067,6 +1077,7 @@ class PoulesController extends Controller
         $retour[8] = $detailsVilles;
         $retour[9] = $idGroupe;
         $retour[10] = $idRapport;
+        $retour[11] = $nomUtilisateur;
 
         return $retour;
     }
