@@ -11,7 +11,6 @@
                      <ul class="breadcrumb">
                          <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
                          <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Choix de la liste d'équipes</a></li>
-                         {#<li><a href="{{ path('ffbb_poule_choisir_groupe', {'idListe': idListe}) }}">Choix de groupes</a></li>#}
                          <li class="active">Participants</li>
                      </ul>
                  </div>
@@ -3530,6 +3529,10 @@
                  </div>
                  <!-- /.col-lg-12 -->
              </div>
+
+
+
+
              <div class="row">
                  <div class="col-lg-12">
                      <h3 class="page-header">Modifier vos options de calcul </h3>
@@ -3771,7 +3774,6 @@
              </div>
 
              <!-- Ajouter des contraintes d'interdiction -->
-
              <div class="row">
                  <div class="panel panel-default">
                      <div class="panel-heading">
@@ -3871,7 +3873,6 @@
              </div>
 
              <!-- ajouter répartitions homogènes -->
-
              <div class="row">
                  <div class="panel panel-default">
                      <div class="panel-heading">
@@ -3932,7 +3933,6 @@
 
 
 
-             {#{% if (typeMatch == "allerRetour" or typeMatch == "allerSimple") and not changeAffectEquipes %}#}
              {% if (typeMatch == "allerRetour" or typeMatch == "allerSimple") %}
              <div class="row">
                  <div class="panel panel-default">
@@ -4038,10 +4038,7 @@
              {% elseif typeMatch == "plateau" %}
              {% endif %}
 
-
-
-
-
+             
 
              <!-- bouton lancemenet de calcul -->
              <div class="row">
