@@ -1357,23 +1357,7 @@
                  });
 
 
-
-                 /**********************************************/
-                             //partie contraintes//
-                 /**********************************************/
-
-                 function myCreateFunction() {
-                     var table = $('#mesContraintes tbody');
-                     var children = table.find('tr');
-                     var numberChilds = children.length;
-                     var lastChild = children.last();
-                     console.log(lastChild);
-                     table.append(lastChild[0].outerHTML);
-                 }
-
-
-
-
+                 //////////traitement des interdictions  ////////////
                  function getContraintes(){
                      var tabContraintes = {};
 
@@ -1393,7 +1377,6 @@
                  }
 
                  //////////traitement de la répartition homogène////////////
-
                  function verifRepartitionHomogene(){
 
                      var length = document.getElementById("tableContrainteRepartitionHomogene").rows.length;
