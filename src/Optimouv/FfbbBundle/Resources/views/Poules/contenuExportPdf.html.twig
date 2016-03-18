@@ -13,22 +13,25 @@
 
 
 <!-- declaration de variables -->
-<!-- distanceMin -->
-{% set distanceMinOp = scenarioOptimalSansContrainte.estimationGenerale.distanceTotale %}
-{% set distanceMinOp = (distanceMinOp / 1000)|round %}
-<!-- distanceTotale -->
-{% set distanceTotaleOp = scenarioOptimalSansContrainte.estimationGenerale.distanceTotaleTousParticipants %}
-{% set distanceTotaleOp = (distanceTotaleOp / 1000)|round %}
-<!-- nbrParticipantsTotal -->
-{% set nbrParticipantsTotalOp = scenarioOptimalSansContrainte.estimationGenerale.nbrParticipantsTotal %}
-<!-- dureeTotale -->
-{% set dureeTotaleOp = scenarioOptimalSansContrainte.estimationGenerale.dureeTotale %}
-<!-- estimationDetails -->
-{% set estimationDetailsOp = scenarioOptimalSansContrainte.estimationDetails %}
-<!-- rencontreDetails -->
-{% set rencontreDetailsOp = scenarioOptimalSansContrainte.rencontreDetails %}
-<!-- coordPoules -->
-{% set coordPoulesOp = scenarioOptimalSansContrainte.poulesCoords %}
+{% if typeScenario == "optimalSansContrainte" %}
+    <!-- distanceMin -->
+    {% set distanceMin = scenarioOptimalSansContrainte.estimationGenerale.distanceTotale %}
+    {% set distanceMin = (distanceMin / 1000)|round %}
+    <!-- distanceTotale -->
+    {% set distanceTotale = scenarioOptimalSansContrainte.estimationGenerale.distanceTotaleTousParticipants %}
+    {% set distanceTotale = (distanceTotale / 1000)|round %}
+    <!-- nbrParticipantsTotal -->
+    {% set nbrParticipantsTotal = scenarioOptimalSansContrainte.estimationGenerale.nbrParticipantsTotal %}
+    <!-- dureeTotale -->
+    {% set dureeTotale = scenarioOptimalSansContrainte.estimationGenerale.dureeTotale %}
+    <!-- estimationDetails -->
+    {% set estimationDetails = scenarioOptimalSansContrainte.estimationDetails %}
+    <!-- rencontreDetails -->
+    {% set rencontreDetails = scenarioOptimalSansContrainte.rencontreDetails %}
+    <!-- coordPoules -->
+    {% set coordPoules = scenarioOptimalSansContrainte.poulesCoords %}
+
+{% endif %}
 
 
 <br><br>
@@ -62,11 +65,11 @@
 
 
 {% set couleur = ['080830', 'd00c05', 'f1c62a', '0d5c35', 'd400ff', '5eb6dd', '8fcf3c', 'ff5900', 'ff73bf', '52251c', '0a1574', 'ff9300', '6b1a6a', '41ab7b','c2314e', '444459', 'b99654', 'a44906', '023548', 'b2b2b2', '616600', '790000', '147376', 'd4cd4a', '95b37c', '006d80' ] %}
-{% for key,coordPouleOpSansContrainte in coordPoulesOp %}
+{% for key,coordPoule in coordPoules %}
 {% set coordEq ="" %}
-{% for coordonneeVilleOpSansContrainte in coordPouleOpSansContrainte %}
-{% set  x = coordonneeVilleOpSansContrainte[0] %}
-{% set y =  coordonneeVilleOpSansContrainte[1] %}
+{% for coordonneeVille in coordPoule %}
+{% set  x = coordonneeVille[0] %}
+{% set y =  coordonneeVille[1] %}
 {% set xy = x~"%2C"~y %}
 {% set coordEq = coordEq~xy~"%2C" %}
 
@@ -87,39 +90,39 @@
     <ul>
 
         <li>
-            <strong>{{ distanceMinOp|number_format(0, ',', ' ') }} </strong>
+            <strong>{{ distanceMin|number_format(0, ',', ' ') }} </strong>
             kilomètres au total
             à parcourir pour l'ensemble du scénario
         </li>
         <li>
-            <strong> {{ (distanceTotaleOp * 0.80 )|round|number_format(0, ',', ' ') }}</strong>
+            <strong> {{ (distanceTotale * 0.80 )|round|number_format(0, ',', ' ') }}</strong>
             € pour réaliser les trajets de l'ensemble du scénario
             en voiture
         </li>
         <li>
-            <strong> {{ (distanceTotaleOp /4 * 0.80 )|round|number_format(0, ',', ' ') }}</strong>
+            <strong> {{ (distanceTotale /4 * 0.80 )|round|number_format(0, ',', ' ') }}</strong>
             € pour réaliser les trajets de l'ensemble du scénario
             en covoiturage
         </li>
         <li>
-            <strong>{{ (distanceTotaleOp /9 * 1.31)|round|number_format(0, ',', ' ') }} </strong>
+            <strong>{{ (distanceTotale /9 * 1.31)|round|number_format(0, ',', ' ') }} </strong>
             € pour réaliser les trajets de l'ensemble du scénario
             en minibus
         </li>
         <li>
-            <strong> {{ (distanceTotaleOp * 0.157)|round|number_format(0, ',', ' ') }}</strong>
-            KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalOp }}
+            <strong> {{ (distanceTotale * 0.157)|round|number_format(0, ',', ' ') }}</strong>
+            KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}
             joueurs en voiture individuelle
             pour le scénario
         </li>
         <li>
-            <strong>{{ (distanceTotaleOp/4 * 0.157)|round|number_format(0, ',', ' ') }} </strong>
-            KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalOp }}
+            <strong>{{ (distanceTotale/4 * 0.157)|round|number_format(0, ',', ' ') }} </strong>
+            KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}
             joueurs en co-voiturage pour le scénario
         </li>
         <li>
-            <strong>{{ (distanceTotaleOp/9 * 0.185)|round|number_format(0, ',', ' ') }} </strong>
-            KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalOp }}
+            <strong>{{ (distanceTotale/9 * 0.185)|round|number_format(0, ',', ' ') }} </strong>
+            KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}
             joueurs en minibus pour le scénario
 
         </li>
@@ -170,76 +173,76 @@
         </thead>
         <tbody>
 
-        {% set dureeTotaleScOpSansContrainteDetail = "" %}
-        {% for key, estimationDetailOpSansContrainte in estimationDetailsOp %}
-        {% set distanceOpSansContrainteDetail = estimationDetailsOp[ loop.index ].distanceTotale // 1000 %}
-        {% set distanceTotaleOpDetail = estimationDetailsOp[ loop.index ].distanceTotaleTousParticipants // 1000 %}
-        {% set dureeTotaleOpDetail = estimationDetailsOp[ loop.index ].dureeTotale  %}
-        {% set nbrParticipantsOpSansContrainteDetail = estimationDetailsOp[ loop.index ].nbrParticipantsTotal  %}
+        {% set dureeTotaleDetail = "" %}
+        {% for key, estimationDetail in estimationDetails %}
+        {% set distanceDetail = estimationDetails[ loop.index ].distanceTotale // 1000 %}
+        {% set distanceTotaleDetail = estimationDetails[ loop.index ].distanceTotaleTousParticipants // 1000 %}
+        {% set dureeTotaleDetail = estimationDetails[ loop.index ].dureeTotale  %}
+        {% set nbrParticipantsDetail = estimationDetails[ loop.index ].nbrParticipantsTotal  %}
         {% set lettre = alphabet[key-1] %}
 
         <tr>
             <td><strong> Poule {{ lettre }} </strong></td>
-            <td style="text-align:right"> {{distanceOpSansContrainteDetail|number_format(0, ',', ' ') }}</td>
+            <td style="text-align:right"> {{distanceDetail|number_format(0, ',', ' ') }}</td>
             <td style="text-align:right">
 
                 <!-- récupérer le nbr de jour -->
-                {% set nbrJour = (dureeTotaleOpDetail/86400)|round %}
+                {% set nbrJour = (dureeTotaleDetail/86400)|round %}
                 {% if nbrJour <10 %}
                 {% set nbrJour = "0"~nbrJour %}
                 {% endif %}
                 <!-- récupérer le nbr d heure -->
-                {% set nbrHeure = ((dureeTotaleOpDetail%86400)/3600)|round %}
+                {% set nbrHeure = ((dureeTotaleDetail%86400)/3600)|round %}
                 {% if nbrHeure <10 %}
                 {% set nbrHeure = "0"~nbrHeure %}
                 {% endif %}
                 <!-- récupérer le nbr de minute -->
-                {% set nbrMin = (((dureeTotaleOpDetail%86400)%3600)/60)|round %}
+                {% set nbrMin = (((dureeTotaleDetail%86400)%3600)/60)|round %}
                 {% if nbrMin <10 %}
                 {% set nbrMin = "0"~nbrMin %}
                 {% endif %}
                 {{ nbrJour}} {{ nbrHeure }}:{{ nbrMin }}
 
             </td>
-            <td style="text-align:right"> {{ (distanceTotaleOpDetail  * 0.80)|round|number_format(0, ',', ' ') }}</td>
-            <td style="text-align:right"> {{ (distanceTotaleOpDetail /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
-            <td style="text-align:right"> {{ (distanceTotaleOpDetail /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
-            <td style="text-align:right"> {{ (distanceTotaleOpDetail * 0.157)|round|number_format(0, ',', ' ') }}</td>
-            <td style="text-align:right"> {{ ((distanceTotaleOpDetail /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
-            <td style="text-align:right"> {{ ((distanceTotaleOpDetail/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
+            <td style="text-align:right"> {{ (distanceTotaleDetail  * 0.80)|round|number_format(0, ',', ' ') }}</td>
+            <td style="text-align:right"> {{ (distanceTotaleDetail /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
+            <td style="text-align:right"> {{ (distanceTotaleDetail /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
+            <td style="text-align:right"> {{ (distanceTotaleDetail * 0.157)|round|number_format(0, ',', ' ') }}</td>
+            <td style="text-align:right"> {{ ((distanceTotaleDetail /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
+            <td style="text-align:right"> {{ ((distanceTotaleDetail/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
         </tr>
-        {% set dureeTotaleScOpSansContrainteDetail = dureeTotaleScOpSansContrainteDetail + dureeTotaleOpDetail %}
+        {% set dureeTotaleDetail = dureeTotaleDetail + dureeTotaleDetail %}
 
         {% endfor %}
         <tr>
             <td><strong> Totaux </strong></td>
-            <td style="text-align:right"> {{ distanceMinOp|number_format(0, ',', ' ') }}</td>
+            <td style="text-align:right"> {{ distanceMin|number_format(0, ',', ' ') }}</td>
             <td style="text-align:right">
 
                 <!-- récupérer le nbr de jour -->
-                {% set nbrJourTotalScOptContrainte = (dureeTotaleScOpSansContrainteDetail/86400)|round %}
-                {% if nbrJourTotalScOptContrainte <10 %}
-                {% set nbrJourTotalScOptContrainte = "0"~nbrJourTotalScOptContrainte %}
+                {% set nbrJourTotal = (dureeTotaleDetail/86400)|round %}
+                {% if nbrJourTotal <10 %}
+                {% set nbrJourTotal = "0"~nbrJourTotal %}
                 {% endif %}
                 <!-- récupérer le nbr d heure -->
-                {% set nbrHeureTotalScOptContrainte = ((dureeTotaleScOpSansContrainteDetail%86400)/3600)|round %}
-                {% if nbrHeureTotalScOptContrainte <10 %}
-                {% set nbrHeureTotalScOptContrainte = "0"~nbrHeureTotalScOptContrainte %}
+                {% set nbrHeureTotal = ((dureeTotaleDetail%86400)/3600)|round %}
+                {% if nbrHeureTotal <10 %}
+                {% set nbrHeureTotal = "0"~nbrHeureTotal %}
                 {% endif %}
                 <!-- récupérer le nbr de minute -->
-                {% set nbrMinTotalScOptContrainte = (((dureeTotaleScOpSansContrainteDetail%86400)%3600)/60)|round %}
-                {% if nbrMinTotalScOptContrainte <10 %}
-                {% set nbrMinTotalScOptContrainte = "0"~nbrMinTotalScOptContrainte %}
+                {% set nbrMinTotal = (((dureeTotaleDetail%86400)%3600)/60)|round %}
+                {% if nbrMinTotal <10 %}
+                {% set nbrMinTotal = "0"~nbrMinTotal %}
                 {% endif %}
-                {{ nbrJourTotalScOptContrainte}} {{ nbrHeureTotalScOptContrainte }}:{{ nbrMinTotalScOptContrainte }}
+                {{ nbrJourTotal}} {{ nbrHeureTotal }}:{{ nbrMinTotal }}
 
             </td>
-            <td style="text-align:right"> {{ (distanceTotaleOp  * 0.80)|round|number_format(0, ',', ' ') }}</td>
-            <td style="text-align:right"> {{ (distanceTotaleOp /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
-            <td style="text-align:right"> {{ (distanceTotaleOp /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
-            <td style="text-align:right"> {{ (distanceTotaleOp * 0.157)|round|number_format(0, ',', ' ') }}</td>
-            <td style="text-align:right"> {{ ((distanceTotaleOp /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
-            <td style="text-align:right"> {{ ((distanceTotaleOp/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
+            <td style="text-align:right"> {{ (distanceTotale  * 0.80)|round|number_format(0, ',', ' ') }}</td>
+            <td style="text-align:right"> {{ (distanceTotale /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
+            <td style="text-align:right"> {{ (distanceTotale /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
+            <td style="text-align:right"> {{ (distanceTotale * 0.157)|round|number_format(0, ',', ' ') }}</td>
+            <td style="text-align:right"> {{ ((distanceTotale /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
+            <td style="text-align:right"> {{ ((distanceTotale/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
         </tr>
         </tbody>
     </table>
@@ -255,8 +258,8 @@
     <table>
 
         <tbody>
-        {% for key, rencontreDetailOpSansContrainte in rencontreDetailsOp %}
-        {% set distanceOptSansContrainte = rencontreDetailsOp[ loop.index ] %}
+        {% for key, rencontreDetail in rencontreDetails %}
+        {% set distanceScenario = rencontreDetails[ loop.index ] %}
 
         <tr>
             {% set lettre = alphabet[key-1] %}
@@ -264,10 +267,10 @@
 
             <td>
                 <ul>
-                    {% for keyDetailOptSansContrainte, detailsOptSansContrainte in distanceOptSansContrainte %}
+                    {% for keyDetail, detailsScenario in distanceScenario %}
                     <li>
-                        {{ distanceOptSansContrainte[ loop.index ].equipeDepartNom }}
-                        ~ {{ distanceOptSansContrainte[ loop.index ].equipeDestinationNom }}
+                        {{ distanceScenario[ loop.index ].equipeDepartNom }}
+                        ~ {{ distanceScenario[ loop.index ].equipeDestinationNom }}
                     </li>
 
                     {% endfor %}

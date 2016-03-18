@@ -19,6 +19,7 @@
 
 <form name="submitParams" action="{{ path('ffbb_export_pdf')}}" method="post">
     <input type="hidden" value="{{ idResultat }}" name="idResultat" >
+    <input type="hidden" value="{{ typeScenario }}" name="typeScenario" >
 
     <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
 </form>

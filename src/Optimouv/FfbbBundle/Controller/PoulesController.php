@@ -871,6 +871,7 @@ class PoulesController extends Controller
     {
 
         $idResultat = $_POST['idResultat'];
+        $typeScenario = $_POST['typeScenario'];
 
 //        error_log("\n params: ".print_r($_POST , true), 3, "error_log_optimouv.txt");
 
@@ -905,6 +906,7 @@ class PoulesController extends Controller
             'idGroupe' => $idGroupe,
             'idResultat' => $idResultat,
             'nomUtilisateur' => $nomUtilisateur,
+            'typeScenario' => $typeScenario,
         ));
 
     }
@@ -915,6 +917,7 @@ class PoulesController extends Controller
     {
 
         $idResultat = $_POST['idResultat'];
+        $typeScenario = $_POST['typeScenario'];
 
         //recuperation des donnees relatives au scenario
         $infoPdf = $this->getInfoPdfAction($idResultat);
@@ -947,6 +950,7 @@ class PoulesController extends Controller
             'idGroupe' => $idGroupe,
             'idResultat' => $idResultat,
             'nomUtilisateur' => $nomUtilisateur,
+            'typeScenario' => $typeScenario,
 
         ));
 
