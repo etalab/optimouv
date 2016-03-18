@@ -15,7 +15,6 @@
 </head>
 <body>
 
-
 <!-- declaration de variables -->
 <!-- distanceMin -->
 {% set distanceMinOpSansContrainte = scenarioOptimalSansContrainte.estimationGenerale.distanceTotale %}
@@ -35,7 +34,6 @@
 {% set coordPoulesOpSansContrainte = scenarioOptimalSansContrainte.poulesCoords %}
 
 
-{#<img src="{{app.request.scheme ~'://'~ app.request.httpHost ~  asset('bundles/ffbb/accueil/img/Logo-Optimouv.jpg') }}" />#}
 
 {% set kernelRootDir = kernelRootDir[:-3] %}
 <img src="{{ kernelRootDir }}web\bundles\ffbb\accueil\img\Logo-Optimouv.jpg">
@@ -191,17 +189,17 @@
                 <td style="text-align:right"> {{distanceOpSansContrainteDetail|number_format(0, ',', ' ') }}</td>
                 <td style="text-align:right">
 
-                    {# récupérer le nbr de jour #}
+                    <!-- récupérer le nbr de jour -->
                     {% set nbrJour = (dureeTotaleOpSansContrainteDetail/86400)|round %}
                     {% if nbrJour <10 %}
                         {% set nbrJour = "0"~nbrJour %}
                     {% endif %}
-                    {# récupérer le nbr d heure #}
+                    <!-- récupérer le nbr d heure -->
                     {% set nbrHeure = ((dureeTotaleOpSansContrainteDetail%86400)/3600)|round %}
                     {% if nbrHeure <10 %}
                         {% set nbrHeure = "0"~nbrHeure %}
                     {% endif %}
-                    {# récupérer le nbr de minute #}
+                    <!-- récupérer le nbr de minute -->
                     {% set nbrMin = (((dureeTotaleOpSansContrainteDetail%86400)%3600)/60)|round %}
                     {% if nbrMin <10 %}
                         {% set nbrMin = "0"~nbrMin %}
@@ -224,17 +222,17 @@
             <td style="text-align:right"> {{ distanceMinOpSansContrainte|number_format(0, ',', ' ') }}</td>
             <td style="text-align:right">
 
-                {# récupérer le nbr de jour #}
+                <!-- récupérer le nbr de jour -->
                 {% set nbrJourTotalScOptContrainte = (dureeTotaleScOpSansContrainteDetail/86400)|round %}
                 {% if nbrJourTotalScOptContrainte <10 %}
                     {% set nbrJourTotalScOptContrainte = "0"~nbrJourTotalScOptContrainte %}
                 {% endif %}
-                {# récupérer le nbr d heure #}
+                <!-- récupérer le nbr d heure-->
                 {% set nbrHeureTotalScOptContrainte = ((dureeTotaleScOpSansContrainteDetail%86400)/3600)|round %}
                 {% if nbrHeureTotalScOptContrainte <10 %}
                     {% set nbrHeureTotalScOptContrainte = "0"~nbrHeureTotalScOptContrainte %}
                 {% endif %}
-                {# récupérer le nbr de minute #}
+                <!-- récupérer le nbr de minute -->
                 {% set nbrMinTotalScOptContrainte = (((dureeTotaleScOpSansContrainteDetail%86400)%3600)/60)|round %}
                 {% if nbrMinTotalScOptContrainte <10 %}
                     {% set nbrMinTotalScOptContrainte = "0"~nbrMinTotalScOptContrainte %}
@@ -260,16 +258,6 @@
 <!-- bloc détails rencontres -->
 <div >
     <table>
-
-        {#<thead>#}
-        {#<tr>#}
-            {#<th style="font-weight: bold !important;">#}
-                {#Poules#}
-            {#</th>#}
-            {#<th>Rencontres</th>#}
-
-        {#</tr>#}
-        {#</thead>#}
 
         <tbody>
         {% for key, rencontreDetailOpSansContrainte in rencontreDetailsOpSansContrainte %}
