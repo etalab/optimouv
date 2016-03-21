@@ -254,9 +254,9 @@ ffbb_selectionner_type_export:
     defaults: { _controller: FfbbBundle:Poules:selectionTypeExport}
 
 
-ffbb_previsualisation_pdf:
-    path:    /admin/poules/export/previsualisation/pdf/
-    defaults: { _controller: FfbbBundle:Poules:previsualisationPdf }
+#ffbb_previsualisation_pdf:
+#    path:    /admin/poules/export/previsualisation/pdf/
+#    defaults: { _controller: FfbbBundle:Poules:previsualisationPdf }
 
 ffbb_export_pdf:
     path:    /admin/poules/export/sauvegarde/pdf/
