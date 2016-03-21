@@ -876,13 +876,14 @@ class PoulesController extends Controller
 //        error_log("\n params: ".print_r($_POST , true), 3, "error_log_optimouv.txt");
 
         //recuperation des donnees relatives au scenario
-        $infoPdf = $this->getInfoPdfAction($idResultat);
+        $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
 
         $nombrePoule = $infoPdf[0];
         $taillePoule = $infoPdf[1];
         $contraintsExiste = $infoPdf[2];
         $typeMatch = $infoPdf[3];
-        $scenarioOptimalSansContrainte = $infoPdf[4];
+//        $scenarioOptimalSansContrainte = $infoPdf[4];
+        $scenarioResultats = $infoPdf[4];
         $nomRapport = $infoPdf[5];
         $nomGroupe = $infoPdf[6];
         $nomListe = $infoPdf[7];
@@ -900,7 +901,8 @@ class PoulesController extends Controller
             'nomGroupe' => $nomGroupe,
             'taillePoule' => $taillePoule,
             'contraintsExiste' => $contraintsExiste,
-            'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
+//            'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
+            'scenarioResultats' => $scenarioResultats,
             'idRapport' => $idRapport,
             'detailsVilles' => $detailsVilles,
             'idGroupe' => $idGroupe,
@@ -920,13 +922,14 @@ class PoulesController extends Controller
         $typeScenario = $_POST['typeScenario'];
 
         //recuperation des donnees relatives au scenario
-        $infoPdf = $this->getInfoPdfAction($idResultat);
+        $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
 
         $nombrePoule = $infoPdf[0];
         $taillePoule = $infoPdf[1];
         $contraintsExiste = $infoPdf[2];
         $typeMatch = $infoPdf[3];
-        $scenarioOptimalSansContrainte = $infoPdf[4];
+//        $scenarioOptimalSansContrainte = $infoPdf[4];
+        $scenarioResultats = $infoPdf[4];
         $nomRapport = $infoPdf[5];
         $nomGroupe = $infoPdf[6];
         $nomListe = $infoPdf[7];
@@ -944,7 +947,8 @@ class PoulesController extends Controller
             'nomGroupe' => $nomGroupe,
             'taillePoule' => $taillePoule,
             'contraintsExiste' => $contraintsExiste,
-            'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
+//            'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
+            'scenarioResultats' => $scenarioResultats,
             'idRapport' => $idRapport,
             'detailsVilles' => $detailsVilles,
             'idGroupe' => $idGroupe,
@@ -1000,7 +1004,8 @@ class PoulesController extends Controller
 
 //    function qui ramene toutes les infos necessaires à la view
 
-    public function getInfoPdfAction($idResultat)
+//    public function getInfoPdfAction($idResultat)
+    public function getInfoPdfAction($idResultat , $typeScenario)
     {
 
 
@@ -1036,7 +1041,17 @@ class PoulesController extends Controller
         $taillePoule = $detailsCalcul["taillePoule"];
         $contraintsExiste = $detailsCalcul["contraintsExiste"];
         $typeMatch = $detailsCalcul["typeMatch"];
-        $scenarioOptimalSansContrainte = $detailsCalcul["scenarioOptimalSansContrainte"];
+
+        # obtenir scénario selon leur type
+        if($typeScenario == "optimalSansContrainte"){
+            $scenarioResultats = $detailsCalcul["scenarioOptimalSansContrainte"];
+        }
+        elseif ($typeScenario == "equitableSansContrainte"){
+            $scenarioResultats = $detailsCalcul["scenarioEquitableSansContrainte"];
+
+        }
+//        $scenarioOptimalSansContrainte = $detailsCalcul["scenarioOptimalSansContrainte"];
+
 
         //récupération du nom du rapport
         $connection = $em->getConnection();
@@ -1074,7 +1089,8 @@ class PoulesController extends Controller
         $retour[1] = $taillePoule;
         $retour[2] = $contraintsExiste;
         $retour[3] = $typeMatch;
-        $retour[4] = $scenarioOptimalSansContrainte;
+//        $retour[4] = $scenarioOptimalSansContrainte;
+        $retour[4] = $scenarioResultats;
         $retour[5] = $nomRapport;
         $retour[6] = $nomGroupe;
         $retour[7] = $nomListe;
