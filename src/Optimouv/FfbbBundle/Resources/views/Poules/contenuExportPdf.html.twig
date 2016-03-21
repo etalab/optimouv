@@ -300,25 +300,31 @@
         </tbody>
 
         {% elseif typeMatch == "plateau" %}
-        <thead>
-        <tr>
-            <th style="font-weight: bold !important;">
-                Poules
-            </th>
-            <th>Journée</th>
-            <th>Equipe hôte</th>
-            <th>Equipes adverses</th>
 
-        </tr>
-        </thead>
 
-        <tbody>
+            {% if typeInclude == "previsualisation" %}
+                <thead>
+                <tr>
+                    <th style="font-weight: bold !important;">
+                        Poules
+                    </th>
+                    <th>Journée</th>
+                    <th>Equipe hôte</th>
+                    <th>Equipes adverses</th>
+
+                </tr>
+                </thead>
+
+            {% endif %}
+
+
+            <tbody>
             {% for poule, contenuPoule in rencontreDetails%}
                 {% set lettre = alphabet[poule-1] %}
                 {% for journee, contenuJournee in contenuPoule %}
                     <tr>
                         <td ><strong> Poule {{ lettre }}  </strong></td>
-                        <td>
+                        <td width="10%">
                             {{ journee }}
                         </td>
                         <td>
@@ -338,7 +344,6 @@
                     </tr>
 
                 {% endfor %}
-
 
             {% endfor %}
         </tbody>
