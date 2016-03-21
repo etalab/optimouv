@@ -1351,7 +1351,6 @@
                                         <div class="tab-pane fade" id="listeRencontresRef">
                                             <div class="table-responsive" style="padding-top: 10px; max-height: 400px; overflow-y: scroll;">
 
-                                                {#<table id="exampleTerrain" class="display"#}
                                                 <table id="exampleTerrain" class="cell-border"
                                                        cellspacing="0"
                                                        width="100%">
@@ -1413,22 +1412,26 @@
                                     <a href="{{ path('ffbb_poules_details_calcul') }}" class="pull-left">Détails
                                         du calcul</a>
 
-                                    {#<button type="button"#}
-                                            {#class="btn btn-primary  pull-right">Exporter#}
-                                    {#</button>#}
 
-                                    {% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}
+                                    <form name="submitParams" action="{{ path('ffbb_previsualisation_pdf')}}" method="post">
+                                        <input type="hidden" value="{{ idResultat }}" name="idResultat">
+                                        <input type="hidden" value="ref" name="typeScenario" >
 
-                                        <form name="submitParams" action="{{ path('ffbb_previsualisation_pdf')}}" method="post">
-                                            <input type="hidden" value="{{ idResultat }}" name="idResultat">
-                                            <input type="hidden" value="ref" name="typeScenario" >
-
-                                            <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
-                                        </form>
-
-                                    {% elseif typeMatch == "plateau" %}
                                         <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
-                                    {% endif %}
+                                    </form>
+
+                                    {#{% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}#}
+
+
+                                    {#{% elseif typeMatch == "plateau" %}#}
+                                        {#<form name="submitParams" action="{{ path('ffbb_previsualisation_pdf')}}" method="post">#}
+                                            {#<input type="hidden" value="{{ idResultat }}" name="idResultat">#}
+                                            {#<input type="hidden" value="ref" name="typeScenario" >#}
+
+                                            {#<button type="submit" class="btn btn-primary  pull-right">Exporter</button>#}
+                                        {#</form>#}
+
+                                    {#{% endif %}#}
 
 
                                 </div>

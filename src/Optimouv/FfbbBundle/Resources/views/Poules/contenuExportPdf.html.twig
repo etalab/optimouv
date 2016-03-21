@@ -48,7 +48,7 @@
     {% elseif typeScenario == "equitableAvecContrainte" %}
         scénario équitable avec contrainte
     {% elseif typeScenario == "ref" %}
-        scénario référence
+        scénario de référence
 
     {% endif %}
 
@@ -273,30 +273,78 @@
 <div >
     <table>
 
+        {% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}
         <tbody>
-        {% for key, rencontreDetail in rencontreDetails %}
-        {% set distanceScenario = rencontreDetails[ loop.index ] %}
+            {% for key, rencontreDetail in rencontreDetails %}
+            {% set distanceScenario = rencontreDetails[ loop.index ] %}
 
-        <tr>
-            {% set lettre = alphabet[key-1] %}
-            <td><strong> Poule {{ lettre }} </strong></td>
+            <tr>
+                {% set lettre = alphabet[key-1] %}
+                <td><strong> Poule {{ lettre }} </strong></td>
 
-            <td>
-                <ul>
+                <td>
+                    <ul>
                     {% for keyDetail, detailsScenario in distanceScenario %}
-                    <li>
+                        <li>
                         {{ distanceScenario[ loop.index ].equipeDepartNom }}
                         ~ {{ distanceScenario[ loop.index ].equipeDestinationNom }}
-                    </li>
+                        </li>
 
                     {% endfor %}
-                </ul>
-            </td>
+                    </ul>
+                </td>
+
+            </tr>
+
+            {% endfor %}
+        </tbody>
+
+        {% elseif typeMatch == "plateau" %}
+        <thead>
+        <tr>
+            <th style="font-weight: bold !important;">
+                Poules
+            </th>
+            <th>Journée</th>
+            <th>Equipe hôte</th>
+            <th>Equipes adverses</th>
 
         </tr>
+        </thead>
 
-        {% endfor %}
+        <tbody>
+            {% for poule, contenuPoule in rencontreDetails%}
+                {% set lettre = alphabet[poule-1] %}
+                {% for journee, contenuJournee in contenuPoule %}
+                    <tr>
+                        <td ><strong> Poule {{ lettre }}  </strong></td>
+                        <td>
+                            {{ journee }}
+                        </td>
+                        <td>
+                            {% for contenuGroup in contenuJournee %}
+                                {{ contenuGroup.hoteNom }} <br/> <br/>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for contenuGroup in contenuJournee %}
+                                * {{ contenuGroup.premierEquipeNom }} <br/>
+                                * {{ contenuGroup.deuxiemeEquipeNom }} <br/>
+                            {% endfor %}
+                        </td>
+
+
+
+                    </tr>
+
+                {% endfor %}
+
+
+            {% endfor %}
         </tbody>
+
+        {% endif %}
+
 
     </table>
 </div>
