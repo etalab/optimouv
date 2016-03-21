@@ -860,12 +860,70 @@ class PoulesController extends Controller
 
 
     //page qui affiche les détails des calculs
-
     public function detailsCalculAction()
     {
 
         return $this->render('FfbbBundle:Poules:detailsCalcul.html.twig');
     }
+
+    public function selectionTypeExportAction()
+    {
+        $formatExport = $_POST['formatExport'];
+        $idResultat = $_POST['idResultat'];
+        $typeScenario = $_POST['typeScenario'];
+
+        error_log("\n params: ".print_r($_POST , true), 3, "error_log_optimouv.txt");
+
+        if($formatExport == "pdf"){
+
+            //recuperation des donnees relatives au scenario
+            $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
+
+            $nombrePoule = $infoPdf[0];
+            $taillePoule = $infoPdf[1];
+            $contraintsExiste = $infoPdf[2];
+            $typeMatch = $infoPdf[3];
+            $scenarioResultats = $infoPdf[4];
+            $nomRapport = $infoPdf[5];
+            $nomGroupe = $infoPdf[6];
+            $nomListe = $infoPdf[7];
+            $detailsVilles = $infoPdf[8];
+            $idGroupe = $infoPdf[9];
+            $idRapport = $infoPdf[10];
+            $nomUtilisateur = $infoPdf[11];
+
+
+            return $this->render('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
+                'nomRapport' => $nomRapport,
+                'typeMatch' => $typeMatch,
+                'nombrePoule' => $nombrePoule,
+                'nomListe' => $nomListe,
+                'nomGroupe' => $nomGroupe,
+                'taillePoule' => $taillePoule,
+                'contraintsExiste' => $contraintsExiste,
+                'scenarioResultats' => $scenarioResultats,
+                'idRapport' => $idRapport,
+                'detailsVilles' => $detailsVilles,
+                'idGroupe' => $idGroupe,
+                'idResultat' => $idResultat,
+                'nomUtilisateur' => $nomUtilisateur,
+                'typeScenario' => $typeScenario,
+            ));
+
+
+        }
+        elseif ($formatExport == "xml"){
+            return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
+            exit();
+        }
+        elseif ($formatExport == "csv"){
+            return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
+            exit();
+        }
+
+
+    }
+
 
     public function previsualisationPdfAction()
     {
@@ -873,7 +931,6 @@ class PoulesController extends Controller
         $idResultat = $_POST['idResultat'];
         $typeScenario = $_POST['typeScenario'];
 
-//        error_log("\n params: ".print_r($_POST , true), 3, "error_log_optimouv.txt");
 
         //recuperation des donnees relatives au scenario
         $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
