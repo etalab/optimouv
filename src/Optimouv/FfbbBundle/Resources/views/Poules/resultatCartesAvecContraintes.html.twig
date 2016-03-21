@@ -457,18 +457,12 @@
                                     <a href="{{ path('ffbb_poules_details_calcul') }}" class="pull-left">Détails du calcul</a>
 
 
-                                    {% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}
+                                    <form name="submitParams" action="{{ path('ffbb_previsualisation_pdf')}}" method="post">
+                                        <input type="hidden" value="{{ idResultat }}" name="idResultat">
+                                        <input type="hidden" value="optimalAvecContrainte" name="typeScenario" >
 
-                                        <form name="submitParams" action="{{ path('ffbb_previsualisation_pdf')}}" method="post">
-                                            <input type="hidden" value="{{ idResultat }}" name="idResultat">
-                                            <input type="hidden" value="optimalAvecContrainte" name="typeScenario" >
-
-                                            <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
-                                        </form>
-
-                                    {% elseif typeMatch == "plateau" %}
                                         <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
-                                    {% endif %}
+                                    </form>
 
 
 
@@ -940,18 +934,13 @@
                                     du calcul</a>
 
 
-                                {% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}
+                                <form name="submitParams" action="{{ path('ffbb_previsualisation_pdf')}}" method="post">
+                                    <input type="hidden" value="{{ idResultat }}" name="idResultat">
+                                    <input type="hidden" value="equitableAvecContrainte" name="typeScenario" >
 
-                                    <form name="submitParams" action="{{ path('ffbb_previsualisation_pdf')}}" method="post">
-                                        <input type="hidden" value="{{ idResultat }}" name="idResultat">
-                                        <input type="hidden" value="equitableAvecContrainte" name="typeScenario" >
-
-                                        <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
-                                    </form>
-
-                                {% elseif typeMatch == "plateau" %}
                                     <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
-                                {% endif %}
+                                </form>
+
 
 
                             </div>
@@ -1418,19 +1407,13 @@
                                 <a href="{{ path('ffbb_poules_details_calcul') }}" class="pull-left">Détails
                                     du calcul</a>
 
-                                {% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}
+                                <form name="submitParams" action="{{ path('ffbb_previsualisation_pdf')}}" method="post">
+                                    <input type="hidden" value="{{ idResultat }}" name="idResultat" >
+                                    <input type="hidden" value="optimalSansContrainte" name="typeScenario" >
 
-                                    <form name="submitParams" action="{{ path('ffbb_previsualisation_pdf')}}" method="post">
-                                        <input type="hidden" value="{{ idResultat }}" name="idResultat" >
-                                        <input type="hidden" value="optimalSansContrainte" name="typeScenario" >
-
-                                        <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
-                                    </form>
-
-                                {% elseif typeMatch == "plateau"  %}
                                     <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
+                                </form>
 
-                                {% endif %}
 
 
 
@@ -1884,12 +1867,6 @@
                                         <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
                                     </form>
 
-                                    {#{% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}#}
-
-
-                                    {#{% elseif typeMatch == "plateau" %}#}
-                                        {#<button type="submit" class="btn btn-primary  pull-right">Exporter</button>#}
-                                    {#{% endif %}#}
 
                                 </div>
                             </div>
