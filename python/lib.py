@@ -1227,8 +1227,7 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 					logging.debug("Failure to create interchange rows and  columns (i, j) which fulfills all constraints")
 					logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 # 					# update status job failure
-					update_job_status(reportId, -1)
-# 					send_email_to_user_failure(userId)
+# 					update_job_status(reportId, -1)
 					send_email_to_user_failure(userId, reportId)
 					sys.exit()
 				iterConstraint -= 1
@@ -1474,8 +1473,7 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 					logging.debug("Failure to create interchange rows and  columns (i, j) which fulfills all constraints")
 					logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 # 					# update status job failure
-					update_job_status(reportId, -1)
-# 					send_email_to_user_failure(userId)
+# 					update_job_status(reportId, -1)
 					send_email_to_user_failure(userId, reportId)
 					sys.exit()
 				iterConstraint -= 1
@@ -2411,7 +2409,6 @@ def send_email_to_user(userId, resultId):
 """
 Function to send email to user when there is no results (there are too many constraints)
 """
-# def send_email_to_user_failure(userId):
 def send_email_to_user_failure(userId, reportId):
 	try:
 # 		sql = "select nom from rapport where id=%s"%reportId
@@ -2449,6 +2446,10 @@ def send_email_to_user_failure(userId, reportId):
 		
 		server.sendmail(gmail_sender, [TO], msg.as_string())
 		server.quit()	
+
+		# update job status
+		update_job_status(reportId, -1)
+
 
 		sys.exit()
 
