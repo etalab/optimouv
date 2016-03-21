@@ -913,7 +913,7 @@ class PoulesController extends Controller
 
 
 
-    public function exportScenarioAction()
+    public function exportScenarioPdfAction()
     {
 
         $idResultat = $_POST['idResultat'];

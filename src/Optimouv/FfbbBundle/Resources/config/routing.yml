@@ -255,8 +255,12 @@ ffbb_previsualisation_pdf:
 
 ffbb_export_pdf:
     path:    /admin/export/sauvegarde/pdf/
-    defaults: { _controller: FfbbBundle:Poules:exportScenario }
+    defaults: { _controller: FfbbBundle:Poules:exportScenarioPdf }
 
 ffbb_comparaison_sc_rencontre:
     path:    /admin/rencontre/comparaison-scenarios/{idRapport}
     defaults: { _controller: FfbbBundle:Comparaison:index }
+
+#ffbb_poules_test_export_pdf:
+#    path:    /admin/poules/test-export-pdf/
+#    defaults: { _controller: FfbbBundle:Poules:testExportPdf}
