@@ -4,110 +4,171 @@ namespace Optimouv\FfbbBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
  class RencontresController extends Controller
-{
+ {
 
-    public function indexAction($idRapport)
-    {
+     public function indexAction($idRapport)
+     {
 
-        # obtenir entity manager
-        $em = $this->getDoctrine()->getManager();
+         # obtenir entity manager
+         $em = $this->getDoctrine()->getManager();
 
-        /////////////////////////////////
-        /************Optimal********/
-        ///////////////////////////////
-
-
-        $participants = [];
+         /////////////////////////////////
+         /************Optimal********/
+         ///////////////////////////////
 
 
-        $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idRapport);
-        $idGroupe = $idGroupe[0]['idGroupe'];
-
-        //récupération du nom du rapport
-
-        $nomRapport = $em->getRepository('FfbbBundle:Rapport')->findOneById($idRapport)->getNom();
-
-        //récupération des détails de calculs
-        $retour = $em->getRepository('FfbbBundle:Scenario')->getDetailsCalcul($idRapport);
-
-        $retour = json_decode($retour[0]["detailsCalcul"], true);
-
-        $retourOp = $retour[0];
-        $retourEq = $retour[1];
-
-        //Donn�es du sc�nario optimal
-        $villeDepart = $retourOp[0];
-        $longPtDep = $retourOp[1];
-        $latPtDep = $retourOp[2];
-        $distanceMin = $retourOp[3];
-        $dureeTrajet = $retourOp[4];
-        $coordonneesVille = $retourOp[5];
-        $terrainsNeutres = $retourOp[9];
-        $nbrParticipantsTotal = $retourOp["nbrParticipantsTotal"];
-        $distanceTotale = $retourOp["distanceTotale"];
-
-        foreach($retourOp[6] as $key => $value ){
-
-            $participants[]= array('ville' => $value, 'distance' => $retourOp[7][$key], 'duree' => $retourOp[8][$key], 'nbrParticipants' => $retourOp[10][$key]);
-        }
-
-        /////////////////////////////////
-        /************Equitable********/
-        ///////////////////////////////
+         $participants = [];
 
 
-        $villeDepartEq = $retourEq[0];
-        $longPtDepEq = $retourEq[1];
-        $latPtDepEq = $retourEq[2];
-        $distanceMinEq = $retourEq[3];
-        $dureeTrajetEq = $retourEq[4];
-        $coordonneesVilleEq = $retourEq[5];
-        $distanceTotaleEq = $retourEq["distanceTotale"];
+         $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idRapport);
+         $idGroupe = $idGroupe[0]['idGroupe'];
 
-        foreach($retourEq[6] as $key => $value ){
+         //récupération du nom du rapport
 
-            $participantsEq[]= array('villeEq' => $value, 'distanceEq' => $retourEq[7][$key], 'dureeEq' => $retourEq[8][$key], 'nbrParticipants' => $retourEq[9][$key]);
-        }
+         $nomRapport = $em->getRepository('FfbbBundle:Rapport')->findOneById($idRapport)->getNom();
 
-        # récupérer idListe pour le breadcrump
-        $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
-        $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
-        $nomGroupe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getNom();
+         //récupération des détails de calculs
+         $retour = $em->getRepository('FfbbBundle:Scenario')->getDetailsCalcul($idRapport);
+
+         $retour = json_decode($retour[0]["detailsCalcul"], true);
+
+         $retourOp = $retour[0];
+         $retourEq = $retour[1];
+
+         //Donn�es du sc�nario optimal
+         $villeDepart = $retourOp[0];
+         $longPtDep = $retourOp[1];
+         $latPtDep = $retourOp[2];
+         $distanceMin = $retourOp[3];
+         $dureeTrajet = $retourOp[4];
+         $coordonneesVille = $retourOp[5];
+         $terrainsNeutres = $retourOp[9];
+         $nbrParticipantsTotal = $retourOp["nbrParticipantsTotal"];
+         $distanceTotale = $retourOp["distanceTotale"];
+
+         foreach ($retourOp[6] as $key => $value) {
+
+             $participants[] = array('ville' => $value, 'distance' => $retourOp[7][$key], 'duree' => $retourOp[8][$key], 'nbrParticipants' => $retourOp[10][$key]);
+         }
+
+         /////////////////////////////////
+         /************Equitable********/
+         ///////////////////////////////
 
 
-        return $this->render('FfbbBundle:Rencontres:index.html.twig', array(
+         $villeDepartEq = $retourEq[0];
+         $longPtDepEq = $retourEq[1];
+         $latPtDepEq = $retourEq[2];
+         $distanceMinEq = $retourEq[3];
+         $dureeTrajetEq = $retourEq[4];
+         $coordonneesVilleEq = $retourEq[5];
+         $distanceTotaleEq = $retourEq["distanceTotale"];
 
-            //Donn�es du sc�nario optimal
-            'villeDepart' => $villeDepart,
-            'longPtDep' => $longPtDep,
-            'latPtDep' => $latPtDep,
-            'distanceMin' => $distanceMin,
-            'dureeTrajet' => $dureeTrajet,
-            'coordonneesVille' => $coordonneesVille,
-            'participants' => $participants,
-            'nbrParticipantsTotal' => $nbrParticipantsTotal,
-            'distanceTotale' => $distanceTotale,
+         foreach ($retourEq[6] as $key => $value) {
 
-            //donn�es sc�nario �quitable
-            'villeDepartEq' => $villeDepartEq,
-            'longPtDepEq' => $longPtDepEq,
-            'latPtDepEq' => $latPtDepEq,
-            'distanceMinEq' => $distanceMinEq,
-            'dureeTrajetEq' => $dureeTrajetEq,
-            'coordonneesVilleEq' => $coordonneesVilleEq,
-            'participantsEq' => $participantsEq,
-            'idGroupe' => $idGroupe,
-            'terrainsNeutres' => $terrainsNeutres,
-            'distanceTotaleEq' => $distanceTotaleEq,
-            'idListe' => $idListe,
-            'nomListe' => $nomListe,
-            'nomGroupe' => $nomGroupe,
-            'idRapport' => $idRapport,
-            'nomRapport' => $nomRapport,
+             $participantsEq[] = array('villeEq' => $value, 'distanceEq' => $retourEq[7][$key], 'dureeEq' => $retourEq[8][$key], 'nbrParticipants' => $retourEq[9][$key]);
+         }
 
-        ));
-    }
+         # récupérer idListe pour le breadcrump
+         $idListe = $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
+         $nomListe = $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
+         $nomGroupe = $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getNom();
+
+
+         return $this->render('FfbbBundle:Rencontres:index.html.twig', array(
+
+             //Donn�es du sc�nario optimal
+             'villeDepart' => $villeDepart,
+             'longPtDep' => $longPtDep,
+             'latPtDep' => $latPtDep,
+             'distanceMin' => $distanceMin,
+             'dureeTrajet' => $dureeTrajet,
+             'coordonneesVille' => $coordonneesVille,
+             'participants' => $participants,
+             'nbrParticipantsTotal' => $nbrParticipantsTotal,
+             'distanceTotale' => $distanceTotale,
+
+             //donn�es sc�nario �quitable
+             'villeDepartEq' => $villeDepartEq,
+             'longPtDepEq' => $longPtDepEq,
+             'latPtDepEq' => $latPtDepEq,
+             'distanceMinEq' => $distanceMinEq,
+             'dureeTrajetEq' => $dureeTrajetEq,
+             'coordonneesVilleEq' => $coordonneesVilleEq,
+             'participantsEq' => $participantsEq,
+             'idGroupe' => $idGroupe,
+             'terrainsNeutres' => $terrainsNeutres,
+             'distanceTotaleEq' => $distanceTotaleEq,
+             'idListe' => $idListe,
+             'nomListe' => $nomListe,
+             'nomGroupe' => $nomGroupe,
+             'idRapport' => $idRapport,
+             'nomRapport' => $nomRapport,
+
+         ));
+     }
+
+     public function selectionTypeExportAction()
+     {
+         $formatExport = $_POST['formatExport'];
+         $idResultat = $_POST['idResultat'];
+         $typeScenario = $_POST['typeScenario'];
+
+//        error_log("\n params: ".print_r($_POST , true), 3, "error_log_optimouv.txt");
+
+         if($formatExport == "pdf"){
+
+//             //recuperation des donnees relatives au scenario
+//             $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
+//
+//             $nombrePoule = $infoPdf[0];
+//             $taillePoule = $infoPdf[1];
+//             $contraintsExiste = $infoPdf[2];
+//             $typeMatch = $infoPdf[3];
+//             $scenarioResultats = $infoPdf[4];
+//             $nomRapport = $infoPdf[5];
+//             $nomGroupe = $infoPdf[6];
+//             $nomListe = $infoPdf[7];
+//             $detailsVilles = $infoPdf[8];
+//             $idGroupe = $infoPdf[9];
+//             $idRapport = $infoPdf[10];
+//             $nomUtilisateur = $infoPdf[11];
+//
+//
+//             return $this->render('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
+//                 'nomRapport' => $nomRapport,
+//                 'typeMatch' => $typeMatch,
+//                 'nombrePoule' => $nombrePoule,
+//                 'nomListe' => $nomListe,
+//                 'nomGroupe' => $nomGroupe,
+//                 'taillePoule' => $taillePoule,
+//                 'contraintsExiste' => $contraintsExiste,
+//                 'scenarioResultats' => $scenarioResultats,
+//                 'idRapport' => $idRapport,
+//                 'detailsVilles' => $detailsVilles,
+//                 'idGroupe' => $idGroupe,
+//                 'idResultat' => $idResultat,
+//                 'nomUtilisateur' => $nomUtilisateur,
+//                 'typeScenario' => $typeScenario,
+//             ));
+
+             exit();
+
+         }
+         elseif ($formatExport == "xml"){
+             return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
+             exit();
+         }
+         elseif ($formatExport == "csv"){
+             return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
+             exit();
+         }
+     }
+
+
 
     public function barycentreAction($idRapport)
     {
@@ -134,7 +195,7 @@ use Symfony\Component\HttpFoundation\Response;
 //        $retour = $this->get('service_rencontres')->Barycentre($idGroupe);
 
 
-        //Donn�es du sc�nario optimal
+        //Données du scénario optimal
         $villeDepart = $retour[0];
         $longPtDep = $retour[1];
         $latPtDep = $retour[2];
@@ -159,13 +220,23 @@ use Symfony\Component\HttpFoundation\Response;
 
 
         //convert idGroupe to int
-
         $idGroupe = $idGroupe[0]['idGroupe'];
+
+
+
+        # obtenir l'id du résultat
+        $idResultat = $em->getRepository('FfbbBundle:Scenario')->getIdScenarioByIdRapport($idRapport);
+//        error_log("\n idResultat: ".print_r($idResultat , true), 3, "error_log_optimouv.txt");
+
+
+        if($idResultat != []){
+            $idResultat = $idResultat[0]["id"];
+        }
 
 
         return $this->render('FfbbBundle:Rencontres:barycentre.html.twig', array(
 
-            //Donn�es du sc�nario optimal
+            //Données du scénario optimal
             'villeDepart' => $villeDepart,
             'longPtDep' => $longPtDep,
             'latPtDep' => $latPtDep,
@@ -181,6 +252,7 @@ use Symfony\Component\HttpFoundation\Response;
             'nomGroupe' => $nomGroupe,
             'idRapport' => $idRapport,
             'nomRapport' => $nomRapport,
+            'idResultat' => $idResultat,
 
         ));
 

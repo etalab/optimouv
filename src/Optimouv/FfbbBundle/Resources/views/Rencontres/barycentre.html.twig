@@ -53,9 +53,6 @@
 
                         </ul>
                     </div>
-                    {#<div class="panel-footer">#}
-                    {#Panel Footer#}
-                    {#</div>#}
                 </div>
             </div>
             <!-- /.col-lg-4 -->
@@ -383,7 +380,21 @@
                                                         <!-- /.table-responsive -->
                                                     </div>
                                                     <a href="{{ path('ffbb_details_calcul') }}" class="pull-left">Détails du calcul</a>
-                                                    <button type="button" class="btn btn-default-rencontre  pull-right">Exporter </button>
+
+                                                    {#<button type="button" class="btn btn-default-rencontre  pull-right">Exporter </button>#}
+
+                                                    <form name="submitParams" action="{{ path('ffbb_selectionner_type_export')}}" method="post">
+                                                        <input type="hidden" value="{{ idResultat }}" name="idResultat">
+                                                        <input type="hidden" value="barycentre" name="typeScenario" >
+
+                                                        <select onchange="this.form.submit()"  class="btn btn-default-rencontre  pull-right" name="formatExport" >
+                                                            <option value="" disabled="disabled" selected="selected">Choisir un format d'export</option>
+                                                            <option value="pdf">Exporter en PDF</option>
+                                                            <option value="xml">Exporter en XML</option>
+                                                            <option value="csv">Exporter en CSV</option>
+                                                        </select>
+
+                                                    </form>
 
                                                 </div>
 

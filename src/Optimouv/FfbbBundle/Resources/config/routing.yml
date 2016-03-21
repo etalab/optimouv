@@ -247,9 +247,9 @@ ffbb_sendMail:
     path:    /sendMail
     defaults: { _controller: FfbbBundle:Default:sendMail }
 
-#ffbb_selectionner_type_export:
-#    path:    /admin/rencontre/export/selection-type-export/
-#    defaults: { _controller: FfbbBundle:Rencontres:selectionTypeExport}
+ffbb_selectionner_type_export:
+    path:    /admin/rencontre/export/selection-type-export/
+    defaults: { _controller: FfbbBundle:Rencontres:selectionTypeExport}
 
 ffbb_poules_selectionner_type_export:
     path:    /admin/poules/export/selection-type-export/
