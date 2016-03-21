@@ -882,7 +882,6 @@ class PoulesController extends Controller
         $taillePoule = $infoPdf[1];
         $contraintsExiste = $infoPdf[2];
         $typeMatch = $infoPdf[3];
-//        $scenarioOptimalSansContrainte = $infoPdf[4];
         $scenarioResultats = $infoPdf[4];
         $nomRapport = $infoPdf[5];
         $nomGroupe = $infoPdf[6];
@@ -901,7 +900,6 @@ class PoulesController extends Controller
             'nomGroupe' => $nomGroupe,
             'taillePoule' => $taillePoule,
             'contraintsExiste' => $contraintsExiste,
-//            'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
             'scenarioResultats' => $scenarioResultats,
             'idRapport' => $idRapport,
             'detailsVilles' => $detailsVilles,
@@ -928,7 +926,6 @@ class PoulesController extends Controller
         $taillePoule = $infoPdf[1];
         $contraintsExiste = $infoPdf[2];
         $typeMatch = $infoPdf[3];
-//        $scenarioOptimalSansContrainte = $infoPdf[4];
         $scenarioResultats = $infoPdf[4];
         $nomRapport = $infoPdf[5];
         $nomGroupe = $infoPdf[6];
@@ -947,7 +944,6 @@ class PoulesController extends Controller
             'nomGroupe' => $nomGroupe,
             'taillePoule' => $taillePoule,
             'contraintsExiste' => $contraintsExiste,
-//            'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
             'scenarioResultats' => $scenarioResultats,
             'idRapport' => $idRapport,
             'detailsVilles' => $detailsVilles,
@@ -1047,6 +1043,12 @@ class PoulesController extends Controller
         elseif ($typeScenario == "equitableSansContrainte"){
             $scenarioResultats = $detailsCalcul["scenarioEquitableSansContrainte"];
 
+        }
+        elseif ($typeScenario == "optimalAvecContrainte"){
+            $scenarioResultats = $detailsCalcul["scenarioOptimalAvecContrainte"];
+        }
+        elseif ($typeScenario == "equitableAvecContrainte"){
+            $scenarioResultats = $detailsCalcul["scenarioEquitableAvecContrainte"];
         }
         elseif ($typeScenario == "ref"){
             $scenarioResultats = $detailsCalcul["scenarioRef"];
