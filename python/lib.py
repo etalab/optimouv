@@ -2460,29 +2460,26 @@ def send_email_to_user_failure(userId, reportId):
 """
 Function control provided params by user
 """
-# def control_params_match_plateau(userId, teamNbr, poolNbr):
 def control_params_match_plateau(userId, teamNbr, poolNbr, reportId):
 	try:
-# 		sql = "select nom from rapport where id=%s"%reportId
 		sql = "select nom from parametres where id=%s"%reportId
 		reportName = db.fetchone(sql)
 
 		TEXT = u"Bonjour,\n\n" 
-# 		TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
 		TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
 
 		# team number has to be the multiplication of 9 (9, 18, 27)
 		if teamNbr % 9 != 0:
 			TEXT += u"Veuillez assurer que le nombre de ligne dans votre fichier correspond au match plateau. " 
 
-			send_email_to_user_failure_with_text(userId, TEXT)
+			send_email_to_user_failure_with_text(userId, reportId, TEXT)
 		
 		# pool number has to be 9
 		poolSize = int(teamNbr/poolNbr)
 		if poolSize != 9:
 			TEXT += u"Veuillez assurer que le nombre de poule selectionné correspond au nombre de ligne dans votre fichier. " 
 
-			send_email_to_user_failure_with_text(userId, TEXT)
+			send_email_to_user_failure_with_text(userId, reportId, TEXT)
 
 
 	except Exception as e:
@@ -2491,7 +2488,7 @@ def control_params_match_plateau(userId, teamNbr, poolNbr, reportId):
 """
 Function to send email to user when the provided params are unexpected (for match plateau)
 """
-def send_email_to_user_failure_with_text(userId, TEXT):
+def send_email_to_user_failure_with_text(userId, reportId, TEXT):
 	try:
 		# get user's email from user id
 		sql = "select email from fos_user where id=%s"%userId
@@ -2520,6 +2517,9 @@ def send_email_to_user_failure_with_text(userId, TEXT):
 		
 		server.sendmail(gmail_sender, [TO], msg.as_string())
 		server.quit()	
+
+		# update job status
+		update_job_status(reportId, -1)
 
 		sys.exit()
 
@@ -2986,7 +2986,7 @@ def check_final_result(calculatedResult, userId, reportId):
 					TEXT = u"Bonjour,\n\n" 
 					TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
 					TEXT += u"Vous ne pouvez lancer le critère de variation du nombre d'équipes par poule qu'une seule fois. " 
-					send_email_to_user_failure_with_text(userId, TEXT)
+					send_email_to_user_failure_with_text(userId, reportId, TEXT)
 					
 		
 	except Exception as e:
@@ -3050,7 +3050,7 @@ def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, pro
 			TEXT = u"Bonjour,\n\n" 
 			TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
 			TEXT += u"Veuillez utiliser les mêmes parametres que vous avez utilisé précédemment . " 
-			send_email_to_user_failure_with_text(userId, TEXT)
+			send_email_to_user_failure_with_text(userId, reportId, TEXT)
 		
 	except Exception as e:
 		show_exception_traceback()
@@ -3068,8 +3068,8 @@ def check_request_validity_post_treatment(teamTransfers, varTeamNbrPerPool, user
 			TEXT = u"Bonjour,\n\n" 
 			TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
 			TEXT += u"Veuillez choisir soit la variation du nombre d'équipes par poule soit le changement d'affectation d'équipes par poule . " 
-			send_email_to_user_failure_with_text(userId, TEXT)
-		
+			send_email_to_user_failure_with_text(userId, reportId, TEXT)
+
 	except Exception as e:
 		show_exception_traceback()
 
