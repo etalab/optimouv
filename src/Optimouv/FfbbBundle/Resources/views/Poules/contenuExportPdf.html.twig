@@ -15,28 +15,58 @@
 <!-- declaration de variables -->
 {% if typeScenario == "optimalSansContrainte" %}
     <!-- distanceMin -->
-    {% set distanceMin = scenarioOptimalSansContrainte.estimationGenerale.distanceTotale %}
+    {% set distanceMin = scenarioResultats.estimationGenerale.distanceTotale %}
     {% set distanceMin = (distanceMin / 1000)|round %}
     <!-- distanceTotale -->
-    {% set distanceTotale = scenarioOptimalSansContrainte.estimationGenerale.distanceTotaleTousParticipants %}
+    {% set distanceTotale = scenarioResultats.estimationGenerale.distanceTotaleTousParticipants %}
     {% set distanceTotale = (distanceTotale / 1000)|round %}
     <!-- nbrParticipantsTotal -->
-    {% set nbrParticipantsTotal = scenarioOptimalSansContrainte.estimationGenerale.nbrParticipantsTotal %}
+    {% set nbrParticipantsTotal = scenarioResultats.estimationGenerale.nbrParticipantsTotal %}
     <!-- dureeTotale -->
-    {% set dureeTotale = scenarioOptimalSansContrainte.estimationGenerale.dureeTotale %}
+    {% set dureeTotale = scenarioResultats.estimationGenerale.dureeTotale %}
     <!-- estimationDetails -->
-    {% set estimationDetails = scenarioOptimalSansContrainte.estimationDetails %}
+    {% set estimationDetails = scenarioResultats.estimationDetails %}
     <!-- rencontreDetails -->
-    {% set rencontreDetails = scenarioOptimalSansContrainte.rencontreDetails %}
+    {% set rencontreDetails = scenarioResultats.rencontreDetails %}
     <!-- coordPoules -->
-    {% set coordPoules = scenarioOptimalSansContrainte.poulesCoords %}
+    {% set coordPoules = scenarioResultats.poulesCoords %}
+
+{% elseif typeScenario == "equitableSansContrainte" %}
+    <!-- distanceMin -->
+    {% set distanceMin = scenarioResultats.estimationGenerale.distanceTotale %}
+    {% set distanceMin = (distanceMin / 1000)|round %}
+    <!-- distanceTotale -->
+    {% set distanceTotale = scenarioResultats.estimationGenerale.distanceTotaleTousParticipants %}
+    {% set distanceTotale = (distanceTotale / 1000)|round %}
+    <!-- nbrParticipantsTotal -->
+    {% set nbrParticipantsTotal = scenarioResultats.estimationGenerale.nbrParticipantsTotal %}
+    <!-- dureeTotale -->
+    {% set dureeTotale = scenarioResultats.estimationGenerale.dureeTotale %}
+    <!-- estimationDetails -->
+    {% set estimationDetails = scenarioResultats.estimationDetails %}
+    <!-- rencontreDetails -->
+    {% set rencontreDetails = scenarioResultats.rencontreDetails %}
+    <!-- coordPoules -->
+    {% set coordPoules = scenarioResultats.poulesCoords %}
+
+
 
 {% endif %}
 
 
 <br><br>
 
-<h3> Export de votre recherche "{{ nomRapport }}" - scénario optimal sans contrainte</h3>
+<h3> Export de votre recherche "{{ nomRapport }}" -
+
+    {% if typeScenario == "optimalSansContrainte" %}
+        scénario optimal sans contrainte
+
+    {% elseif typeScenario == "equitableSansContrainte" %}
+        scénario équitable sans contrainte
+
+    {% endif %}
+
+</h3>
 <h4>Fédération : UFOLEP</h4>
 <h4> Discipline : Rugby</h4>
 <h4>Utilisateur : {{ nomUtilisateur }} </h4>
