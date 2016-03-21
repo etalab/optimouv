@@ -13,45 +13,26 @@
 
 
 <!-- declaration de variables -->
-{% if typeScenario == "optimalSansContrainte" %}
-    <!-- distanceMin -->
-    {% set distanceMin = scenarioResultats.estimationGenerale.distanceTotale %}
-    {% set distanceMin = (distanceMin / 1000)|round %}
-    <!-- distanceTotale -->
-    {% set distanceTotale = scenarioResultats.estimationGenerale.distanceTotaleTousParticipants %}
-    {% set distanceTotale = (distanceTotale / 1000)|round %}
-    <!-- nbrParticipantsTotal -->
-    {% set nbrParticipantsTotal = scenarioResultats.estimationGenerale.nbrParticipantsTotal %}
-    <!-- dureeTotale -->
-    {% set dureeTotale = scenarioResultats.estimationGenerale.dureeTotale %}
-    <!-- estimationDetails -->
-    {% set estimationDetails = scenarioResultats.estimationDetails %}
-    <!-- rencontreDetails -->
-    {% set rencontreDetails = scenarioResultats.rencontreDetails %}
-    <!-- coordPoules -->
-    {% set coordPoules = scenarioResultats.poulesCoords %}
-
-{% elseif typeScenario == "equitableSansContrainte" %}
-    <!-- distanceMin -->
-    {% set distanceMin = scenarioResultats.estimationGenerale.distanceTotale %}
-    {% set distanceMin = (distanceMin / 1000)|round %}
-    <!-- distanceTotale -->
-    {% set distanceTotale = scenarioResultats.estimationGenerale.distanceTotaleTousParticipants %}
-    {% set distanceTotale = (distanceTotale / 1000)|round %}
-    <!-- nbrParticipantsTotal -->
-    {% set nbrParticipantsTotal = scenarioResultats.estimationGenerale.nbrParticipantsTotal %}
-    <!-- dureeTotale -->
-    {% set dureeTotale = scenarioResultats.estimationGenerale.dureeTotale %}
-    <!-- estimationDetails -->
-    {% set estimationDetails = scenarioResultats.estimationDetails %}
-    <!-- rencontreDetails -->
-    {% set rencontreDetails = scenarioResultats.rencontreDetails %}
-    <!-- coordPoules -->
-    {% set coordPoules = scenarioResultats.poulesCoords %}
+<!-- distanceMin -->
+{% set distanceMin = scenarioResultats.estimationGenerale.distanceTotale %}
+{% set distanceMin = (distanceMin / 1000)|round %}
+<!-- distanceTotale -->
+{% set distanceTotale = scenarioResultats.estimationGenerale.distanceTotaleTousParticipants %}
+{% set distanceTotale = (distanceTotale / 1000)|round %}
+<!-- nbrParticipantsTotal -->
+{% set nbrParticipantsTotal = scenarioResultats.estimationGenerale.nbrParticipantsTotal %}
+<!-- dureeTotale -->
+{% set dureeTotale = scenarioResultats.estimationGenerale.dureeTotale %}
+<!-- estimationDetails -->
+{% set estimationDetails = scenarioResultats.estimationDetails %}
+<!-- rencontreDetails -->
+{% set rencontreDetails = scenarioResultats.rencontreDetails %}
+<!-- coordPoules -->
+{% set coordPoules = scenarioResultats.poulesCoords %}
 
 
 
-{% endif %}
+
 
 
 <br><br>
@@ -60,9 +41,10 @@
 
     {% if typeScenario == "optimalSansContrainte" %}
         scénario optimal sans contrainte
-
     {% elseif typeScenario == "equitableSansContrainte" %}
         scénario équitable sans contrainte
+    {% elseif typeScenario == "ref" %}
+        scénario référence
 
     {% endif %}
 

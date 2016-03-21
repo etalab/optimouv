@@ -1850,10 +1850,22 @@
                                     <a href="{{ path('ffbb_poules_details_calcul') }}" class="pull-left">Détails
                                         du calcul</a>
 
-                                    <button type="button"
-                                            class="btn btn-primary  pull-right">Exporter
-                                    </button>
+                                    {#<button type="button"#}
+                                            {#class="btn btn-primary  pull-right">Exporter#}
+                                    {#</button>#}
 
+                                    {% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}
+
+                                        <form name="submitParams" action="{{ path('ffbb_previsualisation_pdf')}}" method="post">
+                                            <input type="hidden" value="{{ idResultat }}" name="idResultat">
+                                            <input type="hidden" value="ref" name="typeScenario" >
+
+                                            <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
+                                        </form>
+
+                                    {% elseif typeMatch == "plateau" %}
+                                        <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
+                                    {% endif %}
 
                                 </div>
                             </div>

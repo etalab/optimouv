@@ -1003,8 +1003,6 @@ class PoulesController extends Controller
     }
 
 //    function qui ramene toutes les infos necessaires à la view
-
-//    public function getInfoPdfAction($idResultat)
     public function getInfoPdfAction($idResultat , $typeScenario)
     {
 
@@ -1050,7 +1048,10 @@ class PoulesController extends Controller
             $scenarioResultats = $detailsCalcul["scenarioEquitableSansContrainte"];
 
         }
-//        $scenarioOptimalSansContrainte = $detailsCalcul["scenarioOptimalSansContrainte"];
+        elseif ($typeScenario == "ref"){
+            $scenarioResultats = $detailsCalcul["scenarioRef"];
+
+        }
 
 
         //récupération du nom du rapport
