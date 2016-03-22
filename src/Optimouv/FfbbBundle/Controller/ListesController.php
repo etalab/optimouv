@@ -32,12 +32,21 @@ class ListesController extends Controller
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
-        # controler toutes le fichier uploadé
-        $statutUpload = $this->get('service_listes')->controlerEntites("participants");
-
         # récupérer idUtilisateur
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $idUtilisateur = $user->getId();
+
+//        error_log("\n Function: controlerEntites, \n"
+//            ."idUtilisateur: ".print_r($idUtilisateur, true), 3, "error_log_optimouv.txt");
+        # flag rencontre
+        $rencontre = 1;
+
+        # flag type équipe
+        $isEquipe = 1;
+
+        # controler toutes le fichier uploadé
+        $statutUpload = $this->get('service_listes')->controlerEntites("participants", $idUtilisateur, $rencontre, $isEquipe);
+
 
         if($statutUpload["success"]){
 
@@ -45,7 +54,6 @@ class ListesController extends Controller
             $retourEntites = $this->get('service_listes')->creerEntites($idUtilisateur);
             $idsEntite = $retourEntites["idsEntite"];
             $nomFichier = $retourEntites["nomFichier"];
-            $rencontre = 1;
 
             # créer une liste dans la table liste_participants
             $retourListe = $this->get('service_listes')->creerListeParticipants($idsEntite, $nomFichier, $idUtilisateur, $rencontre);
@@ -162,12 +170,20 @@ class ListesController extends Controller
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
-        # controler toutes le fichier uploadé
-        $statutUpload = $this->get('service_listes')->controlerEntites("lieux");
-
         # récupérer idUtilisateur
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $idUtilisateur = $user->getId();
+
+        # flag rencontre
+        $rencontre = 1;
+
+        # flag type équipe
+        $isEquipe = 0;
+
+
+        # controler toutes le fichier uploadé
+        $statutUpload = $this->get('service_listes')->controlerEntites("lieux", $idUtilisateur, $rencontre, $isEquipe);
+
 
         if($statutUpload["success"]){
             # créer des entités dans la table entite

@@ -24,7 +24,7 @@ class ListeParticipants
     /**
      * @var string
      *
-     * @ORM\Column(name="nom", type="string", length=50)
+     * @ORM\Column(name="nom", type="string", length=100)
      */
     private $nom;
 

@@ -1703,8 +1703,7 @@ def callback(ch, method, properties, body):
 				logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 				logging.debug("Failure to create P Init Matrix which fulfills all constraints")
 				# update status job failure
-				update_job_status(reportId, -1)
-# 				send_email_to_user_failure(userId)
+# 				update_job_status(reportId, -1)
 				send_email_to_user_failure(userId, reportId)
 				logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 				sys.exit()

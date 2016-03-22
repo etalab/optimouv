@@ -2,6 +2,7 @@
 
 namespace Optimouv\FfbbBundle\Controller;
 
+use Optimouv\FfbbBundle\Entity\Groupe;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Optimouv\FfbbBundle\Entity\Entite;
@@ -74,13 +75,21 @@ class PoulesController extends Controller
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
-
-        # controler toutes le fichier uploadé
-        $statutUpload = $this->get('service_listes')->controlerEntites("participants");
-
         # récupérer idUtilisateur
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $idUtilisateur = $user->getId();
+
+        # flag rencontre
+        $rencontre = 0;
+
+        # flag type équipe
+        $isEquipe = 1;
+
+
+
+        # controler toutes le fichier uploadé
+        $statutUpload = $this->get('service_listes')->controlerEntites("participants", $idUtilisateur, $rencontre, $isEquipe);
+
 
         if($statutUpload["success"]){
 
@@ -88,7 +97,6 @@ class PoulesController extends Controller
             $retourEntites = $this->get('service_listes')->creerEntites($idUtilisateur);
             $idsEntite = $retourEntites["idsEntite"];
             $nomFichier = $retourEntites["nomFichier"];
-            $rencontre = 0;
 
 
             # créer une liste dans la table liste_participants
@@ -206,7 +214,6 @@ class PoulesController extends Controller
 
         }
 
-//        error_log("\n detailsEntites: ".print_r($detailsEntites , true), 3, "error_log_optimouv.txt");
 
 
         return $this->render('FfbbBundle:Poules:visualiserListeEquipes.html.twig', array(
@@ -863,23 +870,26 @@ class PoulesController extends Controller
     public function previsualisationPdfAction()
     {
 
-        $params = $_POST['params'];
+        $idResultat = $_POST['idResultat'];
+        $typeScenario = $_POST['typeScenario'];
 
+//        error_log("\n params: ".print_r($_POST , true), 3, "error_log_optimouv.txt");
 
         //recuperation des donnees relatives au scenario
-        $infoPdf = $this->getInfoPdfAction($params);
+        $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
 
         $nombrePoule = $infoPdf[0];
         $taillePoule = $infoPdf[1];
         $contraintsExiste = $infoPdf[2];
         $typeMatch = $infoPdf[3];
-        $scenarioOptimalSansContrainte = $infoPdf[4];
+        $scenarioResultats = $infoPdf[4];
         $nomRapport = $infoPdf[5];
         $nomGroupe = $infoPdf[6];
         $nomListe = $infoPdf[7];
         $detailsVilles = $infoPdf[8];
         $idGroupe = $infoPdf[9];
         $idRapport = $infoPdf[10];
+        $nomUtilisateur = $infoPdf[11];
 
 
         return $this->render('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
@@ -890,34 +900,40 @@ class PoulesController extends Controller
             'nomGroupe' => $nomGroupe,
             'taillePoule' => $taillePoule,
             'contraintsExiste' => $contraintsExiste,
-            'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
+            'scenarioResultats' => $scenarioResultats,
             'idRapport' => $idRapport,
             'detailsVilles' => $detailsVilles,
             'idGroupe' => $idGroupe,
-            'idResultat' => $params,
+            'idResultat' => $idResultat,
+            'nomUtilisateur' => $nomUtilisateur,
+            'typeScenario' => $typeScenario,
         ));
 
     }
 
+
+
     public function exportScenarioAction()
     {
 
-        $params = $_POST['params'];
+        $idResultat = $_POST['idResultat'];
+        $typeScenario = $_POST['typeScenario'];
 
         //recuperation des donnees relatives au scenario
-        $infoPdf = $this->getInfoPdfAction($params);
+        $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
 
         $nombrePoule = $infoPdf[0];
         $taillePoule = $infoPdf[1];
         $contraintsExiste = $infoPdf[2];
         $typeMatch = $infoPdf[3];
-        $scenarioOptimalSansContrainte = $infoPdf[4];
+        $scenarioResultats = $infoPdf[4];
         $nomRapport = $infoPdf[5];
         $nomGroupe = $infoPdf[6];
         $nomListe = $infoPdf[7];
         $detailsVilles = $infoPdf[8];
         $idGroupe = $infoPdf[9];
         $idRapport = $infoPdf[10];
+        $nomUtilisateur = $infoPdf[11];
 
 
         $html = $this->renderView('FfbbBundle:Poules:exportPdf.html.twig', array(
@@ -928,11 +944,13 @@ class PoulesController extends Controller
             'nomGroupe' => $nomGroupe,
             'taillePoule' => $taillePoule,
             'contraintsExiste' => $contraintsExiste,
-            'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
+            'scenarioResultats' => $scenarioResultats,
             'idRapport' => $idRapport,
             'detailsVilles' => $detailsVilles,
             'idGroupe' => $idGroupe,
-            'idResultat' => $params,
+            'idResultat' => $idResultat,
+            'nomUtilisateur' => $nomUtilisateur,
+            'typeScenario' => $typeScenario,
 
         ));
 
@@ -950,9 +968,38 @@ class PoulesController extends Controller
         );
     }
 
-//    function qui ramene toutes les infos necessaires à la view
+    public function testExportPdfAction()
+    {
 
-    public function getInfoPdfAction($idResultat)
+        return $this->render('FfbbBundle:Poules:testExportPdf.html.twig', [
+        ]);
+
+        $html = $this->renderView('FfbbBundle:Poules:testExportPdf.html.twig', [
+        ]);
+
+
+
+
+
+
+        return new Response(
+            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+            200,
+            array(
+                'Content-Type'          => 'application/pdf',
+                'Content-Disposition'   => 'attachment; filename="mon_rapport.pdf"',
+                'print-media-type'      => false,
+                'outline'               => true,
+
+            )
+        );
+
+
+
+    }
+
+//    function qui ramene toutes les infos necessaires à la view
+    public function getInfoPdfAction($idResultat , $typeScenario)
     {
 
 
@@ -972,6 +1019,10 @@ class PoulesController extends Controller
         }
 
 
+        //récupérer le nom d'utilisateur
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $nomUtilisateur = $user->getUsername();
+
         $equipes = $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getEquipes();
         //$equipes de string a array
         $equipes = explode(",", $equipes);
@@ -984,7 +1035,26 @@ class PoulesController extends Controller
         $taillePoule = $detailsCalcul["taillePoule"];
         $contraintsExiste = $detailsCalcul["contraintsExiste"];
         $typeMatch = $detailsCalcul["typeMatch"];
-        $scenarioOptimalSansContrainte = $detailsCalcul["scenarioOptimalSansContrainte"];
+
+        # obtenir scénario selon leur type
+        if($typeScenario == "optimalSansContrainte"){
+            $scenarioResultats = $detailsCalcul["scenarioOptimalSansContrainte"];
+        }
+        elseif ($typeScenario == "equitableSansContrainte"){
+            $scenarioResultats = $detailsCalcul["scenarioEquitableSansContrainte"];
+
+        }
+        elseif ($typeScenario == "optimalAvecContrainte"){
+            $scenarioResultats = $detailsCalcul["scenarioOptimalAvecContrainte"];
+        }
+        elseif ($typeScenario == "equitableAvecContrainte"){
+            $scenarioResultats = $detailsCalcul["scenarioEquitableAvecContrainte"];
+        }
+        elseif ($typeScenario == "ref"){
+            $scenarioResultats = $detailsCalcul["scenarioRef"];
+
+        }
+
 
         //récupération du nom du rapport
         $connection = $em->getConnection();
@@ -1022,13 +1092,15 @@ class PoulesController extends Controller
         $retour[1] = $taillePoule;
         $retour[2] = $contraintsExiste;
         $retour[3] = $typeMatch;
-        $retour[4] = $scenarioOptimalSansContrainte;
+//        $retour[4] = $scenarioOptimalSansContrainte;
+        $retour[4] = $scenarioResultats;
         $retour[5] = $nomRapport;
         $retour[6] = $nomGroupe;
         $retour[7] = $nomListe;
         $retour[8] = $detailsVilles;
         $retour[9] = $idGroupe;
         $retour[10] = $idRapport;
+        $retour[11] = $nomUtilisateur;
 
         return $retour;
     }
