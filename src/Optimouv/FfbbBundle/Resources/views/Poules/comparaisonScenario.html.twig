@@ -43,40 +43,40 @@
                                         <th colspan="3" >Kms à parcourir</th>
                                         <th colspan="3" >Temps de parcours (J H:M)</th>
                                     {% else %}
-                                        <th colspan="2" style="text-align:center">Kms à parcourir</th>
-                                        <th colspan="2" style="text-align:center">Temps de parcours (J H:M)</th>
+                                        <th colspan="2" >Kms à parcourir</th>
+                                        <th colspan="2">Temps de parcours (J H:M)</th>
                                     {%  endif %}
                                 </tr>
 
                                 <tr>
                                     {%  if contraintsExiste and refExiste %}
-                                        <th style="text-align:right ; max-width: 10%;  vertical-align: middle; ">Scénario optimal</th>
-                                        <th style="text-align:right ; max-width: 10%; vertical-align: middle; ">Scénario équitable</th>
-                                        <th style="text-align:right ; max-width: 10% ; vertical-align: middle;">Scénario de référence</th>
-                                        <th style="text-align:right ; max-width: 10% ; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:right ; max-width: 10% ; vertical-align: middle;">Scénario optimal</th>
-                                        <th style="text-align:right ; max-width: 10% ; vertical-align: middle;">Scénario équitable</th>
-                                        <th style="text-align:right ; max-width: 10% ; vertical-align: middle;">Scénario de référence</th>
-                                        <th style="text-align:right ; max-width: 10% ; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                        <th style="max-width: 10%;  vertical-align: middle; ">Scénario optimal</th>
+                                        <th style="max-width: 10%; vertical-align: middle; ">Scénario équitable</th>
+                                        <th style="max-width: 10% ; vertical-align: middle;">Scénario de référence</th>
+                                        <th style="max-width: 10% ; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                        <th style="max-width: 10% ; vertical-align: middle;">Scénario optimal</th>
+                                        <th style="max-width: 10% ; vertical-align: middle;">Scénario équitable</th>
+                                        <th style="max-width: 10% ; vertical-align: middle;">Scénario de référence</th>
+                                        <th style="max-width: 10% ; vertical-align: middle;">Scénario optimal sans contrainte</th>
                                     {%  elseif contraintsExiste and not refExiste %}
-                                        <th style="text-align:right ; max-width: 10% ; vertical-align: middle;">Scénario optimal</th>
-                                        <th style="text-align:right ; max-width: 10% ; vertical-align: middle;">Scénario équitable</th>
-                                        <th style="text-align:right ; max-width: 10% ; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:right ; max-width: 10%; vertical-align: middle;">Scénario optimal</th>
-                                        <th style="text-align:right ; max-width: 10% ; vertical-align: middle;">Scénario équitable</th>
-                                        <th style="text-align:right ; max-width: 10% ; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                        <th style="max-width: 10% ; vertical-align: middle;">Scénario optimal</th>
+                                        <th style="max-width: 10% ; vertical-align: middle;">Scénario équitable</th>
+                                        <th style="max-width: 10% ; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                        <th style="max-width: 10%; vertical-align: middle;">Scénario optimal</th>
+                                        <th style="max-width: 10% ; vertical-align: middle;">Scénario équitable</th>
+                                        <th style="max-width: 10% ; vertical-align: middle;">Scénario optimal sans contrainte</th>
                                     {%  elseif not contraintsExiste and refExiste %}
-                                        <th style="text-align:right ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:right ; max-width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
-                                        <th style="text-align:right ; max-width: 10%; vertical-align: middle;">Scénario de référence</th>
-                                        <th style="text-align:right ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:right ; max-width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
-                                        <th style="text-align:right ; max-width: 10%; vertical-align: middle;">Scénario de référence</th>
+                                        <th style="max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                        <th style="max-width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
+                                        <th style="max-width: 10%; vertical-align: middle;">Scénario de référence</th>
+                                        <th style="max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                        <th style="max-width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
+                                        <th style="max-width: 10%; vertical-align: middle;">Scénario de référence</th>
                                     {%  else %}
-                                        <th style="text-align:right ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:right ; max-width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
-                                        <th style="text-align:right ; max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
-                                        <th style="text-align:right ; max-width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
+                                        <th style="max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                        <th style="max-width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
+                                        <th style="max-width: 10%; vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                        <th style="max-width: 10%; vertical-align: middle;">Scénario équitable sans contrainte</th>
                                     {%  endif %}
 
 
