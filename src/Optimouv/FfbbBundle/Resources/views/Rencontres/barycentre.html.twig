@@ -333,17 +333,17 @@
                                                                 <thead>
                                                                 <tr>
                                                                     <th style="font-weight: bold !important;">Participants</th>
-                                                                    <th style="text-align:right">Kms à parcourir</th>
-                                                                    <th style="text-align:right">Temps de parcours (H:M)</th>
-                                                                    <th style="text-align:right">Coût du parcours en voiture (€)</th>
-                                                                    <th style="text-align:right">Coût du parcours en covoiturage(€)</th>
-                                                                    <th style="text-align:right">Coût du parcours en minibus(€)</th>
-                                                                    <th style="text-align:right">Emissions GES voiture individuelle (en KG eq CO2)
+                                                                    <th>Kms à parcourir</th>
+                                                                    <th >Temps de parcours (H:M)</th>
+                                                                    <th >Coût du parcours en voiture (€)</th>
+                                                                    <th >Coût du parcours en covoiturage(€)</th>
+                                                                    <th >Coût du parcours en minibus(€)</th>
+                                                                    <th >Emissions GES voiture individuelle (en KG eq CO2)
                                                                     </th>
-                                                                    <th style="text-align:right">Emissions GES covoiturage (en KG eq CO2)
+                                                                    <th >Emissions GES covoiturage (en KG eq CO2)
                                                                     </th>
 
-                                                                    <th style="text-align:right">Emissions GES minibus (en KG eq CO2)
+                                                                    <th >Emissions GES minibus (en KG eq CO2)
                                                                     </th>
                                                                 </tr>
                                                                 </thead>
@@ -355,7 +355,7 @@
                                                                         <td><strong> {{ participant.ville|slice(8) }}</strong>
                                                                         </td>
                                                                         <td style="text-align:right"> {{ (participant.distance // 1000)|number_format(0, ',', ' ') }}</td>
-                                                                        <td style="text-align:right"> {{ (participant.duree/3600)|round }}:{{ ((participant.duree%3600)/60)|round}}</td>
+                                                                        <td style="text-align:center"> {{ (participant.duree/3600)|round }}:{{ ((participant.duree%3600)/60)|round}}</td>
                                                                         <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                         <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                         <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -368,7 +368,7 @@
                                                                 <tr>
                                                                     <td><strong> Totaux </strong></td>
                                                                     <td style="text-align:right"> {{ distanceMin|number_format(0, ',', ' ') }}</td>
-                                                                    <td style="text-align:right"> {{ (dureeTotale/3600)|round }}:{{ ((dureeTotale%3600)/60)|round}}</td>
+                                                                    <td style="text-align:center"> {{ (dureeTotale/3600)|round }}:{{ ((dureeTotale%3600)/60)|round}}</td>
                                                                     <td style="text-align:right"> {{ (distanceTotale  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                     <td style="text-align:right"> {{ (distanceTotale /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                     <td style="text-align:right"> {{ (distanceTotale /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
