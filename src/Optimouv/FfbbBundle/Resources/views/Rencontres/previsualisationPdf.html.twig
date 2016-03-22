@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+    <meta charset="UTF-8">
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        table, td, th {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+
+{#{% include 'FfbbBundle:Poules:contenuExportPdf.html.twig' with  {'typeInclude' : 'previsualisation'} %}#}
+
+<form name="submitParams" action="{{ path('ffbb_rencontres_export_pdf')}}" method="post">
+    <input type="hidden" value="{{ idResultat }}" name="idResultat" >
+    <input type="hidden" value="{{ typeScenario }}" name="typeScenario" >
+
+    <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
+</form>
+
+
+</body>
+</html>
