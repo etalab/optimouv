@@ -38,7 +38,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $retourOp = $retour[0];
          $retourEq = $retour[1];
 
-         //Donn�es du sc�nario optimal
+         //Données du scénario optimal
          $villeDepart = $retourOp[0];
          $longPtDep = $retourOp[1];
          $latPtDep = $retourOp[2];
@@ -80,7 +80,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
          return $this->render('FfbbBundle:Rencontres:index.html.twig', array(
 
-             //Donn�es du sc�nario optimal
+             //Données du scénario optimal
              'villeDepart' => $villeDepart,
              'longPtDep' => $longPtDep,
              'latPtDep' => $latPtDep,
@@ -91,7 +91,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
              'nbrParticipantsTotal' => $nbrParticipantsTotal,
              'distanceTotale' => $distanceTotale,
 
-             //donn�es sc�nario �quitable
+             //données scénario équitable
              'villeDepartEq' => $villeDepartEq,
              'longPtDepEq' => $longPtDepEq,
              'latPtDepEq' => $latPtDepEq,
@@ -119,7 +119,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $typeRencontre = $_POST['typeRencontre'];
 
 
-//        error_log("\n params: ".print_r($_POST , true), 3, "error_log_optimouv.txt");
 
          if($formatExport == "pdf"){
 
@@ -130,10 +129,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
              $nomUtilisateur = $infoPdf["nomUtilisateur"];
              $nomListe = $infoPdf["nomListe"];
              $nomGroupe = $infoPdf["nomGroupe"];
+             $distanceTotale = $infoPdf["distanceTotale"];
+             $distanceMin = $infoPdf["distanceMin"];
+             $nbrParticipantsTotal = $infoPdf["nbrParticipantsTotal"];
+             $villeDepart = $infoPdf["villeDepart"];
+             $participants = $infoPdf["participants"];
+             $participantsNoms = $infoPdf["participantsNoms"];
 
-//             $detailsVilles = $infoPdf[8];
-//
-
+//             error_log("\n participants: ".print_r($participants , true), 3, "error_log_optimouv.txt");
 //             exit();
 
              return $this->render('FfbbBundle:Rencontres:previsualisationPdf.html.twig', array(
@@ -144,7 +147,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
                  'nomGroupe' => $nomGroupe,
                  'nomRapport' => $nomRapport,
                  'typeRencontre' => $typeRencontre,
-
+                 'distanceTotale' => $distanceTotale,
+                 'distanceMin' => $distanceMin,
+                 'nbrParticipantsTotal' => $nbrParticipantsTotal,
+                 'villeDepart' => $villeDepart,
+                 'participants' => $participants,
+                 'participantsNoms' => $participantsNoms,
              ));
                  
 
@@ -177,7 +185,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $nomUtilisateur = $infoPdf["nomUtilisateur"];
          $nomListe = $infoPdf["nomListe"];
          $nomGroupe = $infoPdf["nomGroupe"];
-
+         $distanceTotale = $infoPdf["distanceTotale"];
+         $distanceMin = $infoPdf["distanceMin"];
+         $nbrParticipantsTotal = $infoPdf["nbrParticipantsTotal"];
+         $villeDepart = $infoPdf["villeDepart"];
+         $participants = $infoPdf["participants"];
+         $participantsNoms = $infoPdf["participantsNoms"];
 
          $html = $this->renderView('FfbbBundle:Rencontres:exportPdf.html.twig', array(
              'idResultat' => $idResultat,
@@ -187,7 +200,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
              'nomGroupe' => $nomGroupe,
              'nomRapport' => $nomRapport,
              'typeRencontre' => $typeRencontre,
-
+             'distanceTotale' => $distanceTotale,
+             'distanceMin' => $distanceMin,
+             'nbrParticipantsTotal' => $nbrParticipantsTotal,
+             'villeDepart' => $villeDepart,
+             'participants' => $participants,
+             'participantsNoms' => $participantsNoms,
          ));
          
 
@@ -253,16 +271,26 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $detailsCalcul = $em->getRepository('FfbbBundle:Scenario')->findOneById($idResultat)->getDetailsCalcul();
          $detailsCalcul = json_decode($detailsCalcul, true);
 
+         $villeDepart = $detailsCalcul[0];
+         $distanceMin = $detailsCalcul[3];
+         $distanceTotale = $detailsCalcul[10];
+         $nbrParticipantsTotal = $detailsCalcul["nbrParticipantsTotal"];
+        
+         $participantsNoms = [];
          
-         
-//         error_log("\n detailsCalcul: ".print_r($detailsCalcul , true), 3, "error_log_optimouv.txt");
-//         error_log("\n typeScenario: ".print_r($typeScenario , true), 3, "error_log_optimouv.txt");
+         foreach($detailsCalcul[6] as $key => $value ){
+             $arrayTmp = array('ville' => $value, 'distance' => $detailsCalcul[7][$key], 'duree' => $detailsCalcul[8][$key], 'nbrParticipants' => $detailsCalcul[9][$key]);
+             array_push($participantsNoms, substr($value, 8));
+             $arrayTmp["villeNom"] = substr($value, 8);
+             $participants[] = $arrayTmp;
+         }
+
+         # trier le tableau basé sur le nom de ville
+         $this->sksort($participants, "villeNom", true);
+
+//         error_log("\n participants: ".print_r($participants , true), 3, "error_log_optimouv.txt");
 //         exit();
-
-
-
-
-
+         
 
 
 
@@ -275,12 +303,44 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $retour["idGroupe"] = $idGroupe;
          $retour["idRapport"] = $idRapport;
          $retour["nomUtilisateur"] = $nomUtilisateur;
+         $retour["distanceTotale"] = $distanceTotale;
+         $retour["distanceMin"] = $distanceMin;
+         $retour["nbrParticipantsTotal"] = $nbrParticipantsTotal;
+         $retour["villeDepart"] = $villeDepart;
+         $retour["participants"] = $participants;
+         $retour["participantsNoms"] = $participantsNoms;
 
          return $retour;
      }
- 
 
-    public function barycentreAction($idRapport)
+     private function sksort(&$array, $subkey="id", $sort_ascending=false) {
+
+        if (count($array))
+            $temp_array[key($array)] = array_shift($array);
+
+        foreach($array as $key => $val){
+            $offset = 0;
+            $found = false;
+            foreach($temp_array as $tmp_key => $tmp_val)
+            {
+                if(!$found and strtolower($val[$subkey]) > strtolower($tmp_val[$subkey]))
+                {
+                    $temp_array = array_merge(    (array)array_slice($temp_array,0,$offset),
+                                                array($key => $val),
+                                                array_slice($temp_array,$offset)
+                                              );
+                    $found = true;
+                }
+                $offset++;
+            }
+            if(!$found) $temp_array = array_merge($temp_array, array($key => $val));
+        }
+
+        if ($sort_ascending) $array = array_reverse($temp_array);
+        else $array = $temp_array;
+    }
+
+public function barycentreAction($idRapport)
     {
 
 

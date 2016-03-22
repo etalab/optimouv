@@ -62,7 +62,6 @@
                     <div class="panel-heading">
                         Type de lieu
                     </div>
-                    {#{{ dump(meilleurLieuOption.value) }}#}
                     <form name="typeLieux" style="padding-left:20px;"  action="{{ path('ffbb_lancer_producer', {'idGroupe':idGroupe}) }}" method="POST" onsubmit="msgLancement()">
 
                         <div class="radio">
@@ -101,7 +100,6 @@
                             Saisissez ici le nombre d'habitants maximum des zones à exclure
                         </div>
                         <div class="form-group">
-                            {#<label>Text Input with Placeholder</label>#}
                             <input name="valeurExclusion" id="valeurExclusion" type="number" onchange="showBtn()"
                                    class="form-control" placeholder="Exemple : '50 000' si je souhaite exclure les zones de plus de 50 000 habitants" min="1000" required>
                             <input type="hidden" name="rencontre" value="exclusion">

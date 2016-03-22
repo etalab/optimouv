@@ -13,20 +13,10 @@
 
 
 {#<!-- declaration de variables -->#}
-{#<!-- distanceMin -->#}
-{#{% set distanceMin = scenarioResultats.estimationGenerale.distanceTotale %}#}
-{#{% set distanceMin = (distanceMin / 1000)|round %}#}
-{#<!-- distanceTotale -->#}
-{#{% set distanceTotale = scenarioResultats.estimationGenerale.distanceTotaleTousParticipants %}#}
-{#{% set distanceTotale = (distanceTotale / 1000)|round %}#}
-{#<!-- nbrParticipantsTotal -->#}
-{#{% set nbrParticipantsTotal = scenarioResultats.estimationGenerale.nbrParticipantsTotal %}#}
 {#<!-- dureeTotale -->#}
 {#{% set dureeTotale = scenarioResultats.estimationGenerale.dureeTotale %}#}
 {#<!-- estimationDetails -->#}
 {#{% set estimationDetails = scenarioResultats.estimationDetails %}#}
-{#<!-- rencontreDetails -->#}
-{#{% set rencontreDetails = scenarioResultats.rencontreDetails %}#}
 {#<!-- coordPoules -->#}
 {#{% set coordPoules = scenarioResultats.poulesCoords %}#}
 
@@ -97,46 +87,49 @@
 <!-- bloc estimation générale -->
 <div>
     <h4> Estimations</h4>
-    {#<ul>#}
+    <ul>
+        <li>
+            Le meilleur lieu de rencontre est
+            <strong>{{ villeDepart }}</strong>
+        </li>
+        <li>
+            <strong>{{ distanceMin|number_format(0, ',', ' ') }} </strong>
+            kilomètres au total
+            à parcourir pour l'ensemble du scénario
+        </li>
+        <li>
+            <strong> {{ (distanceTotale * 0.80 )|round|number_format(0, ',', ' ') }}</strong>
+            € pour réaliser les trajets de l'ensemble du scénario
+            en voiture
+        </li>
+        <li>
+            <strong> {{ (distanceTotale /4 * 0.80 )|round|number_format(0, ',', ' ') }}</strong>
+            € pour réaliser les trajets de l'ensemble du scénario
+            en covoiturage
+        </li>
+        <li>
+            <strong>{{ (distanceTotale /9 * 1.31)|round|number_format(0, ',', ' ') }} </strong>
+            € pour réaliser les trajets de l'ensemble du scénario
+            en minibus
+        </li>
+        <li>
+            <strong> {{ (distanceTotale * 0.157)|round|number_format(0, ',', ' ') }}</strong>
+            KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}
+            joueurs en voiture individuelle
+            pour le scénario
+        </li>
+        <li>
+            <strong>{{ (distanceTotale/4 * 0.157)|round|number_format(0, ',', ' ') }} </strong>
+            KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}
+            joueurs en co-voiturage pour le scénario
+        </li>
+        <li>
+            <strong>{{ (distanceTotale/9 * 0.185)|round|number_format(0, ',', ' ') }} </strong>
+            KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}
+            joueurs en minibus pour le scénario
 
-        {#<li>#}
-            {#<strong>{{ distanceMin|number_format(0, ',', ' ') }} </strong>#}
-            {#kilomètres au total#}
-            {#à parcourir pour l'ensemble du scénario#}
-        {#</li>#}
-        {#<li>#}
-            {#<strong> {{ (distanceTotale * 0.80 )|round|number_format(0, ',', ' ') }}</strong>#}
-            {#€ pour réaliser les trajets de l'ensemble du scénario#}
-            {#en voiture#}
-        {#</li>#}
-        {#<li>#}
-            {#<strong> {{ (distanceTotale /4 * 0.80 )|round|number_format(0, ',', ' ') }}</strong>#}
-            {#€ pour réaliser les trajets de l'ensemble du scénario#}
-            {#en covoiturage#}
-        {#</li>#}
-        {#<li>#}
-            {#<strong>{{ (distanceTotale /9 * 1.31)|round|number_format(0, ',', ' ') }} </strong>#}
-            {#€ pour réaliser les trajets de l'ensemble du scénario#}
-            {#en minibus#}
-        {#</li>#}
-        {#<li>#}
-            {#<strong> {{ (distanceTotale * 0.157)|round|number_format(0, ',', ' ') }}</strong>#}
-            {#KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}#}
-            {#joueurs en voiture individuelle#}
-            {#pour le scénario#}
-        {#</li>#}
-        {#<li>#}
-            {#<strong>{{ (distanceTotale/4 * 0.157)|round|number_format(0, ',', ' ') }} </strong>#}
-            {#KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}#}
-            {#joueurs en co-voiturage pour le scénario#}
-        {#</li>#}
-        {#<li>#}
-            {#<strong>{{ (distanceTotale/9 * 0.185)|round|number_format(0, ',', ' ') }} </strong>#}
-            {#KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}#}
-            {#joueurs en minibus pour le scénario#}
-
-        {#</li>#}
-    {#</ul>#}
+        </li>
+    </ul>
 
 </div>
 
@@ -147,116 +140,77 @@
 {#<!-- bloc détails calcul pour poules -->#}
 <div>
 
-    {#<table>#}
-        {#<thead>#}
-        {#<tr>#}
-            {#<th>#}
-                {#Participants#}
-            {#</th>#}
-            {#<th>Kilomètres à#}
-                {#parcourir#}
-            {#</th>#}
-            {#<th>Temps de parcours#}
-                {#(J H:M)#}
-            {#</th>#}
-            {#<th>Coût du parcours en#}
-                {#voiture(€)#}
-            {#</th>#}
-            {#<th >Coût du parcours en#}
-                {#covoiturage(€)#}
-            {#</th>#}
-            {#<th>Coût du parcours en#}
-                {#minibus(€)#}
-            {#</th>#}
-            {#<th >Emissions GES voiture#}
-                {#individuelle (en KG eq CO2)#}
-            {#</th>#}
-            {#<th>Emissions GES#}
-                {#covoiturage (en KG eq CO2)#}
-            {#</th>#}
+    <table>
+        <thead>
+        <tr>
+            <th>
+                Participants
+            </th>
+            <th>Kilomètres à
+                parcourir
+            </th>
+            <th>Temps de parcours
+                (J H:M)
+            </th>
+            <th>Coût du parcours en
+                voiture(€)
+            </th>
+            <th >Coût du parcours en
+                covoiturage(€)
+            </th>
+            <th>Coût du parcours en
+                minibus(€)
+            </th>
+            <th >Emissions GES voiture
+                individuelle (en KG eq CO2)
+            </th>
+            <th>Emissions GES
+                covoiturage (en KG eq CO2)
+            </th>
 
-            {#<th>Emissions GES minibus#}
-                {#(en KG eq CO2)#}
-            {#</th>#}
-        {#</tr>#}
-        {#</thead>#}
-        {#<tbody>#}
+            <th>Emissions GES minibus
+                (en KG eq CO2)
+            </th>
+        </tr>
+        </thead>
+        <tbody>
 
-        {#{% set dureeTotaleDetail = "" %}#}
-        {#{% for key, estimationDetail in estimationDetails %}#}
-            {#{% set distanceDetail = estimationDetails[ loop.index ].distanceTotale // 1000 %}#}
-            {#{% set distanceTotaleDetail = estimationDetails[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
-            {#{% set dureeTotaleDetail = estimationDetails[ loop.index ].dureeTotale  %}#}
-            {#{% set nbrParticipantsDetail = estimationDetails[ loop.index ].nbrParticipantsTotal  %}#}
-            {#{% set lettre = alphabet[key-1] %}#}
+        {% set dureeTotale = "" %}
+        {% for participant in participants %}
+            <tr>
+                <td><strong> {{ participant.villeNom }}</strong></td>
+                <td style="text-align:right"> {{ (participant.distance // 1000)|number_format(0, ',', ' ') }}</td>
+                <td style="text-align:right"> {{ (participant.duree/3600)|round }}:{{ ((participant.duree%3600)/60)|round}}</td>
+                <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants * 0.80)|round|number_format(0, ',', ' ') }}</td>
+                <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
+                <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
+                <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants * 0.157)|round|number_format(0, ',', ' ') }}</td>
+                <td style="text-align:right"> {{ (participant.distance / 1000 *(participant.nbrParticipants/4)*0.157)|round|number_format(0, ',', ' ') }} </td>
+                <td style="text-align:right"> {{ (participant.distance / 1000 *(participant.nbrParticipants/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
+            </tr>
+            {% set dureeTotale = dureeTotale + participant.duree %}
+        {% endfor %}
 
-            {#<tr>#}
-                {#<td><strong> Poule {{ lettre }} </strong></td>#}
-                {#<td style="text-align:right"> {{distanceDetail|number_format(0, ',', ' ') }}</td>#}
-                {#<td style="text-align:right">#}
 
-                    {#<!-- récupérer le nbr de jour -->#}
-                    {#{% set nbrJour = (dureeTotaleDetail/86400)|round %}#}
-                    {#{% if nbrJour <10 %}#}
-                        {#{% set nbrJour = "0"~nbrJour %}#}
-                    {#{% endif %}#}
-                    {#<!-- récupérer le nbr d heure -->#}
-                    {#{% set nbrHeure = ((dureeTotaleDetail%86400)/3600)|round %}#}
-                    {#{% if nbrHeure <10 %}#}
-                        {#{% set nbrHeure = "0"~nbrHeure %}#}
-                    {#{% endif %}#}
-                    {#<!-- récupérer le nbr de minute -->#}
-                    {#{% set nbrMin = (((dureeTotaleDetail%86400)%3600)/60)|round %}#}
-                    {#{% if nbrMin <10 %}#}
-                        {#{% set nbrMin = "0"~nbrMin %}#}
-                    {#{% endif %}#}
-                    {#{{ nbrJour}} {{ nbrHeure }}:{{ nbrMin }}#}
 
-                {#</td>#}
-                {#<td style="text-align:right"> {{ (distanceTotaleDetail  * 0.80)|round|number_format(0, ',', ' ') }}</td>#}
-                {#<td style="text-align:right"> {{ (distanceTotaleDetail /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>#}
-                {#<td style="text-align:right"> {{ (distanceTotaleDetail /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>#}
-                {#<td style="text-align:right"> {{ (distanceTotaleDetail * 0.157)|round|number_format(0, ',', ' ') }}</td>#}
-                {#<td style="text-align:right"> {{ ((distanceTotaleDetail /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>#}
-                {#<td style="text-align:right"> {{ ((distanceTotaleDetail/9)*0.185)|round|number_format(0, ',', ' ') }} </td>#}
-            {#</tr>#}
-            {#{% set dureeTotaleDetail = dureeTotaleDetail + dureeTotaleDetail %}#}
 
-        {#{% endfor %}#}
-        {#<tr>#}
-            {#<td><strong> Totaux </strong></td>#}
-            {#<td style="text-align:right"> {{ distanceMin|number_format(0, ',', ' ') }}</td>#}
-            {#<td style="text-align:right">#}
+        <tr>
+            <td><strong> Totaux </strong></td>
+            <td style="text-align:right"> {{ distanceMin|number_format(0, ',', ' ') }}</td>
 
-                {#<!-- récupérer le nbr de jour -->#}
-                {#{% set nbrJourTotal = (dureeTotaleDetail/86400)|round %}#}
-                {#{% if nbrJourTotal <10 %}#}
-                    {#{% set nbrJourTotal = "0"~nbrJourTotal %}#}
-                {#{% endif %}#}
-                {#<!-- récupérer le nbr d heure -->#}
-                {#{% set nbrHeureTotal = ((dureeTotaleDetail%86400)/3600)|round %}#}
-                {#{% if nbrHeureTotal <10 %}#}
-                    {#{% set nbrHeureTotal = "0"~nbrHeureTotal %}#}
-                {#{% endif %}#}
-                {#<!-- récupérer le nbr de minute -->#}
-                {#{% set nbrMinTotal = (((dureeTotaleDetail%86400)%3600)/60)|round %}#}
-                {#{% if nbrMinTotal <10 %}#}
-                    {#{% set nbrMinTotal = "0"~nbrMinTotal %}#}
-                {#{% endif %}#}
-                {#{{ nbrJourTotal}} {{ nbrHeureTotal }}:{{ nbrMinTotal }}#}
+            <td style="text-align:right"> {{ (dureeTotale/3600)|round }}:{{ ((dureeTotale%3600)/60)|round}}</td>
 
-            {#</td>#}
-            {#<td style="text-align:right"> {{ (distanceTotale  * 0.80)|round|number_format(0, ',', ' ') }}</td>#}
-            {#<td style="text-align:right"> {{ (distanceTotale /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>#}
-            {#<td style="text-align:right"> {{ (distanceTotale /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>#}
-            {#<td style="text-align:right"> {{ (distanceTotale * 0.157)|round|number_format(0, ',', ' ') }}</td>#}
-            {#<td style="text-align:right"> {{ ((distanceTotale /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>#}
-            {#<td style="text-align:right"> {{ ((distanceTotale/9)*0.185)|round|number_format(0, ',', ' ') }} </td>#}
-        {#</tr>#}
-        {#</tbody>#}
-    {#</table>#}
+
+
+            <td style="text-align:right"> {{ (distanceTotale  * 0.80)|round|number_format(0, ',', ' ') }}</td>
+            <td style="text-align:right"> {{ (distanceTotale /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
+            <td style="text-align:right"> {{ (distanceTotale /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
+            <td style="text-align:right"> {{ (distanceTotale * 0.157)|round|number_format(0, ',', ' ') }}</td>
+            <td style="text-align:right"> {{ ((distanceTotale /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
+            <td style="text-align:right"> {{ ((distanceTotale/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
+        </tr>
+        </tbody>
+    </table>
 
 </div>
 
-<div style="page-break-after:always;"></div>
-<hr>
