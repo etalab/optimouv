@@ -247,9 +247,13 @@ ffbb_sendMail:
     path:    /sendMail
     defaults: { _controller: FfbbBundle:Default:sendMail }
 
-ffbb_selectionner_type_export:
+ffbb_rencontres_selectionner_type_export:
     path:    /admin/rencontre/export/selection-type-export/
     defaults: { _controller: FfbbBundle:Rencontres:selectionTypeExport}
+
+ffbb_rencontres_export_pdf:
+    path:    /admin/poules/export/sauvegarde/pdf/
+    defaults: { _controller: FfbbBundle:Poules:exportScenarioPdf }
 
 ffbb_poules_selectionner_type_export:
     path:    /admin/poules/export/selection-type-export/

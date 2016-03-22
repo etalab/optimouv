@@ -1149,7 +1149,6 @@ class PoulesController extends Controller
         $retour[1] = $taillePoule;
         $retour[2] = $contraintsExiste;
         $retour[3] = $typeMatch;
-//        $retour[4] = $scenarioOptimalSansContrainte;
         $retour[4] = $scenarioResultats;
         $retour[5] = $nomRapport;
         $retour[6] = $nomGroupe;

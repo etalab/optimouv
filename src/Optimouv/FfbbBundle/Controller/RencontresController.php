@@ -137,6 +137,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 //             $idRapport = $infoPdf[10];
 //             $nomUtilisateur = $infoPdf[11];
 //
+
+             return $this->render('FfbbBundle:Rencontres:previsualisationPdf.html.twig', array(
+                 'idResultat' => $idResultat,
+                 'typeScenario' => $typeScenario,
+
+             ));
+                 
+
 //
 //             return $this->render('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
 //                 'nomRapport' => $nomRapport,
