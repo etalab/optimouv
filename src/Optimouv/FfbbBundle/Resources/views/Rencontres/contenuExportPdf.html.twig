@@ -35,41 +35,35 @@
 
 
 
-{#<br><br>#}
+<br><br>
 
-{#<h3> Export de votre recherche "{{ nomRapport }}" -#}
+<h3> Export de votre recherche "{{ nomRapport }}" -
 
-    {#{% if typeScenario == "optimalSansContrainte" %}#}
-        {#scénario optimal sans contrainte#}
-    {#{% elseif typeScenario == "equitableSansContrainte" %}#}
-        {#scénario équitable sans contrainte#}
-    {#{% elseif typeScenario == "optimalAvecContrainte" %}#}
-        {#scénario optimal avec contrainte#}
-    {#{% elseif typeScenario == "equitableAvecContrainte" %}#}
-        {#scénario équitable avec contrainte#}
-    {#{% elseif typeScenario == "ref" %}#}
-        {#scénario de référence#}
+    {% if typeScenario == "optimal" %}
+        scénario optimal
+    {% elseif typeScenario == "equitable" %}
+        scénario équitable
 
-    {#{% endif %}#}
+    {% endif %}
 
-{#</h3>#}
-{#<h4>Fédération : UFOLEP</h4>#}
-{#<h4> Discipline : Rugby</h4>#}
-{#<h4>Utilisateur : {{ nomUtilisateur }} </h4>#}
-{#<h4>Nom de la liste : {{ nomListe }}</h4>#}
-{#<h4>Nom du groupe : {{ nomGroupe }}</h4>#}
+</h3>
+<h4>Fédération : UFOLEP</h4>
+<h4> Discipline : Rugby</h4>
+<h4>Utilisateur : {{ nomUtilisateur }} </h4>
+<h4>Nom de la liste : {{ nomListe }}</h4>
+<h4>Nom du groupe : {{ nomGroupe }}</h4>
 
-{#{% if typeMatch == "allerRetour" %}#}
-    {#<h4>  Type de rencontre : Optimisation de poules - match aller retour </h4>#}
-{#{% elseif typeMatch == "allerSimple" %}#}
-    {#<h4>  Type de rencontre : Optimisation de poules - match aller simple </h4>#}
-{#{% elseif typeMatch == "plateau" %}#}
-    {#<h4>  Type de rencontre : Optimisation de poules - match aller plateau </h4>#}
-{#{% else %}#}
-    {#<h4> Type de rencontre : {{ typeMatch }} </h4>#}
-{#{% endif %}#}
+{% if typeRencontre == "barycentre" %}
+    <h4>  Type de rencontre : Meilleur lieu de rencontre - barycentre </h4>
+{% elseif typeRencontre == "barycentreAvecExclusion" %}
+    <h4>  Type de rencontre : Meilleur lieu de rencontre - barycentre avec exclusion </h4>
+{% elseif typeRencontre == "meilleurLieu" %}
+    <h4>  Type de rencontre : Meilleur lieu de rencontre - meilleur lieu </h4>
+{% elseif typeRencontre == "terrainNeutre" %}
+    <h4>  Type de rencontre : Meilleur lieu de rencontre - terrain neutre </h4>
+{% endif %}
 
-{#<h4>Poules : {{ nombrePoule }} poules de {{ taillePoule }} équipes </h4>#}
+
 {#{% if contraintsExiste == 1 %}#}
     {#{% set contrainte = "Avec contrainte" %}#}
 
@@ -98,11 +92,11 @@
 
 
 
-{#<div style="page-break-after:always;"></div>#}
+<div style="page-break-after:always;"></div>
 
-{#<!-- bloc estimation générale -->#}
-{#<div>#}
-    {#<h4> Estimations</h4>#}
+<!-- bloc estimation générale -->
+<div>
+    <h4> Estimations</h4>
     {#<ul>#}
 
         {#<li>#}
@@ -144,15 +138,14 @@
         {#</li>#}
     {#</ul>#}
 
-{#</div>#}
+</div>
 
-{#<div style="page-break-after:always;"></div>#}
-{#<hr>#}
-{#<h4> Détails des estimations </h4>#}
+<div style="page-break-after:always;"></div>
+<hr>
+<h4> Détails des estimations </h4>
 
 {#<!-- bloc détails calcul pour poules -->#}
-{#<div>#}
-    {#{% set alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ] %}#}
+<div>
 
     {#<table>#}
         {#<thead>#}
@@ -263,93 +256,7 @@
         {#</tbody>#}
     {#</table>#}
 
-{#</div>#}
+</div>
 
-{#<div style="page-break-after:always;"></div>#}
-{#<hr>#}
-{#<h4> Liste des rencontres </h4>#}
-
-{#<!-- bloc détails rencontres -->#}
-{#<div >#}
-    {#<table>#}
-
-        {#{% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}#}
-            {#<tbody>#}
-            {#{% for key, rencontreDetail in rencontreDetails %}#}
-                {#{% set distanceScenario = rencontreDetails[ loop.index ] %}#}
-
-                {#<tr>#}
-                    {#{% set lettre = alphabet[key-1] %}#}
-                    {#<td><strong> Poule {{ lettre }} </strong></td>#}
-
-                    {#<td>#}
-                        {#<ul>#}
-                            {#{% for keyDetail, detailsScenario in distanceScenario %}#}
-                                {#<li>#}
-                                    {#{{ distanceScenario[ loop.index ].equipeDepartNom }}#}
-                                    {#~ {{ distanceScenario[ loop.index ].equipeDestinationNom }}#}
-                                {#</li>#}
-
-                            {#{% endfor %}#}
-                        {#</ul>#}
-                    {#</td>#}
-
-                {#</tr>#}
-
-            {#{% endfor %}#}
-            {#</tbody>#}
-
-        {#{% elseif typeMatch == "plateau" %}#}
-
-
-            {#{% if typeInclude == "previsualisation" %}#}
-                {#<thead>#}
-                {#<tr>#}
-                    {#<th style="font-weight: bold !important;">#}
-                        {#Poules#}
-                    {#</th>#}
-                    {#<th>Journée</th>#}
-                    {#<th>Equipe hôte</th>#}
-                    {#<th>Equipes adverses</th>#}
-
-                {#</tr>#}
-                {#</thead>#}
-
-            {#{% endif %}#}
-
-
-            {#<tbody>#}
-            {#{% for poule, contenuPoule in rencontreDetails%}#}
-                {#{% set lettre = alphabet[poule-1] %}#}
-                {#{% for journee, contenuJournee in contenuPoule %}#}
-                    {#<tr>#}
-                        {#<td ><strong> Poule {{ lettre }}  </strong></td>#}
-                        {#<td width="10%">#}
-                            {#{{ journee }}#}
-                        {#</td>#}
-                        {#<td>#}
-                            {#{% for contenuGroup in contenuJournee %}#}
-                                {#{{ contenuGroup.hoteNom }} <br/> <br/>#}
-                            {#{% endfor %}#}
-                        {#</td>#}
-                        {#<td>#}
-                            {#{% for contenuGroup in contenuJournee %}#}
-                                {#* {{ contenuGroup.premierEquipeNom }} <br/>#}
-                                {#* {{ contenuGroup.deuxiemeEquipeNom }} <br/>#}
-                            {#{% endfor %}#}
-                        {#</td>#}
-
-
-
-                    {#</tr>#}
-
-                {#{% endfor %}#}
-
-            {#{% endfor %}#}
-            {#</tbody>#}
-
-        {#{% endif %}#}
-
-
-    {#</table>#}
-{#</div>#}
+<div style="page-break-after:always;"></div>
+<hr>

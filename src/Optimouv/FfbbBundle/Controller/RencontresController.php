@@ -111,59 +111,44 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          ));
      }
 
-     public function selectionTypeExportAction()
+     public function previsualisationExportAction()
      {
          $formatExport = $_POST['formatExport'];
          $idResultat = $_POST['idResultat'];
          $typeScenario = $_POST['typeScenario'];
+         $typeRencontre = $_POST['typeRencontre'];
+
 
 //        error_log("\n params: ".print_r($_POST , true), 3, "error_log_optimouv.txt");
 
          if($formatExport == "pdf"){
 
-//             //recuperation des donnees relatives au scenario
-//             $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
-//
-//             $nombrePoule = $infoPdf[0];
-//             $taillePoule = $infoPdf[1];
-//             $contraintsExiste = $infoPdf[2];
-//             $typeMatch = $infoPdf[3];
-//             $scenarioResultats = $infoPdf[4];
-//             $nomRapport = $infoPdf[5];
-//             $nomGroupe = $infoPdf[6];
-//             $nomListe = $infoPdf[7];
+             //recuperation des donnees relatives au scenario
+             $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
+
+             $nomRapport = $infoPdf["nomRapport"];
+             $nomUtilisateur = $infoPdf["nomUtilisateur"];
+             $nomListe = $infoPdf["nomListe"];
+             $nomGroupe = $infoPdf["nomGroupe"];
+
 //             $detailsVilles = $infoPdf[8];
-//             $idGroupe = $infoPdf[9];
-//             $idRapport = $infoPdf[10];
-//             $nomUtilisateur = $infoPdf[11];
 //
+
+//             exit();
 
              return $this->render('FfbbBundle:Rencontres:previsualisationPdf.html.twig', array(
                  'idResultat' => $idResultat,
                  'typeScenario' => $typeScenario,
+                 'nomUtilisateur' => $nomUtilisateur,
+                 'nomListe' => $nomListe,
+                 'nomGroupe' => $nomGroupe,
+                 'nomRapport' => $nomRapport,
+                 'typeRencontre' => $typeRencontre,
 
              ));
                  
 
-//
-//             return $this->render('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
-//                 'nomRapport' => $nomRapport,
-//                 'typeMatch' => $typeMatch,
-//                 'nombrePoule' => $nombrePoule,
-//                 'nomListe' => $nomListe,
-//                 'nomGroupe' => $nomGroupe,
-//                 'taillePoule' => $taillePoule,
-//                 'contraintsExiste' => $contraintsExiste,
-//                 'scenarioResultats' => $scenarioResultats,
-//                 'idRapport' => $idRapport,
-//                 'detailsVilles' => $detailsVilles,
-//                 'idGroupe' => $idGroupe,
-//                 'idResultat' => $idResultat,
-//                 'nomUtilisateur' => $nomUtilisateur,
-//                 'typeScenario' => $typeScenario,
-//             ));
 
-             exit();
 
          }
          elseif ($formatExport == "xml"){
@@ -177,6 +162,123 @@ use Symfony\Component\HttpFoundation\JsonResponse;
      }
 
 
+
+     public function exportScenarioPdfAction()
+     {
+
+         $idResultat = $_POST['idResultat'];
+         $typeScenario = $_POST['typeScenario'];
+         $typeRencontre = $_POST['typeRencontre'];
+         
+         //recuperation des donnees relatives au scenario
+         $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
+
+         $nomRapport = $infoPdf["nomRapport"];
+         $nomUtilisateur = $infoPdf["nomUtilisateur"];
+         $nomListe = $infoPdf["nomListe"];
+         $nomGroupe = $infoPdf["nomGroupe"];
+
+
+         $html = $this->renderView('FfbbBundle:Rencontres:exportPdf.html.twig', array(
+             'idResultat' => $idResultat,
+             'typeScenario' => $typeScenario,
+             'nomUtilisateur' => $nomUtilisateur,
+             'nomListe' => $nomListe,
+             'nomGroupe' => $nomGroupe,
+             'nomRapport' => $nomRapport,
+             'typeRencontre' => $typeRencontre,
+
+         ));
+         
+
+
+         return new Response(
+             $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+             200,
+             array(
+                 'Content-Type'          => 'application/pdf',
+                 'Content-Disposition'   => 'attachment; filename="'.$nomRapport.'"',
+                 'print-media-type'      => false,
+                 'outline'               => true,
+
+             )
+         );
+     }
+
+     //    function qui ramene toutes les infos necessaires à la view
+     public function getInfoPdfAction($idResultat , $typeScenario)
+     {
+
+         $em = $this->getDoctrine()->getManager();
+
+         $idRapport = $em->getRepository('FfbbBundle:Scenario')->getIdRapportByIdScenario($idResultat);
+         if($idRapport != []){
+             $idRapport  = $idRapport[0]["idRapport"];
+         }
+         # obtenir le nom du rapport
+         $nomRapport = $em->getRepository('FfbbBundle:Rapport')->findOneById($idRapport)->getNom();
+
+
+         $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idRapport);
+         if($idGroupe != []){
+             $idGroupe = $idGroupe[0]['idGroupe'];
+         }
+         # obtenir le nom du groupe
+         $nomGroupe = $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getNom();
+
+
+         # obtenir l'id de la liste
+         $idListe = $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
+         # obtenir le nom de la liste
+         $nomListe = $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
+
+
+
+         //récupérer le nom d'utilisateur
+         $user = $this->get('security.token_storage')->getToken()->getUser();
+         $nomUtilisateur = $user->getUsername();
+
+
+
+         $equipes = $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getEquipes();
+         //$equipes de string a array
+         $equipes = explode(",", $equipes);
+
+
+
+         # récupérer la liste des noms et des ids de villes
+         $detailsVilles = $em->getRepository('FfbbBundle:Entite')->getEntities($equipes);
+
+         
+         $detailsCalcul = $em->getRepository('FfbbBundle:Scenario')->findOneById($idResultat)->getDetailsCalcul();
+         $detailsCalcul = json_decode($detailsCalcul, true);
+
+         
+         
+//         error_log("\n detailsCalcul: ".print_r($detailsCalcul , true), 3, "error_log_optimouv.txt");
+//         error_log("\n typeScenario: ".print_r($typeScenario , true), 3, "error_log_optimouv.txt");
+//         exit();
+
+
+
+
+
+
+
+
+         //construire le tableau de retour
+         $retour = [];
+         $retour["nomRapport"] = $nomRapport;
+         $retour["nomGroupe"] = $nomGroupe;
+         $retour["nomListe"] = $nomListe;
+         $retour["detailsVilles"] = $detailsVilles;
+         $retour["idGroupe"] = $idGroupe;
+         $retour["idRapport"] = $idRapport;
+         $retour["nomUtilisateur"] = $nomUtilisateur;
+
+         return $retour;
+     }
+ 
 
     public function barycentreAction($idRapport)
     {
