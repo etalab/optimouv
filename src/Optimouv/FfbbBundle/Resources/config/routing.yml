@@ -252,8 +252,8 @@ ffbb_rencontres_previsualisation_export:
     defaults: { _controller: FfbbBundle:Rencontres:previsualisationExport}
 
 ffbb_rencontres_export_pdf:
-    path:    /admin/poules/export/sauvegarde/pdf/
-    defaults: { _controller: FfbbBundle:Poules:exportScenarioPdf }
+    path:    /admin/rencontre/export/sauvegarde/pdf/
+    defaults: { _controller: FfbbBundle:Rencontres:exportScenarioPdf }
 
 ffbb_poules_previsualisation_export:
     path:    /admin/poules/export/previsualisation-export/
