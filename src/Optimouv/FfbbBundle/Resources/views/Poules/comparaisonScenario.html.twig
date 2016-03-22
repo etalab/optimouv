@@ -630,7 +630,7 @@
                                 {% for equipe in donneesComparison %}
                                     <tr>
                                         {%  if contraintsExiste and refExiste %}
-                                            <td style="text-align: center"> {{ equipe.nom }} </td>
+                                            <td style="text-align: left"> {{ equipe.nom }} </td>
                                             <td style="text-align:right"> {{ (equipe.distanceTotale.scenarioOptimalAvecContrainte * 0.157 // 1000) | number_format(0, ',', ' ') }} </td>
                                             <td style="text-align:right"> {{ (equipe.distanceTotale.scenarioEquitableAvecContrainte * 0.157 // 1000) | number_format(0, ',', ' ') }} </td>
                                             <td style="text-align:right"> {{ (equipe.distanceTotale.scenarioRef * 0.157 // 1000) | number_format(0, ',', ' ') }} </td>
@@ -647,7 +647,7 @@
                                             <td style="text-align:right"> {{ (equipe.distanceTotale.scenarioOptimalSansContrainte/9 * 0.185 // 1000) | number_format(0, ',', ' ') }} </td>
 
                                         {%  elseif contraintsExiste and not refExiste %}
-                                            <td style="text-align:center"> {{ equipe.nom }} </td>
+                                            <td style="text-align:left"> {{ equipe.nom }} </td>
                                             <td style="text-align:right"> {{ (equipe.distanceTotale.scenarioOptimalAvecContrainte * 0.157 // 1000) | number_format(0, ',', ' ') }} </td>
                                             <td style="text-align:right"> {{ (equipe.distanceTotale.scenarioEquitableAvecContrainte * 0.157 // 1000) | number_format(0, ',', ' ') }} </td>
                                             <td style="text-align:right"> {{ (equipe.distanceTotale.scenarioOptimalSansContrainte * 0.157 // 1000) | number_format(0, ',', ' ') }} </td>
@@ -661,7 +661,7 @@
                                             <td style="text-align:right"> {{ (equipe.distanceTotale.scenarioOptimalSansContrainte/9 * 0.185 // 1000) | number_format(0, ',', ' ') }} </td>
 
                                         {%  elseif not contraintsExiste and refExiste %}
-                                            <td style="text-align:center"> {{ equipe.nom }} </td>
+                                            <td style="text-align:left"> {{ equipe.nom }} </td>
                                             <td style="text-align:right"> {{ (equipe.distanceTotale.scenarioOptimalSansContrainte * 0.157 // 1000) | number_format(0, ',', ' ') }} </td>
                                             <td style="text-align:right"> {{ (equipe.distanceTotale.scenarioEquitableSansContrainte * 0.157 // 1000) | number_format(0, ',', ' ') }} </td>
                                             <td style="text-align:right"> {{ (equipe.distanceTotale.scenarioRef * 0.157 // 1000) | number_format(0, ',', ' ') }} </td>
@@ -675,7 +675,7 @@
                                             <td style="text-align:right"> {{ (equipe.distanceTotale.scenarioRef/9 * 0.185 // 1000) | number_format(0, ',', ' ') }} </td>
 
                                         {%  else %}
-                                            <td style="text-align: center"> {{ equipe.nom }} </td>
+                                            <td style="text-align: left"> {{ equipe.nom }} </td>
                                             <td style="text-align:right"> {{ (equipe.distanceTotale.scenarioOptimalSansContrainte * 0.157 // 1000) | number_format(0, ',', ' ') }} </td>
                                             <td style="text-align:right"> {{ (equipe.distanceTotale.scenarioEquitableSansContrainte * 0.157 // 1000) | number_format(0, ',', ' ') }} </td>
 
