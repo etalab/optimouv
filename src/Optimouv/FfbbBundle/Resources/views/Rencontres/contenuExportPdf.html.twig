@@ -1,0 +1,355 @@
+<!-- Logo -->
+{% set kernelRootDir = kernelRootDir[:-3] %}
+
+{% if typeInclude == "export" %}
+    <img src="{{ kernelRootDir }}web\bundles\ffbb\accueil\img\Logo-Optimouv.jpg">
+
+{% elseif typeInclude == "previsualisation" %}
+    <img src="{{ asset('bundles/ffbb/accueil/img/Logo-Optimouv.jpg') }}" >
+
+{% endif %}
+
+
+
+
+{#<!-- declaration de variables -->#}
+{#<!-- distanceMin -->#}
+{#{% set distanceMin = scenarioResultats.estimationGenerale.distanceTotale %}#}
+{#{% set distanceMin = (distanceMin / 1000)|round %}#}
+{#<!-- distanceTotale -->#}
+{#{% set distanceTotale = scenarioResultats.estimationGenerale.distanceTotaleTousParticipants %}#}
+{#{% set distanceTotale = (distanceTotale / 1000)|round %}#}
+{#<!-- nbrParticipantsTotal -->#}
+{#{% set nbrParticipantsTotal = scenarioResultats.estimationGenerale.nbrParticipantsTotal %}#}
+{#<!-- dureeTotale -->#}
+{#{% set dureeTotale = scenarioResultats.estimationGenerale.dureeTotale %}#}
+{#<!-- estimationDetails -->#}
+{#{% set estimationDetails = scenarioResultats.estimationDetails %}#}
+{#<!-- rencontreDetails -->#}
+{#{% set rencontreDetails = scenarioResultats.rencontreDetails %}#}
+{#<!-- coordPoules -->#}
+{#{% set coordPoules = scenarioResultats.poulesCoords %}#}
+
+
+
+
+
+
+{#<br><br>#}
+
+{#<h3> Export de votre recherche "{{ nomRapport }}" -#}
+
+    {#{% if typeScenario == "optimalSansContrainte" %}#}
+        {#scénario optimal sans contrainte#}
+    {#{% elseif typeScenario == "equitableSansContrainte" %}#}
+        {#scénario équitable sans contrainte#}
+    {#{% elseif typeScenario == "optimalAvecContrainte" %}#}
+        {#scénario optimal avec contrainte#}
+    {#{% elseif typeScenario == "equitableAvecContrainte" %}#}
+        {#scénario équitable avec contrainte#}
+    {#{% elseif typeScenario == "ref" %}#}
+        {#scénario de référence#}
+
+    {#{% endif %}#}
+
+{#</h3>#}
+{#<h4>Fédération : UFOLEP</h4>#}
+{#<h4> Discipline : Rugby</h4>#}
+{#<h4>Utilisateur : {{ nomUtilisateur }} </h4>#}
+{#<h4>Nom de la liste : {{ nomListe }}</h4>#}
+{#<h4>Nom du groupe : {{ nomGroupe }}</h4>#}
+
+{#{% if typeMatch == "allerRetour" %}#}
+    {#<h4>  Type de rencontre : Optimisation de poules - match aller retour </h4>#}
+{#{% elseif typeMatch == "allerSimple" %}#}
+    {#<h4>  Type de rencontre : Optimisation de poules - match aller simple </h4>#}
+{#{% elseif typeMatch == "plateau" %}#}
+    {#<h4>  Type de rencontre : Optimisation de poules - match aller plateau </h4>#}
+{#{% else %}#}
+    {#<h4> Type de rencontre : {{ typeMatch }} </h4>#}
+{#{% endif %}#}
+
+{#<h4>Poules : {{ nombrePoule }} poules de {{ taillePoule }} équipes </h4>#}
+{#{% if contraintsExiste == 1 %}#}
+    {#{% set contrainte = "Avec contrainte" %}#}
+
+{#{% else %}#}
+    {#{% set contrainte = "Sans contrainte" %}#}
+
+{#{% endif %}#}
+{#<h4>Contraintes : {{ contrainte }} </h4>#}
+
+
+{#{% set couleur = ['080830', 'd00c05', 'f1c62a', '0d5c35', 'd400ff', '5eb6dd', '8fcf3c', 'ff5900', 'ff73bf', '52251c', '0a1574', 'ff9300', '6b1a6a', '41ab7b','c2314e', '444459', 'b99654', 'a44906', '023548', 'b2b2b2', '616600', '790000', '147376', 'd4cd4a', '95b37c', '006d80' ] %}#}
+{#{% for key,coordPoule in coordPoules %}#}
+    {#{% set coordEq ="" %}#}
+    {#{% for coordonneeVille in coordPoule %}#}
+        {#{% set  x = coordonneeVille[0] %}#}
+        {#{% set y =  coordonneeVille[1] %}#}
+        {#{% set xy = x~"%2C"~y %}#}
+        {#{% set coordEq = coordEq~xy~"%2C" %}#}
+
+
+    {#{% endfor %}#}
+    {#{% set coordEq = coordEq[:-3] %}#}
+    {#{% set Marker = couleur[key] %}#}
+    {#<img src="https://image.maps.api.here.com/mia/1.6/mapview?poi={{ coordEq }}&ml=fre&poitxs=16&poifc={{ Marker }}&app_id={{ app_id }}&amp;app_code={{ app_code }}&z=6&w=400&h=200" style="margin-left: 40px">#}
+{#{% endfor %}#}
+
+
+
+{#<div style="page-break-after:always;"></div>#}
+
+{#<!-- bloc estimation générale -->#}
+{#<div>#}
+    {#<h4> Estimations</h4>#}
+    {#<ul>#}
+
+        {#<li>#}
+            {#<strong>{{ distanceMin|number_format(0, ',', ' ') }} </strong>#}
+            {#kilomètres au total#}
+            {#à parcourir pour l'ensemble du scénario#}
+        {#</li>#}
+        {#<li>#}
+            {#<strong> {{ (distanceTotale * 0.80 )|round|number_format(0, ',', ' ') }}</strong>#}
+            {#€ pour réaliser les trajets de l'ensemble du scénario#}
+            {#en voiture#}
+        {#</li>#}
+        {#<li>#}
+            {#<strong> {{ (distanceTotale /4 * 0.80 )|round|number_format(0, ',', ' ') }}</strong>#}
+            {#€ pour réaliser les trajets de l'ensemble du scénario#}
+            {#en covoiturage#}
+        {#</li>#}
+        {#<li>#}
+            {#<strong>{{ (distanceTotale /9 * 1.31)|round|number_format(0, ',', ' ') }} </strong>#}
+            {#€ pour réaliser les trajets de l'ensemble du scénario#}
+            {#en minibus#}
+        {#</li>#}
+        {#<li>#}
+            {#<strong> {{ (distanceTotale * 0.157)|round|number_format(0, ',', ' ') }}</strong>#}
+            {#KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}#}
+            {#joueurs en voiture individuelle#}
+            {#pour le scénario#}
+        {#</li>#}
+        {#<li>#}
+            {#<strong>{{ (distanceTotale/4 * 0.157)|round|number_format(0, ',', ' ') }} </strong>#}
+            {#KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}#}
+            {#joueurs en co-voiturage pour le scénario#}
+        {#</li>#}
+        {#<li>#}
+            {#<strong>{{ (distanceTotale/9 * 0.185)|round|number_format(0, ',', ' ') }} </strong>#}
+            {#KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}#}
+            {#joueurs en minibus pour le scénario#}
+
+        {#</li>#}
+    {#</ul>#}
+
+{#</div>#}
+
+{#<div style="page-break-after:always;"></div>#}
+{#<hr>#}
+{#<h4> Détails des estimations </h4>#}
+
+{#<!-- bloc détails calcul pour poules -->#}
+{#<div>#}
+    {#{% set alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ] %}#}
+
+    {#<table>#}
+        {#<thead>#}
+        {#<tr>#}
+            {#<th>#}
+                {#Participants#}
+            {#</th>#}
+            {#<th>Kilomètres à#}
+                {#parcourir#}
+            {#</th>#}
+            {#<th>Temps de parcours#}
+                {#(J H:M)#}
+            {#</th>#}
+            {#<th>Coût du parcours en#}
+                {#voiture(€)#}
+            {#</th>#}
+            {#<th >Coût du parcours en#}
+                {#covoiturage(€)#}
+            {#</th>#}
+            {#<th>Coût du parcours en#}
+                {#minibus(€)#}
+            {#</th>#}
+            {#<th >Emissions GES voiture#}
+                {#individuelle (en KG eq CO2)#}
+            {#</th>#}
+            {#<th>Emissions GES#}
+                {#covoiturage (en KG eq CO2)#}
+            {#</th>#}
+
+            {#<th>Emissions GES minibus#}
+                {#(en KG eq CO2)#}
+            {#</th>#}
+        {#</tr>#}
+        {#</thead>#}
+        {#<tbody>#}
+
+        {#{% set dureeTotaleDetail = "" %}#}
+        {#{% for key, estimationDetail in estimationDetails %}#}
+            {#{% set distanceDetail = estimationDetails[ loop.index ].distanceTotale // 1000 %}#}
+            {#{% set distanceTotaleDetail = estimationDetails[ loop.index ].distanceTotaleTousParticipants // 1000 %}#}
+            {#{% set dureeTotaleDetail = estimationDetails[ loop.index ].dureeTotale  %}#}
+            {#{% set nbrParticipantsDetail = estimationDetails[ loop.index ].nbrParticipantsTotal  %}#}
+            {#{% set lettre = alphabet[key-1] %}#}
+
+            {#<tr>#}
+                {#<td><strong> Poule {{ lettre }} </strong></td>#}
+                {#<td style="text-align:right"> {{distanceDetail|number_format(0, ',', ' ') }}</td>#}
+                {#<td style="text-align:right">#}
+
+                    {#<!-- récupérer le nbr de jour -->#}
+                    {#{% set nbrJour = (dureeTotaleDetail/86400)|round %}#}
+                    {#{% if nbrJour <10 %}#}
+                        {#{% set nbrJour = "0"~nbrJour %}#}
+                    {#{% endif %}#}
+                    {#<!-- récupérer le nbr d heure -->#}
+                    {#{% set nbrHeure = ((dureeTotaleDetail%86400)/3600)|round %}#}
+                    {#{% if nbrHeure <10 %}#}
+                        {#{% set nbrHeure = "0"~nbrHeure %}#}
+                    {#{% endif %}#}
+                    {#<!-- récupérer le nbr de minute -->#}
+                    {#{% set nbrMin = (((dureeTotaleDetail%86400)%3600)/60)|round %}#}
+                    {#{% if nbrMin <10 %}#}
+                        {#{% set nbrMin = "0"~nbrMin %}#}
+                    {#{% endif %}#}
+                    {#{{ nbrJour}} {{ nbrHeure }}:{{ nbrMin }}#}
+
+                {#</td>#}
+                {#<td style="text-align:right"> {{ (distanceTotaleDetail  * 0.80)|round|number_format(0, ',', ' ') }}</td>#}
+                {#<td style="text-align:right"> {{ (distanceTotaleDetail /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>#}
+                {#<td style="text-align:right"> {{ (distanceTotaleDetail /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>#}
+                {#<td style="text-align:right"> {{ (distanceTotaleDetail * 0.157)|round|number_format(0, ',', ' ') }}</td>#}
+                {#<td style="text-align:right"> {{ ((distanceTotaleDetail /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>#}
+                {#<td style="text-align:right"> {{ ((distanceTotaleDetail/9)*0.185)|round|number_format(0, ',', ' ') }} </td>#}
+            {#</tr>#}
+            {#{% set dureeTotaleDetail = dureeTotaleDetail + dureeTotaleDetail %}#}
+
+        {#{% endfor %}#}
+        {#<tr>#}
+            {#<td><strong> Totaux </strong></td>#}
+            {#<td style="text-align:right"> {{ distanceMin|number_format(0, ',', ' ') }}</td>#}
+            {#<td style="text-align:right">#}
+
+                {#<!-- récupérer le nbr de jour -->#}
+                {#{% set nbrJourTotal = (dureeTotaleDetail/86400)|round %}#}
+                {#{% if nbrJourTotal <10 %}#}
+                    {#{% set nbrJourTotal = "0"~nbrJourTotal %}#}
+                {#{% endif %}#}
+                {#<!-- récupérer le nbr d heure -->#}
+                {#{% set nbrHeureTotal = ((dureeTotaleDetail%86400)/3600)|round %}#}
+                {#{% if nbrHeureTotal <10 %}#}
+                    {#{% set nbrHeureTotal = "0"~nbrHeureTotal %}#}
+                {#{% endif %}#}
+                {#<!-- récupérer le nbr de minute -->#}
+                {#{% set nbrMinTotal = (((dureeTotaleDetail%86400)%3600)/60)|round %}#}
+                {#{% if nbrMinTotal <10 %}#}
+                    {#{% set nbrMinTotal = "0"~nbrMinTotal %}#}
+                {#{% endif %}#}
+                {#{{ nbrJourTotal}} {{ nbrHeureTotal }}:{{ nbrMinTotal }}#}
+
+            {#</td>#}
+            {#<td style="text-align:right"> {{ (distanceTotale  * 0.80)|round|number_format(0, ',', ' ') }}</td>#}
+            {#<td style="text-align:right"> {{ (distanceTotale /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>#}
+            {#<td style="text-align:right"> {{ (distanceTotale /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>#}
+            {#<td style="text-align:right"> {{ (distanceTotale * 0.157)|round|number_format(0, ',', ' ') }}</td>#}
+            {#<td style="text-align:right"> {{ ((distanceTotale /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>#}
+            {#<td style="text-align:right"> {{ ((distanceTotale/9)*0.185)|round|number_format(0, ',', ' ') }} </td>#}
+        {#</tr>#}
+        {#</tbody>#}
+    {#</table>#}
+
+{#</div>#}
+
+{#<div style="page-break-after:always;"></div>#}
+{#<hr>#}
+{#<h4> Liste des rencontres </h4>#}
+
+{#<!-- bloc détails rencontres -->#}
+{#<div >#}
+    {#<table>#}
+
+        {#{% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}#}
+            {#<tbody>#}
+            {#{% for key, rencontreDetail in rencontreDetails %}#}
+                {#{% set distanceScenario = rencontreDetails[ loop.index ] %}#}
+
+                {#<tr>#}
+                    {#{% set lettre = alphabet[key-1] %}#}
+                    {#<td><strong> Poule {{ lettre }} </strong></td>#}
+
+                    {#<td>#}
+                        {#<ul>#}
+                            {#{% for keyDetail, detailsScenario in distanceScenario %}#}
+                                {#<li>#}
+                                    {#{{ distanceScenario[ loop.index ].equipeDepartNom }}#}
+                                    {#~ {{ distanceScenario[ loop.index ].equipeDestinationNom }}#}
+                                {#</li>#}
+
+                            {#{% endfor %}#}
+                        {#</ul>#}
+                    {#</td>#}
+
+                {#</tr>#}
+
+            {#{% endfor %}#}
+            {#</tbody>#}
+
+        {#{% elseif typeMatch == "plateau" %}#}
+
+
+            {#{% if typeInclude == "previsualisation" %}#}
+                {#<thead>#}
+                {#<tr>#}
+                    {#<th style="font-weight: bold !important;">#}
+                        {#Poules#}
+                    {#</th>#}
+                    {#<th>Journée</th>#}
+                    {#<th>Equipe hôte</th>#}
+                    {#<th>Equipes adverses</th>#}
+
+                {#</tr>#}
+                {#</thead>#}
+
+            {#{% endif %}#}
+
+
+            {#<tbody>#}
+            {#{% for poule, contenuPoule in rencontreDetails%}#}
+                {#{% set lettre = alphabet[poule-1] %}#}
+                {#{% for journee, contenuJournee in contenuPoule %}#}
+                    {#<tr>#}
+                        {#<td ><strong> Poule {{ lettre }}  </strong></td>#}
+                        {#<td width="10%">#}
+                            {#{{ journee }}#}
+                        {#</td>#}
+                        {#<td>#}
+                            {#{% for contenuGroup in contenuJournee %}#}
+                                {#{{ contenuGroup.hoteNom }} <br/> <br/>#}
+                            {#{% endfor %}#}
+                        {#</td>#}
+                        {#<td>#}
+                            {#{% for contenuGroup in contenuJournee %}#}
+                                {#* {{ contenuGroup.premierEquipeNom }} <br/>#}
+                                {#* {{ contenuGroup.deuxiemeEquipeNom }} <br/>#}
+                            {#{% endfor %}#}
+                        {#</td>#}
+
+
+
+                    {#</tr>#}
+
+                {#{% endfor %}#}
+
+            {#{% endfor %}#}
+            {#</tbody>#}
+
+        {#{% endif %}#}
+
+
+    {#</table>#}
+{#</div>#}
