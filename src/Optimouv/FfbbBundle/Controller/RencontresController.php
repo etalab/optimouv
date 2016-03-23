@@ -342,7 +342,28 @@ use Symfony\Component\HttpFoundation\JsonResponse;
              }
 
          }
+         elseif ($typeRencontre == "meilleurLieu" && $typeScenario == "optimal"){
+             $retourOp = $detailsCalcul[0];
 
+
+             $villeDepart = $retourOp[0];
+             $distanceMin = $retourOp[3];
+             $coordonneesVille = $retourOp[5];
+             $distanceTotale = $retourOp["distanceTotale"];
+             $nbrParticipantsTotal = $retourOp["nbrParticipantsTotal"];
+
+             $coordPointDepart = $retourOp[1]."%2C".$retourOp[2];
+
+
+             foreach($retourOp[6] as $key => $value ){
+                 $arrayTmp =  array('ville' => $value, 'distance' => $retourOp[7][$key], 'duree' => $retourOp[8][$key], 'nbrParticipants' => $retourOp[10][$key]);
+                 $arrayTmp["villeNom"] = substr($value, 8);
+                 $participants[] = $arrayTmp;
+
+             }
+
+
+         }
          elseif ($typeRencontre == "meilleurLieu" && $typeScenario == "equitable"){
              $retourEq = $detailsCalcul[1];
 
@@ -372,7 +393,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
              }
              
          }
-         elseif ($typeRencontre == "meilleurLieu" && $typeScenario == "optimal"){
+
+         elseif ($typeRencontre == "terrainNeutre" && $typeScenario == "optimal"){
              $retourOp = $detailsCalcul[0];
 
 
@@ -394,6 +416,38 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 
          }
+         elseif ($typeRencontre == "meilleurLieu" && $typeScenario == "equitable"){
+             $retourEq = $detailsCalcul[1];
+
+
+             $villeDepart = $retourEq[0];
+             $distanceMin = $retourEq[3];
+             $coordonneesVille = $retourEq[5];
+             $distanceTotale = $retourEq["distanceTotale"];
+
+
+
+             $nbrParticipantsTotal =  0;
+             foreach($retourEq["nbrParticipants"] as $nbrParticipantEquipe ){
+                 $nbrParticipantsTotal += $nbrParticipantEquipe;
+             }
+
+             $coordPointDepart = $retourEq[1]."%2C".$retourEq[2];
+
+
+
+             foreach($retourEq[6] as $key => $value ){
+                 $arrayTmp =  array('ville' => $value, 'distance' => $retourEq[7][$key], 'duree' => $retourEq[8][$key], 'nbrParticipants' => $retourEq[9][$key]);
+                 $arrayTmp["villeNom"] = substr($value, 8);
+                 $participants[] = $arrayTmp;
+
+             }
+
+
+
+         }
+
+
 
 
 //           error_log("\n retourOp: ".print_r($retourOp , true), 3, "error_log_optimouv.txt");
@@ -630,9 +684,6 @@ public function barycentreAction($idRapport)
 
         # obtenir l'id du résultat
         $idResultat = $em->getRepository('FfbbBundle:Scenario')->getIdScenarioByIdRapport($idRapport);
-//        error_log("\n idResultat: ".print_r($idResultat , true), 3, "error_log_optimouv.txt");
-
-
         if($idResultat != []){
             $idResultat = $idResultat[0]["id"];
         }
@@ -754,6 +805,12 @@ public function barycentreAction($idRapport)
 
         $nomGroupe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getNom();
 
+        # obtenir l'id du résultat
+        $idResultat = $em->getRepository('FfbbBundle:Scenario')->getIdScenarioByIdRapport($idRapport);
+        if($idResultat != []){
+            $idResultat = $idResultat[0]["id"];
+        }
+
 
         return $this->render('FfbbBundle:Rencontres:terrainNeutre.html.twig', array(
 
@@ -785,6 +842,7 @@ public function barycentreAction($idRapport)
             'nomGroupe' => $nomGroupe,
             'idRapport' => $idRapport,
             'nomRapport' => $nomRapport,
+            'idResultat' => $idResultat,
 
         ));
 
