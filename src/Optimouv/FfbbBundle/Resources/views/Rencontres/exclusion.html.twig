@@ -389,7 +389,8 @@
 
                                                     {#<button type="button" class="btn btn-default-rencontre  pull-right">Exporter</button>#}
 
-                                                    <form name="submitParams" action="{{ path('ffbb_rencontres_previsualisation_export')}}" method="post">
+                                                    {#<form name="submitParams" action="{{ path('ffbb_rencontres_previsualisation_export')}}" method="post">#}
+                                                    <form name="submitParams" action="{{ path('ffbb_rencontres_pretraitement_export')}}" method="post">
                                                         <input type="hidden" value="{{ idResultat }}" name="idResultat">
                                                         <input type="hidden" value="optimalAvecContrainte" name="typeScenario" >
                                                         <input type="hidden" value="barycentreAvecExlcusion" name="typeRencontre" >
@@ -666,7 +667,8 @@
 
                                                     {#<button type="button" class="btn btn-default-rencontre  pull-right">Exporter</button>#}
 
-                                                    <form name="submitParams" action="{{ path('ffbb_rencontres_previsualisation_export')}}" method="post">
+                                                    {#<form name="submitParams" action="{{ path('ffbb_rencontres_previsualisation_export')}}" method="post">#}
+                                                    <form name="submitParams" action="{{ path('ffbb_rencontres_pretraitement_export')}}" method="post">
                                                         <input type="hidden" value="{{ idResultat }}" name="idResultat">
                                                         <input type="hidden" value="optimalSansContrainte" name="typeScenario" >
                                                         <input type="hidden" value="barycentreAvecExlcusion" name="typeRencontre" >
