@@ -866,8 +866,10 @@ class PoulesController extends Controller
         return $this->render('FfbbBundle:Poules:detailsCalcul.html.twig');
     }
 
-    public function previsualisationExportAction()
-    {
+//    public function previsualisationExportAction()
+    public function pretraitementExportAction()
+    
+{
         $formatExport = $_POST['formatExport'];
         $idResultat = $_POST['idResultat'];
         $typeScenario = $_POST['typeScenario'];

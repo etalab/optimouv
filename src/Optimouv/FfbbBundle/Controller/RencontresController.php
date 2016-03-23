@@ -121,7 +121,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          ));
      }
 
-     public function previsualisationExportAction()
+//     public function previsualisationExportAction()
+     public function pretraitementExportAction()
      {
          $formatExport = $_POST['formatExport'];
          $idResultat = $_POST['idResultat'];
