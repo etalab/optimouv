@@ -106,7 +106,7 @@
                     </div>
 
                 </div>
-                <form style="padding-left:20px;"  action="{{ path('ffbb_lancer_producer', {'idGroupe':idGroupe}) }}" method="POST" onsubmit="msgLancement()">
+                <form style="padding-left:20px;"  action="{{ path('ffbb_lancer_producer', {'idGroupe':idGroupe}) }}" method="POST" onsubmit="msgLancementTerrainNeutre()">
 
                     <input type="hidden" name="rencontre" value="terrainNeutre">
 
@@ -356,17 +356,17 @@
                                                             <thead>
                                                             <tr>
                                                                 <th style="font-weight: bold !important;">Participants</th>
-                                                                <th style="text-align:right">Kms à parcourir</th>
-                                                                <th style="text-align:right">Temps de parcours (H:M)</th>
-                                                                <th style="text-align:right">Coût du parcours en voiture(€)</th>
-                                                                <th style="text-align:right">Coût du parcours en covoiturage(€)</th>
-                                                                <th style="text-align:right">Coût du parcours en minibus(€)</th>
-                                                                <th style="text-align:right">Emissions GES voiture individuelle (en KG eq CO2)
+                                                                <th>Kms à parcourir</th>
+                                                                <th>Temps de parcours (H:M)</th>
+                                                                <th>Coût du parcours en voiture(€)</th>
+                                                                <th>Coût du parcours en covoiturage(€)</th>
+                                                                <th>Coût du parcours en minibus(€)</th>
+                                                                <th>Emissions GES voiture individuelle (en KG eq CO2)
                                                                 </th>
-                                                                <th style="text-align:right">Emissions GES covoiturage (en KG eq CO2)
+                                                                <th>Emissions GES covoiturage (en KG eq CO2)
                                                                 </th>
 
-                                                                <th style="text-align:right">Emissions GES minibus (en KG eq CO2)
+                                                                <th>Emissions GES minibus (en KG eq CO2)
                                                                 </th>
                                                             </tr>
                                                             </thead>
@@ -376,7 +376,7 @@
                                                                 <tr>
                                                                     <td><strong> {{ participant.ville|slice(8) }}</strong></td>
                                                                     <td style="text-align:right"> {{ (participant.distance //1000)|number_format(0, ',', ' ') }}</td>
-                                                                    <td style="text-align:right"> {{ (participant.duree/3600)|round }}:{{ ((participant.duree%3600)/60)|round}}</td>
+                                                                    <td style="text-align:center"> {{ (participant.duree/3600)|round }}:{{ ((participant.duree%3600)/60)|round}}</td>
                                                                     <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                     <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants/4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                     <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants/9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -390,7 +390,7 @@
                                                             <tr>
                                                                 <td><strong> Totaux </strong></td>
                                                                 <td style="text-align:right"> {{ distanceMin|number_format(0, ',', ' ') }}</td>
-                                                                <td style="text-align:right"> {{ (dureeTotale/3600)|round }}:{{ ((dureeTotale%3600)/60)|round}}</td>
+                                                                <td style="text-align:center"> {{ (dureeTotale/3600)|round }}:{{ ((dureeTotale%3600)/60)|round}}</td>
                                                                 <td style="text-align:right"> {{ (distanceTotale  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                 <td style="text-align:right"> {{ (distanceTotale /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                 <td style="text-align:right"> {{ (distanceTotale /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -634,17 +634,17 @@
                                                             <thead>
                                                             <tr>
                                                                 <th style="font-weight: bold !important;">Participants</th>
-                                                                <th style="text-align:right">Kms à parcourir</th>
-                                                                <th style="text-align:right">Temps de parcours (H:M)</th>
-                                                                <th style="text-align:right">Coût du parcours en voiture(€)</th>
-                                                                <th style="text-align:right">Coût du parcours en covoiturage(€)</th>
-                                                                <th style="text-align:right">Coût du parcours en minibus(€)</th>
-                                                                <th style="text-align:right">Emissions GES voiture individuelle (en KG eq CO2)
+                                                                <th>Kms à parcourir</th>
+                                                                <th>Temps de parcours (H:M)</th>
+                                                                <th>Coût du parcours en voiture(€)</th>
+                                                                <th>Coût du parcours en covoiturage(€)</th>
+                                                                <th>Coût du parcours en minibus(€)</th>
+                                                                <th>Emissions GES voiture individuelle (en KG eq CO2)
                                                                 </th>
-                                                                <th style="text-align:right">Emissions GES covoiturage (en KG eq CO2)
+                                                                <th>Emissions GES covoiturage (en KG eq CO2)
                                                                 </th>
 
-                                                                <th style="text-align:right">Emissions GES minibus (en KG eq CO2)
+                                                                <th>Emissions GES minibus (en KG eq CO2)
                                                                 </th>
 
                                                             </tr>
@@ -656,7 +656,7 @@
                                                                     <td><strong> {{ participantEq.villeEq|slice(8) }}</strong>
                                                                     </td>
                                                                     <td style="text-align:right"> {{ (participantEq.distanceEq //1000)|number_format(0, ',', ' ') }}</td>
-                                                                    <td style="text-align:right"> {{ (participantEq.dureeEq/3600)|round }}:{{ ((participantEq.dureeEq%3600)/60)|round}}</td>
+                                                                    <td style="text-align:center"> {{ (participantEq.dureeEq/3600)|round }}:{{ ((participantEq.dureeEq%3600)/60)|round}}</td>
                                                                     <td style="text-align:right"> {{ (participantEq.distanceEq / 1000 * participantEq.nbrParticipants *  0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                     <td style="text-align:right"> {{ (participantEq.distanceEq / 1000 * participantEq.nbrParticipants/4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                     <td style="text-align:right"> {{ (participantEq.distanceEq / 1000 * participantEq.nbrParticipants/9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -670,7 +670,7 @@
                                                             <tr>
                                                                 <td><strong> Totaux </strong></td>
                                                                 <td style="text-align:right"> {{ distanceMinEq|number_format(0, ',', ' ') }}</td>
-                                                                <td style="text-align:right"> {{ (dureeTotaleEq/3600)|round }}:{{ ((dureeTotaleEq%3600)/60)|round}}</td>
+                                                                <td style="text-align:center"> {{ (dureeTotaleEq/3600)|round }}:{{ ((dureeTotaleEq%3600)/60)|round}}</td>
                                                                 <td style="text-align:right"> {{ (distanceTotaleEq  * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                 <td style="text-align:right"> {{ (distanceTotaleEq /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
                                                                 <td style="text-align:right"> {{ (distanceTotaleEq /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
@@ -741,6 +741,11 @@
                     alert("Le calcul est en cours. Vous recevrez un mail pour vous avertir de la mise à disposition de vos résultats de calculs");
 
                 }
+            }
+            function msgLancementTerrainNeutre(){
+
+                    alert("Le calcul est en cours. Vous recevrez un mail pour vous avertir de la mise à disposition de vos résultats de calculs");
+
             }
         </script>
     {% endblock %}

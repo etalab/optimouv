@@ -255,29 +255,29 @@
                                                 <th style="font-weight: bold !important;">
                                                     Participants
                                                 </th>
-                                                <th style="text-align:right">Kms à
+                                                <th >Kms à
                                                     parcourir
                                                 </th>
-                                                <th style="text-align:right">Temps de parcours
+                                                <th >Temps de parcours
                                                     (J H:M)
                                                 </th>
-                                                <th style="text-align:right">Coût du parcours en
+                                                <th >Coût du parcours en
                                                     voiture(€)
                                                 </th>
-                                                <th style="text-align:right">Coût du parcours en
+                                                <th>Coût du parcours en
                                                     covoiturage(€)
                                                 </th>
-                                                <th style="text-align:right">Coût du parcours en
+                                                <th>Coût du parcours en
                                                     minibus(€)
                                                 </th>
-                                                <th style="text-align:right">Emissions GES voiture
+                                                <th>Emissions GES voiture
                                                     individuelle (en KG eq CO2)
                                                 </th>
-                                                <th style="text-align:right">Emissions GES
+                                                <th >Emissions GES
                                                     covoiturage (en KG eq CO2)
                                                 </th>
 
-                                                <th style="text-align:right">Emissions GES minibus
+                                                <th>Emissions GES minibus
                                                     (en KG eq CO2)
                                                 </th>
                                             </tr>
@@ -295,7 +295,7 @@
                                                 <tr>
                                                     <td><strong> Poule {{ lettre }} </strong></td>
                                                     <td style="text-align:right"> {{distanceOpSansContrainteDetail|number_format(0, ',', ' ') }}</td>
-                                                    <td style="text-align:right">
+                                                    <td style="text-align:center">
                                                         {# récupérer le nbr de jour #}
                                                         {% set nbrJour = (dureeTotaleOpSansContrainteDetail/86400)|round %}
                                                         {% if nbrJour <10 %}
@@ -328,7 +328,7 @@
                                             <tr>
                                                 <td><strong> Totaux </strong></td>
                                                 <td style="text-align:right"> {{ distanceMinOpSansContrainte|number_format(0, ',', ' ') }}</td>
-                                                <td style="text-align:right">
+                                                <td style="text-align:center">
 
                                                     {# récupérer le nbr de jour #}
                                                     {% set nbrJourScOpSansContrainteDetail = (dureeTotaleScOpSansContrainteDetail/86400)|round %}
@@ -747,29 +747,29 @@
                                                 <th style="font-weight: bold !important;">
                                                     Participants
                                                 </th>
-                                                <th style="text-align:right">Kms à
+                                                <th>Kms à
                                                     parcourir
                                                 </th>
-                                                <th style="text-align:right">Temps de parcours
+                                                <th >Temps de parcours
                                                     (J H:M)
                                                 </th>
-                                                <th style="text-align:right">Coût du parcours en
+                                                <th >Coût du parcours en
                                                     voiture(€)
                                                 </th>
-                                                <th style="text-align:right">Coût du parcours en
+                                                <th >Coût du parcours en
                                                     covoiturage(€)
                                                 </th>
-                                                <th style="text-align:right">Coût du parcours en
+                                                <th >Coût du parcours en
                                                     minibus(€)
                                                 </th>
-                                                <th style="text-align:right">Emissions GES voiture
+                                                <th >Emissions GES voiture
                                                     individuelle (en KG eq CO2)
                                                 </th>
-                                                <th style="text-align:right">Emissions GES
+                                                <th >Emissions GES
                                                     covoiturage (en KG eq CO2)
                                                 </th>
 
-                                                <th style="text-align:right">Emissions GES minibus
+                                                <th >Emissions GES minibus
                                                     (en KG eq CO2)
                                                 </th>
                                             </tr>
@@ -787,7 +787,7 @@
                                                 <tr>
                                                     <td><strong> Poule {{ lettre }} </strong></td>
                                                     <td style="text-align:right"> {{ distanceEqDetailContrainte|number_format(0, ',', ' ') }}</td>
-                                                    <td style="text-align:right">
+                                                    <td style="text-align:center">
 
                                                         {# récupérer le nbr de jour #}
                                                         {% set nbrJourEqDetailContrainte = (dureeTotaleEqDetailContrainte/86400)|round %}
@@ -822,7 +822,7 @@
                                             <tr>
                                                 <td><strong> Totaux </strong></td>
                                                 <td style="text-align:right"> {{distanceMinEqContrainte|number_format(0, ',', ' ') }}</td>
-                                                <td style="text-align:right">
+                                                <td style="text-align:center">
 
                                                     {# récupérer le nbr de jour #}
                                                     {% set nbrJourScEqDetailContrainte = (dureeTotaleScEqDetailContrainte/86400)|round %}
@@ -1251,29 +1251,29 @@
                                                     <th style="font-weight: bold !important;">
                                                         Participants
                                                     </th>
-                                                    <th style="text-align:right">Kms à
+                                                    <th>Kms à
                                                         parcourir
                                                     </th>
-                                                    <th style="text-align:right">Temps de parcours
+                                                    <th >Temps de parcours
                                                         (J H:M)
                                                     </th>
-                                                    <th style="text-align:right">Coût du parcours en
+                                                    <th>Coût du parcours en
                                                         voiture(€)
                                                     </th>
-                                                    <th style="text-align:right">Coût du parcours en
+                                                    <th >Coût du parcours en
                                                         covoiturage(€)
                                                     </th>
-                                                    <th style="text-align:right">Coût du parcours en
+                                                    <th >Coût du parcours en
                                                         minibus(€)
                                                     </th>
-                                                    <th style="text-align:right">Emissions GES voiture
+                                                    <th >Emissions GES voiture
                                                         individuelle (en KG eq CO2)
                                                     </th>
-                                                    <th style="text-align:right">Emissions GES
+                                                    <th >Emissions GES
                                                         covoiturage (en KG eq CO2)
                                                     </th>
 
-                                                    <th style="text-align:right">Emissions GES minibus
+                                                    <th >Emissions GES minibus
                                                         (en KG eq CO2)
                                                     </th>
                                                 </tr>
@@ -1292,7 +1292,7 @@
                                                     <tr>
                                                         <td><strong> Poule {{ lettre }} </strong></td>
                                                         <td style="text-align:right"> {{distanceDetailRef|number_format(0, ',', ' ') }}</td>
-                                                        <td style="text-align:right">
+                                                        <td style="text-align:center">
 
                                                             {# récupérer le nbr de jour #}
                                                             {% set nbrJourDetailRef = (dureeTotaleDetailRef/86400)|round %}
@@ -1327,7 +1327,7 @@
                                                 <tr>
                                                     <td><strong> Totaux </strong></td>
                                                     <td style="text-align:right"> {{ distanceMinRef|number_format(0, ',', ' ') }}</td>
-                                                    <td style="text-align:right">
+                                                    <td style="text-align:center">
 
                                                         {# récupérer le nbr de jour #}
                                                         {% set nbrJourScRefPasContrainte = (dureeTotaleScRefPasContrainte/86400)|round %}
