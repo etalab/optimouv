@@ -387,8 +387,21 @@
                                                     </div>
                                                     <a href="{{ path('ffbb_details_calcul') }}" class="pull-left">Détails du calcul</a>
 
-                                                    <button type="button" class="btn btn-default-rencontre  pull-right">Exporter</button>
+                                                    {#<button type="button" class="btn btn-default-rencontre  pull-right">Exporter</button>#}
 
+                                                    <form name="submitParams" action="{{ path('ffbb_rencontres_previsualisation_export')}}" method="post">
+                                                        <input type="hidden" value="{{ idResultat }}" name="idResultat">
+                                                        <input type="hidden" value="optimalAvecContrainte" name="typeScenario" >
+                                                        <input type="hidden" value="barycentreAvecExlcusion" name="typeRencontre" >
+
+                                                        <select onchange="this.form.submit()"  class="btn btn-default-rencontre  pull-right" name="formatExport" >
+                                                            <option value="" disabled="disabled" selected="selected">Choisir un format d'export</option>
+                                                            <option value="pdf">Exporter en PDF</option>
+                                                            <option value="xml">Exporter en XML</option>
+                                                            <option value="csv">Exporter en CSV</option>
+                                                        </select>
+
+                                                    </form>
 
                                                 </div>
                                             </div>
@@ -651,8 +664,21 @@
                                                     </div>
                                                     <a href="{{ path('ffbb_details_calcul') }}" class="pull-left">Détails du calcul</a>
 
-                                                    <button type="button" class="btn btn-default-rencontre  pull-right">Exporter</button>
+                                                    {#<button type="button" class="btn btn-default-rencontre  pull-right">Exporter</button>#}
 
+                                                    <form name="submitParams" action="{{ path('ffbb_rencontres_previsualisation_export')}}" method="post">
+                                                        <input type="hidden" value="{{ idResultat }}" name="idResultat">
+                                                        <input type="hidden" value="optimalSansContrainte" name="typeScenario" >
+                                                        <input type="hidden" value="barycentreAvecExlcusion" name="typeRencontre" >
+
+                                                        <select onchange="this.form.submit()"  class="btn btn-default-rencontre  pull-right" name="formatExport" >
+                                                            <option value="" disabled="disabled" selected="selected">Choisir un format d'export</option>
+                                                            <option value="pdf">Exporter en PDF</option>
+                                                            <option value="xml">Exporter en XML</option>
+                                                            <option value="csv">Exporter en CSV</option>
+                                                        </select>
+
+                                                    </form>
 
 
 

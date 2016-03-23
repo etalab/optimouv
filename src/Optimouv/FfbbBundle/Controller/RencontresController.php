@@ -123,7 +123,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          if($formatExport == "pdf"){
 
              //recuperation des donnees relatives au scenario
-             $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
+             $infoPdf = $this->getInfoPdfAction($idResultat, $typeRencontre, $typeScenario) ;
 
              $nomRapport = $infoPdf["nomRapport"];
              $nomUtilisateur = $infoPdf["nomUtilisateur"];
@@ -181,7 +181,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $typeRencontre = $_POST['typeRencontre'];
          
          //recuperation des donnees relatives au scenario
-         $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
+         $infoPdf = $this->getInfoPdfAction($idResultat, $typeRencontre, $typeScenario);
 
          $nomRapport = $infoPdf["nomRapport"];
          $nomUtilisateur = $infoPdf["nomUtilisateur"];
@@ -229,7 +229,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
      }
 
      //    function qui ramene toutes les infos necessaires à la view
-     public function getInfoPdfAction($idResultat , $typeScenario)
+     public function getInfoPdfAction($idResultat , $typeRencontre, $typeScenario)
      {
 
          $em = $this->getDoctrine()->getManager();
@@ -276,27 +276,72 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $detailsCalcul = $em->getRepository('FfbbBundle:Scenario')->findOneById($idResultat)->getDetailsCalcul();
          $detailsCalcul = json_decode($detailsCalcul, true);
 
-         $villeDepart = $detailsCalcul[0];
-         $distanceMin = $detailsCalcul[3];
-         $coordonneesVille = $detailsCalcul[5];
-         $distanceTotale = $detailsCalcul[10];
-         $nbrParticipantsTotal = $detailsCalcul["nbrParticipantsTotal"];
+         if($typeRencontre == "barycentre"){
+             $villeDepart = $detailsCalcul[0];
+             $distanceMin = $detailsCalcul[3];
+             $coordonneesVille = $detailsCalcul[5];
+             $distanceTotale = $detailsCalcul[10];
+             $nbrParticipantsTotal = $detailsCalcul["nbrParticipantsTotal"];
 
-         $coordPointDepart = $detailsCalcul[2]."%2C".$detailsCalcul[1];
+             $coordPointDepart = $detailsCalcul[2]."%2C".$detailsCalcul[1];
 
-         foreach($detailsCalcul[6] as $key => $value ){
-             $arrayTmp = array('ville' => $value, 'distance' => $detailsCalcul[7][$key], 'duree' => $detailsCalcul[8][$key], 'nbrParticipants' => $detailsCalcul[9][$key]);
-             $arrayTmp["villeNom"] = substr($value, 8);
-             $participants[] = $arrayTmp;
+             foreach($detailsCalcul[6] as $key => $value ){
+                 $arrayTmp = array('ville' => $value, 'distance' => $detailsCalcul[7][$key], 'duree' => $detailsCalcul[8][$key], 'nbrParticipants' => $detailsCalcul[9][$key]);
+                 $arrayTmp["villeNom"] = substr($value, 8);
+                 $participants[] = $arrayTmp;
+             }
+
+
          }
+         elseif ($typeRencontre == "barycentreAvecExlcusion" && $typeScenario == "optimalSansContrainte"){
+
+             $retourOpSc = $detailsCalcul[0];
+
+             $villeDepart = $retourOpSc[0];
+             $distanceMin = $retourOpSc[3];
+             $coordonneesVille = $retourOpSc[5];
+             $distanceTotale = $retourOpSc[10];
+             $nbrParticipantsTotal = $retourOpSc["nbrParticipantsTotal"];
+
+             $coordPointDepart = $retourOpSc[2]."%2C".$retourOpSc[1];
+
+             foreach($retourOpSc[6] as $key => $value ){
+                 $arrayTmp = array('ville' => $value, 'distance' => $retourOpSc[7][$key], 'duree' => $retourOpSc[8][$key], 'nbrParticipants' => $retourOpSc[9][$key] );
+                 $arrayTmp["villeNom"] = substr($value, 8);
+                 $participants[] = $arrayTmp;
+             }
+
+             
+         }
+         elseif ($typeRencontre == "barycentreAvecExlcusion" && $typeScenario == "optimalAvecContrainte"){
+             $retourOpAc = $detailsCalcul[1];
+
+             $villeDepart = $retourOpAc[0];
+             $distanceMin = $retourOpAc[3];
+             $coordonneesVille = $retourOpAc[5];
+             $distanceTotale = $retourOpAc[10];
+             $nbrParticipantsTotal = $retourOpAc["nbrParticipantsTotal"];
+
+             $coordPointDepart = $retourOpAc[2]."%2C".$retourOpAc[1];
+
+             foreach($retourOpAc[6] as $key => $value ){
+                 $arrayTmp =  array('ville' => $value, 'distance' => $retourOpAc[7][$key], 'duree' => $retourOpAc[8][$key], 'nbrParticipants' => $retourOpAc[9][$key]);
+                 $arrayTmp["villeNom"] = substr($value, 8);
+                 $participants[] = $arrayTmp;
+
+             }
+
+
+         }
+//         error_log("\n retourOpSc: ".print_r($retourOpSc , true), 3, "error_log_optimouv.txt");
+//         exit();
 
          # trier le tableau basé sur le nom de ville
          $this->sksort($participants, "villeNom", true);
 
 
 
-//         error_log("\n coordPointDepart: ".print_r($coordPointDepart , true), 3, "error_log_optimouv.txt");
-//         exit();
+
 
 
 
@@ -310,6 +355,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $retour["idGroupe"] = $idGroupe;
          $retour["idRapport"] = $idRapport;
          $retour["nomUtilisateur"] = $nomUtilisateur;
+
          $retour["distanceTotale"] = $distanceTotale;
          $retour["distanceMin"] = $distanceMin;
          $retour["nbrParticipantsTotal"] = $nbrParticipantsTotal;
@@ -516,11 +562,23 @@ public function barycentreAction($idRapport)
 
         # récupérer idListe pour le breadcrump
         $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
-
         $nomGroupe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getNom();
 
+
+        # obtenir l'id du résultat
+        $idResultat = $em->getRepository('FfbbBundle:Scenario')->getIdScenarioByIdRapport($idRapport);
+//        error_log("\n idResultat: ".print_r($idResultat , true), 3, "error_log_optimouv.txt");
+
+
+        if($idResultat != []){
+            $idResultat = $idResultat[0]["id"];
+        }
+
+
+
+
         return $this->render('FfbbBundle:Rencontres:exclusion.html.twig', array(
-            //Donn�es du sc�nario avec contrainte
+            //Données du scénario avec contrainte
             'villeDepart' => $villeDepart,
             'longPtDep' => $longPtDep,
             'latPtDep' => $latPtDep,
@@ -531,7 +589,7 @@ public function barycentreAction($idRapport)
             'nbrParticipantsTotal' => $nbrParticipantsTotal,
             'distanceTotale' => $distanceTotale,
 
-            //donn�es sc�nario sans contrainte
+            //données scénario sans contrainte
             'villeDepartEq' => $villeDepartEq,
             'longPtDepEq' => $longPtDepEq,
             'latPtDepEq' => $latPtDepEq,
@@ -547,6 +605,7 @@ public function barycentreAction($idRapport)
             'nomGroupe' => $nomGroupe,
             'idRapport' => $idRapport,
             'nomRapport' => $nomRapport,
+            'idResultat' => $idResultat,
 
         ));
 
