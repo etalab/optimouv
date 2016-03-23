@@ -12,6 +12,11 @@ class ComparaisonController extends Controller
 
         $scenario = $_POST["scenario"];
 
+        $em = $this->getDoctrine()->getManager();
+        $typeAction = $em->getRepository('FfbbBundle:Rapport')->getTypeAction($idRapport);
+        $typeAction = $typeAction[0]['typeAction'];
+
+
         if($scenario == 'meilleurLieu'){
 
             $participants = $this->scenarioMeilleurLieu($idRapport);
@@ -22,6 +27,7 @@ class ComparaisonController extends Controller
 
          return $this->render('FfbbBundle:Rencontres:comparaisonScenario.html.twig', array(
              'participants' => $participants,
+             'typeAction' => $typeAction,
 
 
         ));
