@@ -53,11 +53,28 @@
 
 
 
-{% set couleur = ['4166f5', 'a4c639' ] %}
 
-{% set Marker = couleur[0] %}
+{% set marquerCouleurAutres = '4166f5' %}
+{% set marquerCouleurPointDepart = 'a4c639' %}
+{% set marqueurTaille = 15 %}
+{% set texteCouleur = "white" %}
 
-<img src="https://image.maps.api.here.com/mia/1.6/mapview?poi={{ coordonneesVille }}&ml=fre&poitxs=14&poifc={{ Marker }}&app_id={{ app_id }}&amp;app_code={{ app_code }}&z=8&w=650&h=400" style="margin-left: 40px">
+{% set stylePointDepart = "poix0=" ~ coordPointDepart ~"%3B"~ marquerCouleurPointDepart~"%3B"~ texteCouleur ~ "%3B"~ marqueurTaille ~"%3B"~"0" %}
+
+{% set styleToutPoints = stylePointDepart %}
+{% set stylePoint = "" %}
+
+{% for coordPoint in coordonneesVille %}
+    {% set pointNbr = loop.index %}
+
+    {% set stylePoint = "poix"~ pointNbr ~"=" ~ coordPoint ~"%3B"~ marquerCouleurAutres~"%3B"~ texteCouleur ~ "%3B"~ marqueurTaille ~"%3B" ~ pointNbr %}
+    {% set styleToutPoints =  styleToutPoints ~ "&" ~ stylePoint %}
+
+{% endfor %}
+
+<img src="https://image.maps.api.here.com/mia/1.6/mapview?{{ styleToutPoints }}&ml=fre&app_id={{ app_id }}&amp;app_code={{ app_code }}&z=8&w=650&h=400" style="margin-left: 40px">
+
+{#<img src="https://image.maps.api.here.com/mia/1.6/mapview?poi={{ coordonneesVille }}&ml=fre&poitxs=14&poifc={{ Marker }}&app_id={{ app_id }}&amp;app_code={{ app_code }}&z=8&w=650&h=400" style="margin-left: 40px">#}
 
 
 

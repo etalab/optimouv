@@ -294,8 +294,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $this->sksort($participants, "villeNom", true);
 
 
-         # convertir les coordonnées villes en chaine de caractères
-         $coordonneesVille = implode("%2C", $coordonneesVille);
 
 //         error_log("\n coordPointDepart: ".print_r($coordPointDepart , true), 3, "error_log_optimouv.txt");
 //         exit();
