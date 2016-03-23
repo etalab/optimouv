@@ -457,11 +457,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          # trier le tableau basé sur le nom de ville
          $this->sksort($participants, "villeNom", true);
 
-
-
-
          
-
 
          //construire le tableau de retour
          $retour = [];
@@ -484,6 +480,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          return $retour;
      }
 
+     # fonction pour trier le tableau à partir d'un clé
      private function sksort(&$array, $subkey="id", $sort_ascending=false) {
 
         if (count($array))
