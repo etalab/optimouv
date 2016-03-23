@@ -15,11 +15,12 @@
 </head>
 <body>
 
-{% include 'FfbbBundle:Poules:contenuExportPdf.html.twig' with  {'typeInclude' : 'previsualisation'} %}
+{% include 'FfbbBundle:Rencontres:contenuExportPdf.html.twig' with  {'typeInclude' : 'previsualisation'} %}
 
-<form name="submitParams" action="{{ path('ffbb_poules_export_pdf')}}" method="post">
+<form name="submitParams" action="{{ path('ffbb_rencontres_export_pdf')}}" method="post">
     <input type="hidden" value="{{ idResultat }}" name="idResultat" >
     <input type="hidden" value="{{ typeScenario }}" name="typeScenario" >
+    <input type="hidden" value="{{ typeRencontre }}" name="typeRencontre" >
 
     <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
 </form>

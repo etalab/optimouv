@@ -1,0 +1,203 @@
+<!-- Logo -->
+{% set kernelRootDir = kernelRootDir[:-3] %}
+
+{% if typeInclude == "export" %}
+    <img src="{{ kernelRootDir }}web\bundles\ffbb\accueil\img\Logo-Optimouv.jpg">
+
+{% elseif typeInclude == "previsualisation" %}
+    <img src="{{ asset('bundles/ffbb/accueil/img/Logo-Optimouv.jpg') }}" >
+
+{% endif %}
+
+
+
+
+
+<br><br>
+
+<h3> Export de votre recherche "{{ nomRapport }}" -
+
+    {% if typeScenario == "optimalSansContrainte" %}
+        scénario optimal sans contrainte
+    {% elseif typeScenario == "optimalAvecContrainte" %}
+        scénario optimal avec contrainte
+    {% elseif typeScenario == "equitable" %}
+        scénario équitable
+    {% elseif typeScenario == "optimal" %}
+        scénario optimal
+    {% endif %}
+
+</h3>
+<h4>Fédération : UFOLEP</h4>
+<h4> Discipline : Rugby</h4>
+<h4>Utilisateur : {{ nomUtilisateur }} </h4>
+<h4>Nom de la liste : {{ nomListe }}</h4>
+<h4>Nom du groupe : {{ nomGroupe }}</h4>
+
+{% if typeRencontre == "barycentre" %}
+    <h4>  Type de rencontre : Meilleur lieu de rencontre - barycentre </h4>
+{% elseif typeRencontre == "barycentreAvecExclusion" %}
+    <h4>  Type de rencontre : Meilleur lieu de rencontre - barycentre avec exclusion </h4>
+{% elseif typeRencontre == "meilleurLieu" %}
+    <h4>  Type de rencontre : Meilleur lieu de rencontre - meilleur lieu </h4>
+{% elseif typeRencontre == "terrainNeutre" %}
+    <h4>  Type de rencontre : Meilleur lieu de rencontre - terrain neutre </h4>
+{% endif %}
+
+
+
+<!-- dessiner la carte HERE -->
+
+{% set marquerCouleurAutres = '4166f5' %}
+{% set marquerCouleurPointDepart = 'a4c639' %}
+{% set marqueurTaille = 15 %}
+{% set texteCouleur = "white" %}
+
+{% set stylePointDepart = "poix0=" ~ coordPointDepart ~"%3B"~ marquerCouleurPointDepart~"%3B"~ texteCouleur ~ "%3B"~ marqueurTaille ~"%3B"~"0" %}
+
+{% set styleToutPoints = stylePointDepart %}
+{% set stylePoint = "" %}
+
+{% for coordPoint in coordonneesVille %}
+    {% set pointNbr = loop.index %}
+
+    {% set stylePoint = "poix"~ pointNbr ~"=" ~ coordPoint ~"%3B"~ marquerCouleurAutres~"%3B"~ texteCouleur ~ "%3B"~ marqueurTaille ~"%3B" ~ pointNbr %}
+    {% set styleToutPoints =  styleToutPoints ~ "&" ~ stylePoint %}
+
+{% endfor %}
+
+<img src="https://image.maps.api.here.com/mia/1.6/mapview?{{ styleToutPoints }}&ml=fre&app_id={{ app_id }}&amp;app_code={{ app_code }}&z=20&w=650&h=400" style="margin-left: 40px">
+
+
+
+
+<div style="page-break-after:always;"></div>
+
+<!-- bloc estimation générale -->
+<div>
+    <h4> Estimations</h4>
+    <ul>
+        <li>
+            Le meilleur lieu de rencontre est
+            <strong>{{ villeDepart }}</strong>
+        </li>
+        <li>
+            <strong>{{ distanceMin|number_format(0, ',', ' ') }} </strong>
+            kilomètres au total
+            à parcourir pour l'ensemble du scénario
+        </li>
+        <li>
+            <strong> {{ (distanceTotale * 0.80 )|round|number_format(0, ',', ' ') }}</strong>
+            € pour réaliser les trajets de l'ensemble du scénario
+            en voiture
+        </li>
+        <li>
+            <strong> {{ (distanceTotale /4 * 0.80 )|round|number_format(0, ',', ' ') }}</strong>
+            € pour réaliser les trajets de l'ensemble du scénario
+            en covoiturage
+        </li>
+        <li>
+            <strong>{{ (distanceTotale /9 * 1.31)|round|number_format(0, ',', ' ') }} </strong>
+            € pour réaliser les trajets de l'ensemble du scénario
+            en minibus
+        </li>
+        <li>
+            <strong> {{ (distanceTotale * 0.157)|round|number_format(0, ',', ' ') }}</strong>
+            KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}
+            joueurs en voiture individuelle
+            pour le scénario
+        </li>
+        <li>
+            <strong>{{ (distanceTotale/4 * 0.157)|round|number_format(0, ',', ' ') }} </strong>
+            KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}
+            joueurs en co-voiturage pour le scénario
+        </li>
+        <li>
+            <strong>{{ (distanceTotale/9 * 0.185)|round|number_format(0, ',', ' ') }} </strong>
+            KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}
+            joueurs en minibus pour le scénario
+
+        </li>
+    </ul>
+
+</div>
+
+<div style="page-break-after:always;"></div>
+<hr>
+<h4> Détails des estimations </h4>
+
+{#<!-- bloc détails calcul pour poules -->#}
+<div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>
+                Participants
+            </th>
+            <th>Kilomètres à
+                parcourir
+            </th>
+            <th>Temps de parcours
+                (J H:M)
+            </th>
+            <th>Coût du parcours en
+                voiture(€)
+            </th>
+            <th >Coût du parcours en
+                covoiturage(€)
+            </th>
+            <th>Coût du parcours en
+                minibus(€)
+            </th>
+            <th >Emissions GES voiture
+                individuelle (en KG eq CO2)
+            </th>
+            <th>Emissions GES
+                covoiturage (en KG eq CO2)
+            </th>
+
+            <th>Emissions GES minibus
+                (en KG eq CO2)
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% set dureeTotale = "" %}
+        {% for participant in participants %}
+            <tr>
+                <td><strong> {{ participant.villeNom }}</strong></td>
+                <td style="text-align:right"> {{ (participant.distance // 1000)|number_format(0, ',', ' ') }}</td>
+                <td style="text-align:right"> {{ (participant.duree/3600)|round }}:{{ ((participant.duree%3600)/60)|round}}</td>
+                <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants * 0.80)|round|number_format(0, ',', ' ') }}</td>
+                <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
+                <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
+                <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants * 0.157)|round|number_format(0, ',', ' ') }}</td>
+                <td style="text-align:right"> {{ (participant.distance / 1000 *(participant.nbrParticipants/4)*0.157)|round|number_format(0, ',', ' ') }} </td>
+                <td style="text-align:right"> {{ (participant.distance / 1000 *(participant.nbrParticipants/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
+            </tr>
+            {% set dureeTotale = dureeTotale + participant.duree %}
+        {% endfor %}
+
+
+        <tr>
+            <td><strong> Totaux </strong></td>
+            <td style="text-align:right"> {{ distanceMin|number_format(0, ',', ' ') }}</td>
+
+            <td style="text-align:right"> {{ (dureeTotale/3600)|round }}:{{ ((dureeTotale%3600)/60)|round}}</td>
+
+
+
+            <td style="text-align:right"> {{ (distanceTotale  * 0.80)|round|number_format(0, ',', ' ') }}</td>
+            <td style="text-align:right"> {{ (distanceTotale /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
+            <td style="text-align:right"> {{ (distanceTotale /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
+            <td style="text-align:right"> {{ (distanceTotale * 0.157)|round|number_format(0, ',', ' ') }}</td>
+            <td style="text-align:right"> {{ ((distanceTotale /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
+            <td style="text-align:right"> {{ ((distanceTotale/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+

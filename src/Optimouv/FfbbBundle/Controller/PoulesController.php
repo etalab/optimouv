@@ -860,60 +860,117 @@ class PoulesController extends Controller
 
 
     //page qui affiche les détails des calculs
-
     public function detailsCalculAction()
     {
 
         return $this->render('FfbbBundle:Poules:detailsCalcul.html.twig');
     }
 
-    public function previsualisationPdfAction()
+    public function previsualisationExportAction()
     {
-
+        $formatExport = $_POST['formatExport'];
         $idResultat = $_POST['idResultat'];
         $typeScenario = $_POST['typeScenario'];
 
 //        error_log("\n params: ".print_r($_POST , true), 3, "error_log_optimouv.txt");
 
-        //recuperation des donnees relatives au scenario
-        $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
+        if($formatExport == "pdf"){
 
-        $nombrePoule = $infoPdf[0];
-        $taillePoule = $infoPdf[1];
-        $contraintsExiste = $infoPdf[2];
-        $typeMatch = $infoPdf[3];
-        $scenarioResultats = $infoPdf[4];
-        $nomRapport = $infoPdf[5];
-        $nomGroupe = $infoPdf[6];
-        $nomListe = $infoPdf[7];
-        $detailsVilles = $infoPdf[8];
-        $idGroupe = $infoPdf[9];
-        $idRapport = $infoPdf[10];
-        $nomUtilisateur = $infoPdf[11];
+            //recuperation des donnees relatives au scenario
+            $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
+
+            $nombrePoule = $infoPdf[0];
+            $taillePoule = $infoPdf[1];
+            $contraintsExiste = $infoPdf[2];
+            $typeMatch = $infoPdf[3];
+            $scenarioResultats = $infoPdf[4];
+            $nomRapport = $infoPdf[5];
+            $nomGroupe = $infoPdf[6];
+            $nomListe = $infoPdf[7];
+            $detailsVilles = $infoPdf[8];
+            $idGroupe = $infoPdf[9];
+            $idRapport = $infoPdf[10];
+            $nomUtilisateur = $infoPdf[11];
 
 
-        return $this->render('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
-            'nomRapport' => $nomRapport,
-            'typeMatch' => $typeMatch,
-            'nombrePoule' => $nombrePoule,
-            'nomListe' => $nomListe,
-            'nomGroupe' => $nomGroupe,
-            'taillePoule' => $taillePoule,
-            'contraintsExiste' => $contraintsExiste,
-            'scenarioResultats' => $scenarioResultats,
-            'idRapport' => $idRapport,
-            'detailsVilles' => $detailsVilles,
-            'idGroupe' => $idGroupe,
-            'idResultat' => $idResultat,
-            'nomUtilisateur' => $nomUtilisateur,
-            'typeScenario' => $typeScenario,
-        ));
+            return $this->render('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
+                'nomRapport' => $nomRapport,
+                'typeMatch' => $typeMatch,
+                'nombrePoule' => $nombrePoule,
+                'nomListe' => $nomListe,
+                'nomGroupe' => $nomGroupe,
+                'taillePoule' => $taillePoule,
+                'contraintsExiste' => $contraintsExiste,
+                'scenarioResultats' => $scenarioResultats,
+                'idRapport' => $idRapport,
+                'detailsVilles' => $detailsVilles,
+                'idGroupe' => $idGroupe,
+                'idResultat' => $idResultat,
+                'nomUtilisateur' => $nomUtilisateur,
+                'typeScenario' => $typeScenario,
+            ));
+
+
+        }
+        elseif ($formatExport == "xml"){
+            return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
+            exit();
+        }
+        elseif ($formatExport == "csv"){
+            return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
+            exit();
+        }
+
 
     }
 
 
+//    public function previsualisationPdfAction()
+//    {
+//
+//        $idResultat = $_POST['idResultat'];
+//        $typeScenario = $_POST['typeScenario'];
+//
+//
+//        //recuperation des donnees relatives au scenario
+//        $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
+//
+//        $nombrePoule = $infoPdf[0];
+//        $taillePoule = $infoPdf[1];
+//        $contraintsExiste = $infoPdf[2];
+//        $typeMatch = $infoPdf[3];
+//        $scenarioResultats = $infoPdf[4];
+//        $nomRapport = $infoPdf[5];
+//        $nomGroupe = $infoPdf[6];
+//        $nomListe = $infoPdf[7];
+//        $detailsVilles = $infoPdf[8];
+//        $idGroupe = $infoPdf[9];
+//        $idRapport = $infoPdf[10];
+//        $nomUtilisateur = $infoPdf[11];
+//
+//
+//        return $this->render('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
+//            'nomRapport' => $nomRapport,
+//            'typeMatch' => $typeMatch,
+//            'nombrePoule' => $nombrePoule,
+//            'nomListe' => $nomListe,
+//            'nomGroupe' => $nomGroupe,
+//            'taillePoule' => $taillePoule,
+//            'contraintsExiste' => $contraintsExiste,
+//            'scenarioResultats' => $scenarioResultats,
+//            'idRapport' => $idRapport,
+//            'detailsVilles' => $detailsVilles,
+//            'idGroupe' => $idGroupe,
+//            'idResultat' => $idResultat,
+//            'nomUtilisateur' => $nomUtilisateur,
+//            'typeScenario' => $typeScenario,
+//        ));
+//
+//    }
 
-    public function exportScenarioAction()
+
+
+    public function exportScenarioPdfAction()
     {
 
         $idResultat = $_POST['idResultat'];
@@ -960,7 +1017,7 @@ class PoulesController extends Controller
             200,
             array(
                 'Content-Type'          => 'application/pdf',
-                'Content-Disposition'   => 'attachment; filename="mon_rapport.pdf"',
+                'Content-Disposition'   => 'attachment; filename="'.$nomRapport.'"',
                 'print-media-type'      => false,
                 'outline'               => true,
 
@@ -1092,7 +1149,6 @@ class PoulesController extends Controller
         $retour[1] = $taillePoule;
         $retour[2] = $contraintsExiste;
         $retour[3] = $typeMatch;
-//        $retour[4] = $scenarioOptimalSansContrainte;
         $retour[4] = $scenarioResultats;
         $retour[5] = $nomRapport;
         $retour[6] = $nomGroupe;

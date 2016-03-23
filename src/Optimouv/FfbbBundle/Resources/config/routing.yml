@@ -16,8 +16,6 @@ ffbb_rapports:
 
 
 # chemin pour l'optimisation de poules
-#ffbb_optimisation_index:
-
 
 # chemins pour le meilleur lieu de rencontre
 ffbb_choisir_liste_participants:
@@ -249,14 +247,28 @@ ffbb_sendMail:
     path:    /sendMail
     defaults: { _controller: FfbbBundle:Default:sendMail }
 
-ffbb_previsualisation_pdf:
-    path:    /admin/export/previsualisation/pdf/
-    defaults: { _controller: FfbbBundle:Poules:previsualisationPdf }
+ffbb_rencontres_previsualisation_export:
+    path:    /admin/rencontre/export/previsualisation-export/
+    defaults: { _controller: FfbbBundle:Rencontres:previsualisationExport}
 
-ffbb_export_pdf:
-    path:    /admin/export/sauvegarde/pdf/
-    defaults: { _controller: FfbbBundle:Poules:exportScenario }
+ffbb_rencontres_export_pdf:
+    path:    /admin/rencontre/export/sauvegarde/pdf/
+    defaults: { _controller: FfbbBundle:Rencontres:exportScenarioPdf }
+
+ffbb_poules_previsualisation_export:
+    path:    /admin/poules/export/previsualisation-export/
+    defaults: { _controller: FfbbBundle:Poules:previsualisationExport}
+
+ffbb_poules_export_pdf:
+    path:    /admin/poules/export/sauvegarde/pdf/
+    defaults: { _controller: FfbbBundle:Poules:exportScenarioPdf }
+
 
 ffbb_comparaison_sc_rencontre:
     path:    /admin/rencontre/comparaison-scenarios/{idRapport}
     defaults: { _controller: FfbbBundle:Comparaison:index }
+
+
+#ffbb_poules_test_export_pdf:
+#    path:    /admin/poules/test-export-pdf/
+#    defaults: { _controller: FfbbBundle:Poules:testExportPdf}
