@@ -41,10 +41,19 @@
                             </tr>
 
                             <tr style="text-align: left">
-                               <th  style="vertical-align: middle; ">Scénario optimal</th>
-                               <th  style="vertical-align: middle; ">Scénario équitable</th>
-                               <th  style="vertical-align: middle;">Scénario optimal</th>
-                               <th  style="vertical-align: middle;">Scénario équitable</th>
+
+                                {% if typeAction == "exclusion" %}
+                                    <th style="vertical-align: middle; ">Scénario optimal</th>
+                                    <th style="vertical-align: middle; ">Scénario optimal sans contrainte</th>
+                                    <th style="vertical-align: middle;">Scénario optimal</th>
+                                    <th style="vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                {% else %}
+                                    <th style="vertical-align: middle; ">Scénario optimal</th>
+                                    <th style="vertical-align: middle; ">Scénario équitable</th>
+                                    <th style="vertical-align: middle;">Scénario optimal</th>
+                                    <th style="vertical-align: middle;">Scénario équitable</th>
+                                {% endif %}
+
                             </tr>
 
                             </thead>
@@ -135,12 +144,21 @@
                                     <th colspan="2" style=" width: 20% ">Coût du parcours en minibus (€) </th>
                                 </tr>
                                 <tr>
-                                    <th  style=" vertical-align: middle; ">Scénario optimal</th>
-                                    <th  style=" vertical-align: middle; ">Scénario équitable</th>
-                                    <th  style=" vertical-align: middle;">Scénario optimal</th>
-                                    <th  style=" vertical-align: middle;">Scénario équitable</th>
-                                    <th  style="vertical-align: middle; ">Scénario optimal</th>
-                                    <th  style="vertical-align: middle; ">Scénario équitable</th>
+                                    {% if typeAction == "exclusion" %}
+                                        <th style="vertical-align: middle; ">Scénario optimal</th>
+                                        <th style="vertical-align: middle; ">Scénario optimal sans contrainte</th>
+                                        <th style="vertical-align: middle;">Scénario optimal</th>
+                                        <th style="vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                        <th style="vertical-align: middle;">Scénario optimal</th>
+                                        <th style="vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                    {% else %}
+                                        <th style="vertical-align: middle; ">Scénario optimal</th>
+                                        <th style="vertical-align: middle; ">Scénario équitable</th>
+                                        <th style="vertical-align: middle;">Scénario optimal</th>
+                                        <th style="vertical-align: middle;">Scénario équitable</th>
+                                        <th style="vertical-align: middle;">Scénario optimal</th>
+                                        <th style="vertical-align: middle;">Scénario équitable</th>
+                                    {% endif %}
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -201,12 +219,21 @@
                                         <th colspan="2" style="width: 20% ">Emissions GES en minibus (en KG eq CO2)</th>
                                 </tr>
                                 <tr style="text-align: left">
-                                    <th  style="vertical-align: middle; ">Scénario optimal</th>
-                                    <th  style="vertical-align: middle; ">Scénario équitable</th>
-                                    <th  style="vertical-align: middle;">Scénario optimal</th>
-                                    <th  style="vertical-align: middle;">Scénario équitable</th>
-                                    <th style="vertical-align: middle; ">Scénario optimal</th>
-                                    <th  style="vertical-align: middle; ">Scénario équitable</th>
+                                    {% if typeAction == "exclusion" %}
+                                        <th style="vertical-align: middle; ">Scénario optimal</th>
+                                        <th style="vertical-align: middle; ">Scénario optimal sans contrainte</th>
+                                        <th style="vertical-align: middle;">Scénario optimal</th>
+                                        <th style="vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                        <th style="vertical-align: middle;">Scénario optimal </th>
+                                        <th style="vertical-align: middle;">Scénario optimal sans contrainte</th>
+                                    {% else %}
+                                        <th style="vertical-align: middle; ">Scénario optimal</th>
+                                        <th style="vertical-align: middle; ">Scénario équitable</th>
+                                        <th style="vertical-align: middle;">Scénario optimal</th>
+                                        <th style="vertical-align: middle;">Scénario équitable</th>
+                                        <th style="vertical-align: middle;">Scénario optimal</th>
+                                        <th style="vertical-align: middle;">Scénario équitable</th>
+                                    {% endif %}
                                 </tr>
 
                                 </thead>

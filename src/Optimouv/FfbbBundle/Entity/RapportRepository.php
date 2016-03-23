@@ -64,4 +64,17 @@ class RapportRepository extends \Doctrine\ORM\EntityRepository
 
     }
 
+    public function getTypeAction($idRapport)
+    {
+
+        $query = $this->createQueryBuilder('t')
+            ->select('t.typeAction')
+            ->where('t.id = :id')
+            ->setParameter('id', $idRapport)
+            ->getQuery();
+        $result = $query->getResult();
+
+        return $result;
+
+    }
 }
