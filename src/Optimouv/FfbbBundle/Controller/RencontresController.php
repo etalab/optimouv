@@ -416,7 +416,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 
          }
-         elseif ($typeRencontre == "meilleurLieu" && $typeScenario == "equitable"){
+         elseif ($typeRencontre == "terrainNeutre" && $typeScenario == "equitable"){
              $retourEq = $detailsCalcul[1];
 
 
