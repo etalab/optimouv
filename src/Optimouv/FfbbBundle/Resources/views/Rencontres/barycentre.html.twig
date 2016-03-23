@@ -383,7 +383,7 @@
 
                                                     <form name="submitParams" action="{{ path('ffbb_rencontres_previsualisation_export')}}" method="post">
                                                         <input type="hidden" value="{{ idResultat }}" name="idResultat">
-                                                        <input type="hidden" value="optimal" name="typeScenario" >
+                                                        <input type="hidden" value="optimalSansContrainte" name="typeScenario" >
                                                         <input type="hidden" value="barycentre" name="typeRencontre" >
 
                                                         <select onchange="this.form.submit()"  class="btn btn-default-rencontre  pull-right" name="formatExport" >
