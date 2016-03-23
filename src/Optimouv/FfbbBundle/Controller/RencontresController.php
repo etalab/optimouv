@@ -134,9 +134,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
              $nbrParticipantsTotal = $infoPdf["nbrParticipantsTotal"];
              $villeDepart = $infoPdf["villeDepart"];
              $participants = $infoPdf["participants"];
-             $participantsNoms = $infoPdf["participantsNoms"];
+             $coordonneesVille = $infoPdf["coordonneesVille"];
+             $coordPointDepart = $infoPdf["coordPointDepart"];
 
-//             error_log("\n participants: ".print_r($participants , true), 3, "error_log_optimouv.txt");
+//             error_log("\n coordonneesVille: ".print_r($coordonneesVille , true), 3, "error_log_optimouv.txt");
 //             exit();
 
              return $this->render('FfbbBundle:Rencontres:previsualisationPdf.html.twig', array(
@@ -152,7 +153,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
                  'nbrParticipantsTotal' => $nbrParticipantsTotal,
                  'villeDepart' => $villeDepart,
                  'participants' => $participants,
-                 'participantsNoms' => $participantsNoms,
+                 'coordonneesVille' => $coordonneesVille,
+                 'coordPointDepart' => $coordPointDepart,
              ));
                  
 
@@ -190,7 +192,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $nbrParticipantsTotal = $infoPdf["nbrParticipantsTotal"];
          $villeDepart = $infoPdf["villeDepart"];
          $participants = $infoPdf["participants"];
-         $participantsNoms = $infoPdf["participantsNoms"];
+         $coordonneesVille = $infoPdf["coordonneesVille"];
+         $coordPointDepart = $infoPdf["coordPointDepart"];
 
          $html = $this->renderView('FfbbBundle:Rencontres:exportPdf.html.twig', array(
              'idResultat' => $idResultat,
@@ -205,7 +208,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
              'nbrParticipantsTotal' => $nbrParticipantsTotal,
              'villeDepart' => $villeDepart,
              'participants' => $participants,
-             'participantsNoms' => $participantsNoms,
+             'coordonneesVille' => $coordonneesVille,
+             'coordPointDepart' => $coordPointDepart,
+
          ));
          
 
@@ -273,14 +278,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
          $villeDepart = $detailsCalcul[0];
          $distanceMin = $detailsCalcul[3];
+         $coordonneesVille = $detailsCalcul[5];
          $distanceTotale = $detailsCalcul[10];
          $nbrParticipantsTotal = $detailsCalcul["nbrParticipantsTotal"];
-        
-         $participantsNoms = [];
-         
+
+         $coordPointDepart = $detailsCalcul[2]."%2C".$detailsCalcul[1];
+
          foreach($detailsCalcul[6] as $key => $value ){
              $arrayTmp = array('ville' => $value, 'distance' => $detailsCalcul[7][$key], 'duree' => $detailsCalcul[8][$key], 'nbrParticipants' => $detailsCalcul[9][$key]);
-             array_push($participantsNoms, substr($value, 8));
              $arrayTmp["villeNom"] = substr($value, 8);
              $participants[] = $arrayTmp;
          }
@@ -288,9 +293,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          # trier le tableau basé sur le nom de ville
          $this->sksort($participants, "villeNom", true);
 
-//         error_log("\n participants: ".print_r($participants , true), 3, "error_log_optimouv.txt");
+
+         # convertir les coordonnées villes en chaine de caractères
+         $coordonneesVille = implode("%2C", $coordonneesVille);
+
+//         error_log("\n coordPointDepart: ".print_r($coordPointDepart , true), 3, "error_log_optimouv.txt");
 //         exit();
-         
+
 
 
 
@@ -308,7 +317,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $retour["nbrParticipantsTotal"] = $nbrParticipantsTotal;
          $retour["villeDepart"] = $villeDepart;
          $retour["participants"] = $participants;
-         $retour["participantsNoms"] = $participantsNoms;
+         $retour["coordonneesVille"] = $coordonneesVille;
+         $retour["coordPointDepart"] = $coordPointDepart;
 
          return $retour;
      }

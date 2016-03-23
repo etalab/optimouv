@@ -12,18 +12,6 @@
 
 
 
-{#<!-- declaration de variables -->#}
-{#<!-- dureeTotale -->#}
-{#{% set dureeTotale = scenarioResultats.estimationGenerale.dureeTotale %}#}
-{#<!-- estimationDetails -->#}
-{#{% set estimationDetails = scenarioResultats.estimationDetails %}#}
-{#<!-- coordPoules -->#}
-{#{% set coordPoules = scenarioResultats.poulesCoords %}#}
-
-
-
-
-
 
 <br><br>
 
@@ -64,21 +52,12 @@
 {#<h4>Contraintes : {{ contrainte }} </h4>#}
 
 
-{#{% set couleur = ['080830', 'd00c05', 'f1c62a', '0d5c35', 'd400ff', '5eb6dd', '8fcf3c', 'ff5900', 'ff73bf', '52251c', '0a1574', 'ff9300', '6b1a6a', '41ab7b','c2314e', '444459', 'b99654', 'a44906', '023548', 'b2b2b2', '616600', '790000', '147376', 'd4cd4a', '95b37c', '006d80' ] %}#}
-{#{% for key,coordPoule in coordPoules %}#}
-    {#{% set coordEq ="" %}#}
-    {#{% for coordonneeVille in coordPoule %}#}
-        {#{% set  x = coordonneeVille[0] %}#}
-        {#{% set y =  coordonneeVille[1] %}#}
-        {#{% set xy = x~"%2C"~y %}#}
-        {#{% set coordEq = coordEq~xy~"%2C" %}#}
 
+{% set couleur = ['4166f5', 'a4c639' ] %}
 
-    {#{% endfor %}#}
-    {#{% set coordEq = coordEq[:-3] %}#}
-    {#{% set Marker = couleur[key] %}#}
-    {#<img src="https://image.maps.api.here.com/mia/1.6/mapview?poi={{ coordEq }}&ml=fre&poitxs=16&poifc={{ Marker }}&app_id={{ app_id }}&amp;app_code={{ app_code }}&z=6&w=400&h=200" style="margin-left: 40px">#}
-{#{% endfor %}#}
+{% set Marker = couleur[0] %}
+
+<img src="https://image.maps.api.here.com/mia/1.6/mapview?poi={{ coordonneesVille }}&ml=fre&poitxs=14&poifc={{ Marker }}&app_id={{ app_id }}&amp;app_code={{ app_code }}&z=8&w=650&h=400" style="margin-left: 40px">
 
 
 
@@ -190,8 +169,6 @@
             </tr>
             {% set dureeTotale = dureeTotale + participant.duree %}
         {% endfor %}
-
-
 
 
         <tr>
