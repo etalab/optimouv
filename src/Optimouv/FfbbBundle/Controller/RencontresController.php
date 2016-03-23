@@ -230,7 +230,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
              200,
              array(
                  'Content-Type'          => 'application/pdf',
-                 'Content-Disposition'   => 'attachment; filename="'.$nomRapport.'"',
+                 'Content-Disposition'   => 'attachment; filename="'.$nomRapport.'.pdf"',
                  'print-media-type'      => false,
                  'outline'               => true,
 
@@ -457,7 +457,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          # trier le tableau basé sur le nom de ville
          $this->sksort($participants, "villeNom", true);
 
-         
+
 
          //construire le tableau de retour
          $retour = [];

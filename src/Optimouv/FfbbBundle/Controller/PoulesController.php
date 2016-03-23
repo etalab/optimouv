@@ -1017,7 +1017,7 @@ class PoulesController extends Controller
             200,
             array(
                 'Content-Type'          => 'application/pdf',
-                'Content-Disposition'   => 'attachment; filename="'.$nomRapport.'"',
+                'Content-Disposition'   => 'attachment; filename="'.$nomRapport.'.pdf"',
                 'print-media-type'      => false,
                 'outline'               => true,
 
