@@ -128,22 +128,22 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $typeScenario = $_POST['typeScenario'];
          $typeRencontre = $_POST['typeRencontre'];
 
+         //recuperation des donnees relatives au scenario
+         $infoResultat = $this->getInfoResultat($idResultat, $typeRencontre, $typeScenario) ;
+
+         $nomRapport = $infoResultat["nomRapport"];
+         $nomUtilisateur = $infoResultat["nomUtilisateur"];
+         $nomListe = $infoResultat["nomListe"];
+         $nomGroupe = $infoResultat["nomGroupe"];
+         $distanceTotale = $infoResultat["distanceTotale"];
+         $distanceMin = $infoResultat["distanceMin"];
+         $nbrParticipantsTotal = $infoResultat["nbrParticipantsTotal"];
+         $participants = $infoResultat["participants"];
 
 
          if($formatExport == "pdf"){
 
-             //recuperation des donnees relatives au scenario
-             $infoResultat = $this->getInfoResultat($idResultat, $typeRencontre, $typeScenario) ;
-
-             $nomRapport = $infoResultat["nomRapport"];
-             $nomUtilisateur = $infoResultat["nomUtilisateur"];
-             $nomListe = $infoResultat["nomListe"];
-             $nomGroupe = $infoResultat["nomGroupe"];
-             $distanceTotale = $infoResultat["distanceTotale"];
-             $distanceMin = $infoResultat["distanceMin"];
-             $nbrParticipantsTotal = $infoResultat["nbrParticipantsTotal"];
              $villeDepart = $infoResultat["villeDepart"];
-             $participants = $infoResultat["participants"];
              $coordonneesVille = $infoResultat["coordonneesVille"];
              $coordPointDepart = $infoResultat["coordPointDepart"];
 
@@ -172,10 +172,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          elseif ($formatExport == "xml"){
 
 
-             $nomFichier = "Sample";
-
              header('Content-type: text/xml');
-             header('Content-Disposition: attachment; filename="'.$nomFichier.'.xml"');
+             header('Content-Disposition: attachment; filename="'.$nomRapport.'.xml"');
 
              $text = '<?xml version="1.0" encoding="utf-8"?>';
 
