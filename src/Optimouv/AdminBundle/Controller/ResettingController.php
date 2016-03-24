@@ -51,14 +51,14 @@ class ResettingController extends Controller
     public function updatePwdAction()
     {
 
-        print_r("toto");
-        exit;
+
         $idUser = $_POST['idUser'];
         $password = $_POST['password'];
 
         $em = $this->getDoctrine()->getManager();
         $username =  $em->getRepository('AdminBundle:User')->findOneBy($idUser)->getUsername();
-
+        print_r($username);
+        exit;
         $user = $this->container->get('fos_user.user_manager')->findUserByUsernameOrEmail($username);
 
 
