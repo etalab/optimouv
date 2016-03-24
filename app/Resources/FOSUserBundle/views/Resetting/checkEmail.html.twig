@@ -1,7 +1,29 @@
 {% extends "FOSUserBundle::layout.html.twig" %}
 
 {% block fos_user_content %}
-<p>
-{{ 'resetting.check_email'|trans({'%email%': email}, 'FOSUserBundle') }}
-</p>
-{% endblock %}
+
+
+    <br>
+    <div class="row">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="text-center">
+                            <img src="{{ asset('bundles/ffbb/accueil/img/Logo-Optimouv.jpg') }}" class="login" height="70">
+
+                            <div class="panel-body">
+
+                                <p>
+                                    {{ 'resetting.check_email'|trans({'%email%': email}, 'FOSUserBundle') }}
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock fos_user_content %}
