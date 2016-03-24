@@ -51,6 +51,8 @@ class ResettingController extends Controller
     public function updatePwdAction()
     {
 
+        print_r("toto");
+        exit;
         $idUser = $_POST['idUser'];
         $password = $_POST['password'];
 
@@ -59,8 +61,7 @@ class ResettingController extends Controller
 
         $user = $this->container->get('fos_user.user_manager')->findUserByUsernameOrEmail($username);
 
-        print_r($password);
-        exit;
+
         //encrypt password
         $factory = $this->get('security.encoder_factory');
         $encoder = $factory->getEncoder($user);
