@@ -152,7 +152,15 @@
 <h4> Détails des estimations </h4>
 
 <!-- bloc détails calcul pour poules -->
+{% if typeInclude == "export" %}
 <div>
+
+{% elseif typeInclude == "previsualisation" %}
+<div style="max-height: 400px; overflow-y: scroll;">
+
+{% endif %}
+
+
     {% set alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ] %}
 
     <table>
@@ -271,7 +279,13 @@
 <h4> Liste des rencontres </h4>
 
 <!-- bloc détails rencontres -->
-<div >
+{% if typeInclude == "export" %}
+<div>
+
+{% elseif typeInclude == "previsualisation" %}
+<div style="max-height: 400px; overflow-y: scroll;">
+
+{% endif %}
     <table>
 
         {% if typeMatch == "allerRetour" or typeMatch == "allerSimple" %}

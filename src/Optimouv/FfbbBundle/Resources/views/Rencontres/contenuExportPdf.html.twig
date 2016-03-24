@@ -127,9 +127,18 @@
 <h4> Détails des estimations </h4>
 
 {#<!-- bloc détails calcul pour poules -->#}
+
+{% if typeInclude == "export" %}
 <div>
 
-    <table>
+{% elseif typeInclude == "previsualisation" %}
+<div style="max-height: 400px; overflow-y: scroll;">
+
+{% endif %}
+
+
+
+    <table >
         <thead>
         <tr>
             <th>
