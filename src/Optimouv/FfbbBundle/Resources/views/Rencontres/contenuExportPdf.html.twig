@@ -24,16 +24,7 @@
 <h4>Utilisateur : {{ nomUtilisateur }} </h4>
 <h4>Nom de la liste : {{ nomListe }}</h4>
 <h4>Nom du groupe : {{ nomGroupe }}</h4>
-
-{% if typeRencontre == "barycentre" %}
-    <h4>  Type de rencontre : Meilleur lieu de rencontre - barycentre </h4>
-{% elseif typeRencontre == "barycentreAvecExclusion" %}
-    <h4>  Type de rencontre : Meilleur lieu de rencontre - barycentre avec exclusion </h4>
-{% elseif typeRencontre == "meilleurLieu" %}
-    <h4>  Type de rencontre : Meilleur lieu de rencontre - lieux définis </h4>
-{% elseif typeRencontre == "terrainNeutre" %}
-    <h4>  Type de rencontre : Meilleur lieu de rencontre - lieux définis avec liste de lieux </h4>
-{% endif %}
+<h4>  Type de rencontre : Meilleur lieu de rencontre - {{ nomRencontre }} </h4>
 
 
 

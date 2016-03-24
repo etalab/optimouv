@@ -128,6 +128,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $typeScenario = $_POST['typeScenario'];
          $nomScenario = $this->getNomScenario($typeScenario);
          $typeRencontre = $_POST['typeRencontre'];
+         $nomRencontre = $this->getNomRencontre($typeRencontre);
 
          //recuperation des donnees relatives au scenario
          $infoResultat = $this->getInfoResultat($idResultat, $typeRencontre, $typeScenario) ;
@@ -162,6 +163,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
                  'nomGroupe' => $nomGroupe,
                  'nomRapport' => $nomRapport,
                  'typeRencontre' => $typeRencontre,
+                 'nomRencontre' => $nomRencontre,
                  'distanceTotale' => $distanceTotale,
                  'distanceMin' => $distanceMin,
                  'nbrParticipantsTotal' => $nbrParticipantsTotal,
@@ -185,7 +187,17 @@ use Symfony\Component\HttpFoundation\JsonResponse;
              header('Content-type: text/xml');
              header('Content-Disposition: attachment; filename="'.$nomRapport.'.xml"');
 
-             $texte = $this->getTexteExportXml($nomRapport, $nomScenario);
+             $infoXML = array(
+                 "nomRapport" => $nomRapport,
+                 "nomScenario" => $nomScenario,
+                 "nomFederation" => $nomFederation,
+                 "nomDiscipline" => $nomDiscipline,
+                 "nomUtilisateur" => $nomUtilisateur,
+                 "nomGroupe" => $nomGroupe,
+                 "nomUtilisateur" => $nomUtilisateur,
+             );
+
+             $texte = $this->getTexteExportXml($infoXML);
 
 
 
@@ -211,6 +223,27 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          }
      }
      
+     private function getNomRencontre($typeRencontre){
+         $nomRencontre = "";
+
+         if($typeRencontre == "barycentre"){
+             $nomRencontre = "barycentre";
+         }
+         elseif($typeRencontre == "barycentreAvecExclusion"){
+             $nomRencontre = "barycentre avec exclusion";
+         }
+         elseif($typeRencontre == "meilleurLieu"){
+             $nomRencontre = "lieux définis";
+         }
+         elseif($typeRencontre == "terrainNeutre"){
+             $nomRencontre = "lieux définis avec liste de lieux";
+         }
+
+
+
+         return $nomRencontre;
+     }
+     
      private function getNomScenario($typeScenario){
          $nomScenario = "";
 
@@ -231,7 +264,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          return $nomScenario;
      }
 
-    private function getTexteExportXml($nomRapport, $nomScenario ){
+    private function getTexteExportXml($infoXml){
         $texte = '<?xml version="1.0" encoding="utf-8"?>';
 
         $texte .= "\n";
@@ -239,9 +272,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
         # parametres
         $texte .= "\t<params>\n";
-        $texte .= "\t\t<nom_rapport>" .$nomRapport."</nom_rapport>\n";
-        $texte .= "\t\t<nom_scenario>" .$nomScenario."</nom_scenario>\n";
-        $texte .= "\t\t<nom_scenario>" .$nomScenario."</nom_scenario>\n";
+        $texte .= "\t\t<nom_rapport>" .$infoXml["nomRapport"]."</nom_rapport>\n";
+        $texte .= "\t\t<nom_scenario>" .$infoXml["nomScenario"]."</nom_scenario>\n";
+        $texte .= "\t\t<nom_federation>" .$infoXml["nomFederation"]."</nom_federation>\n";
+        $texte .= "\t\t<nom_discipline>" .$infoXml["nomDiscipline"]."</nom_discipline>\n";
+        $texte .= "\t\t<nom_utilisateur>" .$infoXml["nomUtilisateur"]."</nom_utilisateur>\n";
 
         $texte .= "\t</params>\n";
 
@@ -272,7 +307,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $typeScenario = $_POST['typeScenario'];
          $nomScenario = $this->getNomScenario($typeScenario);
          $typeRencontre = $_POST['typeRencontre'];
-         
+         $nomRencontre = $this->getNomRencontre($typeRencontre);
+
          //recuperation des donnees relatives au scenario
          $infoResultat = $this->getInfoResultat($idResultat, $typeRencontre, $typeScenario);
 
@@ -300,6 +336,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
              'nomGroupe' => $nomGroupe,
              'nomRapport' => $nomRapport,
              'typeRencontre' => $typeRencontre,
+             'nomRencontre' => $nomRencontre,
              'distanceTotale' => $distanceTotale,
              'distanceMin' => $distanceMin,
              'nbrParticipantsTotal' => $nbrParticipantsTotal,
