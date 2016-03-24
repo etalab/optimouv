@@ -100,7 +100,22 @@ fos_user:
     db_driver: orm
     firewall_name: main
     user_class: Optimouv\AdminBundle\Entity\User
+    registration:
+            confirmation:
+                enabled: true
+                from_email:
+                    address:        serviceclients@it4pme.fr
+                    sender_name:    service clients it4pme
 
+    resetting:
+        token_ttl: 0 #Disable Single Password Request Functionality
+        email:
+            from_email:
+                address:        serviceclients@it4pme.fr
+                sender_name:    service clients it4pme
+    service:
+            mailer: fos_user.mailer.twig_swift
+    
 old_sound_rabbit_mq:
        connections:
            default:
