@@ -25,6 +25,13 @@
     <button type="submit" class="btn btn-primary  pull-right">Exporter</button>
 </form>
 
+<script>
+
+    {% if boolTropVilles %}
+        alert("Pour des raisons techniques, seules les 100 premiers participants sont affichés sur l'export.");
+    {% endif %}
+
+</script>
 
 </body>
 </html>

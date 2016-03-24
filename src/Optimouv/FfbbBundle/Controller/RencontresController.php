@@ -139,6 +139,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $distanceMin = $infoResultat["distanceMin"];
          $nbrParticipantsTotal = $infoResultat["nbrParticipantsTotal"];
          $participants = $infoResultat["participants"];
+         $boolTropVilles = $infoResultat["boolTropVilles"];
 
 
          if($formatExport == "pdf"){
@@ -163,6 +164,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
                  'participants' => $participants,
                  'coordonneesVille' => $coordonneesVille,
                  'coordPointDepart' => $coordPointDepart,
+                 'boolTropVilles' => $boolTropVilles,
              ));
                  
 
@@ -467,9 +469,15 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          }
 
 
+         # controler le nombre de villes
+         # s'il y a plus de 100 villes, on prend juste 99 villes
+         $boolTropVilles = 0; # indiquer si on dépasse 100 villes
+        if(count($coordonneesVille) >= 100){
+            $coordonneesVille = array_slice($coordonneesVille, 0, 99);
+            $boolTropVilles = 1;
+        }
 
-
-//           error_log("\n retourOp: ".print_r($retourOp , true), 3, "error_log_optimouv.txt");
+//           error_log("\n coordonneesVille: ".print_r($coordonneesVille , true), 3, "error_log_optimouv.txt");
 //             exit();
 
 
@@ -495,6 +503,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $retour["participants"] = $participants;
          $retour["coordonneesVille"] = $coordonneesVille;
          $retour["coordPointDepart"] = $coordPointDepart;
+         $retour["boolTropVilles"] = $boolTropVilles;
 
          return $retour;
      }
