@@ -54,23 +54,17 @@ class ResettingController extends Controller
         $idUser = $_POST['idUser'];
         $password = $_POST['password'];
 
-        echo password_hash("admin", PASSWORD_DEFAULT)."\n";
-
-        exit;
+        $password = password_hash($password, PASSWORD_DEFAULT)."\n";
+        
         $em = $this->getDoctrine()->getManager();
         $connection = $em->getConnection();
-
-
+        
         $update = $connection->prepare("UPDATE fos_user SET password = :password WHERE id = :id");
         $update->bindParam(':password', $password);
         $update->bindParam(':id', $idUser);
         $update->execute();
-
-        print_r($idUser);
-        print_r($password);
-        exit;
-
-//        return $this->render('AdminBundle:resetPwd:updatePassword.html.twig', array('idUser' => $idUser));
+        
+        return $this->redirect($this->generateUrl('fos_user_security_login'));
 
     }
 }
