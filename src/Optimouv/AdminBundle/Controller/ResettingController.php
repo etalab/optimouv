@@ -64,6 +64,8 @@ class ResettingController extends Controller
         $encoder = $factory->getEncoder($user);
         $password = $encoder->encodePassword($password, $user->getSalt());
         
+        print_r($password);
+        exit;
         $connection = $em->getConnection();
 
         $update = $connection->prepare("UPDATE fos_user SET password = :password WHERE id = :id");
