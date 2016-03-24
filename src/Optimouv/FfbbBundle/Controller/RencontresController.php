@@ -121,7 +121,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          ));
      }
 
-//     public function previsualisationExportAction()
      public function pretraitementExportAction()
      {
          $formatExport = $_POST['formatExport'];
@@ -134,7 +133,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          if($formatExport == "pdf"){
 
              //recuperation des donnees relatives au scenario
-             $infoPdf = $this->getInfoPdfAction($idResultat, $typeRencontre, $typeScenario) ;
+             $infoPdf = $this->getInfoResultat($idResultat, $typeRencontre, $typeScenario) ;
 
              $nomRapport = $infoPdf["nomRapport"];
              $nomUtilisateur = $infoPdf["nomUtilisateur"];
@@ -148,8 +147,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
              $coordonneesVille = $infoPdf["coordonneesVille"];
              $coordPointDepart = $infoPdf["coordPointDepart"];
 
-//             error_log("\n coordonneesVille: ".print_r($coordonneesVille , true), 3, "error_log_optimouv.txt");
-//             exit();
 
              return $this->render('FfbbBundle:Rencontres:previsualisationPdf.html.twig', array(
                  'idResultat' => $idResultat,
@@ -173,8 +170,31 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
          }
          elseif ($formatExport == "xml"){
-             return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
+
+
+             $nomFichier = "Sample";
+
+             header('Content-type: text/xml');
+             header('Content-Disposition: attachment; filename="'.$nomFichier.'.xml"');
+
+             $text = '<?xml version="1.0" encoding="utf-8"?>';
+
+
+
+             echo $text;
+
+             error_log("\n text: ".print_r($text , true), 3, "error_log_optimouv.txt");
              exit();
+
+             
+//             return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
+//
+//
+//
+//
+//
+//
+//             exit();
          }
          elseif ($formatExport == "csv"){
              return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
@@ -192,7 +212,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $typeRencontre = $_POST['typeRencontre'];
          
          //recuperation des donnees relatives au scenario
-         $infoPdf = $this->getInfoPdfAction($idResultat, $typeRencontre, $typeScenario);
+         $infoPdf = $this->getInfoResultat($idResultat, $typeRencontre, $typeScenario);
 
          $nomRapport = $infoPdf["nomRapport"];
          $nomUtilisateur = $infoPdf["nomUtilisateur"];
@@ -240,7 +260,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
      }
 
      //    function qui ramene toutes les infos necessaires à la view
-     public function getInfoPdfAction($idResultat , $typeRencontre, $typeScenario)
+     private function getInfoResultat($idResultat , $typeRencontre, $typeScenario)
      {
 
          $em = $this->getDoctrine()->getManager();
