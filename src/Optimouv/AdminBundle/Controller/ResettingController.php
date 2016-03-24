@@ -53,18 +53,38 @@ class ResettingController extends Controller
 
         $idUser = $_POST['idUser'];
         $password = $_POST['password'];
-
-        $password = password_hash($password, PASSWORD_DEFAULT)."\n";
         
         $em = $this->getDoctrine()->getManager();
-        $connection = $em->getConnection();
-        
-        $update = $connection->prepare("UPDATE fos_user SET password = :password WHERE id = :id");
-        $update->bindParam(':password', $password);
-        $update->bindParam(':id', $idUser);
-        $update->execute();
-        
-        return $this->redirect($this->generateUrl('fos_user_security_login'));
+        $username =  $em->getRepository('AdminBundle:User')->findOneBy($idUser)->getUsername();
+
+        $user = $this->container->get('fos_user.user_manager')->findUserByUsernameOrEmail($username);
+
+        $form = $this->container->get('fos_user.change_password.form');
+        $formHandler = $this->container->get('fos_user.change_password.form.handler');
+
+        $process = $formHandler->process($user);
+        if ($process) {
+            $this->setFlash('fos_user_success', 'change_password.flash.success');
+
+            return new RedirectResponse($this->getRedirectionUrl($user));
+        }
+
+        return $this->container->get('templating')->renderResponse(
+            'FOSUserBundle:ChangePassword:changePassword.html.'.$this->container->getParameter('fos_user.template.engine'),
+            array('form' => $form->createView())
+        );
+//
+//        $password = password_hash($password, PASSWORD_DEFAULT)."\n";
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $connection = $em->getConnection();
+//
+//        $update = $connection->prepare("UPDATE fos_user SET password = :password WHERE id = :id");
+//        $update->bindParam(':password', $password);
+//        $update->bindParam(':id', $idUser);
+//        $update->execute();
+//
+//        return $this->redirect($this->generateUrl('fos_user_security_login'));
 
     }
 }
