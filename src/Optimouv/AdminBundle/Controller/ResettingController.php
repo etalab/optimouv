@@ -54,9 +54,16 @@ class ResettingController extends Controller
         $idUser = $_POST['idUser'];
         $password = $_POST['password'];
 
-        $password = password_hash($password, PASSWORD_DEFAULT)."\n";
-
         $em = $this->getDoctrine()->getManager();
+        $username =  $em->getRepository('AdminBundle:User')->findOneBy($idUser)->getUsername();
+
+        $user = $this->container->get('fos_user.user_manager')->findUserByUsernameOrEmail($username);
+
+        //encrypt password
+        $factory = $this->get('security.encoder_factory');
+        $encoder = $factory->getEncoder($user);
+        $password = $encoder->encodePassword($password, $user->getSalt());
+        
         $connection = $em->getConnection();
 
         $update = $connection->prepare("UPDATE fos_user SET password = :password WHERE id = :id");
