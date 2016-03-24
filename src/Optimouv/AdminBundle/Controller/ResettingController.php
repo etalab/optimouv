@@ -53,6 +53,19 @@ class ResettingController extends Controller
 
         $idUser = $_POST['idUser'];
         $password = $_POST['password'];
+
+        echo password_hash("admin", PASSWORD_DEFAULT)."\n";
+
+        exit;
+        $em = $this->getDoctrine()->getManager();
+        $connection = $em->getConnection();
+
+
+        $update = $connection->prepare("UPDATE fos_user SET password = :password WHERE id = :id");
+        $update->bindParam(':password', $password);
+        $update->bindParam(':id', $idUser);
+        $update->execute();
+
         print_r($idUser);
         print_r($password);
         exit;
