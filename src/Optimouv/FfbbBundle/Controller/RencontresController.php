@@ -147,9 +147,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $nomFederation = "FFBB"; # FIXME
          $nomDiscipline ="Basket"; # FIXME
 
+
+         $villeDepart = $infoResultat["villeDepart"];
+
          if($formatExport == "pdf"){
 
-             $villeDepart = $infoResultat["villeDepart"];
              $coordonneesVille = $infoResultat["coordonneesVille"];
              $coordPointDepart = $infoResultat["coordPointDepart"];
 
@@ -194,13 +196,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
                  "nomDiscipline" => $nomDiscipline,
                  "nomUtilisateur" => $nomUtilisateur,
                  "nomGroupe" => $nomGroupe,
-                 "nomUtilisateur" => $nomUtilisateur,
+                 "nomRencontre" => $nomRencontre,
+                 'villeDepart' => $villeDepart,
+                 'distanceMin' => $distanceMin,
+                 'distanceTotale' => $distanceTotale,
              );
 
              $texte = $this->getTexteExportXml($infoXML);
-
-
-
 
              echo $texte;
 
@@ -208,14 +210,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
              exit();
 
              
-//             return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
-//
-//
-//
-//
-//
-//
-//             exit();
          }
          elseif ($formatExport == "csv"){
              return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
@@ -238,9 +232,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          elseif($typeRencontre == "terrainNeutre"){
              $nomRencontre = "lieux définis avec liste de lieux";
          }
-
-
-
+         
          return $nomRencontre;
      }
      
@@ -277,12 +269,26 @@ use Symfony\Component\HttpFoundation\JsonResponse;
         $texte .= "\t\t<nom_federation>" .$infoXml["nomFederation"]."</nom_federation>\n";
         $texte .= "\t\t<nom_discipline>" .$infoXml["nomDiscipline"]."</nom_discipline>\n";
         $texte .= "\t\t<nom_utilisateur>" .$infoXml["nomUtilisateur"]."</nom_utilisateur>\n";
-
+        $texte .= "\t\t<nom_groupe>" .$infoXml["nomGroupe"]."</nom_groupe>\n";
+        $texte .= "\t\t<nom_rencontre>" .$infoXml["nomRencontre"]."</nom_rencontre>\n";
         $texte .= "\t</params>\n";
 
 
         # estimation générale
+        $villeDepart = explode("|", $infoXml["villeDepart"]) ;
+        $nomVilleDepart = trim($villeDepart[1]);
+        $codePostalVilleDepart = trim($villeDepart[0]);
+
         $texte .= "\t<estimation_generale>\n";
+        $texte .= "\t\t<meilleu_lieu_rencontre_nom>" .$nomVilleDepart."</meilleu_lieu_rencontre_nom>\n";
+        $texte .= "\t\t<meilleu_lieu_rencontre_code_postal>" .$codePostalVilleDepart."</meilleu_lieu_rencontre_code_postal>\n";
+        $texte .= "\t\t<distance_totale>" .$infoXml["distanceMin"]." km</distance_totale>\n";
+        $texte .= "\t\t<cout_voiture>" .round($infoXml["distanceTotale"]*0.8)." €</cout_voiture>\n";
+        $texte .= "\t\t<cout_covoiturage>" .round($infoXml["distanceTotale"]/4*0.8)." €</cout_covoiturage>\n";
+        $texte .= "\t\t<cout_minibus>" .round($infoXml["distanceTotale"]/9*1.31)." €</cout_minibus>\n";
+        $texte .= "\t\t<co2_emission_voiture>" .round($infoXml["distanceTotale"]*0.157)." KG</co2_emission_voiture>\n";
+        $texte .= "\t\t<co2_emission_covoiturage>" .round($infoXml["distanceTotale"]/4*0.157)." KG</co2_emission_covoiturage>\n";
+        $texte .= "\t\t<co2_emission_minibus>" .round($infoXml["distanceTotale"]/9*0.157)." KG</co2_emission_minibus>\n";
 
         $texte .= "\t</estimation_generale>\n";
 
