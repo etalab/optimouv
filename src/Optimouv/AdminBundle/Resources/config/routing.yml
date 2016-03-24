@@ -5,3 +5,7 @@ admin_reset_password:
 admin_update_password:
     path:     /update-password/{idUser}
     defaults: { _controller: AdminBundle:Resetting:update }
+
+admin_update_password_user:
+    path:     /update-password-user/
+    defaults: { _controller: AdminBundle:Resetting:updatePwd }

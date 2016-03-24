@@ -37,7 +37,7 @@ class ResettingController extends Controller
             ->setBody($body, 'text/html')
         ;
         $this->get('mailer')->send($message);
-        
+
         return $this->redirect($this->generateUrl('ffbb_accueil'));
 
     }
@@ -46,6 +46,18 @@ class ResettingController extends Controller
     {
 
         return $this->render('AdminBundle:resetPwd:updatePassword.html.twig', array('idUser' => $idUser));
+
+    }
+    public function updatePwdAction()
+    {
+
+        $idUser = $_POST['idUser'];
+        $password = $_POST['password'];
+        print_r($idUser);
+        print_r($password);
+        exit;
+
+//        return $this->render('AdminBundle:resetPwd:updatePassword.html.twig', array('idUser' => $idUser));
 
     }
 }
