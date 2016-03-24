@@ -126,6 +126,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $formatExport = $_POST['formatExport'];
          $idResultat = $_POST['idResultat'];
          $typeScenario = $_POST['typeScenario'];
+         $nomScenario = $this->getNomScenario($typeScenario);
          $typeRencontre = $_POST['typeRencontre'];
 
          //recuperation des donnees relatives au scenario
@@ -142,6 +143,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $boolTropVilles = $infoResultat["boolTropVilles"];
 
 
+         $nomFederation = "FFBB"; # FIXME
+         $nomDiscipline ="Basket"; # FIXME
+
          if($formatExport == "pdf"){
 
              $villeDepart = $infoResultat["villeDepart"];
@@ -152,6 +156,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
              return $this->render('FfbbBundle:Rencontres:previsualisationPdf.html.twig', array(
                  'idResultat' => $idResultat,
                  'typeScenario' => $typeScenario,
+                 'nomScenario' => $nomScenario,
                  'nomUtilisateur' => $nomUtilisateur,
                  'nomListe' => $nomListe,
                  'nomGroupe' => $nomGroupe,
@@ -165,6 +170,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
                  'coordonneesVille' => $coordonneesVille,
                  'coordPointDepart' => $coordPointDepart,
                  'boolTropVilles' => $boolTropVilles,
+                 'nomFederation' => $nomFederation,
+                 'nomDiscipline' => $nomDiscipline,
+
              ));
                  
 
@@ -177,13 +185,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
              header('Content-type: text/xml');
              header('Content-Disposition: attachment; filename="'.$nomRapport.'.xml"');
 
-             $text = '<?xml version="1.0" encoding="utf-8"?>';
+             $texte = $this->getTexteExportXml($nomRapport, $nomScenario);
 
 
 
-             echo $text;
 
-             error_log("\n text: ".print_r($text , true), 3, "error_log_optimouv.txt");
+             echo $texte;
+
+             error_log("\n text: ".print_r($texte , true), 3, "error_log_optimouv.txt");
              exit();
 
              
@@ -201,14 +210,67 @@ use Symfony\Component\HttpFoundation\JsonResponse;
              exit();
          }
      }
+     
+     private function getNomScenario($typeScenario){
+         $nomScenario = "";
 
 
+         if($typeScenario == "optimalSansContrainte"){
+             $nomScenario = "scénario optimal sans contrainte";
+         }
+         elseif($typeScenario == "optimalAvecContrainte"){
+             $nomScenario = "scénario optimal avec contrainte";
+         }
+         elseif($typeScenario == "equitable"){
+             $nomScenario = "scénario équitable";
+         }
+         elseif($typeScenario == "optimal"){
+             $nomScenario = "scénario optimal";
+         }
+
+         return $nomScenario;
+     }
+
+    private function getTexteExportXml($nomRapport, $nomScenario ){
+        $texte = '<?xml version="1.0" encoding="utf-8"?>';
+
+        $texte .= "\n";
+        $texte .= "<resultat>\n";
+
+        # parametres
+        $texte .= "\t<params>\n";
+        $texte .= "\t\t<nom_rapport>" .$nomRapport."</nom_rapport>\n";
+        $texte .= "\t\t<nom_scenario>" .$nomScenario."</nom_scenario>\n";
+        $texte .= "\t\t<nom_scenario>" .$nomScenario."</nom_scenario>\n";
+
+        $texte .= "\t</params>\n";
+
+
+        # estimation générale
+        $texte .= "\t<estimation_generale>\n";
+
+        $texte .= "\t</estimation_generale>\n";
+
+
+        # estimation détaillée
+        $texte .= "\t<estimation_detaille>\n";
+
+        $texte .= "\t</estimation_detaille>\n";
+
+
+
+        $texte .= "</resultat>";
+
+        return $texte;
+    }
+     
 
      public function exportScenarioPdfAction()
      {
 
          $idResultat = $_POST['idResultat'];
          $typeScenario = $_POST['typeScenario'];
+         $nomScenario = $this->getNomScenario($typeScenario);
          $typeRencontre = $_POST['typeRencontre'];
          
          //recuperation des donnees relatives au scenario
@@ -226,9 +288,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $coordonneesVille = $infoResultat["coordonneesVille"];
          $coordPointDepart = $infoResultat["coordPointDepart"];
 
+         $nomFederation = "FFBB"; # FIXME
+         $nomDiscipline ="Basket"; # FIXME
+         
          $html = $this->renderView('FfbbBundle:Rencontres:exportPdf.html.twig', array(
              'idResultat' => $idResultat,
              'typeScenario' => $typeScenario,
+             'nomScenario' => $nomScenario,
              'nomUtilisateur' => $nomUtilisateur,
              'nomListe' => $nomListe,
              'nomGroupe' => $nomGroupe,
@@ -241,6 +307,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
              'participants' => $participants,
              'coordonneesVille' => $coordonneesVille,
              'coordPointDepart' => $coordPointDepart,
+             'nomFederation' => $nomFederation,
+             'nomDiscipline' => $nomDiscipline,
 
          ));
          
@@ -470,7 +538,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 
          # controler le nombre de villes
-         # s'il y a plus de 100 villes, on prend juste 99 villes
+         # s'il y a plus de 100 villes (la limite HERE ), on prend juste 99 villes
          $boolTropVilles = 0; # indiquer si on dépasse 100 villes
         if(count($coordonneesVille) >= 100){
             $coordonneesVille = array_slice($coordonneesVille, 0, 99);

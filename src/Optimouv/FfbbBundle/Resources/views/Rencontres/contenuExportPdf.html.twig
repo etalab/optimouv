@@ -15,21 +15,12 @@
 
 <br><br>
 
-<h3> Export de votre recherche "{{ nomRapport }}" -
+<h3> Export de votre recherche "{{ nomRapport }}" - {{ nomScenario  }}
 
-    {% if typeScenario == "optimalSansContrainte" %}
-        scénario optimal sans contrainte
-    {% elseif typeScenario == "optimalAvecContrainte" %}
-        scénario optimal avec contrainte
-    {% elseif typeScenario == "equitable" %}
-        scénario équitable
-    {% elseif typeScenario == "optimal" %}
-        scénario optimal
-    {% endif %}
 
 </h3>
-<h4>Fédération : UFOLEP</h4>
-<h4> Discipline : Rugby</h4>
+<h4>Fédération : {{ nomFederation }}</h4>
+<h4> Discipline : {{ nomDiscipline }} </h4>
 <h4>Utilisateur : {{ nomUtilisateur }} </h4>
 <h4>Nom de la liste : {{ nomListe }}</h4>
 <h4>Nom du groupe : {{ nomGroupe }}</h4>
