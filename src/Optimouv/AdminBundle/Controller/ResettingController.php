@@ -63,8 +63,6 @@ class ResettingController extends Controller
         $factory = $this->get('security.encoder_factory');
         $encoder = $factory->getEncoder($user);
         $password = $encoder->encodePassword($password, $user->getSalt());
-        print_r($password);
-        exit;
 
         $connection = $em->getConnection();
 
