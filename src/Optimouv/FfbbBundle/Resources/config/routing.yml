@@ -247,17 +247,23 @@ ffbb_sendMail:
     path:    /sendMail
     defaults: { _controller: FfbbBundle:Default:sendMail }
 
-ffbb_rencontres_previsualisation_export:
-    path:    /admin/rencontre/export/previsualisation-export/
-    defaults: { _controller: FfbbBundle:Rencontres:previsualisationExport}
+#ffbb_rencontres_previsualisation_export:
+#    path:    /admin/rencontre/export/previsualisation-export/
+#    defaults: { _controller: FfbbBundle:Rencontres:previsualisationExport}
+ffbb_rencontres_pretraitement_export:
+    path:    /admin/rencontre/export/pretraitement-export/
+    defaults: { _controller: FfbbBundle:Rencontres:pretraitementExport}
 
 ffbb_rencontres_export_pdf:
     path:    /admin/rencontre/export/sauvegarde/pdf/
     defaults: { _controller: FfbbBundle:Rencontres:exportScenarioPdf }
 
-ffbb_poules_previsualisation_export:
-    path:    /admin/poules/export/previsualisation-export/
-    defaults: { _controller: FfbbBundle:Poules:previsualisationExport}
+#ffbb_poules_previsualisation_export:
+#    path:    /admin/poules/export/previsualisation-export/
+#    defaults: { _controller: FfbbBundle:Poules:previsualisationExport}
+ffbb_poules_pretraitement_export:
+    path:    /admin/poules/export/pretraitement-export/
+    defaults: { _controller: FfbbBundle:Poules:pretraitementExport}
 
 ffbb_poules_export_pdf:
     path:    /admin/poules/export/sauvegarde/pdf/
