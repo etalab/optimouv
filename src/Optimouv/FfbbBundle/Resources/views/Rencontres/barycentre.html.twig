@@ -386,7 +386,8 @@
                                                         <input type="hidden" value="optimalSansContrainte" name="typeScenario" >
                                                         <input type="hidden" value="barycentre" name="typeRencontre" >
 
-                                                        <select onchange="this.form.submit()"  class="btn btn-default-rencontre  pull-right" name="formatExport" >
+                                                        <select onchange="this.form.submit()"  class="btn btn-default-rencontre  pull-right" name="formatExport" id="selectExport" >
+                                                        {#<select   class="btn btn-default-rencontre  pull-right" name="formatExport" >#}
                                                             <option value="" disabled="disabled" selected="selected">Choisir un format d'export</option>
                                                             <option value="pdf">Exporter en PDF</option>
                                                             <option value="xml">Exporter en XML</option>
@@ -425,14 +426,17 @@
 
 
             function showBtn(){
-
-
                 document.getElementById('bntLancerCalcul').style.visibility="visible";
             }
 
             function msgLancement(){
                 alert("Le calcul est en cours. Vous recevrez un mail pour vous avertir de la mise à disposition de vos résultats de calculs");
             }
+            // reset select option formatExport
+            $('select[name="formatExport"]').change(function() {
+                $('select[name="formatExport"]').prop('selectedIndex',0);
+            });
+
 
         </script>
     {% endblock %}
