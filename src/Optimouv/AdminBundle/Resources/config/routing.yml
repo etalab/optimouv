@@ -1,3 +1,7 @@
-admin_homepage:
-    path:     /hello/{name}
-    defaults: { _controller: AdminBundle:Default:index }
+admin_reset_password:
+    path:     /reset-password
+    defaults: { _controller: AdminBundle:Resetting:index }
+
+admin_update_password:
+    path:     /update-password/{idUser}
+    defaults: { _controller: AdminBundle:Resetting:update }
