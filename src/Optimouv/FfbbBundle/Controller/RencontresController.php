@@ -133,19 +133,19 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          if($formatExport == "pdf"){
 
              //recuperation des donnees relatives au scenario
-             $infoPdf = $this->getInfoResultat($idResultat, $typeRencontre, $typeScenario) ;
+             $infoResultat = $this->getInfoResultat($idResultat, $typeRencontre, $typeScenario) ;
 
-             $nomRapport = $infoPdf["nomRapport"];
-             $nomUtilisateur = $infoPdf["nomUtilisateur"];
-             $nomListe = $infoPdf["nomListe"];
-             $nomGroupe = $infoPdf["nomGroupe"];
-             $distanceTotale = $infoPdf["distanceTotale"];
-             $distanceMin = $infoPdf["distanceMin"];
-             $nbrParticipantsTotal = $infoPdf["nbrParticipantsTotal"];
-             $villeDepart = $infoPdf["villeDepart"];
-             $participants = $infoPdf["participants"];
-             $coordonneesVille = $infoPdf["coordonneesVille"];
-             $coordPointDepart = $infoPdf["coordPointDepart"];
+             $nomRapport = $infoResultat["nomRapport"];
+             $nomUtilisateur = $infoResultat["nomUtilisateur"];
+             $nomListe = $infoResultat["nomListe"];
+             $nomGroupe = $infoResultat["nomGroupe"];
+             $distanceTotale = $infoResultat["distanceTotale"];
+             $distanceMin = $infoResultat["distanceMin"];
+             $nbrParticipantsTotal = $infoResultat["nbrParticipantsTotal"];
+             $villeDepart = $infoResultat["villeDepart"];
+             $participants = $infoResultat["participants"];
+             $coordonneesVille = $infoResultat["coordonneesVille"];
+             $coordPointDepart = $infoResultat["coordPointDepart"];
 
 
              return $this->render('FfbbBundle:Rencontres:previsualisationPdf.html.twig', array(
@@ -212,19 +212,19 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $typeRencontre = $_POST['typeRencontre'];
          
          //recuperation des donnees relatives au scenario
-         $infoPdf = $this->getInfoResultat($idResultat, $typeRencontre, $typeScenario);
+         $infoResultat = $this->getInfoResultat($idResultat, $typeRencontre, $typeScenario);
 
-         $nomRapport = $infoPdf["nomRapport"];
-         $nomUtilisateur = $infoPdf["nomUtilisateur"];
-         $nomListe = $infoPdf["nomListe"];
-         $nomGroupe = $infoPdf["nomGroupe"];
-         $distanceTotale = $infoPdf["distanceTotale"];
-         $distanceMin = $infoPdf["distanceMin"];
-         $nbrParticipantsTotal = $infoPdf["nbrParticipantsTotal"];
-         $villeDepart = $infoPdf["villeDepart"];
-         $participants = $infoPdf["participants"];
-         $coordonneesVille = $infoPdf["coordonneesVille"];
-         $coordPointDepart = $infoPdf["coordPointDepart"];
+         $nomRapport = $infoResultat["nomRapport"];
+         $nomUtilisateur = $infoResultat["nomUtilisateur"];
+         $nomListe = $infoResultat["nomListe"];
+         $nomGroupe = $infoResultat["nomGroupe"];
+         $distanceTotale = $infoResultat["distanceTotale"];
+         $distanceMin = $infoResultat["distanceMin"];
+         $nbrParticipantsTotal = $infoResultat["nbrParticipantsTotal"];
+         $villeDepart = $infoResultat["villeDepart"];
+         $participants = $infoResultat["participants"];
+         $coordonneesVille = $infoResultat["coordonneesVille"];
+         $coordPointDepart = $infoResultat["coordPointDepart"];
 
          $html = $this->renderView('FfbbBundle:Rencontres:exportPdf.html.twig', array(
              'idResultat' => $idResultat,
