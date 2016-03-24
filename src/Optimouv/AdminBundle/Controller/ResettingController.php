@@ -59,13 +59,13 @@ class ResettingController extends Controller
 
         $user = $this->container->get('fos_user.user_manager')->findUserByUsernameOrEmail($username);
 
+        print_r($password);
+        exit;
         //encrypt password
         $factory = $this->get('security.encoder_factory');
         $encoder = $factory->getEncoder($user);
         $password = $encoder->encodePassword($password, $user->getSalt());
-        
-        print_r($password);
-        exit;
+
         $connection = $em->getConnection();
 
         $update = $connection->prepare("UPDATE fos_user SET password = :password WHERE id = :id");
