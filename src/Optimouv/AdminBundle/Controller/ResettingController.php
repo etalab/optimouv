@@ -57,10 +57,9 @@ class ResettingController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $username =  $em->getRepository('AdminBundle:User')->findOneById($idUser)->getUsername();
-        print_r($username);
-        exit;
         $user = $this->container->get('fos_user.user_manager')->findUserByUsernameOrEmail($username);
-
+        print_r($user);
+        exit;
 
         //encrypt password
         $factory = $this->get('security.encoder_factory');
