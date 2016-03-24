@@ -39,9 +39,9 @@
 {% elseif typeRencontre == "barycentreAvecExclusion" %}
     <h4>  Type de rencontre : Meilleur lieu de rencontre - barycentre avec exclusion </h4>
 {% elseif typeRencontre == "meilleurLieu" %}
-    <h4>  Type de rencontre : Meilleur lieu de rencontre - meilleur lieu </h4>
+    <h4>  Type de rencontre : Meilleur lieu de rencontre - lieux définis </h4>
 {% elseif typeRencontre == "terrainNeutre" %}
-    <h4>  Type de rencontre : Meilleur lieu de rencontre - terrain neutre </h4>
+    <h4>  Type de rencontre : Meilleur lieu de rencontre - lieux définis avec liste de lieux </h4>
 {% endif %}
 
 
@@ -127,9 +127,18 @@
 <h4> Détails des estimations </h4>
 
 {#<!-- bloc détails calcul pour poules -->#}
+
+{% if typeInclude == "export" %}
 <div>
 
-    <table>
+{% elseif typeInclude == "previsualisation" %}
+<div style="max-height: 400px; overflow-y: scroll;">
+
+{% endif %}
+
+
+
+    <table >
         <thead>
         <tr>
             <th>

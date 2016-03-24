@@ -121,7 +121,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          ));
      }
 
-//     public function previsualisationExportAction()
      public function pretraitementExportAction()
      {
          $formatExport = $_POST['formatExport'];
@@ -129,27 +128,26 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $typeScenario = $_POST['typeScenario'];
          $typeRencontre = $_POST['typeRencontre'];
 
+         //recuperation des donnees relatives au scenario
+         $infoResultat = $this->getInfoResultat($idResultat, $typeRencontre, $typeScenario) ;
+
+         $nomRapport = $infoResultat["nomRapport"];
+         $nomUtilisateur = $infoResultat["nomUtilisateur"];
+         $nomListe = $infoResultat["nomListe"];
+         $nomGroupe = $infoResultat["nomGroupe"];
+         $distanceTotale = $infoResultat["distanceTotale"];
+         $distanceMin = $infoResultat["distanceMin"];
+         $nbrParticipantsTotal = $infoResultat["nbrParticipantsTotal"];
+         $participants = $infoResultat["participants"];
+         $boolTropVilles = $infoResultat["boolTropVilles"];
 
 
          if($formatExport == "pdf"){
 
-             //recuperation des donnees relatives au scenario
-             $infoPdf = $this->getInfoPdfAction($idResultat, $typeRencontre, $typeScenario) ;
+             $villeDepart = $infoResultat["villeDepart"];
+             $coordonneesVille = $infoResultat["coordonneesVille"];
+             $coordPointDepart = $infoResultat["coordPointDepart"];
 
-             $nomRapport = $infoPdf["nomRapport"];
-             $nomUtilisateur = $infoPdf["nomUtilisateur"];
-             $nomListe = $infoPdf["nomListe"];
-             $nomGroupe = $infoPdf["nomGroupe"];
-             $distanceTotale = $infoPdf["distanceTotale"];
-             $distanceMin = $infoPdf["distanceMin"];
-             $nbrParticipantsTotal = $infoPdf["nbrParticipantsTotal"];
-             $villeDepart = $infoPdf["villeDepart"];
-             $participants = $infoPdf["participants"];
-             $coordonneesVille = $infoPdf["coordonneesVille"];
-             $coordPointDepart = $infoPdf["coordPointDepart"];
-
-//             error_log("\n coordonneesVille: ".print_r($coordonneesVille , true), 3, "error_log_optimouv.txt");
-//             exit();
 
              return $this->render('FfbbBundle:Rencontres:previsualisationPdf.html.twig', array(
                  'idResultat' => $idResultat,
@@ -166,6 +164,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
                  'participants' => $participants,
                  'coordonneesVille' => $coordonneesVille,
                  'coordPointDepart' => $coordPointDepart,
+                 'boolTropVilles' => $boolTropVilles,
              ));
                  
 
@@ -173,8 +172,29 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
          }
          elseif ($formatExport == "xml"){
-             return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
+
+
+             header('Content-type: text/xml');
+             header('Content-Disposition: attachment; filename="'.$nomRapport.'.xml"');
+
+             $text = '<?xml version="1.0" encoding="utf-8"?>';
+
+
+
+             echo $text;
+
+             error_log("\n text: ".print_r($text , true), 3, "error_log_optimouv.txt");
              exit();
+
+             
+//             return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
+//
+//
+//
+//
+//
+//
+//             exit();
          }
          elseif ($formatExport == "csv"){
              return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
@@ -192,19 +212,19 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $typeRencontre = $_POST['typeRencontre'];
          
          //recuperation des donnees relatives au scenario
-         $infoPdf = $this->getInfoPdfAction($idResultat, $typeRencontre, $typeScenario);
+         $infoResultat = $this->getInfoResultat($idResultat, $typeRencontre, $typeScenario);
 
-         $nomRapport = $infoPdf["nomRapport"];
-         $nomUtilisateur = $infoPdf["nomUtilisateur"];
-         $nomListe = $infoPdf["nomListe"];
-         $nomGroupe = $infoPdf["nomGroupe"];
-         $distanceTotale = $infoPdf["distanceTotale"];
-         $distanceMin = $infoPdf["distanceMin"];
-         $nbrParticipantsTotal = $infoPdf["nbrParticipantsTotal"];
-         $villeDepart = $infoPdf["villeDepart"];
-         $participants = $infoPdf["participants"];
-         $coordonneesVille = $infoPdf["coordonneesVille"];
-         $coordPointDepart = $infoPdf["coordPointDepart"];
+         $nomRapport = $infoResultat["nomRapport"];
+         $nomUtilisateur = $infoResultat["nomUtilisateur"];
+         $nomListe = $infoResultat["nomListe"];
+         $nomGroupe = $infoResultat["nomGroupe"];
+         $distanceTotale = $infoResultat["distanceTotale"];
+         $distanceMin = $infoResultat["distanceMin"];
+         $nbrParticipantsTotal = $infoResultat["nbrParticipantsTotal"];
+         $villeDepart = $infoResultat["villeDepart"];
+         $participants = $infoResultat["participants"];
+         $coordonneesVille = $infoResultat["coordonneesVille"];
+         $coordPointDepart = $infoResultat["coordPointDepart"];
 
          $html = $this->renderView('FfbbBundle:Rencontres:exportPdf.html.twig', array(
              'idResultat' => $idResultat,
@@ -240,7 +260,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
      }
 
      //    function qui ramene toutes les infos necessaires à la view
-     public function getInfoPdfAction($idResultat , $typeRencontre, $typeScenario)
+     private function getInfoResultat($idResultat , $typeRencontre, $typeScenario)
      {
 
          $em = $this->getDoctrine()->getManager();
@@ -449,9 +469,15 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          }
 
 
+         # controler le nombre de villes
+         # s'il y a plus de 100 villes, on prend juste 99 villes
+         $boolTropVilles = 0; # indiquer si on dépasse 100 villes
+        if(count($coordonneesVille) >= 100){
+            $coordonneesVille = array_slice($coordonneesVille, 0, 99);
+            $boolTropVilles = 1;
+        }
 
-
-//           error_log("\n retourOp: ".print_r($retourOp , true), 3, "error_log_optimouv.txt");
+//           error_log("\n coordonneesVille: ".print_r($coordonneesVille , true), 3, "error_log_optimouv.txt");
 //             exit();
 
 
@@ -477,6 +503,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $retour["participants"] = $participants;
          $retour["coordonneesVille"] = $coordonneesVille;
          $retour["coordPointDepart"] = $coordPointDepart;
+         $retour["boolTropVilles"] = $boolTropVilles;
 
          return $retour;
      }
