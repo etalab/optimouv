@@ -934,9 +934,7 @@ class PoulesController extends Controller
                 'taillePoule' => $taillePoule,
                 'infoPouleStr' => $infoPouleStr,
                 'scenarioResultats' => $scenarioResultats,
-
-
-
+                'typeMatch' => $typeMatch,
 
 
             );
@@ -950,6 +948,9 @@ class PoulesController extends Controller
 
         }
         elseif ($formatExport == "csv"){
+
+
+
             return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
             exit();
         }
@@ -1000,7 +1001,6 @@ class PoulesController extends Controller
         $texte .= "\t<estimation_detaille>\n";
         $alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ];
 
-//        error_log("\n estimationDetails: ".print_r($estimationDetails , true), 3, "error_log_optimouv.txt");
 
 
         foreach($estimationDetails as $pouleNbr => $estimationDetail) {
@@ -1036,7 +1036,47 @@ class PoulesController extends Controller
         $texte .= "\t</estimation_detaille>\n";
 
 
+        # liste de rencontre
+        $rencontres =  $infoXml["scenarioResultats"]["rencontreDetails"];
+        ksort($rencontres);
+        $typeMatch = $infoXml["typeMatch"];
+//        error_log("\n rencontres: ".print_r($rencontres , true), 3, "error_log_optimouv.txt");
+        $texte .= "\t<liste_rencontres>\n";
 
+        if($typeMatch == "allerRetour" || $typeMatch == "allerSimple") {
+            foreach ($rencontres as $pouleNbr => $rencontresParPoule) {
+                foreach ($rencontresParPoule as $rencontre) {
+                    $texte .= "\t\t<rencontre>\n";
+                    $texte .= "\t\t\t<poule>Poule " .$alphabet[$pouleNbr-1]."</poule>\n";
+                    $texte .= "\t\t\t<equipe1>" .$rencontre["equipeDepartNom"]."</equipe1>\n";
+                    $texte .= "\t\t\t<equipe2>" .$rencontre["equipeDestinationNom"]."</equipe2>\n";
+                    $texte .= "\t\t</rencontre>\n";
+
+                }
+
+            }
+        }
+        elseif ($typeMatch == "plateau"){
+            foreach ($rencontres as $pouleNbr => $rencontresParPoule) {
+                foreach ($rencontresParPoule as $jourNbr => $rencontresParJour) {
+                    foreach ($rencontresParJour as $rencontre) {
+                        error_log("\n rencontre: " . print_r($rencontre, true), 3, "error_log_optimouv.txt");
+                        $texte .= "\t\t<rencontre>\n";
+                        $texte .= "\t\t\t<poule>Poule " .$alphabet[$pouleNbr-1]."</poule>\n";
+                        $texte .= "\t\t\t<jour> " .$jourNbr."</jour>\n";
+                        $texte .= "\t\t\t<equipe_hote>" .$rencontre["hoteNom"]."</equipe_hote>\n";
+                        $texte .= "\t\t\t<equipe_adverse1>" .$rencontre["premierEquipeNom"]."</equipe_adverse1>\n";
+                        $texte .= "\t\t\t<equipe_adverse2>" .$rencontre["deuxiemeEquipeNom"]."</equipe_adverse2>\n";
+                        $texte .= "\t\t</rencontre>\n";
+
+                    }
+                }
+
+            }
+        }
+
+
+        $texte .= "\t</liste_rencontres>\n";
         $texte .= "</resultat>";
 
         return $texte;
