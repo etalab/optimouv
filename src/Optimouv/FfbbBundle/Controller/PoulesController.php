@@ -604,14 +604,12 @@ class PoulesController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $idRapport = $em->getRepository('FfbbBundle:Scenario')->getIdRapportByIdScenario($idResultat);
-
         if($idRapport != []){
             $idRapport  = $idRapport[0]["idRapport"];
         }
 
 
         $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idRapport);
-
         if($idGroupe != []){
             $idGroupe = $idGroupe[0]['idGroupe'];
         }
@@ -625,7 +623,6 @@ class PoulesController extends Controller
 
         
         $detailsCalcul = $em->getRepository('FfbbBundle:Scenario')->findOneById($idResultat)->getDetailsCalcul();
-
         $detailsCalcul = json_decode($detailsCalcul, true);
 
         $nombrePoule = $detailsCalcul["nombrePoule"];
@@ -712,7 +709,6 @@ class PoulesController extends Controller
         $statement->bindParam(':id', $idResultat);
         $statement->execute();
         $statement = $statement->fetchAll(PDO::FETCH_ASSOC);
-        $idRapport = $statement[0]['idRapport'];
         $nomRapport = $statement[0]['nomRapport'];
         $idGroupe = $statement[0]['idGroupe'];
 
@@ -882,13 +878,12 @@ class PoulesController extends Controller
         $nomGroupe = $infoPdf[6];
         $nomListe = $infoPdf[7];
         $detailsVilles = $infoPdf[8];
-        $idGroupe = $infoPdf[9];
-        $idRapport = $infoPdf[10];
         $nomUtilisateur = $infoPdf[11];
         $infoPoule = $infoPdf["infoPoule"];
+        $interdictions = $infoPdf["interdictions"];
         $infoPouleStr = $this->getStrInfoPoule($infoPoule);
 
-//        error_log("\n infoPouleStr: ".print_r($infoPouleStr , true), 3, "error_log_optimouv.txt");
+        error_log("\n interdictions: ".print_r($interdictions , true), 3, "error_log_optimouv.txt");
 
 
         $nomFederation = "FFBB"; # FIXME
@@ -906,9 +901,7 @@ class PoulesController extends Controller
                 'taillePoule' => $taillePoule,
                 'contraintsExiste' => $contraintsExiste,
                 'scenarioResultats' => $scenarioResultats,
-                'idRapport' => $idRapport,
                 'detailsVilles' => $detailsVilles,
-                'idGroupe' => $idGroupe,
                 'idResultat' => $idResultat,
                 'nomUtilisateur' => $nomUtilisateur,
                 'typeScenario' => $typeScenario,
@@ -937,6 +930,9 @@ class PoulesController extends Controller
                 'nomListe' => $nomListe,
                 'nombrePoule' => $nombrePoule,
                 'taillePoule' => $taillePoule,
+                'infoPouleStr' => $infoPouleStr,
+                'scenarioResultats' => $scenarioResultats,
+                'interdictions' => $interdictions,
 
 
 
@@ -980,16 +976,40 @@ class PoulesController extends Controller
         $texte .= "\t\t<nom_utilisateur>" .$infoXml["nomUtilisateur"]."</nom_utilisateur>\n";
         $texte .= "\t\t<nom_liste>" .$infoXml["nomListe"]."</nom_liste>\n";
         $texte .= "\t\t<nom_groupe>" .$infoXml["nomGroupe"]."</nom_groupe>\n";
-        $texte .= "\t\t<nombre_poule>" .$infoXml["nombrePoule"]."</nombre_poule>\n";
-        $texte .= "\t\t<taille_poule>" .$infoXml["taillePoule"]."</taille_poule>\n";
+        $texte .= "\t\t<info_poules>" .$infoXml["infoPouleStr"]."</info_poules>\n";
+        $texte .= "\t\t<contraintes>\n";
+
+
+        $texte .= "\t\t\t<interdictions>\n";
+
+
+        foreach($infoXml["interdictions"] as $interdictionNbr => $interdictionInfo){
+            $texte .= "\t\t\t\t<interdiction>\n";
+            $texte .= "\t\t\t\t\t<equipe1>" .$interdictionInfo["noms"][0]."</equipe1>\n";
+            $texte .= "\t\t\t\t\t<equipe2>" .$interdictionInfo["noms"][1]."</equipe2>\n";
+            $texte .= "\t\t\t\t</interdiction>\n";
+
+        }
+
+
+
+        $texte .= "\t\t\t</interdictions>\n";
+
+
+
+        $texte .= "\t\t\t<repartitions_homogenes>\n";
+
+
+        $texte .= "\t\t\t</repartitions_homogenes>\n";
+        $texte .= "\t\t\t<changement_affectation>\n";
+        $texte .= "\t\t\t</changement_affectation>\n";
+        $texte .= "\t\t</contraintes>\n";
         $texte .= "\t</params>\n";
 
 
         # estimation générale
 
         $texte .= "\t<estimation_generale>\n";
-//        $texte .= "\t\t<meilleu_lieu_rencontre_nom>" .$nomVilleDepart."</meilleu_lieu_rencontre_nom>\n";
-//        $texte .= "\t\t<meilleu_lieu_rencontre_code_postal>" .$codePostalVilleDepart."</meilleu_lieu_rencontre_code_postal>\n";
 //        $texte .= "\t\t<distance_totale>" .$infoXml["distanceMin"]." Kms</distance_totale>\n";
 //        $texte .= "\t\t<cout_voiture>" .round($infoXml["distanceTotale"]*0.8)." €</cout_voiture>\n";
 //        $texte .= "\t\t<cout_covoiturage>" .round($infoXml["distanceTotale"]/4*0.8)." €</cout_covoiturage>\n";
@@ -1091,8 +1111,6 @@ class PoulesController extends Controller
         $nomGroupe = $infoPdf[6];
         $nomListe = $infoPdf[7];
         $detailsVilles = $infoPdf[8];
-        $idGroupe = $infoPdf[9];
-        $idRapport = $infoPdf[10];
         $nomUtilisateur = $infoPdf[11];
         $infoPoule = $infoPdf["infoPoule"];
         $infoPouleStr = $this->getStrInfoPoule($infoPoule);
@@ -1110,9 +1128,7 @@ class PoulesController extends Controller
             'taillePoule' => $taillePoule,
             'contraintsExiste' => $contraintsExiste,
             'scenarioResultats' => $scenarioResultats,
-            'idRapport' => $idRapport,
             'detailsVilles' => $detailsVilles,
-            'idGroupe' => $idGroupe,
             'idResultat' => $idResultat,
             'nomUtilisateur' => $nomUtilisateur,
             'typeScenario' => $typeScenario,
@@ -1194,19 +1210,14 @@ class PoulesController extends Controller
 //    function qui ramene toutes les infos necessaires à la view
     private function getInfoPdf($idResultat , $typeScenario)
     {
-
-
         $em = $this->getDoctrine()->getManager();
 
         $idRapport = $em->getRepository('FfbbBundle:Scenario')->getIdRapportByIdScenario($idResultat);
-
         if($idRapport != []){
             $idRapport  = $idRapport[0]["idRapport"];
         }
 
          $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idRapport);
-
-
         if($idGroupe != []){
             $idGroupe = $idGroupe[0]['idGroupe'];
         }
@@ -1236,7 +1247,13 @@ class PoulesController extends Controller
         else{
             $infoPoule = array($taillePoule => $nombrePoule);
         }
-
+        # récupérer les contraintes d'interdictions
+        if(array_key_exists("interdictions", $detailsCalcul["params"])){
+            $interdictions = $detailsCalcul["params"]["interdictions"];
+        }
+        else {
+            $interdictions = [];
+        }
 
         # obtenir scénario selon leur type
         if($typeScenario == "optimalSansContrainte"){
@@ -1303,6 +1320,7 @@ class PoulesController extends Controller
         $retour[10] = $idRapport;
         $retour[11] = $nomUtilisateur;
         $retour["infoPoule"] = $infoPoule;
+        $retour["interdictions"] = $interdictions;
 
         return $retour;
     }
