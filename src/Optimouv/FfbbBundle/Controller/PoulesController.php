@@ -735,7 +735,7 @@ class PoulesController extends Controller
         // info pour changement d'affectation d'équipe par poule
         $infoChangeAffectation = $this->get('service_poules')->getInfoChangeAffectation($scenarioOptimalSansContrainte, $scenarioEquitableSansContrainte,  $scenarioOptimalAvecContrainte, $scenarioEquitableAvecContrainte);
 
-//        error_log("\n infoChangeAffectation: ".print_r($infoChangeAffectation , true), 3, "error_log_optimouv.txt");
+//        error_log("\n changeAffectEquipes: ".print_r($changeAffectEquipes , true), 3, "error_log_optimouv.txt");
 
 
         return $this->render('FfbbBundle:Poules:resultatCalcul.html.twig' , array(
@@ -884,10 +884,8 @@ class PoulesController extends Controller
         $nomUtilisateur = $infoPdf[11];
         $infoPoule = $infoPdf["infoPoule"];
         $infoPouleStr = $this->getStrInfoPoule($infoPoule);
-        $interdictions = $infoPdf["interdictions"];
-        $repartitionsHomogenes = $infoPdf["repartitionsHomogenes"];
 
-        error_log("\n repartitionsHomogenes: ".print_r($repartitionsHomogenes , true), 3, "error_log_optimouv.txt");
+//        error_log("\n changeAffectEquipes: ".print_r($changeAffectEquipes , true), 3, "error_log_optimouv.txt");
 
 
         $nomFederation = "FFBB"; # FIXME
@@ -936,8 +934,6 @@ class PoulesController extends Controller
                 'taillePoule' => $taillePoule,
                 'infoPouleStr' => $infoPouleStr,
                 'scenarioResultats' => $scenarioResultats,
-                'interdictions' => $interdictions,
-                'repartitionsHomogenes' => $repartitionsHomogenes,
 
 
 
@@ -982,38 +978,6 @@ class PoulesController extends Controller
         $texte .= "\t\t<nom_liste>" .$infoXml["nomListe"]."</nom_liste>\n";
         $texte .= "\t\t<nom_groupe>" .$infoXml["nomGroupe"]."</nom_groupe>\n";
         $texte .= "\t\t<info_poules>" .$infoXml["infoPouleStr"]."</info_poules>\n";
-        $texte .= "\t\t<contraintes>\n";
-
-        # interdictions
-        $texte .= "\t\t\t<interdictions>\n";
-        foreach($infoXml["interdictions"] as $interdictionNbr => $interdictionInfo){
-            $texte .= "\t\t\t\t<interdiction>\n";
-            $texte .= "\t\t\t\t\t<equipe1>" .$interdictionInfo["noms"][0]."</equipe1>\n";
-            $texte .= "\t\t\t\t\t<equipe2>" .$interdictionInfo["noms"][1]."</equipe2>\n";
-            $texte .= "\t\t\t\t</interdiction>\n";
-
-        }
-        $texte .= "\t\t\t</interdictions>\n";
-
-
-
-        # repartitions homogènes
-        $texte .= "\t\t\t<repartitions_homogenes>\n";
-        foreach($infoXml["repartitionsHomogenes"] as $equipeType => $detailsContraintes){
-            $texte .= "\t\t\t\t<$equipeType>\n";
-            foreach($detailsContraintes["noms"] as $index => $villeNom){
-                $texte .= "\t\t\t\t\t<equipe".">" .$villeNom."</equipe".">\n";
-            }
-            $texte .= "\t\t\t\t</$equipeType>\n";
-        }
-        $texte .= "\t\t\t</repartitions_homogenes>\n";
-
-
-        
-        $texte .= "\t\t\t<changement_affectation>\n";
-
-        $texte .= "\t\t\t</changement_affectation>\n";
-        $texte .= "\t\t</contraintes>\n";
         $texte .= "\t</params>\n";
 
 
@@ -1257,21 +1221,30 @@ class PoulesController extends Controller
         else{
             $infoPoule = array($taillePoule => $nombrePoule);
         }
-        # récupérer les contraintes d'interdictions
-        if(array_key_exists("interdictions", $detailsCalcul["params"])){
-            $interdictions = $detailsCalcul["params"]["interdictions"];
-        }
-        else {
-            $interdictions = [];
-        }
-        # récupérer les contraintes de répartitions homogènes
-        if(array_key_exists("repartitionsHomogenes", $detailsCalcul["params"])){
-            $repartitionsHomogenes = $detailsCalcul["params"]["repartitionsHomogenes"];
-        }
-        else{
-            $repartitionsHomogenes = [];
-        }
-        
+//        # récupérer les contraintes d'interdictions
+//        if(array_key_exists("interdictions", $detailsCalcul["params"])){
+//            $interdictions = $detailsCalcul["params"]["interdictions"];
+//        }
+//        else {
+//            $interdictions = [];
+//        }
+//        # récupérer les contraintes de répartitions homogènes
+//        if(array_key_exists("repartitionsHomogenes", $detailsCalcul["params"])){
+//            $repartitionsHomogenes = $detailsCalcul["params"]["repartitionsHomogenes"];
+//        }
+//        else{
+//            $repartitionsHomogenes = [];
+//        }
+//        # récupérer les changements d'affectation d'équipes entre les poules
+//        if(array_key_exists("changeAffectEquipes", $detailsCalcul["params"])){
+//            $changeAffectEquipes = $detailsCalcul["params"]["changeAffectEquipes"];
+//        }
+//        else{
+//            $changeAffectEquipes = [];;
+//        }
+
+
+
         # obtenir scénario selon leur type
         if($typeScenario == "optimalSansContrainte"){
             $scenarioResultats = $detailsCalcul["scenarioOptimalSansContrainte"];
@@ -1337,8 +1310,9 @@ class PoulesController extends Controller
         $retour[10] = $idRapport;
         $retour[11] = $nomUtilisateur;
         $retour["infoPoule"] = $infoPoule;
-        $retour["interdictions"] = $interdictions;
-        $retour["repartitionsHomogenes"] = $repartitionsHomogenes;
+//        $retour["interdictions"] = $interdictions;
+//        $retour["repartitionsHomogenes"] = $repartitionsHomogenes;
+//        $retour["changeAffectEquipes"] = $changeAffectEquipes;
 
         return $retour;
     }
