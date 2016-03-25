@@ -885,7 +885,7 @@ class PoulesController extends Controller
         $infoPoule = $infoPdf["infoPoule"];
         $infoPouleStr = $this->getStrInfoPoule($infoPoule);
 
-//        error_log("\n changeAffectEquipes: ".print_r($changeAffectEquipes , true), 3, "error_log_optimouv.txt");
+//        error_log("\n scenarioResultats: ".print_r($scenarioResultats , true), 3, "error_log_optimouv.txt");
 
 
         $nomFederation = "FFBB"; # FIXME
@@ -944,9 +944,6 @@ class PoulesController extends Controller
 
             $texte = $this->getTexteExportXml($infoXML);
 
-//             error_log("\n text: ".print_r($texte , true), 3, "error_log_optimouv.txt");
-
-
             echo $texte;
             exit();
 
@@ -983,36 +980,59 @@ class PoulesController extends Controller
 
         # estimation générale
 
+        $distanceTotale = round($infoXml["scenarioResultats"]["estimationGenerale"]["distanceTotale"]/1000);
+        $distanceTotaleTousParticipants = round($infoXml["scenarioResultats"]["estimationGenerale"]["distanceTotaleTousParticipants"]/1000);
+
         $texte .= "\t<estimation_generale>\n";
-//        $texte .= "\t\t<distance_totale>" .$infoXml["distanceMin"]." Kms</distance_totale>\n";
-//        $texte .= "\t\t<cout_voiture>" .round($infoXml["distanceTotale"]*0.8)." €</cout_voiture>\n";
-//        $texte .= "\t\t<cout_covoiturage>" .round($infoXml["distanceTotale"]/4*0.8)." €</cout_covoiturage>\n";
-//        $texte .= "\t\t<cout_minibus>" .round($infoXml["distanceTotale"]/9*1.31)." €</cout_minibus>\n";
-//        $texte .= "\t\t<co2_emission_voiture>" .round($infoXml["distanceTotale"]*0.157)." KG eq CO2</co2_emission_voiture>\n";
-//        $texte .= "\t\t<co2_emission_covoiturage>" .round($infoXml["distanceTotale"]/4*0.157)." KG eq CO2</co2_emission_covoiturage>\n";
-//        $texte .= "\t\t<co2_emission_minibus>" .round($infoXml["distanceTotale"]/9*0.185)." KG eq CO2</co2_emission_minibus>\n";
+        $texte .= "\t\t<distance_totale>" .$distanceTotale." Kms</distance_totale>\n";
+        $texte .= "\t\t<cout_voiture>" .round($distanceTotaleTousParticipants*0.8)." €</cout_voiture>\n";
+        $texte .= "\t\t<cout_covoiturage>" .round($distanceTotaleTousParticipants/4*0.8)." €</cout_covoiturage>\n";
+        $texte .= "\t\t<cout_minibus>" .round($distanceTotaleTousParticipants/9*1.31)." €</cout_minibus>\n";
+        $texte .= "\t\t<co2_emission_voiture>" .round($distanceTotaleTousParticipants*0.157)." KG eq CO2</co2_emission_voiture>\n";
+        $texte .= "\t\t<co2_emission_covoiturage>" .round($distanceTotaleTousParticipants/4*0.157)." KG eq CO2</co2_emission_covoiturage>\n";
+        $texte .= "\t\t<co2_emission_minibus>" .round($distanceTotaleTousParticipants/9*0.185)." KG eq CO2</co2_emission_minibus>\n";
         $texte .= "\t</estimation_generale>\n";
-//
-//
+
+
         # estimation détaillée
+        $estimationDetails = $infoXml["scenarioResultats"]["estimationDetails"];
+        ksort($estimationDetails);
         $texte .= "\t<estimation_detaille>\n";
-//
-//        foreach($infoXml["participants"] as $participant){
-//
-//            $texte .= "\t\t<participant>\n";
-//            $texte .= "\t\t\t<nom>".$participant["villeNom"] ."</nom>\n";
-//            $texte .= "\t\t\t<distance_parcourue>" .floor($participant["distance"]/1000)." Kms</distance_parcourue>\n";
-//            $texte .= "\t\t\t<duree_trajet>" .round($participant["duree"]/3600).":".round($participant["duree"]%3600/60)." (H:M)"." </duree_trajet>\n";
-//            $texte .= "\t\t\t<cout_voiture>" .round($participant["distance"]/1000*$participant["nbrParticipants"]*0.8)." €</cout_voiture>\n";
-//            $texte .= "\t\t\t<cout_covoiturage>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.8)." €</cout_covoiturage>\n";
-//            $texte .= "\t\t\t<cout_minibus>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/9*1.31)." €</cout_minibus>\n";
-//            $texte .= "\t\t\t<co2_emission_voiture>" .round($participant["distance"]/1000*$participant["nbrParticipants"]*0.157)." KG eq CO2</co2_emission_voiture>\n";
-//            $texte .= "\t\t\t<co2_emission_covoiturage>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.157)." KG eq CO2</co2_emission_covoiturage>\n";
-//            $texte .= "\t\t\t<co2_emission_minibus>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/9*0.185)." KG eq CO2</co2_emission_minibus>\n";
-//            $texte .= "\t\t</participant>\n";
-//
-//        }
-//
+        $alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ];
+
+//        error_log("\n estimationDetails: ".print_r($estimationDetails , true), 3, "error_log_optimouv.txt");
+
+
+        foreach($estimationDetails as $pouleNbr => $estimationDetail) {
+
+            $texte .= "\t\t<participant>\n";
+            $texte .= "\t\t\t<nom>"."Poule ".$alphabet[$pouleNbr-1] ."</nom>\n";
+            $texte .= "\t\t\t<distance_parcourue>" .round($estimationDetail["distanceTotale"]/1000)." Kms</distance_parcourue>\n";
+
+            $jourTrajet = round($estimationDetail["dureeTotale"]/86400);
+            if( $jourTrajet < 10){
+                $jourTrajet = "0$jourTrajet";
+            }
+            $heureTrajet = round($estimationDetail["dureeTotale"]%86400/3600);
+            if( $heureTrajet< 10){
+                $heureTrajet = "0$heureTrajet";
+            }
+            $minuteTrajet = round($estimationDetail["dureeTotale"]%86400/3600);
+            if( $minuteTrajet< 10){
+                $minuteTrajet = "0$minuteTrajet";
+            }
+
+            $texte .= "\t\t\t<duree_trajet>" .$jourTrajet." ".$heureTrajet.":".$minuteTrajet." (J H:M)"." </duree_trajet>\n";
+            $texte .= "\t\t\t<cout_voiture>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000*0.8)." €</cout_voiture>\n";
+            $texte .= "\t\t\t<cout_covoiturage>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000/4*0.8)." €</cout_covoiturage>\n";
+            $texte .= "\t\t\t<cout_minibus>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000/9*1.31)." €</cout_minibus>\n";
+            $texte .= "\t\t\t<co2_emission_voiture>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000*0.157)." KG eq CO2</co2_emission_voiture>\n";
+            $texte .= "\t\t\t<co2_emission_covoiturage>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000/4*0.157)." KG eq CO2</co2_emission_covoiturage>\n";
+            $texte .= "\t\t\t<co2_emission_minibus>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000/9*0.185)." KG eq CO2</co2_emission_minibus>\n";
+            $texte .= "\t\t</participant>\n";
+
+        }
+
         $texte .= "\t</estimation_detaille>\n";
 
 
