@@ -456,7 +456,6 @@
                                 <a href="{{ path('ffbb_poules_details_calcul') }}" class="pull-left">Détails du calcul</a>
 
 
-                                {#<form name="submitParams" action="{{ path('ffbb_poules_previsualisation_export')}}" method="post">#}
                                 <form name="submitParams" action="{{ path('ffbb_poules_pretraitement_export')}}" method="post">
                                     <input type="hidden" value="{{ idResultat }}" name="idResultat">
                                     <input type="hidden" value="optimalSansContrainte" name="typeScenario" >
@@ -469,14 +468,6 @@
                                     </select>
 
                                 </form>
-
-                                {#<form name="submitParams" action="{{ path('ffbb_previsualisation_pdf')}}" method="post">#}
-                                    {#<input type="hidden" value="{{ idResultat }}" name="idResultat">#}
-                                    {#<input type="hidden" value="optimalSansContrainte" name="typeScenario" >#}
-
-                                    {#<button type="submit" class="btn btn-primary  pull-right">Exporter</button>#}
-                                    {##}
-                                {#</form>#}
 
 
 
@@ -953,7 +944,6 @@
                                     du calcul</a>
 
 
-                                {#<form name="submitParams" action="{{ path('ffbb_poules_previsualisation_export')}}" method="post">#}
                                 <form name="submitParams" action="{{ path('ffbb_poules_pretraitement_export')}}" method="post">
                                     <input type="hidden" value="{{ idResultat }}" name="idResultat">
                                     <input type="hidden" value="equitableSansContrainte" name="typeScenario" >
@@ -966,14 +956,6 @@
                                     </select>
 
                                 </form>
-
-
-                                {#<form name="submitParams" action="{{ path('ffbb_previsualisation_pdf')}}" method="post">#}
-                                    {#<input type="hidden" value="{{ idResultat }}" name="idResultat">#}
-                                    {#<input type="hidden" value="equitableSansContrainte" name="typeScenario" >#}
-
-                                    {#<button type="submit" class="btn btn-primary  pull-right">Exporter</button>#}
-                                {#</form>#}
 
 
 
@@ -1430,7 +1412,6 @@
                                         du calcul</a>
 
 
-                                    {#<form name="submitParams" action="{{ path('ffbb_poules_previsualisation_export')}}" method="post">#}
                                     <form name="submitParams" action="{{ path('ffbb_poules_pretraitement_export')}}" method="post">
                                         <input type="hidden" value="{{ idResultat }}" name="idResultat">
                                         <input type="hidden" value="ref" name="typeScenario" >
@@ -1446,13 +1427,6 @@
 
 
 
-                                    {#<form name="submitParams" action="{{ path('ffbb_previsualisation_pdf')}}" method="post">#}
-                                        {#<input type="hidden" value="{{ idResultat }}" name="idResultat">#}
-                                        {#<input type="hidden" value="ref" name="typeScenario" >#}
-
-                                        {#<button type="submit" class="btn btn-primary  pull-right">Exporter</button>#}
-                                        {##}
-                                    {#</form>#}
 
 
 

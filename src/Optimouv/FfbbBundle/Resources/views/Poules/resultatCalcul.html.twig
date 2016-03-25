@@ -736,6 +736,12 @@
                  }
 
                  $(document).ready(function(){
+
+                     // reset select option formatExport
+                     $('select[name="formatExport"]').change(function() {
+                         $('select[name="formatExport"]').prop('selectedIndex',0);
+                     });
+
                      // toggle boutons interdictions
                      $("#contrainteInterdiction").click(function(){
                          $("#contrainteInterdictionBody").toggle();
