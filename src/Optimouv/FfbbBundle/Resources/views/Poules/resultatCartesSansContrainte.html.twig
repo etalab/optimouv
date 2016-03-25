@@ -93,19 +93,15 @@
                                     var incrment = 1;
                                     var points = [];
                                     var incrementIcons = 0;
-                                    {#{%  for key,coordPouleOpSansContrainte in coordPoulesOpSansContrainte %}#}
                                     {%  for poule, coordPouleOpSansContrainte in coordPoulesOpSansContrainte %}
 
                                     //tracer dynamiquement les points de villes
                                     {% for coordonneeVilleOpSansContrainte in coordPouleOpSansContrainte %}
                                     var x = '{{ coordonneeVilleOpSansContrainte[0]}}';
                                     var y = '{{ coordonneeVilleOpSansContrainte[1]}}';
-//
-                                    var xy = x+y;
-//                                                                         var x = xy[0];
-//                                                                         var y = xy[1];
 
-//                                                            var icon = 'icons' + incrementIcons;
+                                    var xy = x+y;
+
                                     var icon = 'icons{{ poule-1 }}' ;
                                     var marker = 'marker' + incrment;
                                     window[marker] = new H.map.Marker({
