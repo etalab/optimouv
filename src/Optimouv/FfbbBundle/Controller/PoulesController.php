@@ -629,6 +629,8 @@ class PoulesController extends Controller
         $taillePoule = $detailsCalcul["taillePoule"];
         $contraintsExiste = $detailsCalcul["contraintsExiste"];
         $typeMatch = $detailsCalcul["typeMatch"];
+        $nomMatch = $this->getNomMatch($typeMatch);
+        
         $scenarioOptimalAvecContrainte = $detailsCalcul["scenarioOptimalAvecContrainte"];
         $scenarioEquitableAvecContrainte = $detailsCalcul["scenarioEquitableAvecContrainte"];
         $scenarioEquitableSansContrainte = $detailsCalcul["scenarioEquitableSansContrainte"];
@@ -742,6 +744,7 @@ class PoulesController extends Controller
             'taillePoule' => $taillePoule,
             'contraintsExiste' => $contraintsExiste,
             'typeMatch'=> $typeMatch,
+            'nomMatch'=> $nomMatch,
             'scenarioOptimalAvecContrainte' => $scenarioOptimalAvecContrainte,
             'scenarioEquitableAvecContrainte' => $scenarioEquitableAvecContrainte,
             'scenarioEquitableSansContrainte' => $scenarioEquitableSansContrainte,
@@ -880,10 +883,11 @@ class PoulesController extends Controller
         $detailsVilles = $infoPdf[8];
         $nomUtilisateur = $infoPdf[11];
         $infoPoule = $infoPdf["infoPoule"];
-        $interdictions = $infoPdf["interdictions"];
         $infoPouleStr = $this->getStrInfoPoule($infoPoule);
+        $interdictions = $infoPdf["interdictions"];
+        $repartitionsHomogenes = $infoPdf["repartitionsHomogenes"];
 
-        error_log("\n interdictions: ".print_r($interdictions , true), 3, "error_log_optimouv.txt");
+        error_log("\n repartitionsHomogenes: ".print_r($repartitionsHomogenes , true), 3, "error_log_optimouv.txt");
 
 
         $nomFederation = "FFBB"; # FIXME
@@ -933,6 +937,7 @@ class PoulesController extends Controller
                 'infoPouleStr' => $infoPouleStr,
                 'scenarioResultats' => $scenarioResultats,
                 'interdictions' => $interdictions,
+                'repartitionsHomogenes' => $repartitionsHomogenes,
 
 
 
@@ -979,10 +984,8 @@ class PoulesController extends Controller
         $texte .= "\t\t<info_poules>" .$infoXml["infoPouleStr"]."</info_poules>\n";
         $texte .= "\t\t<contraintes>\n";
 
-
+        # interdictions
         $texte .= "\t\t\t<interdictions>\n";
-
-
         foreach($infoXml["interdictions"] as $interdictionNbr => $interdictionInfo){
             $texte .= "\t\t\t\t<interdiction>\n";
             $texte .= "\t\t\t\t\t<equipe1>" .$interdictionInfo["noms"][0]."</equipe1>\n";
@@ -990,18 +993,25 @@ class PoulesController extends Controller
             $texte .= "\t\t\t\t</interdiction>\n";
 
         }
-
-
-
         $texte .= "\t\t\t</interdictions>\n";
 
 
 
+        # repartitions homogènes
         $texte .= "\t\t\t<repartitions_homogenes>\n";
-
-
+        foreach($infoXml["repartitionsHomogenes"] as $equipeType => $detailsContraintes){
+            $texte .= "\t\t\t\t<$equipeType>\n";
+            foreach($detailsContraintes["noms"] as $index => $villeNom){
+                $texte .= "\t\t\t\t\t<equipe".">" .$villeNom."</equipe".">\n";
+            }
+            $texte .= "\t\t\t\t</$equipeType>\n";
+        }
         $texte .= "\t\t\t</repartitions_homogenes>\n";
+
+
+        
         $texte .= "\t\t\t<changement_affectation>\n";
+
         $texte .= "\t\t\t</changement_affectation>\n";
         $texte .= "\t\t</contraintes>\n";
         $texte .= "\t</params>\n";
@@ -1254,7 +1264,14 @@ class PoulesController extends Controller
         else {
             $interdictions = [];
         }
-
+        # récupérer les contraintes de répartitions homogènes
+        if(array_key_exists("repartitionsHomogenes", $detailsCalcul["params"])){
+            $repartitionsHomogenes = $detailsCalcul["params"]["repartitionsHomogenes"];
+        }
+        else{
+            $repartitionsHomogenes = [];
+        }
+        
         # obtenir scénario selon leur type
         if($typeScenario == "optimalSansContrainte"){
             $scenarioResultats = $detailsCalcul["scenarioOptimalSansContrainte"];
@@ -1321,6 +1338,7 @@ class PoulesController extends Controller
         $retour[11] = $nomUtilisateur;
         $retour["infoPoule"] = $infoPoule;
         $retour["interdictions"] = $interdictions;
+        $retour["repartitionsHomogenes"] = $repartitionsHomogenes;
 
         return $retour;
     }
