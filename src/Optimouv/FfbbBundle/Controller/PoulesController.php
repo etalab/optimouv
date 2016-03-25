@@ -872,28 +872,31 @@ class PoulesController extends Controller
         $formatExport = $_POST['formatExport'];
         $idResultat = $_POST['idResultat'];
         $typeScenario = $_POST['typeScenario'];
+        $nomScenario = $this->getNomScenario($typeScenario);
+
+        //recuperation des donnees relatives au scenario
+        $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
 
 //        error_log("\n params: ".print_r($_POST , true), 3, "error_log_optimouv.txt");
 
+        $nombrePoule = $infoPdf[0];
+        $taillePoule = $infoPdf[1];
+        $contraintsExiste = $infoPdf[2];
+        $typeMatch = $infoPdf[3];
+        $scenarioResultats = $infoPdf[4];
+        $nomRapport = $infoPdf[5];
+        $nomGroupe = $infoPdf[6];
+        $nomListe = $infoPdf[7];
+        $detailsVilles = $infoPdf[8];
+        $idGroupe = $infoPdf[9];
+        $idRapport = $infoPdf[10];
+        $nomUtilisateur = $infoPdf[11];
+
+        $nomFederation = "FFBB"; # FIXME
+        $nomDiscipline ="Basket"; # FIXME
+
         if($formatExport == "pdf"){
-
-            //recuperation des donnees relatives au scenario
-            $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
-
-            $nombrePoule = $infoPdf[0];
-            $taillePoule = $infoPdf[1];
-            $contraintsExiste = $infoPdf[2];
-            $typeMatch = $infoPdf[3];
-            $scenarioResultats = $infoPdf[4];
-            $nomRapport = $infoPdf[5];
-            $nomGroupe = $infoPdf[6];
-            $nomListe = $infoPdf[7];
-            $detailsVilles = $infoPdf[8];
-            $idGroupe = $infoPdf[9];
-            $idRapport = $infoPdf[10];
-            $nomUtilisateur = $infoPdf[11];
-
-
+            
             return $this->render('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
                 'nomRapport' => $nomRapport,
                 'typeMatch' => $typeMatch,
@@ -909,16 +912,44 @@ class PoulesController extends Controller
                 'idResultat' => $idResultat,
                 'nomUtilisateur' => $nomUtilisateur,
                 'typeScenario' => $typeScenario,
+                'nomScenario' => $nomScenario,
+                'nomFederation' => $nomFederation,
+                'nomDiscipline' => $nomDiscipline,
             ));
 
 
         }
         elseif ($formatExport == "xml"){
 
+            header('Content-type: text/xml');
+            header('Content-Disposition: attachment; filename="'.$nomRapport.'.xml"');
 
 
-            return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
+
+            $infoXML = array(
+                "nomRapport" => $nomRapport,
+                "nomScenario" => $nomScenario,
+                "nomFederation" => $nomFederation,
+                "nomDiscipline" => $nomDiscipline,
+                "nomUtilisateur" => $nomUtilisateur,
+                "nomGroupe" => $nomGroupe,
+                "nomRencontre" => $nomRencontre,
+                'villeDepart' => $villeDepart,
+                'distanceMin' => $distanceMin,
+                'distanceTotale' => $distanceTotale,
+                'participants' => $participants,
+            );
+
             exit();
+
+            $texte = $this->getTexteExportXml($infoXML);
+
+            echo $texte;
+
+//             error_log("\n text: ".print_r($texte , true), 3, "error_log_optimouv.txt");
+            exit();
+
+
         }
         elseif ($formatExport == "csv"){
             return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
@@ -929,6 +960,94 @@ class PoulesController extends Controller
     }
 
 
+    private function getTexteExportXml($infoXml){
+        $texte = '<?xml version="1.0" encoding="utf-8"?>';
+
+        $texte .= "\n";
+        $texte .= "<resultat>\n";
+
+        # parametres
+        $texte .= "\t<params>\n";
+        $texte .= "\t\t<nom_rapport>" .$infoXml["nomRapport"]."</nom_rapport>\n";
+        $texte .= "\t\t<nom_scenario>" .$infoXml["nomScenario"]."</nom_scenario>\n";
+        $texte .= "\t\t<nom_federation>" .$infoXml["nomFederation"]."</nom_federation>\n";
+        $texte .= "\t\t<nom_discipline>" .$infoXml["nomDiscipline"]."</nom_discipline>\n";
+        $texte .= "\t\t<nom_utilisateur>" .$infoXml["nomUtilisateur"]."</nom_utilisateur>\n";
+        $texte .= "\t\t<nom_groupe>" .$infoXml["nomGroupe"]."</nom_groupe>\n";
+        $texte .= "\t\t<nom_rencontre>" .$infoXml["nomRencontre"]."</nom_rencontre>\n";
+        $texte .= "\t</params>\n";
+
+
+        # estimation générale
+        $villeDepart = explode("|", $infoXml["villeDepart"]) ;
+        $nomVilleDepart = trim($villeDepart[1]);
+        $codePostalVilleDepart = trim($villeDepart[0]);
+
+        $texte .= "\t<estimation_generale>\n";
+        $texte .= "\t\t<meilleu_lieu_rencontre_nom>" .$nomVilleDepart."</meilleu_lieu_rencontre_nom>\n";
+        $texte .= "\t\t<meilleu_lieu_rencontre_code_postal>" .$codePostalVilleDepart."</meilleu_lieu_rencontre_code_postal>\n";
+        $texte .= "\t\t<distance_totale>" .$infoXml["distanceMin"]." Kms</distance_totale>\n";
+        $texte .= "\t\t<cout_voiture>" .round($infoXml["distanceTotale"]*0.8)." €</cout_voiture>\n";
+        $texte .= "\t\t<cout_covoiturage>" .round($infoXml["distanceTotale"]/4*0.8)." €</cout_covoiturage>\n";
+        $texte .= "\t\t<cout_minibus>" .round($infoXml["distanceTotale"]/9*1.31)." €</cout_minibus>\n";
+        $texte .= "\t\t<co2_emission_voiture>" .round($infoXml["distanceTotale"]*0.157)." KG eq CO2</co2_emission_voiture>\n";
+        $texte .= "\t\t<co2_emission_covoiturage>" .round($infoXml["distanceTotale"]/4*0.157)." KG eq CO2</co2_emission_covoiturage>\n";
+        $texte .= "\t\t<co2_emission_minibus>" .round($infoXml["distanceTotale"]/9*0.185)." KG eq CO2</co2_emission_minibus>\n";
+        $texte .= "\t</estimation_generale>\n";
+
+
+        # estimation détaillée
+        $texte .= "\t<estimation_detaille>\n";
+
+        foreach($infoXml["participants"] as $participant){
+
+//            error_log("\n participant: ".print_r($participant , true), 3, "error_log_optimouv.txt");
+
+            $texte .= "\t\t<participant>\n";
+            $texte .= "\t\t\t<nom>".$participant["villeNom"] ."</nom>\n";
+            $texte .= "\t\t\t<distance_parcourue>" .floor($participant["distance"]/1000)." Kms</distance_parcourue>\n";
+            $texte .= "\t\t\t<duree_trajet>" .round($participant["duree"]/3600).":".round($participant["duree"]%3600/60)." (H:M)"." </duree_trajet>\n";
+            $texte .= "\t\t\t<cout_voiture>" .round($participant["distance"]/1000*$participant["nbrParticipants"]*0.8)." €</cout_voiture>\n";
+            $texte .= "\t\t\t<cout_covoiturage>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.8)." €</cout_covoiturage>\n";
+            $texte .= "\t\t\t<cout_minibus>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/9*1.31)." €</cout_minibus>\n";
+            $texte .= "\t\t\t<co2_emission_voiture>" .round($participant["distance"]/1000*$participant["nbrParticipants"]*0.157)." KG eq CO2</co2_emission_voiture>\n";
+            $texte .= "\t\t\t<co2_emission_covoiturage>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.157)." KG eq CO2</co2_emission_covoiturage>\n";
+            $texte .= "\t\t\t<co2_emission_minibus>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/9*0.185)." KG eq CO2</co2_emission_minibus>\n";
+            $texte .= "\t\t</participant>\n";
+
+        }
+
+        $texte .= "\t</estimation_detaille>\n";
+
+
+
+        $texte .= "</resultat>";
+
+        return $texte;
+    }
+    
+    private function getNomScenario($typeScenario){
+        $nomScenario = "";
+
+
+        if($typeScenario == "optimalSansContrainte"){
+            $nomScenario = "scénario optimal sans contrainte";
+        }
+        elseif($typeScenario == "optimalAvecContrainte"){
+            $nomScenario = "scénario optimal avec contrainte";
+        }
+        elseif($typeScenario == "equitableSansContrainte"){
+            $nomScenario = "scénario équitable sans contrainte";
+        }
+        elseif($typeScenario == "equitableAvecContrainte"){
+            $nomScenario = "scénario équitable avec contrainte";
+        }
+        elseif($typeScenario == "ref"){
+            $nomScenario = "scénario de référence";
+        }
+
+        return $nomScenario;
+    }
 
 
 
@@ -937,6 +1056,7 @@ class PoulesController extends Controller
 
         $idResultat = $_POST['idResultat'];
         $typeScenario = $_POST['typeScenario'];
+        $nomScenario = $this->getNomScenario($typeScenario);
 
         //recuperation des donnees relatives au scenario
         $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
@@ -954,6 +1074,8 @@ class PoulesController extends Controller
         $idRapport = $infoPdf[10];
         $nomUtilisateur = $infoPdf[11];
 
+        $nomFederation = "FFBB"; # FIXME
+        $nomDiscipline ="Basket"; # FIXME
 
         $html = $this->renderView('FfbbBundle:Poules:exportPdf.html.twig', array(
             'nomRapport' => $nomRapport,
@@ -970,6 +1092,9 @@ class PoulesController extends Controller
             'idResultat' => $idResultat,
             'nomUtilisateur' => $nomUtilisateur,
             'typeScenario' => $typeScenario,
+            'nomScenario' => $nomScenario,
+            'nomFederation' => $nomFederation,
+            'nomDiscipline' => $nomDiscipline,
 
         ));
 
