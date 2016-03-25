@@ -883,6 +883,7 @@ class PoulesController extends Controller
         $taillePoule = $infoPdf[1];
         $contraintsExiste = $infoPdf[2];
         $typeMatch = $infoPdf[3];
+        $nomMatch = $this->getNomMatch($typeMatch);
         $scenarioResultats = $infoPdf[4];
         $nomRapport = $infoPdf[5];
         $nomGroupe = $infoPdf[6];
@@ -900,6 +901,7 @@ class PoulesController extends Controller
             return $this->render('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
                 'nomRapport' => $nomRapport,
                 'typeMatch' => $typeMatch,
+                'nomMatch' => $nomMatch,
                 'nombrePoule' => $nombrePoule,
                 'nomListe' => $nomListe,
                 'nomGroupe' => $nomGroupe,
@@ -1025,6 +1027,24 @@ class PoulesController extends Controller
 
         return $texte;
     }
+
+
+    private function getNomMatch($typeMatch){
+        $nomMatch = "";
+
+ 
+        if($typeMatch == "allerRetour"){
+            $nomMatch = "Optimisation de poules - match aller retour";
+        }
+        elseif($typeMatch == "allerSimple"){
+            $nomMatch = "Optimisation de poules - match aller simple";
+        }
+        elseif($typeMatch == "plateau"){
+            $nomMatch = "Optimisation de poules - match aller plateau";
+        }
+
+        return $nomMatch;
+    }
     
     private function getNomScenario($typeScenario){
         $nomScenario = "";
@@ -1065,6 +1085,7 @@ class PoulesController extends Controller
         $taillePoule = $infoPdf[1];
         $contraintsExiste = $infoPdf[2];
         $typeMatch = $infoPdf[3];
+        $nomMatch = $this->getnomMatch($typeMatch);
         $scenarioResultats = $infoPdf[4];
         $nomRapport = $infoPdf[5];
         $nomGroupe = $infoPdf[6];
@@ -1080,6 +1101,7 @@ class PoulesController extends Controller
         $html = $this->renderView('FfbbBundle:Poules:exportPdf.html.twig', array(
             'nomRapport' => $nomRapport,
             'typeMatch' => $typeMatch,
+            'nomMatch' => $nomMatch,
             'nombrePoule' => $nombrePoule,
             'nomListe' => $nomListe,
             'nomGroupe' => $nomGroupe,
