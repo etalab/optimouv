@@ -269,12 +269,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
         # parametres
         $texte .= "\t<params>\n";
         $texte .= "\t\t<nom_rapport>" .$infoXml["nomRapport"]."</nom_rapport>\n";
+        $texte .= "\t\t<nom_rencontre>" .$infoXml["nomRencontre"]."</nom_rencontre>\n";
         $texte .= "\t\t<nom_scenario>" .$infoXml["nomScenario"]."</nom_scenario>\n";
         $texte .= "\t\t<nom_federation>" .$infoXml["nomFederation"]."</nom_federation>\n";
         $texte .= "\t\t<nom_discipline>" .$infoXml["nomDiscipline"]."</nom_discipline>\n";
         $texte .= "\t\t<nom_utilisateur>" .$infoXml["nomUtilisateur"]."</nom_utilisateur>\n";
         $texte .= "\t\t<nom_groupe>" .$infoXml["nomGroupe"]."</nom_groupe>\n";
-        $texte .= "\t\t<nom_rencontre>" .$infoXml["nomRencontre"]."</nom_rencontre>\n";
         $texte .= "\t</params>\n";
 
 
