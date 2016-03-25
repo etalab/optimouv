@@ -936,7 +936,6 @@ class PoulesController extends Controller
                 'scenarioResultats' => $scenarioResultats,
                 'typeMatch' => $typeMatch,
 
-
             );
 
 
