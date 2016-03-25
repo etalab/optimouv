@@ -200,13 +200,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
                  'villeDepart' => $villeDepart,
                  'distanceMin' => $distanceMin,
                  'distanceTotale' => $distanceTotale,
+                 'participants' => $participants,
              );
 
              $texte = $this->getTexteExportXml($infoXML);
 
              echo $texte;
 
-             error_log("\n text: ".print_r($texte , true), 3, "error_log_optimouv.txt");
+//             error_log("\n text: ".print_r($texte , true), 3, "error_log_optimouv.txt");
              exit();
 
              
@@ -282,19 +283,36 @@ use Symfony\Component\HttpFoundation\JsonResponse;
         $texte .= "\t<estimation_generale>\n";
         $texte .= "\t\t<meilleu_lieu_rencontre_nom>" .$nomVilleDepart."</meilleu_lieu_rencontre_nom>\n";
         $texte .= "\t\t<meilleu_lieu_rencontre_code_postal>" .$codePostalVilleDepart."</meilleu_lieu_rencontre_code_postal>\n";
-        $texte .= "\t\t<distance_totale>" .$infoXml["distanceMin"]." km</distance_totale>\n";
+        $texte .= "\t\t<distance_totale>" .$infoXml["distanceMin"]." Kms</distance_totale>\n";
         $texte .= "\t\t<cout_voiture>" .round($infoXml["distanceTotale"]*0.8)." €</cout_voiture>\n";
         $texte .= "\t\t<cout_covoiturage>" .round($infoXml["distanceTotale"]/4*0.8)." €</cout_covoiturage>\n";
         $texte .= "\t\t<cout_minibus>" .round($infoXml["distanceTotale"]/9*1.31)." €</cout_minibus>\n";
         $texte .= "\t\t<co2_emission_voiture>" .round($infoXml["distanceTotale"]*0.157)." KG</co2_emission_voiture>\n";
         $texte .= "\t\t<co2_emission_covoiturage>" .round($infoXml["distanceTotale"]/4*0.157)." KG</co2_emission_covoiturage>\n";
-        $texte .= "\t\t<co2_emission_minibus>" .round($infoXml["distanceTotale"]/9*0.157)." KG</co2_emission_minibus>\n";
-
+        $texte .= "\t\t<co2_emission_minibus>" .round($infoXml["distanceTotale"]/9*0.185)." KG</co2_emission_minibus>\n";
         $texte .= "\t</estimation_generale>\n";
 
 
         # estimation détaillée
         $texte .= "\t<estimation_detaille>\n";
+
+        foreach($infoXml["participants"] as $participant){
+
+//            error_log("\n participant: ".print_r($participant , true), 3, "error_log_optimouv.txt");
+
+            $texte .= "\t\t<participant>\n";
+            $texte .= "\t\t\t<nom>".$participant["villeNom"] ."</nom>\n";
+            $texte .= "\t\t\t<distance_parcourue>" .floor($participant["distance"]/1000)." Kms</distance_parcourue>\n";
+            $texte .= "\t\t\t<duree_trajet>" .round($participant["duree"]/3600).":".round($participant["duree"]%3600/60)." </duree_trajet>\n";
+            $texte .= "\t\t\t<cout_voiture>" .round($participant["distance"]/1000*$participant["nbrParticipants"]*0.8)." €</cout_voiture>\n";
+            $texte .= "\t\t\t<cout_covoiturage>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.8)." €</cout_covoiturage>\n";
+            $texte .= "\t\t\t<cout_minibus>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/9*1.31)." €</cout_minibus>\n";
+            $texte .= "\t\t\t<co2_emission_voiture>" .round($participant["distance"]/1000*$participant["nbrParticipants"]*0.157)." KG</co2_emission_voiture>\n";
+            $texte .= "\t\t\t<co2_emission_covoiturage>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.157)." KG</co2_emission_covoiturage>\n";
+            $texte .= "\t\t\t<co2_emission_minibus>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/9*0.185)." KG</co2_emission_minibus>\n";
+            $texte .= "\t\t</participant>\n";
+
+        }
 
         $texte .= "\t</estimation_detaille>\n";
 
