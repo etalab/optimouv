@@ -866,7 +866,6 @@ class PoulesController extends Controller
         return $this->render('FfbbBundle:Poules:detailsCalcul.html.twig');
     }
 
-//    public function previsualisationExportAction()
     public function pretraitementExportAction()
     
 {
@@ -915,6 +914,9 @@ class PoulesController extends Controller
 
         }
         elseif ($formatExport == "xml"){
+
+
+
             return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
             exit();
         }
@@ -927,48 +929,6 @@ class PoulesController extends Controller
     }
 
 
-//    public function previsualisationPdfAction()
-//    {
-//
-//        $idResultat = $_POST['idResultat'];
-//        $typeScenario = $_POST['typeScenario'];
-//
-//
-//        //recuperation des donnees relatives au scenario
-//        $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
-//
-//        $nombrePoule = $infoPdf[0];
-//        $taillePoule = $infoPdf[1];
-//        $contraintsExiste = $infoPdf[2];
-//        $typeMatch = $infoPdf[3];
-//        $scenarioResultats = $infoPdf[4];
-//        $nomRapport = $infoPdf[5];
-//        $nomGroupe = $infoPdf[6];
-//        $nomListe = $infoPdf[7];
-//        $detailsVilles = $infoPdf[8];
-//        $idGroupe = $infoPdf[9];
-//        $idRapport = $infoPdf[10];
-//        $nomUtilisateur = $infoPdf[11];
-//
-//
-//        return $this->render('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
-//            'nomRapport' => $nomRapport,
-//            'typeMatch' => $typeMatch,
-//            'nombrePoule' => $nombrePoule,
-//            'nomListe' => $nomListe,
-//            'nomGroupe' => $nomGroupe,
-//            'taillePoule' => $taillePoule,
-//            'contraintsExiste' => $contraintsExiste,
-//            'scenarioResultats' => $scenarioResultats,
-//            'idRapport' => $idRapport,
-//            'detailsVilles' => $detailsVilles,
-//            'idGroupe' => $idGroupe,
-//            'idResultat' => $idResultat,
-//            'nomUtilisateur' => $nomUtilisateur,
-//            'typeScenario' => $typeScenario,
-//        ));
-//
-//    }
 
 
 
