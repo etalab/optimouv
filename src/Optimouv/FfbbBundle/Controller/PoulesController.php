@@ -867,15 +867,14 @@ class PoulesController extends Controller
     }
 
     public function pretraitementExportAction()
-    
-{
+    {
         $formatExport = $_POST['formatExport'];
         $idResultat = $_POST['idResultat'];
         $typeScenario = $_POST['typeScenario'];
         $nomScenario = $this->getNomScenario($typeScenario);
 
         //recuperation des donnees relatives au scenario
-        $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
+        $infoPdf = $this->getInfoPdf($idResultat, $typeScenario);
 
 //        error_log("\n params: ".print_r($_POST , true), 3, "error_log_optimouv.txt");
 
@@ -927,7 +926,6 @@ class PoulesController extends Controller
             header('Content-Disposition: attachment; filename="'.$nomRapport.'.xml"');
 
 
-
             $infoXML = array(
                 "nomRapport" => $nomRapport,
                 "nomScenario" => $nomScenario,
@@ -935,20 +933,24 @@ class PoulesController extends Controller
                 "nomDiscipline" => $nomDiscipline,
                 "nomUtilisateur" => $nomUtilisateur,
                 "nomGroupe" => $nomGroupe,
-                "nomRencontre" => $nomRencontre,
-                'villeDepart' => $villeDepart,
-                'distanceMin' => $distanceMin,
-                'distanceTotale' => $distanceTotale,
-                'participants' => $participants,
+                "nomMatch" => $nomMatch,
+                'nomListe' => $nomListe,
+                'nombrePoule' => $nombrePoule,
+                'taillePoule' => $taillePoule,
+
+
+
+
+
             );
 
-            exit();
 
             $texte = $this->getTexteExportXml($infoXML);
 
-            echo $texte;
-
 //             error_log("\n text: ".print_r($texte , true), 3, "error_log_optimouv.txt");
+
+
+            echo $texte;
             exit();
 
 
@@ -971,54 +973,52 @@ class PoulesController extends Controller
         # parametres
         $texte .= "\t<params>\n";
         $texte .= "\t\t<nom_rapport>" .$infoXml["nomRapport"]."</nom_rapport>\n";
+        $texte .= "\t\t<nom_rencontre>" .$infoXml["nomMatch"]."</nom_rencontre>\n";
         $texte .= "\t\t<nom_scenario>" .$infoXml["nomScenario"]."</nom_scenario>\n";
         $texte .= "\t\t<nom_federation>" .$infoXml["nomFederation"]."</nom_federation>\n";
         $texte .= "\t\t<nom_discipline>" .$infoXml["nomDiscipline"]."</nom_discipline>\n";
         $texte .= "\t\t<nom_utilisateur>" .$infoXml["nomUtilisateur"]."</nom_utilisateur>\n";
+        $texte .= "\t\t<nom_liste>" .$infoXml["nomListe"]."</nom_liste>\n";
         $texte .= "\t\t<nom_groupe>" .$infoXml["nomGroupe"]."</nom_groupe>\n";
-        $texte .= "\t\t<nom_rencontre>" .$infoXml["nomRencontre"]."</nom_rencontre>\n";
+        $texte .= "\t\t<nombre_poule>" .$infoXml["nombrePoule"]."</nombre_poule>\n";
+        $texte .= "\t\t<taille_poule>" .$infoXml["taillePoule"]."</taille_poule>\n";
         $texte .= "\t</params>\n";
 
 
         # estimation générale
-        $villeDepart = explode("|", $infoXml["villeDepart"]) ;
-        $nomVilleDepart = trim($villeDepart[1]);
-        $codePostalVilleDepart = trim($villeDepart[0]);
 
         $texte .= "\t<estimation_generale>\n";
-        $texte .= "\t\t<meilleu_lieu_rencontre_nom>" .$nomVilleDepart."</meilleu_lieu_rencontre_nom>\n";
-        $texte .= "\t\t<meilleu_lieu_rencontre_code_postal>" .$codePostalVilleDepart."</meilleu_lieu_rencontre_code_postal>\n";
-        $texte .= "\t\t<distance_totale>" .$infoXml["distanceMin"]." Kms</distance_totale>\n";
-        $texte .= "\t\t<cout_voiture>" .round($infoXml["distanceTotale"]*0.8)." €</cout_voiture>\n";
-        $texte .= "\t\t<cout_covoiturage>" .round($infoXml["distanceTotale"]/4*0.8)." €</cout_covoiturage>\n";
-        $texte .= "\t\t<cout_minibus>" .round($infoXml["distanceTotale"]/9*1.31)." €</cout_minibus>\n";
-        $texte .= "\t\t<co2_emission_voiture>" .round($infoXml["distanceTotale"]*0.157)." KG eq CO2</co2_emission_voiture>\n";
-        $texte .= "\t\t<co2_emission_covoiturage>" .round($infoXml["distanceTotale"]/4*0.157)." KG eq CO2</co2_emission_covoiturage>\n";
-        $texte .= "\t\t<co2_emission_minibus>" .round($infoXml["distanceTotale"]/9*0.185)." KG eq CO2</co2_emission_minibus>\n";
+//        $texte .= "\t\t<meilleu_lieu_rencontre_nom>" .$nomVilleDepart."</meilleu_lieu_rencontre_nom>\n";
+//        $texte .= "\t\t<meilleu_lieu_rencontre_code_postal>" .$codePostalVilleDepart."</meilleu_lieu_rencontre_code_postal>\n";
+//        $texte .= "\t\t<distance_totale>" .$infoXml["distanceMin"]." Kms</distance_totale>\n";
+//        $texte .= "\t\t<cout_voiture>" .round($infoXml["distanceTotale"]*0.8)." €</cout_voiture>\n";
+//        $texte .= "\t\t<cout_covoiturage>" .round($infoXml["distanceTotale"]/4*0.8)." €</cout_covoiturage>\n";
+//        $texte .= "\t\t<cout_minibus>" .round($infoXml["distanceTotale"]/9*1.31)." €</cout_minibus>\n";
+//        $texte .= "\t\t<co2_emission_voiture>" .round($infoXml["distanceTotale"]*0.157)." KG eq CO2</co2_emission_voiture>\n";
+//        $texte .= "\t\t<co2_emission_covoiturage>" .round($infoXml["distanceTotale"]/4*0.157)." KG eq CO2</co2_emission_covoiturage>\n";
+//        $texte .= "\t\t<co2_emission_minibus>" .round($infoXml["distanceTotale"]/9*0.185)." KG eq CO2</co2_emission_minibus>\n";
         $texte .= "\t</estimation_generale>\n";
-
-
+//
+//
         # estimation détaillée
         $texte .= "\t<estimation_detaille>\n";
-
-        foreach($infoXml["participants"] as $participant){
-
-//            error_log("\n participant: ".print_r($participant , true), 3, "error_log_optimouv.txt");
-
-            $texte .= "\t\t<participant>\n";
-            $texte .= "\t\t\t<nom>".$participant["villeNom"] ."</nom>\n";
-            $texte .= "\t\t\t<distance_parcourue>" .floor($participant["distance"]/1000)." Kms</distance_parcourue>\n";
-            $texte .= "\t\t\t<duree_trajet>" .round($participant["duree"]/3600).":".round($participant["duree"]%3600/60)." (H:M)"." </duree_trajet>\n";
-            $texte .= "\t\t\t<cout_voiture>" .round($participant["distance"]/1000*$participant["nbrParticipants"]*0.8)." €</cout_voiture>\n";
-            $texte .= "\t\t\t<cout_covoiturage>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.8)." €</cout_covoiturage>\n";
-            $texte .= "\t\t\t<cout_minibus>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/9*1.31)." €</cout_minibus>\n";
-            $texte .= "\t\t\t<co2_emission_voiture>" .round($participant["distance"]/1000*$participant["nbrParticipants"]*0.157)." KG eq CO2</co2_emission_voiture>\n";
-            $texte .= "\t\t\t<co2_emission_covoiturage>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.157)." KG eq CO2</co2_emission_covoiturage>\n";
-            $texte .= "\t\t\t<co2_emission_minibus>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/9*0.185)." KG eq CO2</co2_emission_minibus>\n";
-            $texte .= "\t\t</participant>\n";
-
-        }
-
+//
+//        foreach($infoXml["participants"] as $participant){
+//
+//            $texte .= "\t\t<participant>\n";
+//            $texte .= "\t\t\t<nom>".$participant["villeNom"] ."</nom>\n";
+//            $texte .= "\t\t\t<distance_parcourue>" .floor($participant["distance"]/1000)." Kms</distance_parcourue>\n";
+//            $texte .= "\t\t\t<duree_trajet>" .round($participant["duree"]/3600).":".round($participant["duree"]%3600/60)." (H:M)"." </duree_trajet>\n";
+//            $texte .= "\t\t\t<cout_voiture>" .round($participant["distance"]/1000*$participant["nbrParticipants"]*0.8)." €</cout_voiture>\n";
+//            $texte .= "\t\t\t<cout_covoiturage>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.8)." €</cout_covoiturage>\n";
+//            $texte .= "\t\t\t<cout_minibus>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/9*1.31)." €</cout_minibus>\n";
+//            $texte .= "\t\t\t<co2_emission_voiture>" .round($participant["distance"]/1000*$participant["nbrParticipants"]*0.157)." KG eq CO2</co2_emission_voiture>\n";
+//            $texte .= "\t\t\t<co2_emission_covoiturage>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.157)." KG eq CO2</co2_emission_covoiturage>\n";
+//            $texte .= "\t\t\t<co2_emission_minibus>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/9*0.185)." KG eq CO2</co2_emission_minibus>\n";
+//            $texte .= "\t\t</participant>\n";
+//
+//        }
+//
         $texte .= "\t</estimation_detaille>\n";
 
 
@@ -1040,7 +1040,7 @@ class PoulesController extends Controller
             $nomMatch = "Optimisation de poules - match aller simple";
         }
         elseif($typeMatch == "plateau"){
-            $nomMatch = "Optimisation de poules - match aller plateau";
+            $nomMatch = "Optimisation de poules - match plateau";
         }
 
         return $nomMatch;
@@ -1079,7 +1079,7 @@ class PoulesController extends Controller
         $nomScenario = $this->getNomScenario($typeScenario);
 
         //recuperation des donnees relatives au scenario
-        $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
+        $infoPdf = $this->getInfoPdf($idResultat, $typeScenario);
 
         $nombrePoule = $infoPdf[0];
         $taillePoule = $infoPdf[1];
@@ -1165,7 +1165,8 @@ class PoulesController extends Controller
     }
 
 //    function qui ramene toutes les infos necessaires à la view
-    public function getInfoPdfAction($idResultat , $typeScenario)
+//    public function getInfoPdf($idResultat , $typeScenario)
+    private function getInfoPdf($idResultat , $typeScenario)
     {
 
 
