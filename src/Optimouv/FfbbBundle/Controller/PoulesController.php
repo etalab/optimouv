@@ -599,10 +599,7 @@ class PoulesController extends Controller
 
     public function resultatCalculAction($idResultat)
     {
-
-
-//        error_log("\n idResultat: ".print_r($idResultat , true), 3, "error_log_optimouv.txt");
-
+        
         # obtenir entity manager
         $em = $this->getDoctrine()->getManager();
 
@@ -626,8 +623,7 @@ class PoulesController extends Controller
         # récupérer la liste des noms et des ids de villes
         $detailsVilles = $em->getRepository('FfbbBundle:Entite')->getEntities($equipes);
 
-
-
+        
         $detailsCalcul = $em->getRepository('FfbbBundle:Scenario')->findOneById($idResultat)->getDetailsCalcul();
 
         $detailsCalcul = json_decode($detailsCalcul, true);
@@ -690,7 +686,9 @@ class PoulesController extends Controller
         else{
             $infoPoule = array($taillePoule => $nombrePoule);
         }
-
+        $infoPouleStr = $this->getStrInfoPoule($infoPoule);
+        
+        
         # récupérer la contrainte d'accueil pour le match plateau
         if(array_key_exists("contrainteAccueilPlateauExiste", $detailsCalcul["params"])){
             $contrainteAccueilPlateauExiste = $detailsCalcul["params"]["contrainteAccueilPlateauExiste"];
@@ -708,9 +706,8 @@ class PoulesController extends Controller
         }
 
 
-        //récupération du nom du rapport
         $connection = $em->getConnection();
-
+        //récupération du nom du rapport
         $statement = $connection->prepare("SELECT  b.id as idRapport, b.nom as nomRapport, b.id_groupe as idGroupe FROM resultats as a, parametres as b where a.id_rapport = b.id and a.id = :id");
         $statement->bindParam(':id', $idResultat);
         $statement->execute();
@@ -720,7 +717,6 @@ class PoulesController extends Controller
         $idGroupe = $statement[0]['idGroupe'];
 
         //récupération du nom du groupe
-
         $statement = $connection->prepare("SELECT  a.nom as nomGroupe, a.id_liste_participant as idListe from groupe as a where a.id = :id");
         $statement->bindParam(':id', $idGroupe);
         $statement->execute();
@@ -730,7 +726,6 @@ class PoulesController extends Controller
 
 
         //récupération du nom du=e la liste
-
         $statement = $connection->prepare("SELECT  a.nom as nomListe from liste_participants as a where a.id = :id");
         $statement->bindParam(':id', $idListe);
         $statement->execute();
@@ -744,7 +739,6 @@ class PoulesController extends Controller
 
 //        error_log("\n infoChangeAffectation: ".print_r($infoChangeAffectation , true), 3, "error_log_optimouv.txt");
 
-//        exit();
 
         return $this->render('FfbbBundle:Poules:resultatCalcul.html.twig' , array(
 
@@ -771,6 +765,7 @@ class PoulesController extends Controller
             'finalStatut' => $finalStatut,
             'phantomExiste' => $phantomExiste,
             'infoPoule' => $infoPoule,
+            'infoPouleStr' => $infoPouleStr,
             'contrainteAccueilPlateauExiste' => $contrainteAccueilPlateauExiste,
             'infoChangeAffectation' => $infoChangeAffectation,
             'changeAffectEquipes' => $changeAffectEquipes,
@@ -876,7 +871,6 @@ class PoulesController extends Controller
         //recuperation des donnees relatives au scenario
         $infoPdf = $this->getInfoPdf($idResultat, $typeScenario);
 
-//        error_log("\n params: ".print_r($_POST , true), 3, "error_log_optimouv.txt");
 
         $nombrePoule = $infoPdf[0];
         $taillePoule = $infoPdf[1];
@@ -891,6 +885,11 @@ class PoulesController extends Controller
         $idGroupe = $infoPdf[9];
         $idRapport = $infoPdf[10];
         $nomUtilisateur = $infoPdf[11];
+        $infoPoule = $infoPdf["infoPoule"];
+        $infoPouleStr = $this->getStrInfoPoule($infoPoule);
+
+//        error_log("\n infoPouleStr: ".print_r($infoPouleStr , true), 3, "error_log_optimouv.txt");
+
 
         $nomFederation = "FFBB"; # FIXME
         $nomDiscipline ="Basket"; # FIXME
@@ -916,6 +915,7 @@ class PoulesController extends Controller
                 'nomScenario' => $nomScenario,
                 'nomFederation' => $nomFederation,
                 'nomDiscipline' => $nomDiscipline,
+                'infoPouleStr' => $infoPouleStr,
             ));
 
 
@@ -1094,6 +1094,8 @@ class PoulesController extends Controller
         $idGroupe = $infoPdf[9];
         $idRapport = $infoPdf[10];
         $nomUtilisateur = $infoPdf[11];
+        $infoPoule = $infoPdf["infoPoule"];
+        $infoPouleStr = $this->getStrInfoPoule($infoPoule);
 
         $nomFederation = "FFBB"; # FIXME
         $nomDiscipline ="Basket"; # FIXME
@@ -1117,6 +1119,7 @@ class PoulesController extends Controller
             'nomScenario' => $nomScenario,
             'nomFederation' => $nomFederation,
             'nomDiscipline' => $nomDiscipline,
+            'infoPouleStr' => $infoPouleStr,
 
         ));
 
@@ -1132,6 +1135,30 @@ class PoulesController extends Controller
 
             )
         );
+    }
+
+    private function getStrInfoPoule($infoPoule){
+        $strInfoPoule = "";
+
+        $i = 0;
+        foreach($infoPoule as $taillePoule => $nombrePoule){
+            $i ++;
+            if($nombrePoule == 1){
+                $strInfoPoule .= $nombrePoule. " poule de ". $taillePoule . " équipes";
+            }
+            else{
+                $strInfoPoule .= $nombrePoule. " poules de ". $taillePoule . " équipes";
+            }
+
+            if($i != count($infoPoule)){
+                $strInfoPoule .= " et ";
+            }
+
+
+        }
+
+
+        return $strInfoPoule;
     }
 
     public function testExportPdfAction()
@@ -1165,7 +1192,6 @@ class PoulesController extends Controller
     }
 
 //    function qui ramene toutes les infos necessaires à la view
-//    public function getInfoPdf($idResultat , $typeScenario)
     private function getInfoPdf($idResultat , $typeScenario)
     {
 
@@ -1202,6 +1228,15 @@ class PoulesController extends Controller
         $taillePoule = $detailsCalcul["taillePoule"];
         $contraintsExiste = $detailsCalcul["contraintsExiste"];
         $typeMatch = $detailsCalcul["typeMatch"];
+
+        # récupérer l'info des poules
+        if(array_key_exists("infoPoule", $detailsCalcul["params"])){
+            $infoPoule = $detailsCalcul["params"]["infoPoule"];
+        }
+        else{
+            $infoPoule = array($taillePoule => $nombrePoule);
+        }
+
 
         # obtenir scénario selon leur type
         if($typeScenario == "optimalSansContrainte"){
@@ -1267,6 +1302,7 @@ class PoulesController extends Controller
         $retour[9] = $idGroupe;
         $retour[10] = $idRapport;
         $retour[11] = $nomUtilisateur;
+        $retour["infoPoule"] = $infoPoule;
 
         return $retour;
     }
