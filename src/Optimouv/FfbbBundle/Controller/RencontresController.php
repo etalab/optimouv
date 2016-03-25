@@ -130,6 +130,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $typeRencontre = $_POST['typeRencontre'];
          $nomRencontre = $this->getNomRencontre($typeRencontre);
 
+//          error_log("\n typeRencontre: ".print_r($typeRencontre , true), 3, "error_log_optimouv.txt");
+
+
          //recuperation des donnees relatives au scenario
          $infoResultat = $this->getInfoResultat($idResultat, $typeRencontre, $typeScenario) ;
 
@@ -224,7 +227,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          if($typeRencontre == "barycentre"){
              $nomRencontre = "barycentre";
          }
-         elseif($typeRencontre == "barycentreAvecExclusion"){
+         elseif($typeRencontre == "barycentreAvecExlcusion"){
              $nomRencontre = "barycentre avec exclusion";
          }
          elseif($typeRencontre == "meilleurLieu"){
@@ -287,9 +290,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
         $texte .= "\t\t<cout_voiture>" .round($infoXml["distanceTotale"]*0.8)." €</cout_voiture>\n";
         $texte .= "\t\t<cout_covoiturage>" .round($infoXml["distanceTotale"]/4*0.8)." €</cout_covoiturage>\n";
         $texte .= "\t\t<cout_minibus>" .round($infoXml["distanceTotale"]/9*1.31)." €</cout_minibus>\n";
-        $texte .= "\t\t<co2_emission_voiture>" .round($infoXml["distanceTotale"]*0.157)." KG</co2_emission_voiture>\n";
-        $texte .= "\t\t<co2_emission_covoiturage>" .round($infoXml["distanceTotale"]/4*0.157)." KG</co2_emission_covoiturage>\n";
-        $texte .= "\t\t<co2_emission_minibus>" .round($infoXml["distanceTotale"]/9*0.185)." KG</co2_emission_minibus>\n";
+        $texte .= "\t\t<co2_emission_voiture>" .round($infoXml["distanceTotale"]*0.157)." KG eq CO2</co2_emission_voiture>\n";
+        $texte .= "\t\t<co2_emission_covoiturage>" .round($infoXml["distanceTotale"]/4*0.157)." KG eq CO2</co2_emission_covoiturage>\n";
+        $texte .= "\t\t<co2_emission_minibus>" .round($infoXml["distanceTotale"]/9*0.185)." KG eq CO2</co2_emission_minibus>\n";
         $texte .= "\t</estimation_generale>\n";
 
 
@@ -303,13 +306,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
             $texte .= "\t\t<participant>\n";
             $texte .= "\t\t\t<nom>".$participant["villeNom"] ."</nom>\n";
             $texte .= "\t\t\t<distance_parcourue>" .floor($participant["distance"]/1000)." Kms</distance_parcourue>\n";
-            $texte .= "\t\t\t<duree_trajet>" .round($participant["duree"]/3600).":".round($participant["duree"]%3600/60)." </duree_trajet>\n";
+            $texte .= "\t\t\t<duree_trajet>" .round($participant["duree"]/3600).":".round($participant["duree"]%3600/60)." (H:M)"." </duree_trajet>\n";
             $texte .= "\t\t\t<cout_voiture>" .round($participant["distance"]/1000*$participant["nbrParticipants"]*0.8)." €</cout_voiture>\n";
             $texte .= "\t\t\t<cout_covoiturage>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.8)." €</cout_covoiturage>\n";
             $texte .= "\t\t\t<cout_minibus>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/9*1.31)." €</cout_minibus>\n";
-            $texte .= "\t\t\t<co2_emission_voiture>" .round($participant["distance"]/1000*$participant["nbrParticipants"]*0.157)." KG</co2_emission_voiture>\n";
-            $texte .= "\t\t\t<co2_emission_covoiturage>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.157)." KG</co2_emission_covoiturage>\n";
-            $texte .= "\t\t\t<co2_emission_minibus>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/9*0.185)." KG</co2_emission_minibus>\n";
+            $texte .= "\t\t\t<co2_emission_voiture>" .round($participant["distance"]/1000*$participant["nbrParticipants"]*0.157)." KG eq CO2</co2_emission_voiture>\n";
+            $texte .= "\t\t\t<co2_emission_covoiturage>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.157)." KG eq CO2</co2_emission_covoiturage>\n";
+            $texte .= "\t\t\t<co2_emission_minibus>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/9*0.185)." KG eq CO2</co2_emission_minibus>\n";
             $texte .= "\t\t</participant>\n";
 
         }
