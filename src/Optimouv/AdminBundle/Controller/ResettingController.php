@@ -51,13 +51,27 @@ class ResettingController extends Controller
     public function updatePwdAction()
     {
 
+
         $idUser = $_POST['idUser'];
         $password = $_POST['password'];
-        print_r($idUser);
-        print_r($password);
-        exit;
 
-//        return $this->render('AdminBundle:resetPwd:updatePassword.html.twig', array('idUser' => $idUser));
+        $em = $this->getDoctrine()->getManager();
+        $username =  $em->getRepository('AdminBundle:User')->findOneById($idUser)->getUsername();
+        $user = $this->container->get('fos_user.user_manager')->findUserByUsernameOrEmail($username);
+
+        //encrypt password
+        $factory = $this->get('security.encoder_factory');
+        $encoder = $factory->getEncoder($user);
+        $password = $encoder->encodePassword($password, $user->getSalt());
+
+        $connection = $em->getConnection();
+
+        $update = $connection->prepare("UPDATE fos_user SET password = :password WHERE id = :id");
+        $update->bindParam(':password', $password);
+        $update->bindParam(':id', $idUser);
+        $update->execute();
+
+        return $this->redirect($this->generateUrl('fos_user_security_login'));
 
     }
 }
