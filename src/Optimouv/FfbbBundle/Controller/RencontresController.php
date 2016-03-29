@@ -5,6 +5,7 @@ namespace Optimouv\FfbbBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use ZipArchive;
 
  class RencontresController extends Controller
  {
@@ -216,8 +217,89 @@ use Symfony\Component\HttpFoundation\JsonResponse;
              
          }
          elseif ($formatExport == "csv"){
-             return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
-             exit();
+
+             // créer le fichier zip
+             $zipNom = "$nomRapport-csv.zip";
+             $zip = new ZipArchive;
+             $zip->open($zipNom, ZipArchive::CREATE);
+
+            // estimation générale
+             $headerEstimationGenerale = array("KILOMETRES A PARCOURIR POUR LE SCENARIO",
+                 "COUT POUR LE SCENARIO EN VOITURE",
+                 "COUT POUR LE SCENARIO EN COVOITURAGE",
+                 "COUT POUR LE SCENARIO EN MINIBUS",
+                 "EMISSIONS TOTALES DE GES EN VOITURE",
+                 "EMISSIONS TOTALES DE GES EN COVOITURAGE",
+                 "EMISSIONS TOTALES DE GES EN MINIBUS"
+             );
+
+
+             // estimation détaillé
+             $headerEstimationDetaille = array( "PARTICIPANTS",
+                 "KILOMETRES A PARCOURIR",
+                 "TEMPS DE PARCOURS",
+                 "COUT DU PARCOURS EN VOITURE",
+                 "COUT DU PARCOURS EN COVOITURAGE",
+                 "COUT DU PARCOURS EN MINIBUS",
+                 "EMISSIONS GES EN VOITURE",
+                 "EMISSIONS GES EN COVOITURAGE",
+                 "EMISSIONS GES EN MINIBUS"
+             );
+
+
+            // index=0 pour estimation générale
+            // index=1 pour estimation détaillée
+             for ($i = 0; $i < 2; $i++) {
+
+                 // créer le fichier temporaire
+                 $fd = fopen('php://temp/maxmemory:1048576', 'w');
+                 if (false === $fd) {
+                     die('Erreur interne lors de la création du fichier temporaire');
+                 }
+
+                 // index=0 pour estimation générale
+                 if($i == 0){
+                     // écrire les données en csv
+                     fputcsv($fd, $headerEstimationGenerale);
+                     // retourner au début du stream
+                     rewind($fd);
+                     // ajouter le fichier qui est en mémoire à l'archive, donner un nom
+                     $zip->addFromString($nomRapport.'-estimations.csv', stream_get_contents($fd) );
+
+                 }
+                 // index=1 pour estimation détaillée
+                 elseif ($i == 1){
+                     // écrire les données en csv
+                     fputcsv($fd, $headerEstimationDetaille);
+                     // retourner au début du stream
+                     rewind($fd);
+                     // ajouter le fichier qui est en mémoire à l'archive, donner un nom
+                     $zip->addFromString($nomRapport.'-details.csv', stream_get_contents($fd) );
+                 }
+
+
+
+
+                 // fermer le fichier
+                 fclose($fd);
+             }
+
+
+
+            // fermer le fichier d'archive
+             $zip->close();
+
+             header('Content-Type: application/zip');
+             header('Content-disposition: attachment; filename='.$zipNom);
+             header('Content-Length: ' . filesize($zipNom));
+             readfile($zipNom);
+
+            // supprimer le fichier zip
+             unlink($zipNom);
+
+            exit;
+
+
          }
      }
      
