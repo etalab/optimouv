@@ -1778,7 +1778,7 @@ def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coord
 					
 		# get distance from HERE response
 		if data["response"]:
-			logging.debug("data[response]: %s" %data["response"])
+# 			logging.debug("data[response]: %s" %data["response"])
 			
 			# if license error
 			if "type" in data["response"]:
