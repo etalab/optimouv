@@ -1781,12 +1781,13 @@ def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coord
 			logging.debug("data[response]: %s" %data["response"])
 			
 			# if license error
-			if data["response"]["type"] == "SystemError":
-				reportName = get_report_name_from_report_id(reportId)
-				contentText = u"Bonjour,\n\n" 
-				contentText += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
-				contentText += u"Veuillez contacter l'administrateur. "
-				send_email_to_user_failure_with_text(userId, reportId, contentText)
+			if "type" in data["response"]:
+				if data["response"]["type"] == "SystemError":
+					reportName = get_report_name_from_report_id(reportId)
+					contentText = u"Bonjour,\n\n" 
+					contentText += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
+					contentText += u"Veuillez contacter l'administrateur. "
+					send_email_to_user_failure_with_text(userId, reportId, contentText)
 			else:
 			
 				distance = data['response']['route'][0]['summary']['distance']
