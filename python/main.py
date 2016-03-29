@@ -1548,7 +1548,6 @@ def callback(ch, method, properties, body):
 		
 		logging.debug("####################################### READ PARAMS FROM USER ##############################################")
 		# get params from DB
-# 		sql = "select id_groupe, type_action, params from rapport where id=%s"%reportId
 		sql = "select id_groupe, type_action, params from parametres where id=%s"%reportId
 		logging.debug("sql: %s" %sql)
 		groupId, launchType, params = db.fetchone_multi(sql)
@@ -1667,7 +1666,8 @@ def callback(ch, method, properties, body):
 		logging.debug("teamsWithPhantom: %s" %teamsWithPhantom)
 
 		logging.debug("####################################### CREATE DISTANCE MATRIX ##############################################")
-		D_Mat = create_distance_matrix_from_db(teams)
+# 		D_Mat = create_distance_matrix_from_db(teams)
+		D_Mat = create_distance_matrix_from_db(teams, reportId, userId)
 
 		# modify the distance matrix if there are phantom members (add zeros columns and rows) 
 		if flagPhantom == 1:
