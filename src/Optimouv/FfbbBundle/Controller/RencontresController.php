@@ -297,7 +297,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 
         # estimation détaillée
-        $texte .= "\t<estimation_detaille>\n";
+        $texte .= "\t<details>\n";
 
         foreach($infoXml["participants"] as $participant){
 
@@ -317,7 +317,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
         }
 
-        $texte .= "\t</estimation_detaille>\n";
+        $texte .= "\t</details>\n";
 
 
 

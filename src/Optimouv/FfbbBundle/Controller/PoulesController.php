@@ -997,7 +997,7 @@ class PoulesController extends Controller
         # estimation détaillée
         $estimationDetails = $infoXml["scenarioResultats"]["estimationDetails"];
         ksort($estimationDetails);
-        $texte .= "\t<estimation_detaille>\n";
+        $texte .= "\t<details>\n";
         $alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ];
 
 
@@ -1032,7 +1032,7 @@ class PoulesController extends Controller
 
         }
 
-        $texte .= "\t</estimation_detaille>\n";
+        $texte .= "\t</details>\n";
 
 
         # liste de rencontre
