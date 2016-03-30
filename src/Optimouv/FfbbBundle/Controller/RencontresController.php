@@ -313,7 +313,6 @@ use ZipArchive;
                  rewind($fd);
                  // ajouter le fichier qui est en mémoire à l'archive, donner un nom
                  $nomFichierEncoder = iconv("UTF-8","Windows-1252", $infoCsv["nomRapport"]."-".$infoCsv["nomScenario"]."-estimations.csv");
-                 $zip->addFromString($nomFichierEncoder , stream_get_contents($fd) );
 //                      error_log("\n encoded_filename: ".print_r($encoded_filename , true), 3, "error_log_optimouv.txt");
              }
              // index=1 pour estimation détaillée
@@ -343,10 +342,10 @@ use ZipArchive;
                  rewind($fd);
                  // ajouter le fichier qui est en mémoire à l'archive, donner un nom
                  $nomFichierEncoder = iconv("UTF-8","Windows-1252", $infoCsv["nomRapport"]."-".$infoCsv["nomScenario"]."-details.csv");
-                 $zip->addFromString($nomFichierEncoder, stream_get_contents($fd) );
              }
 
-
+            // ajouter les fichiers csv en fichier zip
+             $zip->addFromString($nomFichierEncoder , stream_get_contents($fd) );
 
 
              // fermer le fichier
