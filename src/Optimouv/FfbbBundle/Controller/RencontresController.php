@@ -127,7 +127,8 @@ use ZipArchive;
          $formatExport = $_POST['formatExport'];
          $idResultat = $_POST['idResultat'];
          $typeScenario = $_POST['typeScenario'];
-         $nomScenario = $this->getNomScenario($typeScenario);
+         $nomScenario = $this->getNomScenario($typeScenario, 1);
+         $nomScenarioSansAccent = $this->getNomScenario($typeScenario, 0);
          $typeRencontre = $_POST['typeRencontre'];
          $nomRencontre = $this->getNomRencontre($typeRencontre);
 
@@ -228,6 +229,7 @@ use ZipArchive;
              $infoCsv = array(
                  "nomRapport" => $nomRapport,
                  "nomScenario" => $nomScenario,
+                 "nomScenarioSansAccent" => $nomScenarioSansAccent,
                  "nomFederation" => $nomFederation,
                  "nomDiscipline" => $nomDiscipline,
                  "nomUtilisateur" => $nomUtilisateur,
@@ -312,7 +314,7 @@ use ZipArchive;
                  // retourner au début du stream
                  rewind($fd);
                  // ajouter le fichier qui est en mémoire à l'archive, donner un nom
-                 $nomFichierEncoder = iconv("UTF-8","Windows-1252", $infoCsv["nomRapport"]."-".$infoCsv["nomScenario"]."-estimations.csv");
+                 $nomFichierEncoder = iconv("UTF-8","Windows-1252", $infoCsv["nomRapport"]."-".$infoCsv["nomScenarioSansAccent"]."-estimations.csv");
 //                      error_log("\n encoded_filename: ".print_r($encoded_filename , true), 3, "error_log_optimouv.txt");
              }
              // index=1 pour estimation détaillée
@@ -341,7 +343,7 @@ use ZipArchive;
                  // retourner au début du stream
                  rewind($fd);
                  // ajouter le fichier qui est en mémoire à l'archive, donner un nom
-                 $nomFichierEncoder = iconv("UTF-8","Windows-1252", $infoCsv["nomRapport"]."-".$infoCsv["nomScenario"]."-details.csv");
+                 $nomFichierEncoder = iconv("UTF-8","Windows-1252", $infoCsv["nomRapport"]."-".$infoCsv["nomScenarioSansAccent"]."-details.csv");
              }
 
             // ajouter les fichiers csv en fichier zip
@@ -373,26 +375,48 @@ use ZipArchive;
          
          return $nomRencontre;
      }
-     
-     private function getNomScenario($typeScenario){
+
+
+     // si boolAccent = 1, le nom est avec accent
+     // si boolAccent = 0, le nom sans avec accent
+     private function getNomScenario($typeScenario, $boolAccent){
          $nomScenario = "";
 
+        if($boolAccent == 1){
+            if($typeScenario == "optimalSansContrainte"){
+                $nomScenario = "scénario optimal sans contrainte";
+            }
+            elseif($typeScenario == "optimalAvecContrainte"){
+                $nomScenario = "scénario optimal avec contrainte";
+            }
+            elseif($typeScenario == "equitable"){
+                $nomScenario = "scénario équitable";
+            }
+            elseif($typeScenario == "optimal"){
+                $nomScenario = "scénario optimal";
+            }
 
-         if($typeScenario == "optimalSansContrainte"){
-             $nomScenario = "scénario optimal sans contrainte";
-         }
-         elseif($typeScenario == "optimalAvecContrainte"){
-             $nomScenario = "scénario optimal avec contrainte";
-         }
-         elseif($typeScenario == "equitable"){
-             $nomScenario = "scénario équitable";
-         }
-         elseif($typeScenario == "optimal"){
-             $nomScenario = "scénario optimal";
+        }
+        elseif($boolAccent == 0){
+             if($typeScenario == "optimalSansContrainte"){
+                 $nomScenario = "scenario optimal sans contrainte";
+             }
+             elseif($typeScenario == "optimalAvecContrainte"){
+                 $nomScenario = "scenario optimal avec contrainte";
+             }
+             elseif($typeScenario == "equitable"){
+                 $nomScenario = "scenario équitable";
+             }
+             elseif($typeScenario == "optimal"){
+                 $nomScenario = "scenario optimal";
+             }
+
          }
 
          return $nomScenario;
      }
+
+
 
     private function getTexteExportXml($infoXml){
         $texte = '<?xml version="1.0" encoding="utf-8"?>';
@@ -466,7 +490,7 @@ use ZipArchive;
 
          $idResultat = $_POST['idResultat'];
          $typeScenario = $_POST['typeScenario'];
-         $nomScenario = $this->getNomScenario($typeScenario);
+         $nomScenario = $this->getNomScenario($typeScenario, 1);
          $typeRencontre = $_POST['typeRencontre'];
          $nomRencontre = $this->getNomRencontre($typeRencontre);
 
