@@ -53,8 +53,30 @@
                             <img src="{{ asset('bundles/ffbb/accueil/img/Logo-Optimouv.jpg') }}" alt="optimouv"/>
                         </div>
                         <div  style="position:relative; float:right; width: 30%; ">
+                            {% if app.user %}
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li class="dropdown">
+                                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                            <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-user">
+                                            <li><a href="{{ path('fos_user_profile_edit') }}"><i class="fa fa-user fa-fw"></i> Gérer votre profil</a>
+                                            </li>
+                                            {#<li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a></li>#}
+                                            <li class="divider"></li>
+                                            <li><a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                                            </li>
+                                        </ul>
+                                        <!-- /.dropdown-user -->
+                                    </li>
+                                </ul>
+                            {% endif %}
+
                             <img src="{{ asset('bundles/ffbb/accueil/img/cop-ministere.png') }}" alt="cop21" style="float: right"/>
+
+
                         </div>
+
 
                     </div>
                     <!-- /.container -->

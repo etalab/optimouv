@@ -268,7 +268,52 @@ ffbb_comparaison_sc_rencontre:
     path:    /admin/rencontre/comparaison-scenarios/{idRapport}
     defaults: { _controller: FfbbBundle:Comparaison:index }
 
+#Federation
+ffbb_federation_list:
+    path:    /admin/federation/list
+    defaults: { _controller: FfbbBundle:Federation:list }
 
-#ffbb_poules_test_export_pdf:
-#    path:    /admin/poules/test-export-pdf/
-#    defaults: { _controller: FfbbBundle:Poules:testExportPdf}
+ffbb_federation_add:
+    path:    /admin/federation/add
+    defaults: { _controller: FfbbBundle:Federation:add }
+
+ffbb_federation_add_fede:
+    path:    /admin/federation/addFede
+    defaults: { _controller: FfbbBundle:Federation:addFede }
+
+ffbb_federation_delete:
+    path:    /admin/federation/delete/{idFede}
+    defaults: { _controller: FfbbBundle:Federation:delete}
+
+ffbb_federation_update:
+    path:    /admin/federation/update/{idFede}
+    defaults: { _controller: FfbbBundle:Federation:update }
+
+ffbb_federation_update_fede:
+    path:    /admin/federation/updateFede
+    defaults: { _controller: FfbbBundle:Federation:updateFede }
+
+#Discipline
+ffbb_discipline_list:
+    path:    /admin/discipline/list
+    defaults: { _controller: FfbbBundle:Discipline:list }
+
+ffbb_discipline_add:
+    path:    /admin/discipline/add
+    defaults: { _controller: FfbbBundle:Discipline:add }
+
+ffbb_federation_add_discipline:
+    path:    /admin/federation/addDiscipline
+    defaults: { _controller: FfbbBundle:Discipline:addDiscipline }
+
+ffbb_discipline_delete:
+    path:    /admin/discipline/delete/{idDiscipline}
+    defaults: { _controller: FfbbBundle:Discipline:delete}
+
+ffbb_discipline_update:
+    path:    /admin/discipline/update/{idDiscipline}
+    defaults: { _controller: FfbbBundle:Discipline:update }
+
+ffbb_discipline_update_disc:
+    path:    /admin/discipline/updateDisc
+    defaults: { _controller: FfbbBundle:Discipline:updateDisc }

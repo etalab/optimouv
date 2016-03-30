@@ -28,11 +28,15 @@ class Discipline
      * @ORM\Column(name="nom", type="string", length=50, nullable=false)
      */
     private $nom;
+    
 
     /**
-     * @var string
+     * @var \Optimouv\FfbbBundle\Entity\Federation
      *
-     * @ORM\Column(name="federation", type="string", length=50, nullable=false)
+     * @ORM\ManyToOne(targetEntity="Optimouv\FfbbBundle\Entity\Federation")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_federation", referencedColumnName="id")
+     * })
      */
     private $federation;
 
@@ -46,7 +50,7 @@ class Discipline
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date_modification", type="date", nullable=false)
+     * @ORM\Column(name="date_modification", type="date", nullable=true)
      */
     private $dateModification;
 
@@ -157,4 +161,5 @@ class Discipline
     {
         return $this->dateModification;
     }
+    
 }
