@@ -425,14 +425,17 @@
 
 
             function showBtn(){
-
-
                 document.getElementById('bntLancerCalcul').style.visibility="visible";
             }
 
             function msgLancement(){
                 alert("Le calcul est en cours. Vous recevrez un mail pour vous avertir de la mise à disposition de vos résultats de calculs");
             }
+            // reset select option formatExport
+            $('select[name="formatExport"]').change(function() {
+                $('select[name="formatExport"]').prop('selectedIndex',0);
+            });
+
 
         </script>
     {% endblock %}

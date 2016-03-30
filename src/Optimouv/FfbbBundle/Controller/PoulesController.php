@@ -599,22 +599,17 @@ class PoulesController extends Controller
 
     public function resultatCalculAction($idResultat)
     {
-
-
-//        error_log("\n idResultat: ".print_r($idResultat , true), 3, "error_log_optimouv.txt");
-
+        
         # obtenir entity manager
         $em = $this->getDoctrine()->getManager();
 
         $idRapport = $em->getRepository('FfbbBundle:Scenario')->getIdRapportByIdScenario($idResultat);
-
         if($idRapport != []){
             $idRapport  = $idRapport[0]["idRapport"];
         }
 
 
         $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idRapport);
-
         if($idGroupe != []){
             $idGroupe = $idGroupe[0]['idGroupe'];
         }
@@ -626,16 +621,16 @@ class PoulesController extends Controller
         # récupérer la liste des noms et des ids de villes
         $detailsVilles = $em->getRepository('FfbbBundle:Entite')->getEntities($equipes);
 
-
-
+        
         $detailsCalcul = $em->getRepository('FfbbBundle:Scenario')->findOneById($idResultat)->getDetailsCalcul();
-
         $detailsCalcul = json_decode($detailsCalcul, true);
 
         $nombrePoule = $detailsCalcul["nombrePoule"];
         $taillePoule = $detailsCalcul["taillePoule"];
         $contraintsExiste = $detailsCalcul["contraintsExiste"];
         $typeMatch = $detailsCalcul["typeMatch"];
+        $nomMatch = $this->getNomMatch($typeMatch);
+        
         $scenarioOptimalAvecContrainte = $detailsCalcul["scenarioOptimalAvecContrainte"];
         $scenarioEquitableAvecContrainte = $detailsCalcul["scenarioEquitableAvecContrainte"];
         $scenarioEquitableSansContrainte = $detailsCalcul["scenarioEquitableSansContrainte"];
@@ -690,7 +685,9 @@ class PoulesController extends Controller
         else{
             $infoPoule = array($taillePoule => $nombrePoule);
         }
-
+        $infoPouleStr = $this->getStrInfoPoule($infoPoule);
+        
+        
         # récupérer la contrainte d'accueil pour le match plateau
         if(array_key_exists("contrainteAccueilPlateauExiste", $detailsCalcul["params"])){
             $contrainteAccueilPlateauExiste = $detailsCalcul["params"]["contrainteAccueilPlateauExiste"];
@@ -708,19 +705,16 @@ class PoulesController extends Controller
         }
 
 
-        //récupération du nom du rapport
         $connection = $em->getConnection();
-
+        //récupération du nom du rapport
         $statement = $connection->prepare("SELECT  b.id as idRapport, b.nom as nomRapport, b.id_groupe as idGroupe FROM resultats as a, parametres as b where a.id_rapport = b.id and a.id = :id");
         $statement->bindParam(':id', $idResultat);
         $statement->execute();
         $statement = $statement->fetchAll(PDO::FETCH_ASSOC);
-        $idRapport = $statement[0]['idRapport'];
         $nomRapport = $statement[0]['nomRapport'];
         $idGroupe = $statement[0]['idGroupe'];
 
         //récupération du nom du groupe
-
         $statement = $connection->prepare("SELECT  a.nom as nomGroupe, a.id_liste_participant as idListe from groupe as a where a.id = :id");
         $statement->bindParam(':id', $idGroupe);
         $statement->execute();
@@ -730,7 +724,6 @@ class PoulesController extends Controller
 
 
         //récupération du nom du=e la liste
-
         $statement = $connection->prepare("SELECT  a.nom as nomListe from liste_participants as a where a.id = :id");
         $statement->bindParam(':id', $idListe);
         $statement->execute();
@@ -742,9 +735,8 @@ class PoulesController extends Controller
         // info pour changement d'affectation d'équipe par poule
         $infoChangeAffectation = $this->get('service_poules')->getInfoChangeAffectation($scenarioOptimalSansContrainte, $scenarioEquitableSansContrainte,  $scenarioOptimalAvecContrainte, $scenarioEquitableAvecContrainte);
 
-//        error_log("\n infoChangeAffectation: ".print_r($infoChangeAffectation , true), 3, "error_log_optimouv.txt");
+//        error_log("\n changeAffectEquipes: ".print_r($changeAffectEquipes , true), 3, "error_log_optimouv.txt");
 
-//        exit();
 
         return $this->render('FfbbBundle:Poules:resultatCalcul.html.twig' , array(
 
@@ -752,6 +744,7 @@ class PoulesController extends Controller
             'taillePoule' => $taillePoule,
             'contraintsExiste' => $contraintsExiste,
             'typeMatch'=> $typeMatch,
+            'nomMatch'=> $nomMatch,
             'scenarioOptimalAvecContrainte' => $scenarioOptimalAvecContrainte,
             'scenarioEquitableAvecContrainte' => $scenarioEquitableAvecContrainte,
             'scenarioEquitableSansContrainte' => $scenarioEquitableSansContrainte,
@@ -771,6 +764,7 @@ class PoulesController extends Controller
             'finalStatut' => $finalStatut,
             'phantomExiste' => $phantomExiste,
             'infoPoule' => $infoPoule,
+            'infoPouleStr' => $infoPouleStr,
             'contrainteAccueilPlateauExiste' => $contrainteAccueilPlateauExiste,
             'infoChangeAffectation' => $infoChangeAffectation,
             'changeAffectEquipes' => $changeAffectEquipes,
@@ -866,59 +860,96 @@ class PoulesController extends Controller
         return $this->render('FfbbBundle:Poules:detailsCalcul.html.twig');
     }
 
-//    public function previsualisationExportAction()
     public function pretraitementExportAction()
-    
-{
+    {
         $formatExport = $_POST['formatExport'];
         $idResultat = $_POST['idResultat'];
         $typeScenario = $_POST['typeScenario'];
+        $nomScenario = $this->getNomScenario($typeScenario);
 
-//        error_log("\n params: ".print_r($_POST , true), 3, "error_log_optimouv.txt");
+        //recuperation des donnees relatives au scenario
+        $infoPdf = $this->getInfoPdf($idResultat, $typeScenario);
+
+
+        $nombrePoule = $infoPdf[0];
+        $taillePoule = $infoPdf[1];
+        $contraintsExiste = $infoPdf[2];
+        $typeMatch = $infoPdf[3];
+        $nomMatch = $this->getNomMatch($typeMatch);
+        $scenarioResultats = $infoPdf[4];
+        $nomRapport = $infoPdf[5];
+        $nomGroupe = $infoPdf[6];
+        $nomListe = $infoPdf[7];
+        $detailsVilles = $infoPdf[8];
+        $nomUtilisateur = $infoPdf[11];
+        $infoPoule = $infoPdf["infoPoule"];
+        $infoPouleStr = $this->getStrInfoPoule($infoPoule);
+
+//        error_log("\n scenarioResultats: ".print_r($scenarioResultats , true), 3, "error_log_optimouv.txt");
+
+
+        $nomFederation = "FFBB"; # FIXME
+        $nomDiscipline ="Basket"; # FIXME
 
         if($formatExport == "pdf"){
-
-            //recuperation des donnees relatives au scenario
-            $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
-
-            $nombrePoule = $infoPdf[0];
-            $taillePoule = $infoPdf[1];
-            $contraintsExiste = $infoPdf[2];
-            $typeMatch = $infoPdf[3];
-            $scenarioResultats = $infoPdf[4];
-            $nomRapport = $infoPdf[5];
-            $nomGroupe = $infoPdf[6];
-            $nomListe = $infoPdf[7];
-            $detailsVilles = $infoPdf[8];
-            $idGroupe = $infoPdf[9];
-            $idRapport = $infoPdf[10];
-            $nomUtilisateur = $infoPdf[11];
-
-
+            
             return $this->render('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
                 'nomRapport' => $nomRapport,
                 'typeMatch' => $typeMatch,
+                'nomMatch' => $nomMatch,
                 'nombrePoule' => $nombrePoule,
                 'nomListe' => $nomListe,
                 'nomGroupe' => $nomGroupe,
                 'taillePoule' => $taillePoule,
                 'contraintsExiste' => $contraintsExiste,
                 'scenarioResultats' => $scenarioResultats,
-                'idRapport' => $idRapport,
                 'detailsVilles' => $detailsVilles,
-                'idGroupe' => $idGroupe,
                 'idResultat' => $idResultat,
                 'nomUtilisateur' => $nomUtilisateur,
                 'typeScenario' => $typeScenario,
+                'nomScenario' => $nomScenario,
+                'nomFederation' => $nomFederation,
+                'nomDiscipline' => $nomDiscipline,
+                'infoPouleStr' => $infoPouleStr,
             ));
 
 
         }
         elseif ($formatExport == "xml"){
-            return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
+
+            header('Content-type: text/xml');
+            header('Content-Disposition: attachment; filename="'.$nomRapport.'.xml"');
+
+
+            $infoXML = array(
+                "nomRapport" => $nomRapport,
+                "nomScenario" => $nomScenario,
+                "nomFederation" => $nomFederation,
+                "nomDiscipline" => $nomDiscipline,
+                "nomUtilisateur" => $nomUtilisateur,
+                "nomGroupe" => $nomGroupe,
+                "nomMatch" => $nomMatch,
+                'nomListe' => $nomListe,
+                'nombrePoule' => $nombrePoule,
+                'taillePoule' => $taillePoule,
+                'infoPouleStr' => $infoPouleStr,
+                'scenarioResultats' => $scenarioResultats,
+                'typeMatch' => $typeMatch,
+
+            );
+
+
+            $texte = $this->getTexteExportXml($infoXML);
+
+            echo $texte;
             exit();
+
+
         }
         elseif ($formatExport == "csv"){
+
+
+
             return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
             exit();
         }
@@ -927,48 +958,169 @@ class PoulesController extends Controller
     }
 
 
-//    public function previsualisationPdfAction()
-//    {
-//
-//        $idResultat = $_POST['idResultat'];
-//        $typeScenario = $_POST['typeScenario'];
-//
-//
-//        //recuperation des donnees relatives au scenario
-//        $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
-//
-//        $nombrePoule = $infoPdf[0];
-//        $taillePoule = $infoPdf[1];
-//        $contraintsExiste = $infoPdf[2];
-//        $typeMatch = $infoPdf[3];
-//        $scenarioResultats = $infoPdf[4];
-//        $nomRapport = $infoPdf[5];
-//        $nomGroupe = $infoPdf[6];
-//        $nomListe = $infoPdf[7];
-//        $detailsVilles = $infoPdf[8];
-//        $idGroupe = $infoPdf[9];
-//        $idRapport = $infoPdf[10];
-//        $nomUtilisateur = $infoPdf[11];
-//
-//
-//        return $this->render('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
-//            'nomRapport' => $nomRapport,
-//            'typeMatch' => $typeMatch,
-//            'nombrePoule' => $nombrePoule,
-//            'nomListe' => $nomListe,
-//            'nomGroupe' => $nomGroupe,
-//            'taillePoule' => $taillePoule,
-//            'contraintsExiste' => $contraintsExiste,
-//            'scenarioResultats' => $scenarioResultats,
-//            'idRapport' => $idRapport,
-//            'detailsVilles' => $detailsVilles,
-//            'idGroupe' => $idGroupe,
-//            'idResultat' => $idResultat,
-//            'nomUtilisateur' => $nomUtilisateur,
-//            'typeScenario' => $typeScenario,
-//        ));
-//
-//    }
+    private function getTexteExportXml($infoXml){
+        $texte = '<?xml version="1.0" encoding="utf-8"?>';
+
+        $texte .= "\n";
+        $texte .= "<resultat>\n";
+
+        # parametres
+        $texte .= "\t<params>\n";
+        $texte .= "\t\t<nom_rapport>" .$infoXml["nomRapport"]."</nom_rapport>\n";
+        $texte .= "\t\t<nom_rencontre>" .$infoXml["nomMatch"]."</nom_rencontre>\n";
+        $texte .= "\t\t<nom_scenario>" .$infoXml["nomScenario"]."</nom_scenario>\n";
+        $texte .= "\t\t<nom_federation>" .$infoXml["nomFederation"]."</nom_federation>\n";
+        $texte .= "\t\t<nom_discipline>" .$infoXml["nomDiscipline"]."</nom_discipline>\n";
+        $texte .= "\t\t<nom_utilisateur>" .$infoXml["nomUtilisateur"]."</nom_utilisateur>\n";
+        $texte .= "\t\t<nom_liste>" .$infoXml["nomListe"]."</nom_liste>\n";
+        $texte .= "\t\t<nom_groupe>" .$infoXml["nomGroupe"]."</nom_groupe>\n";
+        $texte .= "\t\t<info_poules>" .$infoXml["infoPouleStr"]."</info_poules>\n";
+        $texte .= "\t</params>\n";
+
+
+        # estimation générale
+
+        $distanceTotale = round($infoXml["scenarioResultats"]["estimationGenerale"]["distanceTotale"]/1000);
+        $distanceTotaleTousParticipants = round($infoXml["scenarioResultats"]["estimationGenerale"]["distanceTotaleTousParticipants"]/1000);
+
+        $texte .= "\t<estimation_generale>\n";
+        $texte .= "\t\t<distance_totale>" .$distanceTotale." Kms</distance_totale>\n";
+        $texte .= "\t\t<cout_voiture>" .round($distanceTotaleTousParticipants*0.8)." €</cout_voiture>\n";
+        $texte .= "\t\t<cout_covoiturage>" .round($distanceTotaleTousParticipants/4*0.8)." €</cout_covoiturage>\n";
+        $texte .= "\t\t<cout_minibus>" .round($distanceTotaleTousParticipants/9*1.31)." €</cout_minibus>\n";
+        $texte .= "\t\t<co2_emission_voiture>" .round($distanceTotaleTousParticipants*0.157)." KG eq CO2</co2_emission_voiture>\n";
+        $texte .= "\t\t<co2_emission_covoiturage>" .round($distanceTotaleTousParticipants/4*0.157)." KG eq CO2</co2_emission_covoiturage>\n";
+        $texte .= "\t\t<co2_emission_minibus>" .round($distanceTotaleTousParticipants/9*0.185)." KG eq CO2</co2_emission_minibus>\n";
+        $texte .= "\t</estimation_generale>\n";
+
+
+        # estimation détaillée
+        $estimationDetails = $infoXml["scenarioResultats"]["estimationDetails"];
+        ksort($estimationDetails);
+        $texte .= "\t<details>\n";
+        $alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ];
+
+
+
+        foreach($estimationDetails as $pouleNbr => $estimationDetail) {
+
+            $texte .= "\t\t<participant>\n";
+            $texte .= "\t\t\t<nom>"."Poule ".$alphabet[$pouleNbr-1] ."</nom>\n";
+            $texte .= "\t\t\t<distance_parcourue>" .round($estimationDetail["distanceTotale"]/1000)." Kms</distance_parcourue>\n";
+
+            $jourTrajet = round($estimationDetail["dureeTotale"]/86400);
+            if( $jourTrajet < 10){
+                $jourTrajet = "0$jourTrajet";
+            }
+            $heureTrajet = round($estimationDetail["dureeTotale"]%86400/3600);
+            if( $heureTrajet< 10){
+                $heureTrajet = "0$heureTrajet";
+            }
+            $minuteTrajet = round($estimationDetail["dureeTotale"]%86400/3600);
+            if( $minuteTrajet< 10){
+                $minuteTrajet = "0$minuteTrajet";
+            }
+
+            $texte .= "\t\t\t<duree_trajet>" .$jourTrajet." ".$heureTrajet.":".$minuteTrajet." (J H:M)"." </duree_trajet>\n";
+            $texte .= "\t\t\t<cout_voiture>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000*0.8)." €</cout_voiture>\n";
+            $texte .= "\t\t\t<cout_covoiturage>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000/4*0.8)." €</cout_covoiturage>\n";
+            $texte .= "\t\t\t<cout_minibus>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000/9*1.31)." €</cout_minibus>\n";
+            $texte .= "\t\t\t<co2_emission_voiture>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000*0.157)." KG eq CO2</co2_emission_voiture>\n";
+            $texte .= "\t\t\t<co2_emission_covoiturage>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000/4*0.157)." KG eq CO2</co2_emission_covoiturage>\n";
+            $texte .= "\t\t\t<co2_emission_minibus>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000/9*0.185)." KG eq CO2</co2_emission_minibus>\n";
+            $texte .= "\t\t</participant>\n";
+
+        }
+
+        $texte .= "\t</details>\n";
+
+
+        # liste de rencontre
+        $rencontres =  $infoXml["scenarioResultats"]["rencontreDetails"];
+        ksort($rencontres);
+        $typeMatch = $infoXml["typeMatch"];
+//        error_log("\n rencontres: ".print_r($rencontres , true), 3, "error_log_optimouv.txt");
+        $texte .= "\t<liste_rencontres>\n";
+
+        if($typeMatch == "allerRetour" || $typeMatch == "allerSimple") {
+            foreach ($rencontres as $pouleNbr => $rencontresParPoule) {
+                foreach ($rencontresParPoule as $rencontre) {
+                    $texte .= "\t\t<rencontre>\n";
+                    $texte .= "\t\t\t<poule>Poule " .$alphabet[$pouleNbr-1]."</poule>\n";
+                    $texte .= "\t\t\t<equipe1>" .$rencontre["equipeDepartNom"]."</equipe1>\n";
+                    $texte .= "\t\t\t<equipe2>" .$rencontre["equipeDestinationNom"]."</equipe2>\n";
+                    $texte .= "\t\t</rencontre>\n";
+
+                }
+
+            }
+        }
+        elseif ($typeMatch == "plateau"){
+            foreach ($rencontres as $pouleNbr => $rencontresParPoule) {
+                foreach ($rencontresParPoule as $jourNbr => $rencontresParJour) {
+                    foreach ($rencontresParJour as $rencontre) {
+                        error_log("\n rencontre: " . print_r($rencontre, true), 3, "error_log_optimouv.txt");
+                        $texte .= "\t\t<rencontre>\n";
+                        $texte .= "\t\t\t<poule>Poule " .$alphabet[$pouleNbr-1]."</poule>\n";
+                        $texte .= "\t\t\t<jour> " .$jourNbr."</jour>\n";
+                        $texte .= "\t\t\t<equipe_hote>" .$rencontre["hoteNom"]."</equipe_hote>\n";
+                        $texte .= "\t\t\t<equipe_adverse1>" .$rencontre["premierEquipeNom"]."</equipe_adverse1>\n";
+                        $texte .= "\t\t\t<equipe_adverse2>" .$rencontre["deuxiemeEquipeNom"]."</equipe_adverse2>\n";
+                        $texte .= "\t\t</rencontre>\n";
+
+                    }
+                }
+
+            }
+        }
+
+
+        $texte .= "\t</liste_rencontres>\n";
+        $texte .= "</resultat>";
+
+        return $texte;
+    }
+
+
+    private function getNomMatch($typeMatch){
+        $nomMatch = "";
+
+ 
+        if($typeMatch == "allerRetour"){
+            $nomMatch = "Optimisation de poules - match aller retour";
+        }
+        elseif($typeMatch == "allerSimple"){
+            $nomMatch = "Optimisation de poules - match aller simple";
+        }
+        elseif($typeMatch == "plateau"){
+            $nomMatch = "Optimisation de poules - match plateau";
+        }
+
+        return $nomMatch;
+    }
+    
+    private function getNomScenario($typeScenario){
+        $nomScenario = "";
+
+
+        if($typeScenario == "optimalSansContrainte"){
+            $nomScenario = "scénario optimal sans contrainte";
+        }
+        elseif($typeScenario == "optimalAvecContrainte"){
+            $nomScenario = "scénario optimal avec contrainte";
+        }
+        elseif($typeScenario == "equitableSansContrainte"){
+            $nomScenario = "scénario équitable sans contrainte";
+        }
+        elseif($typeScenario == "equitableAvecContrainte"){
+            $nomScenario = "scénario équitable avec contrainte";
+        }
+        elseif($typeScenario == "ref"){
+            $nomScenario = "scénario de référence";
+        }
+
+        return $nomScenario;
+    }
 
 
 
@@ -977,39 +1129,46 @@ class PoulesController extends Controller
 
         $idResultat = $_POST['idResultat'];
         $typeScenario = $_POST['typeScenario'];
+        $nomScenario = $this->getNomScenario($typeScenario);
 
         //recuperation des donnees relatives au scenario
-        $infoPdf = $this->getInfoPdfAction($idResultat, $typeScenario);
+        $infoPdf = $this->getInfoPdf($idResultat, $typeScenario);
 
         $nombrePoule = $infoPdf[0];
         $taillePoule = $infoPdf[1];
         $contraintsExiste = $infoPdf[2];
         $typeMatch = $infoPdf[3];
+        $nomMatch = $this->getnomMatch($typeMatch);
         $scenarioResultats = $infoPdf[4];
         $nomRapport = $infoPdf[5];
         $nomGroupe = $infoPdf[6];
         $nomListe = $infoPdf[7];
         $detailsVilles = $infoPdf[8];
-        $idGroupe = $infoPdf[9];
-        $idRapport = $infoPdf[10];
         $nomUtilisateur = $infoPdf[11];
+        $infoPoule = $infoPdf["infoPoule"];
+        $infoPouleStr = $this->getStrInfoPoule($infoPoule);
 
+        $nomFederation = "FFBB"; # FIXME
+        $nomDiscipline ="Basket"; # FIXME
 
         $html = $this->renderView('FfbbBundle:Poules:exportPdf.html.twig', array(
             'nomRapport' => $nomRapport,
             'typeMatch' => $typeMatch,
+            'nomMatch' => $nomMatch,
             'nombrePoule' => $nombrePoule,
             'nomListe' => $nomListe,
             'nomGroupe' => $nomGroupe,
             'taillePoule' => $taillePoule,
             'contraintsExiste' => $contraintsExiste,
             'scenarioResultats' => $scenarioResultats,
-            'idRapport' => $idRapport,
             'detailsVilles' => $detailsVilles,
-            'idGroupe' => $idGroupe,
             'idResultat' => $idResultat,
             'nomUtilisateur' => $nomUtilisateur,
             'typeScenario' => $typeScenario,
+            'nomScenario' => $nomScenario,
+            'nomFederation' => $nomFederation,
+            'nomDiscipline' => $nomDiscipline,
+            'infoPouleStr' => $infoPouleStr,
 
         ));
 
@@ -1025,6 +1184,30 @@ class PoulesController extends Controller
 
             )
         );
+    }
+
+    private function getStrInfoPoule($infoPoule){
+        $strInfoPoule = "";
+
+        $i = 0;
+        foreach($infoPoule as $taillePoule => $nombrePoule){
+            $i ++;
+            if($nombrePoule == 1){
+                $strInfoPoule .= $nombrePoule. " poule de ". $taillePoule . " équipes";
+            }
+            else{
+                $strInfoPoule .= $nombrePoule. " poules de ". $taillePoule . " équipes";
+            }
+
+            if($i != count($infoPoule)){
+                $strInfoPoule .= " et ";
+            }
+
+
+        }
+
+
+        return $strInfoPoule;
     }
 
     public function testExportPdfAction()
@@ -1058,21 +1241,16 @@ class PoulesController extends Controller
     }
 
 //    function qui ramene toutes les infos necessaires à la view
-    public function getInfoPdfAction($idResultat , $typeScenario)
+    private function getInfoPdf($idResultat , $typeScenario)
     {
-
-
         $em = $this->getDoctrine()->getManager();
 
         $idRapport = $em->getRepository('FfbbBundle:Scenario')->getIdRapportByIdScenario($idResultat);
-
         if($idRapport != []){
             $idRapport  = $idRapport[0]["idRapport"];
         }
 
          $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idRapport);
-
-
         if($idGroupe != []){
             $idGroupe = $idGroupe[0]['idGroupe'];
         }
@@ -1094,6 +1272,37 @@ class PoulesController extends Controller
         $taillePoule = $detailsCalcul["taillePoule"];
         $contraintsExiste = $detailsCalcul["contraintsExiste"];
         $typeMatch = $detailsCalcul["typeMatch"];
+
+        # récupérer l'info des poules
+        if(array_key_exists("infoPoule", $detailsCalcul["params"])){
+            $infoPoule = $detailsCalcul["params"]["infoPoule"];
+        }
+        else{
+            $infoPoule = array($taillePoule => $nombrePoule);
+        }
+//        # récupérer les contraintes d'interdictions
+//        if(array_key_exists("interdictions", $detailsCalcul["params"])){
+//            $interdictions = $detailsCalcul["params"]["interdictions"];
+//        }
+//        else {
+//            $interdictions = [];
+//        }
+//        # récupérer les contraintes de répartitions homogènes
+//        if(array_key_exists("repartitionsHomogenes", $detailsCalcul["params"])){
+//            $repartitionsHomogenes = $detailsCalcul["params"]["repartitionsHomogenes"];
+//        }
+//        else{
+//            $repartitionsHomogenes = [];
+//        }
+//        # récupérer les changements d'affectation d'équipes entre les poules
+//        if(array_key_exists("changeAffectEquipes", $detailsCalcul["params"])){
+//            $changeAffectEquipes = $detailsCalcul["params"]["changeAffectEquipes"];
+//        }
+//        else{
+//            $changeAffectEquipes = [];;
+//        }
+
+
 
         # obtenir scénario selon leur type
         if($typeScenario == "optimalSansContrainte"){
@@ -1159,6 +1368,10 @@ class PoulesController extends Controller
         $retour[9] = $idGroupe;
         $retour[10] = $idRapport;
         $retour[11] = $nomUtilisateur;
+        $retour["infoPoule"] = $infoPoule;
+//        $retour["interdictions"] = $interdictions;
+//        $retour["repartitionsHomogenes"] = $repartitionsHomogenes;
+//        $retour["changeAffectEquipes"] = $changeAffectEquipes;
 
         return $retour;
     }

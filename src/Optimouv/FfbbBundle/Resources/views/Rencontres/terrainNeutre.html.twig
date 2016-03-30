@@ -2,10 +2,7 @@
 
 {% block pagewrapper %}
 
-
-
-
-        <div id="page-wrapper">
+<div id="page-wrapper">
 
             <div class="row">
                 <div class="bs-example">
@@ -664,6 +661,21 @@
 
 
         </div>
+
+
+    {% block javascript %}
+        <!-- /#page-wrapper -->
+        <script type="text/javascript" charset="UTF-8">
+            
+            // reset select option formatExport
+            $('select[name="formatExport"]').change(function() {
+                $('select[name="formatExport"]').prop('selectedIndex',0);
+            });
+
+
+        </script>
+    {% endblock %}
+
 
 {% endblock %}
 

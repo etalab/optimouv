@@ -15,34 +15,16 @@
 
 <br><br>
 
-<h3> Export de votre recherche "{{ nomRapport }}" -
+<h3> Export de votre recherche "{{ nomRapport }}" - {{ nomScenario  }}
 
-    {% if typeScenario == "optimalSansContrainte" %}
-        scénario optimal sans contrainte
-    {% elseif typeScenario == "optimalAvecContrainte" %}
-        scénario optimal avec contrainte
-    {% elseif typeScenario == "equitable" %}
-        scénario équitable
-    {% elseif typeScenario == "optimal" %}
-        scénario optimal
-    {% endif %}
 
 </h3>
-<h4>Fédération : UFOLEP</h4>
-<h4> Discipline : Rugby</h4>
+<h4>Fédération : {{ nomFederation }}</h4>
+<h4> Discipline : {{ nomDiscipline }} </h4>
 <h4>Utilisateur : {{ nomUtilisateur }} </h4>
 <h4>Nom de la liste : {{ nomListe }}</h4>
 <h4>Nom du groupe : {{ nomGroupe }}</h4>
-
-{% if typeRencontre == "barycentre" %}
-    <h4>  Type de rencontre : Meilleur lieu de rencontre - barycentre </h4>
-{% elseif typeRencontre == "barycentreAvecExclusion" %}
-    <h4>  Type de rencontre : Meilleur lieu de rencontre - barycentre avec exclusion </h4>
-{% elseif typeRencontre == "meilleurLieu" %}
-    <h4>  Type de rencontre : Meilleur lieu de rencontre - lieux définis </h4>
-{% elseif typeRencontre == "terrainNeutre" %}
-    <h4>  Type de rencontre : Meilleur lieu de rencontre - lieux définis avec liste de lieux </h4>
-{% endif %}
+<h4>  Type de rencontre : Meilleur lieu de rencontre - {{ nomRencontre }} </h4>
 
 
 

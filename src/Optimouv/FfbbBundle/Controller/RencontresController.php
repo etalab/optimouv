@@ -5,6 +5,7 @@ namespace Optimouv\FfbbBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use ZipArchive;
 
  class RencontresController extends Controller
  {
@@ -126,7 +127,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $formatExport = $_POST['formatExport'];
          $idResultat = $_POST['idResultat'];
          $typeScenario = $_POST['typeScenario'];
+         $nomScenario = $this->getNomScenario($typeScenario);
          $typeRencontre = $_POST['typeRencontre'];
+         $nomRencontre = $this->getNomRencontre($typeRencontre);
+
+//          error_log("\n typeRencontre: ".print_r($typeRencontre , true), 3, "error_log_optimouv.txt");
+
 
          //recuperation des donnees relatives au scenario
          $infoResultat = $this->getInfoResultat($idResultat, $typeRencontre, $typeScenario) ;
@@ -142,9 +148,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $boolTropVilles = $infoResultat["boolTropVilles"];
 
 
+         $nomFederation = "FFBB"; # FIXME
+         $nomDiscipline ="Basket"; # FIXME
+
+
+         $villeDepart = $infoResultat["villeDepart"];
+
          if($formatExport == "pdf"){
 
-             $villeDepart = $infoResultat["villeDepart"];
              $coordonneesVille = $infoResultat["coordonneesVille"];
              $coordPointDepart = $infoResultat["coordPointDepart"];
 
@@ -152,11 +163,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
              return $this->render('FfbbBundle:Rencontres:previsualisationPdf.html.twig', array(
                  'idResultat' => $idResultat,
                  'typeScenario' => $typeScenario,
+                 'nomScenario' => $nomScenario,
                  'nomUtilisateur' => $nomUtilisateur,
                  'nomListe' => $nomListe,
                  'nomGroupe' => $nomGroupe,
                  'nomRapport' => $nomRapport,
                  'typeRencontre' => $typeRencontre,
+                 'nomRencontre' => $nomRencontre,
                  'distanceTotale' => $distanceTotale,
                  'distanceMin' => $distanceMin,
                  'nbrParticipantsTotal' => $nbrParticipantsTotal,
@@ -165,6 +178,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
                  'coordonneesVille' => $coordonneesVille,
                  'coordPointDepart' => $coordPointDepart,
                  'boolTropVilles' => $boolTropVilles,
+                 'nomFederation' => $nomFederation,
+                 'nomDiscipline' => $nomDiscipline,
+
              ));
                  
 
@@ -177,40 +193,231 @@ use Symfony\Component\HttpFoundation\JsonResponse;
              header('Content-type: text/xml');
              header('Content-Disposition: attachment; filename="'.$nomRapport.'.xml"');
 
-             $text = '<?xml version="1.0" encoding="utf-8"?>';
+             $infoXML = array(
+                 "nomRapport" => $nomRapport,
+                 "nomScenario" => $nomScenario,
+                 "nomFederation" => $nomFederation,
+                 "nomDiscipline" => $nomDiscipline,
+                 "nomUtilisateur" => $nomUtilisateur,
+                 "nomGroupe" => $nomGroupe,
+                 "nomRencontre" => $nomRencontre,
+                 'villeDepart' => $villeDepart,
+                 'distanceMin' => $distanceMin,
+                 'distanceTotale' => $distanceTotale,
+                 'participants' => $participants,
+             );
 
+             $texte = $this->getTexteExportXml($infoXML);
 
+             echo $texte;
 
-             echo $text;
-
-             error_log("\n text: ".print_r($text , true), 3, "error_log_optimouv.txt");
+//             error_log("\n text: ".print_r($texte , true), 3, "error_log_optimouv.txt");
              exit();
 
              
-//             return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
-//
-//
-//
-//
-//
-//
-//             exit();
          }
          elseif ($formatExport == "csv"){
-             return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
-             exit();
+
+             // créer le fichier zip
+             $zipNom = "$nomRapport-csv.zip";
+             $zip = new ZipArchive;
+             $zip->open($zipNom, ZipArchive::CREATE);
+
+            // estimation générale
+             $headerEstimationGenerale = array("KILOMETRES A PARCOURIR POUR LE SCENARIO",
+                 "COUT POUR LE SCENARIO EN VOITURE",
+                 "COUT POUR LE SCENARIO EN COVOITURAGE",
+                 "COUT POUR LE SCENARIO EN MINIBUS",
+                 "EMISSIONS TOTALES DE GES EN VOITURE",
+                 "EMISSIONS TOTALES DE GES EN COVOITURAGE",
+                 "EMISSIONS TOTALES DE GES EN MINIBUS"
+             );
+
+
+             // estimation détaillé
+             $headerEstimationDetaille = array( "PARTICIPANTS",
+                 "KILOMETRES A PARCOURIR",
+                 "TEMPS DE PARCOURS",
+                 "COUT DU PARCOURS EN VOITURE",
+                 "COUT DU PARCOURS EN COVOITURAGE",
+                 "COUT DU PARCOURS EN MINIBUS",
+                 "EMISSIONS GES EN VOITURE",
+                 "EMISSIONS GES EN COVOITURAGE",
+                 "EMISSIONS GES EN MINIBUS"
+             );
+
+
+            // index=0 pour estimation générale
+            // index=1 pour estimation détaillée
+             for ($i = 0; $i < 2; $i++) {
+
+                 // créer le fichier temporaire
+                 $fd = fopen('php://temp/maxmemory:1048576', 'w');
+                 if (false === $fd) {
+                     die('Erreur interne lors de la création du fichier temporaire');
+                 }
+
+                 // index=0 pour estimation générale
+                 if($i == 0){
+                     // écrire les données en csv
+                     fputcsv($fd, $headerEstimationGenerale);
+                     // retourner au début du stream
+                     rewind($fd);
+                     // ajouter le fichier qui est en mémoire à l'archive, donner un nom
+                     $zip->addFromString($nomRapport.'-estimations.csv', stream_get_contents($fd) );
+
+                 }
+                 // index=1 pour estimation détaillée
+                 elseif ($i == 1){
+                     // écrire les données en csv
+                     fputcsv($fd, $headerEstimationDetaille);
+                     // retourner au début du stream
+                     rewind($fd);
+                     // ajouter le fichier qui est en mémoire à l'archive, donner un nom
+                     $zip->addFromString($nomRapport.'-details.csv', stream_get_contents($fd) );
+                 }
+
+
+
+
+                 // fermer le fichier
+                 fclose($fd);
+             }
+
+
+
+            // fermer le fichier d'archive
+             $zip->close();
+
+             header('Content-Type: application/zip');
+             header('Content-disposition: attachment; filename='.$zipNom);
+             header('Content-Length: ' . filesize($zipNom));
+             readfile($zipNom);
+
+            // supprimer le fichier zip
+             unlink($zipNom);
+
+            exit;
+
+
          }
      }
+     
+     private function getNomRencontre($typeRencontre){
+         $nomRencontre = "";
+
+         if($typeRencontre == "barycentre"){
+             $nomRencontre = "barycentre";
+         }
+         elseif($typeRencontre == "barycentreAvecExlcusion"){
+             $nomRencontre = "barycentre avec exclusion";
+         }
+         elseif($typeRencontre == "meilleurLieu"){
+             $nomRencontre = "lieux définis";
+         }
+         elseif($typeRencontre == "terrainNeutre"){
+             $nomRencontre = "lieux définis avec liste de lieux";
+         }
+         
+         return $nomRencontre;
+     }
+     
+     private function getNomScenario($typeScenario){
+         $nomScenario = "";
 
 
+         if($typeScenario == "optimalSansContrainte"){
+             $nomScenario = "scénario optimal sans contrainte";
+         }
+         elseif($typeScenario == "optimalAvecContrainte"){
+             $nomScenario = "scénario optimal avec contrainte";
+         }
+         elseif($typeScenario == "equitable"){
+             $nomScenario = "scénario équitable";
+         }
+         elseif($typeScenario == "optimal"){
+             $nomScenario = "scénario optimal";
+         }
+
+         return $nomScenario;
+     }
+
+    private function getTexteExportXml($infoXml){
+        $texte = '<?xml version="1.0" encoding="utf-8"?>';
+
+        $texte .= "\n";
+        $texte .= "<resultat>\n";
+
+        # parametres
+        $texte .= "\t<params>\n";
+        $texte .= "\t\t<nom_rapport>" .$infoXml["nomRapport"]."</nom_rapport>\n";
+        $texte .= "\t\t<nom_rencontre>" .$infoXml["nomRencontre"]."</nom_rencontre>\n";
+        $texte .= "\t\t<nom_scenario>" .$infoXml["nomScenario"]."</nom_scenario>\n";
+        $texte .= "\t\t<nom_federation>" .$infoXml["nomFederation"]."</nom_federation>\n";
+        $texte .= "\t\t<nom_discipline>" .$infoXml["nomDiscipline"]."</nom_discipline>\n";
+        $texte .= "\t\t<nom_utilisateur>" .$infoXml["nomUtilisateur"]."</nom_utilisateur>\n";
+        $texte .= "\t\t<nom_groupe>" .$infoXml["nomGroupe"]."</nom_groupe>\n";
+        $texte .= "\t</params>\n";
+
+
+        # estimation générale
+        $villeDepart = explode("|", $infoXml["villeDepart"]) ;
+        $nomVilleDepart = trim($villeDepart[1]);
+        $codePostalVilleDepart = trim($villeDepart[0]);
+
+        $texte .= "\t<estimation_generale>\n";
+        $texte .= "\t\t<meilleu_lieu_rencontre_nom>" .$nomVilleDepart."</meilleu_lieu_rencontre_nom>\n";
+        $texte .= "\t\t<meilleu_lieu_rencontre_code_postal>" .$codePostalVilleDepart."</meilleu_lieu_rencontre_code_postal>\n";
+        $texte .= "\t\t<distance_totale>" .$infoXml["distanceMin"]." Kms</distance_totale>\n";
+        $texte .= "\t\t<cout_voiture>" .round($infoXml["distanceTotale"]*0.8)." €</cout_voiture>\n";
+        $texte .= "\t\t<cout_covoiturage>" .round($infoXml["distanceTotale"]/4*0.8)." €</cout_covoiturage>\n";
+        $texte .= "\t\t<cout_minibus>" .round($infoXml["distanceTotale"]/9*1.31)." €</cout_minibus>\n";
+        $texte .= "\t\t<co2_emission_voiture>" .round($infoXml["distanceTotale"]*0.157)." KG eq CO2</co2_emission_voiture>\n";
+        $texte .= "\t\t<co2_emission_covoiturage>" .round($infoXml["distanceTotale"]/4*0.157)." KG eq CO2</co2_emission_covoiturage>\n";
+        $texte .= "\t\t<co2_emission_minibus>" .round($infoXml["distanceTotale"]/9*0.185)." KG eq CO2</co2_emission_minibus>\n";
+        $texte .= "\t</estimation_generale>\n";
+
+
+        # estimation détaillée
+        $texte .= "\t<details>\n";
+
+        foreach($infoXml["participants"] as $participant){
+
+//            error_log("\n participant: ".print_r($participant , true), 3, "error_log_optimouv.txt");
+
+            $texte .= "\t\t<participant>\n";
+            $texte .= "\t\t\t<nom>".$participant["villeNom"] ."</nom>\n";
+            $texte .= "\t\t\t<distance_parcourue>" .floor($participant["distance"]/1000)." Kms</distance_parcourue>\n";
+            $texte .= "\t\t\t<duree_trajet>" .round($participant["duree"]/3600).":".round($participant["duree"]%3600/60)." (H:M)"." </duree_trajet>\n";
+            $texte .= "\t\t\t<cout_voiture>" .round($participant["distance"]/1000*$participant["nbrParticipants"]*0.8)." €</cout_voiture>\n";
+            $texte .= "\t\t\t<cout_covoiturage>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.8)." €</cout_covoiturage>\n";
+            $texte .= "\t\t\t<cout_minibus>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/9*1.31)." €</cout_minibus>\n";
+            $texte .= "\t\t\t<co2_emission_voiture>" .round($participant["distance"]/1000*$participant["nbrParticipants"]*0.157)." KG eq CO2</co2_emission_voiture>\n";
+            $texte .= "\t\t\t<co2_emission_covoiturage>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.157)." KG eq CO2</co2_emission_covoiturage>\n";
+            $texte .= "\t\t\t<co2_emission_minibus>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/9*0.185)." KG eq CO2</co2_emission_minibus>\n";
+            $texte .= "\t\t</participant>\n";
+
+        }
+
+        $texte .= "\t</details>\n";
+
+
+
+        $texte .= "</resultat>";
+
+        return $texte;
+    }
+     
 
      public function exportScenarioPdfAction()
      {
 
          $idResultat = $_POST['idResultat'];
          $typeScenario = $_POST['typeScenario'];
+         $nomScenario = $this->getNomScenario($typeScenario);
          $typeRencontre = $_POST['typeRencontre'];
-         
+         $nomRencontre = $this->getNomRencontre($typeRencontre);
+
          //recuperation des donnees relatives au scenario
          $infoResultat = $this->getInfoResultat($idResultat, $typeRencontre, $typeScenario);
 
@@ -226,14 +433,19 @@ use Symfony\Component\HttpFoundation\JsonResponse;
          $coordonneesVille = $infoResultat["coordonneesVille"];
          $coordPointDepart = $infoResultat["coordPointDepart"];
 
+         $nomFederation = "FFBB"; # FIXME
+         $nomDiscipline ="Basket"; # FIXME
+         
          $html = $this->renderView('FfbbBundle:Rencontres:exportPdf.html.twig', array(
              'idResultat' => $idResultat,
              'typeScenario' => $typeScenario,
+             'nomScenario' => $nomScenario,
              'nomUtilisateur' => $nomUtilisateur,
              'nomListe' => $nomListe,
              'nomGroupe' => $nomGroupe,
              'nomRapport' => $nomRapport,
              'typeRencontre' => $typeRencontre,
+             'nomRencontre' => $nomRencontre,
              'distanceTotale' => $distanceTotale,
              'distanceMin' => $distanceMin,
              'nbrParticipantsTotal' => $nbrParticipantsTotal,
@@ -241,6 +453,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
              'participants' => $participants,
              'coordonneesVille' => $coordonneesVille,
              'coordPointDepart' => $coordPointDepart,
+             'nomFederation' => $nomFederation,
+             'nomDiscipline' => $nomDiscipline,
 
          ));
          
@@ -470,7 +684,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 
          # controler le nombre de villes
-         # s'il y a plus de 100 villes, on prend juste 99 villes
+         # s'il y a plus de 100 villes (la limite HERE ), on prend juste 99 villes
          $boolTropVilles = 0; # indiquer si on dépasse 100 villes
         if(count($coordonneesVille) >= 100){
             $coordonneesVille = array_slice($coordonneesVille, 0, 99);

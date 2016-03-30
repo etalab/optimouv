@@ -15,8 +15,8 @@ class DB:
 	Password="trk"
 	
 class HERE:
-	AppId="tObeTMHIXTfmuTUvyDBa"
-	AppCode="6ST2s3g8BkS7B0Uft0kPeg"
+	AppId="pfKIAUOCwlUoDaS5HMSF"
+	AppCode="eyRBIwonpnFNMXR0fza4vA"
 	
 class EMAIL:
 	Server="smtp.gmail.com"

@@ -1761,7 +1761,8 @@ def get_coordinates_from_city_id(entityId):
 """
 Function to probe HERE web service and fill in table trajet
 """
-def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coordDepart, coordDestination):
+# def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coordDepart, coordDestination):
+def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coordDepart, coordDestination, reportId, userId):
 	try:
 		
 		hereUrl = "http://route.api.here.com/routing/7.2/calculateroute.json"
@@ -1776,9 +1777,21 @@ def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coord
 		data = json.loads(resp.text)
 					
 		# get distance from HERE response
-		if ( data["response"]):
-			distance = data['response']['route'][0]['summary']['distance']
-			travelTime = data['response']['route'][0]['summary']['baseTime']
+		if data["response"]:
+# 			logging.debug("data[response]: %s" %data["response"])
+			
+			# if license error
+			if "type" in data["response"]:
+				if data["response"]["type"] == "SystemError":
+					reportName = get_report_name_from_report_id(reportId)
+					contentText = u"Bonjour,\n\n" 
+					contentText += u"Optimouv rencontre un problème de licence.\n"
+					contentText += u"Veuillez contacter votre administrateur. "
+					send_email_to_user_failure_with_text(userId, reportId, contentText)
+			else:
+			
+				distance = data['response']['route'][0]['summary']['distance']
+				travelTime = data['response']['route'][0]['summary']['baseTime']
 
 
 		# insert to table trajet
@@ -1810,7 +1823,8 @@ def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coord
 """
 Function to create distance matrix from DB
 """
-def create_distance_matrix_from_db(teams):
+# def create_distance_matrix_from_db(teams):
+def create_distance_matrix_from_db(teams, reportId, userId):
 	try:
 		# get size for the matrix
 		teamNbr = len(teams)
@@ -1852,7 +1866,8 @@ def create_distance_matrix_from_db(teams):
 						logging.debug("coordDestination: %s" %coordDestination)
 						
 						# get distance and travel time from HERE web service
-						resultsHere = get_distance_travel_time_from_here_ws(depart, destination, coordDepart, coordDestination)
+# 						resultsHere = get_distance_travel_time_from_here_ws(depart, destination, coordDepart, coordDestination)
+						resultsHere = get_distance_travel_time_from_here_ws(depart, destination, coordDepart, coordDestination, reportId, userId)
 						logging.debug("resultsHere: %s" %resultsHere)
 
 						# get distance from results Here
@@ -2362,94 +2377,114 @@ def variation_team_number_per_pool(poolsIds, varTeamNbrPerPool):
 	except Exception as e:
 		show_exception_traceback()
 
+	
+
+"""
+Function to get report name from report id
+"""
+def get_report_name_from_report_id(reportId):
+	try:
+		sql = "select nom from parametres where id=%s"%reportId
+		reportName = db.fetchone(sql)
+
+		return reportName
+
+	except Exception as e:
+		show_exception_traceback()
+
+"""
+Function to get user email from user id
+"""
+def get_user_email_from_user_id(userId):
+	try:
+		# get user's email from user id
+		sql = "select email from fos_user where id=%s"%userId
+		email = db.fetchone(sql)
+
+		return email
+
+	except Exception as e:
+		show_exception_traceback()
+
 """
 Function to send email to user concerning the job finished status
 """
 def send_email_to_user(userId, resultId):
 	try:
-		# get user's email from user id
-		sql = "select email from fos_user where id=%s"%userId
 		
-		TO = db.fetchone(sql)
-# 		logging.debug("TO: %s" %TO)
+		recipientAddress = get_user_email_from_user_id(userId)
 
-		URL="%s/admin/poules/resultat/%s"%(config.INPUT.MainUrl, resultId)
-
-		SUBJECT = u'mise à disposition de vos résultats de calculs'
-		TEXT = u"Bonjour,\n\n" 
-		TEXT += u"Le résultat de votre calcul est disponible. "
-		TEXT += u"Vous pouvez le consulter en cliquant sur ce lien:\n" 
-		TEXT += u"%s"%(URL)
-		logging.debug("TEXT: \n%s" %TEXT)
+		url="%s/admin/poules/resultat/%s"%(config.INPUT.MainUrl, resultId)
+		subject = u'mise à disposition de vos résultats de calculs'
+		contentText = u"Bonjour,\n\n" 
+		contentText += u"Le résultat de votre calcul est disponible. "
+		contentText += u"Vous pouvez le consulter en cliquant sur ce lien:\n" 
+		contentText += u"%s"%(url)
+		logging.debug("contentText: \n%s" %contentText)
 		
+		send_email_general(recipientAddress, subject, contentText)
+		
+
+	except Exception as e:
+		show_exception_traceback()
+
+"""
+General Function to send email 
+"""
+def send_email_general(recipientAddress, subject, contentText ):
+	try:
 		# Gmail Sign In
-		gmail_sender = config.EMAIL.Account
-		gmail_passwd = config.EMAIL.Password
+		senderAccount = config.EMAIL.Account
+		senderPassword = config.EMAIL.Password
 		
 		server = smtplib.SMTP(config.EMAIL.Server, config.EMAIL.Port)
 		server.ehlo()
 		server.starttls()
-		server.login(gmail_sender, gmail_passwd)
+		server.login(senderAccount, senderPassword)
 		
+		msg = MIMEText(contentText)
+		msg['From'] = senderAccount
+		msg['To'] = recipientAddress
+		msg['Subject'] = subject
 		
-		msg = MIMEText(TEXT)
-		msg['Subject'] = SUBJECT
-		msg['From'] = gmail_sender
-		msg['To'] = TO
-		
-		
-		server.sendmail(gmail_sender, [TO], msg.as_string())
+		server.sendmail(senderAccount, [recipientAddress], msg.as_string())
 		server.quit()	
-
-
+	
 	except Exception as e:
 		show_exception_traceback()
-	
 
 """
 Function to send email to user when there is no results (there are too many constraints)
 """
 def send_email_to_user_failure(userId, reportId):
 	try:
-# 		sql = "select nom from rapport where id=%s"%reportId
-		sql = "select nom from parametres where id=%s"%reportId
-		reportName = db.fetchone(sql)
 		
-		# get user's email from user id
-		sql = "select email from fos_user where id=%s"%userId
-		
-		TO = db.fetchone(sql)
-# 		logging.debug("TO: %s" %TO)
+		reportName = get_report_name_from_report_id(reportId)
 
-		SUBJECT = u'mise à disposition de vos résultats de calculs'
-		TEXT = u"Bonjour,\n\n" 
-# 		TEXT += u"Aucun résultat n'est disponible pour vos critères de sélection. "
-		TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
-		TEXT += u"Veuillez modifier vos critères et contraintes et relancer un calcul. " 
-		logging.debug("TEXT: \n%s" %TEXT)
+		contentText = u"Bonjour,\n\n" 
+		contentText += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
+		contentText += u"Veuillez modifier vos critères et contraintes et relancer un calcul. " 
+
+		send_email_to_user_failure_with_text(userId, reportId, contentText)
 		
-		# Gmail Sign In
-		gmail_sender = config.EMAIL.Account
-		gmail_passwd = config.EMAIL.Password
+	except Exception as e:
+		show_exception_traceback()
+
+
+"""
+Function to send email to user when the provided params are unexpected (for match plateau)
+"""
+def send_email_to_user_failure_with_text(userId, reportId, contentText):
+	try:
+		recipientAddress = get_user_email_from_user_id(userId)
+
+		subject = u'mise à disposition de vos résultats de calculs'
+		logging.debug("contentText: \n%s" %contentText)
 		
-		server = smtplib.SMTP('smtp.gmail.com', 587)
-		server.ehlo()
-		server.starttls()
-		server.login(gmail_sender, gmail_passwd)
-		
-		
-		msg = MIMEText(TEXT)
-		msg['Subject'] = SUBJECT
-		msg['From'] = gmail_sender
-		msg['To'] = TO
-		
-		
-		server.sendmail(gmail_sender, [TO], msg.as_string())
-		server.quit()	
+		send_email_general(recipientAddress, subject, contentText)
 
 		# update job status
 		update_job_status(reportId, -1)
-
 
 		sys.exit()
 
@@ -2457,13 +2492,13 @@ def send_email_to_user_failure(userId, reportId):
 		show_exception_traceback()
 
 
+
 """
 Function control provided params by user
 """
 def control_params_match_plateau(userId, teamNbr, poolNbr, reportId):
 	try:
-		sql = "select nom from parametres where id=%s"%reportId
-		reportName = db.fetchone(sql)
+		reportName = get_report_name_from_report_id(reportId)
 
 		TEXT = u"Bonjour,\n\n" 
 		TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
@@ -2485,46 +2520,6 @@ def control_params_match_plateau(userId, teamNbr, poolNbr, reportId):
 	except Exception as e:
 		show_exception_traceback()
 
-"""
-Function to send email to user when the provided params are unexpected (for match plateau)
-"""
-def send_email_to_user_failure_with_text(userId, reportId, TEXT):
-	try:
-		# get user's email from user id
-		sql = "select email from fos_user where id=%s"%userId
-		
-		TO = db.fetchone(sql)
-# 		logging.debug("TO: %s" %TO)
-
-		SUBJECT = u'mise à disposition de vos résultats de calculs'
-		logging.debug("TEXT: \n%s" %TEXT)
-		
-		# Gmail Sign In
-		gmail_sender = config.EMAIL.Account
-		gmail_passwd = config.EMAIL.Password
-		
-		server = smtplib.SMTP('smtp.gmail.com', 587)
-		server.ehlo()
-		server.starttls()
-		server.login(gmail_sender, gmail_passwd)
-		
-		
-		msg = MIMEText(TEXT)
-		msg['Subject'] = SUBJECT
-		msg['From'] = gmail_sender
-		msg['To'] = TO
-		
-		
-		server.sendmail(gmail_sender, [TO], msg.as_string())
-		server.quit()	
-
-		# update job status
-		update_job_status(reportId, -1)
-
-		sys.exit()
-
-	except Exception as e:
-		show_exception_traceback()
 
 
 
