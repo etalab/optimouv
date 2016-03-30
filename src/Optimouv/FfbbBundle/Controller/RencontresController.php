@@ -224,105 +224,23 @@ use ZipArchive;
              $zip = new ZipArchive;
              $zip->open($zipNom, ZipArchive::CREATE);
 
-            // estimation générale
-             $headerEstimationGenerale = array("KILOMETRES A PARCOURIR POUR LE SCENARIO",
-                 "COUT POUR LE SCENARIO EN VOITURE",
-                 "COUT POUR LE SCENARIO EN COVOITURAGE",
-                 "COUT POUR LE SCENARIO EN MINIBUS",
-                 "EMISSIONS TOTALES DE GES EN VOITURE",
-                 "EMISSIONS TOTALES DE GES EN COVOITURAGE",
-                 "EMISSIONS TOTALES DE GES EN MINIBUS"
-             );
-             $coutVoiture = round($distanceTotale * 0.8);
-             $coutCovoiturage = round($distanceTotale/4 * 0.8);
-             $coutMinibus = round($distanceTotale/9 * 1.31);
-             $emissionVoiture = round($distanceTotale * 0.157);
-             $emissionCovoiturage = round($distanceTotale/4 * 0.157);
-             $emissionMinibus = round($distanceTotale/9 * 0.185);
-             $contenuEstimationGenerale = array($distanceMin,
-                 $coutVoiture, $coutCovoiturage, $coutMinibus,
-                 $emissionVoiture, $emissionCovoiturage, $emissionMinibus
+
+             $infoCsv = array(
+                 "nomRapport" => $nomRapport,
+                 "nomScenario" => $nomScenario,
+                 "nomFederation" => $nomFederation,
+                 "nomDiscipline" => $nomDiscipline,
+                 "nomUtilisateur" => $nomUtilisateur,
+                 "nomGroupe" => $nomGroupe,
+                 "nomRencontre" => $nomRencontre,
+                 'villeDepart' => $villeDepart,
+                 'distanceMin' => $distanceMin,
+                 'distanceTotale' => $distanceTotale,
+                 'participants' => $participants,
              );
 
 
-             // estimation détaillé
-             $headerEstimationDetaille = array( "PARTICIPANTS",
-                 "KILOMETRES A PARCOURIR",
-                 "TEMPS DE PARCOURS",
-                 "COUT DU PARCOURS EN VOITURE",
-                 "COUT DU PARCOURS EN COVOITURAGE",
-                 "COUT DU PARCOURS EN MINIBUS",
-                 "EMISSIONS GES EN VOITURE",
-                 "EMISSIONS GES EN COVOITURAGE",
-                 "EMISSIONS GES EN MINIBUS"
-             );
-
-
-
-
-
-
-
-            // index=0 pour estimation générale
-            // index=1 pour estimation détaillée
-             for ($i = 0; $i < 2; $i++) {
-
-                 // créer le fichier temporaire
-                 $fd = fopen('php://temp/maxmemory:1048576', 'w');
-                 if (false === $fd) {
-                     die('Erreur interne lors de la création du fichier temporaire');
-                 }
-
-                 // index=0 pour estimation générale
-                 if($i == 0){
-                     // écrire les données en csv
-                     fputcsv($fd, $headerEstimationGenerale);
-                     fputcsv($fd, $contenuEstimationGenerale);
-                     // retourner au début du stream
-                     rewind($fd);
-                     // ajouter le fichier qui est en mémoire à l'archive, donner un nom
-                     $nomFichierEncoder = iconv("UTF-8","Windows-1252", "$nomRapport-$nomScenario-estimations.csv");
-                     $zip->addFromString($nomFichierEncoder , stream_get_contents($fd) );
-//                      error_log("\n encoded_filename: ".print_r($encoded_filename , true), 3, "error_log_optimouv.txt");
-                 }
-                 // index=1 pour estimation détaillée
-                 elseif ($i == 1){
-                     // écrire les données en csv
-                     fputcsv($fd, $headerEstimationDetaille);
-
-                     foreach($participants as $participant){
-
-                         $contenuEstimationDetaille = array($participant["villeNom"],
-                            floor($participant["distance"]/1000),
-                            round($participant["duree"]/3600).":".round($participant["duree"]%3600/60),
-                            round($participant["distance"]/1000*$participant["nbrParticipants"]*0.8),
-                            round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.8),
-                            round($participant["distance"]/1000*$participant["nbrParticipants"]/9*1.31),
-                            round($participant["distance"]/1000*$participant["nbrParticipants"]*0.157),
-                            round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.157),
-                            round($participant["distance"]/1000*$participant["nbrParticipants"]/9*0.185)
-                         );
-
-                         fputcsv($fd, $contenuEstimationDetaille);
-                     }
-
-
-
-                     // retourner au début du stream
-                     rewind($fd);
-                     // ajouter le fichier qui est en mémoire à l'archive, donner un nom
-                     $nomFichierEncoder = iconv("UTF-8","Windows-1252", "$nomRapport-$nomScenario-details.csv");
-                     $zip->addFromString($nomFichierEncoder, stream_get_contents($fd) );
-                 }
-
-
-
-
-                 // fermer le fichier
-                 fclose($fd);
-             }
-
-
+            $this->remplirCsvEnZip($infoCsv, $zip);
 
             // fermer le fichier d'archive
              $zip->close();
@@ -340,7 +258,104 @@ use ZipArchive;
 
          }
      }
-     
+
+     private function remplirCsvEnZip($infoCsv, $zip){
+         // estimation générale
+         $headerEstimationGenerale = array("KILOMETRES A PARCOURIR POUR LE SCENARIO",
+             "COUT POUR LE SCENARIO EN VOITURE",
+             "COUT POUR LE SCENARIO EN COVOITURAGE",
+             "COUT POUR LE SCENARIO EN MINIBUS",
+             "EMISSIONS TOTALES DE GES EN VOITURE",
+             "EMISSIONS TOTALES DE GES EN COVOITURAGE",
+             "EMISSIONS TOTALES DE GES EN MINIBUS"
+         );
+         $coutVoiture = round($infoCsv["distanceTotale"] * 0.8);
+         $coutCovoiturage = round($infoCsv["distanceTotale"]/4 * 0.8);
+         $coutMinibus = round($infoCsv["distanceTotale"]/9 * 1.31);
+         $emissionVoiture = round($infoCsv["distanceTotale"] * 0.157);
+         $emissionCovoiturage = round($infoCsv["distanceTotale"]/4 * 0.157);
+         $emissionMinibus = round($infoCsv["distanceTotale"]/9 * 0.185);
+         $contenuEstimationGenerale = array($infoCsv["distanceMin"],
+             $coutVoiture, $coutCovoiturage, $coutMinibus,
+             $emissionVoiture, $emissionCovoiturage, $emissionMinibus
+         );
+
+
+         // estimation détaillé
+         $headerEstimationDetaille = array( "PARTICIPANTS",
+             "KILOMETRES A PARCOURIR",
+             "TEMPS DE PARCOURS",
+             "COUT DU PARCOURS EN VOITURE",
+             "COUT DU PARCOURS EN COVOITURAGE",
+             "COUT DU PARCOURS EN MINIBUS",
+             "EMISSIONS GES EN VOITURE",
+             "EMISSIONS GES EN COVOITURAGE",
+             "EMISSIONS GES EN MINIBUS"
+         );
+
+
+         // index=0 pour estimation générale
+         // index=1 pour estimation détaillée
+         for ($i = 0; $i < 2; $i++) {
+
+             // créer le fichier temporaire
+             $fd = fopen('php://temp/maxmemory:1048576', 'w');
+             if (false === $fd) {
+                 die('Erreur interne lors de la création du fichier temporaire');
+             }
+
+             // index=0 pour estimation générale
+             if($i == 0){
+                 // écrire les données en csv
+                 fputcsv($fd, $headerEstimationGenerale);
+                 fputcsv($fd, $contenuEstimationGenerale);
+                 // retourner au début du stream
+                 rewind($fd);
+                 // ajouter le fichier qui est en mémoire à l'archive, donner un nom
+                 $nomFichierEncoder = iconv("UTF-8","Windows-1252", $infoCsv["nomRapport"]."-".$infoCsv["nomScenario"]."-estimations.csv");
+                 $zip->addFromString($nomFichierEncoder , stream_get_contents($fd) );
+//                      error_log("\n encoded_filename: ".print_r($encoded_filename , true), 3, "error_log_optimouv.txt");
+             }
+             // index=1 pour estimation détaillée
+             elseif ($i == 1){
+                 // écrire les données en csv
+                 fputcsv($fd, $headerEstimationDetaille);
+
+                 foreach($infoCsv["participants"] as $participant){
+
+                     $contenuEstimationDetaille = array($participant["villeNom"],
+                         floor($participant["distance"]/1000),
+                         round($participant["duree"]/3600).":".round($participant["duree"]%3600/60),
+                         round($participant["distance"]/1000*$participant["nbrParticipants"]*0.8),
+                         round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.8),
+                         round($participant["distance"]/1000*$participant["nbrParticipants"]/9*1.31),
+                         round($participant["distance"]/1000*$participant["nbrParticipants"]*0.157),
+                         round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.157),
+                         round($participant["distance"]/1000*$participant["nbrParticipants"]/9*0.185)
+                     );
+
+                     fputcsv($fd, $contenuEstimationDetaille);
+                 }
+
+
+
+                 // retourner au début du stream
+                 rewind($fd);
+                 // ajouter le fichier qui est en mémoire à l'archive, donner un nom
+                 $nomFichierEncoder = iconv("UTF-8","Windows-1252", $infoCsv["nomRapport"]."-".$infoCsv["nomScenario"]."-details.csv");
+                 $zip->addFromString($nomFichierEncoder, stream_get_contents($fd) );
+             }
+
+
+
+
+             // fermer le fichier
+             fclose($fd);
+         }
+
+     }
+
+
      private function getNomRencontre($typeRencontre){
          $nomRencontre = "";
 
