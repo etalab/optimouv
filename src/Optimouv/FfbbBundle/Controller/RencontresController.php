@@ -131,7 +131,8 @@ use ZipArchive;
          $typeRencontre = $_POST['typeRencontre'];
          $nomRencontre = $this->getNomRencontre($typeRencontre);
 
-//          error_log("\n typeRencontre: ".print_r($typeRencontre , true), 3, "error_log_optimouv.txt");
+//          error_log("\n nomRencontre: ".print_r($nomRencontre , true), 3, "error_log_optimouv.txt");
+//         error_log("\n nomScenario: ".print_r($nomScenario , true), 3, "error_log_optimouv.txt");
 
 
          //recuperation des donnees relatives au scenario
@@ -219,7 +220,7 @@ use ZipArchive;
          elseif ($formatExport == "csv"){
 
              // créer le fichier zip
-             $zipNom = "$nomRapport-csv.zip";
+             $zipNom = "$nomRapport-$nomScenario-csv.zip";
              $zip = new ZipArchive;
              $zip->open($zipNom, ZipArchive::CREATE);
 
@@ -231,6 +232,16 @@ use ZipArchive;
                  "EMISSIONS TOTALES DE GES EN VOITURE",
                  "EMISSIONS TOTALES DE GES EN COVOITURAGE",
                  "EMISSIONS TOTALES DE GES EN MINIBUS"
+             );
+             $coutVoiture = round($distanceTotale * 0.8);
+             $coutCovoiturage = round($distanceTotale/4 * 0.8);
+             $coutMinibus = round($distanceTotale/9 * 1.31);
+             $emissionVoiture = round($distanceTotale * 0.157);
+             $emissionCovoiturage = round($distanceTotale/4 * 0.157);
+             $emissionMinibus = round($distanceTotale/9 * 0.185);
+             $contenuEstimationGenerale = array($distanceMin,
+                 $coutVoiture, $coutCovoiturage, $coutMinibus,
+                 $emissionVoiture, $emissionCovoiturage, $emissionMinibus
              );
 
 
@@ -247,6 +258,11 @@ use ZipArchive;
              );
 
 
+
+
+
+
+
             // index=0 pour estimation générale
             // index=1 pour estimation détaillée
              for ($i = 0; $i < 2; $i++) {
@@ -261,20 +277,42 @@ use ZipArchive;
                  if($i == 0){
                      // écrire les données en csv
                      fputcsv($fd, $headerEstimationGenerale);
+                     fputcsv($fd, $contenuEstimationGenerale);
                      // retourner au début du stream
                      rewind($fd);
                      // ajouter le fichier qui est en mémoire à l'archive, donner un nom
-                     $zip->addFromString($nomRapport.'-estimations.csv', stream_get_contents($fd) );
-
+                     $nomFichierEncoder = iconv("UTF-8","Windows-1252", "$nomRapport-$nomScenario-estimations.csv");
+                     $zip->addFromString($nomFichierEncoder , stream_get_contents($fd) );
+//                      error_log("\n encoded_filename: ".print_r($encoded_filename , true), 3, "error_log_optimouv.txt");
                  }
                  // index=1 pour estimation détaillée
                  elseif ($i == 1){
                      // écrire les données en csv
                      fputcsv($fd, $headerEstimationDetaille);
+
+                     foreach($participants as $participant){
+
+                         $contenuEstimationDetaille = array($participant["villeNom"],
+                            floor($participant["distance"]/1000),
+                            round($participant["duree"]/3600).":".round($participant["duree"]%3600/60),
+                            round($participant["distance"]/1000*$participant["nbrParticipants"]*0.8),
+                            round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.8),
+                            round($participant["distance"]/1000*$participant["nbrParticipants"]/9*1.31),
+                            round($participant["distance"]/1000*$participant["nbrParticipants"]*0.157),
+                            round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.157),
+                            round($participant["distance"]/1000*$participant["nbrParticipants"]/9*0.185)
+                         );
+
+                         fputcsv($fd, $contenuEstimationDetaille);
+                     }
+
+
+
                      // retourner au début du stream
                      rewind($fd);
                      // ajouter le fichier qui est en mémoire à l'archive, donner un nom
-                     $zip->addFromString($nomRapport.'-details.csv', stream_get_contents($fd) );
+                     $nomFichierEncoder = iconv("UTF-8","Windows-1252", "$nomRapport-$nomScenario-details.csv");
+                     $zip->addFromString($nomFichierEncoder, stream_get_contents($fd) );
                  }
 
 
@@ -289,7 +327,7 @@ use ZipArchive;
             // fermer le fichier d'archive
              $zip->close();
 
-             header('Content-Type: application/zip');
+             header('Content-Type: application/zip; charset=utf-8');
              header('Content-disposition: attachment; filename='.$zipNom);
              header('Content-Length: ' . filesize($zipNom));
              readfile($zipNom);
