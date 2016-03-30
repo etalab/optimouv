@@ -1625,7 +1625,29 @@ def get_info_pool_from_pool_distribution(poolDistribution):
 
 
 
+"""
+Function to check existence of ref scenario
+"""
+def check_existence_ref_scenario(teams):
+	try:
+		withRef = False
 
+# 		logging.debug(" teams: %s" %sorted(teams))
+
+		for teamId in teams:
+			sql = "select poule from entite where id=%s"%teamId
+			logging.debug(" sql: %s" %sql)
+			poule = db.fetchone(sql)
+			logging.debug(" poule: %s" %poule)
+			
+			if poule != '' and poule != None:
+				return True
+
+		
+		return withRef
+		
+	except Exception as e:
+		show_exception_traceback()
 
 """
 Function to get reference pool distribution from DB
