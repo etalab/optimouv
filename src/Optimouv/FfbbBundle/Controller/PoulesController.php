@@ -999,7 +999,7 @@ class PoulesController extends Controller
 
 
     private function remplirCsvEnZip($infoCsv, $zip){
-        // estimation générale
+        // entete pour l'estimation générale
         $headerEstimationGenerale = array("KILOMETRES A PARCOURIR POUR LE SCENARIO",
             "COUT POUR LE SCENARIO EN VOITURE",
             "COUT POUR LE SCENARIO EN COVOITURAGE",
@@ -1009,36 +1009,26 @@ class PoulesController extends Controller
             "EMISSIONS TOTALES DE GES EN MINIBUS"
         );
 
+        // contenu de l'estimation générale
         $distanceTotale = round($infoCsv["scenarioResultats"]["estimationGenerale"]["distanceTotale"]/1000);
         $distanceTotaleTousParticipants = round($infoCsv["scenarioResultats"]["estimationGenerale"]["distanceTotaleTousParticipants"]/1000);
 
-
-        $coutVoiture = round($distanceTotale * 0.8);
-//        $coutCovoiturage = round($infoCsv["distanceTotale"]/4 * 0.8);
-//        $coutMinibus = round($infoCsv["distanceTotale"]/9 * 1.31);
-//        $emissionVoiture = round($infoCsv["distanceTotale"] * 0.157);
-//        $emissionCovoiturage = round($infoCsv["distanceTotale"]/4 * 0.157);
-//        $emissionMinibus = round($infoCsv["distanceTotale"]/9 * 0.185);
-//        $contenuEstimationGenerale = array($infoCsv["distanceMin"],
-//            $coutVoiture, $coutCovoiturage, $coutMinibus,
-//            $emissionVoiture, $emissionCovoiturage, $emissionMinibus
-//        );
-
-
-//        $texte .= "\t\t<distance_totale>" .$distanceTotale." Kms</distance_totale>\n";
-//        $texte .= "\t\t<cout_voiture>" .round($distanceTotaleTousParticipants*0.8)." €</cout_voiture>\n";
-//        $texte .= "\t\t<cout_covoiturage>" .round($distanceTotaleTousParticipants/4*0.8)." €</cout_covoiturage>\n";
-//        $texte .= "\t\t<cout_minibus>" .round($distanceTotaleTousParticipants/9*1.31)." €</cout_minibus>\n";
-//        $texte .= "\t\t<co2_emission_voiture>" .round($distanceTotaleTousParticipants*0.157)." KG eq CO2</co2_emission_voiture>\n";
-//        $texte .= "\t\t<co2_emission_covoiturage>" .round($distanceTotaleTousParticipants/4*0.157)." KG eq CO2</co2_emission_covoiturage>\n";
-//        $texte .= "\t\t<co2_emission_minibus>" .round($distanceTotaleTousParticipants/9*0.185)." KG eq CO2</co2_emission_minibus>\n";
+        $coutVoiture = round($distanceTotaleTousParticipants * 0.8);
+        $coutCovoiturage = round($distanceTotaleTousParticipants/4 * 0.8);
+        $coutMinibus = round($distanceTotaleTousParticipants/9 * 1.31);
+        $emissionVoiture = round($distanceTotaleTousParticipants * 0.157);
+        $emissionCovoiturage = round($distanceTotaleTousParticipants/4 * 0.157);
+        $emissionMinibus = round($distanceTotaleTousParticipants/9 * 0.185);
+        $contenuEstimationGenerale = array($distanceTotale,
+            $coutVoiture, $coutCovoiturage, $coutMinibus,
+            $emissionVoiture, $emissionCovoiturage, $emissionMinibus
+        );
 
 
-
-        // estimation détaillé
+        // entete pour l'estimation détaillé
         $headerEstimationDetaille = array( "PARTICIPANTS",
             "KILOMETRES A PARCOURIR",
-            "TEMPS DE PARCOURS",
+            "TEMPS DE PARCOURS (J H:M)",
             "COUT DU PARCOURS EN VOITURE",
             "COUT DU PARCOURS EN COVOITURAGE",
             "COUT DU PARCOURS EN MINIBUS",
@@ -1047,13 +1037,13 @@ class PoulesController extends Controller
             "EMISSIONS GES EN MINIBUS"
         );
 
-        // liste de rencontres
+        // entete pour l' liste de rencontres
         if($infoCsv["typeMatch"] == "allerRetour" ||  $infoCsv["typeMatch"] == "allerSimple"){
             $headerRencontres = array("POULE", "PARTICIPANT 1", "PARTICIPANT 2"
             );
         }
         elseif($infoCsv["typeMatch"] == "plateau" ){
-            $headerRencontres = array("POULE", "JOUR", "EQUIPE HOTE", "EQUIPE ADVERSE 1", "EQUIPE ADVERSE 2"
+            $headerRencontres = array("POULE", "JOURNEE", "EQUIPE HOTE", "EQUIPE ADVERSE 1", "EQUIPE ADVERSE 2"
             );
 
         }
@@ -1074,7 +1064,7 @@ class PoulesController extends Controller
             if($i == 0){
                 // écrire les données en csv
                 fputcsv($fd, $headerEstimationGenerale);
-//                fputcsv($fd, $contenuEstimationGenerale);
+                fputcsv($fd, $contenuEstimationGenerale);
                 // retourner au début du stream
                 rewind($fd);
                 // ajouter le fichier qui est en mémoire à l'archive, donner un nom
@@ -1085,24 +1075,46 @@ class PoulesController extends Controller
                 // écrire les données en csv
                 fputcsv($fd, $headerEstimationDetaille);
 
-//                foreach($infoCsv["participants"] as $participant){
-//
-//                    $contenuEstimationDetaille = array($participant["villeNom"],
-//                        floor($participant["distance"]/1000),
-//                        round($participant["duree"]/3600).":".round($participant["duree"]%3600/60),
-//                        round($participant["distance"]/1000*$participant["nbrParticipants"]*0.8),
-//                        round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.8),
-//                        round($participant["distance"]/1000*$participant["nbrParticipants"]/9*1.31),
-//                        round($participant["distance"]/1000*$participant["nbrParticipants"]*0.157),
-//                        round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.157),
-//                        round($participant["distance"]/1000*$participant["nbrParticipants"]/9*0.185)
-//                    );
-//
-//                    fputcsv($fd, $contenuEstimationDetaille);
-//                }
+
+                $estimationDetails = $infoCsv["scenarioResultats"]["estimationDetails"];
+                ksort($estimationDetails);
+                $alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ];
 
 
 
+                foreach($estimationDetails as $pouleNbr => $estimationDetail) {
+
+
+                    $jourTrajet = round($estimationDetail["dureeTotale"]/86400);
+                    if( $jourTrajet < 10){
+                        $jourTrajet = "0$jourTrajet";
+                    }
+                    $heureTrajet = round($estimationDetail["dureeTotale"]%86400/3600);
+                    if( $heureTrajet< 10){
+                        $heureTrajet = "0$heureTrajet";
+                    }
+                    $minuteTrajet = round($estimationDetail["dureeTotale"]%86400/3600);
+                    if( $minuteTrajet< 10){
+                        $minuteTrajet = "0$minuteTrajet";
+                    }
+
+                    $contenuEstimationDetaille = array($alphabet[$pouleNbr-1],
+                        floor($estimationDetail["distanceTotale"]/1000),
+                        $jourTrajet." ".$heureTrajet.":".$minuteTrajet,
+                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000*0.8),
+                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000/4*0.8),
+                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000/9*1.31),
+                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000*0.157),
+                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000/4*0.157),
+                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000/9*0.185),
+
+                    );
+
+                    fputcsv($fd, $contenuEstimationDetaille);
+
+                }
+
+                
                 // retourner au début du stream
                 rewind($fd);
                 // ajouter le fichier qui est en mémoire à l'archive, donner un nom
