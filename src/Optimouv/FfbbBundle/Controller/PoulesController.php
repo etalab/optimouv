@@ -1048,6 +1048,9 @@ class PoulesController extends Controller
 
         }
 
+        // alphabet pour le nom de poule
+        $alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ];
+
 
         // index=0 pour estimation générale
         // index=1 pour estimation détaillée
@@ -1078,7 +1081,6 @@ class PoulesController extends Controller
 
                 $estimationDetails = $infoCsv["scenarioResultats"]["estimationDetails"];
                 ksort($estimationDetails);
-                $alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ];
 
 
 
@@ -1126,6 +1128,45 @@ class PoulesController extends Controller
                 // écrire les données en csv
                 fputcsv($fd, $headerRencontres);
 
+
+                $rencontres =  $infoCsv["scenarioResultats"]["rencontreDetails"];
+                ksort($rencontres);
+                $typeMatch = $infoCsv["typeMatch"];
+
+                if($typeMatch == "allerRetour" || $typeMatch == "allerSimple") {
+                    foreach ($rencontres as $pouleNbr => $rencontresParPoule) {
+                        foreach ($rencontresParPoule as $rencontre) {
+                            $contenuRencontres = array($alphabet[$pouleNbr-1],
+                                $rencontre["equipeDepartNom"],
+                                $rencontre["equipeDestinationNom"],
+                            );
+
+                            fputcsv($fd, $contenuRencontres);
+                        }
+
+                    }
+                }
+                elseif ($typeMatch == "plateau"){
+                    foreach ($rencontres as $pouleNbr => $rencontresParPoule) {
+                        foreach ($rencontresParPoule as $jourNbr => $rencontresParJour) {
+                            foreach ($rencontresParJour as $rencontre) {
+                                $contenuRencontres = array($alphabet[$pouleNbr-1],
+                                    $jourNbr,
+                                    $rencontre["hoteNom"],
+                                    $rencontre["premierEquipeNom"],
+                                    $rencontre["deuxiemeEquipeNom"]
+                                );
+
+                                fputcsv($fd, $contenuRencontres);
+
+                            }
+                        }
+
+                    }
+                }
+
+
+                
                 // retourner au début du stream
                 rewind($fd);
                 // ajouter le fichier qui est en mémoire à l'archive, donner un nom
@@ -1242,7 +1283,6 @@ class PoulesController extends Controller
             foreach ($rencontres as $pouleNbr => $rencontresParPoule) {
                 foreach ($rencontresParPoule as $jourNbr => $rencontresParJour) {
                     foreach ($rencontresParJour as $rencontre) {
-                        error_log("\n rencontre: " . print_r($rencontre, true), 3, "error_log_optimouv.txt");
                         $texte .= "\t\t<rencontre>\n";
                         $texte .= "\t\t\t<poule>Poule " .$alphabet[$pouleNbr-1]."</poule>\n";
                         $texte .= "\t\t\t<jour> " .$jourNbr."</jour>\n";
