@@ -404,7 +404,7 @@ use ZipArchive;
                  $nomScenario = "scenario optimal avec contrainte";
              }
              elseif($typeScenario == "equitable"){
-                 $nomScenario = "scenario équitable";
+                 $nomScenario = "scenario equitable";
              }
              elseif($typeScenario == "optimal"){
                  $nomScenario = "scenario optimal";
