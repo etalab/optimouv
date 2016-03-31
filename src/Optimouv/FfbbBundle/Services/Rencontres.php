@@ -1577,4 +1577,24 @@ class Rencontres
 
     }
 
+    public function getNomRencontre($typeRencontre){
+        $nomRencontre = "";
+
+        if($typeRencontre == "barycentre"){
+            $nomRencontre = "barycentre";
+        }
+        elseif($typeRencontre == "barycentreAvecExlcusion"){
+            $nomRencontre = "barycentre avec exclusion";
+        }
+        elseif($typeRencontre == "meilleurLieu"){
+            $nomRencontre = "lieux définis";
+        }
+        elseif($typeRencontre == "terrainNeutre"){
+            $nomRencontre = "lieux définis avec liste de lieux";
+        }
+
+        return $nomRencontre;
+    }
+
+
 }

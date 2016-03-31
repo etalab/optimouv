@@ -130,7 +130,7 @@ use ZipArchive;
          $nomScenario = $this->getNomScenario($typeScenario, 1);
          $nomScenarioSansAccent = $this->getNomScenario($typeScenario, 0);
          $typeRencontre = $_POST['typeRencontre'];
-         $nomRencontre = $this->getNomRencontre($typeRencontre);
+         $nomRencontre = $this->get('service_rencontres')->getNomRencontre($typeRencontre);
 
 //          error_log("\n nomRencontre: ".print_r($nomRencontre , true), 3, "error_log_optimouv.txt");
 //         error_log("\n nomScenario: ".print_r($nomScenario , true), 3, "error_log_optimouv.txt");
@@ -356,24 +356,7 @@ use ZipArchive;
      }
 
 
-     private function getNomRencontre($typeRencontre){
-         $nomRencontre = "";
-
-         if($typeRencontre == "barycentre"){
-             $nomRencontre = "barycentre";
-         }
-         elseif($typeRencontre == "barycentreAvecExlcusion"){
-             $nomRencontre = "barycentre avec exclusion";
-         }
-         elseif($typeRencontre == "meilleurLieu"){
-             $nomRencontre = "lieux définis";
-         }
-         elseif($typeRencontre == "terrainNeutre"){
-             $nomRencontre = "lieux définis avec liste de lieux";
-         }
-         
-         return $nomRencontre;
-     }
+     
 
 
      // si boolAccent = 1, le nom est avec accent
@@ -491,7 +474,7 @@ use ZipArchive;
          $typeScenario = $_POST['typeScenario'];
          $nomScenario = $this->getNomScenario($typeScenario, 1);
          $typeRencontre = $_POST['typeRencontre'];
-         $nomRencontre = $this->getNomRencontre($typeRencontre);
+         $nomRencontre = $this->get('service_rencontres')->getNomRencontre($typeRencontre);
 
          //recuperation des donnees relatives au scenario
          $infoResultat = $this->getInfoResultat($idResultat, $typeRencontre, $typeScenario);
@@ -847,7 +830,6 @@ public function barycentreAction($idRapport)
         $retour = json_decode($retour, true);
 
 
-//        $retour = $this->get('service_rencontres')->Barycentre($idGroupe);
 
 
         //Données du scénario optimal
