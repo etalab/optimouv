@@ -115,11 +115,6 @@
                         </div>
 
 
-                        {#<div class="row">#}
-                            {#<div class="col-lg-12">#}
-                                {#<a class="pull-right btn btn-default-rencontre ">Exporter</a>#}
-                            {#</div>#}
-                        {#</div>#}
 
 
                     </div>
@@ -187,13 +182,6 @@
 
                             </table>
                         </div>
-
-
-                        {#<div class="row">#}
-                            {#<div class="col-lg-12">#}
-                                {#<a class="pull-right btn btn-default-rencontre ">Exporter</a>#}
-                            {#</div>#}
-                        {#</div>#}
 
 
                     </div>
@@ -268,12 +256,6 @@
                         </div>
 
 
-                        {#<div class="row">#}
-                            {#<div class="col-lg-12">#}
-                                {#<a class="pull-right btn btn-default-rencontre ">Exporter</a>#}
-                            {#</div>#}
-                        {#</div>#}
-
 
                     </div>
                     <!-- /.table-responsive -->
@@ -285,7 +267,17 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <a class="pull-right btn btn-default-rencontre ">Exporter</a>
+
+
+            <form name="submitParams" action="{{ path('ffbb_rencontres_export_comparaison_scenario')}}" method="post">
+                <input type="hidden" value="{{ idResultat }}" name="idResultat">
+                <input type="hidden" value="{{ idRapport }}" name="idRapport">
+                <input type="hidden" value={{ typeAction }} name="typeRencontre" >
+
+                <button class="pull-right btn btn-default-rencontre ">Exporter</button>
+
+            </form>
+
         </div>
     </div>
     <br>

@@ -18,19 +18,42 @@ class ComparaisonController extends Controller
 
 
         if($scenario == 'meilleurLieu'){
-
             $participants = $this->scenarioMeilleurLieu($idRapport);
         }
         else{
             $participants = $this->scenarioTerrainNeutre($idRapport);
         }
 
-         return $this->render('FfbbBundle:Rencontres:comparaisonScenario.html.twig', array(
+
+        // obtenir l'id du résultat
+        $idResultat = $em->getRepository('FfbbBundle:Scenario')->getIdScenarioByIdRapport($idRapport);
+        if($idResultat != []) $idResultat = $idResultat[0]["id"];
+
+        error_log("\n scenario: ".print_r($scenario , true), 3, "error_log_optimouv.txt");
+
+
+        return $this->render('FfbbBundle:Rencontres:comparaisonScenario.html.twig', array(
              'participants' => $participants,
              'typeAction' => $typeAction,
+             'idResultat' => $idResultat,
+            'idRapport' => $idRapport,
+            'scenario' => $scenario,
+
 
 
         ));
+    }
+
+    public function exportAction()
+    {
+        $idRapport = $_POST['idRapport'];
+        $typeRencontre = $_POST['typeRencontre'];
+
+        error_log("\n typeRencontre: ".print_r($typeRencontre , true), 3, "error_log_optimouv.txt");
+
+        exit;
+//        $nomRencontre = $this->getNomRencontre($typeRencontre);
+
     }
 
 

@@ -268,6 +268,12 @@ ffbb_comparaison_sc_rencontre:
     path:    /admin/rencontre/comparaison-scenarios/{idRapport}
     defaults: { _controller: FfbbBundle:Comparaison:index }
 
+ffbb_rencontres_export_comparaison_scenario:
+    path:    /admin/rencontre/export-comparaison-scenarios/
+    defaults: { _controller: FfbbBundle:Comparaison:export }
+
+
+
 #Federation
 ffbb_federation_list:
     path:    /admin/federation/list
