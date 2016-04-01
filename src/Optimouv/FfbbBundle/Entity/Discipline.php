@@ -33,7 +33,7 @@ class Discipline
     /**
      * @var \Optimouv\FfbbBundle\Entity\Federation
      *
-     * @ORM\ManyToOne(targetEntity="Optimouv\FfbbBundle\Entity\Federation")
+     * @ORM\ManyToOne(targetEntity="Optimouv\FfbbBundle\Entity\Federation", inversedBy="disciplines")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_federation", referencedColumnName="id")
      * })
@@ -91,30 +91,6 @@ class Discipline
     }
 
     /**
-     * Set federation
-     *
-     * @param string $federation
-     *
-     * @return Discipline
-     */
-    public function setFederation($federation)
-    {
-        $this->federation = $federation;
-
-        return $this;
-    }
-
-    /**
-     * Get federation
-     *
-     * @return string
-     */
-    public function getFederation()
-    {
-        return $this->federation;
-    }
-
-    /**
      * Set dateCreation
      *
      * @param \DateTime $dateCreation
@@ -162,4 +138,28 @@ class Discipline
         return $this->dateModification;
     }
     
+
+    /**
+     * Set federation
+     *
+     * @param \Optimouv\FfbbBundle\Entity\Federation $federation
+     *
+     * @return Discipline
+     */
+    public function setFederation(\Optimouv\FfbbBundle\Entity\Federation $federation = null)
+    {
+        $this->federation = $federation;
+
+        return $this;
+    }
+
+    /**
+     * Get federation
+     *
+     * @return \Optimouv\FfbbBundle\Entity\Federation
+     */
+    public function getFederation()
+    {
+        return $this->federation;
+    }
 }
