@@ -42,6 +42,13 @@ class Federation
      */
     private $dateCreation;
 
+    /**
+     * @var \Optimouv\FfbbBundle\Entity\Federation
+     *
+     * @ORM\OneToMany(targetEntity="Optimouv\FfbbBundle\Entity\Discipline",mappedBy="federation")
+     */
+    private $disciplines;
+
 
     /**
      * Get id
@@ -124,5 +131,45 @@ class Federation
     {
         return $this->dateCreation;
     }
-}
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->disciplines = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
+    /**
+     * Add discipline
+     *
+     * @param \Optimouv\FfbbBundle\Entity\Federation $discipline
+     *
+     * @return Federation
+     */
+    public function addDiscipline(\Optimouv\FfbbBundle\Entity\Federation $discipline)
+    {
+        $this->disciplines[] = $discipline;
+
+        return $this;
+    }
+
+    /**
+     * Remove discipline
+     *
+     * @param \Optimouv\FfbbBundle\Entity\Federation $discipline
+     */
+    public function removeDiscipline(\Optimouv\FfbbBundle\Entity\Federation $discipline)
+    {
+        $this->disciplines->removeElement($discipline);
+    }
+
+    /**
+     * Get disciplines
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDisciplines()
+    {
+        return $this->disciplines;
+    }
+}

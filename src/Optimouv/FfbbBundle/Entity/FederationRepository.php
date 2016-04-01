@@ -30,4 +30,18 @@ class FederationRepository extends \Doctrine\ORM\EntityRepository
 
         return $update;
     }
+
+    public function getAllList()
+    {
+        $query = $this->createQueryBuilder('f')
+            ->join('f.disciplines', 'd')
+            ->getQuery();
+        $result = $query->getResult();
+        return $result;
+    }
+
+  
+
+    
 }
+

@@ -13,3 +13,11 @@ admin_update_password_user:
 admin_user_add:
     path:     /user-add/
     defaults: { _controller: AdminBundle:User:userAdd }
+
+admin_user_create:
+    path:     /user-create/
+    defaults: { _controller: AdminBundle:User:userCreate }
+
+admin_user_activate:
+    path:     /user-activate/{$id}
+    defaults: { _controller: AdminBundle:User:userActivate }

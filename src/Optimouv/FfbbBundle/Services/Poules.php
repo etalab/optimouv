@@ -650,5 +650,58 @@ class Poules{
         return $bdd;
     }
 
+    public function getListDiscipline()
+    {
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+        try{
+            # obtenir l'objet PDO
+            $bdd = $this->getPdo();
+
+            if (!$bdd) {
+                //erreur de connexion
+                error_log("\n erreur récupération de l'objet PDO, Service: Poules, Function: sauvegarderParamsEnDB, datetime: ".$dateTimeNow, 3, $this->error_log_path);
+                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+            }
+
+            $idFede = [];
+            $disciplines= [];
+            $sql = "SELECT id from federation;";
+            $stmt = $bdd->prepare($sql);
+            $stmt->execute();
+
+            while ($fede = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+                $id = $fede['id'];
+                array_push($idFede,$id);
+
+            }
+
+            $length = count($idFede);
+            for($i=0; $i<$length; $i++){
+
+                $id = $idFede[$i];
+                $disciplines[$id] = [];
+                $ReqDis = "SELECT id, nom from discipline where id_federation = :idFede;";
+                $stmt = $bdd->prepare($ReqDis);
+                $stmt->bindParam(':idFede', $id);
+                $stmt->execute();
+
+                while ($disc = $stmt->fetch(PDO::FETCH_ASSOC)){
+                    array_push($disciplines[$id],$disc);
+                }
+            }
+
+            return $disciplines;
+            
+        }
+        catch (Exception $e) {
+            error_log("\n erreur PDO, Service: Poules, Function: getDetailsTrajet, datetime: ".$dateTimeNow."\n"
+                ."erreur: ".print_r($e, true), 3, $this->error_log_path);
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
+    }
 
 }
