@@ -179,9 +179,6 @@ def optimize_pool_post_treatment_team_transfers(D_Mat, teamNbr, poolNbr, poolSiz
 			results[scenarioName]["estimationGenerale"] = sumInfo_scenario
 			
 			
-			
-			
-
 		logging.debug("" )
 
 			
@@ -298,7 +295,6 @@ def optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbr, poolNbr, poolSize,
 			logging.debug(" chosenDistance_EquitableWithoutConstraint: %s" %chosenDistance_EquitableWithoutConstraint)
 	
 			# get pool distribution
-# 			poolDistribution_EquitableWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
 			poolDistribution_EquitableWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithoutConstraint, teamNbr, poolNbr, poolSize, teams)
 			logging.debug(" poolDistribution_EquitableWithoutConstraint: %s" %poolDistribution_EquitableWithoutConstraint)
 	
@@ -408,7 +404,6 @@ def optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbr, poolNbr, poolSize,
 			logging.debug(" chosenDistance_EquitableWithConstraint: %s" %chosenDistance_EquitableWithConstraint)
 	
 			# get pool distribution
-# 			poolDistribution_EquitableWithConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
 			poolDistribution_EquitableWithConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithConstraint, teamNbr, poolNbr, poolSize, teams)
 			logging.debug(" poolDistribution_EquitableWithConstraint: %s" %poolDistribution_EquitableWithConstraint)
 	
@@ -453,15 +448,6 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, "params": {}
 					}
-# 		results = {"params": {"typeMatch": "allerRetour", "nombrePoule": poolNbr, "taillePoule": poolSize, 
-# 							"interdictionsIds" : {}, 
-# 							"interdictionsNoms" : {}, "interdictionsVilles" : {}, 
-# 							"repartitionsHomogenesIds": {}, 
-# 							"repartitionsHomogenesNoms": {}, "repartitionsHomogenesVilles": {}, 
-# 							},  
-# 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
-# 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
-# 					}
 
 # 		# get list of ids, names and cities from entity table for prohibition constraints
 		for indexProhibition, members in enumerate(prohibitionConstraints, start=1):
@@ -527,10 +513,8 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		# add status constraints in the result
 		if statusConstraints:
 			results["contraintsExiste"] = 1
-# 			results["params"]["contraintsExiste"] = 1
 		else:
 			results["contraintsExiste"] = 0
-# 			results["params"]["contraintsExiste"] = 0
 
 
 		logging.debug("")
@@ -541,7 +525,6 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		if returnPoolDistributionRef["status"] == "yes":
 			
 			# add boolean to results
-# 			results["params"]["refExiste"] = 1
 			results["refExiste"] = 1
 			
 			poolDistributionRef = returnPoolDistributionRef["data"]
@@ -580,9 +563,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			logging.debug(" sumInfoRef: \n%s" %sumInfoRef)
 		else:
 			# add boolean to results
-# 			results["params"]["refExiste"] = 0
 			results["refExiste"] = 0
-
 
 
 		logging.debug("")
@@ -607,10 +588,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		logging.debug(" chosenDistance_OptimalWithoutConstraint: %s" %chosenDistance_OptimalWithoutConstraint)
 # 	
 	
-# 		np.savetxt("/tmp/p_mat_optimal_without_constraint.csv", P_Mat_OptimalWithoutConstraint, delimiter=",", fmt='%d') # DEBUG
-# 
 # 		# get pool distribution
-# 		poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
 		poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams)
 		logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %poolDistribution_OptimalWithoutConstraint)
 # 		
@@ -814,16 +792,6 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, "params": {}
 				}
 
-# 		results = {"params": {"typeMatch": "allerSimple", "nombrePoule": poolNbr, "taillePoule": poolSize, 
-# 							"interdictionsIds" : {}, 
-# 							"interdictionsNoms" : {}, "interdictionsVilles" : {}, 
-# 							"repartitionsHomogenesIds": {}, 
-# 							"repartitionsHomogenesNoms": {}, "repartitionsHomogenesVilles": {}, 
-# 							},  
-# 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
-# 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
-# 					}
-# 
 # 		# get list of ids, names and cities from entity table for prohibition constraints
 		for indexProhibition, members in enumerate(prohibitionConstraints, start=1):
 # 			logging.debug(" indexProhibition: %s" %indexProhibition)
@@ -969,7 +937,6 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		logging.debug(" chosenDistance_OptimalWithoutConstraint: %s" %chosenDistance_OptimalWithoutConstraint)
 	
 # 		# get pool distribution
-# 		poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
 		poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix_one_way(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
 		logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %poolDistribution_OptimalWithoutConstraint)
 # 		
@@ -1771,8 +1738,6 @@ def callback(ch, method, properties, body):
 
 			results = optimize_pool_post_treatment_team_transfers(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, oldResultId, userId, teamTransfers, flagPhantom, calculatedResult)
 # 			logging.debug("results : \n%s" %json.dumps(results))
-			
-
 
 
 		if varTeamNbrPerPool == 0 and not teamTransfers:
@@ -1820,17 +1785,12 @@ def on_channel_open(channel_):
 	try:
 		channel.basic_qos(prefetch_count=1)
 		
-# 		channel.basic_get(callback=callback, queue=config.MQ.Queue, no_ack=True)
-
-# 		print("before basic consume")
 		channel.basic_consume(callback, queue=config.MQ.Queue, no_ack=True)
-# 		print("after basic consume")
 		
 	except Exception as e:
 		show_exception_traceback()
 
 
-# LOGGER = logging.getLogger(__name__)
 
 """
 Pika Asynchronous consumer
@@ -1848,18 +1808,11 @@ class ExampleConsumer(object):
     commands that were issued and that should surface in the output as well.
 
     """
-# 	EXCHANGE = 'message'
 	EXCHANGE = config.MQ.Exchange
 
-#     EXCHANGE_TYPE = 'topic'
 	EXCHANGE_TYPE = 'direct'
-#     QUEUE = 'text'
 	QUEUE = config.MQ.Queue
-#     ROUTING_KEY = 'example.text'
 
-
-
-# 	def __init__(self, amqp_url):
 	def __init__(self, params):
 		"""Create a new instance of the consumer class, passing in the AMQP
 		URL used to connect to RabbitMQ.
@@ -1871,7 +1824,6 @@ class ExampleConsumer(object):
 		self._channel = None
 		self._closing = False
 		self._consumer_tag = None
-# 		self._url = amqp_url
 		self._params = params
 
 	def connect(self):
@@ -1882,15 +1834,10 @@ class ExampleConsumer(object):
 		:rtype: pika.SelectConnection
 
 		"""
-# 		LOGGER.info('Connecting to %s', self._url)
-# 		return pika.SelectConnection(pika.URLParameters(self._url),
-# 									 self.on_connection_open,
-# 									 stop_ioloop_on_close=False)
 		print("Trying to connect")
 		return pika.SelectConnection(self._params,
 									 self.on_connection_open,
 									 stop_ioloop_on_close=False)
-# 		connection = SelectConnection(parameters, on_connected)
 
 	def on_connection_open(self, unused_connection):
 		"""This method is called by pika once the connection to RabbitMQ has
@@ -1900,7 +1847,6 @@ class ExampleConsumer(object):
 		:type unused_connection: pika.SelectConnection
 
 		"""
-# 		LOGGER.info('Connection opened')
 		print('Connection opened')
 		self.add_on_connection_close_callback()
 		self.open_channel()
@@ -1910,7 +1856,6 @@ class ExampleConsumer(object):
 		when RabbitMQ closes the connection to the publisher unexpectedly.
 
 		"""
-# 		LOGGER.info('Adding connection close callback')
 		print('Adding connection close callback')
 		self._connection.add_on_close_callback(self.on_connection_closed)
 
@@ -1928,8 +1873,6 @@ class ExampleConsumer(object):
 		if self._closing:
 			self._connection.ioloop.stop()
 		else:
-# 			LOGGER.warning('Connection closed, reopening in 5 seconds: (%s) %s',
-# 						   reply_code, reply_text)
 			print('Connection closed, reopening in 5 seconds: (%s) %s',
 						   reply_code, reply_text)
 			self._connection.add_timeout(5, self.reconnect)
@@ -1956,7 +1899,6 @@ class ExampleConsumer(object):
 		on_channel_open callback will be invoked by pika.
 
 		"""
-# 		LOGGER.info('Creating a new channel')
 		print('Creating a new channel')
 		self._connection.channel(on_open_callback=self.on_channel_open)
 
@@ -1969,15 +1911,12 @@ class ExampleConsumer(object):
 		:param pika.channel.Channel channel: The channel object
 
 		"""
-# 		LOGGER.info('Channel opened')
 		print('Channel opened')
 		self._channel = channel
 		self.add_on_channel_close_callback()
-# 		self.setup_exchange(self.EXCHANGE)
 
 		self._channel.basic_qos(prefetch_count=1)
 		
-# 		self._channel.basic_consume(callback, queue=config.MQ.Queue, no_ack=True)
 		self._channel.basic_consume(callback, queue=config.MQ.Queue, no_ack=False)
 
 
@@ -1986,7 +1925,6 @@ class ExampleConsumer(object):
 		RabbitMQ unexpectedly closes the channel.
 
 		"""
-# 		LOGGER.info('Adding channel close callback')
 		print('Adding channel close callback')
 		self._channel.add_on_close_callback(self.on_channel_closed)
 
@@ -2002,8 +1940,6 @@ class ExampleConsumer(object):
 		:param str reply_text: The text reason the channel was closed
 
 		"""
-# 		LOGGER.warning('Channel %i was closed: (%s) %s',
-# 					   channel, reply_code, reply_text)
 		print('Channel %i was closed: (%s) %s',
 					   channel, reply_code, reply_text)
 		self._connection.close()
@@ -2016,11 +1952,7 @@ class ExampleConsumer(object):
 		:param str|unicode exchange_name: The name of the exchange to declare
 
 		"""
-# 		LOGGER.info('Declaring exchange %s', exchange_name)
 		print('Declaring exchange %s', exchange_name)
-# 		self._channel.exchange_declare(self.on_exchange_declareok,
-# 									   exchange_name,
-# 									   self.EXCHANGE_TYPE)
 
 	def on_exchange_declareok(self, unused_frame):
 		"""Invoked by pika when RabbitMQ has finished the Exchange.Declare RPC
@@ -2029,7 +1961,6 @@ class ExampleConsumer(object):
 		:param pika.Frame.Method unused_frame: Exchange.DeclareOk response frame
 
 		"""
-# 		LOGGER.info('Exchange declared')
 		print('Exchange declared')
 		self.setup_queue(self.QUEUE)
 
@@ -2041,7 +1972,6 @@ class ExampleConsumer(object):
 		:param str|unicode queue_name: The name of the queue to declare.
 
 		"""
-# 		LOGGER.info('Declaring queue %s', queue_name)
 		print('Declaring queue %s', queue_name)
 		self._channel.queue_declare(self.on_queue_declareok, queue_name)
 
@@ -2055,14 +1985,8 @@ class ExampleConsumer(object):
 		:param pika.frame.Method method_frame: The Queue.DeclareOk frame
 
 		"""
-# 		LOGGER.info('Binding %s to %s with %s',
-# 					self.EXCHANGE, self.QUEUE, self.ROUTING_KEY)
-# 		LOGGER.info('Binding %s to %s with %s',
-# 					self.EXCHANGE, self.QUEUE)
 		print('Binding %s to %s with %s',
 					self.EXCHANGE, self.QUEUE)
-# 		self._channel.queue_bind(self.on_bindok, self.QUEUE,
-# 								 self.EXCHANGE, self.ROUTING_KEY)
 		self._channel.queue_bind(self.on_bindok, self.QUEUE,
 								 self.EXCHANGE)
 
@@ -2074,7 +1998,6 @@ class ExampleConsumer(object):
 		:param pika.frame.Method unused_frame: The Queue.BindOk response frame
 
 		"""
-# 		LOGGER.info('Queue bound')
 		print('Queue bound')
 		self.start_consuming()
 
@@ -2088,7 +2011,6 @@ class ExampleConsumer(object):
 		will invoke when a message is fully received.
 
 		"""
-# 		LOGGER.info('Issuing consumer related RPC commands')
 		print('Issuing consumer related RPC commands')
 		self.add_on_cancel_callback()
 		self._consumer_tag = self._channel.basic_consume(self.on_message,
@@ -2100,7 +2022,6 @@ class ExampleConsumer(object):
 		on_consumer_cancelled will be invoked by pika.
 
 		"""
-# 		LOGGER.info('Adding consumer cancellation callback')
 		print('Adding consumer cancellation callback')
 		self._channel.add_on_cancel_callback(self.on_consumer_cancelled)
 
@@ -2111,8 +2032,6 @@ class ExampleConsumer(object):
 		:param pika.frame.Method method_frame: The Basic.Cancel frame
 
 		"""
-# 		LOGGER.info('Consumer was cancelled remotely, shutting down: %r',
-# 					method_frame)
 		print('Consumer was cancelled remotely, shutting down: %r',
 					method_frame)
 		if self._channel:
@@ -2132,8 +2051,6 @@ class ExampleConsumer(object):
 		:param str|unicode body: The message body
 
 		"""
-# 		LOGGER.info('Received message # %s from %s: %s',
-# 					basic_deliver.delivery_tag, properties.app_id, body)
 		print('Received message # %s from %s: %s',
 					basic_deliver.delivery_tag, properties.app_id, body)
 		self.acknowledge_message(basic_deliver.delivery_tag)
@@ -2145,7 +2062,6 @@ class ExampleConsumer(object):
 		:param int delivery_tag: The delivery tag from the Basic.Deliver frame
 
 		"""
-# 		LOGGER.info('Acknowledging message %s', delivery_tag)
 		print('Acknowledging message %s', delivery_tag)
 		self._channel.basic_ack(delivery_tag)
 
@@ -2155,7 +2071,6 @@ class ExampleConsumer(object):
 
 		"""
 		if self._channel:
-# 			LOGGER.info('Sending a Basic.Cancel RPC command to RabbitMQ')
 			print('Sending a Basic.Cancel RPC command to RabbitMQ')
 			self._channel.basic_cancel(self.on_cancelok, self._consumer_tag)
 
@@ -2168,7 +2083,6 @@ class ExampleConsumer(object):
 		:param pika.frame.Method unused_frame: The Basic.CancelOk frame
 
 		"""
-# 		LOGGER.info('RabbitMQ acknowledged the cancellation of the consumer')
 		print('RabbitMQ acknowledged the cancellation of the consumer')
 		self.close_channel()
 
@@ -2177,7 +2091,6 @@ class ExampleConsumer(object):
 		Channel.Close RPC command.
 
 		"""
-# 		LOGGER.info('Closing the channel')
 		print('Closing the channel')
 		self._channel.close()
 
@@ -2200,17 +2113,14 @@ class ExampleConsumer(object):
 		the IOLoop will be buffered but not processed.
 
 		"""
-# 		LOGGER.info('Stopping')
 		print('Stopping')
 		self._closing = True
 		self.stop_consuming()
 		self._connection.ioloop.start()
-# 		LOGGER.info('Stopped')
 		print('Stopped')
 
 	def close_connection(self):
 		"""This method closes the connection to RabbitMQ."""
-# 		LOGGER.info('Closing connection')
 		print('Closing connection')
 		self._connection.close()
 
@@ -2241,21 +2151,7 @@ def main():
 		credentials = pika.PlainCredentials(config.MQ.User, config.MQ.Password)
 		parameters = pika.ConnectionParameters(host=config.MQ.Host, credentials=credentials, heartbeat_interval=0)
 
-		# synchronous Rabbit MQ
-# 		connection = pika.BlockingConnection(parameters)
-# 		channel = connection.channel()
-# 		channel.queue_declare(queue=config.MQ.Queue)
-# 		channel.queue_bind(exchange=config.MQ.Exchange, queue=config.MQ.Queue)
-# 		channel.basic_qos(prefetch_count=1)
-# 		print (' [*] Waiting for messages. To exit press CTRL+C')
-# 		
-# 		channel.basic_consume(callback, queue=config.MQ.Queue, no_ack=False)
-# 		channel.basic_consume(callback, queue=config.MQ.Queue, no_ack=True)
-# 		channel.start_consuming()
-
 		# asynchronous RabbitMQ
-# 		connection = SelectConnection(parameters, on_connected)
-# 		connection.ioloop.start()
 		consumer = ExampleConsumer(parameters)
 		consumer.run()
 
@@ -2264,7 +2160,6 @@ def main():
 	except Exception as e:
 		show_exception_traceback()
 	finally:
-# 		connection.close() # asynchronous only
 		gc.collect()
 		db.disconnect()
 
