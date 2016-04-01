@@ -190,7 +190,7 @@ class ComparaisonController extends Controller
                 foreach($infoCsv["participants"] as $participant){
 
                     $dureeFormater = $this->formatterHeureMinute($participant["duree"]);
-                    $dureeFormaterEq = $this->formatterHeureMinute($participant["duree"]);
+                    $dureeFormaterEq = $this->formatterHeureMinute($participant["dureeEq"]);
 
                     $contenuDistanceParcours = array($participant["ville"],
                         round($participant["distance"]/1000),
