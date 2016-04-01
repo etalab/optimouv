@@ -699,12 +699,41 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 				logging.debug(" -----------------------------   iterLaunch: %s -------------------------------------" %iterLaunch)
 				# launch calculation based on ref scenario only if the params are comparable
 				if iterLaunch == 0:
+					# try to use ref scenario
 					if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
-						P_Mat_OptimalWithConstraint = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+					
+						if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
+							P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
+						else:
+							# if error, launch again with P_init_matrix
+							P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+							if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
+								P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
+							# if error, use P_init_matrix
+							else:
+								P_Mat_OptimalWithConstraint = P_InitMat_withConstraint
+								
+					# if there is no ref scenario
 					else:
-						P_Mat_OptimalWithConstraint = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
+							P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
+						# if error, use P_init_matrix
+						else:
+							P_Mat_OptimalWithConstraint = P_InitMat_withConstraint
+				
+				# for second iteration onwards
 				else:
-					P_Mat_OptimalWithConstraint = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_OptimalWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+					P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_OptimalWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+					if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
+						P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
+					# if error, use P_init_matrix
+					else:
+						P_Mat_OptimalWithConstraint = P_InitMat_withConstraint
+
+
+
 					
 			chosenDistance_OptimalWithConstraint = calculate_V_value(P_Mat_OptimalWithConstraint, D_Mat)
 			logging.debug(" chosenDistance_OptimalWithConstraint: %s" %chosenDistance_OptimalWithConstraint)
@@ -748,14 +777,46 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			for iterLaunch in range(config.INPUT.IterLaunch):
 				logging.debug(" -----------------------------   iterLaunch: %s -------------------------------------" %iterLaunch)
 				# launch calculation based on ref scenario only if the params are comparable
+
 				if iterLaunch == 0:
 					if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
-						P_Mat_EquitableWithConstraint = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						# try to use ref scenario
+						P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+					
+						if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
+							P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
+						else:
+							# if error, launch again with P_init_matrix
+							P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+							if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
+								P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
+							# if error, use P_init_matrix
+							else:
+								P_Mat_EquitableWithConstraint = P_InitMat_withConstraint
+					
+					
+					# if there is no ref scenario
 					else:
-						P_Mat_EquitableWithConstraint = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
+							P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
+						# if error, use P_init_matrix
+						else:
+							P_Mat_EquitableWithConstraint = P_InitMat_withConstraint
+				
+				
+				# for second iteration onwards
 				else:
 					P_Mat_EquitableWithConstraint = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_EquitableWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+					if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
+						P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
+					# if error, use P_init_matrix
+					else:
+						P_Mat_EquitableWithConstraint = P_InitMat_withConstraint
 					
+	
+					
+	
 	
 			chosenDistance_EquitableWithConstraint = calculate_V_value(P_Mat_EquitableWithConstraint, D_Mat)
 			logging.debug(" chosenDistance_EquitableWithConstraint: %s" %chosenDistance_EquitableWithConstraint)
@@ -1047,14 +1108,42 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 				logging.debug(" -----------------------------   iterLaunch: %s -------------------------------------" %iterLaunch)
 				# launch calculation based on ref scenario only if the params are comparable
 				if iterLaunch == 0:
-					# launch calculation based on ref scenario only if the params are comparable
+					# try to use ref scenario
 					if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
-						P_Mat_OptimalWithConstraint = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
-					else:
-						P_Mat_OptimalWithConstraint = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
-				else:
-					P_Mat_OptimalWithConstraint = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_OptimalWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
 					
+						if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
+							P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
+						else:
+							# if error, launch again with P_init_matrix
+							P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+							if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
+								P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
+							# if error, use P_init_matrix
+							else:
+								P_Mat_OptimalWithConstraint = P_InitMat_withConstraint
+								
+					# if there is no ref scenario
+					else:
+						P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
+							P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
+						# if error, use P_init_matrix
+						else:
+							P_Mat_OptimalWithConstraint = P_InitMat_withConstraint
+				
+				# for second iteration onwards
+				else:
+					P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_OptimalWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+					if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
+						P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
+					# if error, use P_init_matrix
+					else:
+						P_Mat_OptimalWithConstraint = P_InitMat_withConstraint
+
+
+
+
 			chosenDistance_OptimalWithConstraint = calculate_V_value(P_Mat_OptimalWithConstraint, D_Mat)
 			logging.debug(" chosenDistance_OptimalWithConstraint: %s" %chosenDistance_OptimalWithConstraint)
 	 	
@@ -1097,11 +1186,40 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 				# launch calculation based on ref scenario only if the params are comparable
 				if iterLaunch == 0:
 					if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
-						P_Mat_EquitableWithConstraint = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						# try to use ref scenario
+						P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+					
+						if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
+							P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
+						else:
+							# if error, launch again with P_init_matrix
+							P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+							if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
+								P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
+							# if error, use P_init_matrix
+							else:
+								P_Mat_EquitableWithConstraint = P_InitMat_withConstraint
+					
+					
+					# if there is no ref scenario
 					else:
-						P_Mat_EquitableWithConstraint = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
+							P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
+						# if error, use P_init_matrix
+						else:
+							P_Mat_EquitableWithConstraint = P_InitMat_withConstraint
+				
+				
+				# for second iteration onwards
 				else:
 					P_Mat_EquitableWithConstraint = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_EquitableWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+					if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
+						P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
+					# if error, use P_init_matrix
+					else:
+						P_Mat_EquitableWithConstraint = P_InitMat_withConstraint
+
 
 	
 			chosenDistance_EquitableWithConstraint = calculate_V_value(P_Mat_EquitableWithConstraint, D_Mat)
@@ -1408,13 +1526,44 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 					logging.debug(" -----------------------------   iterLaunch: %s -------------------------------------" %iterLaunch)
 					# launch calculation based on ref scenario only if the params are comparable
 					if iterLaunch == 0:
+						# try to use ref scenario
 						if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
-							P_Mat_OptimalWithConstraint = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+							P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						
+							if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
+								P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
+							else:
+								# if error, launch again with P_init_matrix
+								P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+								if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
+									P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
+								# if error, use P_init_matrix
+								else:
+									P_Mat_OptimalWithConstraint = P_InitMat_withConstraint
+									
+						# if there is no ref scenario
 						else:
-							P_Mat_OptimalWithConstraint = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+							P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+							if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
+								P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
+							# if error, use P_init_matrix
+							else:
+								P_Mat_OptimalWithConstraint = P_InitMat_withConstraint
+					
+					# for second iteration onwards
 					else:
-						P_Mat_OptimalWithConstraint = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_OptimalWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
-	# 
+						P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_OptimalWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
+							P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
+						# if error, use P_init_matrix
+						else:
+							P_Mat_OptimalWithConstraint = P_InitMat_withConstraint
+
+	
+	
+	
+	
+	
 				chosenDistance_OptimalWithConstraint = calculate_V_value(P_Mat_OptimalWithConstraint, D_Mat)
 				logging.debug(" chosenDistance_OptimalWithConstraint: %s" %chosenDistance_OptimalWithConstraint)
 		
@@ -1458,15 +1607,46 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 				# equitable scenario with constraint
 				for iterLaunch in range(config.INPUT.IterLaunchPlateau):
 					logging.debug(" -----------------------------   iterLaunch: %s -------------------------------------" %iterLaunch)
+
+
 					# launch calculation based on ref scenario only if the params are comparable
 					if iterLaunch == 0:
 						if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
-							P_Mat_EquitableWithConstraint = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+							# try to use ref scenario
+							P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						
+							if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
+								P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
+							else:
+								# if error, launch again with P_init_matrix
+								P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+								if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
+									P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
+								# if error, use P_init_matrix
+								else:
+									P_Mat_EquitableWithConstraint = P_InitMat_withConstraint
+						
+						
+						# if there is no ref scenario
 						else:
-							P_Mat_EquitableWithConstraint = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+							P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+							if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
+								P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
+							# if error, use P_init_matrix
+							else:
+								P_Mat_EquitableWithConstraint = P_InitMat_withConstraint
+					
+					
+					# for second iteration onwards
 					else:
 						P_Mat_EquitableWithConstraint = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_EquitableWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
-	# 
+						if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
+							P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
+						# if error, use P_init_matrix
+						else:
+							P_Mat_EquitableWithConstraint = P_InitMat_withConstraint
+
+
 				chosenDistance_EquitableWithConstraint = calculate_V_value(P_Mat_EquitableWithConstraint, D_Mat)
 				logging.debug(" chosenDistance_EquitableWithConstraint: %s" %chosenDistance_EquitableWithConstraint)
 		
