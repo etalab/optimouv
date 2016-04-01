@@ -191,7 +191,7 @@ def optimize_pool_post_treatment_team_transfers(D_Mat, teamNbr, poolNbr, poolSiz
 """
 Function to optimize pool post treatment for variation of team number per pool
 """	
-def optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult):
+def optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, resultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult, P_InitMat_withConstraint, P_InitMat_oneWayWithConstraint):
 	try:
 		# duplicate results
 		results = calculatedResult
@@ -209,7 +209,6 @@ def optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbr, poolNbr, poolSize,
 			results["params"]["final"] = "oui"
 
 			# change values concerning variation of team members per pool
-# 			results["params"]["varEquipeParPouleProposition"] = [0]
 			results["params"]["varEquipeParPouleChoisi"] = varTeamNbrPerPool
 			results["params"]["varEquipeParPoulePossible"] = 0
 			
@@ -345,12 +344,20 @@ def optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbr, poolNbr, poolSize,
 			for iterLaunch in range(config.INPUT.IterLaunch):
 				logging.debug(" -----------------------------   iterLaunch: %s -------------------------------------" %iterLaunch)
 				# launch calculation based on ref scenario only if the params are comparable
-				P_Mat_OptimalWithConstraint = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_OptimalWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+				P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_OptimalWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+
+				if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
+					P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
+				# in case of failure because of constraints
+				else:
+					if typeMatch == "allerRetour":
+						P_Mat_OptimalWithConstraint = P_InitMat_withConstraint
+					elif typeMatch == "allerSimple":
+						P_Mat_OptimalWithConstraint = P_InitMat_oneWayWithConstraint
 
 			chosenDistance_OptimalWithConstraint = calculate_V_value(P_Mat_OptimalWithConstraint, D_Mat)
 			logging.debug(" chosenDistance_OptimalWithConstraint: %s" %chosenDistance_OptimalWithConstraint)
 
-# 			poolDistribution_OptimalWithConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
 			poolDistribution_OptimalWithConstraint = create_pool_distribution_from_matrix(P_Mat_OptimalWithConstraint, teamNbr, poolNbr, poolSize, teams)
 			logging.debug(" poolDistribution_OptimalWithConstraint: %s" %poolDistribution_OptimalWithConstraint)
 
@@ -398,7 +405,19 @@ def optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbr, poolNbr, poolSize,
 			for iterLaunch in range(config.INPUT.IterLaunch):
 				logging.debug(" -----------------------------   iterLaunch: %s -------------------------------------" %iterLaunch)
 				# launch calculation based on ref scenario only if the params are comparable
-				P_Mat_EquitableWithConstraint = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_EquitableWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+				P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_EquitableWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+
+				if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
+					P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
+				# in case of failure because of constraints
+				else:
+					if typeMatch == "allerRetour":
+						P_Mat_EquitableWithConstraint = P_InitMat_withConstraint
+					elif typeMatch == "allerSimple":
+						P_Mat_EquitableWithConstraint = P_InitMat_oneWayWithConstraint
+
+
+
 
 			chosenDistance_EquitableWithConstraint = calculate_V_value(P_Mat_EquitableWithConstraint, D_Mat)
 			logging.debug(" chosenDistance_EquitableWithConstraint: %s" %chosenDistance_EquitableWithConstraint)
@@ -744,7 +763,6 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			np.savetxt("/tmp/p_mat_equitable_with_constraint.csv", P_Mat_EquitableWithConstraint, delimiter=",", fmt='%d') # DEBUG
 	
 			# get pool distribution
-# 			poolDistribution_EquitableWithConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
 			poolDistribution_EquitableWithConstraint = create_pool_distribution_from_matrix(P_Mat_EquitableWithConstraint, teamNbr, poolNbr, poolSize, teams)
 			logging.debug(" poolDistribution_EquitableWithConstraint: %s" %poolDistribution_EquitableWithConstraint)
 	
@@ -1635,7 +1653,6 @@ def callback(ch, method, properties, body):
 		logging.debug("teamsWithPhantom: %s" %teamsWithPhantom)
 
 		logging.debug("####################################### CREATE DISTANCE MATRIX ##############################################")
-# 		D_Mat = create_distance_matrix_from_db(teams)
 		D_Mat = create_distance_matrix_from_db(teams, reportId, userId)
 
 		# modify the distance matrix if there are phantom members (add zeros columns and rows) 
@@ -1648,12 +1665,9 @@ def callback(ch, method, properties, body):
 		P_InitMat_withoutConstraint = create_init_matrix_without_constraint(teamNbrWithPhantom, poolNbr, poolSize)
 		logging.debug("P_InitMat_withoutConstraint.shape: %s" %(P_InitMat_withoutConstraint.shape,))
 
-# 		np.savetxt("/tmp/p_init_without_constraint.csv", P_InitMat_withoutConstraint, delimiter=",", fmt='%d')
-
 		# get P_Init Mat for one way
 		P_InitMat_oneWaywithoutConstraint = np.triu(P_InitMat_withoutConstraint)
 		logging.debug("P_InitMat_oneWaywithoutConstraint.shape: %s" %(P_InitMat_oneWaywithoutConstraint.shape,))
-# 		logging.debug("P_InitMat_oneWaywithoutConstraint: \n%s" %(P_InitMat_oneWaywithoutConstraint,))
 
 		# create init matrix with constraint if there is any constraint
 		if statusConstraints:
@@ -1708,7 +1722,7 @@ def callback(ch, method, properties, body):
 			# check given params if they are the same or not as the stocked params
 			check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints, userId, reportId)
 
-			results = optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, oldResultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult)
+			results = optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, oldResultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult, P_InitMat_withConstraint, P_InitMat_oneWayWithConstraint)
 # 			logging.debug("results : \n%s" %json.dumps(results))
 
 		### Post treatment team transfers between pools
