@@ -1155,12 +1155,9 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 					logging.debug("Failure to create interchange rows and  columns (i, j) which fulfills all constraints")
 					logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 					
+					return {"status": "no", "data": {}}
 					
-					
-					
-					
-					send_email_to_user_failure(userId, reportId)
-					sys.exit()
+# 					send_email_to_user_failure(userId, reportId)
 				iterConstraint -= 1
 				
 				transIndex = random.sample(range(teamNbr), 2)
@@ -1249,7 +1246,8 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 		logging.debug("  poolDistributionTest: \n%s" %poolDistributionTest)
 
 
-		return P_InitMat
+		return {"status": "yes", "data": P_InitMat}
+	
 		
 	except Exception as e:
 		show_exception_traceback()
@@ -1380,10 +1378,10 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 					logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 					logging.debug("Failure to create interchange rows and  columns (i, j) which fulfills all constraints")
 					logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-# 					# update status job failure
-# 					update_job_status(reportId, -1)
-					send_email_to_user_failure(userId, reportId)
-					sys.exit()
+
+					return {"status": "no", "data": {}}
+					
+# 					send_email_to_user_failure(userId, reportId)
 				iterConstraint -= 1
 
 				transIndex = random.sample(range(teamNbr), 2)
@@ -1472,7 +1470,7 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 				else:
 					P_InitMat = P_TransMat
 
-		return P_InitMat
+		return {"status": "yes", "data": P_InitMat}
 		
 	except Exception as e:
 		show_exception_traceback()
@@ -2237,9 +2235,6 @@ def variation_team_number_per_pool(poolsIds, varTeamNbrPerPool):
 			
 			tmpTeams = []
 			for index, (pool, teams) in enumerate(poolsIdsCopy.items(), start=1):
-# 				logging.debug(" index: %s"%index)
-# 				logging.debug(" pool: %s"%pool)
-# 				logging.debug(" teams: %s"%teams)
 			
 				# remove teams from odd number pool
 				if index % 2 == 1:
@@ -2260,9 +2255,6 @@ def variation_team_number_per_pool(poolsIds, varTeamNbrPerPool):
 			for index, (pool, teams) in enumerate(poolsIdsCopy.items(), start=1):
 				# ignore last pool
 				if index != poolNbr:
-# 					logging.debug(" index: %s"%index)
-# 					logging.debug(" pool: %s"%pool)
-# 					logging.debug(" teams: %s"%teams)
 
 					# remove teams from odd number pool
 					if index % 2 == 1:
@@ -2277,7 +2269,6 @@ def variation_team_number_per_pool(poolsIds, varTeamNbrPerPool):
 				
 # 		logging.debug(" resultPoolsIds: %s" %(resultPoolsIds,))
 
-# 		return poolsIds
 		return resultPoolsIds
 	except Exception as e:
 		show_exception_traceback()
