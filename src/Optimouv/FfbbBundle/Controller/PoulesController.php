@@ -910,7 +910,7 @@ class PoulesController extends Controller
 //        unlink($zipNom);
 //
         exit;
-        
+
     }
 
 
@@ -1769,29 +1769,6 @@ class PoulesController extends Controller
         else{
             $infoPoule = array($taillePoule => $nombrePoule);
         }
-//        # récupérer les contraintes d'interdictions
-//        if(array_key_exists("interdictions", $detailsCalcul["params"])){
-//            $interdictions = $detailsCalcul["params"]["interdictions"];
-//        }
-//        else {
-//            $interdictions = [];
-//        }
-//        # récupérer les contraintes de répartitions homogènes
-//        if(array_key_exists("repartitionsHomogenes", $detailsCalcul["params"])){
-//            $repartitionsHomogenes = $detailsCalcul["params"]["repartitionsHomogenes"];
-//        }
-//        else{
-//            $repartitionsHomogenes = [];
-//        }
-//        # récupérer les changements d'affectation d'équipes entre les poules
-//        if(array_key_exists("changeAffectEquipes", $detailsCalcul["params"])){
-//            $changeAffectEquipes = $detailsCalcul["params"]["changeAffectEquipes"];
-//        }
-//        else{
-//            $changeAffectEquipes = [];;
-//        }
-
-
 
         # obtenir scénario selon leur type
         if($typeScenario == "optimalSansContrainte"){
@@ -1858,9 +1835,6 @@ class PoulesController extends Controller
         $retour[10] = $idRapport;
         $retour[11] = $nomUtilisateur;
         $retour["infoPoule"] = $infoPoule;
-//        $retour["interdictions"] = $interdictions;
-//        $retour["repartitionsHomogenes"] = $repartitionsHomogenes;
-//        $retour["changeAffectEquipes"] = $changeAffectEquipes;
 
         return $retour;
     }
