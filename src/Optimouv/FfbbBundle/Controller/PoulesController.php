@@ -9,6 +9,7 @@ use Optimouv\FfbbBundle\Entity\Entite;
 use Optimouv\FfbbBundle\Form\EntiteType;
 use Symfony\Component\HttpFoundation\Response;
 use PDO;
+use ZipArchive;
 class PoulesController extends Controller
 {
     public function indexAction()
@@ -865,7 +866,8 @@ class PoulesController extends Controller
         $formatExport = $_POST['formatExport'];
         $idResultat = $_POST['idResultat'];
         $typeScenario = $_POST['typeScenario'];
-        $nomScenario = $this->getNomScenario($typeScenario);
+        $nomScenario = $this->getNomScenario($typeScenario, 1);
+        $nomScenarioSansAccent = $this->getNomScenario($typeScenario, 0);
 
         //recuperation des donnees relatives au scenario
         $infoPdf = $this->getInfoPdf($idResultat, $typeScenario);
@@ -885,7 +887,6 @@ class PoulesController extends Controller
         $infoPoule = $infoPdf["infoPoule"];
         $infoPouleStr = $this->getStrInfoPoule($infoPoule);
 
-//        error_log("\n scenarioResultats: ".print_r($scenarioResultats , true), 3, "error_log_optimouv.txt");
 
 
         $nomFederation = "FFBB"; # FIXME
@@ -948,15 +949,238 @@ class PoulesController extends Controller
         }
         elseif ($formatExport == "csv"){
 
+            // créer le fichier zip
+            $zipNom = "$nomRapport-$nomScenario-csv.zip";
+            $zip = new ZipArchive;
+            $zip->open($zipNom, ZipArchive::CREATE);
 
 
-            return new JsonResponse("Cette fonctionalité est en cours de développement. Merci de vouloir patienter.");
-            exit();
+            $infoCsv = array(
+                "nomRapport" => $nomRapport,
+                "nomScenario" => $nomScenario,
+                "nomScenarioSansAccent" => $nomScenarioSansAccent,
+                "nomFederation" => $nomFederation,
+                "nomDiscipline" => $nomDiscipline,
+                "nomUtilisateur" => $nomUtilisateur,
+                "nomGroupe" => $nomGroupe,
+                "nomMatch" => $nomMatch,
+                'nomListe' => $nomListe,
+                'nombrePoule' => $nombrePoule,
+                'taillePoule' => $taillePoule,
+                'infoPouleStr' => $infoPouleStr,
+                'scenarioResultats' => $scenarioResultats,
+                'typeMatch' => $typeMatch,
+            );
+
+//            error_log("\n typeMatch: ".print_r($typeMatch , true), 3, "error_log_optimouv.txt");
+
+            
+            $this->remplirCsvEnZip($infoCsv, $zip);
+
+            // fermer le fichier d'archive
+            $zip->close();
+
+            header('Content-Type: application/zip; charset=utf-8');
+            header('Content-disposition: attachment; filename='.$zipNom);
+            header('Content-Length: ' . filesize($zipNom));
+            readfile($zipNom);
+
+             // supprimer le fichier zip
+            unlink($zipNom);
+
+            exit;
+
+
+
         }
 
 
     }
 
+
+    private function remplirCsvEnZip($infoCsv, $zip){
+        // entete pour l'estimation générale
+        $headerEstimationGenerale = array("KILOMETRES A PARCOURIR POUR LE SCENARIO",
+            "COUT POUR LE SCENARIO EN VOITURE",
+            "COUT POUR LE SCENARIO EN COVOITURAGE",
+            "COUT POUR LE SCENARIO EN MINIBUS",
+            "EMISSIONS TOTALES DE GES EN VOITURE",
+            "EMISSIONS TOTALES DE GES EN COVOITURAGE",
+            "EMISSIONS TOTALES DE GES EN MINIBUS"
+        );
+
+        // contenu de l'estimation générale
+        $distanceTotale = round($infoCsv["scenarioResultats"]["estimationGenerale"]["distanceTotale"]/1000);
+        $distanceTotaleTousParticipants = round($infoCsv["scenarioResultats"]["estimationGenerale"]["distanceTotaleTousParticipants"]/1000);
+
+        $coutVoiture = round($distanceTotaleTousParticipants * 0.8);
+        $coutCovoiturage = round($distanceTotaleTousParticipants/4 * 0.8);
+        $coutMinibus = round($distanceTotaleTousParticipants/9 * 1.31);
+        $emissionVoiture = round($distanceTotaleTousParticipants * 0.157);
+        $emissionCovoiturage = round($distanceTotaleTousParticipants/4 * 0.157);
+        $emissionMinibus = round($distanceTotaleTousParticipants/9 * 0.185);
+        $contenuEstimationGenerale = array($distanceTotale,
+            $coutVoiture, $coutCovoiturage, $coutMinibus,
+            $emissionVoiture, $emissionCovoiturage, $emissionMinibus
+        );
+
+
+        // entete pour l'estimation détaillé
+        $headerEstimationDetaille = array( "PARTICIPANTS",
+            "KILOMETRES A PARCOURIR",
+            "TEMPS DE PARCOURS (J H:M)",
+            "COUT DU PARCOURS EN VOITURE",
+            "COUT DU PARCOURS EN COVOITURAGE",
+            "COUT DU PARCOURS EN MINIBUS",
+            "EMISSIONS GES EN VOITURE",
+            "EMISSIONS GES EN COVOITURAGE",
+            "EMISSIONS GES EN MINIBUS"
+        );
+
+        // entete pour l' liste de rencontres
+        if($infoCsv["typeMatch"] == "allerRetour" ||  $infoCsv["typeMatch"] == "allerSimple"){
+            $headerRencontres = array("POULE", "PARTICIPANT 1", "PARTICIPANT 2"
+            );
+        }
+        elseif($infoCsv["typeMatch"] == "plateau" ){
+            $headerRencontres = array("POULE", "JOURNEE", "EQUIPE HOTE", "EQUIPE ADVERSE 1", "EQUIPE ADVERSE 2"
+            );
+
+        }
+
+        // alphabet pour le nom de poule
+        $alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ];
+
+
+        // index=0 pour estimation générale
+        // index=1 pour estimation détaillée
+        // index=2 pour rencontre
+        for ($i = 0; $i < 3; $i++) {
+
+            // créer le fichier temporaire
+            $fd = fopen('php://temp/maxmemory:1048576', 'w');
+            if (false === $fd) {
+                die('Erreur interne lors de la création du fichier temporaire');
+            }
+
+            // index=0 pour estimation générale
+            if($i == 0){
+                // écrire les données en csv
+                fputcsv($fd, $headerEstimationGenerale);
+                fputcsv($fd, $contenuEstimationGenerale);
+                // retourner au début du stream
+                rewind($fd);
+                // ajouter le fichier qui est en mémoire à l'archive, donner un nom
+                $nomFichierEncoder = $infoCsv["nomRapport"]."-".$infoCsv["nomScenarioSansAccent"]."-estimations.csv";
+            }
+            // index=1 pour estimation détaillée
+            elseif ($i == 1){
+                // écrire les données en csv
+                fputcsv($fd, $headerEstimationDetaille);
+
+
+                $estimationDetails = $infoCsv["scenarioResultats"]["estimationDetails"];
+                ksort($estimationDetails);
+
+
+
+                foreach($estimationDetails as $pouleNbr => $estimationDetail) {
+
+
+                    $jourTrajet = round($estimationDetail["dureeTotale"]/86400);
+                    if( $jourTrajet < 10){
+                        $jourTrajet = "0$jourTrajet";
+                    }
+                    $heureTrajet = round($estimationDetail["dureeTotale"]%86400/3600);
+                    if( $heureTrajet< 10){
+                        $heureTrajet = "0$heureTrajet";
+                    }
+                    $minuteTrajet = round($estimationDetail["dureeTotale"]%86400/3600);
+                    if( $minuteTrajet< 10){
+                        $minuteTrajet = "0$minuteTrajet";
+                    }
+
+                    $contenuEstimationDetaille = array($alphabet[$pouleNbr-1],
+                        floor($estimationDetail["distanceTotale"]/1000),
+                        $jourTrajet." ".$heureTrajet.":".$minuteTrajet,
+                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000*0.8),
+                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000/4*0.8),
+                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000/9*1.31),
+                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000*0.157),
+                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000/4*0.157),
+                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000/9*0.185),
+
+                    );
+
+                    fputcsv($fd, $contenuEstimationDetaille);
+
+                }
+
+                
+                // retourner au début du stream
+                rewind($fd);
+                // ajouter le fichier qui est en mémoire à l'archive, donner un nom
+                $nomFichierEncoder = $infoCsv["nomRapport"]."-".$infoCsv["nomScenarioSansAccent"]."-details.csv";
+            }
+            // index=2 pour liste de rencontre
+            // il y a deux formats: aller-retour (aller-simple) et plateau
+            elseif ($i == 2){
+                // écrire les données en csv
+                fputcsv($fd, $headerRencontres);
+
+
+                $rencontres =  $infoCsv["scenarioResultats"]["rencontreDetails"];
+                ksort($rencontres);
+                $typeMatch = $infoCsv["typeMatch"];
+
+                if($typeMatch == "allerRetour" || $typeMatch == "allerSimple") {
+                    foreach ($rencontres as $pouleNbr => $rencontresParPoule) {
+                        foreach ($rencontresParPoule as $rencontre) {
+                            $contenuRencontres = array($alphabet[$pouleNbr-1],
+                                $rencontre["equipeDepartNom"],
+                                $rencontre["equipeDestinationNom"],
+                            );
+
+                            fputcsv($fd, $contenuRencontres);
+                        }
+
+                    }
+                }
+                elseif ($typeMatch == "plateau"){
+                    foreach ($rencontres as $pouleNbr => $rencontresParPoule) {
+                        foreach ($rencontresParPoule as $jourNbr => $rencontresParJour) {
+                            foreach ($rencontresParJour as $rencontre) {
+                                $contenuRencontres = array($alphabet[$pouleNbr-1],
+                                    $jourNbr,
+                                    $rencontre["hoteNom"],
+                                    $rencontre["premierEquipeNom"],
+                                    $rencontre["deuxiemeEquipeNom"]
+                                );
+
+                                fputcsv($fd, $contenuRencontres);
+
+                            }
+                        }
+
+                    }
+                }
+
+
+                
+                // retourner au début du stream
+                rewind($fd);
+                // ajouter le fichier qui est en mémoire à l'archive, donner un nom
+                $nomFichierEncoder = $infoCsv["nomRapport"]."-".$infoCsv["nomScenarioSansAccent"]."-rencontres.csv";
+            }
+
+            // ajouter les fichiers csv en fichier zip
+            $zip->addFromString($nomFichierEncoder, stream_get_contents($fd) );
+
+
+            // fermer le fichier
+            fclose($fd);
+        }
+    }
 
     private function getTexteExportXml($infoXml){
         $texte = '<?xml version="1.0" encoding="utf-8"?>';
@@ -1059,7 +1283,6 @@ class PoulesController extends Controller
             foreach ($rencontres as $pouleNbr => $rencontresParPoule) {
                 foreach ($rencontresParPoule as $jourNbr => $rencontresParJour) {
                     foreach ($rencontresParJour as $rencontre) {
-                        error_log("\n rencontre: " . print_r($rencontre, true), 3, "error_log_optimouv.txt");
                         $texte .= "\t\t<rencontre>\n";
                         $texte .= "\t\t\t<poule>Poule " .$alphabet[$pouleNbr-1]."</poule>\n";
                         $texte .= "\t\t\t<jour> " .$jourNbr."</jour>\n";
@@ -1098,25 +1321,48 @@ class PoulesController extends Controller
 
         return $nomMatch;
     }
-    
-    private function getNomScenario($typeScenario){
+
+    // si boolAccent = 1, le nom est avec accent
+    // si boolAccent = 0, le nom sans avec accent
+    private function getNomScenario($typeScenario, $boolAccent){
         $nomScenario = "";
 
 
-        if($typeScenario == "optimalSansContrainte"){
-            $nomScenario = "scénario optimal sans contrainte";
+        if($boolAccent == 1){
+            if($typeScenario == "optimalSansContrainte"){
+                $nomScenario = "scénario optimal sans contrainte";
+            }
+            elseif($typeScenario == "optimalAvecContrainte"){
+                $nomScenario = "scénario optimal avec contrainte";
+            }
+            elseif($typeScenario == "equitableSansContrainte"){
+                $nomScenario = "scénario équitable sans contrainte";
+            }
+            elseif($typeScenario == "equitableAvecContrainte"){
+                $nomScenario = "scénario équitable avec contrainte";
+            }
+            elseif($typeScenario == "ref"){
+                $nomScenario = "scénario de référence";
+            }
+
         }
-        elseif($typeScenario == "optimalAvecContrainte"){
-            $nomScenario = "scénario optimal avec contrainte";
-        }
-        elseif($typeScenario == "equitableSansContrainte"){
-            $nomScenario = "scénario équitable sans contrainte";
-        }
-        elseif($typeScenario == "equitableAvecContrainte"){
-            $nomScenario = "scénario équitable avec contrainte";
-        }
-        elseif($typeScenario == "ref"){
-            $nomScenario = "scénario de référence";
+        elseif ($boolAccent == 0){
+            if($typeScenario == "optimalSansContrainte"){
+                $nomScenario = "scenario optimal sans contrainte";
+            }
+            elseif($typeScenario == "optimalAvecContrainte"){
+                $nomScenario = "scenario optimal avec contrainte";
+            }
+            elseif($typeScenario == "equitableSansContrainte"){
+                $nomScenario = "scenario equitable sans contrainte";
+            }
+            elseif($typeScenario == "equitableAvecContrainte"){
+                $nomScenario = "scenario equitable avec contrainte";
+            }
+            elseif($typeScenario == "ref"){
+                $nomScenario = "scenario de reference";
+            }
+
         }
 
         return $nomScenario;
@@ -1129,7 +1375,7 @@ class PoulesController extends Controller
 
         $idResultat = $_POST['idResultat'];
         $typeScenario = $_POST['typeScenario'];
-        $nomScenario = $this->getNomScenario($typeScenario);
+        $nomScenario = $this->getNomScenario($typeScenario, 1);
 
         //recuperation des donnees relatives au scenario
         $infoPdf = $this->getInfoPdf($idResultat, $typeScenario);

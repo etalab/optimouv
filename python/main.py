@@ -1605,6 +1605,10 @@ def callback(ch, method, properties, body):
 		teamNbr = len(teams)
 		logging.debug("teamNbr: %s" %teamNbr)
 		
+		# check if teams have ref scenario or not
+		withRef = check_existence_ref_scenario(teams)
+		logging.debug("withRef: %s" %withRef)
+		
 		# check team number and pool number for match plateau
 		if launchType == "plateau":
 			control_params_match_plateau(userId, teamNbr, poolNbr, reportId)
