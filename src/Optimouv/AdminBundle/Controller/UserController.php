@@ -180,10 +180,9 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         //Activation utilisateur
-        $activation = $em->getRepository('AdminBundle:User')->activateUser($idUser);
-        print_r($activation);exit;
-       if($activation){
+        $em->getRepository('AdminBundle:User')->activateUser($idUser);
+       
            return $this->redirect($this->generateUrl('fos_user_security_login '));
-       }
+      
     }
 }
