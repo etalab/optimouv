@@ -182,7 +182,7 @@ class UserController extends Controller
         //Activation utilisateur
         $em->getRepository('AdminBundle:User')->activateUser($idUser);
        
-           return $this->redirect($this->generateUrl('fos_user_security_login '));
-      
+//        return $this->redirect($this->generateUrl('fos_user_security_login '));
+        return $this->redirectToRoute('fos_user_security_login');
     }
 }
