@@ -19,5 +19,5 @@ admin_user_create:
     defaults: { _controller: AdminBundle:User:userCreate }
 
 admin_user_activate:
-    path:     /user-activate/{$id}
+    path:     /user-activate/{idUser}
     defaults: { _controller: AdminBundle:User:userActivate }

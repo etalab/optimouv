@@ -158,7 +158,7 @@ class UserController extends Controller
 
     public function sendMail($idUser, $email)
     {
-
+        
         $body = $this->renderView('AdminBundle:Mails:register.html.twig',
             array(
                 'idUser' => $idUser,
