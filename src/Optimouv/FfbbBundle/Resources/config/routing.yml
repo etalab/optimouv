@@ -272,6 +272,9 @@ ffbb_rencontres_export_comparaison_scenario:
     path:    /admin/rencontre/export-comparaison-scenarios/
     defaults: { _controller: FfbbBundle:Comparaison:export }
 
+ffbb_poules_export_comparaison_scenario:
+    path:    /admin/poules/export-comparaison-scenarios/
+    defaults: { _controller: FfbbBundle:Poules:exportComparaison }
 
 
 #Federation
