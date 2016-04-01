@@ -888,16 +888,10 @@ class PoulesController extends Controller
         $nomRapport = $infoCsv["nomRapport"];
 
 
-
-//        // trier le tableau basé sur le nom de ville
-//        $this->get('service_rencontres')->sksort($participants, "ville", true);
-
-
         // créer le fichier zip
         $zipNom = "$nomRapport-comparaison_scenario.zip";
         $zip = new ZipArchive;
         $zip->open($zipNom, ZipArchive::CREATE);
-
 
 
         $this->remplirCsvEnZipComparaison($infoCsv, $zip);
@@ -923,9 +917,6 @@ class PoulesController extends Controller
         $refExiste = $infoCsv["refExiste"];
         $contraintsExiste = $infoCsv["contraintsExiste"];
 
-//        error_log("\n refExiste: ".print_r($refExiste , true), 3, "error_log_optimouv.txt");
-//        error_log("\n contraintsExiste: ".print_r($contraintsExiste , true), 3, "error_log_optimouv.txt");
-
 
         // avec contraintes et ref
         if($contraintsExiste == 1 && $refExiste == 1){
@@ -933,29 +924,28 @@ class PoulesController extends Controller
             $headerDistanceParcours = array("EQUIPES",
                 "KMS A PARCOURIR - SCENARIO OPTIMAL AVEC CONTRAINTE",
                 "KMS A PARCOURIR - SCENARIO EQUITABLE AVEC CONTRAINTE",
-                "KMS A PARCOURIR - SCENARIO OPTIMAL SANS CONTRAINTE",
                 "KMS A PARCOURIR - SCENARIO DE REFERENCE",
+                "KMS A PARCOURIR - SCENARIO OPTIMAL SANS CONTRAINTE",
                 "TEMPS DE PARCOURS - SCENARIO OPTIMAL AVEC CONTRAINTE",
                 "TEMPS DE PARCOURS - SCENARIO EQUITABLE AVEC CONTRAINTE",
-                "TEMPS DE PARCOURS - SCENARIO OPTIMAL SANS CONTRAINTE",
                 "TEMPS DE PARCOURS - SCENARIO DE REFERENCE",
+                "TEMPS DE PARCOURS - SCENARIO OPTIMAL SANS CONTRAINTE",
             );
-
 
             // cout du parcours
             $headerCoutParcours = array( "EQUIPES",
                 "COUT EN VOITURE - SCENARIO OPTIMAL AVEC CONTRAINTE",
                 "COUT EN VOITURE - SCENARIO EQUITABLE AVEC CONTRAINTE",
-                "COUT EN VOITURE - SCENARIO OPTIMAL SANS CONTRAINTE",
                 "COUT EN VOITURE - SCENARIO DE REFERENCE",
+                "COUT EN VOITURE - SCENARIO OPTIMAL SANS CONTRAINTE",
                 "COUT EN COVOITURAGE - SCENARIO OPTIMAL AVEC CONTRAINTE",
                 "COUT EN COVOITURAGE - SCENARIO EQUITABLE AVEC CONTRAINTE",
-                "COUT EN COVOITURAGE - SCENARIO OPTIMAL SANS CONTRAINTE",
                 "COUT EN COVOITURAGE - SCENARIO DE REFERENCE",
+                "COUT EN COVOITURAGE - SCENARIO OPTIMAL SANS CONTRAINTE",
                 "COUT EN MINIBUS - SCENARIO OPTIMAL AVEC CONTRAINTE",
                 "COUT EN MINIBUS - SCENARIO EQUITABLE AVEC CONTRAINTE",
-                "COUT EN MINIBUS - SCENARIO OPTIMAL SANS CONTRAINTE",
                 "COUT EN MINIBUS - SCENARIO DE REFERENCE",
+                "COUT EN MINIBUS - SCENARIO OPTIMAL SANS CONTRAINTE",
             );
 
 
@@ -963,16 +953,16 @@ class PoulesController extends Controller
             $headerCoutEmission= array( "EQUIPES",
                 "EMISSIONS GES EN VOITURE - SCENARIO OPTIMAL AVEC CONTRAINTE",
                 "EMISSIONS GES EN VOITURE - SCENARIO EQUITABLE AVEC CONTRAINTE",
-                "EMISSIONS GES EN VOITURE - SCENARIO OPTIMAL SANS CONTRAINTE",
                 "EMISSIONS GES EN VOITURE - SCENARIO DE REFERENCE",
+                "EMISSIONS GES EN VOITURE - SCENARIO OPTIMAL SANS CONTRAINTE",
                 "EMISSIONS GES EN COVOITURAGE - SCENARIO OPTIMAL AVEC CONTRAINTE",
                 "EMISSIONS GES EN COVOITURAGE - SCENARIO EQUITABLE AVEC CONTRAINTE",
-                "EMISSIONS GES EN COVOITURAGE - SCENARIO OPTIMAL SANS CONTRAINTE",
                 "EMISSIONS GES EN COVOITURAGE - SCENARIO DE REFERENCE",
+                "EMISSIONS GES EN COVOITURAGE - SCENARIO OPTIMAL SANS CONTRAINTE",
                 "EMISSIONS GES EN MINIBUS - SCENARIO OPTIMAL AVEC CONTRAINTE",
                 "EMISSIONS GES EN MINIBUS - SCENARIO EQUITABLE AVEC CONTRAINTE",
-                "EMISSIONS GES EN MINIBUS - SCENARIO OPTIMAL SANS CONTRAINTE",
                 "EMISSIONS GES EN MINIBUS - SCENARIO DE REFERENCE",
+                "EMISSIONS GES EN MINIBUS - SCENARIO OPTIMAL SANS CONTRAINTE",
             );
         }
         // avec contraintes sans ref
@@ -1090,8 +1080,14 @@ class PoulesController extends Controller
                 "EMISSIONS GES EN MINIBUS - SCENARIO OPTIMAL SANS CONTRAINTE",
                 "EMISSIONS GES EN MINIBUS - SCENARIO EQUITABLE SANS CONTRAINTE",
             );
-            
+
         }
+
+
+//        error_log("\n donneesComparison: ".print_r($donneesComparison , true), 3, "error_log_optimouv.txt");
+
+        // trier le tableau basé sur le nom de ville
+        $this->get('service_rencontres')->sksort($infoCsv["donneesComparison"], "nom", true);
 
         // index=0 pour distance et temps du parcours
         // index=1 pour cout du parcours
@@ -1109,21 +1105,71 @@ class PoulesController extends Controller
                 // écrire les données en csv
                 fputcsv($fd, $headerDistanceParcours);
 
+                foreach($infoCsv["donneesComparison"] as $equipe){
 
-//                foreach($infoCsv["participants"] as $participant){
-//
-//                    $dureeFormater = $this->formatterHeureMinute($participant["duree"]);
-//                    $dureeFormaterEq = $this->formatterHeureMinute($participant["dureeEq"]);
-//
-//                    $contenuDistanceParcours = array($participant["ville"],
-//                        round($participant["distance"]/1000),
-//                        round($participant["distanceEq"]/1000),
-//                        ($dureeFormater["nbrHeure"].":".$dureeFormater["nbrMin"]),
-//                        ($dureeFormaterEq["nbrHeure"].":".$dureeFormaterEq["nbrMin"]),
-//                    );
-//
-//                    fputcsv($fd, $contenuDistanceParcours);
-//                }
+                    if($contraintsExiste == 1 && $refExiste == 1){
+                        $dureeFormaterOpAc = $this->formaterJourHeureMinute($equipe["duree"]["scenarioOptimalAvecContrainte"]);
+                        $dureeFormaterEqAc = $this->formaterJourHeureMinute($equipe["duree"]["scenarioEquitableAvecContrainte"]);
+                        $dureeFormaterRef = $this->formaterJourHeureMinute($equipe["duree"]["scenarioRef"]);
+                        $dureeFormaterOpSc = $this->formaterJourHeureMinute($equipe["duree"]["scenarioOptimalSansContrainte"]);
+
+                        $contenuDistanceParcours = array($equipe["nom"],
+                            floor($equipe["distance"]["scenarioOptimalAvecContrainte"]/1000),
+                            floor($equipe["distance"]["scenarioEquitableAvecContrainte"]/1000),
+                            floor($equipe["distance"]["scenarioRef"]/1000),
+                            floor($equipe["distance"]["scenarioOptimalSansContrainte"]/1000),
+                            ($dureeFormaterOpAc["nbrJour"]." ".$dureeFormaterOpAc["nbrHeure"].":".$dureeFormaterOpAc["nbrMin"]),
+                            ($dureeFormaterEqAc["nbrJour"]." ".$dureeFormaterEqAc["nbrHeure"].":".$dureeFormaterEqAc["nbrMin"]),
+                            ($dureeFormaterRef["nbrJour"]." ".$dureeFormaterRef["nbrHeure"].":".$dureeFormaterRef["nbrMin"]),
+                            ($dureeFormaterOpSc["nbrJour"]." ".$dureeFormaterOpSc["nbrHeure"].":".$dureeFormaterOpSc["nbrMin"]),
+                        );
+
+                    }
+                    elseif($contraintsExiste == 1 && $refExiste == 0){
+                        $dureeFormaterOpAc = $this->formaterJourHeureMinute($equipe["duree"]["scenarioOptimalAvecContrainte"]);
+                        $dureeFormaterEqAc = $this->formaterJourHeureMinute($equipe["duree"]["scenarioEquitableAvecContrainte"]);
+                        $dureeFormaterOpSc = $this->formaterJourHeureMinute($equipe["duree"]["scenarioOptimalSansContrainte"]);
+
+                        $contenuDistanceParcours = array($equipe["nom"],
+                            floor($equipe["distance"]["scenarioOptimalAvecContrainte"]/1000),
+                            floor($equipe["distance"]["scenarioEquitableAvecContrainte"]/1000),
+                            floor($equipe["distance"]["scenarioOptimalSansContrainte"]/1000),
+                            ($dureeFormaterOpAc["nbrJour"]." ".$dureeFormaterOpAc["nbrHeure"].":".$dureeFormaterOpAc["nbrMin"]),
+                            ($dureeFormaterEqAc["nbrJour"]." ".$dureeFormaterEqAc["nbrHeure"].":".$dureeFormaterEqAc["nbrMin"]),
+                            ($dureeFormaterOpSc["nbrJour"]." ".$dureeFormaterOpSc["nbrHeure"].":".$dureeFormaterOpSc["nbrMin"]),
+                        );
+
+                    }
+                    elseif($contraintsExiste == 0 && $refExiste == 1){
+                        $dureeFormaterOpSc = $this->formaterJourHeureMinute($equipe["duree"]["scenarioOptimalSansContrainte"]);
+                        $dureeFormaterEqSc = $this->formaterJourHeureMinute($equipe["duree"]["scenarioEquitableSansContrainte"]);
+                        $dureeFormaterRef = $this->formaterJourHeureMinute($equipe["duree"]["scenarioRef"]);
+
+                        $contenuDistanceParcours = array($equipe["nom"],
+                            floor($equipe["distance"]["scenarioOptimalSansContrainte"]/1000),
+                            floor($equipe["distance"]["scenarioEquitableSansContrainte"]/1000),
+                            floor($equipe["distance"]["scenarioRef"]/1000),
+                            ($dureeFormaterOpSc["nbrJour"]." ".$dureeFormaterOpSc["nbrHeure"].":".$dureeFormaterOpSc["nbrMin"]),
+                            ($dureeFormaterEqSc["nbrJour"]." ".$dureeFormaterEqSc["nbrHeure"].":".$dureeFormaterEqSc["nbrMin"]),
+                            ($dureeFormaterRef["nbrJour"]." ".$dureeFormaterRef["nbrHeure"].":".$dureeFormaterRef["nbrMin"]),
+                        );
+
+                    }
+                    elseif($contraintsExiste == 0 && $refExiste == 0){
+                        $dureeFormaterOpSc = $this->formaterJourHeureMinute($equipe["duree"]["scenarioOptimalSansContrainte"]);
+                        $dureeFormaterEqSc = $this->formaterJourHeureMinute($equipe["duree"]["scenarioEquitableSansContrainte"]);
+
+                        $contenuDistanceParcours = array($equipe["nom"],
+                            floor($equipe["distance"]["scenarioOptimalSansContrainte"]/1000),
+                            floor($equipe["distance"]["scenarioEquitableSansContrainte"]/1000),
+                            ($dureeFormaterOpSc["nbrJour"]." ".$dureeFormaterOpSc["nbrHeure"].":".$dureeFormaterOpSc["nbrMin"]),
+                            ($dureeFormaterEqSc["nbrJour"]." ".$dureeFormaterEqSc["nbrHeure"].":".$dureeFormaterEqSc["nbrMin"]),
+                        );
+
+                    }
+                    
+                    fputcsv($fd, $contenuDistanceParcours);
+                }
 
 
 
@@ -1137,19 +1183,83 @@ class PoulesController extends Controller
                 // écrire les données en csv
                 fputcsv($fd, $headerCoutParcours);
 
-//                foreach($infoCsv["participants"] as $participant){
-//
-//                    $contenuCoutParcours = array($participant["ville"],
-//                        round($participant["distance"]/1000*$participant["nbrParticipants"]*0.8),
-//                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]*0.8),
-//                        round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.8),
-//                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]/4*0.8),
-//                        round($participant["distance"]/1000*$participant["nbrParticipants"]/9*1.31),
-//                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]/9*1.31),
-//                    );
-//
-//                    fputcsv($fd, $contenuCoutParcours);
-//                }
+                foreach($infoCsv["donneesComparison"] as $equipe){
+
+                    if($contraintsExiste == 1 && $refExiste == 1){
+
+                        $contenuCoutParcours = array($equipe["nom"],
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.8/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/4* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/4* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/4* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.8/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/9 * 1.31/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/9 * 1.31/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/9 * 1.31/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 1.31/1000),
+
+                        );
+
+                    }
+                    elseif($contraintsExiste == 1 && $refExiste == 0){
+                        $contenuCoutParcours = array($equipe["nom"],
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.8/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/4* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/4* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.8/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/9 * 1.31/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/9 * 1.31/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 1.31/1000),
+
+                        );
+
+                    }
+                    elseif($contraintsExiste == 0 && $refExiste == 1){
+
+                        $contenuCoutParcours = array($equipe["nom"],
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]* 0.8/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/4* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/4* 0.8/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 1.31/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/9 * 1.31/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/9 * 1.31/1000),
+
+                        );
+
+                    }
+                    elseif($contraintsExiste == 0 && $refExiste == 0){
+                        $contenuCoutParcours = array($equipe["nom"],
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]* 0.8/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/4* 0.8/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 1.31/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/9 * 1.31/1000),
+
+                        );
+
+
+                    }
+
+                    fputcsv($fd, $contenuCoutParcours);
+                }
+
 
                 // retourner au début du stream
                 rewind($fd);
@@ -1161,19 +1271,84 @@ class PoulesController extends Controller
                 // écrire les données en csv
                 fputcsv($fd, $headerCoutEmission);
 
-//                foreach($infoCsv["participants"] as $participant){
-//
-//                    $contenuCoutEmission = array($participant["ville"],
-//                        round($participant["distance"]/1000*$participant["nbrParticipants"]*0.157),
-//                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]*0.157),
-//                        round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.157),
-//                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]/4*0.157),
-//                        round($participant["distance"]/1000*$participant["nbrParticipants"]/9*0.185),
-//                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]/9*0.185),
-//                    );
-//
-//                    fputcsv($fd, $contenuCoutEmission);
-//                }
+                foreach($infoCsv["donneesComparison"] as $equipe){
+
+                    if($contraintsExiste == 1 && $refExiste == 1){
+
+                        $contenuCoutEmission = array($equipe["nom"],
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.157/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/4* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/4* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/4* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.157/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/9 * 0.185/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/9 * 0.185/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/9 * 0.185/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 0.185/1000),
+
+                        );
+
+                    }
+                    elseif($contraintsExiste == 1 && $refExiste == 0){
+                        $contenuCoutEmission = array($equipe["nom"],
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.157/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/4* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/4* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.157/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/9 * 0.185/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/9 * 0.185/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 0.185/1000),
+
+                        );
+
+                    }
+                    elseif($contraintsExiste == 0 && $refExiste == 1){
+                        $contenuCoutEmission = array($equipe["nom"],
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]* 0.157/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/4* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/4* 0.157/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 0.185/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/9 * 0.185/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/9 * 0.185/1000),
+
+                        );
+
+                    }
+                    elseif($contraintsExiste == 0 && $refExiste == 0){
+                        $contenuCoutEmission = array($equipe["nom"],
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]* 0.157/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/4* 0.157/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 0.185/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/9 * 0.185/1000),
+
+                        );
+
+
+                    }
+
+                    fputcsv($fd, $contenuCoutEmission);
+                }
+
+
+
 
                 // retourner au début du stream
                 rewind($fd);
@@ -1193,6 +1368,26 @@ class PoulesController extends Controller
 
 
     }
+
+    private function formaterJourHeureMinute($duree){
+
+        $nbrJour = round($duree /86400);
+        if ($nbrJour <10) $nbrJour = "0$nbrJour";
+
+        $nbrHeure = round($duree%86400/3600);
+        if($nbrHeure <10) $nbrHeure = "0$nbrHeure";
+
+        $nbrMin = round(($duree%86400%3600)/60);
+        if($nbrMin <10 ) $nbrMin = "0$nbrMin";
+
+        return array(
+            "nbrJour"=> $nbrJour,
+            "nbrHeure"=> $nbrHeure,
+            "nbrMin"=>$nbrMin
+        );
+
+    }
+
 
 
     //page qui affiche les détails des calculs
