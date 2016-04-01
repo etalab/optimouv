@@ -158,7 +158,7 @@ class UserController extends Controller
 
     public function sendMail($idUser, $email)
     {
-        
+
         $body = $this->renderView('AdminBundle:Mails:register.html.twig',
             array(
                 'idUser' => $idUser,
@@ -181,7 +181,7 @@ class UserController extends Controller
 
         //Activation utilisateur
         $activation = $em->getRepository('AdminBundle:User')->activateUser($idUser);
-        
+        print_r($activation);exit;
        if($activation){
            return $this->redirect($this->generateUrl('fos_user_security_login '));
        }

@@ -23,9 +23,9 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter(3, $idUser)
             ->getQuery();
 
-        $update = $query->execute();
+        $activation = $query->execute();
 
-        return $update;
+        return $activation;
     }
 
    
