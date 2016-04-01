@@ -3038,6 +3038,3 @@ def update_job_status(jobId, status):
 	except Exception as e:
 		show_exception_traceback()
 
-
-
-

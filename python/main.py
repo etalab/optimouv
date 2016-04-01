@@ -570,8 +570,6 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		logging.debug(" ####################### RESULT OPTIMAL WITHOUT CONSTRAINT #############################################")
 
 		# optimal scenario without constraint
-# 		P_Mats_OptimalWithoutConstraint = []
-# 		chosenDistances_OptimalWithoutConstraint = []
 		for iterLaunch in range(config.INPUT.IterLaunch):
 			logging.debug(" -----------------------------   iterLaunch: %s -------------------------------------" %iterLaunch)
 			# launch calculation based on ref scenario only if the params are comparable
@@ -1647,7 +1645,6 @@ def callback(ch, method, properties, body):
 		logging.debug("D_Mat.shape: %s" %(D_Mat.shape,))
 
 		logging.debug("####################################### CREATE INITIALISATION MATRIX ########################################")
-# 		P_InitMat_withoutConstraint = create_init_matrix_without_constraint(teamNbrWithPhantom, poolNbr, poolSize, varTeamNbrPerPool)
 		P_InitMat_withoutConstraint = create_init_matrix_without_constraint(teamNbrWithPhantom, poolNbr, poolSize)
 		logging.debug("P_InitMat_withoutConstraint.shape: %s" %(P_InitMat_withoutConstraint.shape,))
 
@@ -1660,7 +1657,6 @@ def callback(ch, method, properties, body):
 
 		# create init matrix with constraint if there is any constraint
 		if statusConstraints:
-# 			statusCreateInitMatrix = create_init_matrix_with_constraint(teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, iterConstraint, prohibitionConstraints, typeDistributionConstraints, varTeamNbrPerPool)
 			statusCreateInitMatrix = create_init_matrix_with_constraint(teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, iterConstraint, prohibitionConstraints, typeDistributionConstraints)
 # 
 			if statusCreateInitMatrix["success"]:
@@ -1673,11 +1669,8 @@ def callback(ch, method, properties, body):
 			else:
 				logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 				logging.debug("Failure to create P Init Matrix which fulfills all constraints")
-				# update status job failure
-# 				update_job_status(reportId, -1)
 				send_email_to_user_failure(userId, reportId)
 				logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-				sys.exit()
 		else:
 			P_InitMat_withConstraint = None
 			P_InitMat_oneWayWithConstraint = None
