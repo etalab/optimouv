@@ -89,7 +89,11 @@ class UserController extends Controller
 
         $discipline = intval($discipline);
 
-         $username = $nom.'_'.$prenom;
+        $username = $nom.'_'.$prenom;
+
+        $dateExpiration = new \DateTime("now");
+        date_add($dateExpiration, date_interval_create_from_date_string('10 days'));
+
        
 
         $secretKey = "6Lf1NxwTAAAAAP6UYH4-vzxAFxxHYJfq0ddkkK3U";
@@ -135,6 +139,7 @@ class UserController extends Controller
             $encryptedPassword = $encoder->encodePassword($password, $user->getSalt());
             $user->setPassword($encryptedPassword);
             $user->setExpired(false);
+            $user->setExpiresAt($dateExpiration);
             $user->setCredentialsExpired(false);
 
             $user->setLocked(true);
