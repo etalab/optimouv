@@ -57,12 +57,15 @@ class ComparaisonController extends Controller
             $participants = $this->scenarioTerrainNeutre($idRapport);
         }
 
+        // trier le tableau basé sur le nom de ville
+        $this->get('service_rencontres')->sksort($participants, "ville", true);
+
         $em = $this->getDoctrine()->getManager();
 
         # obtenir le nom du rapport
         $nomRapport = $em->getRepository('FfbbBundle:Rapport')->findOneById($idRapport)->getNom();
 
-        error_log("\n participants: ".print_r($participants , true), 3, "error_log_optimouv.txt");
+//        error_log("\n participants: ".print_r($participants , true), 3, "error_log_optimouv.txt");
 
         
         // créer le fichier zip
@@ -186,16 +189,14 @@ class ComparaisonController extends Controller
 
                 foreach($infoCsv["participants"] as $participant){
 
+                    $dureeFormater = $this->formatterHeureMinute($participant["duree"]);
+                    $dureeFormaterEq = $this->formatterHeureMinute($participant["duree"]);
+
                     $contenuDistanceParcours = array($participant["ville"],
                         round($participant["distance"]/1000),
                         round($participant["distanceEq"]/1000),
-//                        round($participant["duree"]/3600).":".round($participant["duree"]%3600/60),
-//                        round($participant["distance"]/1000*$participant["nbrParticipants"]*0.8),
-//                        round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.8),
-//                        round($participant["distance"]/1000*$participant["nbrParticipants"]/9*1.31),
-//                        round($participant["distance"]/1000*$participant["nbrParticipants"]*0.157),
-//                        round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.157),
-//                        round($participant["distance"]/1000*$participant["nbrParticipants"]/9*0.185)
+                        ($dureeFormater["nbrHeure"].":".$dureeFormater["nbrMin"]),
+                        ($dureeFormaterEq["nbrHeure"].":".$dureeFormaterEq["nbrMin"]),
                     );
 
                     fputcsv($fd, $contenuDistanceParcours);
@@ -213,8 +214,21 @@ class ComparaisonController extends Controller
                 // écrire les données en csv
                 fputcsv($fd, $headerCoutParcours);
 
-                
-                
+                foreach($infoCsv["participants"] as $participant){
+
+                    $contenuCoutParcours = array($participant["ville"],
+                        round($participant["distance"]/1000*$participant["nbrParticipants"]*0.8),
+                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]*0.8),
+                        round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.8),
+                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]/4*0.8),
+                        round($participant["distance"]/1000*$participant["nbrParticipants"]/9*1.31),
+                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]/9*1.31),
+                    );
+
+                    fputcsv($fd, $contenuCoutParcours);
+                }
+
+
 
 
 
@@ -228,7 +242,20 @@ class ComparaisonController extends Controller
                 // écrire les données en csv
                 fputcsv($fd, $headerCoutEmission);
 
-                
+                foreach($infoCsv["participants"] as $participant){
+
+                    $contenuCoutEmission = array($participant["ville"],
+                        round($participant["distance"]/1000*$participant["nbrParticipants"]*0.157),
+                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]*0.157),
+                        round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.157),
+                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]/4*0.157),
+                        round($participant["distance"]/1000*$participant["nbrParticipants"]/9*0.185),
+                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]/9*0.185),
+                    );
+
+                    fputcsv($fd, $contenuCoutEmission);
+                }
+
                 
                 
                 
@@ -248,6 +275,16 @@ class ComparaisonController extends Controller
             fclose($fd);
         }
 
+    }
+
+    private function formatterHeureMinute($duree){
+        $nbrHeure = round($duree/3600);
+        if($nbrHeure <10) $nbrHeure = "0$nbrHeure";
+
+        $nbrMin = round(($duree%3600)/60);
+        if($nbrMin <10 ) $nbrMin = "0$nbrMin";
+
+        return array("nbrHeure"=> $nbrHeure, "nbrMin"=>$nbrMin);
     }
 
     public function scenarioMeilleurLieu($idRapport)
