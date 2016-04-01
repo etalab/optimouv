@@ -776,6 +776,27 @@ class PoulesController extends Controller
     }
 
     public function comparaisonScenarioAction($idResultat){
+
+        $infoComparaison = $this->getInfoComparaison($idResultat);
+
+
+        return $this->render('FfbbBundle:Poules:comparaisonScenario.html.twig', array(
+            'idResultat' => $idResultat,
+            'typeMatch' => $infoComparaison["typeMatch"],
+            'scenarioOptimalSansContrainte' => $infoComparaison["scenarioOptimalSansContrainte"],
+            'scenarioEquitableSansContrainte' => $infoComparaison["scenarioEquitableSansContrainte"],
+            'scenarioOptimalAvecContrainte' => $infoComparaison["scenarioOptimalAvecContrainte"],
+            'scenarioEquitableAvecContrainte' => $infoComparaison["scenarioEquitableAvecContrainte"],
+            'scenarioRef' => $infoComparaison["scenarioRef"],
+            'contraintsExiste' => $infoComparaison["contraintsExiste"],
+            'refExiste' => $infoComparaison["refExiste"],
+            'donneesComparison' => $infoComparaison["donneesComparison"]
+
+            ));
+    }
+
+    private function getInfoComparaison($idResultat){
+
         $em = $this->getDoctrine()->getManager();
         $detailsCalcul = $em->getRepository('FfbbBundle:Scenario')->findOneById($idResultat)->getDetailsCalcul();
         $detailsCalcul = json_decode($detailsCalcul, true);
@@ -836,22 +857,537 @@ class PoulesController extends Controller
         # parser les données pour l'affichage
         $donneesComparison = $this->get('service_poules')->parserComparaisonScenario($detailsVilles, $scenarioOptimalAvecContrainte, $scenarioOptimalSansContrainte, $scenarioEquitableAvecContrainte, $scenarioEquitableSansContrainte, $scenarioRef, $refExiste, $contraintsExiste, $typeMatch );
 
+        # obtenir le nom du rapport
+        $nomRapport = $em->getRepository('FfbbBundle:Rapport')->findOneById($idRapport)->getNom();
 
 
-
-        return $this->render('FfbbBundle:Poules:comparaisonScenario.html.twig', array(
-            'idResultat' => $idResultat,
+        $infoComparaison = array("typeMatch"=>$typeMatch,
+            "nomRapport" => $nomRapport,
+            "refExiste" => $refExiste,
+            "contraintsExiste" => $contraintsExiste,
+            "donneesComparison" => $donneesComparison,
+            "scenarioRef" => $scenarioRef,
             'scenarioOptimalSansContrainte' => $scenarioOptimalSansContrainte,
             'scenarioEquitableSansContrainte' => $scenarioEquitableSansContrainte,
             'scenarioOptimalAvecContrainte' => $scenarioOptimalAvecContrainte,
             'scenarioEquitableAvecContrainte' => $scenarioEquitableAvecContrainte,
-            'scenarioRef' => $scenarioRef,
-            'contraintsExiste' => $contraintsExiste,
-            'refExiste' => $refExiste,
-            'donneesComparison' => $donneesComparison
+        ) ;
 
-            ));
+
+        return $infoComparaison;
+
+
     }
+
+    public function exportComparaisonAction(){
+
+        $idResultat = $_POST['idResultat'];
+
+        $infoCsv = $this->getInfoComparaison($idResultat);
+
+        $nomRapport = $infoCsv["nomRapport"];
+
+
+        // créer le fichier zip
+        $zipNom = "$nomRapport-comparaison_scenario.zip";
+        $zip = new ZipArchive;
+        $zip->open($zipNom, ZipArchive::CREATE);
+
+
+        $this->remplirCsvEnZipComparaison($infoCsv, $zip);
+
+        // fermer le fichier d'archive
+        $zip->close();
+
+        header('Content-Type: application/zip; charset=utf-8');
+        header('Content-disposition: attachment; filename='.$zipNom);
+        header('Content-Length: ' . filesize($zipNom));
+        readfile($zipNom);
+
+        // supprimer le fichier zip
+        unlink($zipNom);
+
+        exit;
+
+    }
+
+
+    public function remplirCsvEnZipComparaison($infoCsv, $zip)
+    {
+        $refExiste = $infoCsv["refExiste"];
+        $contraintsExiste = $infoCsv["contraintsExiste"];
+
+
+        // avec contraintes et ref
+        if($contraintsExiste == 1 && $refExiste == 1){
+            // distance et temps du parcours
+            $headerDistanceParcours = array("EQUIPES",
+                "KMS A PARCOURIR - SCENARIO OPTIMAL AVEC CONTRAINTE",
+                "KMS A PARCOURIR - SCENARIO EQUITABLE AVEC CONTRAINTE",
+                "KMS A PARCOURIR - SCENARIO DE REFERENCE",
+                "KMS A PARCOURIR - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "TEMPS DE PARCOURS - SCENARIO OPTIMAL AVEC CONTRAINTE",
+                "TEMPS DE PARCOURS - SCENARIO EQUITABLE AVEC CONTRAINTE",
+                "TEMPS DE PARCOURS - SCENARIO DE REFERENCE",
+                "TEMPS DE PARCOURS - SCENARIO OPTIMAL SANS CONTRAINTE",
+            );
+
+            // cout du parcours
+            $headerCoutParcours = array( "EQUIPES",
+                "COUT EN VOITURE - SCENARIO OPTIMAL AVEC CONTRAINTE",
+                "COUT EN VOITURE - SCENARIO EQUITABLE AVEC CONTRAINTE",
+                "COUT EN VOITURE - SCENARIO DE REFERENCE",
+                "COUT EN VOITURE - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "COUT EN COVOITURAGE - SCENARIO OPTIMAL AVEC CONTRAINTE",
+                "COUT EN COVOITURAGE - SCENARIO EQUITABLE AVEC CONTRAINTE",
+                "COUT EN COVOITURAGE - SCENARIO DE REFERENCE",
+                "COUT EN COVOITURAGE - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "COUT EN MINIBUS - SCENARIO OPTIMAL AVEC CONTRAINTE",
+                "COUT EN MINIBUS - SCENARIO EQUITABLE AVEC CONTRAINTE",
+                "COUT EN MINIBUS - SCENARIO DE REFERENCE",
+                "COUT EN MINIBUS - SCENARIO OPTIMAL SANS CONTRAINTE",
+            );
+
+
+            // émission de GES
+            $headerCoutEmission= array( "EQUIPES",
+                "EMISSIONS GES EN VOITURE - SCENARIO OPTIMAL AVEC CONTRAINTE",
+                "EMISSIONS GES EN VOITURE - SCENARIO EQUITABLE AVEC CONTRAINTE",
+                "EMISSIONS GES EN VOITURE - SCENARIO DE REFERENCE",
+                "EMISSIONS GES EN VOITURE - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "EMISSIONS GES EN COVOITURAGE - SCENARIO OPTIMAL AVEC CONTRAINTE",
+                "EMISSIONS GES EN COVOITURAGE - SCENARIO EQUITABLE AVEC CONTRAINTE",
+                "EMISSIONS GES EN COVOITURAGE - SCENARIO DE REFERENCE",
+                "EMISSIONS GES EN COVOITURAGE - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "EMISSIONS GES EN MINIBUS - SCENARIO OPTIMAL AVEC CONTRAINTE",
+                "EMISSIONS GES EN MINIBUS - SCENARIO EQUITABLE AVEC CONTRAINTE",
+                "EMISSIONS GES EN MINIBUS - SCENARIO DE REFERENCE",
+                "EMISSIONS GES EN MINIBUS - SCENARIO OPTIMAL SANS CONTRAINTE",
+            );
+        }
+        // avec contraintes sans ref
+        elseif ($contraintsExiste == 1 && $refExiste == 0){
+            // distance et temps du parcours
+            $headerDistanceParcours = array("EQUIPES",
+                "KMS A PARCOURIR - SCENARIO OPTIMAL AVEC CONTRAINTE",
+                "KMS A PARCOURIR - SCENARIO EQUITABLE AVEC CONTRAINTE",
+                "KMS A PARCOURIR - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "TEMPS DE PARCOURS - SCENARIO OPTIMAL AVEC CONTRAINTE",
+                "TEMPS DE PARCOURS - SCENARIO EQUITABLE AVEC CONTRAINTE",
+                "TEMPS DE PARCOURS - SCENARIO OPTIMAL SANS CONTRAINTE",
+            );
+
+
+            // cout du parcours
+            $headerCoutParcours = array( "EQUIPES",
+                "COUT EN VOITURE - SCENARIO OPTIMAL AVEC CONTRAINTE",
+                "COUT EN VOITURE - SCENARIO EQUITABLE AVEC CONTRAINTE",
+                "COUT EN VOITURE - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "COUT EN COVOITURAGE - SCENARIO OPTIMAL AVEC CONTRAINTE",
+                "COUT EN COVOITURAGE - SCENARIO EQUITABLE AVEC CONTRAINTE",
+                "COUT EN COVOITURAGE - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "COUT EN MINIBUS - SCENARIO OPTIMAL AVEC CONTRAINTE",
+                "COUT EN MINIBUS - SCENARIO EQUITABLE AVEC CONTRAINTE",
+                "COUT EN MINIBUS - SCENARIO OPTIMAL SANS CONTRAINTE",
+            );
+
+
+            // émission de GES
+            $headerCoutEmission= array( "EQUIPES",
+                "EMISSIONS GES EN VOITURE - SCENARIO OPTIMAL AVEC CONTRAINTE",
+                "EMISSIONS GES EN VOITURE - SCENARIO EQUITABLE AVEC CONTRAINTE",
+                "EMISSIONS GES EN VOITURE - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "EMISSIONS GES EN COVOITURAGE - SCENARIO OPTIMAL AVEC CONTRAINTE",
+                "EMISSIONS GES EN COVOITURAGE - SCENARIO EQUITABLE AVEC CONTRAINTE",
+                "EMISSIONS GES EN COVOITURAGE - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "EMISSIONS GES EN MINIBUS - SCENARIO OPTIMAL AVEC CONTRAINTE",
+                "EMISSIONS GES EN MINIBUS - SCENARIO EQUITABLE AVEC CONTRAINTE",
+                "EMISSIONS GES EN MINIBUS - SCENARIO OPTIMAL SANS CONTRAINTE",
+            );
+
+        }
+        // sans contraintes avec ref
+        elseif ($contraintsExiste == 0 && $refExiste == 1){
+
+            // distance et temps du parcours
+            $headerDistanceParcours = array("EQUIPES",
+                "KMS A PARCOURIR - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "KMS A PARCOURIR - SCENARIO EQUITABLE SANS CONTRAINTE",
+                "KMS A PARCOURIR - SCENARIO DE REFERENCE",
+                "TEMPS DE PARCOURS - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "TEMPS DE PARCOURS - SCENARIO EQUITABLE SANS CONTRAINTE",
+                "TEMPS DE PARCOURS - SCENARIO DE REFERENCE",
+            );
+
+
+            // cout du parcours
+            $headerCoutParcours = array( "EQUIPES",
+                "COUT EN VOITURE - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "COUT EN VOITURE - SCENARIO EQUITABLE SANS CONTRAINTE",
+                "COUT EN VOITURE - SCENARIO DE REFERENCE",
+                "COUT EN COVOITURAGE - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "COUT EN COVOITURAGE - SCENARIO EQUITABLE SANS CONTRAINTE",
+                "COUT EN COVOITURAGE - SCENARIO DE REFERENCE",
+                "COUT EN MINIBUS - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "COUT EN MINIBUS - SCENARIO EQUITABLE SANS CONTRAINTE",
+                "COUT EN MINIBUS - SCENARIO DE REFERENCE",
+            );
+
+
+            // émission de GES
+            $headerCoutEmission= array( "EQUIPES",
+                "EMISSIONS GES EN VOITURE - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "EMISSIONS GES EN VOITURE - SCENARIO EQUITABLE SANS CONTRAINTE",
+                "EMISSIONS GES EN VOITURE - SCENARIO DE REFERENCE",
+                "EMISSIONS GES EN COVOITURAGE - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "EMISSIONS GES EN COVOITURAGE - SCENARIO EQUITABLE SANS CONTRAINTE",
+                "EMISSIONS GES EN COVOITURAGE - SCENARIO DE REFERENCE",
+                "EMISSIONS GES EN MINIBUS - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "EMISSIONS GES EN MINIBUS - SCENARIO EQUITABLE SANS CONTRAINTE",
+                "EMISSIONS GES EN MINIBUS - SCENARIO DE REFERENCE",
+            );
+
+        }
+        // sans contraintes sans ref
+        elseif ($contraintsExiste == 0 && $refExiste == 0){
+
+            // distance et temps du parcours
+            $headerDistanceParcours = array("EQUIPES",
+                "KMS A PARCOURIR - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "KMS A PARCOURIR - SCENARIO EQUITABLE SANS CONTRAINTE",
+                "TEMPS DE PARCOURS - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "TEMPS DE PARCOURS - SCENARIO EQUITABLE SANS CONTRAINTE",
+            );
+
+
+            // cout du parcours
+            $headerCoutParcours = array( "EQUIPES",
+                "COUT EN VOITURE - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "COUT EN VOITURE - SCENARIO EQUITABLE SANS CONTRAINTE",
+                "COUT EN COVOITURAGE - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "COUT EN COVOITURAGE - SCENARIO EQUITABLE SANS CONTRAINTE",
+                "COUT EN MINIBUS - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "COUT EN MINIBUS - SCENARIO EQUITABLE SANS CONTRAINTE",
+            );
+
+
+            // émission de GES
+            $headerCoutEmission= array( "EQUIPES",
+                "EMISSIONS GES EN VOITURE - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "EMISSIONS GES EN VOITURE - SCENARIO EQUITABLE SANS CONTRAINTE",
+                "EMISSIONS GES EN COVOITURAGE - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "EMISSIONS GES EN COVOITURAGE - SCENARIO EQUITABLE SANS CONTRAINTE",
+                "EMISSIONS GES EN MINIBUS - SCENARIO OPTIMAL SANS CONTRAINTE",
+                "EMISSIONS GES EN MINIBUS - SCENARIO EQUITABLE SANS CONTRAINTE",
+            );
+
+        }
+
+
+//        error_log("\n donneesComparison: ".print_r($donneesComparison , true), 3, "error_log_optimouv.txt");
+
+        // trier le tableau basé sur le nom de ville
+        $this->get('service_rencontres')->sksort($infoCsv["donneesComparison"], "nom", true);
+
+        // index=0 pour distance et temps du parcours
+        // index=1 pour cout du parcours
+        // index=2 pour émission de GES
+        for ($i = 0; $i < 3; $i++) {
+
+            // créer le fichier temporaire
+            $fd = fopen('php://temp/maxmemory:1048576', 'w');
+            if (false === $fd) {
+                die('Erreur interne lors de la création du fichier temporaire');
+            }
+
+            // index=0 pour distance et temps
+            if($i == 0){
+                // écrire les données en csv
+                fputcsv($fd, $headerDistanceParcours);
+
+                foreach($infoCsv["donneesComparison"] as $equipe){
+
+                    if($contraintsExiste == 1 && $refExiste == 1){
+                        $dureeFormaterOpAc = $this->formaterJourHeureMinute($equipe["duree"]["scenarioOptimalAvecContrainte"]);
+                        $dureeFormaterEqAc = $this->formaterJourHeureMinute($equipe["duree"]["scenarioEquitableAvecContrainte"]);
+                        $dureeFormaterRef = $this->formaterJourHeureMinute($equipe["duree"]["scenarioRef"]);
+                        $dureeFormaterOpSc = $this->formaterJourHeureMinute($equipe["duree"]["scenarioOptimalSansContrainte"]);
+
+                        $contenuDistanceParcours = array($equipe["nom"],
+                            floor($equipe["distance"]["scenarioOptimalAvecContrainte"]/1000),
+                            floor($equipe["distance"]["scenarioEquitableAvecContrainte"]/1000),
+                            floor($equipe["distance"]["scenarioRef"]/1000),
+                            floor($equipe["distance"]["scenarioOptimalSansContrainte"]/1000),
+                            ($dureeFormaterOpAc["nbrJour"]." ".$dureeFormaterOpAc["nbrHeure"].":".$dureeFormaterOpAc["nbrMin"]),
+                            ($dureeFormaterEqAc["nbrJour"]." ".$dureeFormaterEqAc["nbrHeure"].":".$dureeFormaterEqAc["nbrMin"]),
+                            ($dureeFormaterRef["nbrJour"]." ".$dureeFormaterRef["nbrHeure"].":".$dureeFormaterRef["nbrMin"]),
+                            ($dureeFormaterOpSc["nbrJour"]." ".$dureeFormaterOpSc["nbrHeure"].":".$dureeFormaterOpSc["nbrMin"]),
+                        );
+
+                    }
+                    elseif($contraintsExiste == 1 && $refExiste == 0){
+                        $dureeFormaterOpAc = $this->formaterJourHeureMinute($equipe["duree"]["scenarioOptimalAvecContrainte"]);
+                        $dureeFormaterEqAc = $this->formaterJourHeureMinute($equipe["duree"]["scenarioEquitableAvecContrainte"]);
+                        $dureeFormaterOpSc = $this->formaterJourHeureMinute($equipe["duree"]["scenarioOptimalSansContrainte"]);
+
+                        $contenuDistanceParcours = array($equipe["nom"],
+                            floor($equipe["distance"]["scenarioOptimalAvecContrainte"]/1000),
+                            floor($equipe["distance"]["scenarioEquitableAvecContrainte"]/1000),
+                            floor($equipe["distance"]["scenarioOptimalSansContrainte"]/1000),
+                            ($dureeFormaterOpAc["nbrJour"]." ".$dureeFormaterOpAc["nbrHeure"].":".$dureeFormaterOpAc["nbrMin"]),
+                            ($dureeFormaterEqAc["nbrJour"]." ".$dureeFormaterEqAc["nbrHeure"].":".$dureeFormaterEqAc["nbrMin"]),
+                            ($dureeFormaterOpSc["nbrJour"]." ".$dureeFormaterOpSc["nbrHeure"].":".$dureeFormaterOpSc["nbrMin"]),
+                        );
+
+                    }
+                    elseif($contraintsExiste == 0 && $refExiste == 1){
+                        $dureeFormaterOpSc = $this->formaterJourHeureMinute($equipe["duree"]["scenarioOptimalSansContrainte"]);
+                        $dureeFormaterEqSc = $this->formaterJourHeureMinute($equipe["duree"]["scenarioEquitableSansContrainte"]);
+                        $dureeFormaterRef = $this->formaterJourHeureMinute($equipe["duree"]["scenarioRef"]);
+
+                        $contenuDistanceParcours = array($equipe["nom"],
+                            floor($equipe["distance"]["scenarioOptimalSansContrainte"]/1000),
+                            floor($equipe["distance"]["scenarioEquitableSansContrainte"]/1000),
+                            floor($equipe["distance"]["scenarioRef"]/1000),
+                            ($dureeFormaterOpSc["nbrJour"]." ".$dureeFormaterOpSc["nbrHeure"].":".$dureeFormaterOpSc["nbrMin"]),
+                            ($dureeFormaterEqSc["nbrJour"]." ".$dureeFormaterEqSc["nbrHeure"].":".$dureeFormaterEqSc["nbrMin"]),
+                            ($dureeFormaterRef["nbrJour"]." ".$dureeFormaterRef["nbrHeure"].":".$dureeFormaterRef["nbrMin"]),
+                        );
+
+                    }
+                    elseif($contraintsExiste == 0 && $refExiste == 0){
+                        $dureeFormaterOpSc = $this->formaterJourHeureMinute($equipe["duree"]["scenarioOptimalSansContrainte"]);
+                        $dureeFormaterEqSc = $this->formaterJourHeureMinute($equipe["duree"]["scenarioEquitableSansContrainte"]);
+
+                        $contenuDistanceParcours = array($equipe["nom"],
+                            floor($equipe["distance"]["scenarioOptimalSansContrainte"]/1000),
+                            floor($equipe["distance"]["scenarioEquitableSansContrainte"]/1000),
+                            ($dureeFormaterOpSc["nbrJour"]." ".$dureeFormaterOpSc["nbrHeure"].":".$dureeFormaterOpSc["nbrMin"]),
+                            ($dureeFormaterEqSc["nbrJour"]." ".$dureeFormaterEqSc["nbrHeure"].":".$dureeFormaterEqSc["nbrMin"]),
+                        );
+
+                    }
+                    
+                    fputcsv($fd, $contenuDistanceParcours);
+                }
+
+
+
+                // retourner au début du stream
+                rewind($fd);
+                // ajouter le fichier qui est en mémoire à l'archive, donner un nom
+                $nomFichierEncoder = $infoCsv["nomRapport"]."-comparaison kilometres et temps.csv";
+            }
+            // index=1 pour cout
+            elseif ($i == 1){
+                // écrire les données en csv
+                fputcsv($fd, $headerCoutParcours);
+
+                foreach($infoCsv["donneesComparison"] as $equipe){
+
+                    if($contraintsExiste == 1 && $refExiste == 1){
+
+                        $contenuCoutParcours = array($equipe["nom"],
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.8/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/4* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/4* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/4* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.8/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/9 * 1.31/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/9 * 1.31/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/9 * 1.31/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 1.31/1000),
+
+                        );
+
+                    }
+                    elseif($contraintsExiste == 1 && $refExiste == 0){
+                        $contenuCoutParcours = array($equipe["nom"],
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.8/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/4* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/4* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.8/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/9 * 1.31/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/9 * 1.31/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 1.31/1000),
+
+                        );
+
+                    }
+                    elseif($contraintsExiste == 0 && $refExiste == 1){
+
+                        $contenuCoutParcours = array($equipe["nom"],
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]* 0.8/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/4* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/4* 0.8/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 1.31/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/9 * 1.31/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/9 * 1.31/1000),
+
+                        );
+
+                    }
+                    elseif($contraintsExiste == 0 && $refExiste == 0){
+                        $contenuCoutParcours = array($equipe["nom"],
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]* 0.8/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/4* 0.8/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 1.31/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/9 * 1.31/1000),
+
+                        );
+
+
+                    }
+
+                    fputcsv($fd, $contenuCoutParcours);
+                }
+
+
+                // retourner au début du stream
+                rewind($fd);
+                // ajouter le fichier qui est en mémoire à l'archive, donner un nom
+                $nomFichierEncoder = $infoCsv["nomRapport"]."-comparaison cout.csv";
+            }
+            // index=2 pour emission GES
+            elseif ($i == 2){
+                // écrire les données en csv
+                fputcsv($fd, $headerCoutEmission);
+
+                foreach($infoCsv["donneesComparison"] as $equipe){
+
+                    if($contraintsExiste == 1 && $refExiste == 1){
+
+                        $contenuCoutEmission = array($equipe["nom"],
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.157/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/4* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/4* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/4* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.157/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/9 * 0.185/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/9 * 0.185/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/9 * 0.185/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 0.185/1000),
+
+                        );
+
+                    }
+                    elseif($contraintsExiste == 1 && $refExiste == 0){
+                        $contenuCoutEmission = array($equipe["nom"],
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.157/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/4* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/4* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.157/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/9 * 0.185/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/9 * 0.185/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 0.185/1000),
+
+                        );
+
+                    }
+                    elseif($contraintsExiste == 0 && $refExiste == 1){
+                        $contenuCoutEmission = array($equipe["nom"],
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]* 0.157/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/4* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/4* 0.157/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 0.185/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/9 * 0.185/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/9 * 0.185/1000),
+
+                        );
+
+                    }
+                    elseif($contraintsExiste == 0 && $refExiste == 0){
+                        $contenuCoutEmission = array($equipe["nom"],
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]* 0.157/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/4* 0.157/1000),
+
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 0.185/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/9 * 0.185/1000),
+
+                        );
+
+
+                    }
+
+                    fputcsv($fd, $contenuCoutEmission);
+                }
+
+
+
+
+                // retourner au début du stream
+                rewind($fd);
+                // ajouter le fichier qui est en mémoire à l'archive, donner un nom
+                $nomFichierEncoder = $infoCsv["nomRapport"]."-comparaison emission GES.csv";
+
+            }
+
+
+
+            // ajouter les fichiers csv en fichier zip
+            $zip->addFromString($nomFichierEncoder , stream_get_contents($fd) );
+
+            // fermer le fichier
+            fclose($fd);
+        }
+
+
+    }
+
+    private function formaterJourHeureMinute($duree){
+
+        $nbrJour = round($duree /86400);
+        if ($nbrJour <10) $nbrJour = "0$nbrJour";
+
+        $nbrHeure = round($duree%86400/3600);
+        if($nbrHeure <10) $nbrHeure = "0$nbrHeure";
+
+        $nbrMin = round(($duree%86400%3600)/60);
+        if($nbrMin <10 ) $nbrMin = "0$nbrMin";
+
+        return array(
+            "nbrJour"=> $nbrJour,
+            "nbrHeure"=> $nbrHeure,
+            "nbrMin"=>$nbrMin
+        );
+
+    }
+
 
 
     //page qui affiche les détails des calculs
@@ -1526,29 +2062,6 @@ class PoulesController extends Controller
         else{
             $infoPoule = array($taillePoule => $nombrePoule);
         }
-//        # récupérer les contraintes d'interdictions
-//        if(array_key_exists("interdictions", $detailsCalcul["params"])){
-//            $interdictions = $detailsCalcul["params"]["interdictions"];
-//        }
-//        else {
-//            $interdictions = [];
-//        }
-//        # récupérer les contraintes de répartitions homogènes
-//        if(array_key_exists("repartitionsHomogenes", $detailsCalcul["params"])){
-//            $repartitionsHomogenes = $detailsCalcul["params"]["repartitionsHomogenes"];
-//        }
-//        else{
-//            $repartitionsHomogenes = [];
-//        }
-//        # récupérer les changements d'affectation d'équipes entre les poules
-//        if(array_key_exists("changeAffectEquipes", $detailsCalcul["params"])){
-//            $changeAffectEquipes = $detailsCalcul["params"]["changeAffectEquipes"];
-//        }
-//        else{
-//            $changeAffectEquipes = [];;
-//        }
-
-
 
         # obtenir scénario selon leur type
         if($typeScenario == "optimalSansContrainte"){
@@ -1615,9 +2128,6 @@ class PoulesController extends Controller
         $retour[10] = $idRapport;
         $retour[11] = $nomUtilisateur;
         $retour["infoPoule"] = $infoPoule;
-//        $retour["interdictions"] = $interdictions;
-//        $retour["repartitionsHomogenes"] = $repartitionsHomogenes;
-//        $retour["changeAffectEquipes"] = $changeAffectEquipes;
 
         return $retour;
     }

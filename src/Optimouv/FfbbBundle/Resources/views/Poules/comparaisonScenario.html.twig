@@ -356,13 +356,6 @@
                         </div>
 
 
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <a class="pull-right btn btn-primary ">Exporter</a>
-                            </div>
-                        </div>
-
-
                     </div>
                     <!-- /.table-responsive -->
                 </div>
@@ -526,11 +519,6 @@
                         </div>
 
 
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <a class="pull-right btn btn-primary ">Exporter</a>
-                            </div>
-                        </div>
 
 
                     </div>
@@ -697,13 +685,6 @@
                         </div>
 
 
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <a class="pull-right btn btn-primary ">Exporter</a>
-                            </div>
-                        </div>
-
-
                     </div>
                     <!-- /.table-responsive -->
                 </div>
@@ -713,6 +694,17 @@
     </div>
 
 
+    <div class="row">
+        <div class="col-lg-12">
+            <form name="submitParams" action="{{ path('ffbb_poules_export_comparaison_scenario')}}" method="post">
+                <input type="hidden" value="{{ idResultat }}" name="idResultat">
+                <button class="pull-right btn btn-primary ">Exporter</button>
+
+            </form>
+
+        </div>
+    </div>
+    <br>
 
 
 </div>
