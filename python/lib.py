@@ -1183,7 +1183,6 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 
 					statusProhibitionConstraints = check_prohibition_constraints(prohibitionConstraints, poolDistributionTmp)
 					logging.debug("	statusProhibitionConstraints: %s" %statusProhibitionConstraints)
-					
 
 					statusTypeDistributionConstraints = check_type_distribution_constraints(typeDistributionConstraints, poolDistributionTmp)
 					logging.debug("	statusTypeDistributionConstraints: %s" %statusTypeDistributionConstraints)
@@ -2025,7 +2024,6 @@ def check_type_distribution_constraints(typeDistributionConstraints, poolDistrib
 """
 Function to create initilization matrix with constraint
 """
-# def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterConstraint, prohibitionConstraints, typeDistributionConstraints, varTeamNbrPerPool):
 def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterConstraint, prohibitionConstraints, typeDistributionConstraints):
 
 	try:
@@ -2063,7 +2061,7 @@ def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterCo
 			for i in range(teamNbr):
 				teamPoolResult[indexSortedTeamRandomValues[i]] = teamPoolSorted[i] 
 # 			logging.debug("	len teamPoolResult: %s" %len(teamPoolResult))
-			logging.debug("	teamPoolResult: %s" %teamPoolResult)
+# 			logging.debug("	teamPoolResult: %s" %teamPoolResult)
 	# 		logging.debug("teams: %s" %teams)
 
 			# create pool distribution
@@ -2111,6 +2109,135 @@ def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterCo
 
 	except Exception as e:
 		show_exception_traceback()
+
+
+"""
+Function to create initilization matrix with constraint manually
+"""
+def create_init_matrix_with_constraint_manual(teamNbr, poolNbr, poolSize, teams, iterConstraint, prohibitionConstraints, typeDistributionConstraints):
+
+	try:
+		logging.debug("-------------------------------------- CREATE INIT MATRIX WITH CONSTRAINT MANUALLY --------------------------------" )
+
+		logging.debug("typeDistributionConstraints: %s" %typeDistributionConstraints)
+		logging.debug("teamNbr: %s" %teamNbr)
+		logging.debug("poolNbr: %s" %poolNbr)
+		logging.debug("poolSize: %s" %poolSize)
+# 		logging.debug("teams: %s" %teams)
+		
+
+
+		# initialize pool distribution
+		poolDistribution = {}
+		for pool in range(1, poolNbr+1):
+			poolDistribution[pool] = []
+
+
+		# initialize unassaign teams
+		unassignedTeams = list(teams)
+
+# 		typeDistributionConstraints = {}
+
+		# distribute teams across the pools
+		for type, teamsPerType in typeDistributionConstraints.items():
+			for indexTeam, teamPerType in enumerate(teamsPerType):
+				teamPerType = int(teamPerType)
+				assignedPoolNbr = (indexTeam%poolNbr)+1
+# 				logging.debug("assignedPoolNbr: %s" %assignedPoolNbr)
+				
+				poolDistribution[assignedPoolNbr].append(teamPerType)
+				
+				# remmove team from the unassaigned list
+				unassignedTeams.remove(teamPerType)
+# 		logging.debug("	poolDistribution: %s" %poolDistribution)
+
+
+		# complete teams distribution by respecting prohibition constraints
+# 		prohibitionConstraints = [
+# 								[11296, 11224], 
+# 								[11293, 11225], 
+# 								[11226, 11285 ], 
+# 								[11227, 11229,], 
+# 								]
+# 		
+# 		logging.debug("prohibitionConstraints: %s" %prohibitionConstraints)
+
+		for prohibition in prohibitionConstraints:
+			team1 = int(prohibition[0])
+# 			logging.debug("team1: %s" %team1)
+			team2 = int(prohibition[1])
+# 			logging.debug("team2: %s" %team2)
+			
+			# find pool of team1 and team2
+			poolTeam1 = False
+			poolTeam2 = False
+			
+			for pool, teamsPerPool in poolDistribution.items():
+				if team1 in teamsPerPool:
+					poolTeam1 = pool
+				if team2 in teamsPerPool:
+					poolTeam2 = pool
+			
+			# if team1 and team2 are in the same pool according to type distribution constraints
+			if team1 != False and team2 != False and team1 == team2:
+				return {"success": False, "data": None}
+			else:
+				# assign team1
+				if not poolTeam1:
+					for poolNbrLoop in range(1, poolNbr+1):
+						# add to the first pool if it is not full
+						if len(poolDistribution[poolNbrLoop]) < poolSize:
+							poolDistribution[poolNbrLoop].append(team1)
+							unassignedTeams.remove(team1)
+							break
+						# if all pools are full
+						if poolNbrLoop == (poolNbr) and len(poolDistribution[poolNbrLoop]) == poolSize:
+							return {"success": False, "data": None}
+							
+				# assign team2
+				if not poolTeam2:
+					for poolNbrLoop in range(1, poolNbr+1):
+						# add to the first pool if it is not full
+						if len(poolDistribution[poolNbrLoop]) < poolSize:
+							poolDistribution[poolNbrLoop].append(team2)
+							unassignedTeams.remove(team2)
+							break
+						# if all pools are full
+						if poolNbrLoop == (poolNbr) and len(poolDistribution[poolNbrLoop]) == poolSize:
+							return {"success": False, "data": None}
+
+# 			logging.debug("poolTeam1: %s" %poolTeam1)
+# 			logging.debug("poolTeam2: %s" %poolTeam2)
+# 			logging.debug("" )
+
+		# try to distribute the remaining teams
+		for unassignedTeam in unassignedTeams:
+			for poolNbrLoop in range(1, poolNbr+1):
+				# add to the first pool if it is not full
+				if len(poolDistribution[poolNbrLoop]) < poolSize:
+					poolDistribution[poolNbrLoop].append(unassignedTeam)
+					break
+				# if all pools are full
+				if poolNbrLoop == (poolNbr) and len(poolDistribution[poolNbrLoop]) == poolSize:
+					return {"success": False, "data": None}
+			
+		
+		logging.debug("	poolDistribution: %s" %poolDistribution)
+		
+
+		P_Mat = create_matrix_from_pool_distribution(poolDistribution, teamNbr, teams)
+		logging.debug("	P_Mat.shape: %s" %(P_Mat.shape,))
+
+# 		np.savetxt("/tmp/p_init_mat_manual.txt", P_Mat, delimiter=",", fmt='%d', newline='\n\n') # DEBUG
+
+
+# 		sys.exit()
+		return {"success": True, "data": P_Mat}
+
+	except Exception as e:
+		show_exception_traceback()
+
+
 
 """
 Function to create phantom distance matrix from distance matrix

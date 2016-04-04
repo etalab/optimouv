@@ -1858,13 +1858,22 @@ def callback(ch, method, properties, body):
 				logging.debug("P_InitMat_withConstraint.shape: %s" %(P_InitMat_withConstraint.shape,))
 				P_InitMat_oneWayWithConstraint = np.triu(P_InitMat_withConstraint)
 				logging.debug("P_InitMat_oneWayWithConstraint.shape: %s" %(P_InitMat_oneWayWithConstraint.shape,))
-	# 			logging.debug("P_InitMat_oneWayWithConstraint: \n%s" %(P_InitMat_oneWayWithConstraint,))
 				
 			else:
-				logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-				logging.debug("Failure to create P Init Matrix which fulfills all constraints")
-				send_email_to_user_failure(userId, reportId)
-				logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+				
+				# try to create init matrix manually
+				statusCreateInitMatrixManual = create_init_matrix_with_constraint_manual(teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, iterConstraint, prohibitionConstraints, typeDistributionConstraints)
+				
+				if statusCreateInitMatrixManual["success"]:
+					P_InitMat_withConstraint = statusCreateInitMatrixManual["data"]
+					logging.debug("P_InitMat_withConstraint.shape: %s" %(P_InitMat_withConstraint.shape,))
+					P_InitMat_oneWayWithConstraint = np.triu(P_InitMat_withConstraint)
+					logging.debug("P_InitMat_oneWayWithConstraint.shape: %s" %(P_InitMat_oneWayWithConstraint.shape,))
+				else:
+					logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+					logging.debug("Failure to create P Init Matrix which fulfills all constraints")
+					send_email_to_user_failure(userId, reportId)
+					logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 		else:
 			P_InitMat_withConstraint = None
 			P_InitMat_oneWayWithConstraint = None
