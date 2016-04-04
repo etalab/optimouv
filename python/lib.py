@@ -2119,14 +2119,6 @@ def create_init_matrix_with_constraint_manual(teamNbr, poolNbr, poolSize, teams,
 	try:
 		logging.debug("-------------------------------------- CREATE INIT MATRIX WITH CONSTRAINT MANUALLY --------------------------------" )
 
-		logging.debug("typeDistributionConstraints: %s" %typeDistributionConstraints)
-		logging.debug("teamNbr: %s" %teamNbr)
-		logging.debug("poolNbr: %s" %poolNbr)
-		logging.debug("poolSize: %s" %poolSize)
-# 		logging.debug("teams: %s" %teams)
-		
-
-
 		# initialize pool distribution
 		poolDistribution = {}
 		for pool in range(1, poolNbr+1):
@@ -2226,12 +2218,9 @@ def create_init_matrix_with_constraint_manual(teamNbr, poolNbr, poolSize, teams,
 		
 
 		P_Mat = create_matrix_from_pool_distribution(poolDistribution, teamNbr, teams)
-		logging.debug("	P_Mat.shape: %s" %(P_Mat.shape,))
+# 		logging.debug("	P_Mat.shape: %s" %(P_Mat.shape,))
 
 # 		np.savetxt("/tmp/p_init_mat_manual.txt", P_Mat, delimiter=",", fmt='%d', newline='\n\n') # DEBUG
-
-
-# 		sys.exit()
 		return {"success": True, "data": P_Mat}
 
 	except Exception as e:
