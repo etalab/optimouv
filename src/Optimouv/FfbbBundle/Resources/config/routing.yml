@@ -276,6 +276,13 @@ ffbb_poules_export_comparaison_scenario:
     path:    /admin/poules/export-comparaison-scenarios/
     defaults: { _controller: FfbbBundle:Poules:exportComparaison }
 
+# Statistiques
+ffbb_statistiques:
+    path:     /admin/statistiques
+    defaults: { _controller: FfbbBundle:Statistique:index }
+
+
+
 
 #Federation
 ffbb_federation_list:

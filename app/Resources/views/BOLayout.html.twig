@@ -133,10 +133,11 @@
 
                         {% endif %}
 
-                        {#{% if (is_granted('ROLE_SUPER_ADMIN') == true) or (is_granted('ROLE_ADMIN') == true) %}#}
-                         {#<li> <a href="#"  style="background-color:#777171;">Statistiques</a> </li>#}
+                        {% if (is_granted('ROLE_SUPER_ADMIN') == true) or (is_granted('ROLE_ADMIN') == true) %}
+                             <li> <a href="{{ path('ffbb_statistiques') }}" >Statistiques</a>
+                             </li>
                             {#<li> <a href="#"  style="background-color:#4e4646;">Administration</a> </li>#}
-                        {#{% endif %}#}
+                        {% endif %}
 
                     </ul>
 
