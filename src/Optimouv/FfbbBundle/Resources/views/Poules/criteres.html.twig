@@ -235,7 +235,6 @@
                                                  <td>{{ detailsVille.nom }}</td>
                                                  <td>
                                                      <select class="form-control" id="repartitionHomogeneOption{{ key }}" style="width: 100%;">
-                                                         {#<option value="Aucun" disabled selected> -- Aucun -- </option>#}
                                                          <option value="Aucun" selected> -- Aucun -- </option>
                                                          <option value="Espoir">Espoir</option>
                                                          <option value="Descendant">Descendant</option>
@@ -423,6 +422,12 @@
                              $("#btnSupprimerInterdiction" + ligneNbr).click(function(){
                                 $(this).closest('tr').remove();
                              });
+
+                             // reinitialiser les options select
+                             $("#select2-equipe1-container").text("-- selectionnez une option --");
+                             $("#select2-equipe2-container").text("-- selectionnez une option --");
+                             $("#equipe1").val("vide");
+                             $("#equipe2").val("vide");
 
                          }
 
