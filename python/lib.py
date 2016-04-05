@@ -2145,14 +2145,6 @@ def create_init_matrix_with_constraint_manual(teamNbr, poolNbr, poolSize, teams,
 # 		logging.debug("	poolDistribution: %s" %poolDistribution)
 
 
-		# complete teams distribution by respecting prohibition constraints
-# 		prohibitionConstraints = [
-# 								[11296, 11224], 
-# 								[11293, 11225], 
-# 								[11226, 11285 ], 
-# 								[11227, 11229,], 
-# 								]
-# 		
 # 		logging.debug("prohibitionConstraints: %s" %prohibitionConstraints)
 
 		for prohibition in prohibitionConstraints:
