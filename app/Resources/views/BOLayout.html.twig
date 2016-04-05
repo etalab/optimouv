@@ -124,7 +124,6 @@
                             </li>
 
                         {% else %}
-
                             <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Optimisation des poules</a></li>
                             <li><a style="background-color:#A4BD10;"
                                    href="{{ path('ffbb_choisir_liste_participants') }}">
@@ -133,9 +132,12 @@
 
                         {% endif %}
 
+
+
                         {% if (is_granted('ROLE_SUPER_ADMIN') == true) or (is_granted('ROLE_ADMIN') == true) %}
-                             <li> <a href="{{ path('ffbb_statistiques') }}" >Statistiques</a>
-                             </li>
+                             {#<li> #}
+                                 {#<a href="{{ path('ffbb_statistiques') }}" >Statistiques</a>#}
+                             {#</li>#}
                             {#<li> <a href="#"  style="background-color:#4e4646;">Administration</a> </li>#}
                         {% endif %}
 
