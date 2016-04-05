@@ -233,7 +233,7 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 """
 Function to create pool distribution from P Matrix
 """
-def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool):
+def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSize, teams):
 	try:
 
 		logging.debug(" ------------------------- create_pool_distribution_from_matrix_one_way ------------------------- ")
@@ -1120,7 +1120,7 @@ def get_p_matrix_for_round_trip_match_optimal_without_constraint(P_InitMat, D_Ma
 """
 Function to get P Matrix for Round Trip and One Way Match Optimal Scenario With Constraints
 """
-def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId):
+def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay):
 	try:		
 		# calculate initial distance
 		initDistance = calculate_V_value(P_InitMat, D_Mat)
@@ -1143,9 +1143,6 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 			T_Value *= 0.99
 			logging.debug("  T_Value current: %s" %T_Value)
 	
-			poolDistributionInit = create_pool_distribution_from_matrix(P_InitMat, teamNbr, poolNbr, poolSize, teams)
-			logging.debug("  poolDistributionInit: \n%s" %poolDistributionInit)
-
 
 			### get index to change row and column
 			while True:
@@ -1178,8 +1175,13 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 					P_TransMatTmp[transIndex,:] = P_TransMatTmp[list(reversed(transIndex)),:]  # change two columns according to transIndex
 					P_TransMatTmp[:,transIndex] = P_TransMatTmp[:,list(reversed(transIndex))] # change two rows according to transIndex
 
-					poolDistributionTmp = create_pool_distribution_from_matrix(P_TransMatTmp, teamNbr, poolNbr, poolSize, teams)
+					if isOneWay == 1:
+						poolDistributionTmp = create_pool_distribution_from_matrix_one_way(P_TransMatTmp, teamNbr, poolNbr, poolSize, teams)
+					else:
+						poolDistributionTmp = create_pool_distribution_from_matrix(P_TransMatTmp, teamNbr, poolNbr, poolSize, teams)
 # 					logging.debug("  poolDistributionTmp: \n%s" %poolDistributionTmp)
+
+
 
 					statusProhibitionConstraints = check_prohibition_constraints(prohibitionConstraints, poolDistributionTmp)
 					logging.debug("	statusProhibitionConstraints: %s" %statusProhibitionConstraints)
@@ -1240,10 +1242,6 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 # 		logging.debug("  P_InitMat: \n%s" %P_InitMat)
 # 		logging.debug("  P_TransMat: \n%s" %P_TransMat)
 # 		logging.debug("  P_TransMatTmp: \n%s" %P_TransMatTmp)
-
-		poolDistributionTest = create_pool_distribution_from_matrix(P_InitMat, teamNbr, poolNbr, poolSize, teams)
-		logging.debug("  poolDistributionTest: \n%s" %poolDistributionTest)
-
 
 		return {"status": "yes", "data": P_InitMat}
 	
@@ -1348,7 +1346,7 @@ def get_p_matrix_for_round_trip_match_equitable_without_constraint(P_InitMat, D_
 """
 Function to get P Matrix for Round Trip and One Way Match Equitable Scenario With Constraint
 """
-def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId):
+def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay):
 	try:		
 		# calculate initial distance
 		initDistance = calculate_V_value_equitable(P_InitMat, D_Mat)
@@ -1401,8 +1399,11 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 						P_TransMatTmp[transIndex,:] = P_TransMatTmp[list(reversed(transIndex)),:]  # change two columns according to transIndex
 						P_TransMatTmp[:,transIndex] = P_TransMatTmp[:,list(reversed(transIndex))] # change two rows according to transIndex
 
-						poolDistributionTmp = create_pool_distribution_from_matrix(P_TransMatTmp, teamNbr, poolNbr, poolSize, teams)
-						logging.debug("  poolDistributionTmp: \n%s" %poolDistributionTmp)
+						if isOneWay == 1:
+							poolDistributionTmp = create_pool_distribution_from_matrix_one_way(P_TransMatTmp, teamNbr, poolNbr, poolSize, teams)
+						else:	
+							poolDistributionTmp = create_pool_distribution_from_matrix(P_TransMatTmp, teamNbr, poolNbr, poolSize, teams)
+
 						
 						statusProhibitionConstraints = check_prohibition_constraints(prohibitionConstraints, poolDistributionTmp)
 						logging.debug("  statusProhibitionConstraints: %s" %statusProhibitionConstraints)

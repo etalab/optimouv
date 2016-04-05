@@ -91,12 +91,12 @@ def optimize_pool_post_treatment_team_transfers(D_Mat, teamNbr, poolNbr, poolSiz
 		results = calculatedResult
 		
 # 		logging.debug(" results: %s" %(json.dumps(results),))
+		iter = config.INPUT.Iter
+		logging.debug(" iter: %s" %iter)
+
 
 		typeMatch = results["typeMatch"]
 		logging.debug(" typeMatch: %s" %(typeMatch,))
-
-		iter = config.INPUT.Iter
-		logging.debug(" iter: %s" %iter)
 
 		# add final flag to results
 		if "params" in results:
@@ -198,11 +198,16 @@ def optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbr, poolNbr, poolSize,
 
 		logging.debug(" varTeamNbrPerPool: %s" %(varTeamNbrPerPool,))
 
+		iter = config.INPUT.Iter
+		logging.debug(" iter: %s" %iter)
+
 		typeMatch = results["typeMatch"]
 		logging.debug(" typeMatch: %s" %(typeMatch,))
 
-		iter = config.INPUT.Iter
-		logging.debug(" iter: %s" %iter)
+		if typeMatch == "allerSimple":
+			isOneWay = 1
+		else:
+			isOneWay = 0
 
 		# add final flag to results
 		if "params" in results:
@@ -339,12 +344,13 @@ def optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbr, poolNbr, poolSize,
 			# filter upper triangular size in the case of one way match
 			if typeMatch == "allerSimple":
 				P_Mat_OptimalWithConstraint = np.triu(P_Mat_OptimalWithConstraint)
+				
 			logging.debug(" P_Mat_OptimalWithConstraint.shape: \n%s" %(P_Mat_OptimalWithConstraint.shape,))
 			
 			for iterLaunch in range(config.INPUT.IterLaunch):
 				logging.debug(" -----------------------------   iterLaunch: %s -------------------------------------" %iterLaunch)
 				# launch calculation based on ref scenario only if the params are comparable
-				P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_OptimalWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+				P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_OptimalWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 
 				if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
 					P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
@@ -405,7 +411,7 @@ def optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbr, poolNbr, poolSize,
 			for iterLaunch in range(config.INPUT.IterLaunch):
 				logging.debug(" -----------------------------   iterLaunch: %s -------------------------------------" %iterLaunch)
 				# launch calculation based on ref scenario only if the params are comparable
-				P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_EquitableWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+				P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_EquitableWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 
 				if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
 					P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
@@ -467,6 +473,8 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, "params": {}
 					}
+
+		isOneWay = 0
 
 # 		# get list of ids, names and cities from entity table for prohibition constraints
 		for indexProhibition, members in enumerate(prohibitionConstraints, start=1):
@@ -701,13 +709,13 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 				if iterLaunch == 0:
 					# try to use ref scenario
 					if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
-						P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 					
 						if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
 							P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
 						else:
 							# if error, launch again with P_init_matrix
-							P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+							P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 							if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
 								P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
 							# if error, use P_init_matrix
@@ -716,7 +724,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 								
 					# if there is no ref scenario
 					else:
-						P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 						if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
 							P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
 						# if error, use P_init_matrix
@@ -725,7 +733,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 				
 				# for second iteration onwards
 				else:
-					P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_OptimalWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+					P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_OptimalWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 					if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
 						P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
 					# if error, use P_init_matrix
@@ -781,13 +789,13 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 				if iterLaunch == 0:
 					if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
 						# try to use ref scenario
-						P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 					
 						if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
 							P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
 						else:
 							# if error, launch again with P_init_matrix
-							P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+							P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 							if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
 								P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
 							# if error, use P_init_matrix
@@ -797,7 +805,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 					
 					# if there is no ref scenario
 					else:
-						P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 						if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
 							P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
 						# if error, use P_init_matrix
@@ -807,7 +815,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 				
 				# for second iteration onwards
 				else:
-					P_Mat_EquitableWithConstraint = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_EquitableWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+					P_Mat_EquitableWithConstraint = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_EquitableWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 					if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
 						P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
 					# if error, use P_init_matrix
@@ -868,6 +876,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, "params": {}
 				}
+		isOneWay = 1
 
 # 		# get list of ids, names and cities from entity table for prohibition constraints
 		for indexProhibition, members in enumerate(prohibitionConstraints, start=1):
@@ -1014,7 +1023,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		logging.debug(" chosenDistance_OptimalWithoutConstraint: %s" %chosenDistance_OptimalWithoutConstraint)
 	
 # 		# get pool distribution
-		poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix_one_way(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+		poolDistribution_OptimalWithoutConstraint = create_pool_distribution_from_matrix_one_way(P_Mat_OptimalWithoutConstraint, teamNbr, poolNbr, poolSize, teams )
 		logging.debug(" poolDistribution_OptimalWithoutConstraint: %s" %poolDistribution_OptimalWithoutConstraint)
 # 		
 		# eliminate phnatom teams
@@ -1071,7 +1080,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 
 
 		# get pool distribution
-		poolDistribution_EquitableWithoutConstraint = create_pool_distribution_from_matrix_one_way(P_Mat_EquitableWithoutConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+		poolDistribution_EquitableWithoutConstraint = create_pool_distribution_from_matrix_one_way(P_Mat_EquitableWithoutConstraint, teamNbr, poolNbr, poolSize, teams)
 		logging.debug(" poolDistribution_EquitableWithoutConstraint: %s" %poolDistribution_EquitableWithoutConstraint)
 
 		# eliminate phnatom teams
@@ -1110,13 +1119,13 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 				if iterLaunch == 0:
 					# try to use ref scenario
 					if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
-						P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 					
 						if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
 							P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
 						else:
 							# if error, launch again with P_init_matrix
-							P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+							P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 							if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
 								P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
 							# if error, use P_init_matrix
@@ -1125,7 +1134,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 								
 					# if there is no ref scenario
 					else:
-						P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 						if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
 							P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
 						# if error, use P_init_matrix
@@ -1134,7 +1143,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 				
 				# for second iteration onwards
 				else:
-					P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_OptimalWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+					P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_OptimalWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 					if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
 						P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
 					# if error, use P_init_matrix
@@ -1149,7 +1158,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 	 	
 			np.savetxt("/tmp/p_mat_optimal_with_constraint.csv", P_Mat_OptimalWithConstraint, delimiter=",", fmt='%d') # DEBUG
 	
-			poolDistribution_OptimalWithConstraint = create_pool_distribution_from_matrix_one_way(P_Mat_OptimalWithConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+			poolDistribution_OptimalWithConstraint = create_pool_distribution_from_matrix_one_way(P_Mat_OptimalWithConstraint, teamNbr, poolNbr, poolSize, teams)
 			logging.debug(" poolDistribution_OptimalWithConstraint: %s" %poolDistribution_OptimalWithConstraint)
 	
 				# eliminate phnatom teams
@@ -1187,13 +1196,13 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 				if iterLaunch == 0:
 					if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
 						# try to use ref scenario
-						P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 					
 						if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
 							P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
 						else:
 							# if error, launch again with P_init_matrix
-							P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+							P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 							if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
 								P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
 							# if error, use P_init_matrix
@@ -1203,7 +1212,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 					
 					# if there is no ref scenario
 					else:
-						P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 						if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
 							P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
 						# if error, use P_init_matrix
@@ -1213,7 +1222,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 				
 				# for second iteration onwards
 				else:
-					P_Mat_EquitableWithConstraint = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_EquitableWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+					P_Mat_EquitableWithConstraint = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_EquitableWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 					if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
 						P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
 					# if error, use P_init_matrix
@@ -1228,7 +1237,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			np.savetxt("/tmp/p_mat_equitable_with_constraint.csv", P_Mat_EquitableWithConstraint, delimiter=",", fmt='%d') # DEBUG
 	
 			# get pool distribution
-			poolDistribution_EquitableWithConstraint = create_pool_distribution_from_matrix_one_way(P_Mat_EquitableWithConstraint, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool)
+			poolDistribution_EquitableWithConstraint = create_pool_distribution_from_matrix_one_way(P_Mat_EquitableWithConstraint, teamNbr, poolNbr, poolSize, teams)
 			logging.debug(" poolDistribution_EquitableWithConstraint: %s" %poolDistribution_EquitableWithConstraint)
 
 			# eliminate phnatom teams
@@ -1273,11 +1282,11 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 					"scenarioEquitableSansContrainte": {}, "scenarioEquitableAvecContrainte": {}, 
 					"params": {"contrainteAccueilPlateauExiste" : welcomeConstraintExistMatchPlateau}
 				}
+		isOneWay = 0
 		
 		
 # 		# get list of ids, names and cities from entity table for prohibition constraints
 		for indexProhibition, members in enumerate(prohibitionConstraints, start=1):
-# 			logging.debug(" indexProhibition: %s" %indexProhibition)
 			members = ",".join(map(str, members)) # convert list of ints to string
 			prohibitionDetail = get_list_details_from_list_ids_for_entity(members)
 # 			logging.debug(" prohibitionDetail: %s" %prohibitionDetail)
@@ -1333,16 +1342,8 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		# add status constraints in the result
 		if statusConstraints:
 			results["contraintsExiste"] = 1
-# 			results["params"]["contraintsExiste"] = 1
 		else:
 			results["contraintsExiste"] = 0
-# 			results["params"]["contraintsExiste"] = 0
-
-# 		logging.debug("teamNbr: %s"%teamNbr)
-# 		logging.debug("poolNbr: %s"%poolNbr)
-# 		logging.debug("poolSize: %s"%poolSize)
-# 		logging.debug("userId: %s"%userId)
-# 		logging.debug("teams: \n%s"%teams)
 
 		logging.debug("")
 		logging.debug(" #################################### REFERENCE RESULT #################################################")
@@ -1403,7 +1404,6 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			logging.debug(" sumInfoRef: \n%s" %sumInfoRef)
 		else:
 			# add boolean to results
-# 			results["params"]["refExiste"] = 0
 			results["refExiste"] = 0
 
 		logging.debug("")
@@ -1528,13 +1528,13 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 					if iterLaunch == 0:
 						# try to use ref scenario
 						if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
-							P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+							P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 						
 							if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
 								P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
 							else:
 								# if error, launch again with P_init_matrix
-								P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+								P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 								if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
 									P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
 								# if error, use P_init_matrix
@@ -1543,7 +1543,7 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 									
 						# if there is no ref scenario
 						else:
-							P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+							P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 							if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
 								P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
 							# if error, use P_init_matrix
@@ -1552,17 +1552,13 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 					
 					# for second iteration onwards
 					else:
-						P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_OptimalWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_OptimalWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 						if P_Mat_OptimalWithConstraintReturn["status"] == "yes":
 							P_Mat_OptimalWithConstraint = P_Mat_OptimalWithConstraintReturn["data"]
 						# if error, use P_init_matrix
 						else:
 							P_Mat_OptimalWithConstraint = P_InitMat_withConstraint
 
-	
-	
-	
-	
 	
 				chosenDistance_OptimalWithConstraint = calculate_V_value(P_Mat_OptimalWithConstraint, D_Mat)
 				logging.debug(" chosenDistance_OptimalWithConstraint: %s" %chosenDistance_OptimalWithConstraint)
@@ -1613,13 +1609,13 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 					if iterLaunch == 0:
 						if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
 							# try to use ref scenario
-							P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+							P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_ref, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 						
 							if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
 								P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
 							else:
 								# if error, launch again with P_init_matrix
-								P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+								P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 								if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
 									P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
 								# if error, use P_init_matrix
@@ -1629,7 +1625,7 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 						
 						# if there is no ref scenario
 						else:
-							P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+							P_Mat_EquitableWithConstraintReturn = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat_withConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 							if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
 								P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
 							# if error, use P_init_matrix
@@ -1639,7 +1635,7 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 					
 					# for second iteration onwards
 					else:
-						P_Mat_EquitableWithConstraint = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_EquitableWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId)#
+						P_Mat_EquitableWithConstraint = get_p_matrix_for_round_trip_match_equitable_with_constraint(P_Mat_EquitableWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 						if P_Mat_EquitableWithConstraintReturn["status"] == "yes":
 							P_Mat_EquitableWithConstraint = P_Mat_EquitableWithConstraintReturn["data"]
 						# if error, use P_init_matrix
