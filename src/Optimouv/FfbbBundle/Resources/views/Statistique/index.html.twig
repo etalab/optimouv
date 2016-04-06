@@ -1,7 +1,123 @@
-{% extends "::base.html.twig" %}
+{% extends "::BOLayout.html.twig" %}
 
-{% block title %}FfbbBundle:Statistique:index{% endblock %}
+{% block pagewrapper %}
 
-{% block body %}
-<h1>Welcome to the Statistique:index page</h1>
+    <div id="page-wrapper">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="page-header">
+                    <b>Visualisez les rapports d'utilisation de l'application</b>
+                </h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>  Sélectionnez les caractéristiques du rapport statistique que vous souhaitez visualiser </h4>
+                    </div>
+                    <div class="panel-body">
+
+
+
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="typeRapport">TYPE DE RAPPORT </label>
+                                <div class="col-sm-2">
+                                    <select class="form-control" >
+                                        <option value="vide" selected> -- selectionnez une option -- </option>
+                                        <option value="systeme">Rapport système</option>
+                                        <option value="utilisateur">Rapport utilisateur</option>
+                                        <option value="federation">Rapport fédération</option>
+                                        <option value="historique">Résultat de recherche</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="nomFderation">NOM DE LA FEDERATION</label>
+                                <div class="col-sm-2">
+                                    <select class="form-control" >
+                                        <option value="vide" selected> -- selectionnez une option -- </option>
+                                        <option value="idFfbb">FFBB</option>
+                                        <option value="idFff">FFF</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="nomDiscipline">NOM DE LA DISCIPLINE</label>
+                                <div class="col-sm-2">
+                                    <select class="form-control" >
+                                        <option value="vide" selected> -- selectionnez une option -- </option>
+                                        <option value="idBasket">Basket Ball</option>
+                                        <option value="idFoot">Football</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="nomUtilisateur">NOM DE L'UTILISATEUR</label>
+                                <div class="col-sm-2">
+                                    <select class="form-control" >
+                                        <option value="vide" selected> -- selectionnez une option -- </option>
+                                        <option value="idBasket">Tous utilisateurs</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="dateDebut">DATE DE DEBUT</label>
+                                <div class="col-sm-2">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-offset-4 col-sm-10">
+                                    <button type="submit" class="btn btn-default">Accéder</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4> Votre rapport </h4>
+                    </div>
+
+                    <div class="panel-body">
+                        <h4 class="page-header">Synthèse des utilisations - vue graphique </h4>
+
+                        <h4 class="page-header">Synthèse des utilisations - vue tableur</h4>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
 {% endblock %}
