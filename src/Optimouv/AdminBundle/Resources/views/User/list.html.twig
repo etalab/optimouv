@@ -32,6 +32,7 @@
                                         <th>Fédération </th>
                                         <th>Discipline </th>
                                         <th>Profil </th>
+                                        <th>Date expiration </th>
                                         <th>Action</th>
 
                                     </tr>
@@ -60,18 +61,28 @@
                                                 {% endif %}
 
                                             </td>
+                                            <td align="center">
+                                                {% set dateExpiration = user. expiresAt %}
+                                                {% if dateExpiration is not null %}
+                                                    {{ dateExpiration|date('d/m/Y') }}
+                                                {% else %}
+                                                    -
+                                                {% endif %}
+                                                {#{{ dump(user.expiresAt) }}#}
+
+                                            </td>
 
 
                                             <td>
-                                                <a href="{{ path('administration_users_edit', {idUser: user.id}) }}" class="btn btn-default-rencontre">Editer</a>
+                                                <a href="{{ path('administration_users_edit', {idUser: user.id}) }}" class="btn btn-consulter-user">Editer</a>
                                                 {% set expriration = user.isAccountNonExpired %}
                                                 {% set enabled = user.enabled %}
                                                 {% if not expriration or  (not enabled)  %}{# utilisateur non actif #}
-                                                    <a href="javascript:void(0)"  id="user_active_{{ user.id }}" class="btn btn-consulter-rapport"
+                                                    <a href="javascript:void(0)"  id="user_active_{{ user.id }}" class="btn btn-consulter-user"
                                                        onclick="activateUserByAdmin({{ user.id }})" >
                                                         Activer
                                                     </a>
-                                                    <a href="javascript:void(0)"  id="user_desactive_{{ user.id }}" class="btn btn-consulter-rapport" onclick="desactivateUserByAdmin({{ user.id }})"
+                                                    <a href="javascript:void(0)"  id="user_desactive_{{ user.id }}" class="btn btn-consulter-user" onclick="desactivateUserByAdmin({{ user.id }})"
                                                        style="visibility: hidden">
                                                         Désactiver
                                                     </a>
@@ -79,10 +90,10 @@
                                                 {# ********************** #}
                                                 {% else %} {# utilisateur actif #}
 
-                                                    <a href="javascript:void(0)"  id="user_desactive_{{ user.id }}" class="btn btn-consulter-rapport" onclick="desactivateUserByAdmin({{ user.id }})">
+                                                    <a href="javascript:void(0)"  id="user_desactive_{{ user.id }}" class="btn btn-consulter-user" onclick="desactivateUserByAdmin({{ user.id }})">
                                                         Désactiver
                                                     </a>
-                                                    <a href="javascript:void(0)"  id="user_active_{{ user.id }}" class="btn btn-consulter-rapport"
+                                                    <a href="javascript:void(0)"  id="user_active_{{ user.id }}" class="btn btn-consulter-user"
                                                        onclick="activateUserByAdmin({{ user.id }})"  style="visibility: hidden">
                                                         Activer
                                                     </a>
@@ -90,6 +101,7 @@
                                                 {% endif %}
 
                                             </td>
+
 
 
                                         </tr>
@@ -101,7 +113,7 @@
                                     </tbody>
 
                                 </table>
-                                <a href="{{ path('admin_user_add') }}" class="btn btn-default-rencontre">Ajouter</a>
+                                <a href="{{ path('admin_user_add') }}" class="btn btn-consulter-user">Ajouter</a>
 
                             </div>
                         </div>

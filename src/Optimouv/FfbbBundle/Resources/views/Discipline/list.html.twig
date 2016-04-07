@@ -28,6 +28,7 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Nom </th>
+                                        <th>Fédération </th>
                                         <th>Date de création</th>
                                         <th>Action</th>
 
@@ -40,12 +41,13 @@
                                         <tr id="{{ discipline.id }}">
                                             <td> {{ discipline.id }} </td>
                                             <td> {{ discipline.nom }} </td>
+                                            <td> {{ discipline.federation.nom }} </td>
                                             <td> {{ discipline.dateCreation.date|date('d/m/Y') }} </td>
 
 
                                             <td>
-                                                <a href="{{ path('ffbb_discipline_update', {idDiscipline:discipline.id }) }}" class="btn btn-default-rencontre">Editer</a>
-                                                <button type="button" name="delete" class="btn btn-consulter-rapport" onclick="deleteDiscipline({{ discipline.id }})">Supprimer</button>
+                                                <a href="{{ path('ffbb_discipline_update', {idDiscipline:discipline.id }) }}" class="btn btn-info-poule">Editer</a>
+                                                <button type="button" name="delete" class="btn btn-info-poule" onclick="deleteDiscipline({{ discipline.id }})">Supprimer</button>
 
                                             </td>
 
@@ -59,7 +61,7 @@
                                     </tbody>
 
                                 </table>
-                                <a href="{{ path('ffbb_discipline_add') }}" class="btn btn-default-rencontre">Ajouter</a>
+                                <a href="{{ path('ffbb_discipline_add') }}" class="btn btn-info-poule">Ajouter</a>
 
                             </div>
                         </div>

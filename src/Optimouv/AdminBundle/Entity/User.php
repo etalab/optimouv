@@ -89,7 +89,7 @@ class User extends BaseUser
      *
      * @ORM\Column(name="federation", type="string", length=50, nullable=true)
      */
-    public $federation;
+    private $federation;
 
 
 
@@ -313,5 +313,14 @@ class User extends BaseUser
     public function getPrenom()
     {
         return $this->prenom;
+    }
+    /**
+     * Get expiresAt
+     *
+     * @return \DateTime
+     */
+    public function getExpiresAt()
+    {
+        return $this->expiresAt;
     }
 }

@@ -370,3 +370,21 @@ table.dataTable thead .sorting:after {
 .panel-discipline a:hover {
     color: #66C7CE;
 }
+
+.panel-gestion-user {
+    border-color: #4E4646;
+}
+
+.panel-gestion-user .panel-heading {
+    border-color: #4E4646;
+    color: #fff;
+    background-color: #4E4646;
+}
+
+.panel-gestion-user a {
+    color: #4E4646;
+}
+
+.panel-gestion-user a:hover {
+    color: #4E4646;
+}
