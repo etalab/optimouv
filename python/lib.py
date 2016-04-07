@@ -33,9 +33,6 @@ def calculate_V_value(input_P_mat, input_D_mat):
 	try:
 		outputDistance = 0
 	
-# 		logging.debug("  input_P_mat: \n%s" %input_P_mat)
-# 		logging.debug("  input_D_mat: \n%s" %input_D_mat)
-
 		rowSize = input_P_mat.shape[0]
 		colSize = input_P_mat.shape[1]
 		
@@ -155,7 +152,6 @@ def adjust_pool_attribution_based_on_pool_variation(teamPoolResult, poolNbr, poo
 						
 		
 		logging.debug("teamPoolResultTransformed: %s" %teamPoolResultTransformed)
-# 		return teamPoolResult
 		return teamPoolResultTransformed
 	except Exception as e:
 		show_exception_traceback()
@@ -163,15 +159,8 @@ def adjust_pool_attribution_based_on_pool_variation(teamPoolResult, poolNbr, poo
 """
 Function to create pool distribution from P Matrix
 """
-# def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool):
 def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, teams):
 	try:
-
-
-# 		logging.debug(" P_Mat: \n%s" %P_Mat)
-# 		logging.debug(" teamNbr: \n%s" %teamNbr)
-# 		logging.debug(" poolNbr: \n%s" %poolNbr)
-# 		logging.debug(" teams: \n%s" %teams)
 
 		# Dict containing the distribution of groups in the pools
 		poolDistribution = {}
@@ -190,9 +179,6 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 
 			# get the row content
 			rowContent = list(P_Mat[indexRow])
-# 			logging.debug("")
-# 			logging.debug("  indexRow: %s" %indexRow)
-# 			logging.debug("  rowContent: %s" %rowContent)
 
 			# calculate the pool size of the row
 			poolSizeRow = rowContent.count(1.0) + 1
@@ -213,12 +199,10 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 				performanceCounter += 1
 	
 				# add teamDestination to temporary pool if the pool size has not been reached and if the teamDestination is not yet in temporary pool 
-# 				if ( len(tempPool) < poolSize) and (teamDestination not in tempPool) and (valueMat == 1):
 				if ( len(tempPool) < poolSizeRow) and (teamDestination not in tempPool) and (valueMat == 1):
 					tempPool.append(teamDestination)
 					
 				# if the pool size has been reached, push the tempPool to tempPools
-# 				if len(tempPool) == poolSize:
 				if len(tempPool) == poolSizeRow:
 					tempPool = sorted(tempPool)
 					if tempPool not in tempPools:
@@ -231,26 +215,15 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 						else: 
 							break
 				
-# 		logging.debug("teamNbr: \n%s" %teamNbr)
-# 		logging.debug("poolNbr: \n%s" %poolNbr)
-# 		logging.debug("poolSize: \n%s" %poolSize)
-# 		logging.debug("teams: \n%s" %teams)
-# 		logging.debug("tempPools: \n%s" %tempPools)
-
 
 		firstPoolName = ord('A')
 		# obtain group distribution per pool
 		for pool in range(poolNbr):
 			poolDistribution[pool+1] = tempPools[pool]
-# 			poolDistribution[ chr(firstPoolName + pool) ] = tempPools[pool]
 	
 		# calculate efficiency of the algorithm
 		efficiency = round((performanceCounter*100/teamNbr/teamNbr), 2)
 	
-# 		logging.debug("  performanceCounter: %s" %performanceCounter)
-# 		logging.debug("  efficiency: %s %%" %(efficiency))
-# 		logging.debug("  tempPools: %s" %tempPools)
-# 		logging.debug("  len tempPools: %s" %len(tempPools))
 
 		return poolDistribution
 
@@ -260,15 +233,10 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 """
 Function to create pool distribution from P Matrix
 """
-def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSize, teams, varTeamNbrPerPool):
+def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSize, teams):
 	try:
 
-# 		logging.debug(" ------------------------- create_pool_distribution_from_matrix_one_way ------------------------- ")
-# 		logging.debug("  P_Mat: \n%s" %P_Mat)
-# 		logging.debug("  teamNbr: %s" %teamNbr)
-# 		logging.debug("  poolNbr: %s" %poolNbr)
-# 		logging.debug("  poolSize: %s" %poolSize)
-# 		logging.debug("  teams: %s" %teams)
+		logging.debug(" ------------------------- create_pool_distribution_from_matrix_one_way ------------------------- ")
 		
 		# Dict containing the distribution of groups in the pools
 		poolDistribution = {}
@@ -310,12 +278,10 @@ def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSi
 					performanceCounter += 1
 		
 					# add teamDestination to temporary pool if the pool size has not been reached and if the teamDestination is not yet in temporary pool 
-	# 				if ( len(tempPool) < poolSize) and (teamDestination not in tempPool) and (valueMat == 1):
 					if ( len(tempPool) < poolSizeRow) and (teamDestination not in tempPool) and (valueMat == 1):
 						tempPool.append(teamDestination)
 						
 					# if the pool size has been reached, push the tempPool to tempPools
-	# 				if len(tempPool) == poolSize:
 					if len(tempPool) == poolSizeRow:
 						tempPool = sorted(tempPool)
 						if tempPool not in tempPools:
@@ -328,26 +294,15 @@ def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSi
 							else: 
 								break
 				
-# 		logging.debug("teamNbr: \n%s" %teamNbr)
-# 		logging.debug("poolNbr: \n%s" %poolNbr)
-# 		logging.debug("poolSize: \n%s" %poolSize)
-# 		logging.debug("teams: \n%s" %teams)
-# 		logging.debug("tempPools: \n%s" %tempPools)
 
 		firstPoolName = ord('A')
 		# obtain group distribution per pool
 		for pool in range(poolNbr):
 			poolDistribution[pool+1] = tempPools[pool]
-# 			poolDistribution[ chr(firstPoolName + pool) ] = tempPools[pool]
 	
 		# calculate efficiency of the algorithm
 		efficiency = round((performanceCounter*100/teamNbr/teamNbr), 2)
 	
-# 		logging.debug("  performanceCounter: %s" %performanceCounter)
-# 		logging.debug("  efficiency: %s %%" %(efficiency))
-# 		logging.debug("  tempPools: %s" %tempPools)
-# 		logging.debug("  len tempPools: %s" %len(tempPools))
-
 		return poolDistribution
 
 	except Exception as e:
@@ -389,9 +344,6 @@ def get_host_combination_index_from_base3(combinationInput, base3Tmp):
 			
 			
 			combinationOutput[day] = [int(value) for value in combinationPerDayInput]
-		
-# 		logging.debug("  combinationOutput: %s" %combinationOutput)
-		
 		
 		return combinationOutput
 	except Exception as e:
@@ -501,17 +453,11 @@ def check_max_times_host_match_plateau(memberCombinationIds):
 						
 						# return false if there is any member who receives more than two times
 						if receivingHosts[hostId] > 2:
-# 							logging.debug("memberCombinationIds: \n%s" %json.dumps(memberCombinationIds))
-# 							logging.debug("receivingHosts: \n%s" %json.dumps(receivingHosts))
-# 							logging.debug("")
 							return statusMaxTimesHost
 		
 		# set status to true
 		statusMaxTimesHost = 1
 
-# 		logging.debug("memberCombinationIds: \n%s" %json.dumps(memberCombinationIds))
-# 		logging.debug("receivingHosts: \n%s" %json.dumps(receivingHosts))
-# 		logging.debug("")
 		return statusMaxTimesHost
 
 	except Exception as e:
@@ -522,9 +468,6 @@ Function to calculate distance plateau for a given 3x4 matrix (plateau distribut
 """
 def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPool, welcomeConstraintExistMatchPlateau, teams):
 	try:
-
-		
-# 		logging.debug("  plateauDistribution: %s" %plateauDistributionPerPool)
 
 		# initialize host combination
 		hostCombinationIndex = {}
@@ -619,8 +562,6 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 # 		logging.debug("  bestHostCombinationIndex: %s" %bestHostCombinationIndex)
 # 		logging.debug("  bestMemberCombinationIds: %s" %bestMemberCombinationIds)
 		
-# 		sys.exit()
-		
 		result = {	"bestDistance": bestDistanceMemberCombination, 
 					"bestHostCombinationIndex": bestHostCombinationIndex,
 					"bestMemberCombinationIds": bestMemberCombinationIds,
@@ -656,9 +597,6 @@ def get_encounters_details_from_member_combination_ids(memberCombinationIds):
 				groupTmp["hoteNom"] = hostName.replace("'", u"''")
 				groupTmp["hoteCodePostal"] = hostPostalCode
 
-# 				logging.debug("  hostCity: %s" %hostCity)
-# 				logging.debug("  hostName: %s" %hostName)
-# 				logging.debug("  hostPostalCode: %s" %hostPostalCode)
 				
 				# get city name and postal code of first team
 				sql = "select ville, nom, code_postal, participants from entite where id=%s"%contentGroup["memberIds"][0]
@@ -832,16 +770,12 @@ def create_encounters_from_pool_distribution(poolDistribution):
 		
 						# Escape single apostrophe for name and city
 						name1 = name1.replace("'", u"''")
-# 						name1 = name1.replace("'", u"")
 # 						logging.debug("  name1: %s" %(name1))
 						name2 = name2.replace("'", u"''")
-# 						name2 = name2.replace("'", u"")
 # 						logging.debug("  name2: %s" %(name2))
 						city1 = city1.replace("'", u"''")
-# 						city1 = city1.replace("'", u"")
 # 						logging.debug("  city1: %s" %(city1))
 						city2 = city2.replace("'", u"''")
-# 						city2 = city2.replace("'", u"")
 # 						logging.debug("  city2: %s" %(city2))
 
 						encounter = {"equipeDepartId": member1, "equipeDestinationId": member2, 
@@ -1067,17 +1001,11 @@ def create_rules_for_prohibition_constraints(indexesProhibitionConstraints, P_Ma
 		
 			# get current team members of member1
 			membersOf1 = P_Mat[member1]
-# 				logging.debug("  membersOf1: %s" %(membersOf1))
 			indexesMembersOf1 = list(np.where(membersOf1 == 1)[0])
-# 				logging.debug("  member2: %s" %(member2))
-# 				logging.debug("  indexesMembersOf1: %s" %(indexesMembersOf1))
 			
 			# get current team members member2
 			membersOf2 = P_Mat[member2]
-# 				logging.debug("  membersOf2: %s" %(membersOf2))
 			indexesMembersOf2 = list(np.where(membersOf2 == 1)[0])
-# 				logging.debug("  member1: %s" %(member1))
-# 				logging.debug("  indexesMembersOf2: %s" %(indexesMembersOf2))
 
 			# create prohibition rules
 			rulesMember1 = [] # member 1 with current team members of member2
@@ -1192,7 +1120,7 @@ def get_p_matrix_for_round_trip_match_optimal_without_constraint(P_InitMat, D_Ma
 """
 Function to get P Matrix for Round Trip and One Way Match Optimal Scenario With Constraints
 """
-def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId):
+def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay):
 	try:		
 		# calculate initial distance
 		initDistance = calculate_V_value(P_InitMat, D_Mat)
@@ -1215,9 +1143,6 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 			T_Value *= 0.99
 			logging.debug("  T_Value current: %s" %T_Value)
 	
-			poolDistributionInit = create_pool_distribution_from_matrix(P_InitMat, teamNbr, poolNbr, poolSize, teams)
-			logging.debug("  poolDistributionInit: \n%s" %poolDistributionInit)
-
 
 			### get index to change row and column
 			while True:
@@ -1226,10 +1151,10 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 					logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 					logging.debug("Failure to create interchange rows and  columns (i, j) which fulfills all constraints")
 					logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-# 					# update status job failure
-# 					update_job_status(reportId, -1)
-					send_email_to_user_failure(userId, reportId)
-					sys.exit()
+					
+					return {"status": "no", "data": {}}
+					
+# 					send_email_to_user_failure(userId, reportId)
 				iterConstraint -= 1
 				
 				transIndex = random.sample(range(teamNbr), 2)
@@ -1250,12 +1175,16 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 					P_TransMatTmp[transIndex,:] = P_TransMatTmp[list(reversed(transIndex)),:]  # change two columns according to transIndex
 					P_TransMatTmp[:,transIndex] = P_TransMatTmp[:,list(reversed(transIndex))] # change two rows according to transIndex
 
-					poolDistributionTmp = create_pool_distribution_from_matrix(P_TransMatTmp, teamNbr, poolNbr, poolSize, teams)
+					if isOneWay == 1:
+						poolDistributionTmp = create_pool_distribution_from_matrix_one_way(P_TransMatTmp, teamNbr, poolNbr, poolSize, teams)
+					else:
+						poolDistributionTmp = create_pool_distribution_from_matrix(P_TransMatTmp, teamNbr, poolNbr, poolSize, teams)
 # 					logging.debug("  poolDistributionTmp: \n%s" %poolDistributionTmp)
+
+
 
 					statusProhibitionConstraints = check_prohibition_constraints(prohibitionConstraints, poolDistributionTmp)
 					logging.debug("	statusProhibitionConstraints: %s" %statusProhibitionConstraints)
-					
 
 					statusTypeDistributionConstraints = check_type_distribution_constraints(typeDistributionConstraints, poolDistributionTmp)
 					logging.debug("	statusTypeDistributionConstraints: %s" %statusTypeDistributionConstraints)
@@ -1314,17 +1243,11 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 # 		logging.debug("  P_TransMat: \n%s" %P_TransMat)
 # 		logging.debug("  P_TransMatTmp: \n%s" %P_TransMatTmp)
 
-		poolDistributionTest = create_pool_distribution_from_matrix(P_InitMat, teamNbr, poolNbr, poolSize, teams)
-		logging.debug("  poolDistributionTest: \n%s" %poolDistributionTest)
-
-
-		return P_InitMat
+		return {"status": "yes", "data": P_InitMat}
+	
 		
 	except Exception as e:
 		show_exception_traceback()
-
-
-
 
 
 
@@ -1423,7 +1346,7 @@ def get_p_matrix_for_round_trip_match_equitable_without_constraint(P_InitMat, D_
 """
 Function to get P Matrix for Round Trip and One Way Match Equitable Scenario With Constraint
 """
-def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId):
+def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay):
 	try:		
 		# calculate initial distance
 		initDistance = calculate_V_value_equitable(P_InitMat, D_Mat)
@@ -1434,15 +1357,6 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 		logging.debug("  T_Value initial: %s" %T_Value)
 
 		logging.debug("  iterConstraint: %s" %iterConstraint)
-
-		# get indexes of prohibition constraints
-# 		indexesProhibitionConstraints = getIndexesProhibitionConstraints(prohibitionConstraints, teams)
-# 		logging.debug("  indexesProhibitionConstraints: %s" %indexesProhibitionConstraints)
-		
-		# get indexes of type distribution constraints
-# 		indexesTypeDistributionConstraints = getIndexesTypeDistributionConstraints(typeDistributionConstraints, teams)
-# 		logging.debug("  indexesTypeDistributionConstraints: %s" %indexesTypeDistributionConstraints)
-
 
 
 		for nbIter in range(iter):
@@ -1455,27 +1369,16 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 			logging.debug("  T_Value current: %s" %T_Value)
 	
 	
-			# list of prohibited constraints
-# 			rulesProhibitionConstraints = create_rules_for_prohibition_constraints(indexesProhibitionConstraints, P_InitMat)
-# 			logging.debug("  rulesProhibitionConstraints: %s" %(rulesProhibitionConstraints))
-
-			# list of type distribution constraints
-# 			rulesTypeDistributionConstraints = []
-# 			for type, indexConstraint in indexesTypeDistributionConstraints.items():
-# 				rulesTypeDistributionConstraints += indexConstraint
-# 			logging.debug("  rulesTypeDistributionConstraints: %s" %(rulesTypeDistributionConstraints))
-
-	
 			### get index to change row and column
 			while True:
 				if iterConstraint == 0:
 					logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 					logging.debug("Failure to create interchange rows and  columns (i, j) which fulfills all constraints")
 					logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-# 					# update status job failure
-# 					update_job_status(reportId, -1)
-					send_email_to_user_failure(userId, reportId)
-					sys.exit()
+
+					return {"status": "no", "data": {}}
+					
+# 					send_email_to_user_failure(userId, reportId)
 				iterConstraint -= 1
 
 				transIndex = random.sample(range(teamNbr), 2)
@@ -1489,7 +1392,6 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 				# P_ij == 0 means that both teams are in different pool 
 				if i <= j and int(P_ij) == 0:
 					# apply prohibition constraints
-# 					if transIndex not in rulesProhibitionConstraints:
 
 						##### apply type distribution constraints #####
 						# create temporary P matrix if the transIndex is applied 
@@ -1497,8 +1399,11 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 						P_TransMatTmp[transIndex,:] = P_TransMatTmp[list(reversed(transIndex)),:]  # change two columns according to transIndex
 						P_TransMatTmp[:,transIndex] = P_TransMatTmp[:,list(reversed(transIndex))] # change two rows according to transIndex
 
-						poolDistributionTmp = create_pool_distribution_from_matrix(P_TransMatTmp, teamNbr, poolNbr, poolSize, teams)
-						logging.debug("  poolDistributionTmp: \n%s" %poolDistributionTmp)
+						if isOneWay == 1:
+							poolDistributionTmp = create_pool_distribution_from_matrix_one_way(P_TransMatTmp, teamNbr, poolNbr, poolSize, teams)
+						else:	
+							poolDistributionTmp = create_pool_distribution_from_matrix(P_TransMatTmp, teamNbr, poolNbr, poolSize, teams)
+
 						
 						statusProhibitionConstraints = check_prohibition_constraints(prohibitionConstraints, poolDistributionTmp)
 						logging.debug("  statusProhibitionConstraints: %s" %statusProhibitionConstraints)
@@ -1513,10 +1418,6 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 							logging.debug("  iterConstraint: %s" %(iterConstraint))
 							break
 						
-# 						if i not in rulesTypeDistributionConstraints and j not in rulesTypeDistributionConstraints:
-# 							logging.debug("  i: %s, j: %s" %(i, j))
-# 							logging.debug("  iterConstraint: %s" %(iterConstraint))
-# 							break
 
 			P_TransMat = np.copy(P_InitMat)
 	
@@ -1569,7 +1470,7 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 				else:
 					P_InitMat = P_TransMat
 
-		return P_InitMat
+		return {"status": "yes", "data": P_InitMat}
 		
 	except Exception as e:
 		show_exception_traceback()
@@ -1657,8 +1558,6 @@ def create_reference_pool_distribution_from_db(teams, poolSize):
 		poolDistributionReference = {"status": "yes", "data": {}}
 		phantomTeams = []
 
-# 		logging.debug(" teams: %s" %sorted(teams))
-# 		logging.debug(" poolSize: %s" %poolSize)
 
 		listChars = []
 
@@ -1888,7 +1787,6 @@ def create_distance_matrix_from_db(teams, reportId, userId):
 						logging.debug("coordDestination: %s" %coordDestination)
 						
 						# get distance and travel time from HERE web service
-# 						resultsHere = get_distance_travel_time_from_here_ws(depart, destination, coordDepart, coordDestination)
 						resultsHere = get_distance_travel_time_from_here_ws(depart, destination, coordDepart, coordDestination, reportId, userId)
 						logging.debug("resultsHere: %s" %resultsHere)
 
@@ -1909,7 +1807,6 @@ def create_distance_matrix_from_db(teams, reportId, userId):
 """
 Function to create initilization matrix without constraint
 """
-# def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize, varTeamNbrPerPool ):
 def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize):
 
 	try:
@@ -1918,8 +1815,6 @@ def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize):
 		P_InitMat = np.zeros((teamNbr, teamNbr))
 		
 		# determine max and min pool size from normal pool size and variation team number per pool
-# 		poolSizeMax = poolSize + varTeamNbrPerPool
-# 		poolSizeMin = poolSize - varTeamNbrPerPool
 		
 		logging.debug("teamNbr: %s" %teamNbr)
 		logging.debug("poolNbr: %s" %poolNbr)
@@ -1936,11 +1831,6 @@ def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize):
 		indexSortedTeamRandomValues = sorted( range(len(teamRandomValues)), key=lambda k: teamRandomValues[k] )
 		
 
-# 		logging.debug("teamNbr: %s" %teamNbr)
-# 		logging.debug("poolNbr: %s" %poolNbr)
-# 		logging.debug("poolSize: %s" %poolSize)
-		
-		
 		
 		# attribute pool number to the sorted team values
 		teamPoolSorted = []
@@ -1955,13 +1845,6 @@ def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize):
 		logging.debug("teamPoolResult: %s" %teamPoolResult)
 		logging.debug("len teamPoolResult: %s" %len(teamPoolResult))
 		
-		#####################################################################################################
-		# take into account variation of team number in a pool
-		#####################################################################################################
-# 		teamPoolResult = adjust_pool_attribution_based_on_pool_variation(teamPoolResult, poolNbr, poolSize, varTeamNbrPerPool)
-# 		logging.debug("teamPoolResult: %s" %teamPoolResult)
-	
-		#####################################################################################################
 		
 		# get index of the teams with the same pool number (create 2D Matrix from list)
 		for indexCurPool, curPoolNbr in enumerate(teamPoolResult):
@@ -2101,8 +1984,6 @@ Return 0 if success (all the type distribution constraints are fulfilled)
 """
 def check_type_distribution_constraints(typeDistributionConstraints, poolDistribution):
 	try:
-# 		logging.debug("typeDistributionConstraints: %s" %typeDistributionConstraints)
-# 		logging.debug("poolDistribution: %s" %poolDistribution)
 
 		# get pool number
 		poolNbr = len(poolDistribution.keys())
@@ -2144,7 +2025,6 @@ def check_type_distribution_constraints(typeDistributionConstraints, poolDistrib
 """
 Function to create initilization matrix with constraint
 """
-# def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterConstraint, prohibitionConstraints, typeDistributionConstraints, varTeamNbrPerPool):
 def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterConstraint, prohibitionConstraints, typeDistributionConstraints):
 
 	try:
@@ -2182,7 +2062,7 @@ def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterCo
 			for i in range(teamNbr):
 				teamPoolResult[indexSortedTeamRandomValues[i]] = teamPoolSorted[i] 
 # 			logging.debug("	len teamPoolResult: %s" %len(teamPoolResult))
-			logging.debug("	teamPoolResult: %s" %teamPoolResult)
+# 			logging.debug("	teamPoolResult: %s" %teamPoolResult)
 	# 		logging.debug("teams: %s" %teams)
 
 			# create pool distribution
@@ -2230,6 +2110,116 @@ def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterCo
 
 	except Exception as e:
 		show_exception_traceback()
+
+
+"""
+Function to create initilization matrix with constraint manually
+"""
+def create_init_matrix_with_constraint_manual(teamNbr, poolNbr, poolSize, teams, iterConstraint, prohibitionConstraints, typeDistributionConstraints):
+
+	try:
+		logging.debug("-------------------------------------- CREATE INIT MATRIX WITH CONSTRAINT MANUALLY --------------------------------" )
+
+		# initialize pool distribution
+		poolDistribution = {}
+		for pool in range(1, poolNbr+1):
+			poolDistribution[pool] = []
+
+
+		# initialize unassaign teams
+		unassignedTeams = list(teams)
+
+# 		typeDistributionConstraints = {}
+
+		# distribute teams across the pools
+		for type, teamsPerType in typeDistributionConstraints.items():
+			for indexTeam, teamPerType in enumerate(teamsPerType):
+				teamPerType = int(teamPerType)
+				assignedPoolNbr = (indexTeam%poolNbr)+1
+# 				logging.debug("assignedPoolNbr: %s" %assignedPoolNbr)
+				
+				poolDistribution[assignedPoolNbr].append(teamPerType)
+				
+				# remmove team from the unassaigned list
+				unassignedTeams.remove(teamPerType)
+# 		logging.debug("	poolDistribution: %s" %poolDistribution)
+
+
+# 		logging.debug("prohibitionConstraints: %s" %prohibitionConstraints)
+
+		for prohibition in prohibitionConstraints:
+			team1 = int(prohibition[0])
+# 			logging.debug("team1: %s" %team1)
+			team2 = int(prohibition[1])
+# 			logging.debug("team2: %s" %team2)
+			
+			# find pool of team1 and team2
+			poolTeam1 = False
+			poolTeam2 = False
+			
+			for pool, teamsPerPool in poolDistribution.items():
+				if team1 in teamsPerPool:
+					poolTeam1 = pool
+				if team2 in teamsPerPool:
+					poolTeam2 = pool
+			
+			# if team1 and team2 are in the same pool according to type distribution constraints
+			if team1 != False and team2 != False and team1 == team2:
+				return {"success": False, "data": None}
+			else:
+				# assign team1
+				if not poolTeam1:
+					for poolNbrLoop in range(1, poolNbr+1):
+						# add to the first pool if it is not full
+						if len(poolDistribution[poolNbrLoop]) < poolSize:
+							poolDistribution[poolNbrLoop].append(team1)
+							unassignedTeams.remove(team1)
+							break
+						# if all pools are full
+						if poolNbrLoop == (poolNbr) and len(poolDistribution[poolNbrLoop]) == poolSize:
+							return {"success": False, "data": None}
+							
+				# assign team2
+				if not poolTeam2:
+					for poolNbrLoop in range(1, poolNbr+1):
+						# add to the first pool if it is not full
+						if len(poolDistribution[poolNbrLoop]) < poolSize:
+							poolDistribution[poolNbrLoop].append(team2)
+							unassignedTeams.remove(team2)
+							break
+						# if all pools are full
+						if poolNbrLoop == (poolNbr) and len(poolDistribution[poolNbrLoop]) == poolSize:
+							return {"success": False, "data": None}
+
+# 			logging.debug("poolTeam1: %s" %poolTeam1)
+# 			logging.debug("poolTeam2: %s" %poolTeam2)
+# 			logging.debug("" )
+
+		# try to distribute the remaining teams
+		for unassignedTeam in unassignedTeams:
+			for poolNbrLoop in range(1, poolNbr+1):
+				# add to the first pool if it is not full
+				if len(poolDistribution[poolNbrLoop]) < poolSize:
+					poolDistribution[poolNbrLoop].append(unassignedTeam)
+					break
+				# if all pools are full
+				if poolNbrLoop == (poolNbr) and len(poolDistribution[poolNbrLoop]) == poolSize:
+					return {"success": False, "data": None}
+			
+		
+		logging.debug("	poolDistribution: %s" %poolDistribution)
+		
+
+		P_Mat = create_matrix_from_pool_distribution(poolDistribution, teamNbr, teams)
+# 		logging.debug("	P_Mat.shape: %s" %(P_Mat.shape,))
+
+# 		np.savetxt("/tmp/p_init_mat_manual.txt", P_Mat, delimiter=",", fmt='%d', newline='\n\n') # DEBUG
+		return {"success": True, "data": P_Mat}
+
+	except Exception as e:
+		show_exception_traceback()
+
+
 
 """
 Function to create phantom distance matrix from distance matrix
@@ -2354,9 +2344,6 @@ def variation_team_number_per_pool(poolsIds, varTeamNbrPerPool):
 			
 			tmpTeams = []
 			for index, (pool, teams) in enumerate(poolsIdsCopy.items(), start=1):
-# 				logging.debug(" index: %s"%index)
-# 				logging.debug(" pool: %s"%pool)
-# 				logging.debug(" teams: %s"%teams)
 			
 				# remove teams from odd number pool
 				if index % 2 == 1:
@@ -2377,9 +2364,6 @@ def variation_team_number_per_pool(poolsIds, varTeamNbrPerPool):
 			for index, (pool, teams) in enumerate(poolsIdsCopy.items(), start=1):
 				# ignore last pool
 				if index != poolNbr:
-# 					logging.debug(" index: %s"%index)
-# 					logging.debug(" pool: %s"%pool)
-# 					logging.debug(" teams: %s"%teams)
 
 					# remove teams from odd number pool
 					if index % 2 == 1:
@@ -2394,7 +2378,6 @@ def variation_team_number_per_pool(poolsIds, varTeamNbrPerPool):
 				
 # 		logging.debug(" resultPoolsIds: %s" %(resultPoolsIds,))
 
-# 		return poolsIds
 		return resultPoolsIds
 	except Exception as e:
 		show_exception_traceback()
@@ -2541,9 +2524,6 @@ def control_params_match_plateau(userId, teamNbr, poolNbr, reportId):
 
 	except Exception as e:
 		show_exception_traceback()
-
-
-
 
 
 
@@ -3053,14 +3033,10 @@ def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, pro
 					typeDistributionConstraintsSaved[type] = sorted(typeDistributionConstraintSavedUnformatted["ids"])
 			if typeDistributionConstraintsInput != typeDistributionConstraintsSaved: 
 				errorStatus = True
-# 				logging.debug("typeDistributionConstraintsSaved : %s" %typeDistributionConstraintsSaved)
-# 				logging.debug("typeDistributionConstraintsInput : %s" %typeDistributionConstraintsInput)
 # 				logging.debug("typeDistributionConstraintsInput == typeDistributionConstraintsSaved : %s" %(typeDistributionConstraintsInput == typeDistributionConstraintsSaved))
 				
 		
 		logging.debug("errorStatus : %s" %(errorStatus))
-
-# 		sys.exit()
 
 		# send email if errorStatus is true
 		if errorStatus:
@@ -3090,54 +3066,6 @@ def check_request_validity_post_treatment(teamTransfers, varTeamNbrPerPool, user
 	except Exception as e:
 		show_exception_traceback()
 
-# """
-# Function to save result into DB
-# """
-# def update_result_to_db(resultId, results):
-# 	try:
-# 		# escape single apostrophe for city names
-# 		# ref scenario
-# 		resultsRef = results["scenarioRef"]
-# 		if resultsRef:
-# 			replace_single_quote_for_result(resultsRef["rencontreDetails"])
-# # 		logging.debug("resultsRef : %s" %resultsRef)
-# 
-# 		# optimal scenario
-# 		resultsOptimalWithoutConstraint = results["scenarioOptimalSansContrainte"]
-# 		if resultsOptimalWithoutConstraint:
-# 			replace_single_quote_for_result(resultsOptimalWithoutConstraint["rencontreDetails"])
-# 		
-# 		resultsOptimalWithConstraint = results["scenarioOptimalAvecContrainte"]
-# 		if resultsOptimalWithConstraint:
-# 			replace_single_quote_for_result(resultsOptimalWithConstraint["rencontreDetails"])
-# 			
-# 		# equitable scenario
-# 		resultsEquitableWithoutConstraint = results["scenarioEquitableSansContrainte"]
-# 		if resultsEquitableWithoutConstraint:
-# 			replace_single_quote_for_result(resultsEquitableWithoutConstraint["rencontreDetails"])
-# 			
-# 		
-# 		resultsEquitableWithConstraint = results["scenarioEquitableAvecContrainte"]
-# 		if resultsEquitableWithConstraint:
-# 			replace_single_quote_for_result(resultsEquitableWithoutConstraint["rencontreDetails"])
-# 
-# 
-# 		# mark the final result
-# # 		results["params"]["final"] = "yes"
-# 		results["params"]["final"] = "oui"
-# 
-# # 		sql = """update scenario set details_calcul='%(results)s' where id=%(resultId)s
-# 		sql = """update resultats set details_calcul='%(results)s' where id=%(resultId)s
-# 			"""%{	"resultId": resultId, 
-# 					"results": json.dumps(results),
-# 				}
-# # 		logging.debug("sql: %s" %sql)
-# 		db.execute(sql)
-# 		db.commit()
-# 		
-# 		return resultId
-# 	except Exception as e:
-# 		show_exception_traceback()
 
 """
 Function to insert params to DB
@@ -3209,7 +3137,4 @@ def update_job_status(jobId, status):
 
 	except Exception as e:
 		show_exception_traceback()
-
-
-
 

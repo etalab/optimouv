@@ -1045,6 +1045,12 @@
                                  $(this).closest('tr').remove();
                              });
 
+                             // reinitialiser les options select
+                             $("#select2-equipe1-container").text("-- selectionnez une option --");
+                             $("#select2-equipe2-container").text("-- selectionnez une option --");
+                             $("#equipe1").val("vide");
+                             $("#equipe2").val("vide");
+
                          }
 
                      });
