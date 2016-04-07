@@ -11,12 +11,17 @@
     </div>
     <div class="form-group">
         <label style="font-weight: bold"  >Nom *</label>
-        <input class="form-control"   name="nom" required>
+        <input class="form-control"   name="nom" required id="firstName">
     </div>
-    <div class="form-group"  id="divPrenom"  style="font-weight: bold">
+    <div class="form-group">
         <label style="font-weight: bold">Prénom *</label>
-        <input class="form-control"  name="prenom" required>
+        <input class="form-control"  name="prenom" id="lastName" required onchange="createLogin()">
     </div>
+    <div class="form-group" >
+        <label style="font-weight: bold">Login </label>
+        <input class="form-control"  name="username" id="username" disabled>
+    </div>
+
     {# afficher les listes en fn de l'utilisateur #}
     {% set userConnect = app.user %}
     {% if userConnect is not null %}
@@ -83,7 +88,7 @@
 
     <div class="form-group">
         <label>Fonction</label>
-        <input type="text" class="form-control"  name="fonction">
+        <input type="text" class="form-control"  name="fonction" id="fonction">
     </div>
     <div class="form-group" id="nbrParticipants">
         <label style="font-weight: bold">Email *</label>

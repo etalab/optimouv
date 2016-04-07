@@ -26,11 +26,7 @@
                      {{ include('@Admin/User/formAdd.html.twig') }}
 
                  </div>
-
-
              </div>
-
-
          </div>
 
      {% endblock %}
@@ -67,7 +63,7 @@
 
             function validatePassword() {
                 if (password.value != confirm_password.value) {
-                    confirm_password.setCustomValidity("Passwords Don't Match");
+                    confirm_password.setCustomValidity("Les mots de passe ne correspondent pas");
                 } else {
                     confirm_password.setCustomValidity('');
                 }
@@ -75,6 +71,22 @@
 
             password.onchange = validatePassword;
             confirm_password.onkeyup = validatePassword;
+            
+            function createLogin() {
+
+                var nom = document.getElementById('firstName').value;
+                if(nom){
+                    var prenom = document.getElementById('lastName').value;
+                    var suffixe = nom.slice(0, 1);
+                    var login = suffixe+prenom;
+                    document.getElementById('username').value = login;
+                }
+                else {
+                    alert('vous devez remplir le champs nom pour générer votre login');
+                }
+
+
+            }
 
         </script>
 

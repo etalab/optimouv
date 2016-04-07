@@ -132,10 +132,11 @@ class UserController extends Controller
             $role = "";
         }
 
+        $username = $_POST['username'];
+
 
         $discipline = intval($discipline);
 
-        $username = $nom.'_'.$prenom;
 
         $dateExpiration = new \DateTime("now");
         date_add($dateExpiration, date_interval_create_from_date_string('10 days'));

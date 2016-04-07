@@ -68,6 +68,22 @@
            password.onchange = validatePassword;
            confirm_password.onkeyup = validatePassword;
 
+           function createLogin() {
+
+               var nom = document.getElementById('firstName').value;
+               if(nom){
+                   var prenom = document.getElementById('lastName').value;
+                   var suffixe = nom.slice(0, 1);
+                   var login = suffixe+prenom;
+                   document.getElementById('username').value = login;
+               }
+               else {
+                   alert('vous devez remplir le champs nom pour générer votre login');
+               }
+
+
+           }
+
        </script>
 
    {% endblock %}
