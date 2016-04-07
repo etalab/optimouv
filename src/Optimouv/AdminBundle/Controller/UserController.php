@@ -121,6 +121,9 @@ class UserController extends Controller
         if (isset($_POST['g-recaptcha-response'])) {
             $captcha = $_POST['g-recaptcha-response'];
         }
+        else {
+            $captcha = "";
+        }
         if (!$captcha) {
             echo '<h2>Vérifiez svp le champs captcha.</h2>';
             exit;
