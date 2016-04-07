@@ -328,13 +328,14 @@ class Rencontres
 //        $villes = $this->index($idGroupe);
         $villes = Rencontres::index($idGroupe);
 
+        
         # récupérer l'ids de toutes les entités
         $idsEntites = $villes[2];
         $idsEntitesPasRencontre = $villes[3];
         $idsEntitesMerge = array_merge($idsEntites,$idsEntitesPasRencontre );
 
         $villes = array_merge($villes[0], $villes[1]);
-
+        
         $length = count($villes);
         $lan = $lat = null;
         for ($i = 0; $i < $length; $i++) {
@@ -347,21 +348,20 @@ class Rencontres
 
         $lanX = $lan / $length;
         $latY = $lat / $length;
-
+       
 
         $stmt1 = $bdd->prepare("SELECT ville_nom, ville_longitude_deg, ville_latitude_deg, ville_code_postal,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
                                 from villes_france_free
                                 order by Proximite limit 1;");
         $stmt1->execute();
         $result = $stmt1->fetch(PDO::FETCH_ASSOC);
-
+        
         $latY = $result['ville_latitude_deg'];
         $lanX = $result['ville_longitude_deg'];
         $ville = $result['ville_nom'];
         $codePostal = $result['ville_code_postal'];
         $nom = 'Barycentre_Groupe_' . $idGroupe;
-
-
+        
         //vérifier si le barycentre existe deja
         $barycentre = $bdd->prepare("SELECT id from entite where longitude = :longitude AND latitude = :latitude");
         $barycentre->bindParam(':longitude', $lanX);
@@ -369,7 +369,7 @@ class Rencontres
         $barycentre->execute();
         $res = $barycentre->fetchColumn();
 
-
+        
         if (!$res) {
             $insert = $bdd->prepare("INSERT INTO  entite (nom, ville, code_postal, longitude, latitude, date_creation) VALUES ( :nom, :ville, :codePostal, :Longitude,:Latitude, :dateCreation );");
             $insert->bindParam(':nom', $nom);
@@ -384,9 +384,7 @@ class Rencontres
 
         $coord = $lanX . '%2C' . $latY; // pour appel la fn routing matrix
 
-
         $retour =  Rencontres::routingMatrix($coord, $villes, $idsEntitesMerge);
-
 
 
         # ajouter le nombre de participants dans les résultats
@@ -631,7 +629,6 @@ class Rencontres
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
-
 
         $bdd=  Rencontres::connexion();
 
@@ -1065,11 +1062,6 @@ class Rencontres
 
         $idStart = $result['id'];
 
-
-
-
-
-
         $coordStart = $latY . '%2C' . $lanX;
 
         $distanceTotale = [];
@@ -1116,9 +1108,8 @@ class Rencontres
                     $reqRoute = 'http://route.api.here.com/routing/7.2/calculateroute.json?waypoint0=' . $coordStart . '&waypoint1=' . $villes[$i] . '&mode=fastest%3Bcar%3Btraffic%3Adisabled&app_id=' . $app_id . '&app_code=' . $app_code;
 //                    error_log("\n Service: Rencontres, Function: calculRoute, datetime: ".$dateTimeNow
 //                        ."\n reqRoute: ".print_r($reqRoute, true), 3, $this->error_log_path);
-
+                    
                     $decoded =  Rencontres::getReponseCurl($reqRoute);
-
 
                     if (isset($decoded->response->status) && $decoded->response->status == 'ERROR') {
                         die('Erreur: ' . $decoded->response->errormessage);

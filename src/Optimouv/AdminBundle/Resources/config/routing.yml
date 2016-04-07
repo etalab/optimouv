@@ -21,3 +21,39 @@ admin_user_create:
 admin_user_activate:
     path:     /user-activate/{idUser}
     defaults: { _controller: AdminBundle:User:userActivate }
+
+admin_user_edit_profile:
+    path: /user/edit-profile
+    defaults: { _controller: AdminBundle:User:editProfil }
+
+#gestion de l'administration
+administration_panel:
+    path:    /gestion
+    defaults: { _controller: AdminBundle:Default:index }
+
+#Utilisateur
+administration_users_list:
+    path:    /gestion/users/list
+    defaults: { _controller: AdminBundle:User:UsersList}
+
+
+administration_users_create:
+    path:    /admin/federation/addFede
+    defaults: { _controller: FfbbBundle:Federation:addFede }
+
+administration_users_activation:
+    path:    /gestion/users/activate/{idUser}
+    defaults: { _controller: AdminBundle:User:activateUserByAdmin}
+
+administration_users_desactivation:
+    path:    /gestion/users/desactivate/{idUser}
+    defaults: { _controller: AdminBundle:User:desactivateUserByAdmin}
+
+administration_users_edit:
+    path:    /gestion/users/edit/{idUser}
+    defaults: { _controller: AdminBundle:User:editUser}
+
+administration_users_update:
+    path:    /gestion/users/update/{idUser}
+    defaults: { _controller: AdminBundle:User:updateUser}
+

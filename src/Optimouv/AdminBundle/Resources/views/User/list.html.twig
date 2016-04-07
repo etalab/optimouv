@@ -1,0 +1,207 @@
+{% extends '::BOLayout.html.twig' %}
+
+{% block pagewrapper %}
+
+
+    <div id="page-wrapper">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="page-header">Gérer vos utilisateurs </h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Liste de vos utilisateurs
+
+                     </div>
+
+                    <div class="panel-body">
+                        <div class="dataTable_wrapper">
+                            <div class="span3">
+                                <table class="table table-striped table-hover table-bordered table-fixed"
+                                       id="tableFede">
+                                    <thead>
+                                    <tr>
+                                        <th>Login</th>
+                                        <th>Nom </th>
+                                        <th>Prenom </th>
+                                        <th>Fédération </th>
+                                        <th>Discipline </th>
+                                        <th>Profil </th>
+                                        <th>Action</th>
+
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                    {% for user in users %}
+                                        <tr id="{{ user.id }}">
+                                            <td> {{ user.username }} </td>
+                                            <td> {{ user.nom }} </td>
+                                            <td> {{ user.prenom }} </td>
+                                            <td>
+                                                {% set federation = user.federation|split('|') %}
+                                                {% set federation = federation[1] %}
+                                                {{ federation }}
+                                            </td>
+                                            <td> {{ user.discipline.nom }} </td>
+                                            <td>
+                                                {% if "ROLE_SUPER_ADMIN" in user.roles %}
+                                                    Admin général
+                                                {% elseif "ROLE_ADMIN" in user.roles %}
+                                                    Admin fédéral
+                                                {% else %}
+                                                    Simple utilisateur
+                                                {% endif %}
+
+                                            </td>
+
+
+                                            <td>
+                                                <a href="{{ path('administration_users_edit', {idUser: user.id}) }}" class="btn btn-default-rencontre">Editer</a>
+                                                {% set expriration = user.isAccountNonExpired %}
+                                                {% set enabled = user.enabled %}
+                                                {% if not expriration or  (not enabled)  %}{# utilisateur non actif #}
+                                                    <a href="javascript:void(0)"  id="user_active_{{ user.id }}" class="btn btn-consulter-rapport"
+                                                       onclick="activateUserByAdmin({{ user.id }})" >
+                                                        Activer
+                                                    </a>
+                                                    <a href="javascript:void(0)"  id="user_desactive_{{ user.id }}" class="btn btn-consulter-rapport" onclick="desactivateUserByAdmin({{ user.id }})"
+                                                       style="visibility: hidden">
+                                                        Désactiver
+                                                    </a>
+
+                                                {# ********************** #}
+                                                {% else %} {# utilisateur actif #}
+
+                                                    <a href="javascript:void(0)"  id="user_desactive_{{ user.id }}" class="btn btn-consulter-rapport" onclick="desactivateUserByAdmin({{ user.id }})">
+                                                        Désactiver
+                                                    </a>
+                                                    <a href="javascript:void(0)"  id="user_active_{{ user.id }}" class="btn btn-consulter-rapport"
+                                                       onclick="activateUserByAdmin({{ user.id }})"  style="visibility: hidden">
+                                                        Activer
+                                                    </a>
+
+                                                {% endif %}
+
+                                            </td>
+
+
+                                        </tr>
+
+
+                                    {% endfor %}
+
+
+                                    </tbody>
+
+                                </table>
+                                <a href="{{ path('admin_user_add') }}" class="btn btn-default-rencontre">Ajouter</a>
+
+                            </div>
+                        </div>
+                        <!-- /.table-responsive -->
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        $(document).ready(function () {
+            $('#tableFede').DataTable({
+                responsive: true,
+                "order": [[ 0, "desc" ]]
+            });
+
+        });
+
+        function activateUserByAdmin(idUser){
+            $.ajax({
+                url: '/administration/gestion/users/activate/' +idUser,
+                type: 'GET',
+                data: null,
+                contentType: false,
+                dataType : "json",
+                processData: false,
+                success: function(data, textStatus, jqXHR)
+                {
+                    console.log(data);
+                    if(data.success)
+                    {
+                        var active_element = document.getElementById('user_active_'+idUser);
+                        var desactive_element = document.getElementById('user_desactive_'+idUser);
+
+                        active_element.style.display="none";
+                        desactive_element.style.visibility="visible";
+                    }
+                    else
+                    {
+                        // Handle errors here
+
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown)
+                {
+                    // Handle errors here
+
+                }
+            });
+        }
+
+        function desactivateUserByAdmin(idUser){
+            $.ajax({
+                url: '/administration/gestion/users/desactivate/' +idUser,
+                type: 'GET',
+                data: null,
+                contentType: false,
+                dataType : "json",
+                processData: false,
+                success: function(data, textStatus, jqXHR)
+                {
+                    console.log(data);
+                    if(data.success)
+                    {
+                        var active_element = document.getElementById('user_active_'+idUser);
+                        var desactive_element = document.getElementById('user_desactive_'+idUser);
+
+                        active_element.style.visibility="visible";
+                        desactive_element.style.display="none";
+
+                    }
+                    else
+                    {
+                        // Handle errors here
+
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown)
+                {
+                    // Handle errors here
+
+                }
+            });
+        }
+
+
+
+    </script>
+{% endblock %}
+
+
+

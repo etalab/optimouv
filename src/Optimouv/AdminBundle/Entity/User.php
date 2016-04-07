@@ -23,7 +23,7 @@ class User extends BaseUser
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+    public $id;
 
     /**
      * @var string
@@ -82,14 +82,14 @@ class User extends BaseUser
      *   @ORM\JoinColumn(name="id_discipline", referencedColumnName="id")
      * })
      */
-    private $discipline;
+    public $discipline;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="id_federation", type="integer", nullable=true)
+     * @ORM\Column(name="federation", type="string", length=50, nullable=true)
      */
-    private $federation;
+    public $federation;
 
 
 

@@ -4,6 +4,7 @@ namespace Optimouv\AdminBundle\Controller;
 
 use Optimouv\AdminBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class UserController extends Controller
 {
@@ -13,17 +14,55 @@ class UserController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        //récuperation de la liste de fede
-        $federations = $em->getRepository('FfbbBundle:Federation')->findAll();
+        //tester si ustilisateur connecté
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        //récuperation de la liste de discipline
-        $disciplines = $this->get('service_poules')->getListDiscipline();
+        //test si utilisateur connecté
+        if(!is_string($user)){
+            $roleUser = $user->getRoles();
+            
+            //connecté en tant qu'admin fédéral
+            if (in_array('ROLE_ADMIN',$roleUser)) {
+
+                $discipline = $user->getDiscipline();
+                $federation = $user->getFederation();
+                return $this->render('AdminBundle:User:addByAdmin.html.twig', array(
+                    'discipline' => $discipline,
+                    'federation' => $federation
+                ));
+
+            }          
+            //connecté en tant qu'admin général
+            elseif (in_array('ROLE_SUPER_ADMIN',$roleUser)){
+
+                //récuperation de la liste de fede
+                $federations = $em->getRepository('FfbbBundle:Federation')->findAll();
+
+                //récuperation de la liste de discipline
+                $disciplines = $this->get('service_poules')->getListDiscipline();
+                
+                return $this->render('AdminBundle:User:addByAdmin.html.twig', array(
+                    "liste_federation" => $federations,
+                    "liste_disciplines" => $disciplines
+                ));   
+            }
+        }
+        else{
+
+            //récuperation de la liste de fede
+            $federations = $em->getRepository('FfbbBundle:Federation')->findAll();
+
+            //récuperation de la liste de discipline
+            $disciplines = $this->get('service_poules')->getListDiscipline();
 
 
-        return $this->render('AdminBundle:User:add.html.twig', array(
-            "liste_federation" => $federations,
-            "liste_disciplines" => $disciplines
-        ));
+            return $this->render('AdminBundle:User:add.html.twig', array(
+                "liste_federation" => $federations,
+                "liste_disciplines" => $disciplines
+            ));
+        }
+       
+
 
     }
 
@@ -86,6 +125,13 @@ class UserController extends Controller
             echo '<h2>Vérifiez svp le champs captcha.</h2>';
             exit;
         }
+        //récupérer le profil utilisateur
+        if (isset($_POST['profil'])) {
+            $role = $_POST['profil'];
+        } else {
+            $role = "";
+        }
+
 
         $discipline = intval($discipline);
 
@@ -133,6 +179,10 @@ class UserController extends Controller
             $user->setAdresse($adresse);
             $user->setNumLicencie($numLicencie);
 
+            if($role == "admin"){
+                $user->setRoles(array('ROLE_ADMIN'));
+            }
+
              //encrypt password
             $factory = $this->get('security.encoder_factory');
             $encoder = $factory->getEncoder($user);
@@ -150,7 +200,18 @@ class UserController extends Controller
             $sendingMail = $this->sendMail($idUser, $email);
             if($sendingMail){
 
-                return $this->redirect($this->generateUrl('ffbb_accueil'));
+                //tester si ustilisateur connecté
+                $userConnect = $this->get('security.token_storage')->getToken()->getUser();
+
+                //test si utilisateur connecté
+                if($userConnect) {
+
+                    return $this->redirect($this->generateUrl('administration_users_list'));
+                }
+                else{
+                    return $this->redirect($this->generateUrl('ffbb_accueil'));
+                }
+
             }
             else{
                 echo '<h2>Erreur envoie de mail de confirmation</h2>';
@@ -190,4 +251,148 @@ class UserController extends Controller
 //        return $this->redirect($this->generateUrl('fos_user_security_login '));
         return $this->redirectToRoute('fos_user_security_login');
     }
+
+    public function UsersListAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        //récupérer toute la liste des utilisateurs pour l'admin fédéral
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $roleUser = $user->getRoles();
+
+        //récupérer id utilisateur
+        $idUser = $user->id;
+
+
+       
+        if (in_array('ROLE_ADMIN',$roleUser)) {
+
+            $idDiscipline = $em->getRepository('AdminBundle:User')->findOneById($idUser)->discipline;
+
+            $users  = $em->getRepository('AdminBundle:User')->getListUsersByDiscipline($idDiscipline);
+
+        }
+        elseif ( in_array('ROLE_SUPER_ADMIN',$roleUser) ){
+
+            //récupérer la liste selon l'admin général
+            $users  = $em->getRepository('AdminBundle:User')->getListUsers();
+        }
+        else{
+            print_r("vous n'êtes pas autorisé à accéder à cette page");
+        }
+
+
+       
+
+        return $this->render('AdminBundle:User:list.html.twig', [
+            "users" => $users
+        ]);
+
+    }
+
+    public function activateUserByAdminAction($idUser)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $activation = $em->getRepository('AdminBundle:User')->activateUserByAdmin($idUser);
+        if(!$activation){
+            
+            die("problème activation utilisateur ".$idUser);
+        }
+        return new JsonResponse(array(
+            "success" => true,
+            "msg" => "utilisateur activé"
+        ));
+    }
+
+    public function desactivateUserByAdminAction($idUser)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $activation = $em->getRepository('AdminBundle:User')->desactivateUserByAdmin($idUser);
+        if(!$activation){
+
+            die("problème activation utilisateur ".$idUser);
+        }
+        return new JsonResponse(array(
+            "success" => true,
+            "msg" => "utilisateur desactivé"
+        ));
+    }
+
+    public function editProfilAction()
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        //récupérer toute la liste des utilisateurs pour l'admin fédéral
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        //récupérer id utilisateur
+        $idUser = $user->id;
+
+        $user  = $em->getRepository('AdminBundle:User')->findOneById($idUser);
+
+        return $this->render('AdminBundle:User:update.html.twig', [
+            "user" => $user,
+
+        ]);
+
+    }
+
+    public function editUserAction($idUser)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user  = $em->getRepository('AdminBundle:User')->findOneById($idUser);
+
+        return $this->render('AdminBundle:User:update.html.twig', [
+            "user" => $user,
+
+        ]);
+    }
+    
+    public function updateUserAction($idUser)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $params =[];
+        $params['id'] = $idUser;
+        $params['login'] = $_POST['username'];
+        $params['email'] = $_POST['email'];
+        $params['tel'] = $_POST['tel'];
+        $password = $_POST['password'];
+
+        //encrypt password
+        $factory = $this->get('security.encoder_factory');
+        $user = $em->getRepository('AdminBundle:User')->findOneById($idUser);
+        $encoder = $factory->getEncoder($user);
+        $params['password'] = $encoder->encodePassword($password, $user->getSalt());
+
+
+        $params['adresse'] = $_POST['adresse'];
+        $params['numLicencie'] = $_POST['numLicencie'];
+
+        $update  = $em->getRepository('AdminBundle:User')->updateUser($params);
+
+        if($update){
+            //récupérer toute la liste des utilisateurs pour l'admin fédéral
+            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $roleUser = $user->getRoles();
+
+            if(in_array('ROLE_ADMIN',$roleUser) or in_array('ROLE_SUPER_ADMIN',$roleUser)){
+                return $this->redirect($this->generateUrl('administration_users_list'));
+            }
+            else{
+                return $this->redirect($this->generateUrl('ffbb_accueil_connect'));
+            }
+
+        }
+        else{
+            print_r("Un problème de mise à jour de l'utilisateur");
+            exit;
+        }
+
+
+    }
+
+
 }

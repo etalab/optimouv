@@ -106,13 +106,17 @@
 
                         {% set url = app.request.requestUri %}
                         {% set poule = "poule" %}
-                         {% if poule in url %}
+                        {% if poule in url %}
                             <li><a style="background-color:#40BAC3;" href="{{ path('ffbb_poules_choisir_liste') }}">Optimisation
                                     des poules</a></li>
 
                             <li><a href="{{ path('ffbb_choisir_liste_participants') }}">
                                     Meilleur lieu de rencontre</a></li>
                             <li><a href="{{ path('ffbb_rapports') }}">Rapports</a></li>
+                            {% if (is_granted('ROLE_SUPER_ADMIN') == true) or (is_granted('ROLE_ADMIN') == true) %}
+                                <li><a href="#">Statistiques</a></li>
+                                <li><a href="{{ path('administration_panel') }}">Administration</a></li>
+                            {% endif %}
 
                         {% elseif  app.request.attributes.get('_route') == 'ffbb_rapports' %}
 
@@ -123,6 +127,36 @@
                             <li><a style="background-color:#EE7700;" href="{{ path('ffbb_rapports') }}">Rapports</a>
                             </li>
 
+                            {% if (is_granted('ROLE_SUPER_ADMIN') == true) or (is_granted('ROLE_ADMIN') == true) %}
+                                <li><a href="#">Statistiques</a></li>
+                                <li><a href="{{ path('administration_panel') }}">Administration</a></li>
+                            {% endif %}
+                        {% elseif "administration" in url %}
+
+                            <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Optimisation des poules</a></li>
+
+                            <li><a href="{{ path('ffbb_choisir_liste_participants') }}">
+                                    Meilleur lieu de rencontre</a></li>
+                            <li><a href="{{ path('ffbb_rapports') }}">Rapports</a>
+                            </li>
+                            {% if (is_granted('ROLE_SUPER_ADMIN') == true) or (is_granted('ROLE_ADMIN') == true) %}
+                                <li><a href="#">Statistiques</a></li>
+                                <li><a href="{{ path('administration_panel') }}" style="background-color:#4e4646;">Administration</a>
+                                </li>
+                            {% endif %}
+
+                        {% elseif "statistiques" in url %}
+
+                            <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Optimisation des poules</a></li>
+
+                            <li><a href="{{ path('ffbb_choisir_liste_participants') }}">
+                                    Meilleur lieu de rencontre</a></li>
+                            <li><a href="{{ path('ffbb_rapports') }}">Rapports</a>
+                            </li>
+                            {% if (is_granted('ROLE_SUPER_ADMIN') == true) or (is_granted('ROLE_ADMIN') == true) %}
+                                <li><a href="#" style="background-color:#777171;">Statistiques</a></li>
+                                <li><a href="{{ path('administration_panel') }}">Administration</a></li>
+                            {% endif %}
                         {% else %}
 
                             <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Optimisation des poules</a></li>
@@ -130,13 +164,13 @@
                                    href="{{ path('ffbb_choisir_liste_participants') }}">
                                     Meilleur lieu de rencontre</a></li>
                             <li><a href="{{ path('ffbb_rapports') }}">Rapports</a></li>
+                            {% if (is_granted('ROLE_SUPER_ADMIN') == true) or (is_granted('ROLE_ADMIN') == true) %}
+                                <li><a href="#">Statistiques</a></li>
+                                <li><a href="{{ path('administration_panel') }}">Administration</a></li>
+                            {% endif %}
 
                         {% endif %}
 
-                        {% if (is_granted('ROLE_SUPER_ADMIN') == true) or (is_granted('ROLE_ADMIN') == true) %}
-                         <li> <a href="#"  style="background-color:#777171;">Statistiques</a> </li>
-                            <li> <a href="#"  style="background-color:#4e4646;">Administration</a> </li>
-                        {% endif %}
 
                     </ul>
 
@@ -147,7 +181,9 @@
                                 <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-user">
-                                <li><a href="#"><i class="fa fa-user fa-fw"></i> Gérer votre profil</a>
+                                <li><a href="#"></a> <i class="fa fa-user fa-fw" style="margin-left: 20px"></i> Bienvenue {{ app.user.username }} </li></a>
+                                <li class="divider"></li>
+                                <li><a href="{{ path('admin_user_edit_profile') }}"><i class="fa fa-pencil fa-fw"></i> Gérer votre profil</a>
                                 </li>
                                 {#<li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a></li>#}
                                 <li class="divider"></li>
