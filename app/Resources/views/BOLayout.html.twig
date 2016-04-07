@@ -157,7 +157,7 @@
                                 <li><a href="#" style="background-color:#777171;">Statistiques</a></li>
                                 <li><a href="{{ path('administration_panel') }}">Administration</a></li>
                             {% endif %}
-                        {% else %}
+                        {% else %}x
 
                             <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Optimisation des poules</a></li>
                             <li><a style="background-color:#A4BD10;"
@@ -171,11 +171,6 @@
 
                         {% endif %}
 
-
-                        {% if (is_granted('ROLE_SUPER_ADMIN') == true) or (is_granted('ROLE_ADMIN') == true) %}
-                         <li> <a href="#"  style="background-color:#777171;">Statistiques</a> </li>
-                            <li> <a href="#"  style="background-color:#4e4646;">Administration</a> </li>
-                        {% endif %}
 
 
                     </ul>
