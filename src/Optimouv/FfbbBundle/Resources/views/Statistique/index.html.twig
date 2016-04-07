@@ -70,7 +70,27 @@
 
                             <div class="form-group">
                                 <label class="control-label col-sm-2" for="dateDebut">DATE DE DEBUT</label>
-                                <div class="col-sm-2">
+                                <div class="col-sm-2" >
+
+                                    <div class="input-group date">
+                                        <input type="text" class="form-control">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="dateFin">DATE DE FIN</label>
+                                <div class="col-sm-2" >
+
+                                    <div class="input-group date">
+                                        <input type="text" class="form-control">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                                    </div>
+
+
                                 </div>
                             </div>
 
@@ -118,6 +138,22 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
+
+    <script type="text/javascript">
+
+        $(function() {
+            $('.input-group.date').datepicker({
+                format: "dd/mm/yyyy",
+                todayBtn: "linked",
+                language: "fr",
+                autoclose: true
+            });
+
+        });
+
+
+    </script>
+
+
 
 {% endblock %}
