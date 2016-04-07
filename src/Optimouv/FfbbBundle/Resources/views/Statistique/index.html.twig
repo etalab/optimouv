@@ -95,8 +95,8 @@
                             </div>
 
                             <div class="form-group">
-                                <div class="col-sm-offset-4 col-sm-10">
-                                    <button type="submit" class="btn btn-default">Accéder</button>
+                                <div class="control-label col-sm-4 ">
+                                    <button type="submit" class="btn btn-statistique">Accéder</button>
                                 </div>
                             </div>
                         </form>
@@ -119,8 +119,28 @@
 
                     <div class="panel-body">
                         <h4 class="page-header">Synthèse des utilisations - vue graphique </h4>
+                        <div class="form-group">
+                            <div class="col-md-9">
+                                <button style="width: 100px" type="submit" class="btn btn-statistique pull-right">Exporter</button>
+                            </div>
+                        </div>
 
+                        <br>
                         <h4 class="page-header">Synthèse des utilisations - vue tableur</h4>
+                        <div class="form-group">
+                            <div class="col-md-9">
+
+                                <select style="width: 100px" class="btn btn-statistique pull-right" name="formatExport">
+                                    <option value="" disabled="disabled" selected="selected">Exporter</option>
+                                    <option class="btn btn-statistique" value="xml">XML</option>
+                                    <option value="csv">CSV</option>
+                                </select>
+
+
+                            </div>
+
+
+                        </div>
 
                     </div>
 

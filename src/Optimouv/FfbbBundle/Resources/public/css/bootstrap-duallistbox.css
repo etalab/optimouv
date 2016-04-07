@@ -110,3 +110,12 @@
   background-color: #EE7700;
   border-color: #ccc;
 }
+
+.btn-statistique {
+  color: #fff;
+  background-color: #777 !important;
+}
+.btn-statistique.active, .btn-statistique.focus, .btn-statistique:active, .btn-statistique:focus, .btn-statistique:hover {
+  color: #fff !important;
+  background-color: #777;
+}
