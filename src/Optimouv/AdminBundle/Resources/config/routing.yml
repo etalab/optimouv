@@ -36,11 +36,6 @@ administration_users_list:
     path:    /gestion/users/list
     defaults: { _controller: AdminBundle:User:UsersList}
 
-
-administration_users_create:
-    path:    /admin/federation/addFede
-    defaults: { _controller: FfbbBundle:Federation:addFede }
-
 administration_users_activation:
     path:    /gestion/users/activate/{idUser}
     defaults: { _controller: AdminBundle:User:activateUserByAdmin}
