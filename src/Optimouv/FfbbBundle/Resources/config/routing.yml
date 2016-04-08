@@ -281,6 +281,9 @@ ffbb_statistiques:
     path:     /admin/statistiques
     defaults: { _controller: FfbbBundle:Statistique:index }
 
+ffbb_statistiques_export_pdf:
+    path:     /admin/statistiques/export/sauvegarde/pdf/
+    defaults: { _controller: FfbbBundle:Statistique:exportPdf }
 
 
 

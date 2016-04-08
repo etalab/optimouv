@@ -131,9 +131,16 @@
 
                                 <div class="form-group">
                             <div class="col-md-12">
-                                <button style="width: 100px" type="submit" class="btn btn-statistique pull-right">Exporter</button>
+                                <form name="submitParams" action="{{ path('ffbb_statistiques_export_pdf')}}" method="post">
+                                    <button style="width: 100px" type="submit" class="btn btn-statistique pull-right">Exporter</button>
+
+                                </form>
                             </div>
-                        </div>
+
+
+
+
+                                </div>
 
                         <br>
                         <h4 class="page-header">Synthèse des utilisations - vue tableur</h4>
@@ -351,7 +358,7 @@
             }
             InitChart();
 
-            
+
         });
 
 
