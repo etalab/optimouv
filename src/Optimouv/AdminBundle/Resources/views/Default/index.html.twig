@@ -15,121 +15,151 @@
                  </div>
                  <div class="col-lg-12">
                      <h3 class="page-header">Dashboard </h3>
-                     <div class="row">
-                         <div class="col-lg-6 col-md-6">
-                             <div class="panel panel-gestion-user">
-                                 <div class="panel-heading">
-                                     <div class="row">
-                                         <div class="col-xs-3">
-                                             <i class="fa fa-users fa-5x"></i>
-                                         </div>
-                                         <div class="col-xs-9 text-right">
-                                             {#<div class="huge">26</div>#}
-                                             <h2>Gestion des utilisateurs</h2>
-                                         </div>
-                                     </div>
-                                 </div>
-                                 <a href="{{ path('administration_users_list') }}">
-                                     <div class="panel-footer">
-                                         <span class="pull-left">Voir Détails</span>
-                                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                         <div class="clearfix"></div>
-                                     </div>
-                                 </a>
-                             </div>
-                         </div>
+                     {% set userConnect = app.user.roles %}
+                     {% if 'ROLE_SUPER_ADMIN' in userConnect %}
+                         <div class="row">
 
-                         <div class="col-lg-6 col-md-6">
-                             <div class="panel panel-green">
-                                 <div class="panel-heading">
-                                     <div class="row">
-                                         <div class="col-xs-3">
-                                             <i class="fa fa-gears fa-5x"></i>
-                                         </div>
-                                         <div class="col-xs-9 text-right">
-                                              <h2>Gestion des coefficients</h2>
+                             <div class="col-lg-6 col-md-6">
+                                 <div class="panel panel-gestion-user">
+                                     <div class="panel-heading">
+                                         <div class="row">
+                                             <div class="col-xs-3">
+                                                 <i class="fa fa-users fa-5x"></i>
+                                             </div>
+                                             <div class="col-xs-9 text-right">
+                                                 {#<div class="huge">26</div>#}
+                                                 <h2>Gestion des utilisateurs</h2>
+                                             </div>
                                          </div>
                                      </div>
+                                     <a href="{{ path('administration_users_list') }}">
+                                         <div class="panel-footer">
+                                             <span class="pull-left">Voir Détails</span>
+                                             <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                             <div class="clearfix"></div>
+                                         </div>
+                                     </a>
                                  </div>
-                                 <a href="#">
-                                     <div class="panel-footer">
-                                         <span class="pull-left">Voir Détails</span>
-                                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                         <div class="clearfix"></div>
-                                     </div>
-                                 </a>
                              </div>
-                         </div>
-                     </div>
-                     <div class="row">
-                         <div class="col-lg-6 col-md-6">
-                             <div class="panel panel-yellow">
-                                 <div class="panel-heading">
-                                     <div class="row">
-                                         <div class="col-xs-3">
-                                             <i class="fa  fa-certificate fa-5x"></i>
-                                         </div>
-                                         <div class="col-xs-9 text-right">
-                                              <h2>Gestion des fédérations</h2>
-                                         </div>
-                                     </div>
-                                 </div>
-                                 <a href="{{ path('ffbb_federation_list') }}">
-                                     <div class="panel-footer">
-                                         <span class="pull-left">Voir Détails</span>
-                                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                         <div class="clearfix"></div>
-                                     </div>
-                                 </a>
-                             </div>
-                         </div>
-                         <div class="col-lg-6 col-md-6">
-                             <div class="panel panel-primary">
-                                 <div class="panel-heading">
-                                     <div class="row">
-                                         <div class="col-xs-3">
-                                             <i class="fa  fa-th fa-5x"></i>
-                                         </div>
-                                         <div class="col-xs-9 text-right">
-                                             {#<div class="huge">26</div>#}
-                                             <h2>Gestion des catégories des répartitions homogènes</h2>
-                                         </div>
-                                     </div>
-                                 </div>
-                                 <a href="#">
-                                     <div class="panel-footer">
-                                         <span class="pull-left">Voir Détails</span>
-                                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                         <div class="clearfix"></div>
-                                     </div>
-                                 </a>
-                             </div>
-                         </div>
-                     </div>
-                     <div class="row">
-                         <div class="col-lg-6 col-md-6">
-                             <div class="panel panel-discipline">
-                                 <div class="panel-heading">
-                                     <div class="row">
-                                         <div class="col-xs-3">
-                                             <i class="fa fa-support fa-5x"></i>
-                                         </div>
-                                         <div class="col-xs-9 text-right">
-                                             <h2>Gestion des disciplines</h2>
-                                         </div>
-                                     </div>
-                                 </div>
-                                 <a href="{{ path('ffbb_discipline_list') }}">
-                                     <div class="panel-footer">
-                                         <span class="pull-left">Voir Détails</span>
-                                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                         <div class="clearfix"></div>
-                                     </div>
-                                 </a>
-                             </div>
-                         </div>
 
-                     </div>
+                             <div class="col-lg-6 col-md-6">
+                                 <div class="panel panel-green">
+                                     <div class="panel-heading">
+                                         <div class="row">
+                                             <div class="col-xs-3">
+                                                 <i class="fa fa-gears fa-5x"></i>
+                                             </div>
+                                             <div class="col-xs-9 text-right">
+                                                 <h2>Gestion des coefficients</h2>
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <a href="#">
+                                         <div class="panel-footer">
+                                             <span class="pull-left">Voir Détails</span>
+                                             <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                             <div class="clearfix"></div>
+                                         </div>
+                                     </a>
+                                 </div>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-lg-6 col-md-6">
+                                 <div class="panel panel-yellow">
+                                     <div class="panel-heading">
+                                         <div class="row">
+                                             <div class="col-xs-3">
+                                                 <i class="fa  fa-certificate fa-5x"></i>
+                                             </div>
+                                             <div class="col-xs-9 text-right">
+                                                 <h2>Gestion des fédérations</h2>
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <a href="{{ path('ffbb_federation_list') }}">
+                                         <div class="panel-footer">
+                                             <span class="pull-left">Voir Détails</span>
+                                             <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                             <div class="clearfix"></div>
+                                         </div>
+                                     </a>
+                                 </div>
+                             </div>
+                             <div class="col-lg-6 col-md-6">
+                                 <div class="panel panel-primary">
+                                     <div class="panel-heading">
+                                         <div class="row">
+                                             <div class="col-xs-3">
+                                                 <i class="fa  fa-th fa-5x"></i>
+                                             </div>
+                                             <div class="col-xs-9 text-right">
+                                                 {#<div class="huge">26</div>#}
+                                                 <h2>Gestion des catégories des répartitions homogènes</h2>
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <a href="#">
+                                         <div class="panel-footer">
+                                             <span class="pull-left">Voir Détails</span>
+                                             <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                             <div class="clearfix"></div>
+                                         </div>
+                                     </a>
+                                 </div>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-lg-6 col-md-6">
+                                 <div class="panel panel-discipline">
+                                     <div class="panel-heading">
+                                         <div class="row">
+                                             <div class="col-xs-3">
+                                                 <i class="fa fa-support fa-5x"></i>
+                                             </div>
+                                             <div class="col-xs-9 text-right">
+                                                 <h2>Gestion des disciplines</h2>
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <a href="{{ path('ffbb_discipline_list') }}">
+                                         <div class="panel-footer">
+                                             <span class="pull-left">Voir Détails</span>
+                                             <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                             <div class="clearfix"></div>
+                                         </div>
+                                     </a>
+                                 </div>
+                             </div>
+
+                         </div>
+                     {% else %}
+                         <div class="row">
+
+                             <div class="col-lg-6 col-md-6">
+                                 <div class="panel panel-gestion-user">
+                                     <div class="panel-heading">
+                                         <div class="row">
+                                             <div class="col-xs-3">
+                                                 <i class="fa fa-users fa-5x"></i>
+                                             </div>
+                                             <div class="col-xs-9 text-right">
+                                                 {#<div class="huge">26</div>#}
+                                                 <h2>Gestion des utilisateurs</h2>
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <a href="{{ path('administration_users_list') }}">
+                                         <div class="panel-footer">
+                                             <span class="pull-left">Voir Détails</span>
+                                             <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                             <div class="clearfix"></div>
+                                         </div>
+                                     </a>
+                                 </div>
+                             </div>
+                         </div>
+                     {% endif %}
                  </div>
                  <!-- /.col-lg-12 -->
              </div>
