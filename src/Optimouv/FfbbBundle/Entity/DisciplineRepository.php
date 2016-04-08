@@ -24,6 +24,16 @@ class DisciplineRepository extends \Doctrine\ORM\EntityRepository
 
         return $update;
     }
+
+    public function getListDisciplines()
+    {
+        $query = $this->createQueryBuilder('f')
+            ->join('f.federation', 'd')
+            ->getQuery();
+        $result = $query->getResult();
+        return $result;
+
+    }
     
 
 

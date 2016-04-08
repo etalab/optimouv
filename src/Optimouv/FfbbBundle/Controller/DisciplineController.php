@@ -13,7 +13,7 @@ class DisciplineController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $disciplines  = $em->getRepository('FfbbBundle:Discipline')->findAll();
+        $disciplines  = $em->getRepository('FfbbBundle:Discipline')->getListDisciplines();
         
         return $this->render('FfbbBundle:Discipline:list.html.twig', [
             "disciplines" => $disciplines

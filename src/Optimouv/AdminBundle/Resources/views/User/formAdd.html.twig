@@ -1,0 +1,134 @@
+<form role="form" action="{{ path('admin_user_create') }}" method="post">
+
+
+    <div class="form-group">
+        <label style="font-weight: bold" >Civilité *</label>
+        <select class="form-control" name="civilite" id="civilite" >
+            <option value="monsieur">Monsieur</option>
+            <option value="madame">Madame</option>
+
+        </select>
+    </div>
+    <div class="form-group">
+        <label style="font-weight: bold"  >Nom *</label>
+        <input class="form-control"   name="nom" required id="firstName">
+    </div>
+    <div class="form-group">
+        <label style="font-weight: bold">Prénom *</label>
+        <input class="form-control"  name="prenom" id="lastName" required onchange="createLogin()">
+    </div>
+    <div class="form-group" >
+        <label style="font-weight: bold">Login </label>
+        <input class="form-control"  name="username" id="username" disabled>
+    </div>
+
+
+    {# afficher les listes en fn de l'utilisateur #}
+    {% set userConnect = app.user %}
+    {% if userConnect is not null %}
+
+        {% if 'ROLE_ADMIN' in userConnect.roles %}
+            {# connecté en tant que admin fédéral #}
+            <input type="hidden" name="discipline" value="{{ discipline.id }}">
+            <input type="hidden" name="federation" value="{{ federation }}">
+
+        {% else %}
+            {# connecté en tant que admin général #}
+
+            <div class="form-group">
+                <label style="font-weight: bold">Profil *</label>
+                <select class="form-control" name="profil" required>
+                         <option value="admin">Admin fédéral</option>
+                         <option value="user">Simple utilisateur</option>
+                 </select>
+            </div>
+
+            <div class="form-group">
+                <label style="font-weight: bold">Fédération *</label>
+                <select class="form-control" name="federation" id="listeFederation" onchange="reloadDisciplines()"
+                        required>
+                    {% for federation in liste_federation %}
+                        <option value="{{ federation.id }}|{{ federation.nom }}">{{ federation.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="hidden" id="all_discipline" value="{{ liste_disciplines|json_encode }}">
+                <label style="font-weight: bold">Discipline *</label>
+                <select name="discipline" id="listeDiscipline" class="form-control" required>
+                    {% for discipline in liste_disciplines[1] %}
+                        <option value="{{ discipline.id }}">{{ discipline.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+        {% endif %}
+
+    {% else %}
+        {# simple utilisateur #}
+            <div class="form-group">
+                <label style="font-weight: bold">Fédération *</label>
+                <select class="form-control" name="federation" id="listeFederation" onchange="reloadDisciplines()"
+                        required>
+                    {% for federation in liste_federation %}
+                        <option value="{{ federation.id }}|{{ federation.nom }}">{{ federation.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="hidden" id="all_discipline" value="{{ liste_disciplines|json_encode }}">
+                <label style="font-weight: bold">Discipline *</label>
+                <select name="discipline" id="listeDiscipline" class="form-control" required>
+                    {% for discipline in liste_disciplines[1] %}
+                        <option value="{{ discipline.id }}">{{ discipline.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+    {% endif %}
+
+    <div class="form-group">
+        <label>Fonction</label>
+        <input type="text" class="form-control"  name="fonction" id="fonction">
+    </div>
+    <div class="form-group" id="nbrParticipants">
+        <label style="font-weight: bold">Email *</label>
+        <input type="email" class="form-control"  name="email" required>
+    </div>
+
+    <div class="form-group">
+        <label>Téléphone</label>
+        <input type="tel" class="form-control"   name="telephone">
+    </div>
+
+    <div class="form-group">
+        <label>Adresse</label>
+        <input type="text" class="form-control"   name="adresse">
+    </div>
+
+
+    <div class="form-group" id="nbrLicencies">
+        <label>Numéro de licencié</label>
+        <input type="text"  class="form-control"  name="numLicencie">
+    </div>
+
+    <div class="form-group">
+        <label style="font-weight: bold">Mot de passe *</label>
+        <input type="password" placeholder="Mot de passe" id="password"
+               name="password" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label style="font-weight: bold">Retapez le mot de passe *</label>
+        <input type="password" placeholder="Retapez votre mot de passe" id="confirm_password" required class="form-control">
+
+    </div>
+
+    <div class="form-group">
+        <div class="g-recaptcha" data-sitekey="6Lf1NxwTAAAAAB2S7NRcj1JfKu_rbJkHewmMeM2G"></div>
+
+    </div>
+
+
+    <button type="submit" class="btn btn-consulter-user">Enregistrer</button>
+    <a href="javascript:history.back()" class="btn btn-consulter-user">Annuler</a>
+</form>

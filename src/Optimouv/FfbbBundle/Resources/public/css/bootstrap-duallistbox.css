@@ -119,3 +119,15 @@
   color: #fff !important;
   background-color: #777;
 }
+
+.btn-consulter-user {
+  color: #4E4646;
+  background-color: #fff;
+  border-color: #4E4646;
+}
+
+.btn-consulter-user:hover {
+  color: #fff;
+  background-color: #4E4646;
+  border-color: #4E4646;
+}

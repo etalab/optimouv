@@ -1,0 +1,94 @@
+{% extends '::BOLayout.html.twig' %}
+
+     {% block pagewrapper %}
+
+         <div id="page-wrapper">
+
+             <div class="row">
+                 <div class="bs-example">
+                     <ul class="breadcrumb">
+                         <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
+                         {#<li><a href="{{ path('ffbb_choisir_liste_participants') }}">Choix de listes</a></li>#}
+                         {#<li><a href="{{ path('ffbb_choisir_groupe', {'idListe': idListe}) }}">Choix de groupes</a></li>#}
+                         {#<li><a href="{{ path('ffbb_gerer_groupe', {'idListe': idListe}) }}">Gestion de groupes</a></li>#}
+                         <li class="active">Mise à jour du profil utilisateur</li>
+                     </ul>
+                 </div>
+                 <div class="col-lg-12">
+                     <h3 class="page-header">Editer un profil utilisateur </h3>
+                     <h5 style="text-align: right; font-weight: bold">(* champs obligatoires)</h5>
+                 </div>
+                 <!-- /.col-lg-12 -->
+             </div>
+             <!-- /.row -->
+             <div class="row">
+                 <div class="col-lg-6">
+                     {{ include('@Admin/User/formAdd.html.twig') }}
+
+                 </div>
+             </div>
+         </div>
+
+     {% endblock %}
+     {% block javascripts %}
+
+        <script language="javascript">
+
+            function reloadDisciplines() {
+
+                var selectedFederation = document.getElementById('listeFederation').value;
+                selectedFederation = selectedFederation.split("|");
+                var idSelectedFederation = selectedFederation[0];
+
+                var all_disciplines = JSON.parse(document.getElementById('all_discipline').value);
+
+                var choosenDisciplines = all_disciplines[idSelectedFederation];
+
+                $('#listeDiscipline')
+                        .find('option')
+                        .remove()
+                        .end();
+
+                for (var i = 0 ; i < choosenDisciplines.length ; i++){
+
+                    $('#listeDiscipline').append('<option value="'  + choosenDisciplines[i]["id"] + '">' + choosenDisciplines[i]["nom"] + '</option>')
+
+                }
+
+
+            }
+
+            var password = document.getElementById("password")
+                    , confirm_password = document.getElementById("confirm_password");
+
+            function validatePassword() {
+                if (password.value != confirm_password.value) {
+                    confirm_password.setCustomValidity("Les mots de passe ne correspondent pas");
+                } else {
+                    confirm_password.setCustomValidity('');
+                }
+            }
+
+            password.onchange = validatePassword;
+            confirm_password.onkeyup = validatePassword;
+            
+            function createLogin() {
+
+                var nom = document.getElementById('firstName').value;
+                if(nom){
+                    var prenom = document.getElementById('lastName').value;
+                    var suffixe = prenom.slice(0, 1);
+                    var login = suffixe+nom;
+                    login = login.toLowerCase();
+                    document.getElementById('username').value = login;
+                }
+                else {
+                    alert('vous devez remplir le champs nom pour générer votre login');
+                }
+
+
+            }
+
+        </script>
+
+    {% endblock %}

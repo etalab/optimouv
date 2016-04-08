@@ -14,90 +14,7 @@
                             <h3 >Création de compte</h3>
                             <div class="panel-body" style="text-align: left">
 
-                                <form role="form" action="{{ path('admin_user_create') }}" method="post">
-
-
-                                    <div class="form-group">
-                                        <label style="font-weight: bold" >Civilité *</label>
-                                        <select class="form-control" name="civilite" id="civilite" >
-                                            <option value="monsieur">Monsieur</option>
-                                            <option value="madame">Madame</option>
-
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label style="font-weight: bold"  >Nom *</label>
-                                        <input class="form-control"   name="nom" required>
-                                    </div>
-                                    <div class="form-group"  id="divPrenom"  style="font-weight: bold">
-                                        <label style="font-weight: bold">Prénom *</label>
-                                        <input class="form-control"  name="prenom" required>
-                                    </div>
-                                    {# à modifier pour que ça soit dynamique en fonction de la federation#}
-                                    <div class="form-group">
-                                        <label style="font-weight: bold">Fédération *</label>
-                                        <select class="form-control" name="federation" id="listeFederation" onchange="reloadDisciplines()" required>
-                                            {% for federation in liste_federation %}
-                                                <option value="{{ federation.id }}">{{ federation.nom }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="hidden" id="all_discipline" value="{{ liste_disciplines|json_encode }}">
-                                        <label style="font-weight: bold">Discipline *</label>
-                                        <select name="discipline" id="listeDiscipline" class="form-control" required>
-                                            {% for discipline in liste_disciplines[1] %}
-                                                <option value="{{ discipline.id }}">{{ discipline.nom }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Fonction</label>
-                                        <input type="text" class="form-control"  name="fonction">
-                                    </div>
-                                    <div class="form-group" id="nbrParticipants">
-                                        <label style="font-weight: bold">Email *</label>
-                                        <input type="email" class="form-control"  name="email" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Téléphone</label>
-                                        <input type="tel" class="form-control"   name="telephone">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Adresse</label>
-                                        <input type="text" class="form-control"   name="adresse">
-                                    </div>
-
-
-                                    <div class="form-group" id="nbrLicencies">
-                                        <label>Numéro de licencié</label>
-                                        <input type="text"  class="form-control"  name="numLicencie">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="font-weight: bold">Mot de passe *</label>
-                                        <input type="password" placeholder="Mot de passe" id="password"
-                                               name="password" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label style="font-weight: bold">Retapez le mot de passe *</label>
-                                        <input type="password" placeholder="Retapez votre mot de passe" id="confirm_password" required class="form-control">
-
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="g-recaptcha" data-sitekey="6Lf1NxwTAAAAAB2S7NRcj1JfKu_rbJkHewmMeM2G"></div>
-
-                                    </div>
-
-
-                                    <button type="submit" class="btn btn-default-rencontre">Enregistrer</button>
-                                    <a href="javascript:history.back()" class="btn btn-default-rencontre">Annuler</a>
-                                </form>
-
+                                {{ include('@Admin/User/formAdd.html.twig') }}
 
 
                             </div>
@@ -115,11 +32,13 @@
 
            function reloadDisciplines() {
 
-               var selectedFederation = parseInt(document.getElementById('listeFederation').value);
+               var selectedFederation = document.getElementById('listeFederation').value;
+               selectedFederation = selectedFederation.split("|");
+               var idSelectedFederation = selectedFederation[0];
 
                var all_disciplines = JSON.parse(document.getElementById('all_discipline').value);
 
-               var choosenDisciplines = all_disciplines[selectedFederation];
+               var choosenDisciplines = all_disciplines[idSelectedFederation];
 
                $('#listeDiscipline')
                        .find('option')
@@ -148,6 +67,23 @@
 
            password.onchange = validatePassword;
            confirm_password.onkeyup = validatePassword;
+
+           function createLogin() {
+
+               var nom = document.getElementById('firstName').value;
+               if(nom){
+                   var prenom = document.getElementById('lastName').value;
+                   var suffixe = prenom.slice(0, 1);
+                   var login = suffixe+nom;
+                   login = login.toLowerCase();
+                   document.getElementById('username').value = login;
+               }
+               else {
+                   alert('vous devez remplir le champs nom pour générer votre login');
+               }
+
+
+           }
 
        </script>
 

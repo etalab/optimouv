@@ -109,7 +109,7 @@ class CalculRencontreConsumer implements ConsumerInterface
 
 
             $retour = $serviceRencontre->Barycentre($idGroupe);
-
+            
 //            $retour = Rencontres::Barycentre($idGroupe);
 
             $idCalcul = $this->stockerResultats($msg,$retour);
