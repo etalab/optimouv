@@ -1,0 +1,271 @@
+{% extends "::BOLayout.html.twig" %}
+
+{% block pagewrapper %}
+
+    <div id="page-wrapper">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="page-header">
+                    <b>Visualisez les rapports d'utilisation de l'application</b>
+                </h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>  Sélectionnez les caractéristiques du rapport statistique que vous souhaitez visualiser </h4>
+                    </div>
+                    <div class="panel-body">
+
+
+
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="typeRapport">TYPE DE RAPPORT </label>
+                                <div class="col-sm-2">
+                                    <select class="form-control" >
+                                        <option value="vide" selected> -- selectionnez une option -- </option>
+                                        <option value="systeme">Rapport système</option>
+                                        <option value="utilisateur">Rapport utilisateur</option>
+                                        <option value="federation">Rapport fédération</option>
+                                        <option value="historique">Résultat de recherche</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="nomFderation">NOM DE LA FEDERATION</label>
+                                <div class="col-sm-2">
+                                    <select class="form-control" >
+                                        <option value="vide" selected> -- selectionnez une option -- </option>
+                                        <option value="idFfbb">FFBB</option>
+                                        <option value="idFff">FFF</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="nomDiscipline">NOM DE LA DISCIPLINE</label>
+                                <div class="col-sm-2">
+                                    <select class="form-control" >
+                                        <option value="vide" selected> -- selectionnez une option -- </option>
+                                        <option value="idBasket">Basket Ball</option>
+                                        <option value="idFoot">Football</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="nomUtilisateur">NOM DE L'UTILISATEUR</label>
+                                <div class="col-sm-2">
+                                    <select class="form-control" >
+                                        <option value="vide" selected> -- selectionnez une option -- </option>
+                                        <option value="idBasket">Tous utilisateurs</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="dateDebut">DATE DE DEBUT</label>
+                                <div class="col-sm-2" >
+
+                                    <div class="input-group date">
+                                        <input type="text" class="form-control">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="dateFin">DATE DE FIN</label>
+                                <div class="col-sm-2" >
+
+                                    <div class="input-group date">
+                                        <input type="text" class="form-control">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="control-label col-sm-4 ">
+                                    <button type="submit" class="btn btn-statistique">Accéder</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4> Votre rapport </h4>
+                    </div>
+
+                    <div class="panel-body">
+                        <h4 class="page-header">Synthèse des utilisations - vue graphique </h4>
+
+                        {% include 'FfbbBundle:Statistique:graph.html.twig' %}
+
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <form name="submitParams" action="{{ path('ffbb_statistiques_export_pdf')}}" method="post">
+                                    <button style="width: 120px" type="submit" class="btn btn-statistique pull-right">Exporter</button>
+
+                                </form>
+                            </div>
+
+                        </div>
+
+                        <br>
+                        <h4 class="page-header">Synthèse des utilisations - vue tableur</h4>
+
+                        <table id="tableUtilisateur" class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2" width="5%"></th>
+
+                                    <th width="10%"><h4><b>Connexion</b></h4></th>
+                                    <th colspan="2" width="20%"><h4><b>Fonctions</b></h4></th>
+                                    <th colspan="3" width="30%"><h4><b>Contraintes</b></h4></th>
+                                    <th colspan="2" width="20%"><h4><b>Outils</b></h4></th>
+
+
+                                </tr>
+
+                                <tr>
+                                    <th style="vertical-align: middle"><h4>Nombre de connexions à Optimouv</h4></th>
+                                    <th style="vertical-align: middle"><h4>Nombre de lancements de la fonction optimisation de poules</h4></th>
+                                    <th style="vertical-align: middle"><h4>Nombre de lancements de la fonction meilleur lieu de rencontre</h4></th>
+                                    <th style="vertical-align: middle"><h4>Nombre d'interdictions utilisées</h4></th>
+                                    <th style="vertical-align: middle"><h4>Nombre de répartitions homogènes utilisées</h4></th>
+                                    <th style="vertical-align: middle"><h4>Nombre d'exclusions géographiques utilisés</h4></th>
+                                    <th style="vertical-align: middle"><h4>Nombre de lancements de l'algorithme d'optimisation des poules (comprenant les relances de calculs avec modification des critères)</h4></th>
+                                    <th style="vertical-align: middle"><h4>Nombre de requêtes Here effectuées (toutes fonctions confondues)</h4></th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <td> jan-16</td>
+                                    <td> 12</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                </tr>
+                                <tr>
+                                    <td> févr-16</td>
+                                    <td> 12</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+
+
+                        <table id="tableUtilisateur" class="table table-striped table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th style="vertical-align: middle" width="10%"></th>
+                                <th style="vertical-align: middle" width="20%"><h4>Nombre de connexions à Optimouv</h4></th>
+                                <th style="vertical-align: middle" width="20%"><h4>Nombre de calculs de scénarios lancés</h4></th>
+                                <th style="vertical-align: middle" width="20%"><h4>Temps de réponse moyen pour l'obtention des résultats (en minutes)</h4></th>
+                                <th style="vertical-align: middle" width="20%"><h4>Nombre de requêtes Here effectuées (toutes fonctions confondues)</h4></th>
+
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <tr>
+                                <td> jan-16</td>
+                                <td> 12</td>
+                                <td> 10</td>
+                                <td> 10</td>
+                                <td> 10</td>
+                            </tr>
+                            <tr>
+                                <td> févr-16</td>
+                                <td> 12</td>
+                                <td> 10</td>
+                                <td> 10</td>
+                                <td> 10</td>
+                            </tr>
+
+
+                            </tbody>
+                        </table>
+
+
+
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <select style="width: 120px" class="btn btn-statistique pull-right" name="formatExport">
+                                    <option value="" disabled="disabled" selected="selected">Exporter</option>
+                                    <option class="btn btn-statistique" value="xml">XML</option>
+                                    <option value="csv">CSV</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script type="text/javascript">
+
+        $(function() {
+            {# options pour le js Date picker #}
+            $('.input-group.date').datepicker({
+                format: "dd/mm/yyyy",
+                todayBtn: "linked",
+                language: "fr",
+                autoclose: true
+            });
+
+        });
+
+    </script>
+
+
+
+{% endblock %}

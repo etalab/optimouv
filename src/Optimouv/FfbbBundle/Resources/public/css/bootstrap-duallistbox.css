@@ -111,12 +111,21 @@
   border-color: #ccc;
 }
 
+.btn-statistique {
+  color: #fff;
+  background-color: #777 !important;
+}
+.btn-statistique.active, .btn-statistique.focus, .btn-statistique:active, .btn-statistique:focus, .btn-statistique:hover {
+  color: #fff !important;
+  background-color: #777;
+}
 
 .btn-consulter-user {
   color: #4E4646;
   background-color: #fff;
   border-color: #4E4646;
 }
+
 .btn-consulter-user:hover {
   color: #fff;
   background-color: #4E4646;

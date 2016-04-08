@@ -1992,35 +1992,6 @@ class PoulesController extends Controller
         return $strInfoPoule;
     }
 
-    public function testExportPdfAction()
-    {
-
-        return $this->render('FfbbBundle:Poules:testExportPdf.html.twig', [
-        ]);
-
-        $html = $this->renderView('FfbbBundle:Poules:testExportPdf.html.twig', [
-        ]);
-
-
-
-
-
-
-        return new Response(
-            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
-            200,
-            array(
-                'Content-Type'          => 'application/pdf',
-                'Content-Disposition'   => 'attachment; filename="mon_rapport.pdf"',
-                'print-media-type'      => false,
-                'outline'               => true,
-
-            )
-        );
-
-
-
-    }
 
 //    function qui ramene toutes les infos necessaires à la view
     private function getInfoPdf($idResultat , $typeScenario)
