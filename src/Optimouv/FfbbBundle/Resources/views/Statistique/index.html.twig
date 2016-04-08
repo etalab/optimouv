@@ -120,32 +120,116 @@
                     <div class="panel-body">
                         <h4 class="page-header">Synthèse des utilisations - vue graphique </h4>
                         <div class="form-group">
-                            <div class="col-md-9">
+                            <div class="col-md-12">
                                 <button style="width: 100px" type="submit" class="btn btn-statistique pull-right">Exporter</button>
                             </div>
                         </div>
 
                         <br>
                         <h4 class="page-header">Synthèse des utilisations - vue tableur</h4>
-                        <div class="form-group">
-                            <div class="col-md-9">
 
+                        <table id="tableUtilisateur" class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2" width="5%"></th>
+
+                                    <th width="10%"><h4><b>Connexion</b></h4></th>
+                                    <th colspan="2" width="20%"><h4><b>Fonctions</b></h4></th>
+                                    <th colspan="3" width="30%"><h4><b>Contraintes</b></h4></th>
+                                    <th colspan="2" width="20%"><h4><b>Outils</b></h4></th>
+
+
+                                </tr>
+
+                                <tr>
+                                    <th style="vertical-align: middle"><h4>Nombre de connexions à Optimouv</h4></th>
+                                    <th style="vertical-align: middle"><h4>Nombre de lancements de la fonction optimisation de poules</h4></th>
+                                    <th style="vertical-align: middle"><h4>Nombre de lancements de la fonction meilleur lieu de rencontre</h4></th>
+                                    <th style="vertical-align: middle"><h4>Nombre d'interdictions utilisées</h4></th>
+                                    <th style="vertical-align: middle"><h4>Nombre de répartitions homogènes utilisées</h4></th>
+                                    <th style="vertical-align: middle"><h4>Nombre d'exclusions géographiques utilisés</h4></th>
+                                    <th style="vertical-align: middle"><h4>Nombre de lancements de l'algorithme d'optimisation des poules (comprenant les relances de calculs avec modification des critères)</h4></th>
+                                    <th style="vertical-align: middle"><h4>Nombre de requêtes Here effectuées (toutes fonctions confondues)</h4></th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <td> jan-16</td>
+                                    <td> 12</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                </tr>
+                                <tr>
+                                    <td> févr-16</td>
+                                    <td> 12</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                    <td> 10</td>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+
+
+                        <table id="tableUtilisateur" class="table table-striped table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th style="vertical-align: middle" width="10%"></th>
+                                <th style="vertical-align: middle" width="20%"><h4>Nombre de connexions à Optimouv</h4></th>
+                                <th style="vertical-align: middle" width="20%"><h4>Nombre de calculs de scénarios lancés</h4></th>
+                                <th style="vertical-align: middle" width="20%"><h4>Temps de réponse moyen pour l'obtention des résultats (en minutes)</h4></th>
+                                <th style="vertical-align: middle" width="20%"><h4>Nombre de requêtes Here effectuées (toutes fonctions confondues)</h4></th>
+
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <tr>
+                                <td> jan-16</td>
+                                <td> 12</td>
+                                <td> 10</td>
+                                <td> 10</td>
+                                <td> 10</td>
+                            </tr>
+                            <tr>
+                                <td> févr-16</td>
+                                <td> 12</td>
+                                <td> 10</td>
+                                <td> 10</td>
+                                <td> 10</td>
+                            </tr>
+
+
+                            </tbody>
+                        </table>
+
+
+
+
+                        <div class="form-group">
+                            <div class="col-md-12">
                                 <select style="width: 100px" class="btn btn-statistique pull-right" name="formatExport">
                                     <option value="" disabled="disabled" selected="selected">Exporter</option>
                                     <option class="btn btn-statistique" value="xml">XML</option>
                                     <option value="csv">CSV</option>
                                 </select>
-
-
                             </div>
-
-
                         </div>
 
+
                     </div>
-
-
-
                 </div>
             </div>
         </div>
