@@ -76,10 +76,7 @@ class UserController extends Controller
         if (isset($_POST['prenom'])) {
             $prenom = $_POST['prenom'];
         }
-        
-        if (isset($_POST['prenom'])) {
-            $prenom = $_POST['prenom'];
-        }
+
         if (isset($_POST['civilite'])) {
             $civilite = $_POST['civilite'];
         }
@@ -135,10 +132,12 @@ class UserController extends Controller
             $role = "";
         }
 
-        $username = $_POST['username'];
-
 
         $discipline = intval($discipline);
+
+        //spécifier le username
+        $username = substr($prenom, 0,1);
+        $username = strtolower($username.$nom);
 
 
         $dateExpiration = new \DateTime("now");
