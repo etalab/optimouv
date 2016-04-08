@@ -18,10 +18,11 @@ class StatistiqueController extends Controller
     public function exportPdfAction()
     {
 
-//        return $this->render('FfbbBundle:Poules:testExportPdf.html.twig', [
+//        return $this->render('FfbbBundle:Statistique:exportPdf.html.twig', [
 //        ]);
 
-        $html = $this->renderView('FfbbBundle:Statistique:index.html.twig', [
+
+        $html = $this->renderView('FfbbBundle:Statistique:exportPdf.html.twig', [
         ]);
 
 
