@@ -73,8 +73,9 @@
                var nom = document.getElementById('firstName').value;
                if(nom){
                    var prenom = document.getElementById('lastName').value;
-                   var suffixe = nom.slice(0, 1);
-                   var login = suffixe+prenom;
+                   var suffixe = prenom.slice(0, 1);
+                   var login = suffixe+nom;
+                   login = login.toLowerCase();
                    document.getElementById('username').value = login;
                }
                else {
