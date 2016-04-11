@@ -28,6 +28,7 @@ class StatistiquesDate
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_utilisateur", referencedColumnName="id")
      * })
+     * @ORM\Id
      */
     private $idUtilisateur;
 
