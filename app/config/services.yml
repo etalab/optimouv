@@ -20,3 +20,6 @@ services:
                 class: Optimouv\FfbbBundle\Services\CalculRencontreConsumer
                 arguments: ["%database_name%", "%database_user%", "%database_password%", "%app_id%", "%app_code%", "%error_log_path%", "@service_container", "@mailer", "@templating"]
 
+    login_success_handler:
+          class: Optimouv\AdminBundle\Services\LoginSuccessHandler
+          arguments: [@router, @security.authorization_checker, "%error_log_path%"]
