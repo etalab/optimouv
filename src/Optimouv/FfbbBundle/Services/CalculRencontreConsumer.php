@@ -70,9 +70,6 @@ class CalculRencontreConsumer implements ConsumerInterface
         //récupérer l'id de la tâche
         $msg =  $msg->body;
 
-      //  echo "Hello $msg->body!".PHP_EOL;
-
-
          //on recupere les parametres de connexion
         $bdd= $this->connexion();
 
@@ -115,8 +112,6 @@ class CalculRencontreConsumer implements ConsumerInterface
 
             $retour = $serviceRencontre->Barycentre($idGroupe);
             
-//            $retour = Rencontres::Barycentre($idGroupe);
-
             $idCalcul = $this->stockerResultats($msg,$retour);
 
             if ($idCalcul) {
@@ -194,9 +189,6 @@ class CalculRencontreConsumer implements ConsumerInterface
 
 
 
-//    $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
-//    fwrite($myfile, print_r($typeAction, true));
-//        return $retour;
         echo "la tache $msg a ete bien executee!".PHP_EOL;
 
 
