@@ -27,5 +27,4 @@ services:
 
     login_success_handler:
           class: Optimouv\AdminBundle\Services\LoginSuccessHandler
-#          arguments: [@router, @security.authorization_checker, "%database_name%", "%database_user%", "%database_password%", "%error_log_path%"]
           arguments: [@router, @security.authorization_checker, @service_statistiques]
