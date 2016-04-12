@@ -20,7 +20,12 @@ class Rencontres
     public $app_code;
     public $error_log_path;
 
-    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path)
+    /**
+     * @var Statistiques $serviceStatistiques
+     */
+    protected $serviceStatistiques;
+
+    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $serviceStatistiques)
     {
         $this->database_name = $database_name;
         $this->database_user = $database_user;
@@ -28,6 +33,8 @@ class Rencontres
         $this->app_id = $app_id;
         $this->app_code = $app_code;
         $this->error_log_path = $error_log_path;
+        $this->serviceStatistiques = $serviceStatistiques;
+
     }
 
     public function connexion()
@@ -1067,6 +1074,14 @@ class Rencontres
         $distanceTotale = [];
         $dureeTotale = [];
 
+
+        # obtenir l'id de l'utilisateur
+//        $utilisateurId = $utilisateur->getId();
+        $utilisateurId = 1; # FIXME
+
+        # nombre des requetes HERE
+        $nbrRequetesHere = 0;
+
         //parcourir tout le tableau des villes
         for ($i = 0; $i < count($villes); $i++) {
 
@@ -1108,7 +1123,9 @@ class Rencontres
                     $reqRoute = 'http://route.api.here.com/routing/7.2/calculateroute.json?waypoint0=' . $coordStart . '&waypoint1=' . $villes[$i] . '&mode=fastest%3Bcar%3Btraffic%3Adisabled&app_id=' . $app_id . '&app_code=' . $app_code;
 //                    error_log("\n Service: Rencontres, Function: calculRoute, datetime: ".$dateTimeNow
 //                        ."\n reqRoute: ".print_r($reqRoute, true), 3, $this->error_log_path);
-                    
+
+                    $nbrRequetesHere += 1;
+
                     $decoded =  Rencontres::getReponseCurl($reqRoute);
 
                     if (isset($decoded->response->status) && $decoded->response->status == 'ERROR') {
@@ -1144,6 +1161,13 @@ class Rencontres
 
         }
 
+        # incrémenter le nombre des requetes HERE
+        if($nbrRequetesHere > 0){
+            $this->serviceStatistiques->augmenterNombreTableStatistiques($utilisateurId, "nombreRequetesHere", $nbrRequetesHere);
+        }
+
+
+
         $retour = [];
         $retour[0] = $distanceTotale;
         $retour[1] = $dureeTotale;
@@ -1152,8 +1176,23 @@ class Rencontres
 
     }
 
+    private function getUtilisateurIdParGroupeId($idGroupe){
+        //on recupere les parametres de connexion
+        $bdd= $this->connexion();
+
+        $stmt1 = $bdd->prepare("select id_utilisateur from groupe where id = :id ;");
+
+        $stmt1->bindParam(':id', $idGroupe);
+        $stmt1->execute();
+        $idUtilisateur = $stmt1->fetchColumn();
+
+        return $idUtilisateur;
+
+    }
+
     public function getListeLieux($idGroupe)
     {
+
         $app_id = $this->app_id;
         $app_code = $this->app_code;
 
@@ -1180,6 +1219,11 @@ class Rencontres
             $nomsVilles = [];
             $coordVilles = [];
 
+            # obtenir l'id de l'utilisateur
+            $utilisateurId = $this->getUtilisateurIdParGroupeId($idGroupe);
+
+            # nombre des requetes HERE
+            $nbrRequetesHere = 0;
 
             for ($i = 0; $i < count($listeLieux); $i++) {
                 //
@@ -1207,6 +1251,8 @@ class Rencontres
 
                         $v = urlencode($nomVille);
                         $reqGeocode = 'http://geocoder.api.here.com/6.2/geocode.json?country=France&city=' . $v . '&postalCode=' . $codePostal . '&app_id=' . $app_id . '&app_code=' . $app_code . '&gen=8';
+
+                        $nbrRequetesHere += 1;
 
                         $reqGeocodeArray = $this->getReponseCurl($reqGeocode);
 
@@ -1244,6 +1290,12 @@ class Rencontres
 
             }
             $retour = [];
+
+            # incrémenter le nombre des requetes HERE
+            if($nbrRequetesHere > 0){
+                $this->serviceStatistiques->augmenterNombreTableStatistiques($utilisateurId, "nombreRequetesHere", $nbrRequetesHere);
+            }
+
 
             $retour[0] = $nomsVilles;
             $retour[1] = $coordVilles;

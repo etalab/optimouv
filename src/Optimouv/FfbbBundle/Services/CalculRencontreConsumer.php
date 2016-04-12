@@ -27,8 +27,12 @@ class CalculRencontreConsumer implements ConsumerInterface
     private $mailer;
     private $templating;
 
+    /**
+     * @var Statistiques $serviceStatistiques
+     */
+    protected $serviceStatistiques;
 
-    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, ContainerInterface $container, $mailer, EngineInterface $templating)
+    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, ContainerInterface $container, $mailer, EngineInterface $templating, $serviceStatistiques)
     {
         $this->database_name = $database_name;
         $this->database_user = $database_user;
@@ -39,6 +43,7 @@ class CalculRencontreConsumer implements ConsumerInterface
         $this->container = $container;
         $this->mailer = $mailer;
         $this->templating = $templating;
+        $this->serviceStatistiques = $serviceStatistiques;
     }
 
     public function connexion()
@@ -102,7 +107,7 @@ class CalculRencontreConsumer implements ConsumerInterface
         $database_password = $this->database_password;
         $error_log_path = $this->error_log_path;
          //Appel de la classe
-        $serviceRencontre = new Rencontres($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path);
+        $serviceRencontre = new Rencontres($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $this->serviceStatistiques);
 
 
         if($typeAction == "barycentre"){
