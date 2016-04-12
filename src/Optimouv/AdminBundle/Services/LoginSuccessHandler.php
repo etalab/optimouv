@@ -63,7 +63,7 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface
             || $this->authorizationChecker->isGranted('ROLE_USER'))
         {
             try{
-                $this->serviceStatistiques->augmenterNombreTableStatistiques($utilisateurId, "nombreConnexions");
+                $this->serviceStatistiques->augmenterNombreTableStatistiques($utilisateurId, "nombreConnexions", 1);
 
             }
             catch (PDOException $e){

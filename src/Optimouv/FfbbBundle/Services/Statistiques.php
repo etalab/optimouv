@@ -38,7 +38,7 @@ class Statistiques {
         return $pdo;
     }
 
-    public function augmenterNombreTableStatistiques($utilisateurId, $typeStatistiques){
+    public function augmenterNombreTableStatistiques($utilisateurId, $typeStatistiques, $valeur){
         $disciplineId = $this->getDisciplineId($utilisateurId);
         $federationId = $this->getFederationId($disciplineId);
 
@@ -56,13 +56,14 @@ class Statistiques {
 
                 # insérer dans la base de données
                 $sql = "INSERT INTO  statistiques_date (date_creation, type_statistiques, id_utilisateur, id_discipline, id_federation, valeur)
-                        VALUES (now(), :type_statistiques, :id_utilisateur, :id_discipline, :id_federation, 1)
-                        on duplicate key UPDATE valeur=valeur+1 ;";
+                        VALUES (now(), :type_statistiques, :id_utilisateur, :id_discipline, :id_federation, :valeur)
+                        on duplicate key UPDATE valeur=valeur+VALUES(valeur);";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindParam(':type_statistiques', $typeStatistiques);
                 $stmt->bindParam(':id_utilisateur', $utilisateurId);
                 $stmt->bindParam(':id_discipline', $disciplineId);
                 $stmt->bindParam(':id_federation', $federationId);
+                $stmt->bindParam(':valeur', $valeur);
                 $statutInsert = $stmt->execute();
 
                 if(!$statutInsert){
@@ -70,6 +71,8 @@ class Statistiques {
                     die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
                 }
 
+            }
+            elseif($typeStatistiques == ""){
 
             }
 
