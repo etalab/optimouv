@@ -33,6 +33,8 @@ security:
                 csrf_provider: form.csrf_provider
                 # if you are using Symfony < 2.8, use the following config instead:
                 # csrf_provider: form.csrf_provider
+                success_handler: login_success_handler
+
 
             logout:
                 path: /logout
