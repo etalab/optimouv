@@ -61,9 +61,8 @@ class Poules{
             if(array_key_exists("interdictions", $_POST)){
                 $interdictions = $_POST["interdictions"];
 
-//                error_log("\n Service: Poules, Function: sauvegarderParamsEnDB, interdictions: ".print_r($interdictions, true), 3, $this->error_log_path);
 
-                # incrémenter le nombre de lancements de calcul pour opti poule
+                # incrémenter le nombre des interdictions pour opti poule
                 $this->serviceStatistiques->augmenterNombreTableStatistiques($utilisateurId, "nombreInterdictions", count($interdictions));
 
             }
@@ -74,6 +73,12 @@ class Poules{
             # contraintes de repartitions homogenes
             if(array_key_exists("repartitionsHomogenes", $_POST)){
                 $repartitionsHomogenes = $_POST["repartitionsHomogenes"];
+
+//                error_log("\n Service: Poules, Function: sauvegarderParamsEnDB, repartitionsHomogenes: ".print_r($repartitionsHomogenes, true), 3, $this->error_log_path);
+
+                # incrémenter le nombre des interdictions pour opti poule
+                $this->serviceStatistiques->augmenterNombreTableStatistiques($utilisateurId, "nombreRepartitionsHomogenes", count($repartitionsHomogenes));
+
             }
             else{
                 $repartitionsHomogenes  = [];
