@@ -6,8 +6,17 @@
     <div id="page-wrapper">
 
         <div class="row">
+            <div class="bs-example">
+                <ul class="breadcrumb">
+                    <li><a href="{{ path('administration_panel') }}">Administration</a></li>
+                    <li class="active">Liste de disciplines</li>
+                </ul>
+            </div>
+
+        </div>
+        <div class="row">
             <div class="col-lg-12">
-                <h3 class="page-header">Gérer vos disciplines </h3>
+                <h3 class="page-header">Gérer la liste des disciplines</h3>
             </div>
         </div>
 
@@ -15,9 +24,9 @@
             <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        Liste de vos disciplines
+                        Liste des disciplines
 
-                     </div>
+                    </div>
 
                     <div class="panel-body">
                         <div class="dataTable_wrapper">
@@ -26,9 +35,9 @@
                                        id="tableFede">
                                     <thead>
                                     <tr>
-                                        <th>No</th>
+                                        {#<th>No</th>#}
                                         <th>Nom </th>
-                                        <th>Fédération </th>
+                                        <th>Fédération de rattachement </th>
                                         <th>Date de création</th>
                                         <th>Action</th>
 
@@ -39,7 +48,7 @@
 
                                     {% for discipline in disciplines %}
                                         <tr id="{{ discipline.id }}">
-                                            <td> {{ discipline.id }} </td>
+                                            {#<td> {{ discipline.id }} </td>#}
                                             <td> {{ discipline.nom }} </td>
                                             <td> {{ discipline.federation.nom }} </td>
                                             <td> {{ discipline.dateCreation.date|date('d/m/Y') }} </td>
@@ -61,7 +70,8 @@
                                     </tbody>
 
                                 </table>
-                                <a href="{{ path('ffbb_discipline_add') }}" class="btn btn-info-poule">Ajouter</a>
+                                <a href="{{ path('ffbb_discipline_add') }}" class="btn btn-ajouter-disc">Ajouter</a>
+                                <a href="javascript:history.back()" class="pull-right btn btn-info-poule ">Retour</a>
 
                             </div>
                         </div>

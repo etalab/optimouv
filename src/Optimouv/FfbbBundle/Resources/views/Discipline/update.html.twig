@@ -7,10 +7,8 @@
              <div class="row">
                  <div class="bs-example">
                      <ul class="breadcrumb">
-                         <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
-                         {#<li><a href="{{ path('ffbb_choisir_liste_participants') }}">Choix de listes</a></li>#}
-                         {#<li><a href="{{ path('ffbb_choisir_groupe', {'idListe': idListe}) }}">Choix de groupes</a></li>#}
-                         {#<li><a href="{{ path('ffbb_gerer_groupe', {'idListe': idListe}) }}">Gestion de groupes</a></li>#}
+                         <li><a href="{{ path('administration_panel') }}">Administration</a></li>
+                         <li><a href="{{ path('ffbb_discipline_list') }}">Liste de disciplines</a></li>
                          <li class="active">Mise à jour de discipline</li>
                      </ul>
                  </div>
@@ -29,15 +27,15 @@
 
 
                          <div class="form-group">
-                             <label style="font-weight: bold">Nom *</label>
+                             <label style="font-weight: bold">Nom de la discipline *</label>
                              <input class="form-control" name="nom" value="{{ nom }}" required>
                          </div>
                          <input type="hidden" name="idDiscipline" value="{{ idDiscipline }}">
 
 
 
-                         <button type="submit" class="btn btn-info-poule">Enregistrer</button>
-                         <a href="javascript:history.back()" class="pull-right btn btn-info-poule ">Annuler</a>
+                         <button type="submit" class="btn btn-ajouter-disc">Enregistrer</button>
+                         <a href="javascript:history.back()" class="btn btn-info-poule ">Annuler</a>
                      </form>
 
                  </div>

@@ -6,12 +6,15 @@
     <br>
     <div class="row">
         <div class="row">
-            <div class="col-md-4 col-md-offset-4">
+            <div class="col-lg-3"></div>
+            <div class="col-md-6">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div class="text-center">
                             <img src="{{ asset('bundles/ffbb/accueil/img/Logo-Optimouv.jpg') }}" class="login" height="70">
-                            <h3 >Création de compte</h3>
+                            <h3 style="padding-top: 30px">Création de compte</h3>
+                            <p>Veuillez remplir les champs requis pour la création de votre compte</p>
+                            <h5 style="text-align: right; font-weight: bold">(* champs obligatoires)</h5>
                             <div class="panel-body" style="text-align: left">
 
                                 {{ include('@Admin/User/formAdd.html.twig') }}
@@ -22,6 +25,7 @@
                     </div>
                 </div>
             </div>
+            <div class="col-lg-3"></div>
         </div>
     </div>
 
@@ -82,6 +86,9 @@
                    alert('vous devez remplir le champs nom pour générer votre login');
                }
 
+           }
+           function msgAlert() {
+               alert('Votre demande de création de compte est enregistrée. Veuillez consulter vos emails pour activer votre compte.');
 
            }
 

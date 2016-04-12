@@ -1,4 +1,4 @@
-<form role="form" action="{{ path('admin_user_create') }}" method="post">
+<form role="form" action="{{ path('admin_user_create') }}" method="post" onsubmit="msgAlert();">
 
 
     <div class="form-group">
@@ -38,8 +38,8 @@
             <div class="form-group">
                 <label style="font-weight: bold">Profil *</label>
                 <select class="form-control" name="profil" required>
-                         <option value="admin">Admin fédéral</option>
-                         <option value="user">Simple utilisateur</option>
+                         <option value="admin">Administrateur  fédéral</option>
+                         <option value="user">Utilisateur</option>
                  </select>
             </div>
 
@@ -119,7 +119,7 @@
     </div>
     <div class="form-group">
         <label style="font-weight: bold">Retapez le mot de passe *</label>
-        <input type="password" placeholder="Retapez votre mot de passe" id="confirm_password" required class="form-control">
+        <input type="password" placeholder=" Saisissez à nouveau votre mot de passe" id="confirm_password" required class="form-control">
 
     </div>
 
@@ -129,6 +129,6 @@
     </div>
 
 
-    <button type="submit" class="btn btn-consulter-user">Enregistrer</button>
+    <button type="submit" class="btn btn-consulter-user-dark">Enregistrer</button>
     <a href="javascript:history.back()" class="btn btn-consulter-user">Annuler</a>
 </form>

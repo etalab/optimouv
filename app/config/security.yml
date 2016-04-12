@@ -59,4 +59,5 @@ security:
 
 #    accéder avec le profil user
         - { path: ^/admin/, role: ROLE_USER }
+        - { path: ^/administration/gestion/users/edit/, role: ROLE_USER }
 
