@@ -1745,6 +1745,24 @@ def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coord
 		show_exception_traceback()
 		
 
+
+"""
+Function to get discipline and federation id from user id
+"""
+def get_discipline_and_federation_id(userId):
+	try:
+		# get discipline and federation id
+		sql = "select id_discipline from fos_user where id=%s"%(userId)
+		disciplineId = db.fetchone(sql)
+		
+		sql = "select id_federation from discipline where id=%s"%(disciplineId)
+		federationId = db.fetchone(sql)
+		
+		return (disciplineId, federationId)
+		
+	except Exception as e:
+		show_exception_traceback()
+
 """
 Function to create distance matrix from DB
 """
@@ -1759,12 +1777,11 @@ def create_distance_matrix_from_db(teams, reportId, userId):
 		# number of HERE requests
 		nbrRequestsHere = 0
 		
-		# get discipline and federation id
-		sql = "select id_discipline from fos_user where id=%s"%(userId)
-		disciplineId = db.fetchone(sql)
 		
-		sql = "select id_federation from discipline where id=%s"%(disciplineId)
-		federationId = db.fetchone(sql)
+		
+		# get discipline and federation id
+		disciplineId, federationId = get_discipline_and_federation_id(userId)
+		
 		
 		# fill in the distance matrix
 		for indexDepart, depart in enumerate(teams):
