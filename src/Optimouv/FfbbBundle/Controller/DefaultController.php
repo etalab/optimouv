@@ -94,6 +94,10 @@ class DefaultController extends Controller
         $typeAction =  $_POST["rencontre"];
         if($typeAction == "exclusion"){
 
+            # incrémenter le nombre d'exclusion géographiques pour le scénario barycentre avec exclusion
+            $this->get('service_statistiques')->augmenterNombreTableStatistiques($utilisateurId, "nombreExclusions", 1);
+
+
             $valeurExclusion =  $_POST["valeurExclusion"];
 
             $idTache = $this->get('service_rencontres')->producerExclusion($idGroupe, $valeurExclusion);
