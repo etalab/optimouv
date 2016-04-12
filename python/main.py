@@ -1951,7 +1951,12 @@ def callback(ch, method, properties, body):
 		endTime = datetime.datetime.now()
 		logging.debug("finishing current time : %s" %endTime.strftime('%Y-%m-%d %H:%M:%S'))
 		processingTime = endTime - beginTime
-		logging.debug("processing time : %s seconds" %processingTime.seconds)
+		processingTimeSeconds = processingTime.seconds
+		logging.debug("processing time : %s seconds" %processingTimeSeconds)
+
+		# insert calculation time to DB
+		insert_calculation_time_to_db(userId, beginTime, endTime, processingTimeSeconds)
+
 
 	except Exception as e:
 		show_exception_traceback()

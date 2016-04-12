@@ -1777,8 +1777,6 @@ def create_distance_matrix_from_db(teams, reportId, userId):
 		# number of HERE requests
 		nbrRequestsHere = 0
 		
-		
-		
 		# get discipline and federation id
 		disciplineId, federationId = get_discipline_and_federation_id(userId)
 		
@@ -1840,7 +1838,7 @@ def create_distance_matrix_from_db(teams, reportId, userId):
 							"valeur": nbrRequestsHere
 						
 						}
-				logging.debug("sql: %s" %sql)
+# 				logging.debug("sql: %s" %sql)
 				db.execute(sql)
 				db.commit()
 
@@ -1853,6 +1851,36 @@ def create_distance_matrix_from_db(teams, reportId, userId):
 	except Exception as e:
 		show_exception_traceback()
 
+
+"""
+Function to insert calculation time to DB
+"""
+def insert_calculation_time_to_db(userId, startTime, endTime, duration):
+	try:
+		# get discipline and federation id
+		disciplineId, federationId = get_discipline_and_federation_id(userId)
+
+		sql = """INSERT INTO  statistiques_date_temps (temps_debut, temps_fin, type_statistiques, id_utilisateur, id_discipline, id_federation, valeur)
+				VALUES ('%(temps_debut)s', '%(temps_fin)s', '%(type_statistiques)s', %(id_utilisateur)s, %(id_discipline)s, %(id_federation)s, %(valeur)s)
+				on duplicate key UPDATE valeur=valeur+VALUES(valeur);
+			"""%{
+					"temps_debut": startTime.strftime('%Y-%m-%d %H:%M:%S'), 
+					"temps_fin": endTime.strftime('%Y-%m-%d %H:%M:%S'),
+					"type_statistiques": "tempsCalculOptiPoule",
+					"id_utilisateur": userId,
+					"id_discipline": disciplineId,
+					"id_federation": federationId,
+					"valeur": duration
+				
+				}
+# 		logging.debug("sql: %s" %sql)
+		db.execute(sql)
+		db.commit()
+
+
+	except Exception as e:
+		logging.debug("Insertion error to table statistiques_date_temps, details %s" %e)
+		sys.exit()
 
 
 """
