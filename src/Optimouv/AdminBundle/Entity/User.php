@@ -68,9 +68,9 @@ class User extends BaseUser
     private $numLicencie;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="telephone", type="integer", nullable=true)
+     * @ORM\Column(name="telephone", type="string", length=10, nullable=true)
      */
     private $telephone;
 
