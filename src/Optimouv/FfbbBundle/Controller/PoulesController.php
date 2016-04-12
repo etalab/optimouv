@@ -301,9 +301,12 @@ class PoulesController extends Controller
 
     public function lancerCalculAction()
     {
+        # obtenir l'id utilisateur
+        $utilisateur = $this->get('security.token_storage')->getToken()->getUser();
+        $utilisateurId = $utilisateur->getId();
 
         # sauvegarder les params dans la DB
-        $retour = $this->get('service_poules')->sauvegarderParamsEnDB();
+        $retour = $this->get('service_poules')->sauvegarderParamsEnDB($utilisateurId);
         $idParams = $retour["data"];
 
         # envoyer l'id du rapport (params) à  RabbitMQ
@@ -311,8 +314,6 @@ class PoulesController extends Controller
 
 //        error_log("\n id params: ".print_r($idParams , true), 3, "error_log_optimouv.txt");
 
-        $utilisateur = $this->get('security.token_storage')->getToken()->getUser();
-        $utilisateurId = $utilisateur->getId();
 
         # incrémenter le nombre de lancements de calcul pour opti poule
         $this->get('service_statistiques')->augmenterNombreTableStatistiques($utilisateurId, "nombreLancementsOptiPoule", 1);
