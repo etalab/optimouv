@@ -52,29 +52,23 @@ class Statistiques {
                 die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
             }
 
-            if($typeStatistiques == "nombreConnexions"){
+            # insérer dans la base de données
+            $sql = "INSERT INTO  statistiques_date (date_creation, type_statistiques, id_utilisateur, id_discipline, id_federation, valeur)
+                    VALUES (now(), :type_statistiques, :id_utilisateur, :id_discipline, :id_federation, :valeur)
+                    on duplicate key UPDATE valeur=valeur+VALUES(valeur);";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':type_statistiques', $typeStatistiques);
+            $stmt->bindParam(':id_utilisateur', $utilisateurId);
+            $stmt->bindParam(':id_discipline', $disciplineId);
+            $stmt->bindParam(':id_federation', $federationId);
+            $stmt->bindParam(':valeur', $valeur);
+            $statutInsert = $stmt->execute();
 
-                # insérer dans la base de données
-                $sql = "INSERT INTO  statistiques_date (date_creation, type_statistiques, id_utilisateur, id_discipline, id_federation, valeur)
-                        VALUES (now(), :type_statistiques, :id_utilisateur, :id_discipline, :id_federation, :valeur)
-                        on duplicate key UPDATE valeur=valeur+VALUES(valeur);";
-                $stmt = $pdo->prepare($sql);
-                $stmt->bindParam(':type_statistiques', $typeStatistiques);
-                $stmt->bindParam(':id_utilisateur', $utilisateurId);
-                $stmt->bindParam(':id_discipline', $disciplineId);
-                $stmt->bindParam(':id_federation', $federationId);
-                $stmt->bindParam(':valeur', $valeur);
-                $statutInsert = $stmt->execute();
-
-                if(!$statutInsert){
-                    error_log("\n  Erreur d'insertion des données dans DB, details: ".print_r($stmt->errorInfo(), true)."\n Service: Statistiques, Function: augmenterNombreTableStatistiques", 3, $this->error_log_path);
-                    die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
-                }
-
+            if(!$statutInsert){
+                error_log("\n  Erreur d'insertion des données dans DB, details: ".print_r($stmt->errorInfo(), true)."\n Service: Statistiques, Function: augmenterNombreTableStatistiques", 3, $this->error_log_path);
+                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
             }
-            elseif($typeStatistiques == ""){
 
-            }
 
 
 

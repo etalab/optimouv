@@ -81,13 +81,18 @@ class DefaultController extends Controller
 
     public function lancerProducerAction($idGroupe)
     {
+        # récupérer chemin fichier log du fichier parameters.yml
+        $this->error_log_path = $this->container->getParameter("error_log_path");
+
+        $utilisateur = $this->get('security.token_storage')->getToken()->getUser();
+        $utilisateurId = $utilisateur->getId();
+
+        # incrémenter le nombre de lancements de calcul pour meilleur lieu
+        $this->get('service_statistiques')->augmenterNombreTableStatistiques($utilisateurId, "nombreLancementsMeilleurLieu", 1);
 
 
         $typeAction =  $_POST["rencontre"];
-
-
         if($typeAction == "exclusion"){
-
 
             $valeurExclusion =  $_POST["valeurExclusion"];
 
