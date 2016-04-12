@@ -20,6 +20,12 @@ services:
                 class: Optimouv\FfbbBundle\Services\CalculRencontreConsumer
                 arguments: ["%database_name%", "%database_user%", "%database_password%", "%app_id%", "%app_code%", "%error_log_path%", "@service_container", "@mailer", "@templating"]
 
+    service_statistiques:
+                class: Optimouv\FfbbBundle\Services\Statistiques
+                arguments: ["%database_name%", "%database_user%", "%database_password%", "%error_log_path%"]
+
+
     login_success_handler:
           class: Optimouv\AdminBundle\Services\LoginSuccessHandler
-          arguments: [@router, @security.authorization_checker, "%database_name%", "%database_user%", "%database_password%", "%error_log_path%"]
+#          arguments: [@router, @security.authorization_checker, "%database_name%", "%database_user%", "%database_password%", "%error_log_path%"]
+          arguments: [@router, @security.authorization_checker, @service_statistiques]
