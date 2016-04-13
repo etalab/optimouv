@@ -1189,7 +1189,7 @@ class Rencontres
 
     }
 
-    private function getUtilisateurIdParGroupeId($idGroupe){
+    public function getUtilisateurIdParGroupeId($idGroupe){
         //on recupere les parametres de connexion
         $bdd= $this->connexion();
 

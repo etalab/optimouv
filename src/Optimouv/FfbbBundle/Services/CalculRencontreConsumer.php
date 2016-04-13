@@ -69,6 +69,7 @@ class CalculRencontreConsumer implements ConsumerInterface
     {
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
+        # noter le temps de début de traitement
         $tempsDebut = new \DateTime();
 
         //récupérer l'id de la tâche
@@ -120,6 +121,8 @@ class CalculRencontreConsumer implements ConsumerInterface
         $error_log_path = $this->error_log_path;
          //Appel de la classe
         $serviceRencontre = new Rencontres($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $this->serviceStatistiques);
+
+
 
 
         if($typeAction == "barycentre"){
@@ -204,12 +207,66 @@ class CalculRencontreConsumer implements ConsumerInterface
 
 
 
-        echo "la tache $msg a ete bien executee!".PHP_EOL;
 
+        # noter le temps de fin de traitement
         $tempsFin = new \DateTime();
 
+        # calculer le temps de calcul
         $tempsCalcul = $tempsFin->getTimestamp()-$tempsDebut->getTimestamp();
-        error_log("\n tempsCalcul: ".print_r($tempsCalcul, true), 3, $this->error_log_path);
+
+        // insérer les données en DB
+        $utilisateurId = $serviceRencontre->getUtilisateurIdParGroupeId($idGroupe);
+        $this->insererTempsCalculEnDB($tempsDebut, $tempsFin, $tempsCalcul, $utilisateurId);
+
+        echo "la tache $msg a ete bien executee!".PHP_EOL;
+
+    }
+
+
+    private function insererTempsCalculEnDB($tempsDebut, $tempsFin, $tempsCalcul, $utilisateurId){
+        try{
+            //on recupere les parametres de connexion
+            $pdo= $this->connexion();
+
+            if (!$pdo) {
+                //erreur de connexion
+                error_log("\n erreur récupération de l'objet PDO, Service: CalculRencontreConsumer, Function: insererTempsCalculEnDB ", 3, $this->error_log_path);
+                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+            }
+
+            $typeStatistiques = "tempsCalculMeilleurLieu";
+            $disciplineId = $this->serviceStatistiques->getDisciplineId($utilisateurId);
+            $federationId = $this->serviceStatistiques->getFederationId($disciplineId);
+            $tempsDebut = $tempsDebut->format('Y-m-d H:i:s');
+            $tempsFin = $tempsFin->format('Y-m-d H:i:s');
+
+//            error_log("\n type tempsFin: ".gettype($tempsFin), 3, $this->error_log_path);
+
+            # insérer dans la base de données
+            $sql = "INSERT INTO  statistiques_date_temps (temps_debut, temps_fin , type_statistiques, id_utilisateur, id_discipline, id_federation, valeur)
+                    VALUES (:temps_debut, :temps_fin,  :type_statistiques, :id_utilisateur, :id_discipline, :id_federation, :valeur);";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':temps_debut', $tempsDebut);
+            $stmt->bindParam(':temps_fin', $tempsFin);
+            $stmt->bindParam(':type_statistiques', $typeStatistiques);
+            $stmt->bindParam(':id_utilisateur', $utilisateurId);
+            $stmt->bindParam(':id_discipline', $disciplineId);
+            $stmt->bindParam(':id_federation', $federationId);
+            $stmt->bindParam(':valeur', $tempsCalcul);
+            $statutInsert = $stmt->execute();
+
+            if(!$statutInsert){
+                error_log("\n  Erreur d'insertion des données dans DB, details: ".print_r($stmt->errorInfo(), true)."\n Service: CalculRencontreConsumer, Function: insererTempsCalculEnDB", 3, $this->error_log_path);
+                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+            }
+
+
+
+        }
+        catch (PDOException $e){
+            error_log("\n erreur PDO, Service: CalculRencontreConsumer, Function: insererTempsCalculEnDB, erreur: ".print_r($e, true), 3, $this->error_log_path);
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
 
     }
 
