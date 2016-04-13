@@ -53,14 +53,15 @@ security:
 #    accéder avec le profil admin général
         - { path: ^/admin/discipline/, role: ROLE_SUPER_ADMIN }
         - { path: ^/admin/federation/, role: ROLE_SUPER_ADMIN }
+        - { path: ^/administration/gestion/users/update/, role: ROLE_USER }
 
 #    accéder avec le profil admin fédéral
         - { path: ^/administration/gestion/, role: ROLE_ADMIN }
         - { path: ^/administration/gestion/users/, role: ROLE_ADMIN }
 
 
+
 #    accéder avec le profil user
         - { path: ^/admin/, role: ROLE_USER }
         - { path: ^/administration/gestion/users/edit/, role: ROLE_USER }
-        - { path: ^/administration/gestion/users/update/, role: ROLE_USER }
 
