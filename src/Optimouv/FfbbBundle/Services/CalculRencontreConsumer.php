@@ -67,24 +67,39 @@ class CalculRencontreConsumer implements ConsumerInterface
 
     public	function execute(AMQPMessage $msg)
     {
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $tempsDebut = new \DateTime();
+
         //récupérer l'id de la tâche
         $msg =  $msg->body;
 
          //on recupere les parametres de connexion
-        $bdd= $this->connexion();
+        $pdo= $this->connexion();
+
+        if (!$pdo) {
+            //erreur de connexion
+            error_log("\n erreur récupération de l'objet PDO, Service: CalculRencontreConsumer, Function: execute ", 3, $this->error_log_path);
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
+
+
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d G:i:s', time());
 
         //on change le statut de la tâche pour dire qu elle est passee a en cours de traitement
         $statut = 1;
 
         //TODO: changer le nom de la table rapport en parametres
-        $update = $bdd->prepare("UPDATE parametres SET statut = :statut WHERE id = :id");
+        $update = $pdo->prepare("UPDATE parametres SET statut = :statut WHERE id = :id");
         $update->bindParam(':id', $msg);
         $update->bindParam(':statut', $statut);
         $update->execute();
 
 
         //recupere les details de l operation
-        $req = $bdd->prepare("SELECT * from parametres where id = :id ");
+        $req = $pdo->prepare("SELECT * from parametres where id = :id ");
         $req->bindParam(':id', $msg);
         $req->execute();
         $res = $req->fetchAll(PDO::FETCH_ASSOC);
@@ -191,8 +206,12 @@ class CalculRencontreConsumer implements ConsumerInterface
 
         echo "la tache $msg a ete bien executee!".PHP_EOL;
 
+        $tempsFin = new \DateTime();
 
-     }
+        $tempsCalcul = $tempsFin->getTimestamp()-$tempsDebut->getTimestamp();
+        error_log("\n tempsCalcul: ".print_r($tempsCalcul, true), 3, $this->error_log_path);
+
+    }
 
     public function stockerResultats($idTache, $resultats)
     {
