@@ -131,3 +131,38 @@
   background-color: #4E4646;
   border-color: #4E4646;
 }
+
+
+.btn-consulter-user-dark {
+  color: #fff;
+  background-color: #4E4646;
+  border-color: #4E4646;
+}
+
+.btn-consulter-user-dark:hover {
+  color: #fff;
+  background-color: #4E4646;
+  border-color: #4E4646;
+}
+
+
+.btn-ajouter-fede {
+  color: #fff;
+  background-color: #EE7700;
+  border-color: #ccc;
+}
+.btn-ajouter-fede:hover {
+  color: #fff;
+  background-color: #EE7700;
+  border-color: #ccc;
+}
+.btn-ajouter-disc {
+  color: #fff;
+  background-color: #40BAC3;
+  border-color: #ccc;
+}
+.btn-ajouter-disc:hover {
+  color: #fff;
+  background-color: #40BAC3;
+  border-color: #ccc;
+}

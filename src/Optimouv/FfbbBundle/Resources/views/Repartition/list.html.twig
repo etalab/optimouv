@@ -9,14 +9,14 @@
             <div class="bs-example">
                 <ul class="breadcrumb">
                     <li><a href="{{ path('administration_panel') }}">Administration</a></li>
-                    <li class="active">Liste des fédérations</li>
+                    <li class="active">Liste de disciplines</li>
                 </ul>
             </div>
 
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <h3 class="page-header">Gérer la liste des fédérations</h3>
+                <h3 class="page-header">Gérer la liste des disciplines</h3>
             </div>
         </div>
 
@@ -24,7 +24,8 @@
             <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        Liste des fédérations
+                        Liste des disciplines
+
                     </div>
 
                     <div class="panel-body">
@@ -35,8 +36,7 @@
                                     <thead>
                                     <tr>
                                         {#<th>No</th>#}
-                                        <th>Nom </th>
-                                        <th>Designation</th>
+                                        <th>Designation </th>
                                         <th>Date de création</th>
                                         <th>Action</th>
 
@@ -45,17 +45,15 @@
 
                                     <tbody>
 
-                                    {% for federation in fede %}
-                                        <tr id="{{ federation.id }}">
-                                            {#<td> {{ federation.id }} </td>#}
-                                            <td> {{ federation.nom }} </td>
-                                            <td> {{ federation.designation }} </td>
-                                            <td> {{ federation.dateCreation.date|date('d/m/Y') }} </td>
+                                    {% for categorie in categories %}
+                                        <tr id="{{ categorie.id }}">
+                                            <td> {{ categorie.designation }} </td>
+                                            <td> {{ categorie.dateCreation.date|date('d/m/Y') }} </td>
 
 
                                             <td>
-                                                <a href="{{ path('ffbb_federation_update', {idFede: federation.id }) }}" class="btn btn-consulter-rapport">Editer</a>
-                                                <button type="button" name="delete" class="btn btn-consulter-rapport" onclick="deleteFede({{ federation.id }})">Supprimer</button>
+                                                <a href="{{ path('ffbb_repartition_update', {idCategorie:categorie.id }) }}" class="btn btn-consulter-user">Editer</a>
+                                                <button type="button" name="delete" class="btn btn-consulter-user" onclick="deleteCategorie({{ categorie.id }})">Supprimer</button>
 
                                             </td>
 
@@ -69,9 +67,8 @@
                                     </tbody>
 
                                 </table>
-                                <a href="{{ path('ffbb_federation_add') }}" class="btn btn-ajouter-fede">Ajouter</a>
-                                <a href="javascript:history.back()" class="pull-right btn btn-consulter-rapport ">Retour</a>
-
+                                <a href="{{ path('ffbb_repartition_add') }}" class="btn btn-consulter-user-dark">Ajouter</a>
+                                <a href="javascript:history.back()" class="pull-right btn btn-consulter-user ">Retour</a>
 
                             </div>
                         </div>
@@ -101,9 +98,9 @@
 
         });
 
-        function deleteFede(idFede){
+        function deleteCategorie(idCategorie){
             $.ajax({
-                url: '/admin/federation/delete/' +idFede,
+                url: '/admin/repartition-homogene/delete/' +idCategorie,
                 type: 'GET',
                 data: null,
                 contentType: false,
@@ -114,9 +111,9 @@
                     console.log(data);
                     if(typeof data.success)
                     {
-                        deletedFedeDiv = '#' + idFede;
+                        deletedCategorieRow = '#' + idCategorie;
 
-                        $(deletedFedeDiv).remove();
+                        $(deletedCategorieRow).remove();
 
 
                     }

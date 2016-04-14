@@ -133,7 +133,7 @@
                                 <li><a href="#">Statistiques</a></li>
                                 <li><a href="{{ path('administration_panel') }}">Administration</a></li>
                             {% endif %}
-                        {% elseif ("administration" in url) or ("federation" in url) or ("discipline" in url) %}
+                        {% elseif ("administration" in url) or ("federation" in url) or ("discipline" in url) or ("repartition" in url)%}
 
                             <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Optimisation des poules</a></li>
 
@@ -189,11 +189,11 @@
                             <ul class="dropdown-menu dropdown-user">
                                 <li><a href="#"></a> <i class="fa fa-user fa-fw" style="margin-left: 20px"></i> Bienvenue {{ app.user.username }} </li></a>
                                 <li class="divider"></li>
-                                <li><a href="{{ path('admin_user_edit_profile') }}"><i class="fa fa-pencil fa-fw"></i> Gérer votre profil</a>
+                                <li><a href="{{ path('admin_user_edit_profile') }}"><i class="fa fa-pencil fa-fw"></i> Modifier mon profil</a>
                                 </li>
                                 {#<li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a></li>#}
                                 <li class="divider"></li>
-                                <li><a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                                <li><a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-sign-out fa-fw"></i> Déconnexion</a>
                                 </li>
                             </ul>
                             <!-- /.dropdown-user -->

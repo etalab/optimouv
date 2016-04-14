@@ -1589,6 +1589,7 @@ def create_reference_pool_distribution_from_db(teams, poolSize):
 			else:
 				phantomTeams.append(team)
 
+		
 		# calculate the max pool size if the distribution is not uniform (there are phantom members)
 		maxPoolSizeRef = 0
 		poolNbrRef = 0
@@ -1602,17 +1603,18 @@ def create_reference_pool_distribution_from_db(teams, poolSize):
 		logging.debug(" maxPoolSizeRef: %s" %maxPoolSizeRef)
 		logging.debug(" poolNbrRef: %s" %poolNbrRef)
 
-		# add phantom teams to the created distribution
+		# add phantom teams to the created distribution 
+		# in the case of pool size in ref scenario is the same as the pool size specified by user
 		if len(phantomTeams) > 0:
 			poolDistributionReferenceTmp = dict.copy(poolDistributionReference["data"])
 			for pool, poolTeams in poolDistributionReferenceTmp.items():
-# 				if len(poolTeams) < poolSize:
 				if len(poolTeams) < maxPoolSizeRef:
-					sizeDiff = poolSize - len(poolTeams)
+					sizeDiff = maxPoolSizeRef - len(poolTeams)
+					logging.debug("sizeDiff: %s" %sizeDiff)
 					for i in range(sizeDiff):
 						phantomTeam = phantomTeams.pop()
 						poolDistributionReference["data"][pool].append(phantomTeam)
-					
+			
 					
 
 # 		logging.debug(" teams: %s" %teams)

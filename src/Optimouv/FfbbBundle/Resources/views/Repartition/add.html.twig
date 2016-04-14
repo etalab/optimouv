@@ -8,12 +8,12 @@
                  <div class="bs-example">
                      <ul class="breadcrumb">
                          <li><a href="{{ path('administration_panel') }}">Administration</a></li>
-                         <li><a href="{{ path('ffbb_discipline_list') }}">Liste de disciplines</a></li>
-                         <li class="active">Mise à jour de discipline</li>
+                         <li><a href="{{ path('ffbb_discipline_list') }}">Liste de catégories</a></li>
+                         <li class="active">Ajout d'une catégorie</li>
                      </ul>
                  </div>
                  <div class="col-lg-12">
-                     <h3 class="page-header">Editer une discipline </h3>
+                     <h3 class="page-header">Ajouter une catégorie </h3>
                      <h5 style="text-align: right; font-weight: bold">(* champs obligatoires)</h5>
                  </div>
                  <!-- /.col-lg-12 -->
@@ -22,25 +22,19 @@
 
              <div class="row">
                  <div class="col-lg-6">
-                     <form role="form" action="{{ path('ffbb_discipline_update_disc') }}" method="post">
-
-
+                     <form role="form" action="{{ path('ffbb_repartition_create') }}" method="post">
 
                          <div class="form-group">
-                             <label style="font-weight: bold">Nom de la discipline *</label>
-                             <input class="form-control" name="nom" value="{{ nom }}" required>
+                             <label style="font-weight: bold">Désignation *</label>
+                             <input class="form-control" name="designation" required>
                          </div>
-                         <input type="hidden" name="idDiscipline" value="{{ idDiscipline }}">
 
 
 
-                         <button type="submit" class="btn btn-ajouter-disc">Enregistrer</button>
-                         <a href="javascript:history.back()" class="btn btn-info-poule ">Annuler</a>
+                         <button type="submit" class="btn btn-consulter-user-dark">Enregistrer</button>
+                         <a href="javascript:history.back()" class="btn btn-consulter-user ">Annuler</a>
                      </form>
-
                  </div>
-
-
              </div>
 
 

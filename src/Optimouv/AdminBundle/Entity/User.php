@@ -68,9 +68,9 @@ class User extends BaseUser
     private $numLicencie;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="telephone", type="integer", nullable=true)
+     * @ORM\Column(name="telephone", type="string", length=10, nullable=true)
      */
     private $telephone;
 
@@ -91,6 +91,12 @@ class User extends BaseUser
      */
     private $federation;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_creation", type="date", nullable=true)
+     */
+    private $dateCreation;
 
 
     public function __construct()
@@ -322,5 +328,29 @@ class User extends BaseUser
     public function getExpiresAt()
     {
         return $this->expiresAt;
+    }
+
+    /**
+     * Set dateCreation
+     *
+     * @param \DateTime $dateCreation
+     *
+     * @return User
+     */
+    public function setDateCreation($dateCreation)
+    {
+        $this->dateCreation = $dateCreation;
+
+        return $this;
+    }
+
+    /**
+     * Get dateCreation
+     *
+     * @return \DateTime
+     */
+    public function getDateCreation()
+    {
+        return $this->dateCreation;
     }
 }

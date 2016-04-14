@@ -21,7 +21,7 @@ class DisciplineController extends Controller
 
     }
     
-    //Ajouter une nouvelle fédération
+    //Ajouter une nouvelle discipline
     public function addAction()
     {
         $em = $this->getDoctrine()->getManager();

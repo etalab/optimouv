@@ -55,6 +55,14 @@ class ResettingController extends Controller
         $idUser = $_POST['idUser'];
         $password = $_POST['password'];
 
+        if (isset($_POST['role'])) {
+            $role = $_POST['role'];
+        }
+        else{
+
+            $role = null;
+        }
+
         $em = $this->getDoctrine()->getManager();
         $username =  $em->getRepository('AdminBundle:User')->findOneById($idUser)->getUsername();
         $user = $this->container->get('fos_user.user_manager')->findUserByUsernameOrEmail($username);
@@ -71,7 +79,13 @@ class ResettingController extends Controller
         $update->bindParam(':id', $idUser);
         $update->execute();
 
-        return $this->redirect($this->generateUrl('fos_user_security_login'));
+        if($role){
+
+            return $this->redirect($this->generateUrl('ffbb_accueil_connect'));
+        }
+        else{
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
 
     }
 }

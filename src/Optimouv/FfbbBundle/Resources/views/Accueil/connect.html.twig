@@ -47,6 +47,40 @@
 
         <!-- /.container -->
 
+        <!-- partie administration -->
+        {% set userConnect = app.user.roles %}
+
+        {% if ('ROLE_ADMIN' in userConnect) or ('ROLE_SUPER_ADMIN' in userConnect) %}
+            <div class="row" style="min-height: 300px">
+                <div style="position:relative; float:left; background-color: #4E4646; border-radius: 5px; width: 30%">
+                    <a href="{{ path('administration_panel') }}" style="text-decoration: none;">
+                        <div style="text-align: center; padding-top:10px">
+                            {#<img src="{{ asset('bundles/ffbb/accueil/img/trophy36.png') }}" alt="utilisateurs optimouv"#}
+                            {#width="20%" height="20%"/>#}
+                            <i class="fa fa-cogs fa-5x" style="color: #fff;"></i>
+                        </div>
+                        <div style=" text-align: center; color:#fff">
+                            <h3>Administration </h3>
+                        </div>
+                    </a>
+
+                </div>
+
+                <div style="position:relative; float:left;background-color: #777171; border-radius: 5px; width: 30%; margin-left: 5%">
+                    <a href="#" style="text-decoration: none;">
+                        <div style="text-align: center; padding-top:10px">
+                            <i class="fa fa-bar-chart fa-5x" style="color: #fff;"></i>
+                        </div>
+                        <div style=" text-align: center; color:#fff">
+                            <h3>Statistiques</h3>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+        {% endif %}
+
+
     </div>
 
 

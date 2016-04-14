@@ -3,40 +3,49 @@
 {% block fos_user_content %}
 
 
-<br>
-         <div class="row">
-            <div class="row">
-                <div class="col-md-4 col-md-offset-4">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <div class="text-center">
-                                <img src="{{ asset('bundles/ffbb/accueil/img/Logo-Optimouv.jpg') }}" class="login" height="70">
-                                <h3 class="text-center">Mot de passe oublié ?</h3>
-                                <p>Si vous avez oublié votre mot de passe - Réinitialisez le ici.</p>
-                                <div class="panel-body">
+    <br>
+    <div class="row">
+        <div class="row">
+            <div class="col-lg-3"></div>
+            <div class="col-md-6 ">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="text-center">
+                            <img src="{{ asset('bundles/ffbb/accueil/img/Logo-Optimouv.jpg') }}" class="login"
+                                 height="70">
+                            <h3 class="text-center" style="padding-top: 30px">Mot de passe oublié ?</h3>
+                            <p>Réinitialisez votre mot de passe</p>
+                            <div class="panel-body">
 
-                                    <form class="form" action="{{ path('admin_reset_password') }}" method="POST" onsubmit="msgAlert();"><!--start form--><!--add form action as needed-->
-                                        <fieldset>
-                                            <div class="form-group">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope color-blue"></i></span>
-                                                    <!--EMAIL ADDRESS-->
-                                                    <input id="emailInput" name="username" placeholder="Adresse email" class="form-control" type="email" oninvalid="setCustomValidity('Rentrez une adresse email valide!')" onchange="try{setCustomValidity('')}catch(e){}" required="">
-                                                </div>
+                                <form class="form" action="{{ path('admin_reset_password') }}" method="POST"
+                                      onsubmit="msgAlert();"><!--start form--><!--add form action as needed-->
+                                    <fieldset>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i
+                                                            class="glyphicon glyphicon-envelope color-blue"></i></span>
+                                                <!--EMAIL ADDRESS-->
+                                                <input id="emailInput" name="username" placeholder="Adresse email"
+                                                       class="form-control" type="email"
+                                                       oninvalid="setCustomValidity('Rentrez une adresse email valide!')"
+                                                       onchange="try{setCustomValidity('')}catch(e){}" required="">
                                             </div>
-                                            <div class="form-group">
-                                                <input class="btn btn-lg btn-primary btn-block" value="Envoyer mon mot de passe" type="submit">
-                                            </div>
-                                        </fieldset>
-                                    </form><!--/end form-->
+                                        </div>
+                                        <div class="form-group">
+                                            <input class="btn btn-lg btn-default btn-block"
+                                                   value="Envoyer mon mot de passe" type="submit">
+                                        </div>
+                                    </fieldset>
+                                </form><!--/end form-->
 
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="col-lg-3"></div>
         </div>
+    </div>
 
 {% endblock fos_user_content %}
 {% block javascripts %}
