@@ -519,16 +519,17 @@
                                              <td>{{ detailsVille.nom }}</td>
                                              <td>
                                                  <select class="form-control" id="repartitionHomogeneOption{{ key }}">
-                                                     {#<option value="Aucun" disabled selected> -- Aucun -- </option>#}
                                                      <option value="Aucun" selected> -- Aucun -- </option>
-                                                     <option value="Espoir">Espoir</option>
-                                                     <option value="Descendant">Descendant</option>
-                                                     <option value="Promu">Promu</option>
-                                                     <option value="EquipeNiveauA">Equipe de niveau A</option>
-                                                     <option value="EquipeNiveauB">Equipe de niveau B</option>
-                                                     <option value="EquipeNiveauC">Equipe de niveau C</option>
-                                                     <option value="TeteSerie1">Tête de série 1</option>
-                                                     <option value="TeteSerie2">Tête de série 2</option>
+                                                     {% for categorie in categories %}
+                                                         <option value="{{ categorie.designation }}">{{ categorie.designation }}</option>
+                                                         {#<option value="Descendant">Descendant</option>#}
+                                                         {#<option value="Promu">Promu</option>#}
+                                                         {#<option value="EquipeNiveauA">Equipe de niveau A</option>#}
+                                                         {#<option value="EquipeNiveauB">Equipe de niveau B</option>#}
+                                                         {#<option value="EquipeNiveauC">Equipe de niveau C</option>#}
+                                                         {#<option value="TeteSerie1">Tête de série 1</option>#}
+                                                         {#<option value="TeteSerie2">Tête de série 2</option>#}
+                                                     {% endfor %}
                                                  </select>
                                              </td>
                                          </tr>

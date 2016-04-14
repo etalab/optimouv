@@ -281,6 +281,7 @@ class PoulesController extends Controller
         $idListe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
         $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
         $nomGroupe =  $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getNom();
+        $categories = $em->getRepository('FfbbBundle:RepartitionHomogene')->findAll();
 
         # récupérer la liste des noms et des ids de villes
         $detailsVilles = $em->getRepository('FfbbBundle:Entite')->getEntities($villes);
@@ -294,6 +295,7 @@ class PoulesController extends Controller
             'nomListe' => $nomListe,
             'nomGroupe' => $nomGroupe,
             'detailsVilles' => $detailsVilles,
+            'categories' =>$categories,
 
 
         ));
@@ -343,6 +345,8 @@ class PoulesController extends Controller
         # récupérer la liste des noms et des ids de villes
         $detailsVilles = $em->getRepository('FfbbBundle:Entite')->getEntities($villes);
 
+        $categories = $em->getRepository('FfbbBundle:RepartitionHomogene')->findAll();
+
         return $this->render('FfbbBundle:Poules:criteres.html.twig', array(
 
             'coordonneesVille' => $coordonneesVille,
@@ -352,6 +356,7 @@ class PoulesController extends Controller
             'nomListe' => $nomListe,
             'nomGroupe' => $nomGroupe,
             'detailsVilles' => $detailsVilles,
+            'categories' => $categories,
 
         ));
     }
@@ -738,6 +743,7 @@ class PoulesController extends Controller
 
 //        error_log("\n changeAffectEquipes: ".print_r($changeAffectEquipes , true), 3, "error_log_optimouv.txt");
 
+        $categories = $em->getRepository('FfbbBundle:RepartitionHomogene')->findAll();
 
         return $this->render('FfbbBundle:Poules:resultatCalcul.html.twig' , array(
 
@@ -769,7 +775,7 @@ class PoulesController extends Controller
             'contrainteAccueilPlateauExiste' => $contrainteAccueilPlateauExiste,
             'infoChangeAffectation' => $infoChangeAffectation,
             'changeAffectEquipes' => $changeAffectEquipes,
-
+            'categories' => $categories,
 
 
         ));
@@ -1533,7 +1539,6 @@ class PoulesController extends Controller
 
     }
 
-
     private function remplirCsvEnZip($infoCsv, $zip){
         // entete pour l'estimation générale
         $headerEstimationGenerale = array("KILOMETRES A PARCOURIR POUR LE SCENARIO",
@@ -1840,7 +1845,6 @@ class PoulesController extends Controller
         return $texte;
     }
 
-
     private function getNomMatch($typeMatch){
         $nomMatch = "";
 
@@ -1903,8 +1907,6 @@ class PoulesController extends Controller
 
         return $nomScenario;
     }
-
-
 
     public function exportScenarioPdfAction()
     {

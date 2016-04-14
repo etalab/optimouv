@@ -336,3 +336,29 @@ ffbb_discipline_update:
 ffbb_discipline_update_disc:
     path:    /admin/discipline/updateDisc
     defaults: { _controller: FfbbBundle:Discipline:updateDisc }
+
+#Categorie Repartition Homogene
+
+ffbb_repartition_list:
+    path:    /admin/repartition-homogene/list
+    defaults: { _controller: FfbbBundle:Repartition:list }
+
+ffbb_repartition_add:
+    path:    /admin/repartition-homogene/add
+    defaults: { _controller: FfbbBundle:Repartition:add }
+
+ffbb_repartition_create:
+    path:    /admin/repartition-homogene/create
+    defaults: { _controller: FfbbBundle:Repartition:create }
+
+ffbb_repartition_update:
+    path:    /admin/repartition-homogene/update/{idCategorie}
+    defaults: { _controller: FfbbBundle:Repartition:update }
+
+ffbb_repartition_update_cat:
+    path:    /admin/repartition-homogene/update-categorie
+    defaults: { _controller: FfbbBundle:Repartition:updateCat }
+
+ffbb_repartition_delete:
+    path:    /admin/repartition-homogene/delete/{idCategorie}
+    defaults: { _controller: FfbbBundle:Repartition:delete}
