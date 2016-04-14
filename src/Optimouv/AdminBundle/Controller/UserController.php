@@ -131,7 +131,15 @@ class UserController extends Controller
         } else {
             $role = "";
         }
+        //récupérer role_utilisateur si exist
+        if (isset($_POST['role'])) {
+            $roleUtilisateur = $_POST['role'];
+        }
+        else{
+            $roleUtilisateur = null;
+        }
 
+        $dateCreation = new \DateTime("now");
 
         $discipline = intval($discipline);
 
@@ -139,11 +147,13 @@ class UserController extends Controller
         $username = substr($prenom, 0,1);
         $username = strtolower($username.$nom);
 
+        if ($roleUtilisateur) {
+            $dateExpiration = null;
+        } else {
+            $dateExpiration = new \DateTime("now");
+            date_add($dateExpiration, date_interval_create_from_date_string('10 days'));
+        }
 
-        $dateExpiration = new \DateTime("now");
-        date_add($dateExpiration, date_interval_create_from_date_string('10 days'));
-
-       
 
         $secretKey = "6Lf1NxwTAAAAAP6UYH4-vzxAFxxHYJfq0ddkkK3U";
         $ip = $_SERVER['REMOTE_ADDR'];
@@ -158,7 +168,7 @@ class UserController extends Controller
             ->getRepository('AdminBundle:User')
             ->findOneByEmail($email);
         if($user){
-            echo '<h2>Utilisateur existe déjà.</h2>';
+            echo '<h2>Utilisateur existe déjà. Veuillez contacter votre administrateur</h2>';
             exit;
         }
         else{
@@ -181,6 +191,7 @@ class UserController extends Controller
             $user->setTelephone($telephone);
             $user->setAdresse($adresse);
             $user->setNumLicencie($numLicencie);
+            $user->setDateCreation($dateCreation);
 
             if($role == "admin"){
                 $user->setRoles(array('ROLE_ADMIN'));
@@ -192,7 +203,9 @@ class UserController extends Controller
             $encryptedPassword = $encoder->encodePassword($password, $user->getSalt());
             $user->setPassword($encryptedPassword);
             $user->setExpired(false);
-            $user->setExpiresAt($dateExpiration);
+            if(isset($dateExpiration)){
+                $user->setExpiresAt($dateExpiration);
+            }
             $user->setCredentialsExpired(false);
 
             $user->setLocked(true);
@@ -359,17 +372,20 @@ class UserController extends Controller
 
         $params =[];
         $params['id'] = $idUser;
+        $params['nom'] = $_POST['nom'];
+        $params['prenom'] = $_POST['prenom'];
         $params['login'] = $_POST['username'];
         $params['email'] = $_POST['email'];
         $params['tel'] = $_POST['tel'];
-        $password = $_POST['password'];
+//        $password = $_POST['password'];
 
+        /*
         //encrypt password
         $factory = $this->get('security.encoder_factory');
         $user = $em->getRepository('AdminBundle:User')->findOneById($idUser);
         $encoder = $factory->getEncoder($user);
         $params['password'] = $encoder->encodePassword($password, $user->getSalt());
-
+*/
 
         $params['adresse'] = $_POST['adresse'];
         $params['numLicencie'] = $_POST['numLicencie'];
@@ -379,9 +395,14 @@ class UserController extends Controller
         if($update){
             //récupérer toute la liste des utilisateurs pour l'admin fédéral
             $user = $this->get('security.token_storage')->getToken()->getUser();
+            $idAdmin = $user->getId();
             $roleUser = $user->getRoles();
 
-            if(in_array('ROLE_ADMIN',$roleUser) or in_array('ROLE_SUPER_ADMIN',$roleUser)){
+            if($idAdmin == $idUser){
+                return $this->redirect($this->generateUrl('ffbb_accueil'));
+            }
+
+            elseif(in_array('ROLE_ADMIN',$roleUser) or in_array('ROLE_SUPER_ADMIN',$roleUser)){
                 return $this->redirect($this->generateUrl('administration_users_list'));
             }
             else{

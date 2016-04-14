@@ -42,6 +42,7 @@
                                         <th>Fédération </th>
                                         <th>Discipline </th>
                                         <th>Profil </th>
+                                        <th>Date de création </th>
                                         <th>Date d’expiration </th>
                                         <th>Action</th>
 
@@ -64,14 +65,15 @@
                                             <td> {{ user.discipline.nom }} </td>
                                             <td>
                                                 {% if "ROLE_SUPER_ADMIN" in user.roles %}
-                                                    Admin général
+                                                    Administrateur général
                                                 {% elseif "ROLE_ADMIN" in user.roles %}
-                                                    Admin fédéral
+                                                    Administrateur fédéral
                                                 {% else %}
-                                                    Simple utilisateur
+                                                    Utilisateur
                                                 {% endif %}
 
                                             </td>
+                                            <td> {{ user.dateCreation|date('d/m/Y') }}</td>
                                             <td align="center">
                                                 {% set dateExpiration = user. expiresAt %}
                                                 {% if dateExpiration is not null %}

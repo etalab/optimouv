@@ -27,10 +27,15 @@
     {% set userConnect = app.user %}
     {% if userConnect is not null %}
 
-        {% if 'ROLE_ADMIN' in userConnect.roles %}
+        {% if 'ROLE_SUPER_ADMIN' in userConnect.roles %}
+            <input type="hidden" name="role" value="ROLE_SUPER_ADMIN">
+        {% endif %}
+
+            {% if 'ROLE_ADMIN' in userConnect.roles %}
             {# connecté en tant que admin fédéral #}
             <input type="hidden" name="discipline" value="{{ discipline.id }}">
             <input type="hidden" name="federation" value="{{ federation }}">
+            <input type="hidden" name="role" value="ROLE_ADMIN">
 
         {% else %}
             {# connecté en tant que admin général #}
