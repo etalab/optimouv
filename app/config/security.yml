@@ -59,6 +59,8 @@ security:
         - { path: ^/administration/gestion/, role: ROLE_ADMIN }
         - { path: ^/administration/gestion/users/, role: ROLE_ADMIN }
 
+#    accéder à la page des statistiques
+        - { path: ^/admin/statistiques/, role: ROLE_ADMIN }
 
 
 #    accéder avec le profil user

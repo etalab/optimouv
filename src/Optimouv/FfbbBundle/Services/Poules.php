@@ -18,8 +18,12 @@ class Poules{
     private $app_id;
     private $app_code;
     private $error_log_path;
+    /**
+     * @var Statistiques $serviceStatistiques
+     */
+    protected $serviceStatistiques;
 
-    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path)
+    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $serviceStatistiques)
     {
         $this->database_name = $database_name;
         $this->database_user = $database_user;
@@ -27,9 +31,10 @@ class Poules{
         $this->app_id = $app_id;
         $this->app_code = $app_code;
         $this->error_log_path = $error_log_path;
+        $this->serviceStatistiques = $serviceStatistiques;
     }
 
-    public function sauvegarderParamsEnDB()
+    public function sauvegarderParamsEnDB($utilisateurId)
     {
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
@@ -52,11 +57,14 @@ class Poules{
             $poulesNbr = intval($_POST["poulesNbr"]);
             $typeAction = $_POST["typeMatch"];
 
-//            error_log("\n Service: Poules, Function: sauvegarderParamsEnDB, datetime: ".$dateTimeNow
-//                ."\n post: ".print_r($_POST , true), 3, $this->error_log_path);
             # contraintes d'interdiction
             if(array_key_exists("interdictions", $_POST)){
                 $interdictions = $_POST["interdictions"];
+
+
+                # incrémenter le nombre des interdictions pour opti poule
+                $this->serviceStatistiques->augmenterNombreTableStatistiques($utilisateurId, "nombreInterdictions", count($interdictions));
+
             }
             else{
                 $interdictions = [];
@@ -65,6 +73,12 @@ class Poules{
             # contraintes de repartitions homogenes
             if(array_key_exists("repartitionsHomogenes", $_POST)){
                 $repartitionsHomogenes = $_POST["repartitionsHomogenes"];
+
+//                error_log("\n Service: Poules, Function: sauvegarderParamsEnDB, repartitionsHomogenes: ".print_r($repartitionsHomogenes, true), 3, $this->error_log_path);
+
+                # incrémenter le nombre des interdictions pour opti poule
+                $this->serviceStatistiques->augmenterNombreTableStatistiques($utilisateurId, "nombreRepartitionsHomogenes", count($repartitionsHomogenes));
+
             }
             else{
                 $repartitionsHomogenes  = [];

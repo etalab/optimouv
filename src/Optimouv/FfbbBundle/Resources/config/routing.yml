@@ -277,8 +277,8 @@ ffbb_poules_export_comparaison_scenario:
     defaults: { _controller: FfbbBundle:Poules:exportComparaison }
 
 # Statistiques
-ffbb_statistiques:
-    path:     /admin/statistiques
+ffbb_statistiques_index:
+    path:     /admin/statistiques/index
     defaults: { _controller: FfbbBundle:Statistique:index }
 
 ffbb_statistiques_export_pdf:

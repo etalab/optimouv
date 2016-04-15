@@ -1589,6 +1589,7 @@ def create_reference_pool_distribution_from_db(teams, poolSize):
 			else:
 				phantomTeams.append(team)
 
+		
 		# calculate the max pool size if the distribution is not uniform (there are phantom members)
 		maxPoolSizeRef = 0
 		poolNbrRef = 0
@@ -1602,17 +1603,18 @@ def create_reference_pool_distribution_from_db(teams, poolSize):
 		logging.debug(" maxPoolSizeRef: %s" %maxPoolSizeRef)
 		logging.debug(" poolNbrRef: %s" %poolNbrRef)
 
-		# add phantom teams to the created distribution
+		# add phantom teams to the created distribution 
+		# in the case of pool size in ref scenario is the same as the pool size specified by user
 		if len(phantomTeams) > 0:
 			poolDistributionReferenceTmp = dict.copy(poolDistributionReference["data"])
 			for pool, poolTeams in poolDistributionReferenceTmp.items():
-# 				if len(poolTeams) < poolSize:
 				if len(poolTeams) < maxPoolSizeRef:
-					sizeDiff = poolSize - len(poolTeams)
+					sizeDiff = maxPoolSizeRef - len(poolTeams)
+					logging.debug("sizeDiff: %s" %sizeDiff)
 					for i in range(sizeDiff):
 						phantomTeam = phantomTeams.pop()
 						poolDistributionReference["data"][pool].append(phantomTeam)
-					
+			
 					
 
 # 		logging.debug(" teams: %s" %teams)
@@ -1682,7 +1684,6 @@ def get_coordinates_from_city_id(entityId):
 """
 Function to probe HERE web service and fill in table trajet
 """
-# def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coordDepart, coordDestination):
 def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coordDepart, coordDestination, reportId, userId):
 	try:
 		
@@ -1719,18 +1720,23 @@ def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coord
 		dateCreation = datetime.datetime.now().date()
 # 		logging.debug("dateCreation: %s" %dateCreation)
 
-		sql = """insert into trajet (depart, destination, distance, duree, date_creation) 
-					values( %(depart)s, %(destination)s, %(distance)s, %(duree)s, '%(date_creation)s' ) 
-				"""%{
-						"depart": cityIdDepart,
-						"destination": cityIdDestination,
-						"distance": distance,
-						"duree": travelTime,
-						"date_creation": dateCreation,
-					}
-# 		logging.debug("sql: %s" %sql)
-		db.execute(sql)
-		db.commit()
+		try:
+			
+			sql = """insert into trajet (depart, destination, distance, duree, date_creation) 
+						values( %(depart)s, %(destination)s, %(distance)s, %(duree)s, '%(date_creation)s' ) 
+					"""%{
+							"depart": cityIdDepart,
+							"destination": cityIdDestination,
+							"distance": distance,
+							"duree": travelTime,
+							"date_creation": dateCreation,
+						}
+	# 		logging.debug("sql: %s" %sql)
+			db.execute(sql)
+			db.commit()
+		except Exception as e:
+			logging.debug("Insertion error to table trajet, details %s" %e)
+			sys.exit()
 
 
 		returnDict = {"distance": distance, "travelTime": travelTime}
@@ -1741,10 +1747,27 @@ def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coord
 		show_exception_traceback()
 		
 
+
+"""
+Function to get discipline and federation id from user id
+"""
+def get_discipline_and_federation_id(userId):
+	try:
+		# get discipline and federation id
+		sql = "select id_discipline from fos_user where id=%s"%(userId)
+		disciplineId = db.fetchone(sql)
+		
+		sql = "select id_federation from discipline where id=%s"%(disciplineId)
+		federationId = db.fetchone(sql)
+		
+		return (disciplineId, federationId)
+		
+	except Exception as e:
+		show_exception_traceback()
+
 """
 Function to create distance matrix from DB
 """
-# def create_distance_matrix_from_db(teams):
 def create_distance_matrix_from_db(teams, reportId, userId):
 	try:
 		# get size for the matrix
@@ -1752,6 +1775,13 @@ def create_distance_matrix_from_db(teams, reportId, userId):
 		
 		# Initialize Distance matrix D_Mat
 		D_Mat = np.zeros((teamNbr, teamNbr))
+		
+		# number of HERE requests
+		nbrRequestsHere = 0
+		
+		# get discipline and federation id
+		disciplineId, federationId = get_discipline_and_federation_id(userId)
+		
 		
 		# fill in the distance matrix
 		for indexDepart, depart in enumerate(teams):
@@ -1786,6 +1816,9 @@ def create_distance_matrix_from_db(teams, reportId, userId):
 						coordDestination = get_coordinates_from_city_id(destination)
 						logging.debug("coordDestination: %s" %coordDestination)
 						
+						# increment number of HERE requests
+						nbrRequestsHere += 1
+						
 						# get distance and travel time from HERE web service
 						resultsHere = get_distance_travel_time_from_here_ws(depart, destination, coordDepart, coordDestination, reportId, userId)
 						logging.debug("resultsHere: %s" %resultsHere)
@@ -1794,14 +1827,62 @@ def create_distance_matrix_from_db(teams, reportId, userId):
 						distance = resultsHere["distance"]
 				D_Mat[indexDepart][indexDestination] = distance
 	
-# 		logging.debug("D_Mat: \n%s" %D_Mat)
+		if nbrRequestsHere > 0:
+			try:
+				sql = """INSERT INTO  statistiques_date (date_creation, type_statistiques, id_utilisateur, id_discipline, id_federation, valeur)
+						VALUES (now(), '%(type_statistiques)s', %(id_utilisateur)s, %(id_discipline)s, %(id_federation)s, %(valeur)s)
+						on duplicate key UPDATE valeur=valeur+VALUES(valeur);
+					"""%{
+							"type_statistiques": "nombreRequetesHere",
+							"id_utilisateur": userId,
+							"id_discipline": disciplineId,
+							"id_federation": federationId,
+							"valeur": nbrRequestsHere
+						
+						}
+# 				logging.debug("sql: %s" %sql)
+				db.execute(sql)
+				db.commit()
+
+			except Exception as e:
+				logging.debug("Insertion error to table statistiques_date, details %s" %e)
+				sys.exit()
+
 		return D_Mat
 
-# 		logging.debug("D_Mat: %s" %D_Mat)
-# 		np.savetxt("/tmp/d_mat_%s.csv"%teamNbr, D_Mat, delimiter=",", fmt='%d') # DEBUG
 	except Exception as e:
 		show_exception_traceback()
 
+
+"""
+Function to insert calculation time to DB
+"""
+def insert_calculation_time_to_db(userId, startTime, endTime, duration):
+	try:
+		# get discipline and federation id
+		disciplineId, federationId = get_discipline_and_federation_id(userId)
+
+		sql = """INSERT INTO  statistiques_date_temps (temps_debut, temps_fin, type_statistiques, id_utilisateur, id_discipline, id_federation, valeur)
+				VALUES ('%(temps_debut)s', '%(temps_fin)s', '%(type_statistiques)s', %(id_utilisateur)s, %(id_discipline)s, %(id_federation)s, %(valeur)s)
+				on duplicate key UPDATE valeur=valeur+VALUES(valeur);
+			"""%{
+					"temps_debut": startTime.strftime('%Y-%m-%d %H:%M:%S'), 
+					"temps_fin": endTime.strftime('%Y-%m-%d %H:%M:%S'),
+					"type_statistiques": "tempsCalculOptiPoule",
+					"id_utilisateur": userId,
+					"id_discipline": disciplineId,
+					"id_federation": federationId,
+					"valeur": duration
+				
+				}
+# 		logging.debug("sql: %s" %sql)
+		db.execute(sql)
+		db.commit()
+
+
+	except Exception as e:
+		logging.debug("Insertion error to table statistiques_date_temps, details %s" %e)
+		sys.exit()
 
 
 """
@@ -1907,8 +1988,17 @@ def get_type_distribution_constraints(typeDistributionDict):
 # 			typeDistributionConstraints = {"status": "yes", "data": {"espoir":  [7968, 7969]}}
 			typeDistributionConstraints = {"status": "yes", "data": {} }
 			
-			for teamType, members in typeDistributionDict.items():
-				typeDistributionConstraints["data"].update({teamType : members})
+			# check type of variable typeDistributionDict
+			if isinstance(typeDistributionDict, dict):
+				for teamType, members in typeDistributionDict.items():
+					typeDistributionConstraints["data"].update({teamType : members})
+			elif isinstance(typeDistributionDict, list):
+				typeDistributionConstraints["data"].update({"promu" : typeDistributionDict})
+				
+			else:
+				# if typeDistributionDict is not a dict, it is an error
+				typeDistributionConstraints = {"status": "no", "data": {}}
+				
 			
 		else:
 			typeDistributionConstraints = {"status": "no", "data": {}}
@@ -2565,32 +2655,35 @@ def save_result_to_db(launchType, reportId, groupId, results):
 		costSharedCar = 0
 		costBus = 0
 		
-# 		sql = """insert into scenario (id_rapport, nom, kilometres, duree, date_creation, date_modification, 
-		sql = """insert into resultats (id_rapport, nom, kilometres, duree, date_creation, date_modification, 
-					co2_voiture, co2_covoiturage, co2_minibus, cout_voiture, cout_covoiturage, cout_minibus, details_calcul ) 
-			values ( %(reportId)s , '%(name)s', %(km)s, %(travelTime)s,' %(creationDate)s', '%(modificationDate)s',
-					%(co2Car)s, %(co2SharedCar)s, %(co2Bus)s, %(costCar)s, %(costSharedCar)s, %(costBus)s, '%(results)s' )
-			"""%{	"reportId": reportId, 
-					"name": name,
-					"km": km,
-					"travelTime": travelTime,
-					"creationDate": creationDate,
-					"modificationDate": modificationDate,
-					"co2Car": co2Car,
-					"co2SharedCar": co2SharedCar,
-					"co2Bus": co2Bus,
-					"costCar": costCar,
-					"costSharedCar": costSharedCar,
-					"costBus": costBus,
-					"results": json.dumps(results),
-					
-				}
-# 		logging.debug("sql: %s" %sql)
-		db.execute(sql)
-		db.commit()
-		
-		resultId = db.lastinsertedid()
-		
+		try:
+			sql = """insert into resultats (id_rapport, nom, kilometres, duree, date_creation, date_modification, 
+						co2_voiture, co2_covoiturage, co2_minibus, cout_voiture, cout_covoiturage, cout_minibus, details_calcul ) 
+				values ( %(reportId)s , '%(name)s', %(km)s, %(travelTime)s,' %(creationDate)s', '%(modificationDate)s',
+						%(co2Car)s, %(co2SharedCar)s, %(co2Bus)s, %(costCar)s, %(costSharedCar)s, %(costBus)s, '%(results)s' )
+				"""%{	"reportId": reportId, 
+						"name": name,
+						"km": km,
+						"travelTime": travelTime,
+						"creationDate": creationDate,
+						"modificationDate": modificationDate,
+						"co2Car": co2Car,
+						"co2SharedCar": co2SharedCar,
+						"co2Bus": co2Bus,
+						"costCar": costCar,
+						"costSharedCar": costSharedCar,
+						"costBus": costBus,
+						"results": json.dumps(results),
+						
+					}
+	# 		logging.debug("sql: %s" %sql)
+			db.execute(sql)
+			db.commit()
+			
+			resultId = db.lastinsertedid()
+		except Exception as e:
+			logging.debug("Insertion error to table resultats, details %s" %e)
+			sys.exit()
+
 		return resultId
 	except Exception as e:
 		show_exception_traceback()
@@ -2664,30 +2757,34 @@ def save_result_to_db_post_treatment(launchType, reportId, groupId, results):
 		costSharedCar = 0
 		costBus = 0
 		
-		sql = """insert into resultats (id_rapport, nom, kilometres, duree, date_creation, date_modification, 
-					co2_voiture, co2_covoiturage, co2_minibus, cout_voiture, cout_covoiturage, cout_minibus, details_calcul ) 
-			values ( %(reportId)s , '%(name)s', %(km)s, %(travelTime)s, '%(creationDate)s', '%(modificationDate)s',
- 					%(co2Car)s, %(co2SharedCar)s, %(co2Bus)s, %(costCar)s, %(costSharedCar)s, %(costBus)s, '%(results)s' )
-			"""%{	"reportId": reportId, 
-					"name": name,
-					"km": km,
-					"travelTime": travelTime,
-					"creationDate": creationDate,
-					"modificationDate": modificationDate,
-					"co2Car": co2Car,
-					"co2SharedCar": co2SharedCar,
-					"co2Bus": co2Bus,
-					"costCar": costCar,
-					"costSharedCar": costSharedCar,
-					"costBus": costBus,
-					"results": json.dumps(results),
-					
-				}
-# 		logging.debug("sql: %s" %sql)
-		db.execute(sql)
-		db.commit()
-		
-		resultId = db.lastinsertedid()
+		try:
+			sql = """insert into resultats (id_rapport, nom, kilometres, duree, date_creation, date_modification, 
+						co2_voiture, co2_covoiturage, co2_minibus, cout_voiture, cout_covoiturage, cout_minibus, details_calcul ) 
+				values ( %(reportId)s , '%(name)s', %(km)s, %(travelTime)s, '%(creationDate)s', '%(modificationDate)s',
+	 					%(co2Car)s, %(co2SharedCar)s, %(co2Bus)s, %(costCar)s, %(costSharedCar)s, %(costBus)s, '%(results)s' )
+				"""%{	"reportId": reportId, 
+						"name": name,
+						"km": km,
+						"travelTime": travelTime,
+						"creationDate": creationDate,
+						"modificationDate": modificationDate,
+						"co2Car": co2Car,
+						"co2SharedCar": co2SharedCar,
+						"co2Bus": co2Bus,
+						"costCar": costCar,
+						"costSharedCar": costSharedCar,
+						"costBus": costBus,
+						"results": json.dumps(results),
+						
+					}
+	# 		logging.debug("sql: %s" %sql)
+			db.execute(sql)
+			db.commit()
+			
+			resultId = db.lastinsertedid()
+		except Exception as e:
+			logging.debug("Insertion error to table resultats, details %s" %e)
+			sys.exit()
 		
 		return resultId
 	except Exception as e:
@@ -3100,7 +3197,6 @@ def test_insert_params_to_db():
 					"repartitionHomogene": {}
 				}
 		
-# 		sql = """insert into rapport (nom, id_groupe, type_action, valeur_exclusion , date_creation, params, statut)
 		sql = """insert into parametres (nom, id_groupe, type_action, valeur_exclusion , date_creation, params, statut)
 				values ( '%(name)s', %(groupId)s, '%(actionType)s', %(exclusionValue)s , '%(creationDate)s', '%(params)s', %(statut)s
 					)

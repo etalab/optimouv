@@ -20,7 +20,12 @@ class Rencontres
     public $app_code;
     public $error_log_path;
 
-    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path)
+    /**
+     * @var Statistiques $serviceStatistiques
+     */
+    protected $serviceStatistiques;
+
+    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $serviceStatistiques)
     {
         $this->database_name = $database_name;
         $this->database_user = $database_user;
@@ -28,6 +33,8 @@ class Rencontres
         $this->app_id = $app_id;
         $this->app_code = $app_code;
         $this->error_log_path = $error_log_path;
+        $this->serviceStatistiques = $serviceStatistiques;
+
     }
 
     public function connexion()
@@ -209,8 +216,11 @@ class Rencontres
             $lanY = $Coordonnes[0];
             $lanX = $Coordonnes[1];
 
+            # obtenir l'id utilisateur
+            $idUtilisateur = $this->getUtilisateurIdParGroupeId($idGroupe);
 
-            $resultat = Rencontres::calculRoute($lanX, $lanY, $T2);
+
+            $resultat = Rencontres::calculRoute($lanX, $lanY, $T2, $idUtilisateur);
 
             $distanceDest = $resultat[0];
             $dureeDest = $resultat[1];
@@ -384,7 +394,7 @@ class Rencontres
 
         $coord = $lanX . '%2C' . $latY; // pour appel la fn routing matrix
 
-        $retour =  Rencontres::routingMatrix($coord, $villes, $idsEntitesMerge);
+        $retour =  Rencontres::routingMatrix($coord, $villes, $idsEntitesMerge, $idGroupe);
 
 
         # ajouter le nombre de participants dans les résultats
@@ -466,7 +476,7 @@ class Rencontres
             }
 
 
-            $retour = Rencontres::routingMatrix($coord, $villes, $idsEntitesMerge);
+            $retour = Rencontres::routingMatrix($coord, $villes, $idsEntitesMerge, $idGroupe);
 
             # ajouter le nombre de participants dans les résultats
             $retour["nbrParticipantsTotal"] = Rencontres::getTotalNombreParticipants($retour[9]);
@@ -532,7 +542,12 @@ class Rencontres
             $lanY = $Coordonnes[0];
             $lanX = $Coordonnes[1];
 
-            $resultat = Rencontres::calculRoute($lanX, $lanY, $T2);
+
+            # obtenir l'id utilisateur
+            $idUtilisateur = $this->getUtilisateurIdParGroupeId($idGroupe);
+
+
+            $resultat = Rencontres::calculRoute($lanX, $lanY, $T2, $idUtilisateur);
 
             $distanceDest = $resultat[0];
             $dureeDest = $resultat[1];
@@ -624,7 +639,7 @@ class Rencontres
         return $retour;
     }
 
-    public function routingMatrix($coord, $villes, $idsEntites)
+    public function routingMatrix($coord, $villes, $idsEntites, $idGroupe)
     {
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
@@ -667,7 +682,10 @@ class Rencontres
         }
 
 
-         $calculRoute =  Rencontres::calculRoute($lanX, $latY, $villes);
+        # obtenir l'id utilisateur
+        $idUtilisateur = $this->getUtilisateurIdParGroupeId($idGroupe);
+
+        $calculRoute =  Rencontres::calculRoute($lanX, $latY, $villes, $idUtilisateur);
 
         $distanceEquipe = $calculRoute[0];
         $dureeEquipe = $calculRoute[1];
@@ -740,8 +758,11 @@ class Rencontres
             $latY = $start[0];
             $lanX = $start[1];
 
+            # obtenir l'id utilisateur
+            $idUtilisateur = $this->getUtilisateurIdParGroupeId($idGroupe);
 
-            $calculRoute = Rencontres::calculRoute($lanX, $latY, $equipe);
+
+            $calculRoute = Rencontres::calculRoute($lanX, $latY, $equipe, $idUtilisateur);
 
             $distanceTotale = $calculRoute[0];
             $dureeTotale = $calculRoute[1];
@@ -853,7 +874,10 @@ class Rencontres
             $latY = $start[0];
             $lanX = $start[1];
 
-            $calculRoute = Rencontres::calculRoute($lanX, $latY, $equipe);
+            # obtenir l'id utilisateur
+            $idUtilisateur = $this->getUtilisateurIdParGroupeId($idGroupe);
+
+            $calculRoute = Rencontres::calculRoute($lanX, $latY, $equipe, $idUtilisateur);
 
             $distanceTotal = $calculRoute[0];
             $dureeTotale = $calculRoute[1];
@@ -1043,7 +1067,7 @@ class Rencontres
 
     }
 
-    public function calculRoute($lanX, $latY, $villes)
+    public function calculRoute($lanX, $latY, $villes, $idUtilisateur)
     {
         # obtenir la date courante du système
         date_default_timezone_set('Europe/Paris');
@@ -1066,6 +1090,10 @@ class Rencontres
 
         $distanceTotale = [];
         $dureeTotale = [];
+
+
+        # nombre des requetes HERE
+        $nbrRequetesHere = 0;
 
         //parcourir tout le tableau des villes
         for ($i = 0; $i < count($villes); $i++) {
@@ -1096,6 +1124,8 @@ class Rencontres
                 $req->execute();
                 $res = $req->fetch(PDO::FETCH_ASSOC);
 
+//                error_log("\n Service: Rencontres".print_r($res, true)."\n", 3, $this->error_log_path);
+
 
                 if ($res) {
 
@@ -1106,9 +1136,9 @@ class Rencontres
 
                 } else {
                     $reqRoute = 'http://route.api.here.com/routing/7.2/calculateroute.json?waypoint0=' . $coordStart . '&waypoint1=' . $villes[$i] . '&mode=fastest%3Bcar%3Btraffic%3Adisabled&app_id=' . $app_id . '&app_code=' . $app_code;
-//                    error_log("\n Service: Rencontres, Function: calculRoute, datetime: ".$dateTimeNow
-//                        ."\n reqRoute: ".print_r($reqRoute, true), 3, $this->error_log_path);
-                    
+
+                    $nbrRequetesHere += 1;
+
                     $decoded =  Rencontres::getReponseCurl($reqRoute);
 
                     if (isset($decoded->response->status) && $decoded->response->status == 'ERROR') {
@@ -1144,6 +1174,13 @@ class Rencontres
 
         }
 
+        # incrémenter le nombre des requetes HERE
+        if($nbrRequetesHere > 0){
+            $this->serviceStatistiques->augmenterNombreTableStatistiques($idUtilisateur, "nombreRequetesHere", $nbrRequetesHere);
+        }
+
+
+
         $retour = [];
         $retour[0] = $distanceTotale;
         $retour[1] = $dureeTotale;
@@ -1152,8 +1189,23 @@ class Rencontres
 
     }
 
+    public function getUtilisateurIdParGroupeId($idGroupe){
+        //on recupere les parametres de connexion
+        $bdd= $this->connexion();
+
+        $stmt1 = $bdd->prepare("select id_utilisateur from groupe where id = :id ;");
+
+        $stmt1->bindParam(':id', $idGroupe);
+        $stmt1->execute();
+        $idUtilisateur = $stmt1->fetchColumn();
+
+        return $idUtilisateur;
+
+    }
+
     public function getListeLieux($idGroupe)
     {
+
         $app_id = $this->app_id;
         $app_code = $this->app_code;
 
@@ -1180,6 +1232,11 @@ class Rencontres
             $nomsVilles = [];
             $coordVilles = [];
 
+            # obtenir l'id de l'utilisateur
+            $utilisateurId = $this->getUtilisateurIdParGroupeId($idGroupe);
+
+            # nombre des requetes HERE
+            $nbrRequetesHere = 0;
 
             for ($i = 0; $i < count($listeLieux); $i++) {
                 //
@@ -1207,6 +1264,8 @@ class Rencontres
 
                         $v = urlencode($nomVille);
                         $reqGeocode = 'http://geocoder.api.here.com/6.2/geocode.json?country=France&city=' . $v . '&postalCode=' . $codePostal . '&app_id=' . $app_id . '&app_code=' . $app_code . '&gen=8';
+
+                        $nbrRequetesHere += 1;
 
                         $reqGeocodeArray = $this->getReponseCurl($reqGeocode);
 
@@ -1244,6 +1303,12 @@ class Rencontres
 
             }
             $retour = [];
+
+            # incrémenter le nombre des requetes HERE
+            if($nbrRequetesHere > 0){
+                $this->serviceStatistiques->augmenterNombreTableStatistiques($utilisateurId, "nombreRequetesHere", $nbrRequetesHere);
+            }
+
 
             $retour[0] = $nomsVilles;
             $retour[1] = $coordVilles;
