@@ -286,6 +286,13 @@
                 ;
             }
 
+            function viderSelectUtilisateurs(){
+                $('#selectUtilisateur').prop('selectedIndex',0)
+                        .find('option')
+                        .remove();
+
+            }
+
             function reinitiliaserSelectFederations(){
                 $('#selectFederation').prop('selectedIndex',0)
                         .find('option')
@@ -382,7 +389,7 @@
                         $('#selectDiscipline')
                                 .append($("<option></option>")
                                         .attr("value", "tous")
-                                        .text("Tous disciplines"));
+                                        .text("Toutes disciplines"));
 
                     }
 
@@ -447,16 +454,16 @@
                     }
                     else if(typeRapport == "systeme" || typeRapport == "federation" ){
                         // fixer les utilisateurs à tous pour le rapport fédération et système
+                        viderSelectUtilisateurs();
+
                         $('#selectUtilisateur')
                                 .append($("<option></option>")
                                         .attr("value", "tous")
                                         .text("Tous utilisateurs"));
 
+
+
                     }
-
-
-
-
 
                 }
                 // pour l'option vide
