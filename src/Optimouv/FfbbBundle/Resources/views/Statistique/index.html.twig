@@ -69,7 +69,6 @@
                                 <div class="col-sm-2">
                                     <select class="form-control" id="selectUtilisateur" >
                                         <option value="vide" selected> -- selectionnez une option -- </option>
-                                        <option value="tous">Tous utilisateurs</option>
                                     </select>
                                 </div>
                             </div>
@@ -276,15 +275,25 @@
                         .end()
                         .append('<option value="vide">-- selectionnez une option --</option>')
                 ;
-
             }
+
+            function reinitiliaserSelectUtilisateurs(){
+                $('#selectUtilisateur').prop('selectedIndex',0)
+                        .find('option')
+                        .remove()
+                        .end()
+                        .append('<option value="vide">-- selectionnez une option --</option>')
+                ;
+            }
+
+
 
             // obtenir les données pour les filtres
             var listeFederations = {{ listeFederations | json_encode | raw }};
 //            console.log("listeFederations: " + JSON.stringify(listeFederations));
 
 
-            // evenement handler
+            // evenement handler pour select rapport
             $( "#selectRapport" ).change(function() {
                 console.log( "------------------------------------------------------ DEBUG selectRapport -------------------------------------------" );
 
@@ -292,8 +301,14 @@
                 var typeRapport = $("#selectRapport option:selected").val();
                 console.log( "typeRapport: " + typeRapport );
 
+//                <option value="tous">Tous utilisateurs</option>
+
+                // fixer les utilisateurs à tous pour le rapport fédération et système // TODO
+
 
             });
+
+            // handler pour select federation
             $( "#selectFederation" ).change(function() {
                 console.log( "------------------------------------------------------ DEBUG selectFederation -------------------------------------------" );
 
@@ -301,43 +316,59 @@
                 var federationId = $("#selectFederation option:selected").val();
                 console.log( "federationId: " + federationId );
 
-                // obtenir l'index du select option
-                var indexSelectionner = $("#selectFederation").prop("selectedIndex");
-                console.log( "indexSelectionner: " + indexSelectionner);
+                if(federationId != "vide"){
+                    // obtenir l'index du select option
+                    var indexFedeSelectionner = $("#selectFederation").prop("selectedIndex");
+                    console.log( "indexFedeSelectionner: " + indexFedeSelectionner);
 
-                var federationSelectionner = listeFederations[indexSelectionner-1];
+                    var federationSelectionner = listeFederations[indexFedeSelectionner-1];
 //                console.log( "federationSelectionner: " + JSON.stringify(federationSelectionner));
 
-                var disciplinesSelectionner = federationSelectionner["disciplines"];
+                    var disciplinesSelectionner = federationSelectionner["disciplines"];
 //                console.log( "disciplinesSelectionner: " + JSON.stringify(disciplinesSelectionner));
 
-                for(var i=0; i<disciplinesSelectionner.length; i++){
-                    var disciplineId = disciplinesSelectionner[i]["id"];
-                    console.log( "disciplineId: " + JSON.stringify(disciplineId));
-                    var disciplineNom = disciplinesSelectionner[i]["nom"];
-                    console.log( "disciplineNom: " + JSON.stringify(disciplineNom));
+                    for(var i=0; i<disciplinesSelectionner.length; i++){
+                        var disciplineId = disciplinesSelectionner[i]["id"];
+                        console.log( "disciplineId: " + JSON.stringify(disciplineId));
+                        var disciplineNom = disciplinesSelectionner[i]["nom"];
+                        console.log( "disciplineNom: " + JSON.stringify(disciplineNom));
 
-                    // reinitialiser select option disciplines
+                        // reinitialiser select option disciplines
+                        reinitiliaserSelectDisciplines();
+
+                        // ajouter des options pour le select disciplines
+                        $('#selectDiscipline')
+                                .append($("<option></option>")
+                                        .attr("value", disciplineId)
+                                        .text(disciplineNom));
+
+                    }
+                }
+                // reinitialiser les valeurs
+                else{
                     reinitiliaserSelectDisciplines();
-
-                    // ajouter des options pour le select disciplines
-                    $('#selectDiscipline')
-                            .append($("<option></option>")
-                                    .attr("value", disciplineId)
-                                    .text(disciplineNom));
-
+                    reinitiliaserSelectUtilisateurs();
                 }
 
             });
 
+            // handler pour select discipline
             $( "#selectDiscipline" ).change(function() {
                 console.log( "------------------------------------------------------ DEBUG selectDiscipline -------------------------------------------" );
+
+                // obtenir l'index du select option
+                var indexFedeSelectionner = $("#selectFederation").prop("selectedIndex");
+                console.log( "indexFedeSelectionner: " + indexFedeSelectionner);
+
+                var federationSelectionner = listeFederations[indexFedeSelectionner-1];
+                console.log( "federationSelectionner: " + JSON.stringify(federationSelectionner));
 
                 // obtenir l'id de discipline
                 var disciplineId = $("#selectDiscipline option:selected").val();
                 console.log( "disciplineId: " + disciplineId );
             });
 
+            // handler pour select utilisateur
             $( "#selectUtilisateur" ).change(function() {
                 console.log( "------------------------------------------------------ DEBUG selectUtilisateur -------------------------------------------" );
 
