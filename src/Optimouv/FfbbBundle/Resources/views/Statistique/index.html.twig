@@ -26,7 +26,7 @@
                             <div class="form-group">
                                 <label class="control-label col-sm-2" for="typeRapport">TYPE DE RAPPORT </label>
                                 <div class="col-sm-2">
-                                    <select class="form-control" >
+                                    <select class="form-control" id="selectRapport" >
                                         <option value="vide" selected> -- selectionnez une option -- </option>
                                         {% if (is_granted('ROLE_ADMIN') == true) %}
                                             <option value="utilisateur">Rapport utilisateur</option>
@@ -44,7 +44,7 @@
                             <div class="form-group">
                                 <label class="control-label col-sm-2" for="nomFderation">NOM DE LA FEDERATION</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control" >
+                                    <select class="form-control" id="selectFederation" >
                                         <option value="vide" selected> -- selectionnez une option -- </option>
                                         {% for federation in listeFederations  %}
                                             <option value="{{ federation.id }}">{{ federation.nom }}</option>
@@ -58,10 +58,8 @@
                             <div class="form-group">
                                 <label class="control-label col-sm-2" for="nomDiscipline">NOM DE LA DISCIPLINE</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control" >
+                                    <select class="form-control" id="selectDiscipline">
                                         <option value="vide" selected> -- selectionnez une option -- </option>
-                                        <option value="idBasket">Basket Ball</option>
-                                        <option value="idFoot">Football</option>
                                     </select>
                                 </div>
                             </div>
@@ -69,9 +67,9 @@
                             <div class="form-group">
                                 <label class="control-label col-sm-2" for="nomUtilisateur">NOM DE L'UTILISATEUR</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control" >
+                                    <select class="form-control" id="selectUtilisateur" >
                                         <option value="vide" selected> -- selectionnez une option -- </option>
-                                        <option value="idBasket">Tous utilisateurs</option>
+                                        <option value="tous">Tous utilisateurs</option>
                                     </select>
                                 </div>
                             </div>
@@ -269,6 +267,86 @@
                 language: "fr",
                 autoclose: true
             });
+
+
+            function reinitiliaserSelectDisciplines(){
+                $('#selectDiscipline').prop('selectedIndex',0)
+                        .find('option')
+                        .remove()
+                        .end()
+                        .append('<option value="vide">-- selectionnez une option --</option>')
+                ;
+
+            }
+
+            // obtenir les données pour les filtres
+            var listeFederations = {{ listeFederations | json_encode | raw }};
+//            console.log("listeFederations: " + JSON.stringify(listeFederations));
+
+
+            // evenement handler
+            $( "#selectRapport" ).change(function() {
+                console.log( "------------------------------------------------------ DEBUG selectRapport -------------------------------------------" );
+
+                // obtenir le type de rapport
+                var typeRapport = $("#selectRapport option:selected").val();
+                console.log( "typeRapport: " + typeRapport );
+
+
+            });
+            $( "#selectFederation" ).change(function() {
+                console.log( "------------------------------------------------------ DEBUG selectFederation -------------------------------------------" );
+
+                // obtenir l'id de fédération
+                var federationId = $("#selectFederation option:selected").val();
+                console.log( "federationId: " + federationId );
+
+                // obtenir l'index du select option
+                var indexSelectionner = $("#selectFederation").prop("selectedIndex");
+                console.log( "indexSelectionner: " + indexSelectionner);
+
+                var federationSelectionner = listeFederations[indexSelectionner-1];
+//                console.log( "federationSelectionner: " + JSON.stringify(federationSelectionner));
+
+                var disciplinesSelectionner = federationSelectionner["disciplines"];
+//                console.log( "disciplinesSelectionner: " + JSON.stringify(disciplinesSelectionner));
+
+                for(var i=0; i<disciplinesSelectionner.length; i++){
+                    var disciplineId = disciplinesSelectionner[i]["id"];
+                    console.log( "disciplineId: " + JSON.stringify(disciplineId));
+                    var disciplineNom = disciplinesSelectionner[i]["nom"];
+                    console.log( "disciplineNom: " + JSON.stringify(disciplineNom));
+
+                    // reinitialiser select option disciplines
+                    reinitiliaserSelectDisciplines();
+
+                    // ajouter des options pour le select disciplines
+                    $('#selectDiscipline')
+                            .append($("<option></option>")
+                                    .attr("value", disciplineId)
+                                    .text(disciplineNom));
+
+                }
+
+            });
+
+            $( "#selectDiscipline" ).change(function() {
+                console.log( "------------------------------------------------------ DEBUG selectDiscipline -------------------------------------------" );
+
+                // obtenir l'id de discipline
+                var disciplineId = $("#selectDiscipline option:selected").val();
+                console.log( "disciplineId: " + disciplineId );
+            });
+
+            $( "#selectUtilisateur" ).change(function() {
+                console.log( "------------------------------------------------------ DEBUG selectUtilisateur -------------------------------------------" );
+
+                // obtenir l'id d'utilisateur
+                var utilisateurId = $("#selectUtilisateur option:selected").val();
+                console.log( "utilisateurId: " + utilisateurId );
+            });
+
+
 
         });
 
