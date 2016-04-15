@@ -165,24 +165,24 @@ class Statistiques {
                 $sql = "SELECT * from federation";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
-                $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $federations = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
             else{
                 $sql = "SELECT * from federation where id=:id";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindParam(':id', $federationId);
                 $stmt->execute();
-                $resultat = $stmt->fetchALL(PDO::FETCH_ASSOC);
+                $federations = $stmt->fetchALL(PDO::FETCH_ASSOC);
             }
 
-            if(!$resultat ){
+            if(!$federations ){
                 error_log("\n  Erreur lors de la récupération de la liste de fédérations, Service: Statistiques, Function: getDetailsFederation, errorInfo: "
                     .print_r($pdo->errorInfo(), true) , 3, $this->error_log_path);
                 die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
             }
 
             // obtenir les détails des disciplines
-            foreach($resultat as &$federation){
+            foreach($federations as $indexFederation => &$federation){
                 $federationId = $federation["id"];
                 $sql = "SELECT id, nom from discipline where id_federation=:id";
                 $stmt = $pdo->prepare($sql);
@@ -198,7 +198,7 @@ class Statistiques {
                 }
 
                 // obtenir les détails des utilisateurs
-                foreach($disciplines as &$discipline ){
+                foreach($disciplines as $indexDiscipline=> &$discipline ){
                     $disciplineId = $discipline["id"];
 
                     $sql = "SELECT id, nom, prenom from fos_user where id_discipline=:id";
@@ -209,16 +209,30 @@ class Statistiques {
 
                     $discipline["utilisateurs"] = $utilisateurs;
 
+                    # enlever la discipline si elle n'a pas d'utilisateurs
+                    if($utilisateurs == []){
+                        unset($disciplines[$indexDiscipline]);
+                        continue;
+
+                    }
+
+//                    error_log("\n utilisateurs: ".print_r($utilisateurs, true), 3, $this->error_log_path);
 
                 }
 
-                // ajouter une clé dans la liste de fédérations
-                $federation["disciplines"] = $disciplines;
+                if($disciplines != []){
+                    // ajouter une clé dans la liste de fédérations
+                    $federation["disciplines"] = $disciplines;
+                }
+                elseif($disciplines == []){
+                    unset($federations[$indexFederation]);
+                    continue;
+                }
 
             }
 
 
-            return $resultat;
+            return $federations;
 
         }
         catch (PDOException $e){
