@@ -166,3 +166,26 @@
   background-color: #40BAC3;
   border-color: #ccc;
 }
+
+.btn-ajouter-reparition {
+  color: #fff;
+  background-color: #bbb;
+  border-color: #ccc;
+}
+.btn-ajouter-reparition:hover {
+  color: #fff;
+  background-color: #bbb;
+  border-color: #ccc;
+}
+
+
+.btn-editer-reparition {
+  color: #000;
+  background-color: #fff;
+  border-color: #ccc;
+}
+.btn-editer-reparition:hover {
+  color: #fff;
+  background-color: #bbb;
+  border-color: #ccc;
+}
