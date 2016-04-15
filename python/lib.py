@@ -1988,8 +1988,17 @@ def get_type_distribution_constraints(typeDistributionDict):
 # 			typeDistributionConstraints = {"status": "yes", "data": {"espoir":  [7968, 7969]}}
 			typeDistributionConstraints = {"status": "yes", "data": {} }
 			
-			for teamType, members in typeDistributionDict.items():
-				typeDistributionConstraints["data"].update({teamType : members})
+			# check type of variable typeDistributionDict
+			if isinstance(typeDistributionDict, dict):
+				for teamType, members in typeDistributionDict.items():
+					typeDistributionConstraints["data"].update({teamType : members})
+			elif isinstance(typeDistributionDict, list):
+				typeDistributionConstraints["data"].update({"promu" : typeDistributionDict})
+				
+			else:
+				# if typeDistributionDict is not a dict, it is an error
+				typeDistributionConstraints = {"status": "no", "data": {}}
+				
 			
 		else:
 			typeDistributionConstraints = {"status": "no", "data": {}}
