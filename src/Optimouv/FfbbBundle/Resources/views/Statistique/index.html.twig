@@ -313,13 +313,14 @@
                 console.log( "------------------------------------------------------ DEBUG selectFederation -------------------------------------------" );
 
                 // obtenir l'id de fédération
-                var federationId = $("#selectFederation option:selected").val();
-                console.log( "federationId: " + federationId );
+//                var federationId = $("#selectFederation option:selected").val();
+//                console.log( "federationId: " + federationId );
 
-                if(federationId != "vide"){
-                    // obtenir l'index du select option
-                    var indexFedeSelectionner = $("#selectFederation").prop("selectedIndex");
-                    console.log( "indexFedeSelectionner: " + indexFedeSelectionner);
+                // obtenir l'index du select option de fédération
+                var indexFedeSelectionner = $("#selectFederation").prop("selectedIndex");
+                console.log( "indexFedeSelectionner: " + indexFedeSelectionner);
+
+                if(indexFedeSelectionner != 0){
 
                     var federationSelectionner = listeFederations[indexFedeSelectionner-1];
 //                console.log( "federationSelectionner: " + JSON.stringify(federationSelectionner));
@@ -327,14 +328,16 @@
                     var disciplinesSelectionner = federationSelectionner["disciplines"];
 //                console.log( "disciplinesSelectionner: " + JSON.stringify(disciplinesSelectionner));
 
+                    // reinitialiser select option disciplines
+                    reinitiliaserSelectDisciplines();
+                    reinitiliaserSelectUtilisateurs();
+
                     for(var i=0; i<disciplinesSelectionner.length; i++){
                         var disciplineId = disciplinesSelectionner[i]["id"];
                         console.log( "disciplineId: " + JSON.stringify(disciplineId));
                         var disciplineNom = disciplinesSelectionner[i]["nom"];
                         console.log( "disciplineNom: " + JSON.stringify(disciplineNom));
 
-                        // reinitialiser select option disciplines
-                        reinitiliaserSelectDisciplines();
 
                         // ajouter des options pour le select disciplines
                         $('#selectDiscipline')
@@ -356,16 +359,53 @@
             $( "#selectDiscipline" ).change(function() {
                 console.log( "------------------------------------------------------ DEBUG selectDiscipline -------------------------------------------" );
 
-                // obtenir l'index du select option
-                var indexFedeSelectionner = $("#selectFederation").prop("selectedIndex");
-                console.log( "indexFedeSelectionner: " + indexFedeSelectionner);
-
-                var federationSelectionner = listeFederations[indexFedeSelectionner-1];
-                console.log( "federationSelectionner: " + JSON.stringify(federationSelectionner));
-
                 // obtenir l'id de discipline
-                var disciplineId = $("#selectDiscipline option:selected").val();
-                console.log( "disciplineId: " + disciplineId );
+//                var disciplineId = $("#selectDiscipline option:selected").val();
+//                console.log( "disciplineId: " + disciplineId );
+
+                // obtenir l'index du select option de discipline
+                var indexDisciplineSelectionner = $("#selectDiscipline").prop("selectedIndex");
+                console.log( "indexDisciplineSelectionner: " + indexDisciplineSelectionner);
+
+
+                if(indexDisciplineSelectionner != 0){
+
+                    // obtenir l'index du select option de fédération
+                    var indexFedeSelectionner = $("#selectFederation").prop("selectedIndex");
+                    console.log( "indexFedeSelectionner: " + indexFedeSelectionner);
+
+                    var federationSelectionner = listeFederations[indexFedeSelectionner-1];
+//                    console.log( "federationSelectionner: " + JSON.stringify(federationSelectionner));
+
+                    var utilisateursSelectionner = federationSelectionner["disciplines"][indexDisciplineSelectionner-1]["utilisateurs"];
+                    console.log( "utilisateursSelectionner: " + JSON.stringify(utilisateursSelectionner));
+
+                    // reinitialiser select option utilisateurs
+                    reinitiliaserSelectUtilisateurs();
+
+                    for(var i=0; i<utilisateursSelectionner.length; i++){
+                        var utilisateurId = utilisateursSelectionner[i]["id"];
+                        console.log( "utilisateurId: " + JSON.stringify(utilisateurId));
+                        var utilisateurNom = utilisateursSelectionner[i]["nom"];
+                        console.log( "utilisateurNom: " + JSON.stringify(utilisateurNom));
+                        var utilisateurPreNom = utilisateursSelectionner[i]["prenom"];
+                        console.log( "utilisateurPreNom: " + JSON.stringify(utilisateurPreNom));
+
+
+                        // ajouter des options pour le select disciplines
+                        $('#selectUtilisateur')
+                                .append($("<option></option>")
+                                        .attr("value", utilisateurId)
+                                        .text(utilisateurPreNom + " " + utilisateurNom));
+
+                    }
+
+
+                }
+                else{
+                    reinitiliaserSelectUtilisateurs();
+                }
+
             });
 
             // handler pour select utilisateur
