@@ -77,8 +77,8 @@
                                 <label class="control-label col-sm-2" for="dateDebut">DATE DE DEBUT</label>
                                 <div class="col-sm-2" >
 
-                                    <div class="input-group date">
-                                        <input type="text" class="form-control">
+                                    <div class="input-group date" >
+                                        <input type="text" class="form-control" id="dateDebut">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
                                     </div>
 
@@ -90,8 +90,8 @@
                                 <label class="control-label col-sm-2" for="dateFin">DATE DE FIN</label>
                                 <div class="col-sm-2" >
 
-                                    <div class="input-group date">
-                                        <input type="text" class="form-control">
+                                    <div class="input-group date" >
+                                        <input type="text" class="form-control" id="dateFin">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
                                     </div>
 
@@ -306,6 +306,11 @@
 
             }
 
+            function reinitiliaserDatePicker(){
+                $("#dateDebut").val('');
+                $("#dateFin").val('');
+
+            }
 
 
 
@@ -325,6 +330,7 @@
                 reinitiliaserSelectFederations();
                 reinitiliaserSelectDisciplines();
                 reinitiliaserSelectUtilisateurs();
+                reinitiliaserDatePicker();
 
                 if(typeRapport != "vide" && typeRapport != ""){
                     remplirSelectFederations();
