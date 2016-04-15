@@ -28,10 +28,15 @@
                                 <div class="col-sm-2">
                                     <select class="form-control" >
                                         <option value="vide" selected> -- selectionnez une option -- </option>
-                                        <option value="systeme">Rapport système</option>
-                                        <option value="utilisateur">Rapport utilisateur</option>
-                                        <option value="federation">Rapport fédération</option>
-                                        <option value="historique">Résultat de recherche</option>
+                                        {% if (is_granted('ROLE_ADMIN') == true) %}
+                                            <option value="utilisateur">Rapport utilisateur</option>
+                                            <option value="federation">Rapport fédération</option>
+                                        {% endif %}
+
+                                        {% if (is_granted('ROLE_SUPER_ADMIN') == true) %}
+                                            <option value="systeme">Rapport système</option>
+
+                                        {% endif %}
                                     </select>
                                 </div>
                             </div>
@@ -41,8 +46,11 @@
                                 <div class="col-sm-2">
                                     <select class="form-control" >
                                         <option value="vide" selected> -- selectionnez une option -- </option>
-                                        <option value="idFfbb">FFBB</option>
-                                        <option value="idFff">FFF</option>
+                                        {% for federation in listeFederations  %}
+                                            <option value="{{ federation.id }}">{{ federation.nom }}</option>
+
+                                        {% endfor %}
+
                                     </select>
                                 </div>
                             </div>
