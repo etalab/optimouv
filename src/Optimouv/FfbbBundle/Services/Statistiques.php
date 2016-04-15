@@ -150,5 +150,85 @@ class Statistiques {
 
 
 
+    public function getDetailsFederation($federationId){
+        try{
+            # obtenir l'objet PDO
+            $pdo = $this->getPdo();
+
+            if (!$pdo) {
+                //erreur de connexion
+                error_log("\n erreur récupération de l'objet PDO, Service: Statistiques, Function: getDetailsFederation ", 3, $this->error_log_path);
+                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+            }
+
+            if($federationId == "tous"){
+                $sql = "SELECT * from federation";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute();
+                $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+            else{
+                $sql = "SELECT * from federation where id=:id";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindParam(':id', $federationId);
+                $stmt->execute();
+                $resultat = $stmt->fetchALL(PDO::FETCH_ASSOC);
+            }
+
+            if(!$resultat ){
+                error_log("\n  Erreur lors de la récupération de la liste de fédérations, Service: Statistiques, Function: getDetailsFederation, errorInfo: "
+                    .print_r($pdo->errorInfo(), true) , 3, $this->error_log_path);
+                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+            }
+
+            // obtenir les détails des disciplines
+            foreach($resultat as &$federation){
+                $federationId = $federation["id"];
+                $sql = "SELECT id, nom from discipline where id_federation=:id";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindParam(':id', $federationId);
+                $stmt->execute();
+                $disciplines = $stmt->fetchALL(PDO::FETCH_ASSOC);
+
+
+                if(!$disciplines ){
+                    error_log("\n  Erreur lors de la récupération de la liste de disciplines pour une fédération, Service: Statistiques, Function: getDetailsFederation, errorInfo: "
+                        .print_r($pdo->errorInfo(), true) , 3, $this->error_log_path);
+                    die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+                }
+
+                // obtenir les détails des utilisateurs
+                foreach($disciplines as &$discipline ){
+                    $disciplineId = $discipline["id"];
+
+                    $sql = "SELECT id, nom, prenom from fos_user where id_discipline=:id";
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->bindParam(':id', $disciplineId);
+                    $stmt->execute();
+                    $utilisateurs = $stmt->fetchALL(PDO::FETCH_ASSOC);
+
+                    $discipline["utilisateurs"] = $utilisateurs;
+
+
+                }
+
+                // ajouter une clé dans la liste de fédérations
+                $federation["disciplines"] = $disciplines;
+
+            }
+
+
+            return $resultat;
+
+        }
+        catch (PDOException $e){
+            error_log("\n erreur PDO, Service: Statistiques, Function: getDetailsFederation, erreur: ".print_r($e, true), 3, $this->error_log_path);
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
+
+    }
+
+
+
 }
 
