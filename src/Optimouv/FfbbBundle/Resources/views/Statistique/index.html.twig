@@ -101,7 +101,7 @@
 
                             <div class="form-group">
                                 <div class="control-label col-sm-4 ">
-                                    <button type="submit" class="btn btn-statistique">Accéder</button>
+                                    <button type="submit" class="btn btn-statistique" id="btnGetResultats">Accéder</button>
                                 </div>
                             </div>
                         </form>
@@ -373,7 +373,21 @@
                                         .text(disciplineNom));
 
                     }
-                }
+
+                    // obtenir le type de rapport
+                    var typeRapport = $("#selectRapport option:selected").val();
+                    console.log( "typeRapport: " + typeRapport );
+
+                    if(typeRapport == "systeme" || typeRapport == "federation" ){
+                        $('#selectDiscipline')
+                                .append($("<option></option>")
+                                        .attr("value", "tous")
+                                        .text("Tous disciplines"));
+
+                    }
+
+
+                    }
                 // pour l'option vide
                 else{
                     // reinitialiser les valeurs
@@ -401,7 +415,6 @@
 
                     var federationSelectionner = listeFederations[indexFedeSelectionner-1];
 //                    console.log( "federationSelectionner: " + JSON.stringify(federationSelectionner));
-
 
                     // obtenir le type de rapport
                     var typeRapport = $("#selectRapport option:selected").val();

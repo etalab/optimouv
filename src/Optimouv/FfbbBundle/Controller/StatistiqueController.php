@@ -25,13 +25,6 @@ class StatistiqueController extends Controller
         # obtenir l'id de la fédération
         $federationId = $this->get("service_statistiques")->getFederationId($disciplineId);
 
-
-//        error_log("\n utilisateurId: ".print_r($utilisateurId, true), 3, $this->error_log_path);
-//        error_log("\n disciplineId: ".print_r($disciplineId, true), 3, $this->error_log_path);
-//        error_log("\n federationId: ".print_r($federationId, true), 3, $this->error_log_path);
-
-
-
         # controler le role de l'utilisateur
         # pour l'admin générale
         if($autorisationChecker->isGranted("ROLE_SUPER_ADMIN")){
