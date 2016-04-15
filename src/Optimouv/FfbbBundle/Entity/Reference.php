@@ -24,7 +24,7 @@ class Reference
     /**
      * @var string
      *
-     * @ORM\Column(name="type", type="string", length=50, nullable=false)
+     * @ORM\Column(name="type", type="string", length=50, nullable=true)
      */
     private $type;
 
@@ -52,7 +52,7 @@ class Reference
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date_modification", type="date", nullable=false)
+     * @ORM\Column(name="date_modification", type="date", nullable=true)
      */
     private $dateModification;
 

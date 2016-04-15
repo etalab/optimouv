@@ -8,12 +8,12 @@
                  <div class="bs-example">
                      <ul class="breadcrumb">
                          <li><a href="{{ path('administration_panel') }}">Administration</a></li>
-                         <li><a href="{{ path('ffbb_discipline_list') }}">Liste de catégories</a></li>
-                         <li class="active">Mise à jour de discipline</li>
+                         <li><a href="{{ path('ffbb_coefficients_list') }}">Liste de coefficients</a></li>
+                         <li class="active">Mise à jour d'un coefficient</li>
                      </ul>
                  </div>
                  <div class="col-lg-12">
-                     <h3 class="page-header">Editer une catégorie </h3>
+                     <h3 class="page-header">Editer un coefficient </h3>
                      <h5 style="text-align: right; font-weight: bold">(* champs obligatoires)</h5>
                  </div>
                  <!-- /.col-lg-12 -->
@@ -22,15 +22,20 @@
 
              <div class="row">
                  <div class="col-lg-6">
-                     <form role="form" action="{{ path('ffbb_repartition_update_cat') }}" method="post">
+                     <form role="form" action="{{ path('ffbb_coefficients_update_coef') }}" method="post">
 
 
 
                          <div class="form-group">
-                             <label style="font-weight: bold">Designation de la catégorie *</label>
-                             <input class="form-control" name="designation" value="{{ designation }}" required>
+                             <label style="font-weight: bold">Code *</label>
+                             <input class="form-control" name="code" value="{{ reference.code }}" required>
                          </div>
-                         <input type="hidden" name="idCategorie" value="{{ idCategorie }}">
+
+                         <div class="form-group">
+                             <label style="font-weight: bold">Valeur *</label>
+                             <input class="form-control" name="coefficient" value="{{ reference.valeur }}" required>
+                         </div>
+                         <input type="hidden" name="idReference" value="{{ reference.id }}">
 
 
 
