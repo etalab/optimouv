@@ -35,7 +35,7 @@
                                        id="tableFede">
                                     <thead>
                                     <tr>
-                                        {#<th>No</th>#}
+                                        <th>No</th>
                                         <th>Designation </th>
                                         <th>Valeur </th>
                                         <th>Date de création</th>
@@ -49,6 +49,7 @@
 
                                     {% for coefficient in coefficients %}
                                         <tr id="{{ coefficient.id }}">
+                                            <td> {{ coefficient.id }} </td>
                                             <td> {{ coefficient.code }} </td>
                                             <td> {{ coefficient.valeur }} </td>
                                             <td> {{ coefficient.dateCreation.date|date('d/m/Y') }} </td>
