@@ -22,7 +22,8 @@
 
 
 
-                        <form class="form-horizontal" role="form">
+                        {#<form class="form-horizontal" role="form">#}
+                        <div class="form-horizontal">
                             <div class="form-group">
                                 <label class="control-label col-sm-2" for="typeRapport">TYPE DE RAPPORT </label>
                                 <div class="col-sm-2">
@@ -104,7 +105,8 @@
                                     <button type="submit" class="btn btn-statistique" id="btnGetResultats">Accéder</button>
                                 </div>
                             </div>
-                        </form>
+                        {#</form>#}
+                        </div>
 
                     </div>
 
@@ -262,6 +264,8 @@
             {# options pour le js Date picker #}
             $('.input-group.date').datepicker({
                 format: "dd/mm/yyyy",
+                startDate:"01/01/2010",
+                endDate:"now",
                 todayBtn: "linked",
                 language: "fr",
                 autoclose: true
@@ -473,16 +477,59 @@
 
             });
 
-            // handler pour select utilisateur
-//            $( "#selectUtilisateur" ).change(function() {
-//                console.log( "------------------------------------------------------ DEBUG selectUtilisateur -------------------------------------------" );
+            // handler pour date début
+//            $("#dateDebut").change(function(){
+//                console.log( "------------------------------------------------------ DEBUG date début -------------------------------------------" );
+//                var dateDebut = $("#dateDebut").val();
+//                console.log( "dateDebut: " + dateDebut );
 //
-//                // obtenir l'id d'utilisateur
-//                var utilisateurId = $("#selectUtilisateur option:selected").val();
-//                console.log( "utilisateurId: " + utilisateurId );
+//                $('.datepicker').datepicker('setStartDate', new Date(dateDebut));
+//            });
+//
+//            // handler pour date fin
+//            $("#dateFin").change(function(){
+//                console.log( "------------------------------------------------------ DEBUG date fin -------------------------------------------" );
+//                var dateFin = $("#dateFin").val();
+//                console.log( "dateFin: " + dateFin );
 //            });
 
 
+            // handler click acceder bouton
+            $("#btnGetResultats").click(function(){
+                console.log( "------------------------------------------------------ DEBUG bouton GetResultats -------------------------------------------" );
+                var dateDebutStr = $("#dateDebut").val();
+                var dateFinStr = $("#dateFin").val();
+
+                console.log( "dateDebutStr: " + dateDebutStr );
+                console.log( "dateFinStr: " + dateFinStr );
+
+                // comparer les dates données
+                if(dateDebutStr != "" && dateDebutStr != null && dateFinStr != "" && dateFinStr != null){
+                    var anneeDebut = dateDebutStr.split("/")[2];
+                    var moisDebut = dateDebutStr.split("/")[1];
+                    var dateDebut = dateDebutStr.split("/")[0];
+
+                    var anneeFin = dateFinStr.split("/")[2];
+                    var moisFin = dateFinStr.split("/")[1];
+                    var dateFin = dateFinStr.split("/")[0];
+
+                    var dateDebutObj = new Date(anneeDebut + "-" + moisDebut + "-" + dateDebut);
+                    console.log( "dateDebutObj: " + dateDebutObj );
+
+                    var dateFinObj = new Date(anneeFin + "-" + moisFin + "-" + dateFin);
+                    console.log( "dateFinObj: " + dateFinObj );
+
+                    if(dateDebutObj>dateFinObj){
+                        alert("Les dates saisies sont incorrectes. Veuillez modifier votre sélection.");
+                        return;
+                    }
+                    else{
+                        console.log("Les valeurs des dates sont correctes")
+                    }
+                }
+
+
+            });
 
         });
 
