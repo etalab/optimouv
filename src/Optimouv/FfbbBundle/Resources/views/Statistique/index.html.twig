@@ -304,7 +304,6 @@
 
 
 
-
             // obtenir les données pour les filtres
             var listeFederations = {{ listeFederations | json_encode | raw }};
 //            console.log("listeFederations: " + JSON.stringify(listeFederations));
@@ -491,6 +490,9 @@
                     var moisFin = dateFinStr.split("/")[1];
                     var dateFin = dateFinStr.split("/")[0];
 
+                    var dateDebutFormatter = anneeDebut + "/" + moisDebut + "/" + dateDebut;
+                    var dateFinFormatter = anneeFin + "/" + moisFin + "/" + dateFin;
+
                     var dateDebutObj = new Date(anneeDebut + "-" + moisDebut + "-" + dateDebut);
 //                    console.log( "dateDebutObj: " + dateDebutObj );
 
@@ -514,7 +516,7 @@
                                     if(idUtilisateur != "" && idUtilisateur != "vide" && idUtilisateur != null){
 
                                         var params = {"typeRapport": typeRapport, "idFederation": idFederation, "idDiscipline": idDiscipline,
-                                            "idUtilisateur": idUtilisateur, "dateDebutStr": dateDebutStr, "dateFinStr": dateFinStr
+                                            "idUtilisateur": idUtilisateur, "dateDebutStr": dateDebutFormatter, "dateFinStr": dateFinFormatter
                                         }
 
                                         console.log( "params: " + JSON.stringify(params));
@@ -530,8 +532,10 @@
                                             {
                                                 console.log('data: ' + JSON.stringify(data));
 
+                                                // afficher la partie de rapport statistiques
                                                 $("#rappportStatistiques").show();
 
+                                                // afficher le tableau  selon le type de rapport
                                                 if(typeRapport == "utilisateur" || typeRapport == "federation"){
                                                     $("#tableSysteme").hide();
                                                     $("#tableUtilisateur").show();
@@ -539,7 +543,6 @@
                                                 else if(typeRapport == "systeme"){
                                                     $("#tableUtilisateur").hide();
                                                     $("#tableSysteme").show();
-
                                                 }
 
 

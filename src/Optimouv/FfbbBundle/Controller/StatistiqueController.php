@@ -52,12 +52,7 @@ class StatistiqueController extends Controller
         # récupérer chemin fichier log du fichier parameters.yml
         $this->error_log_path = $this->container->getParameter("error_log_path");
 
-
-        error_log("\n filtreAction: ", 3, $this->error_log_path);
-
-//        error_log("\n filtreAction: ".print_r(filtreAction, true), 3, $this->error_log_path);
-
-
+        $donneesStatistiques = $this->get('service_statistiques')->getDonneesStatistiques();
 
         return new JsonResponse(array(
             "success" => true,
