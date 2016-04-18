@@ -285,7 +285,9 @@ ffbb_statistiques_export_pdf:
     path:     /admin/statistiques/export/sauvegarde/pdf/
     defaults: { _controller: FfbbBundle:Statistique:exportPdf }
 
-
+ffbb_statistiques_filtre:
+    path:     /admin/statistiques/filtre/
+    defaults: { _controller: FfbbBundle:Statistique:filtre}
 
 #Federation
 ffbb_federation_list:

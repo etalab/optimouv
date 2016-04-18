@@ -4,6 +4,7 @@ namespace Optimouv\FfbbBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class StatistiqueController extends Controller
 {
@@ -45,6 +46,23 @@ class StatistiqueController extends Controller
         return $this->render('FfbbBundle:Statistique:index.html.twig', array(
             "listeFederations" => $listeFederations
             ));
+    }
+
+    public function filtreAction(){
+        # récupérer chemin fichier log du fichier parameters.yml
+        $this->error_log_path = $this->container->getParameter("error_log_path");
+
+
+        error_log("\n filtreAction: ", 3, $this->error_log_path);
+
+//        error_log("\n filtreAction: ".print_r(filtreAction, true), 3, $this->error_log_path);
+
+
+
+        return new JsonResponse(array(
+            "success" => true,
+            "msg" => ""
+        ));
     }
 
     public function exportPdfAction()
