@@ -84,7 +84,7 @@ class Statistiques {
         $dateDebut = strtotime($dateDebutStr);
         $dateFin = strtotime($dateFinStr);
         $datediff = ceil( ($dateFin - $dateDebut)/(60*60*24) )+1;
-        error_log("\n datediff: ".print_r($datediff, true), 3, $this->error_log_path);
+//        error_log("\n datediff: ".print_r($datediff, true), 3, $this->error_log_path);
 
 
         # determiner le type d'affichage pour les dates
@@ -114,20 +114,37 @@ class Statistiques {
 
             $lignesTableau = array();
 
-            if($typeRapport == "utilisateur"){
+            if($typeRapport == "utilisateur" || $typeRapport == "federation" ){
 
+                if($typeRapport == "utilisateur"){
+                    # obtenir l'id de la fédération
+                    $sql = "SELECT date_creation, type_statistiques, valeur from statistiques_date where date_creation between :dateDebut and :dateFin".
+                        " and id_utilisateur=:id_utilisateur and id_discipline=:id_discipline and id_federation=:id_federation order by date_creation asc  ;";
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->bindParam(':id_utilisateur', $idUtilisateur);
+                    $stmt->bindParam(':id_discipline', $idDiscipline);
 
-                # obtenir l'id de la fédération
-                $sql = "SELECT date_creation, type_statistiques, valeur from statistiques_date where date_creation between :dateDebut and :dateFin".
-                    " and id_utilisateur=:id_utilisateur and id_discipline=:id_discipline and id_federation=:id_federation order by date_creation asc  ;";
-                $stmt = $pdo->prepare($sql);
+                }
+                elseif($typeRapport == "federation"){
+                    if($idDiscipline == "tous"){
+                        $sql = "SELECT date_creation, type_statistiques, valeur from statistiques_date where date_creation between :dateDebut and :dateFin".
+                            " and id_federation=:id_federation order by date_creation asc  ;";
+                        $stmt = $pdo->prepare($sql);
+                    }
+                    else{
+                        $sql = "SELECT date_creation, type_statistiques, valeur from statistiques_date where date_creation between :dateDebut and :dateFin".
+                            " and id_discipline=:id_discipline and id_federation=:id_federation order by date_creation asc  ;";
+                        $stmt = $pdo->prepare($sql);
+                        $stmt->bindParam(':id_discipline', $idDiscipline);
+                    }
+                }
                 $stmt->bindParam(':dateDebut', $dateDebutStr);
                 $stmt->bindParam(':dateFin', $dateFinStr);
-                $stmt->bindParam(':id_utilisateur', $idUtilisateur);
-                $stmt->bindParam(':id_discipline', $idDiscipline);
                 $stmt->bindParam(':id_federation', $idFederation);
                 $stmt->execute();
                 $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                
 
                 if(!$resultat){
                     error_log("\n  Erreur de récupération des données depuis la DB, details: ".print_r($stmt->errorInfo(), true)."\n Service: Statistiques, Function: augmenterNombreTableStatistiques", 3, $this->error_log_path);
@@ -179,19 +196,8 @@ class Statistiques {
                         else{
                             $lignesTableau[$dateLigneMod] = array($typeStatistiques => $valeur);
                         }
-
                     }
-
-
                 }
-
-
-
-
-
-
-            }
-            elseif($typeRapport == "federation"){
             }
             elseif($typeRapport == "systeme"){
             }
