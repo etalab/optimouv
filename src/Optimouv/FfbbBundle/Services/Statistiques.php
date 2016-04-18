@@ -79,12 +79,25 @@ class Statistiques {
         }
 
 
-//        error_log("\n typeRapport: ".print_r($typeRapport, true), 3, $this->error_log_path);
-//        error_log("\n idFederation: ".print_r($idFederation, true), 3, $this->error_log_path);
-//        error_log("\n idDiscipline: ".print_r($idDiscipline, true), 3, $this->error_log_path);
-//        error_log("\n idUtilisateur: ".print_r($idUtilisateur, true), 3, $this->error_log_path);
-//        error_log("\n dateDebutStr: ".print_r($dateDebutStr, true), 3, $this->error_log_path);
-//        error_log("\n dateFinStr: ".print_r($dateFinStr, true), 3, $this->error_log_path);
+
+        # obtenir le nombre de jours entre les dates
+        $dateDebut = strtotime($dateDebutStr);
+        $dateFin = strtotime($dateFinStr);
+        $datediff = ceil( ($dateFin - $dateDebut)/(60*60*24) )+1;
+        error_log("\n datediff: ".print_r($datediff, true), 3, $this->error_log_path);
+
+
+        # determiner le type d'affichage pour les dates
+        if($datediff <= 30){
+            $formatResultat = "jour";
+        }
+        elseif($datediff <=365){
+            $formatResultat = "mois";
+        }
+        else{
+            $formatResultat = "annee";
+        }
+        error_log("\n formatResultat: ".print_r($formatResultat, true), 3, $this->error_log_path);
 
 
         try{
@@ -97,34 +110,83 @@ class Statistiques {
                 die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
             }
 
-            # obtenir l'id de la fédération
-            $sql = "SELECT date_creation, type_statistiques, valeur from statistiques_date where date_creation between :dateDebut and :dateFin".
-                " and id_utilisateur=:id_utilisateur and id_discipline=:id_discipline and id_federation=:id_federation  ;";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':dateDebut', $dateDebutStr);
-            $stmt->bindParam(':dateFin', $dateFinStr);
-            $stmt->bindParam(':id_utilisateur', $idUtilisateur);
-            $stmt->bindParam(':id_discipline', $idDiscipline);
-            $stmt->bindParam(':id_federation', $idFederation);
-            $stmt->execute();
-            $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            error_log("\n typeRapport: ".print_r($typeRapport, true), 3, $this->error_log_path);
+
+            $lignesTableau = array();
+
+            if($typeRapport == "utilisateur"){
 
 
-            if(!$resultat){
-                error_log("\n  Erreur de récupération des données depuis la DB, details: ".print_r($stmt->errorInfo(), true)."\n Service: Statistiques, Function: augmenterNombreTableStatistiques", 3, $this->error_log_path);
-                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+                # obtenir l'id de la fédération
+                $sql = "SELECT date_creation, type_statistiques, valeur from statistiques_date where date_creation between :dateDebut and :dateFin".
+                    " and id_utilisateur=:id_utilisateur and id_discipline=:id_discipline and id_federation=:id_federation order by date_creation asc  ;";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindParam(':dateDebut', $dateDebutStr);
+                $stmt->bindParam(':dateFin', $dateFinStr);
+                $stmt->bindParam(':id_utilisateur', $idUtilisateur);
+                $stmt->bindParam(':id_discipline', $idDiscipline);
+                $stmt->bindParam(':id_federation', $idFederation);
+                $stmt->execute();
+                $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                if(!$resultat){
+                    error_log("\n  Erreur de récupération des données depuis la DB, details: ".print_r($stmt->errorInfo(), true)."\n Service: Statistiques, Function: augmenterNombreTableStatistiques", 3, $this->error_log_path);
+                    die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+                }
+
+                error_log("\n resultat: ".print_r($resultat, true), 3, $this->error_log_path);
+
+
+                # formater les données selon le type
+                if($formatResultat == "jour"){
+                    foreach($resultat as $ligneDb){
+                        $dateLigneDb = $ligneDb["date_creation"];
+                        $valeur = $ligneDb["valeur"];
+                        $typeStatistiques = $ligneDb["type_statistiques"];
+
+                        # formater la date selon le format français
+                        $dateLigneTmp = explode("-", $dateLigneDb);
+                        $dateLigneMod = $dateLigneTmp[2]. "/". $dateLigneTmp[1]."/".$dateLigneTmp[0];
+
+                        if(array_key_exists($dateLigneMod, $lignesTableau)){
+                            $lignesTableau[$dateLigneMod][$typeStatistiques] = $valeur  ;
+                        }
+                        else{
+                            $lignesTableau[$dateLigneMod] = array($typeStatistiques => $valeur);
+                        }
+
+                    }
+                }
+                elseif($formatResultat == "mois"){
+
+                }
+                # pour l'année
+                else{
+
+                }
+
+
+
+            }
+            elseif($typeRapport == "federation"){
+            }
+            elseif($typeRapport == "systeme"){
             }
 
-            error_log("\n resultat: ".print_r($resultat, true), 3, $this->error_log_path);
+
+
+            error_log("\n lignesTableau: ".print_r($lignesTableau, true), 3, $this->error_log_path);
+
+
+            return array("lignesTableau" => $lignesTableau,
+                );
 
         }
-
         catch (PDOException $e){
             error_log("\n erreur PDO, Service: Statistiques, Function: getDonneesStatistiques, erreur: ".print_r($e, true), 3, $this->error_log_path);
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
 
-        return array();
     }
 
     public function augmenterNombreTableStatistiques($utilisateurId, $typeStatistiques, $valeur){
