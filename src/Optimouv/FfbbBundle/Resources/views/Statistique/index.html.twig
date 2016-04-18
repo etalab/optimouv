@@ -551,52 +551,52 @@
                                                         // remplir la ligne selon les données récupérées
                                                         var dateLigne = "<td>" + jour +  "</td>";
                                                         if("nombreConnexions" in typeStatistique){
-                                                            var nbrConnextions = "<td>" + typeStatistique.nombreConnexions + "</td>";
+                                                            var nbrConnexions = "<td>" + typeStatistique.nombreConnexions + "</td>";
                                                         }
                                                         else{
-                                                            var nbrConnextions = "<td>" +  "</td>";
+                                                            var nbrConnextions = "<td>0</td>";
                                                         }
                                                         if("nombreLancementsOptiPoule" in typeStatistique){
                                                             var nbrLanceOptiPoule = "<td>" + typeStatistique.nombreLancementsOptiPoule + "</td>";
                                                         }
                                                         else{
-                                                            var nbrLanceOptiPoule = "<td>" +  "</td>";
+                                                            var nbrLanceOptiPoule = "<td>0</td>";
                                                         }
                                                         if("nombreLancementsMeilleurLieu" in typeStatistique){
                                                             var nbrLanceMeilleurLieu = "<td>" + typeStatistique.nombreLancementsMeilleurLieu + "</td>";
                                                         }
                                                         else{
-                                                            var nbrLanceMeilleurLieu = "<td>" +  "</td>";
+                                                            var nbrLanceMeilleurLieu =  "<td>0</td>";
                                                         }
                                                         if("nombreInterdictions" in typeStatistique){
                                                             var nbrInterdictions = "<td>" + typeStatistique.nombreInterdictions + "</td>";
                                                         }
                                                         else{
-                                                            var nbrInterdictions = "<td>" +  "</td>";
+                                                            var nbrInterdictions = "<td>0</td>";
                                                         }
                                                         if("nombreRepartitionsHomogenes" in typeStatistique){
                                                             var nbrRepartitionsHomogenes = "<td>" + typeStatistique.nombreRepartitionsHomogenes + "</td>";
                                                         }
                                                         else{
-                                                            var nbrRepartitionsHomogenes = "<td>" +  "</td>";
+                                                            var nbrRepartitionsHomogenes =  "<td>0</td>";
                                                         }
                                                         if("nombreExclusions" in typeStatistique){
                                                             var nbrExclusions = "<td>" + typeStatistique.nombreExclusions + "</td>";
                                                         }
                                                         else{
-                                                            var nbrExclusions = "<td>" +  "</td>";
+                                                            var nbrExclusions = "<td>0</td>";
                                                         }
                                                         if("nombreRequetesHere" in typeStatistique){
                                                             var nbrHere = "<td>" + typeStatistique.nombreRequetesHere + "</td>";
                                                         }
                                                         else{
-                                                            var nbrHere = "<td>" +  "</td>";
+                                                            var nbrHere =  "<td>0</td>";
                                                         }
 
 
                                                         // ajouter les données colonnes sur la ligne
                                                         ligneTableau += dateLigne;
-                                                        ligneTableau += nbrConnextions;
+                                                        ligneTableau += nbrConnexions;
                                                         ligneTableau += nbrLanceOptiPoule;
                                                         ligneTableau += nbrLanceMeilleurLieu;
                                                         ligneTableau += nbrInterdictions;
