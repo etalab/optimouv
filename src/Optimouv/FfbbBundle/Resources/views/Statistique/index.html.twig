@@ -500,8 +500,6 @@
                 var dateDebutStr = $("#dateDebut").val();
                 var dateFinStr = $("#dateFin").val();
 
-                console.log( "dateDebutStr: " + dateDebutStr );
-                console.log( "dateFinStr: " + dateFinStr );
 
                 // comparer les dates données
                 if(dateDebutStr != "" && dateDebutStr != null && dateFinStr != "" && dateFinStr != null){
@@ -514,17 +512,21 @@
                     var dateFin = dateFinStr.split("/")[0];
 
                     var dateDebutObj = new Date(anneeDebut + "-" + moisDebut + "-" + dateDebut);
-                    console.log( "dateDebutObj: " + dateDebutObj );
+//                    console.log( "dateDebutObj: " + dateDebutObj );
 
                     var dateFinObj = new Date(anneeFin + "-" + moisFin + "-" + dateFin);
-                    console.log( "dateFinObj: " + dateFinObj );
+//                    console.log( "dateFinObj: " + dateFinObj );
 
                     if(dateDebutObj>dateFinObj){
                         alert("Les dates saisies sont incorrectes. Veuillez modifier votre sélection.");
                         return;
                     }
                     else{
-                        console.log("Les valeurs des dates sont correctes")
+                        console.log( "dateDebutStr: " + dateDebutStr );
+                        console.log( "dateFinStr: " + dateFinStr );
+
+
+
                     }
                 }
 
