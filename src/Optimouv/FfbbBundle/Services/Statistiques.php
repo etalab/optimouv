@@ -137,15 +137,16 @@ class Statistiques {
                 error_log("\n resultat: ".print_r($resultat, true), 3, $this->error_log_path);
 
 
-                # formater les données selon le type
-                if($formatResultat == "jour"){
-                    foreach($resultat as $ligneDb){
-                        $dateLigneDb = $ligneDb["date_creation"];
-                        $valeur = $ligneDb["valeur"];
-                        $typeStatistiques = $ligneDb["type_statistiques"];
+                foreach($resultat as $ligneDb){
+                    $dateLigneDb = $ligneDb["date_creation"];
+                    $valeur = $ligneDb["valeur"];
+                    $typeStatistiques = $ligneDb["type_statistiques"];
 
-                        # formater la date selon le format français
-                        $dateLigneTmp = explode("-", $dateLigneDb);
+                    # formater la date selon le format français
+                    $dateLigneTmp = explode("-", $dateLigneDb);
+
+                    # formater les données selon le type
+                    if($formatResultat == "jour"){
                         $dateLigneMod = $dateLigneTmp[2]. "/". $dateLigneTmp[1]."/".$dateLigneTmp[0];
 
                         if(array_key_exists($dateLigneMod, $lignesTableau)){
@@ -156,14 +157,33 @@ class Statistiques {
                         }
 
                     }
-                }
-                elseif($formatResultat == "mois"){
+                    elseif($formatResultat == "mois"){
+                        $dateLigneMod = $dateLigneTmp[1]."/".$dateLigneTmp[0];
+
+                        if(array_key_exists($dateLigneMod, $lignesTableau)){
+
+                            if(array_key_exists($typeStatistiques, $lignesTableau[$dateLigneMod])){
+                                $lignesTableau[$dateLigneMod][$typeStatistiques] += $valeur  ;
+                            }
+                            else{
+                                $lignesTableau[$dateLigneMod][$typeStatistiques] = $valeur  ;
+
+                            }
+                        }
+                        else{
+                            $lignesTableau[$dateLigneMod] = array($typeStatistiques => $valeur);
+                        }
+
+                    }
+                    # pour l'année
+                    else{
+
+                    }
 
                 }
-                # pour l'année
-                else{
 
-                }
+
+
 
 
 
