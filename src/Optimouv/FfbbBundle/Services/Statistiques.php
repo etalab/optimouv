@@ -148,7 +148,17 @@ class Statistiques {
                     # formater les données selon le type
                     if($formatResultat == "jour"){
                         $dateLigneMod = $dateLigneTmp[2]. "/". $dateLigneTmp[1]."/".$dateLigneTmp[0];
+                    }
+                    elseif($formatResultat == "mois"){
+                        $dateLigneMod = $dateLigneTmp[1]."/".$dateLigneTmp[0];
+                    }
+                    # pour l'année
+                    else{
+                        $dateLigneMod = $dateLigneTmp[0];
+                    }
 
+                    # remplir les données pour la ligne
+                    if($formatResultat == "jour"){
                         if(array_key_exists($dateLigneMod, $lignesTableau)){
                             $lignesTableau[$dateLigneMod][$typeStatistiques] = $valeur  ;
                         }
@@ -157,17 +167,13 @@ class Statistiques {
                         }
 
                     }
-                    elseif($formatResultat == "mois"){
-                        $dateLigneMod = $dateLigneTmp[1]."/".$dateLigneTmp[0];
-
+                    elseif($formatResultat == "mois" || $formatResultat == "annee"){
                         if(array_key_exists($dateLigneMod, $lignesTableau)){
-
                             if(array_key_exists($typeStatistiques, $lignesTableau[$dateLigneMod])){
                                 $lignesTableau[$dateLigneMod][$typeStatistiques] += $valeur  ;
                             }
                             else{
                                 $lignesTableau[$dateLigneMod][$typeStatistiques] = $valeur  ;
-
                             }
                         }
                         else{
@@ -175,10 +181,7 @@ class Statistiques {
                         }
 
                     }
-                    # pour l'année
-                    else{
 
-                    }
 
                 }
 
