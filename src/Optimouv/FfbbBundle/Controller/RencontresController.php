@@ -87,6 +87,14 @@ use ZipArchive;
              $idResultat = $idResultat[0]["id"];
          }
 
+         $coutVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(1)->getValeur();
+         $coutCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(2)->getValeur();
+         $coutMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(3)->getValeur();
+
+         $gesVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(4)->getValeur();
+         $gesCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(5)->getValeur();
+         $gesMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(6)->getValeur();
+
 
          return $this->render('FfbbBundle:Rencontres:index.html.twig', array(
 
@@ -118,6 +126,13 @@ use ZipArchive;
              'idRapport' => $idRapport,
              'nomRapport' => $nomRapport,
              'idResultat' => $idResultat,
+
+             'coutVoiture' => $coutVoiture,
+             'coutCovoiturage' => $coutCovoiturage,
+             'coutMinibus' => $coutMinibus,
+             'gesVoiture' => $gesVoiture,
+             'gesCovoiturage' => $gesCovoiturage,
+             'gesMinibus' => $gesMinibus
 
          ));
      }
@@ -355,10 +370,6 @@ use ZipArchive;
 
      }
 
-
-     
-
-
      // si boolAccent = 1, le nom est avec accent
      // si boolAccent = 0, le nom sans avec accent
      private function getNomScenario($typeScenario, $boolAccent){
@@ -397,8 +408,6 @@ use ZipArchive;
 
          return $nomScenario;
      }
-
-
 
     private function getTexteExportXml($infoXml){
         $texte = '<?xml version="1.0" encoding="utf-8"?>';
@@ -465,7 +474,6 @@ use ZipArchive;
 
         return $texte;
     }
-     
 
      public function exportScenarioPdfAction()
      {
@@ -781,8 +789,7 @@ use ZipArchive;
      }
 
 
-
-public function barycentreAction($idRapport)
+    public function barycentreAction($idRapport)
     {
 
 
@@ -844,6 +851,13 @@ public function barycentreAction($idRapport)
             $idResultat = $idResultat[0]["id"];
         }
 
+        $coutVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(1)->getValeur();
+        $coutCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(2)->getValeur();
+        $coutMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(3)->getValeur();
+
+        $gesVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(4)->getValeur();
+        $gesCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(5)->getValeur();
+        $gesMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(6)->getValeur();
 
         return $this->render('FfbbBundle:Rencontres:barycentre.html.twig', array(
 
@@ -864,6 +878,13 @@ public function barycentreAction($idRapport)
             'idRapport' => $idRapport,
             'nomRapport' => $nomRapport,
             'idResultat' => $idResultat,
+            'coutVoiture' => $coutVoiture,
+            'coutCovoiturage' => $coutCovoiturage,
+            'coutMinibus' => $coutMinibus,
+            'gesVoiture' => $gesVoiture,
+            'gesCovoiturage' => $gesCovoiturage,
+            'gesMinibus' => $gesMinibus
+
 
         ));
 
@@ -959,6 +980,13 @@ public function barycentreAction($idRapport)
         }
 
 
+        $coutVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(1)->getValeur();
+        $coutCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(2)->getValeur();
+        $coutMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(3)->getValeur();
+
+        $gesVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(4)->getValeur();
+        $gesCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(5)->getValeur();
+        $gesMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(6)->getValeur();
 
 
         return $this->render('FfbbBundle:Rencontres:exclusion.html.twig', array(
@@ -990,6 +1018,13 @@ public function barycentreAction($idRapport)
             'idRapport' => $idRapport,
             'nomRapport' => $nomRapport,
             'idResultat' => $idResultat,
+
+            'coutVoiture' => $coutVoiture,
+            'coutCovoiturage' => $coutCovoiturage,
+            'coutMinibus' => $coutMinibus,
+            'gesVoiture' => $gesVoiture,
+            'gesCovoiturage' => $gesCovoiturage,
+            'gesMinibus' => $gesMinibus
 
         ));
 
@@ -1081,6 +1116,13 @@ public function barycentreAction($idRapport)
             $idResultat = $idResultat[0]["id"];
         }
 
+        $coutVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(1)->getValeur();
+        $coutCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(2)->getValeur();
+        $coutMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(3)->getValeur();
+
+        $gesVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(4)->getValeur();
+        $gesCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(5)->getValeur();
+        $gesMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(6)->getValeur();
 
         return $this->render('FfbbBundle:Rencontres:terrainNeutre.html.twig', array(
 
@@ -1114,6 +1156,12 @@ public function barycentreAction($idRapport)
             'nomRapport' => $nomRapport,
             'idResultat' => $idResultat,
 
+            'coutVoiture' => $coutVoiture,
+            'coutCovoiturage' => $coutCovoiturage,
+            'coutMinibus' => $coutMinibus,
+            'gesVoiture' => $gesVoiture,
+            'gesCovoiturage' => $gesCovoiturage,
+            'gesMinibus' => $gesMinibus
         ));
 
     }
