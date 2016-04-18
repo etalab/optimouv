@@ -114,98 +114,92 @@ class Statistiques {
 
             $lignesTableau = array();
 
-            if($typeRapport == "utilisateur" || $typeRapport == "federation" ){
 
-                if($typeRapport == "utilisateur"){
-                    # obtenir l'id de la fédération
+            if($typeRapport == "utilisateur"){
+                # obtenir l'id de la fédération
+                $sql = "SELECT date_creation, type_statistiques, valeur from statistiques_date where date_creation between :dateDebut and :dateFin".
+                    " and id_utilisateur=:id_utilisateur and id_discipline=:id_discipline and id_federation=:id_federation order by date_creation asc  ;";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindParam(':id_utilisateur', $idUtilisateur);
+                $stmt->bindParam(':id_discipline', $idDiscipline);
+
+            }
+            elseif($typeRapport == "federation" || $typeRapport == "systeme" ){
+                if($idDiscipline == "tous"){
                     $sql = "SELECT date_creation, type_statistiques, valeur from statistiques_date where date_creation between :dateDebut and :dateFin".
-                        " and id_utilisateur=:id_utilisateur and id_discipline=:id_discipline and id_federation=:id_federation order by date_creation asc  ;";
+                        " and id_federation=:id_federation order by date_creation asc  ;";
                     $stmt = $pdo->prepare($sql);
-                    $stmt->bindParam(':id_utilisateur', $idUtilisateur);
+                }
+                else{
+                    $sql = "SELECT date_creation, type_statistiques, valeur from statistiques_date where date_creation between :dateDebut and :dateFin".
+                        " and id_discipline=:id_discipline and id_federation=:id_federation order by date_creation asc  ;";
+                    $stmt = $pdo->prepare($sql);
                     $stmt->bindParam(':id_discipline', $idDiscipline);
-
-                }
-                elseif($typeRapport == "federation"){
-                    if($idDiscipline == "tous"){
-                        $sql = "SELECT date_creation, type_statistiques, valeur from statistiques_date where date_creation between :dateDebut and :dateFin".
-                            " and id_federation=:id_federation order by date_creation asc  ;";
-                        $stmt = $pdo->prepare($sql);
-                    }
-                    else{
-                        $sql = "SELECT date_creation, type_statistiques, valeur from statistiques_date where date_creation between :dateDebut and :dateFin".
-                            " and id_discipline=:id_discipline and id_federation=:id_federation order by date_creation asc  ;";
-                        $stmt = $pdo->prepare($sql);
-                        $stmt->bindParam(':id_discipline', $idDiscipline);
-                    }
-                }
-                $stmt->bindParam(':dateDebut', $dateDebutStr);
-                $stmt->bindParam(':dateFin', $dateFinStr);
-                $stmt->bindParam(':id_federation', $idFederation);
-                $stmt->execute();
-                $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                
-
-                if(!$resultat){
-                    error_log("\n  Erreur de récupération des données depuis la DB, details: ".print_r($stmt->errorInfo(), true)."\n Service: Statistiques, Function: augmenterNombreTableStatistiques", 3, $this->error_log_path);
-                    die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
-                }
-
-                error_log("\n resultat: ".print_r($resultat, true), 3, $this->error_log_path);
-
-
-                foreach($resultat as $ligneDb){
-                    $dateLigneDb = $ligneDb["date_creation"];
-                    $valeur = $ligneDb["valeur"];
-                    $typeStatistiques = $ligneDb["type_statistiques"];
-
-                    # formater la date selon le format français
-                    $dateLigneTmp = explode("-", $dateLigneDb);
-
-                    # formater les données selon le type
-                    if($formatResultat == "jour"){
-                        $dateLigneMod = $dateLigneTmp[2]. "/". $dateLigneTmp[1]."/".$dateLigneTmp[0];
-                    }
-                    elseif($formatResultat == "mois"){
-                        $dateLigneMod = $dateLigneTmp[1]."/".$dateLigneTmp[0];
-                    }
-                    # pour l'année
-                    else{
-                        $dateLigneMod = $dateLigneTmp[0];
-                    }
-
-                    # remplir les données pour la ligne
-                    if($formatResultat == "jour"){
-                        if(array_key_exists($dateLigneMod, $lignesTableau)){
-                            $lignesTableau[$dateLigneMod][$typeStatistiques] = $valeur  ;
-                        }
-                        else{
-                            $lignesTableau[$dateLigneMod] = array($typeStatistiques => $valeur);
-                        }
-
-                    }
-                    elseif($formatResultat == "mois" || $formatResultat == "annee"){
-                        if(array_key_exists($dateLigneMod, $lignesTableau)){
-                            if(array_key_exists($typeStatistiques, $lignesTableau[$dateLigneMod])){
-                                $lignesTableau[$dateLigneMod][$typeStatistiques] += $valeur  ;
-                            }
-                            else{
-                                $lignesTableau[$dateLigneMod][$typeStatistiques] = $valeur  ;
-                            }
-                        }
-                        else{
-                            $lignesTableau[$dateLigneMod] = array($typeStatistiques => $valeur);
-                        }
-                    }
                 }
             }
-            elseif($typeRapport == "systeme"){
+            $stmt->bindParam(':dateDebut', $dateDebutStr);
+            $stmt->bindParam(':dateFin', $dateFinStr);
+            $stmt->bindParam(':id_federation', $idFederation);
+            $stmt->execute();
+            $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+            if(!$resultat){
+                error_log("\n  Erreur de récupération des données depuis la DB, details: ".print_r($stmt->errorInfo(), true)."\n Service: Statistiques, Function: augmenterNombreTableStatistiques", 3, $this->error_log_path);
+                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+            }
+
+            error_log("\n resultat: ".print_r($resultat, true), 3, $this->error_log_path);
+
+
+            foreach($resultat as $ligneDb){
+                $dateLigneDb = $ligneDb["date_creation"];
+                $valeur = $ligneDb["valeur"];
+                $typeStatistiques = $ligneDb["type_statistiques"];
+
+                # formater la date selon le format français
+                $dateLigneTmp = explode("-", $dateLigneDb);
+
+                # formater les données selon le type
+                if($formatResultat == "jour"){
+                    $dateLigneMod = $dateLigneTmp[2]. "/". $dateLigneTmp[1]."/".$dateLigneTmp[0];
+                }
+                elseif($formatResultat == "mois"){
+                    $dateLigneMod = $dateLigneTmp[1]."/".$dateLigneTmp[0];
+                }
+                # pour l'année
+                else{
+                    $dateLigneMod = $dateLigneTmp[0];
+                }
+
+                # remplir les données pour la ligne
+                if($formatResultat == "jour"){
+                    if(array_key_exists($dateLigneMod, $lignesTableau)){
+                        $lignesTableau[$dateLigneMod][$typeStatistiques] = $valeur  ;
+                    }
+                    else{
+                        $lignesTableau[$dateLigneMod] = array($typeStatistiques => $valeur);
+                    }
+
+                }
+                elseif($formatResultat == "mois" || $formatResultat == "annee"){
+                    if(array_key_exists($dateLigneMod, $lignesTableau)){
+                        if(array_key_exists($typeStatistiques, $lignesTableau[$dateLigneMod])){
+                            $lignesTableau[$dateLigneMod][$typeStatistiques] += $valeur  ;
+                        }
+                        else{
+                            $lignesTableau[$dateLigneMod][$typeStatistiques] = $valeur  ;
+                        }
+                    }
+                    else{
+                        $lignesTableau[$dateLigneMod] = array($typeStatistiques => $valeur);
+                    }
+                }
             }
 
 
 
             error_log("\n lignesTableau: ".print_r($lignesTableau, true), 3, $this->error_log_path);
-
 
             return array("lignesTableau" => $lignesTableau,
                 );
