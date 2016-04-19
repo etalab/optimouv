@@ -202,13 +202,13 @@ class Statistiques {
             // données pour le temps de réponse moyen (table statistiques_date_temps)
             if($typeRapport == "systeme"){
                 if($idDiscipline == "tous"){
-                    $sql = "SELECT date(temps_fin), type_statistiques, avg(valeur) from statistiques_date_temps ".
+                    $sql = "SELECT date(temps_fin) as date_filtre, type_statistiques, avg(valeur) as avg_valeur from statistiques_date_temps ".
                         "where date(temps_fin) between :dateDebut and :dateFin ".
                         " and id_federation=:id_federation group by date(temps_fin), type_statistiques ;";
                     $stmt = $pdo->prepare($sql);
                 }
                 else{
-                    $sql = "SELECT date(temps_fin), type_statistiques, avg(valeur) from statistiques_date_temps ".
+                    $sql = "SELECT date(temps_fin) as date_filtre, type_statistiques, avg(valeur) as avg_valeur from statistiques_date_temps ".
                         " where date(temps_fin) between :dateDebut and :dateFin".
                         " and id_discipline=:id_discipline and id_federation=:id_federation group by date(temps_fin), type_statistiques  ;";
                     $stmt = $pdo->prepare($sql);
@@ -236,24 +236,51 @@ class Statistiques {
 
                     error_log("\n ligneDb: ".print_r($ligneDb, true), 3, $this->error_log_path);
 
-//                    $dateLigneDb = $ligneDb["temps_fin"];
-//                    $valeur = $ligneDb["valeur"];
-//                    $typeStatistiques = $ligneDb["type_statistiques"];
-//
-//                    # formater la date selon le format français
-//                    $dateLigneTmp = explode("-", $dateLigneDb);
+                    $dateLigneDb = $ligneDb["date_filtre"];
+                    $valeur = round($ligneDb["avg_valeur"]);
+                    $typeStatistiques = $ligneDb["type_statistiques"];
 
-//                    # formater les données selon le type
-//                    if($formatResultat == "jour"){
-//                        $dateLigneMod = $dateLigneTmp[2]. "/". $dateLigneTmp[1]."/".$dateLigneTmp[0];
-//                    }
-//                    elseif($formatResultat == "mois"){
-//                        $dateLigneMod = $dateLigneTmp[1]."/".$dateLigneTmp[0];
-//                    }
-//                    # pour l'année
-//                    else{
-//                        $dateLigneMod = $dateLigneTmp[0];
-//                    }
+                    # formater la date selon le format français
+                    $dateLigneTmp = explode("-", $dateLigneDb);
+
+                    # formater les données selon le type
+                    if($formatResultat == "jour"){
+                        $dateLigneMod = $dateLigneTmp[2]. "/". $dateLigneTmp[1]."/".$dateLigneTmp[0];
+                    }
+                    elseif($formatResultat == "mois"){
+                        $dateLigneMod = $dateLigneTmp[1]."/".$dateLigneTmp[0];
+                    }
+                    # pour l'année
+                    else{
+                        $dateLigneMod = $dateLigneTmp[0];
+                    }
+
+
+                    # remplir les données pour la ligne
+                    if($formatResultat == "jour"){
+                        if(array_key_exists($dateLigneMod, $lignesTableau)){
+                            $lignesTableau[$dateLigneMod][$typeStatistiques] = $valeur  ;
+                        }
+                        else{
+                            $lignesTableau[$dateLigneMod] = array($typeStatistiques => $valeur);
+                        }
+
+                    }
+                    elseif($formatResultat == "mois" || $formatResultat == "annee"){
+                        if(array_key_exists($dateLigneMod, $lignesTableau)){
+                            if(array_key_exists($typeStatistiques, $lignesTableau[$dateLigneMod])){
+                                $lignesTableau[$dateLigneMod][$typeStatistiques] += $valeur  ;
+                            }
+                            else{
+                                $lignesTableau[$dateLigneMod][$typeStatistiques] = $valeur  ;
+                            }
+                        }
+                        else{
+                            $lignesTableau[$dateLigneMod] = array($typeStatistiques => $valeur);
+                        }
+                    }
+
+
 
 
 
