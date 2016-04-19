@@ -5,7 +5,7 @@
 
 
         <div class="row" style="min-height: 300px">
-            <div style="position:relative; float:left; background-color: #01a2bb; border-radius: 5px; width: 30%">
+            <div style="position:relative; float:left; background-color: #01a2bb; border-radius: 5px; width: 30%; min-height: 150px">
                 <a href="{{ path('ffbb_poules_choisir_liste') }}" style="text-decoration: none;">
                     <div style="text-align: center; padding-top:10px">
                         <img src="{{ asset('bundles/ffbb/accueil/img/trophy36.png') }}" alt="utilisateurs optimouv"
@@ -18,7 +18,7 @@
 
             </div>
 
-            <div style="position:relative; float:left;background-color: #babe11; border-radius: 5px; width: 30%; margin-left: 5%">
+            <div style="position:relative; float:left;background-color: #babe11; border-radius: 5px; width: 30%; margin-left: 5%; min-height: 150px">
                 <a href="{{ path('ffbb_choisir_liste_participants') }}" style="text-decoration: none;">
                     <div style="text-align: center; padding-top:10px">
                         <img src="{{ asset('bundles/ffbb/accueil/img/pin66.png') }}"
@@ -31,7 +31,7 @@
             </div>
 
 
-            <div style="position:relative; float:right;background-color: #f07800; border-radius: 5px; width: 30%">
+            <div style="position:relative; float:right;background-color: #f07800; border-radius: 5px; width: 30%; min-height: 150px">
                 <a href="{{ path('ffbb_rapports') }}" style="text-decoration: none;">
                     <div style="text-align: center; padding-top:10px">
                         <img src="{{ asset('bundles/ffbb/accueil/img/chart42.png') }}" alt="Rapports" width="20%"
@@ -52,7 +52,7 @@
 
         {% if ('ROLE_ADMIN' in userConnect) or ('ROLE_SUPER_ADMIN' in userConnect) %}
             <div class="row" style="min-height: 300px">
-                <div style="position:relative; float:left; background-color: #4E4646; border-radius: 5px; width: 30%">
+                <div style="position:relative; float:left; background-color: #4E4646; border-radius: 5px; width: 30%; min-height: 150px">
                     <a href="{{ path('administration_panel') }}" style="text-decoration: none;">
                         <div style="text-align: center; padding-top:10px">
                             {#<img src="{{ asset('bundles/ffbb/accueil/img/trophy36.png') }}" alt="utilisateurs optimouv"#}
@@ -66,7 +66,7 @@
 
                 </div>
 
-                <div style="position:relative; float:left;background-color: #777171; border-radius: 5px; width: 30%; margin-left: 5%">
+                <div style="position:relative; float:left;background-color: #777171; border-radius: 5px; width: 30%; margin-left: 5%; min-height: 150px">
                     <a href="{{ path('ffbb_statistiques_index') }}" style="text-decoration: none;">
                         <div style="text-align: center; padding-top:10px">
                             <i class="fa fa-bar-chart fa-5x" style="color: #fff;"></i>

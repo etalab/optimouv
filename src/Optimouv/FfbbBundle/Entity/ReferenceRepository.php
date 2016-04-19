@@ -10,4 +10,22 @@ namespace Optimouv\FfbbBundle\Entity;
  */
 class ReferenceRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function updateCoef($code, $coefficient, $dateModification, $id){
+
+        $query = $this->createQueryBuilder('G')
+            ->update('FfbbBundle:Reference', 'd')
+            ->set('d.code' , '?1')
+            ->set('d.valeur' , '?2')
+            ->set('d.dateModification' , '?3')
+            ->where('d.id = ?4')
+            ->setParameter(1, $code)
+            ->setParameter(2, $coefficient)
+            ->setParameter(3, $dateModification)
+            ->setParameter(4, $id)
+            ->getQuery();
+
+        $update = $query->execute();
+
+        return $update;
+    }
 }

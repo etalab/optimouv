@@ -52,6 +52,7 @@
                 <label style="font-weight: bold">Fédération *</label>
                 <select class="form-control" name="federation" id="listeFederation" onchange="reloadDisciplines()"
                         required>
+                    <option value="none">Sélectionner une fédération</option>
                     {% for federation in liste_federation %}
                         <option value="{{ federation.id }}|{{ federation.nom }}">{{ federation.nom }}</option>
                     {% endfor %}
@@ -61,6 +62,7 @@
                 <input type="hidden" id="all_discipline" value="{{ liste_disciplines|json_encode }}">
                 <label style="font-weight: bold">Discipline *</label>
                 <select name="discipline" id="listeDiscipline" class="form-control" required>
+                    <option value="none">Sélectionner une discipline</option>
                     {% for discipline in liste_disciplines[1] %}
                         <option value="{{ discipline.id }}">{{ discipline.nom }}</option>
                     {% endfor %}
@@ -75,6 +77,7 @@
                 <label style="font-weight: bold">Fédération *</label>
                 <select class="form-control" name="federation" id="listeFederation" onchange="reloadDisciplines()"
                         required>
+                    <option value="none">Sélectionner une fédération</option>
                     {% for federation in liste_federation %}
                         <option value="{{ federation.id }}|{{ federation.nom }}">{{ federation.nom }}</option>
                     {% endfor %}
@@ -84,6 +87,7 @@
                 <input type="hidden" id="all_discipline" value="{{ liste_disciplines|json_encode }}">
                 <label style="font-weight: bold">Discipline *</label>
                 <select name="discipline" id="listeDiscipline" class="form-control" required>
+                    <option value="none">Sélectionner une discipline</option>
                     {% for discipline in liste_disciplines[1] %}
                         <option value="{{ discipline.id }}">{{ discipline.nom }}</option>
                     {% endfor %}

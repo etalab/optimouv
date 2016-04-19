@@ -169,12 +169,12 @@
                                 {% set distanceEq = participant.distanceEq/1000 %}
                                 <tr>
                                     <td> {{ participant.ville }}</td>
-                                    <td style="text-align: right">{{ (distanceOp  * participant.nbrParticipants * 0.80)|round|number_format(0, ',', ' ') }}</td>
-                                    <td style="text-align: right">{{ (distanceEq  * participant.nbrParticipants * 0.80)|round|number_format(0, ',', ' ') }}</td>
-                                    <td style="text-align: right">{{ (distanceOp  * participant.nbrParticipants /4 * 0.80)|round|number_format(0, ',', ' ') }} </td>
-                                    <td style="text-align: right">{{ (distanceEq  * participant.nbrParticipants /4 * 0.80)|round|number_format(0, ',', ' ') }} </td>
-                                    <td style="text-align: right">{{ (distanceOp  * participant.nbrParticipants /9 * 1.31)|round|number_format(0, ',', ' ') }} </td>
-                                    <td style="text-align: right">{{ (distanceEq  * participant.nbrParticipants /9 * 1.31)|round|number_format(0, ',', ' ') }} </td>
+                                    <td style="text-align: right">{{ (distanceOp  * participant.nbrParticipants * coutVoiture)|round|number_format(0, ',', ' ') }}</td>
+                                    <td style="text-align: right">{{ (distanceEq  * participant.nbrParticipants * coutVoiture)|round|number_format(0, ',', ' ') }}</td>
+                                    <td style="text-align: right">{{ (distanceOp  * participant.nbrParticipants /4 * coutCovoiturage)|round|number_format(0, ',', ' ') }} </td>
+                                    <td style="text-align: right">{{ (distanceEq  * participant.nbrParticipants /4 * coutCovoiturage)|round|number_format(0, ',', ' ') }} </td>
+                                    <td style="text-align: right">{{ (distanceOp  * participant.nbrParticipants /9 * coutMinibus)|round|number_format(0, ',', ' ') }} </td>
+                                    <td style="text-align: right">{{ (distanceEq  * participant.nbrParticipants /9 * coutMinibus)|round|number_format(0, ',', ' ') }} </td>
                                 </tr>
                                 {% endfor %}
 
@@ -241,12 +241,12 @@
                                     {% set distanceEq = participant.distanceEq/1000 %}
                                     <tr>
                                         <td> {{ participant.ville }}</td>
-                                        <td style="text-align: right">{{ (distanceOp  * participant.nbrParticipants * 0.157)|round|number_format(0, ',', ' ') }}</td>
-                                        <td style="text-align: right">{{ (distanceEq  * participant.nbrParticipants * 0.157)|round|number_format(0, ',', ' ') }}</td>
-                                        <td style="text-align: right">{{ ((distanceOp * participant.nbrParticipants /4) * 0.157)|round|number_format(0, ',', ' ') }} </td>
-                                        <td style="text-align: right">{{ ((distanceEq * participant.nbrParticipants /4) * 0.157)|round|number_format(0, ',', ' ') }} </td>
-                                        <td style="text-align: right">{{ ((distanceOp * participant.nbrParticipants /9) * 0.185)|round|number_format(0, ',', ' ') }} </td>
-                                        <td style="text-align: right">{{ ((distanceEq * participant.nbrParticipants /9) * 0.185)|round|number_format(0, ',', ' ') }} </td>
+                                        <td style="text-align: right">{{ (distanceOp  * participant.nbrParticipants * gesVoiture)|round|number_format(0, ',', ' ') }}</td>
+                                        <td style="text-align: right">{{ (distanceEq  * participant.nbrParticipants * gesVoiture)|round|number_format(0, ',', ' ') }}</td>
+                                        <td style="text-align: right">{{ ((distanceOp * participant.nbrParticipants /4) * gesCovoiturage)|round|number_format(0, ',', ' ') }} </td>
+                                        <td style="text-align: right">{{ ((distanceEq * participant.nbrParticipants /4) * gesCovoiturage)|round|number_format(0, ',', ' ') }} </td>
+                                        <td style="text-align: right">{{ ((distanceOp * participant.nbrParticipants /9) * gesMinibus)|round|number_format(0, ',', ' ') }} </td>
+                                        <td style="text-align: right">{{ ((distanceEq * participant.nbrParticipants /9) * gesMinibus)|round|number_format(0, ',', ' ') }} </td>
                                     </tr>
                                 {% endfor %}
 

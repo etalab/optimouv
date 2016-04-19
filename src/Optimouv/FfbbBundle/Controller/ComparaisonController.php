@@ -31,14 +31,25 @@ class ComparaisonController extends Controller
         if($idResultat != []) $idResultat = $idResultat[0]["id"];
 
 //        error_log("\n typeAction: ".print_r($typeAction , true), 3, "error_log_optimouv.txt");
+        $coutVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(1)->getValeur();
+        $coutCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(2)->getValeur();
+        $coutMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(3)->getValeur();
 
+        $gesVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(4)->getValeur();
+        $gesCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(5)->getValeur();
+        $gesMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(6)->getValeur();
 
         return $this->render('FfbbBundle:Rencontres:comparaisonScenario.html.twig', array(
              'participants' => $participants,
              'typeAction' => $typeAction,
              'idResultat' => $idResultat,
             'idRapport' => $idRapport,
-
+            'coutVoiture' => $coutVoiture,
+            'coutCovoiturage' => $coutCovoiturage,
+            'coutMinibus' => $coutMinibus,
+            'gesVoiture' => $gesVoiture,
+            'gesCovoiturage' => $gesCovoiturage,
+            'gesMinibus' => $gesMinibus
 
 
         ));
@@ -99,6 +110,17 @@ class ComparaisonController extends Controller
     }
 
     private function remplirCsvEnZip($infoCsv, $zip){
+
+        $em = $this->getDoctrine()->getManager();
+
+        $coutVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(1)->getValeur();
+        $coutCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(2)->getValeur();
+        $coutMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(3)->getValeur();
+
+        $gesVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(4)->getValeur();
+        $gesCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(5)->getValeur();
+        $gesMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(6)->getValeur();
+
 
         // le cas du barycentre avec exclusion
         if($infoCsv["typeRencontre"] == "exclusion"){
@@ -217,12 +239,12 @@ class ComparaisonController extends Controller
                 foreach($infoCsv["participants"] as $participant){
 
                     $contenuCoutParcours = array($participant["ville"],
-                        round($participant["distance"]/1000*$participant["nbrParticipants"]*0.8),
-                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]*0.8),
-                        round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.8),
-                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]/4*0.8),
-                        round($participant["distance"]/1000*$participant["nbrParticipants"]/9*1.31),
-                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]/9*1.31),
+                        round($participant["distance"]/1000*$participant["nbrParticipants"]*$coutVoiture),
+                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]*$coutVoiture),
+                        round($participant["distance"]/1000*$participant["nbrParticipants"]/4*$coutCovoiturage),
+                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]/4*$coutCovoiturage),
+                        round($participant["distance"]/1000*$participant["nbrParticipants"]/9*$coutMinibus),
+                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]/9*$coutMinibus),
                     );
 
                     fputcsv($fd, $contenuCoutParcours);
@@ -245,12 +267,12 @@ class ComparaisonController extends Controller
                 foreach($infoCsv["participants"] as $participant){
 
                     $contenuCoutEmission = array($participant["ville"],
-                        round($participant["distance"]/1000*$participant["nbrParticipants"]*0.157),
-                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]*0.157),
-                        round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.157),
-                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]/4*0.157),
-                        round($participant["distance"]/1000*$participant["nbrParticipants"]/9*0.185),
-                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]/9*0.185),
+                        round($participant["distance"]/1000*$participant["nbrParticipants"]*$gesVoiture),
+                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]*$gesVoiture),
+                        round($participant["distance"]/1000*$participant["nbrParticipants"]/4*$gesCovoiturage),
+                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]/4*$gesCovoiturage),
+                        round($participant["distance"]/1000*$participant["nbrParticipants"]/9*$gesMinibus),
+                        round($participant["distanceEq"]/1000*$participant["nbrParticipants"]/9*$gesMinibus),
                     );
 
                     fputcsv($fd, $contenuCoutEmission);

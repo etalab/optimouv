@@ -364,3 +364,25 @@ ffbb_repartition_update_cat:
 ffbb_repartition_delete:
     path:    /admin/repartition-homogene/delete/{idCategorie}
     defaults: { _controller: FfbbBundle:Repartition:delete}
+
+#Gestion des coefficients
+
+ffbb_coefficients_list:
+    path:    /admin/donnees-reference/list
+    defaults: { _controller: FfbbBundle:Coefficients:list }
+
+ffbb_coefficients_update:
+    path:    /admin/donnees-reference/update/{idReference}
+    defaults: { _controller: FfbbBundle:Coefficients:update }
+
+ffbb_coefficients_update_coef:
+    path:    /admin/donnees-reference/update-coefficient
+    defaults: { _controller: FfbbBundle:Coefficients:updateCoef }
+
+ffbb_coefficients_add:
+    path:    /admin/donnees-reference/add
+    defaults: { _controller: FfbbBundle:Coefficients:add }
+
+ffbb_coefficients_create:
+    path:    /admin/donnees-reference/create
+    defaults: { _controller: FfbbBundle:Coefficients:create }

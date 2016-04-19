@@ -751,6 +751,16 @@ class PoulesController extends Controller
 
         $categories = $em->getRepository('FfbbBundle:RepartitionHomogene')->findAll();
 
+
+        //recuperer les coeff
+        $coutVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(1)->getValeur();
+        $coutCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(2)->getValeur();
+        $coutMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(3)->getValeur();
+
+        $gesVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(4)->getValeur();
+        $gesCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(5)->getValeur();
+        $gesMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(6)->getValeur();
+
         return $this->render('FfbbBundle:Poules:resultatCalcul.html.twig' , array(
 
             'nombrePoule' => $nombrePoule,
@@ -782,12 +792,30 @@ class PoulesController extends Controller
             'infoChangeAffectation' => $infoChangeAffectation,
             'changeAffectEquipes' => $changeAffectEquipes,
             'categories' => $categories,
+            'coutVoiture' => $coutVoiture,
+            'coutCovoiturage' => $coutCovoiturage,
+            'coutMinibus' => $coutMinibus,
+            'gesVoiture' => $gesVoiture,
+            'gesCovoiturage' => $gesCovoiturage,
+            'gesMinibus' => $gesMinibus
 
 
         ));
     }
 
     public function comparaisonScenarioAction($idResultat){
+
+        //récupérer les coefff
+        $em = $this->getDoctrine()->getManager();
+        $coutVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(1)->getValeur();
+        $coutCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(2)->getValeur();
+        $coutMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(3)->getValeur();
+
+        $gesVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(4)->getValeur();
+        $gesCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(5)->getValeur();
+        $gesMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(6)->getValeur();
+
+
 
         $infoComparaison = $this->getInfoComparaison($idResultat);
 
@@ -802,7 +830,13 @@ class PoulesController extends Controller
             'scenarioRef' => $infoComparaison["scenarioRef"],
             'contraintsExiste' => $infoComparaison["contraintsExiste"],
             'refExiste' => $infoComparaison["refExiste"],
-            'donneesComparison' => $infoComparaison["donneesComparison"]
+            'donneesComparison' => $infoComparaison["donneesComparison"],
+            'coutVoiture' => $coutVoiture,
+            'coutCovoiturage' => $coutCovoiturage,
+            'coutMinibus' => $coutMinibus,
+            'gesVoiture' => $gesVoiture,
+            'gesCovoiturage' => $gesCovoiturage,
+            'gesMinibus' => $gesMinibus
 
             ));
     }
@@ -926,6 +960,16 @@ class PoulesController extends Controller
 
     public function remplirCsvEnZipComparaison($infoCsv, $zip)
     {
+
+        $em = $this->getDoctrine()->getManager();
+        $coutVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(1)->getValeur();
+        $coutCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(2)->getValeur();
+        $coutMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(3)->getValeur();
+
+        $gesVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(4)->getValeur();
+        $gesCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(5)->getValeur();
+        $gesMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(6)->getValeur();
+
         $refExiste = $infoCsv["refExiste"];
         $contraintsExiste = $infoCsv["contraintsExiste"];
 
@@ -1200,37 +1244,37 @@ class PoulesController extends Controller
                     if($contraintsExiste == 1 && $refExiste == 1){
 
                         $contenuCoutParcours = array($equipe["nom"],
-                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]* 0.8/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]* 0.8/1000),
-                            floor($equipe["distanceTotale"]["scenarioRef"]* 0.8/1000),
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]* $coutVoiture/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]* $coutVoiture/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]* $coutVoiture/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* $coutVoiture/1000),
 
-                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/4* 0.8/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/4* 0.8/1000),
-                            floor($equipe["distanceTotale"]["scenarioRef"]/4* 0.8/1000),
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/4* $coutCovoiturage/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/4* $coutCovoiturage/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/4* $coutCovoiturage/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* $coutCovoiturage/1000),
 
-                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/9 * 1.31/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/9 * 1.31/1000),
-                            floor($equipe["distanceTotale"]["scenarioRef"]/9 * 1.31/1000),
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 1.31/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/9 * $coutMinibus/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/9 * $coutMinibus/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/9 * $coutMinibus/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * $coutMinibus/1000),
 
                         );
 
                     }
                     elseif($contraintsExiste == 1 && $refExiste == 0){
                         $contenuCoutParcours = array($equipe["nom"],
-                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]* 0.8/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]* 0.8/1000),
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]* $coutVoiture/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]* $coutVoiture/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* $coutVoiture/1000),
 
-                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/4* 0.8/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/4* 0.8/1000),
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/4* $coutCovoiturage/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/4* $coutCovoiturage/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* $coutCovoiturage/1000),
 
-                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/9 * 1.31/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/9 * 1.31/1000),
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 1.31/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/9 * $coutMinibus/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/9 * $coutMinibus/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * $coutMinibus/1000),
 
                         );
 
@@ -1238,31 +1282,31 @@ class PoulesController extends Controller
                     elseif($contraintsExiste == 0 && $refExiste == 1){
 
                         $contenuCoutParcours = array($equipe["nom"],
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.8/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]* 0.8/1000),
-                            floor($equipe["distanceTotale"]["scenarioRef"]* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* $coutVoiture/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]* $coutVoiture/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]* $coutVoiture/1000),
 
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.8/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/4* 0.8/1000),
-                            floor($equipe["distanceTotale"]["scenarioRef"]/4* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* $coutCovoiturage/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/4* $coutCovoiturage/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/4* $coutCovoiturage/1000),
 
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 1.31/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/9 * 1.31/1000),
-                            floor($equipe["distanceTotale"]["scenarioRef"]/9 * 1.31/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * $coutMinibus/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/9 * $coutMinibus/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/9 * $coutMinibus/1000),
 
                         );
 
                     }
                     elseif($contraintsExiste == 0 && $refExiste == 0){
                         $contenuCoutParcours = array($equipe["nom"],
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.8/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* $coutVoiture/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]* $coutVoiture/1000),
 
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.8/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/4* 0.8/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* $coutCovoiturage/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/4* $coutCovoiturage/1000),
 
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 1.31/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/9 * 1.31/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * $coutMinibus/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/9 * $coutMinibus/1000),
 
                         );
 
@@ -1288,68 +1332,68 @@ class PoulesController extends Controller
                     if($contraintsExiste == 1 && $refExiste == 1){
 
                         $contenuCoutEmission = array($equipe["nom"],
-                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]* 0.157/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]* 0.157/1000),
-                            floor($equipe["distanceTotale"]["scenarioRef"]* 0.157/1000),
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]* $gesVoiture/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]* $gesVoiture/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]* $gesVoiture/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* $gesVoiture/1000),
 
-                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/4* 0.157/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/4* 0.157/1000),
-                            floor($equipe["distanceTotale"]["scenarioRef"]/4* 0.157/1000),
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/4* $gesCovoiturage/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/4* $gesCovoiturage/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/4* $gesCovoiturage/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* $gesCovoiturage/1000),
 
-                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/9 * 0.185/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/9 * 0.185/1000),
-                            floor($equipe["distanceTotale"]["scenarioRef"]/9 * 0.185/1000),
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 0.185/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/9 * $gesMinibus/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/9 * $gesMinibus/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/9 * $gesMinibus/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * $gesMinibus/1000),
 
                         );
 
                     }
                     elseif($contraintsExiste == 1 && $refExiste == 0){
                         $contenuCoutEmission = array($equipe["nom"],
-                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]* 0.157/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]* 0.157/1000),
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]* $gesVoiture/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]* $gesVoiture/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* $gesVoiture/1000),
 
-                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/4* 0.157/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/4* 0.157/1000),
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/4* $gesCovoiturage/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/4* $gesCovoiturage/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* $gesCovoiturage/1000),
 
-                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/9 * 0.185/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/9 * 0.185/1000),
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 0.185/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalAvecContrainte"]/9 * $gesMinibus/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableAvecContrainte"]/9 * $gesMinibus/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * $gesMinibus/1000),
 
                         );
 
                     }
                     elseif($contraintsExiste == 0 && $refExiste == 1){
                         $contenuCoutEmission = array($equipe["nom"],
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.157/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]* 0.157/1000),
-                            floor($equipe["distanceTotale"]["scenarioRef"]* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* $gesVoiture/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]* $gesVoiture/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]* $gesVoiture/1000),
 
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.157/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/4* 0.157/1000),
-                            floor($equipe["distanceTotale"]["scenarioRef"]/4* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* $gesCovoiturage/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/4* $gesCovoiturage/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/4* $gesCovoiturage/1000),
 
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 0.185/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/9 * 0.185/1000),
-                            floor($equipe["distanceTotale"]["scenarioRef"]/9 * 0.185/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * $gesMinibus/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/9 * $gesMinibus/1000),
+                            floor($equipe["distanceTotale"]["scenarioRef"]/9 *$gesMinibus/1000),
 
                         );
 
                     }
                     elseif($contraintsExiste == 0 && $refExiste == 0){
                         $contenuCoutEmission = array($equipe["nom"],
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* 0.157/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]* $gesVoiture/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]* $gesVoiture/1000),
 
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* 0.157/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/4* 0.157/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/4* $gesCovoiturage/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/4* $gesCovoiturage/1000),
 
-                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * 0.185/1000),
-                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/9 * 0.185/1000),
+                            floor($equipe["distanceTotale"]["scenarioOptimalSansContrainte"]/9 * $gesMinibus/1000),
+                            floor($equipe["distanceTotale"]["scenarioEquitableSansContrainte"]/9 * $gesMinibus/1000),
 
                         );
 
@@ -1411,6 +1455,8 @@ class PoulesController extends Controller
 
     public function pretraitementExportAction()
     {
+
+        $em = $this->getDoctrine()->getManager();
         $formatExport = $_POST['formatExport'];
         $idResultat = $_POST['idResultat'];
         $typeScenario = $_POST['typeScenario'];
@@ -1440,6 +1486,14 @@ class PoulesController extends Controller
         $nomFederation = "FFBB"; # FIXME
         $nomDiscipline ="Basket"; # FIXME
 
+        $coutVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(1)->getValeur();
+        $coutCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(2)->getValeur();
+        $coutMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(3)->getValeur();
+
+        $gesVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(4)->getValeur();
+        $gesCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(5)->getValeur();
+        $gesMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(6)->getValeur();
+
         if($formatExport == "pdf"){
             
             return $this->render('FfbbBundle:Poules:previsualisationPdf.html.twig', array(
@@ -1460,6 +1514,12 @@ class PoulesController extends Controller
                 'nomFederation' => $nomFederation,
                 'nomDiscipline' => $nomDiscipline,
                 'infoPouleStr' => $infoPouleStr,
+                'coutVoiture' => $coutVoiture,
+                'coutCovoiturage' => $coutCovoiturage,
+                'coutMinibus' => $coutMinibus,
+                'gesVoiture' => $gesVoiture,
+                'gesCovoiturage' => $gesCovoiturage,
+                'gesMinibus' => $gesMinibus
             ));
 
 
@@ -1546,6 +1606,16 @@ class PoulesController extends Controller
     }
 
     private function remplirCsvEnZip($infoCsv, $zip){
+
+        $em = $this->getDoctrine()->getManager();
+        $coutVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(1)->getValeur();
+        $coutCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(2)->getValeur();
+        $coutMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(3)->getValeur();
+
+        $gesVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(4)->getValeur();
+        $gesCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(5)->getValeur();
+        $gesMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(6)->getValeur();
+        
         // entete pour l'estimation générale
         $headerEstimationGenerale = array("KILOMETRES A PARCOURIR POUR LE SCENARIO",
             "COUT POUR LE SCENARIO EN VOITURE",
@@ -1560,12 +1630,12 @@ class PoulesController extends Controller
         $distanceTotale = round($infoCsv["scenarioResultats"]["estimationGenerale"]["distanceTotale"]/1000);
         $distanceTotaleTousParticipants = round($infoCsv["scenarioResultats"]["estimationGenerale"]["distanceTotaleTousParticipants"]/1000);
 
-        $coutVoiture = round($distanceTotaleTousParticipants * 0.8);
-        $coutCovoiturage = round($distanceTotaleTousParticipants/4 * 0.8);
-        $coutMinibus = round($distanceTotaleTousParticipants/9 * 1.31);
-        $emissionVoiture = round($distanceTotaleTousParticipants * 0.157);
-        $emissionCovoiturage = round($distanceTotaleTousParticipants/4 * 0.157);
-        $emissionMinibus = round($distanceTotaleTousParticipants/9 * 0.185);
+        $coutVoiture = round($distanceTotaleTousParticipants * $coutVoiture);
+        $coutCovoiturage = round($distanceTotaleTousParticipants/4 * $coutCovoiturage);
+        $coutMinibus = round($distanceTotaleTousParticipants/9 * $coutMinibus);
+        $emissionVoiture = round($distanceTotaleTousParticipants * $gesVoiture);
+        $emissionCovoiturage = round($distanceTotaleTousParticipants/4 * $gesCovoiturage);
+        $emissionMinibus = round($distanceTotaleTousParticipants/9 * $gesMinibus);
         $contenuEstimationGenerale = array($distanceTotale,
             $coutVoiture, $coutCovoiturage, $coutMinibus,
             $emissionVoiture, $emissionCovoiturage, $emissionMinibus
@@ -1650,12 +1720,12 @@ class PoulesController extends Controller
                     $contenuEstimationDetaille = array($alphabet[$pouleNbr-1],
                         floor($estimationDetail["distanceTotale"]/1000),
                         $jourTrajet." ".$heureTrajet.":".$minuteTrajet,
-                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000*0.8),
-                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000/4*0.8),
-                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000/9*1.31),
-                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000*0.157),
-                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000/4*0.157),
-                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000/9*0.185),
+                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000*$coutVoiture),
+                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000/4*$coutCovoiturage),
+                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000/9*$coutMinibus),
+                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000*$gesVoiture),
+                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000/4*$gesCovoiturage),
+                        floor($estimationDetail["distanceTotaleTousParticipants"]/1000/9*$gesMinibus),
 
                     );
 
@@ -1730,6 +1800,16 @@ class PoulesController extends Controller
     }
 
     private function getTexteExportXml($infoXml){
+
+        $em = $this->getDoctrine()->getManager();
+        $coutVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(1)->getValeur();
+        $coutCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(2)->getValeur();
+        $coutMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(3)->getValeur();
+
+        $gesVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(4)->getValeur();
+        $gesCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(5)->getValeur();
+        $gesMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(6)->getValeur();
+
         $texte = '<?xml version="1.0" encoding="utf-8"?>';
 
         $texte .= "\n";
@@ -1756,12 +1836,12 @@ class PoulesController extends Controller
 
         $texte .= "\t<estimation_generale>\n";
         $texte .= "\t\t<distance_totale>" .$distanceTotale." Kms</distance_totale>\n";
-        $texte .= "\t\t<cout_voiture>" .round($distanceTotaleTousParticipants*0.8)." €</cout_voiture>\n";
-        $texte .= "\t\t<cout_covoiturage>" .round($distanceTotaleTousParticipants/4*0.8)." €</cout_covoiturage>\n";
-        $texte .= "\t\t<cout_minibus>" .round($distanceTotaleTousParticipants/9*1.31)." €</cout_minibus>\n";
-        $texte .= "\t\t<co2_emission_voiture>" .round($distanceTotaleTousParticipants*0.157)." KG eq CO2</co2_emission_voiture>\n";
-        $texte .= "\t\t<co2_emission_covoiturage>" .round($distanceTotaleTousParticipants/4*0.157)." KG eq CO2</co2_emission_covoiturage>\n";
-        $texte .= "\t\t<co2_emission_minibus>" .round($distanceTotaleTousParticipants/9*0.185)." KG eq CO2</co2_emission_minibus>\n";
+        $texte .= "\t\t<cout_voiture>" .round($distanceTotaleTousParticipants*$coutVoiture)." €</cout_voiture>\n";
+        $texte .= "\t\t<cout_covoiturage>" .round($distanceTotaleTousParticipants/4*$coutCovoiturage)." €</cout_covoiturage>\n";
+        $texte .= "\t\t<cout_minibus>" .round($distanceTotaleTousParticipants/9*$coutMinibus)." €</cout_minibus>\n";
+        $texte .= "\t\t<co2_emission_voiture>" .round($distanceTotaleTousParticipants*$gesVoiture)." KG eq CO2</co2_emission_voiture>\n";
+        $texte .= "\t\t<co2_emission_covoiturage>" .round($distanceTotaleTousParticipants/4*$gesCovoiturage)." KG eq CO2</co2_emission_covoiturage>\n";
+        $texte .= "\t\t<co2_emission_minibus>" .round($distanceTotaleTousParticipants/9*$gesMinibus)." KG eq CO2</co2_emission_minibus>\n";
         $texte .= "\t</estimation_generale>\n";
 
 
@@ -1793,12 +1873,12 @@ class PoulesController extends Controller
             }
 
             $texte .= "\t\t\t<duree_trajet>" .$jourTrajet." ".$heureTrajet.":".$minuteTrajet." (J H:M)"." </duree_trajet>\n";
-            $texte .= "\t\t\t<cout_voiture>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000*0.8)." €</cout_voiture>\n";
-            $texte .= "\t\t\t<cout_covoiturage>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000/4*0.8)." €</cout_covoiturage>\n";
-            $texte .= "\t\t\t<cout_minibus>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000/9*1.31)." €</cout_minibus>\n";
-            $texte .= "\t\t\t<co2_emission_voiture>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000*0.157)." KG eq CO2</co2_emission_voiture>\n";
-            $texte .= "\t\t\t<co2_emission_covoiturage>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000/4*0.157)." KG eq CO2</co2_emission_covoiturage>\n";
-            $texte .= "\t\t\t<co2_emission_minibus>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000/9*0.185)." KG eq CO2</co2_emission_minibus>\n";
+            $texte .= "\t\t\t<cout_voiture>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000*$coutVoiture)." €</cout_voiture>\n";
+            $texte .= "\t\t\t<cout_covoiturage>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000/4*$coutCovoiturage)." €</cout_covoiturage>\n";
+            $texte .= "\t\t\t<cout_minibus>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000/9*$coutMinibus)." €</cout_minibus>\n";
+            $texte .= "\t\t\t<co2_emission_voiture>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000*$gesVoiture)." KG eq CO2</co2_emission_voiture>\n";
+            $texte .= "\t\t\t<co2_emission_covoiturage>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000/4*$gesCovoiturage)." KG eq CO2</co2_emission_covoiturage>\n";
+            $texte .= "\t\t\t<co2_emission_minibus>" .round($estimationDetail["distanceTotaleTousParticipants"]/1000/9*$gesMinibus)." KG eq CO2</co2_emission_minibus>\n";
             $texte .= "\t\t</participant>\n";
 
         }
@@ -1917,6 +1997,7 @@ class PoulesController extends Controller
     public function exportScenarioPdfAction()
     {
 
+        $em = $this->getDoctrine()->getManager();
         $idResultat = $_POST['idResultat'];
         $typeScenario = $_POST['typeScenario'];
         $nomScenario = $this->getNomScenario($typeScenario, 1);
@@ -1941,6 +2022,14 @@ class PoulesController extends Controller
         $nomFederation = "FFBB"; # FIXME
         $nomDiscipline ="Basket"; # FIXME
 
+        $coutVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(1)->getValeur();
+        $coutCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(2)->getValeur();
+        $coutMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(3)->getValeur();
+
+        $gesVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(4)->getValeur();
+        $gesCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(5)->getValeur();
+        $gesMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(6)->getValeur();
+
         $html = $this->renderView('FfbbBundle:Poules:exportPdf.html.twig', array(
             'nomRapport' => $nomRapport,
             'typeMatch' => $typeMatch,
@@ -1959,6 +2048,12 @@ class PoulesController extends Controller
             'nomFederation' => $nomFederation,
             'nomDiscipline' => $nomDiscipline,
             'infoPouleStr' => $infoPouleStr,
+            'coutVoiture' => $coutVoiture,
+            'coutCovoiturage' => $coutCovoiturage,
+            'coutMinibus' => $coutMinibus,
+            'gesVoiture' => $gesVoiture,
+            'gesCovoiturage' => $gesCovoiturage,
+            'gesMinibus' => $gesMinibus
 
         ));
 

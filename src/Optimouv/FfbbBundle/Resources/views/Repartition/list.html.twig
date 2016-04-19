@@ -9,14 +9,14 @@
             <div class="bs-example">
                 <ul class="breadcrumb">
                     <li><a href="{{ path('administration_panel') }}">Administration</a></li>
-                    <li class="active">Liste de disciplines</li>
+                    <li class="active">Liste de catégories de répartitions homogènes</li>
                 </ul>
             </div>
 
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <h3 class="page-header">Gérer la liste des disciplines</h3>
+                <h3 class="page-header">Gérer les catégories de répartitions homogènes</h3>
             </div>
         </div>
 
@@ -24,7 +24,7 @@
             <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        Liste des disciplines
+                        Liste des catégories
 
                     </div>
 
@@ -52,8 +52,8 @@
 
 
                                             <td>
-                                                <a href="{{ path('ffbb_repartition_update', {idCategorie:categorie.id }) }}" class="btn btn-consulter-user">Editer</a>
-                                                <button type="button" name="delete" class="btn btn-consulter-user" onclick="deleteCategorie({{ categorie.id }})">Supprimer</button>
+                                                <a href="{{ path('ffbb_repartition_update', {idCategorie:categorie.id }) }}" class="btn btn-editer-reparition">Editer</a>
+                                                <button type="button" name="delete" class="btn btn-editer-reparition" onclick="deleteCategorie({{ categorie.id }})">Supprimer</button>
 
                                             </td>
 
@@ -67,8 +67,8 @@
                                     </tbody>
 
                                 </table>
-                                <a href="{{ path('ffbb_repartition_add') }}" class="btn btn-consulter-user-dark">Ajouter</a>
-                                <a href="javascript:history.back()" class="pull-right btn btn-consulter-user ">Retour</a>
+                                <a href="{{ path('ffbb_repartition_add') }}" class="btn btn-ajouter-reparition">Ajouter</a>
+                                <a href="javascript:history.back()" class="pull-right btn btn-editer-reparition ">Retour</a>
 
                             </div>
                         </div>
