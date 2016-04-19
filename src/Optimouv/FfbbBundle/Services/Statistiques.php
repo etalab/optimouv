@@ -174,27 +174,16 @@ class Statistiques {
                 }
 
                 # remplir les données pour la ligne
-                if($formatResultat == "jour"){
-                    if(array_key_exists($dateLigneMod, $lignesTableau)){
+                if(array_key_exists($dateLigneMod, $lignesTableau)){
+                    if(array_key_exists($typeStatistiques, $lignesTableau[$dateLigneMod])){
+                        $lignesTableau[$dateLigneMod][$typeStatistiques] += $valeur  ;
+                    }
+                    else{
                         $lignesTableau[$dateLigneMod][$typeStatistiques] = $valeur  ;
                     }
-                    else{
-                        $lignesTableau[$dateLigneMod] = array($typeStatistiques => $valeur);
-                    }
-
                 }
-                elseif($formatResultat == "mois" || $formatResultat == "annee"){
-                    if(array_key_exists($dateLigneMod, $lignesTableau)){
-                        if(array_key_exists($typeStatistiques, $lignesTableau[$dateLigneMod])){
-                            $lignesTableau[$dateLigneMod][$typeStatistiques] += $valeur  ;
-                        }
-                        else{
-                            $lignesTableau[$dateLigneMod][$typeStatistiques] = $valeur  ;
-                        }
-                    }
-                    else{
-                        $lignesTableau[$dateLigneMod] = array($typeStatistiques => $valeur);
-                    }
+                else{
+                    $lignesTableau[$dateLigneMod] = array($typeStatistiques => $valeur);
                 }
             }
 
@@ -259,29 +248,17 @@ class Statistiques {
 
 
                     # remplir les données pour la ligne
-                    if($formatResultat == "jour"){
-                        if(array_key_exists($dateLigneMod, $lignesTableau)){
+                    if(array_key_exists($dateLigneMod, $lignesTableau)){
+                        if(array_key_exists($typeStatistiques, $lignesTableau[$dateLigneMod])){
+                            $lignesTableau[$dateLigneMod][$typeStatistiques] += $valeur  ;
+                        }
+                        else{
                             $lignesTableau[$dateLigneMod][$typeStatistiques] = $valeur  ;
                         }
-                        else{
-                            $lignesTableau[$dateLigneMod] = array($typeStatistiques => $valeur);
-                        }
-
                     }
-                    elseif($formatResultat == "mois" || $formatResultat == "annee"){
-                        if(array_key_exists($dateLigneMod, $lignesTableau)){
-                            if(array_key_exists($typeStatistiques, $lignesTableau[$dateLigneMod])){
-                                $lignesTableau[$dateLigneMod][$typeStatistiques] += $valeur  ;
-                            }
-                            else{
-                                $lignesTableau[$dateLigneMod][$typeStatistiques] = $valeur  ;
-                            }
-                        }
-                        else{
-                            $lignesTableau[$dateLigneMod] = array($typeStatistiques => $valeur);
-                        }
+                    else{
+                        $lignesTableau[$dateLigneMod] = array($typeStatistiques => $valeur);
                     }
-
 
 
                 }
