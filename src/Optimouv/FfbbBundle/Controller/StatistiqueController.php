@@ -40,7 +40,6 @@ class StatistiqueController extends Controller
 
         }
 
-//        error_log("\n listeFederations: ".print_r($listeFederations, true), 3, $this->error_log_path);
 
 
         return $this->render('FfbbBundle:Statistique:index.html.twig', array(
@@ -58,6 +57,14 @@ class StatistiqueController extends Controller
 
     public function exportPdfAction()
     {
+        # récupérer chemin fichier log du fichier parameters.yml
+        $this->error_log_path = $this->container->getParameter("error_log_path");
+
+        $donneesStatistiques = $this->get('service_statistiques')->getDonneesStatistiques();
+
+//        error_log("\n post: ".print_r($_POST, true), 3, $this->error_log_path);
+
+        error_log("\n donneesStatistiques: ".print_r($donneesStatistiques, true), 3, $this->error_log_path);
 
 //        return $this->render('FfbbBundle:Statistique:exportPdf.html.twig', [
 //        ]);
@@ -65,6 +72,7 @@ class StatistiqueController extends Controller
 
         $html = $this->renderView('FfbbBundle:Statistique:exportPdf.html.twig', [
         ]);
+
 
 
         return new Response(

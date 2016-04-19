@@ -40,6 +40,7 @@ class Statistiques {
 
 
     public function getDonneesStatistiques(){
+
         # obtenir les params envoyé par l'utilisateur
         if(array_key_exists("typeRapport", $_POST)){
             $typeRapport = $_POST["typeRapport"];
@@ -97,7 +98,7 @@ class Statistiques {
         else{
             $formatResultat = "annee";
         }
-        error_log("\n formatResultat: ".print_r($formatResultat, true), 3, $this->error_log_path);
+//        error_log("\n formatResultat: ".print_r($formatResultat, true), 3, $this->error_log_path);
 
 
         try{
@@ -110,7 +111,7 @@ class Statistiques {
                 die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
             }
 
-            error_log("\n typeRapport: ".print_r($typeRapport, true), 3, $this->error_log_path);
+//            error_log("\n typeRapport: ".print_r($typeRapport, true), 3, $this->error_log_path);
 
             $lignesTableau = array();
 
