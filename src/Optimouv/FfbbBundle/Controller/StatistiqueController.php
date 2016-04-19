@@ -104,6 +104,7 @@ class StatistiqueController extends Controller
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('dmY', time());
 
+        # obtenir le nom et prénom de l'utilisateur et le nom de la fédération
         $resultat = $this->get('service_statistiques')->getNomUtilisateurNomFederation($idUtilisateur, $idFederation);
         $nomUtilisateur = $resultat["nomUtilisateur"];
         $prenomUtilisateur = $resultat["prenomUtilisateur"];
@@ -111,6 +112,7 @@ class StatistiqueController extends Controller
 
 //        error_log("\n resultat: ".print_r($resultat, true), 3, $this->error_log_path);
 
+        # construire le nom de la graphique
         $nomGraph = "Rapport_".$typeRapport."_";
         if($typeRapport == "utilisateur"){
             $nomGraph .= $prenomUtilisateur."_".$nomUtilisateur;
@@ -120,19 +122,22 @@ class StatistiqueController extends Controller
         }
         $nomGraph .= "_".$dateTimeNow;
 
-        error_log("\n typeRapport: ".print_r($typeRapport, true), 3, $this->error_log_path);
+//        error_log("\n typeRapport: ".print_r($typeRapport, true), 3, $this->error_log_path);
 
-//        return $this->render('FfbbBundle:Statistique:exportPdf.html.twig', array(
-//                "donneesStatistiques" => $donneesStatistiques
-//
-//            )
-//        );
+        $tableauOutput = array(
+            "donneesStatistiques" => $donneesStatistiques,
+            "typeRapport" => $typeRapport,
+            "dateDebutStr" => $dateDebutStr,
+            "dateFinStr" => $dateFinStr,
+
+        );
+
+        return $this->render('FfbbBundle:Statistique:exportPdf.html.twig',
+            $tableauOutput
+        );
 
 
-        $html = $this->renderView('FfbbBundle:Statistique:exportPdf.html.twig', array(
-                "donneesStatistiques" => $donneesStatistiques
-
-            )
+        $html = $this->renderView('FfbbBundle:Statistique:exportPdf.html.twig', $tableauOutput
         );
 
 

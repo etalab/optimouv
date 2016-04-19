@@ -139,23 +139,23 @@ class Statistiques {
             $idUtilisateur  = -1;
         }
         if(array_key_exists("dateDebutStr", $_POST)){
-            $dateDebutStr = $_POST["dateDebutStr"];
+            $dateDebutFormatter = $_POST["dateDebutFormatter"];
         }
         else{
-            $dateDebutStr  = "";
+            $dateDebutFormatter  = "";
         }
         if(array_key_exists("dateFinStr", $_POST)){
-            $dateFinStr = $_POST["dateFinStr"];
+            $dateFinFormatter = $_POST["dateFinFormatter"];
         }
         else{
-            $dateFinStr  = "";
+            $dateFinFormatter  = "";
         }
 
 
 
         # obtenir le nombre de jours entre les dates
-        $dateDebut = strtotime($dateDebutStr);
-        $dateFin = strtotime($dateFinStr);
+        $dateDebut = strtotime($dateDebutFormatter);
+        $dateFin = strtotime($dateFinFormatter);
         $datediff = ceil( ($dateFin - $dateDebut)/(60*60*24) )+1;
 //        error_log("\n datediff: ".print_r($datediff, true), 3, $this->error_log_path);
 
@@ -210,8 +210,8 @@ class Statistiques {
                     $stmt->bindParam(':id_discipline', $idDiscipline);
                 }
             }
-            $stmt->bindParam(':dateDebut', $dateDebutStr);
-            $stmt->bindParam(':dateFin', $dateFinStr);
+            $stmt->bindParam(':dateDebut', $dateDebutFormatter);
+            $stmt->bindParam(':dateFin', $dateFinFormatter);
             $stmt->bindParam(':id_federation', $idFederation);
             $stmt->execute();
             $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -302,8 +302,8 @@ class Statistiques {
                     $stmt->bindParam(':id_discipline', $idDiscipline);
                 }
 
-                $stmt->bindParam(':dateDebut', $dateDebutStr);
-                $stmt->bindParam(':dateFin', $dateFinStr);
+                $stmt->bindParam(':dateDebut', $dateDebutFormatter);
+                $stmt->bindParam(':dateFin', $dateFinFormatter);
                 $stmt->bindParam(':id_federation', $idFederation);
                 $stmt->execute();
                 $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -133,6 +133,8 @@
                                     <input type="hidden" name="idUtilisateur">
                                     <input type="hidden" name="dateDebutStr">
                                     <input type="hidden" name="dateFinStr">
+                                    <input type="hidden" name="dateDebutFormatter">
+                                    <input type="hidden" name="dateFinFormatter">
 
                                 </form>
                             </div>
@@ -500,7 +502,8 @@
                                     if(idUtilisateur != "" && idUtilisateur != "vide" && idUtilisateur != null){
 
                                         var params = {"typeRapport": typeRapport, "idFederation": idFederation, "idDiscipline": idDiscipline,
-                                            "idUtilisateur": idUtilisateur, "dateDebutStr": dateDebutFormatter, "dateFinStr": dateFinFormatter
+                                            "idUtilisateur": idUtilisateur, "dateDebutStr": dateDebutStr, "dateFinStr": dateFinStr,
+                                            "dateDebutFormatter": dateDebutFormatter, "dateFinFormatter":dateFinFormatter
                                         }
 
                                         console.log( "params: " + JSON.stringify(params));
@@ -511,8 +514,10 @@
                                         $('input[name="idFederation"]').val(idFederation);
                                         $('input[name="idDiscipline"]').val(idDiscipline);
                                         $('input[name="idUtilisateur"]').val(idUtilisateur);
-                                        $('input[name="dateDebutStr"]').val(dateDebutFormatter);
-                                        $('input[name="dateFinStr"]').val(dateFinFormatter);
+                                        $('input[name="dateDebutStr"]').val(dateDebutStr);
+                                        $('input[name="dateFinStr"]').val(dateFinStr);
+                                        $('input[name="dateDebutFormatter"]').val(dateDebutFormatter);
+                                        $('input[name="dateDebutFormatter"]').val(dateDebutFormatter);
 
 
                                         // AJAX requete
