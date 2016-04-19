@@ -65,6 +65,11 @@
 
     InitChart(data, data2);
 
+    console.log( "------------------------------------------------------ DEBUG export PDF graph -------------------------------------------" );
+    var donneesStatistiques = {{ donneesStatistiques | json_encode | raw }};
+    console.log('donneesStatistiques: ' + JSON.stringify(donneesStatistiques));
+
+
 </script>
 
 

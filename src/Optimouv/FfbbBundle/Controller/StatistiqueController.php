@@ -62,16 +62,21 @@ class StatistiqueController extends Controller
 
         $donneesStatistiques = $this->get('service_statistiques')->getDonneesStatistiques();
 
-//        error_log("\n post: ".print_r($_POST, true), 3, $this->error_log_path);
 
-        error_log("\n donneesStatistiques: ".print_r($donneesStatistiques, true), 3, $this->error_log_path);
+//        error_log("\n donneesStatistiques: ".print_r($donneesStatistiques, true), 3, $this->error_log_path);
 
-//        return $this->render('FfbbBundle:Statistique:exportPdf.html.twig', [
-//        ]);
+        return $this->render('FfbbBundle:Statistique:exportPdf.html.twig', array(
+                "donneesStatistiques" => $donneesStatistiques
+
+            )
+        );
 
 
-        $html = $this->renderView('FfbbBundle:Statistique:exportPdf.html.twig', [
-        ]);
+        $html = $this->renderView('FfbbBundle:Statistique:exportPdf.html.twig', array(
+                "donneesStatistiques" => $donneesStatistiques
+
+            )
+        );
 
 
 
