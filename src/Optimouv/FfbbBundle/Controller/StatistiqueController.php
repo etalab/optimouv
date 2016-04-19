@@ -41,7 +41,6 @@ class StatistiqueController extends Controller
         }
 
 
-
         return $this->render('FfbbBundle:Statistique:index.html.twig', array(
             "listeFederations" => $listeFederations
             ));
@@ -65,11 +64,11 @@ class StatistiqueController extends Controller
 
 //        error_log("\n donneesStatistiques: ".print_r($donneesStatistiques, true), 3, $this->error_log_path);
 
-        return $this->render('FfbbBundle:Statistique:exportPdf.html.twig', array(
-                "donneesStatistiques" => $donneesStatistiques
-
-            )
-        );
+//        return $this->render('FfbbBundle:Statistique:exportPdf.html.twig', array(
+//                "donneesStatistiques" => $donneesStatistiques
+//
+//            )
+//        );
 
 
         $html = $this->renderView('FfbbBundle:Statistique:exportPdf.html.twig', array(

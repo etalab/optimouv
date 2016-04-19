@@ -290,9 +290,33 @@ class Statistiques {
             }
 
 
-//            error_log("\n lignesTableau: ".print_r($lignesTableau, true), 3, $this->error_log_path);
+            # données pour la graphique
+            $donneesGraph = [];
+
+            $donnees1 = array();
+            array_push($donnees1, array("sale"=>202, "year"=>2000));
+            array_push($donnees1, array("sale"=>215, "year"=>2002));
+            array_push($donnees1, array("sale"=>179, "year"=>2004));
+            array_push($donnees1, array("sale"=>199, "year"=>2006));
+            array_push($donnees1, array("sale"=>134, "year"=>2008));
+            array_push($donnees1, array("sale"=>176, "year"=>2010));
+
+            $donnees2 = array();
+            array_push($donnees2, array("sale"=>152, "year"=>2000));
+            array_push($donnees2, array("sale"=>189, "year"=>2002));
+            array_push($donnees2, array("sale"=>179, "year"=>2004));
+            array_push($donnees2, array("sale"=>199, "year"=>2006));
+            array_push($donnees2, array("sale"=>134, "year"=>2008));
+            array_push($donnees2, array("sale"=>176, "year"=>2010));
+
+            array_push($donneesGraph,  $donnees1);
+            array_push($donneesGraph, $donnees2);
+
+
+            error_log("\n donneesGraph: ".print_r($donneesGraph, true), 3, $this->error_log_path);
 
             return array("lignesTableau" => $lignesTableau,
+                "donneesGraph" => $donneesGraph,
                 );
 
         }
