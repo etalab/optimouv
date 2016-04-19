@@ -69,33 +69,33 @@
             à parcourir pour l'ensemble du scénario
         </li>
         <li>
-            <strong> {{ (distanceTotale * 0.80 )|round|number_format(0, ',', ' ') }}</strong>
+            <strong> {{ (distanceTotale * coutVoiture )|round|number_format(0, ',', ' ') }}</strong>
             € pour réaliser les trajets de l'ensemble du scénario
             en voiture
         </li>
         <li>
-            <strong> {{ (distanceTotale /4 * 0.80 )|round|number_format(0, ',', ' ') }}</strong>
+            <strong> {{ (distanceTotale /4 * coutCovoiturage )|round|number_format(0, ',', ' ') }}</strong>
             € pour réaliser les trajets de l'ensemble du scénario
             en covoiturage
         </li>
         <li>
-            <strong>{{ (distanceTotale /9 * 1.31)|round|number_format(0, ',', ' ') }} </strong>
+            <strong>{{ (distanceTotale /9 * coutMinibus)|round|number_format(0, ',', ' ') }} </strong>
             € pour réaliser les trajets de l'ensemble du scénario
             en minibus
         </li>
         <li>
-            <strong> {{ (distanceTotale * 0.157)|round|number_format(0, ',', ' ') }}</strong>
+            <strong> {{ (distanceTotale * gesVoiture)|round|number_format(0, ',', ' ') }}</strong>
             KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}
             joueurs en voiture individuelle
             pour le scénario
         </li>
         <li>
-            <strong>{{ (distanceTotale/4 * 0.157)|round|number_format(0, ',', ' ') }} </strong>
+            <strong>{{ (distanceTotale/4 * gesCovoiturage)|round|number_format(0, ',', ' ') }} </strong>
             KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}
             joueurs en co-voiturage pour le scénario
         </li>
         <li>
-            <strong>{{ (distanceTotale/9 * 0.185)|round|number_format(0, ',', ' ') }} </strong>
+            <strong>{{ (distanceTotale/9 * gesMinibus)|round|number_format(0, ',', ' ') }} </strong>
             KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotal }}
             joueurs en minibus pour le scénario
 
@@ -161,12 +161,12 @@
                 <td><strong> {{ participant.villeNom }}</strong></td>
                 <td style="text-align:right"> {{ (participant.distance // 1000)|number_format(0, ',', ' ') }}</td>
                 <td style="text-align:right"> {{ (participant.duree/3600)|round }}:{{ ((participant.duree%3600)/60)|round}}</td>
-                <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants * 0.80)|round|number_format(0, ',', ' ') }}</td>
-                <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
-                <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
-                <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants * 0.157)|round|number_format(0, ',', ' ') }}</td>
-                <td style="text-align:right"> {{ (participant.distance / 1000 *(participant.nbrParticipants/4)*0.157)|round|number_format(0, ',', ' ') }} </td>
-                <td style="text-align:right"> {{ (participant.distance / 1000 *(participant.nbrParticipants/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
+                <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants * coutVoiture)|round|number_format(0, ',', ' ') }}</td>
+                <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants /4 * coutCovoiturage)|round|number_format(0, ',', ' ') }}</td>
+                <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants /9 * coutMinibus)|round|number_format(0, ',', ' ') }}</td>
+                <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants * gesVoiture)|round|number_format(0, ',', ' ') }}</td>
+                <td style="text-align:right"> {{ (participant.distance / 1000 *(participant.nbrParticipants/4)*gesCovoiturage)|round|number_format(0, ',', ' ') }} </td>
+                <td style="text-align:right"> {{ (participant.distance / 1000 *(participant.nbrParticipants/9)*gesMinibus)|round|number_format(0, ',', ' ') }} </td>
             </tr>
             {% set dureeTotale = dureeTotale + participant.duree %}
         {% endfor %}
@@ -180,15 +180,16 @@
 
 
 
-            <td style="text-align:right"> {{ (distanceTotale  * 0.80)|round|number_format(0, ',', ' ') }}</td>
-            <td style="text-align:right"> {{ (distanceTotale /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
-            <td style="text-align:right"> {{ (distanceTotale /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
-            <td style="text-align:right"> {{ (distanceTotale * 0.157)|round|number_format(0, ',', ' ') }}</td>
-            <td style="text-align:right"> {{ ((distanceTotale /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
-            <td style="text-align:right"> {{ ((distanceTotale/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
+            <td style="text-align:right"> {{ (distanceTotale  * coutVoiture)|round|number_format(0, ',', ' ') }}</td>
+            <td style="text-align:right"> {{ (distanceTotale /4 * coutCovoiturage)|round|number_format(0, ',', ' ') }}</td>
+            <td style="text-align:right"> {{ (distanceTotale /9 * coutMinibus)|round|number_format(0, ',', ' ') }}</td>
+            <td style="text-align:right"> {{ (distanceTotale * gesVoiture)|round|number_format(0, ',', ' ') }}</td>
+            <td style="text-align:right"> {{ ((distanceTotale /4)*gesCovoiturage)|round|number_format(0, ',', ' ')  }} </td>
+            <td style="text-align:right"> {{ ((distanceTotale/9)*gesMinibus)|round|number_format(0, ',', ' ') }} </td>
         </tr>
         </tbody>
     </table>
 
 </div>
 
+</div>

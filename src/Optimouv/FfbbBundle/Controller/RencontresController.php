@@ -176,6 +176,17 @@ use ZipArchive;
              $coordonneesVille = $infoResultat["coordonneesVille"];
              $coordPointDepart = $infoResultat["coordPointDepart"];
 
+             $em = $this->getDoctrine()->getManager();
+
+             //récupération des coeff
+             $coutVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(1)->getValeur();
+             $coutCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(2)->getValeur();
+             $coutMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(3)->getValeur();
+
+             $gesVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(4)->getValeur();
+             $gesCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(5)->getValeur();
+             $gesMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(6)->getValeur();
+
 
              return $this->render('FfbbBundle:Rencontres:previsualisationPdf.html.twig', array(
                  'idResultat' => $idResultat,
@@ -197,6 +208,12 @@ use ZipArchive;
                  'boolTropVilles' => $boolTropVilles,
                  'nomFederation' => $nomFederation,
                  'nomDiscipline' => $nomDiscipline,
+                 'coutVoiture' => $coutVoiture,
+                 'coutCovoiturage' => $coutCovoiturage,
+                 'coutMinibus' => $coutMinibus,
+                 'gesVoiture' => $gesVoiture,
+                 'gesCovoiturage' => $gesCovoiturage,
+                 'gesMinibus' => $gesMinibus
 
              ));
                  
@@ -277,6 +294,18 @@ use ZipArchive;
      }
 
      private function remplirCsvEnZip($infoCsv, $zip){
+
+         $em = $this->getDoctrine()->getManager();
+
+         $coutVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(1)->getValeur();
+         $coutCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(2)->getValeur();
+         $coutMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(3)->getValeur();
+
+         $gesVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(4)->getValeur();
+         $gesCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(5)->getValeur();
+         $gesMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(6)->getValeur();
+
+
          // estimation générale
          $headerEstimationGenerale = array("KILOMETRES A PARCOURIR POUR LE SCENARIO",
              "COUT POUR LE SCENARIO EN VOITURE",
@@ -286,12 +315,12 @@ use ZipArchive;
              "EMISSIONS TOTALES DE GES EN COVOITURAGE",
              "EMISSIONS TOTALES DE GES EN MINIBUS"
          );
-         $coutVoiture = round($infoCsv["distanceTotale"] * 0.8);
-         $coutCovoiturage = round($infoCsv["distanceTotale"]/4 * 0.8);
-         $coutMinibus = round($infoCsv["distanceTotale"]/9 * 1.31);
-         $emissionVoiture = round($infoCsv["distanceTotale"] * 0.157);
-         $emissionCovoiturage = round($infoCsv["distanceTotale"]/4 * 0.157);
-         $emissionMinibus = round($infoCsv["distanceTotale"]/9 * 0.185);
+         $coutVoiture = round($infoCsv["distanceTotale"] * $coutVoiture);
+         $coutCovoiturage = round($infoCsv["distanceTotale"]/4 * $coutCovoiturage);
+         $coutMinibus = round($infoCsv["distanceTotale"]/9 * $coutMinibus);
+         $emissionVoiture = round($infoCsv["distanceTotale"] * $gesVoiture);
+         $emissionCovoiturage = round($infoCsv["distanceTotale"]/4 * $gesCovoiturage);
+         $emissionMinibus = round($infoCsv["distanceTotale"]/9 * $gesMinibus);
          $contenuEstimationGenerale = array($infoCsv["distanceMin"],
              $coutVoiture, $coutCovoiturage, $coutMinibus,
              $emissionVoiture, $emissionCovoiturage, $emissionMinibus
@@ -341,12 +370,12 @@ use ZipArchive;
                      $contenuEstimationDetaille = array($participant["villeNom"],
                          floor($participant["distance"]/1000),
                          round($participant["duree"]/3600).":".round($participant["duree"]%3600/60),
-                         round($participant["distance"]/1000*$participant["nbrParticipants"]*0.8),
-                         round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.8),
-                         round($participant["distance"]/1000*$participant["nbrParticipants"]/9*1.31),
-                         round($participant["distance"]/1000*$participant["nbrParticipants"]*0.157),
-                         round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.157),
-                         round($participant["distance"]/1000*$participant["nbrParticipants"]/9*0.185)
+                         round($participant["distance"]/1000*$participant["nbrParticipants"]*$coutVoiture),
+                         round($participant["distance"]/1000*$participant["nbrParticipants"]/4*$coutCovoiturage),
+                         round($participant["distance"]/1000*$participant["nbrParticipants"]/9*$coutMinibus),
+                         round($participant["distance"]/1000*$participant["nbrParticipants"]*$gesVoiture),
+                         round($participant["distance"]/1000*$participant["nbrParticipants"]/4*$gesCovoiturage),
+                         round($participant["distance"]/1000*$participant["nbrParticipants"]/9*$gesMinibus)
                      );
 
                      fputcsv($fd, $contenuEstimationDetaille);
@@ -410,6 +439,18 @@ use ZipArchive;
      }
 
     private function getTexteExportXml($infoXml){
+
+        $em = $this->getDoctrine()->getManager();
+
+        $coutVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(1)->getValeur();
+        $coutCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(2)->getValeur();
+        $coutMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(3)->getValeur();
+
+        $gesVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(4)->getValeur();
+        $gesCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(5)->getValeur();
+        $gesMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(6)->getValeur();
+
+
         $texte = '<?xml version="1.0" encoding="utf-8"?>';
 
         $texte .= "\n";
@@ -436,12 +477,12 @@ use ZipArchive;
         $texte .= "\t\t<meilleu_lieu_rencontre_nom>" .$nomVilleDepart."</meilleu_lieu_rencontre_nom>\n";
         $texte .= "\t\t<meilleu_lieu_rencontre_code_postal>" .$codePostalVilleDepart."</meilleu_lieu_rencontre_code_postal>\n";
         $texte .= "\t\t<distance_totale>" .$infoXml["distanceMin"]." Kms</distance_totale>\n";
-        $texte .= "\t\t<cout_voiture>" .round($infoXml["distanceTotale"]*0.8)." €</cout_voiture>\n";
-        $texte .= "\t\t<cout_covoiturage>" .round($infoXml["distanceTotale"]/4*0.8)." €</cout_covoiturage>\n";
-        $texte .= "\t\t<cout_minibus>" .round($infoXml["distanceTotale"]/9*1.31)." €</cout_minibus>\n";
-        $texte .= "\t\t<co2_emission_voiture>" .round($infoXml["distanceTotale"]*0.157)." KG eq CO2</co2_emission_voiture>\n";
-        $texte .= "\t\t<co2_emission_covoiturage>" .round($infoXml["distanceTotale"]/4*0.157)." KG eq CO2</co2_emission_covoiturage>\n";
-        $texte .= "\t\t<co2_emission_minibus>" .round($infoXml["distanceTotale"]/9*0.185)." KG eq CO2</co2_emission_minibus>\n";
+        $texte .= "\t\t<cout_voiture>" .round($infoXml["distanceTotale"]*$coutVoiture)." €</cout_voiture>\n";
+        $texte .= "\t\t<cout_covoiturage>" .round($infoXml["distanceTotale"]/4*$coutCovoiturage)." €</cout_covoiturage>\n";
+        $texte .= "\t\t<cout_minibus>" .round($infoXml["distanceTotale"]/9*$coutMinibus)." €</cout_minibus>\n";
+        $texte .= "\t\t<co2_emission_voiture>" .round($infoXml["distanceTotale"]*$gesVoiture)." KG eq CO2</co2_emission_voiture>\n";
+        $texte .= "\t\t<co2_emission_covoiturage>" .round($infoXml["distanceTotale"]/4*$gesCovoiturage)." KG eq CO2</co2_emission_covoiturage>\n";
+        $texte .= "\t\t<co2_emission_minibus>" .round($infoXml["distanceTotale"]/9*$gesMinibus)." KG eq CO2</co2_emission_minibus>\n";
         $texte .= "\t</estimation_generale>\n";
 
 
@@ -456,12 +497,12 @@ use ZipArchive;
             $texte .= "\t\t\t<nom>".$participant["villeNom"] ."</nom>\n";
             $texte .= "\t\t\t<distance_parcourue>" .floor($participant["distance"]/1000)." Kms</distance_parcourue>\n";
             $texte .= "\t\t\t<duree_trajet>" .round($participant["duree"]/3600).":".round($participant["duree"]%3600/60)." (H:M)"." </duree_trajet>\n";
-            $texte .= "\t\t\t<cout_voiture>" .round($participant["distance"]/1000*$participant["nbrParticipants"]*0.8)." €</cout_voiture>\n";
-            $texte .= "\t\t\t<cout_covoiturage>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.8)." €</cout_covoiturage>\n";
-            $texte .= "\t\t\t<cout_minibus>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/9*1.31)." €</cout_minibus>\n";
-            $texte .= "\t\t\t<co2_emission_voiture>" .round($participant["distance"]/1000*$participant["nbrParticipants"]*0.157)." KG eq CO2</co2_emission_voiture>\n";
-            $texte .= "\t\t\t<co2_emission_covoiturage>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/4*0.157)." KG eq CO2</co2_emission_covoiturage>\n";
-            $texte .= "\t\t\t<co2_emission_minibus>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/9*0.185)." KG eq CO2</co2_emission_minibus>\n";
+            $texte .= "\t\t\t<cout_voiture>" .round($participant["distance"]/1000*$participant["nbrParticipants"]*$coutVoiture)." €</cout_voiture>\n";
+            $texte .= "\t\t\t<cout_covoiturage>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/4*$coutCovoiturage)." €</cout_covoiturage>\n";
+            $texte .= "\t\t\t<cout_minibus>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/9*$coutMinibus)." €</cout_minibus>\n";
+            $texte .= "\t\t\t<co2_emission_voiture>" .round($participant["distance"]/1000*$participant["nbrParticipants"]*$gesVoiture)." KG eq CO2</co2_emission_voiture>\n";
+            $texte .= "\t\t\t<co2_emission_covoiturage>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/4*$gesCovoiturage)." KG eq CO2</co2_emission_covoiturage>\n";
+            $texte .= "\t\t\t<co2_emission_minibus>" .round($participant["distance"]/1000*$participant["nbrParticipants"]/9*$gesMinibus)." KG eq CO2</co2_emission_minibus>\n";
             $texte .= "\t\t</participant>\n";
 
         }
@@ -501,6 +542,17 @@ use ZipArchive;
 
          $nomFederation = "FFBB"; # FIXME
          $nomDiscipline ="Basket"; # FIXME
+
+         $em = $this->getDoctrine()->getManager();
+
+         //récupération des coeff
+         $coutVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(1)->getValeur();
+         $coutCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(2)->getValeur();
+         $coutMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(3)->getValeur();
+
+         $gesVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(4)->getValeur();
+         $gesCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(5)->getValeur();
+         $gesMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(6)->getValeur();
          
          $html = $this->renderView('FfbbBundle:Rencontres:exportPdf.html.twig', array(
              'idResultat' => $idResultat,
@@ -521,6 +573,12 @@ use ZipArchive;
              'coordPointDepart' => $coordPointDepart,
              'nomFederation' => $nomFederation,
              'nomDiscipline' => $nomDiscipline,
+             'coutVoiture' => $coutVoiture,
+             'coutCovoiturage' => $coutCovoiturage,
+             'coutMinibus' => $coutMinibus,
+             'gesVoiture' => $gesVoiture,
+             'gesCovoiturage' => $gesCovoiturage,
+             'gesMinibus' => $gesMinibus
 
          ));
          

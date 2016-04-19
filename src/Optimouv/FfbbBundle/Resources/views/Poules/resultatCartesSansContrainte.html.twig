@@ -185,7 +185,7 @@
                                         <p class="list-group-item">
                                             <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}"
                                                  width="20px" height="20px"/>
-                                            <i style="padding-right: 10px"></i> <strong> {{ (distanceTotaleOpSansContrainte * 0.80 )|round|number_format(0, ',', ' ') }}</strong>
+                                            <i style="padding-right: 10px"></i> <strong> {{ (distanceTotaleOpSansContrainte * coutVoiture )|round|number_format(0, ',', ' ') }}</strong>
                                             € pour réaliser les trajets de l'ensemble du scénario
                                             en voiture
 
@@ -193,7 +193,7 @@
                                         <p class="list-group-item">
                                             <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}"
                                                  width="20px" height="20px"/>
-                                            <i style="padding-right: 10px"></i> <strong> {{ (distanceTotaleOpSansContrainte /4 * 0.80 )|round|number_format(0, ',', ' ') }}</strong>
+                                            <i style="padding-right: 10px"></i> <strong> {{ (distanceTotaleOpSansContrainte /4 * coutCovoiturage )|round|number_format(0, ',', ' ') }}</strong>
                                             € pour réaliser les trajets de l'ensemble du scénario
                                             en covoiturage
 
@@ -202,7 +202,7 @@
                                             <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}"
                                                  width="20px" height="20px"/>
                                             <i style="padding-right: 10px"></i>
-                                            <strong>{{ (distanceTotaleOpSansContrainte /9 * 1.31)|round|number_format(0, ',', ' ') }} </strong>
+                                            <strong>{{ (distanceTotaleOpSansContrainte /9 * coutMinibus)|round|number_format(0, ',', ' ') }} </strong>
                                             € pour réaliser les trajets de l'ensemble du scénario
                                             en minibus
 
@@ -211,7 +211,7 @@
                                         <p class="list-group-item">
                                             <img src="{{ asset('bundles/ffbb/images/icons/car-icon.png') }}"
                                                  width="20px" height="20px"/>
-                                            <i style="padding-right: 10px"></i> <strong> {{ (distanceTotaleOpSansContrainte * 0.157)|round|number_format(0, ',', ' ') }}</strong>
+                                            <i style="padding-right: 10px"></i> <strong> {{ (distanceTotaleOpSansContrainte * gesVoiture)|round|number_format(0, ',', ' ') }}</strong>
                                             KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalOpSansContrainte }}
                                             joueurs en voiture individuelle
                                             pour le scénario
@@ -220,7 +220,7 @@
                                         <p class="list-group-item">
                                             <img src="{{ asset('bundles/ffbb/images/icons/covoiturage-icon.png') }}"
                                                  width="20px" height="20px"/>
-                                            <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleOpSansContrainte/4 * 0.157)|round|number_format(0, ',', ' ') }} </strong>
+                                            <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleOpSansContrainte/4 * gesCovoiturage)|round|number_format(0, ',', ' ') }} </strong>
                                             KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalOpSansContrainte }}
                                             joueurs en co-voiturage pour le scénario
 
@@ -230,7 +230,7 @@
                                             <img src="{{ asset('bundles/ffbb/images/icons/bus-icon.png') }}"
                                                  width="20px" height="15px"/>
                                             <i style="padding-right: 10px"></i>
-                                            <strong>{{ (distanceTotaleOpSansContrainte/9 * 0.185)|round|number_format(0, ',', ' ') }} </strong>
+                                            <strong>{{ (distanceTotaleOpSansContrainte/9 * gesMinibus)|round|number_format(0, ',', ' ') }} </strong>
                                             KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalOpSansContrainte }}
                                             joueurs en minibus pour le scénario
 
@@ -311,12 +311,12 @@
 
                                                     </td>
 
-                                                    <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail  * 0.80)|round|number_format(0, ',', ' ') }}</td>
-                                                    <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
-                                                    <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
-                                                    <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail * 0.157)|round|number_format(0, ',', ' ') }}</td>
-                                                    <td style="text-align:right"> {{ ((distanceTotaleOpSansContrainteDetail /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
-                                                    <td style="text-align:right"> {{ ((distanceTotaleOpSansContrainteDetail/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
+                                                    <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail  * coutVoiture)|round|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail /4 * coutCovoiturage)|round|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail /9 *coutMinibus)|round|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right"> {{ (distanceTotaleOpSansContrainteDetail * gesVoiture)|round|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right"> {{ ((distanceTotaleOpSansContrainteDetail /4)*gesCovoiturage)|round|number_format(0, ',', ' ')  }} </td>
+                                                    <td style="text-align:right"> {{ ((distanceTotaleOpSansContrainteDetail/9)*gesMinibus)|round|number_format(0, ',', ' ') }} </td>
                                                 </tr>
                                                 {% set dureeTotaleScOpSansContrainteDetail = dureeTotaleScOpSansContrainteDetail + dureeTotaleOpSansContrainteDetail %}
 
@@ -344,12 +344,12 @@
                                                     {{ nbrJourScOpSansContrainteDetail}} {{ nbrHeureScOpSansContrainteDetail }}:{{ nbrMinScOpSansContrainteDetail }}
 
                                                 </td>
-                                                <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte  * 0.80)|round|number_format(0, ',', ' ') }}</td>
-                                                <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
-                                                <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
-                                                <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte * 0.157)|round|number_format(0, ',', ' ') }}</td>
-                                                <td style="text-align:right"> {{ ((distanceTotaleOpSansContrainte /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
-                                                <td style="text-align:right"> {{ ((distanceTotaleOpSansContrainte/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
+                                                <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte  * coutVoiture)|round|number_format(0, ',', ' ') }}</td>
+                                                <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte /4 * coutCovoiturage)|round|number_format(0, ',', ' ') }}</td>
+                                                <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte /9 * coutMinibus)|round|number_format(0, ',', ' ') }}</td>
+                                                <td style="text-align:right"> {{ (distanceTotaleOpSansContrainte * gesVoiture)|round|number_format(0, ',', ' ') }}</td>
+                                                <td style="text-align:right"> {{ ((distanceTotaleOpSansContrainte /4)*gesCovoiturage)|round|number_format(0, ',', ' ')  }} </td>
+                                                <td style="text-align:right"> {{ ((distanceTotaleOpSansContrainte/9)*gesMinibus)|round|number_format(0, ',', ' ') }} </td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -669,7 +669,7 @@
                                         <p class="list-group-item">
                                             <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}"
                                                  width="20px" height="20px"/>
-                                            <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleEqContrainte * 0.80 )|round|number_format(0, ',', ' ') }} </strong>
+                                            <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleEqContrainte * coutVoiture )|round|number_format(0, ',', ' ') }} </strong>
                                             € pour réaliser les trajets de l'ensemble du scénario
                                             en voiture
 
@@ -677,7 +677,7 @@
                                         <p class="list-group-item">
                                             <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}"
                                                  width="20px" height="20px"/>
-                                            <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleEqContrainte /4 * 0.80 )|round|number_format(0, ',', ' ') }} </strong>
+                                            <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleEqContrainte /4 * coutCovoiturage )|round|number_format(0, ',', ' ') }} </strong>
                                             € pour réaliser les trajets de l'ensemble du scénario
                                             en covoiturage
 
@@ -686,7 +686,7 @@
                                             <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}"
                                                  width="20px" height="20px"/>
                                             <i style="padding-right: 10px"></i>
-                                            <strong>{{ (distanceTotaleEqContrainte /9 * 1.31)|round|number_format(0, ',', ' ') }} </strong>
+                                            <strong>{{ (distanceTotaleEqContrainte /9 * coutMinibus)|round|number_format(0, ',', ' ') }} </strong>
                                             € pour réaliser les trajets de l'ensemble du scénario
                                             en minibus
 
@@ -695,7 +695,7 @@
                                         <p class="list-group-item">
                                             <img src="{{ asset('bundles/ffbb/images/icons/car-icon.png') }}"
                                                  width="20px" height="20px"/>
-                                            <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleEqContrainte * 0.157)|round|number_format(0, ',', ' ') }} </strong>
+                                            <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleEqContrainte * gesVoiture)|round|number_format(0, ',', ' ') }} </strong>
                                             KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalEqContrainte }}
                                             joueurs en voiture individuelle
                                             pour le scénario
@@ -704,7 +704,7 @@
                                         <p class="list-group-item">
                                             <img src="{{ asset('bundles/ffbb/images/icons/covoiturage-icon.png') }}"
                                                  width="20px" height="20px"/>
-                                            <i style="padding-right: 10px"></i> <strong> {{ (distanceTotaleEqContrainte/4 * 0.157)|round|number_format(0, ',', ' ') }} </strong>
+                                            <i style="padding-right: 10px"></i> <strong> {{ (distanceTotaleEqContrainte/4 * gesCovoiturage)|round|number_format(0, ',', ' ') }} </strong>
                                             KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalEqContrainte }}
                                             joueurs en co-voiturage pour le scénario
 
@@ -714,7 +714,7 @@
                                             <img src="{{ asset('bundles/ffbb/images/icons/bus-icon.png') }}"
                                                  width="20px" height="15px"/>
                                             <i style="padding-right: 10px"></i>
-                                            <strong> {{ (distanceTotaleEqContrainte/9 * 0.185)|round|number_format(0, ',', ' ') }}</strong>
+                                            <strong> {{ (distanceTotaleEqContrainte/9 * gesMinibus)|round|number_format(0, ',', ' ') }}</strong>
                                             KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalEqContrainte }}
                                             joueurs en minibus pour le scénario
 
@@ -796,12 +796,12 @@
 
                                                     </td>
 
-                                                    <td style="text-align:right"> {{ (distanceTotaleEqDetailContrainte  * 0.80)|round|number_format(0, ',', ' ') }}</td>
-                                                    <td style="text-align:right"> {{ (distanceTotaleEqDetailContrainte /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
-                                                    <td style="text-align:right"> {{ (distanceTotaleEqDetailContrainte /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
-                                                    <td style="text-align:right"> {{ (distanceTotaleEqDetailContrainte * 0.157)|round|number_format(0, ',', ' ') }}</td>
-                                                    <td style="text-align:right"> {{ ((distanceTotaleEqDetailContrainte /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
-                                                    <td style="text-align:right"> {{ ((distanceTotaleEqDetailContrainte/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
+                                                    <td style="text-align:right"> {{ (distanceTotaleEqDetailContrainte  * coutVoiture)|round|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right"> {{ (distanceTotaleEqDetailContrainte /4 * coutCovoiturage)|round|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right"> {{ (distanceTotaleEqDetailContrainte /9 * coutMinibus)|round|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right"> {{ (distanceTotaleEqDetailContrainte * gesVoiture)|round|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right"> {{ ((distanceTotaleEqDetailContrainte /4)*gesCovoiturage)|round|number_format(0, ',', ' ')  }} </td>
+                                                    <td style="text-align:right"> {{ ((distanceTotaleEqDetailContrainte/9)*gesMinibus)|round|number_format(0, ',', ' ') }} </td>
                                                 </tr>
 
                                                 {% set dureeTotaleScEqDetailContrainte = dureeTotaleScEqDetailContrainte + dureeTotaleEqDetailContrainte %}
@@ -829,12 +829,12 @@
                                                     {% endif %}
                                                     {{ nbrJourScEqDetailContrainte}} {{ nbrHeureScEqDetailContrainte }}:{{ nbrMinScEqDetailContrainte }}
                                                 </td>
-                                                <td style="text-align:right"> {{ (distanceTotaleEqContrainte  * 0.80)|round|number_format(0, ',', ' ') }}</td>
-                                                <td style="text-align:right"> {{ (distanceTotaleEqContrainte /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
-                                                <td style="text-align:right"> {{ (distanceTotaleEqContrainte /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
-                                                <td style="text-align:right"> {{ (distanceTotaleEqContrainte * 0.157)|round|number_format(0, ',', ' ') }}</td>
-                                                <td style="text-align:right"> {{ ((distanceTotaleEqContrainte /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
-                                                <td style="text-align:right"> {{ ((distanceTotaleEqContrainte/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
+                                                <td style="text-align:right"> {{ (distanceTotaleEqContrainte  * coutVoiture)|round|number_format(0, ',', ' ') }}</td>
+                                                <td style="text-align:right"> {{ (distanceTotaleEqContrainte /4 * coutCovoiturage)|round|number_format(0, ',', ' ') }}</td>
+                                                <td style="text-align:right"> {{ (distanceTotaleEqContrainte /9 * coutMinibus)|round|number_format(0, ',', ' ') }}</td>
+                                                <td style="text-align:right"> {{ (distanceTotaleEqContrainte * gesVoiture)|round|number_format(0, ',', ' ') }}</td>
+                                                <td style="text-align:right"> {{ ((distanceTotaleEqContrainte /4)* gesCovoiturage)|round|number_format(0, ',', ' ')  }} </td>
+                                                <td style="text-align:right"> {{ ((distanceTotaleEqContrainte/9)* gesMinibus)|round|number_format(0, ',', ' ') }} </td>
                                             </tr>
 
                                             </tbody>
@@ -1165,7 +1165,7 @@
                                             <p href="#" class="list-group-item">
                                                 <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}"
                                                      width="20px" height="20px"/>
-                                                <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleRef * 0.80 )|round|number_format(0, ',', ' ')   }}</strong>
+                                                <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleRef * coutVoiture )|round|number_format(0, ',', ' ')   }}</strong>
                                                 € pour réaliser les trajets de l'ensemble du scénario
                                                 en voiture
 
@@ -1173,7 +1173,7 @@
                                             <p href="#" class="list-group-item">
                                                 <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}"
                                                      width="20px" height="20px"/>
-                                                <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleRef /4 * 0.80 )|round|number_format(0, ',', ' ')   }} </strong>
+                                                <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleRef /4 * coutCovoiturage )|round|number_format(0, ',', ' ')   }} </strong>
                                                 € pour réaliser les trajets de l'ensemble du scénario
                                                 covoiturage
 
@@ -1183,7 +1183,7 @@
                                                 <img src="{{ asset('bundles/ffbb/images/icons/money-icon.png') }}"
                                                      width="20px" height="20px"/>
                                                 <i style="padding-right: 10px"></i>
-                                                <strong> {{ (distanceTotaleRef /9 * 1.31)|round|number_format(0, ',', ' ') }}</strong>
+                                                <strong> {{ (distanceTotaleRef /9 * coutMinibus)|round|number_format(0, ',', ' ') }}</strong>
                                                 € pour réaliser les trajets de l'ensemble du scénario
                                                 en minibus
 
@@ -1191,7 +1191,7 @@
                                             <p class="list-group-item">
                                                 <img src="{{ asset('bundles/ffbb/images/icons/car-icon.png') }}"
                                                      width="20px" height="20px"/>
-                                                <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleRef * 0.157)|round|number_format(0, ',', ' ') }} </strong>
+                                                <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleRef * gesVoiture)|round|number_format(0, ',', ' ') }} </strong>
                                                 KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalRef }}
                                                 joueurs en voiture individuelle
                                                 pour le scénario
@@ -1200,7 +1200,7 @@
                                             <p class="list-group-item">
                                                 <img src="{{ asset('bundles/ffbb/images/icons/covoiturage-icon.png') }}"
                                                      width="20px" height="20px"/>
-                                                <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleRef/4 * 0.157)|round|number_format(0, ',', ' ') }} </strong>
+                                                <i style="padding-right: 10px"></i> <strong>{{ (distanceTotaleRef/4 * gesCovoiturage)|round|number_format(0, ',', ' ') }} </strong>
                                                 KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalRef }}
                                                 joueurs en co-voiturage pour le scénario
 
@@ -1210,7 +1210,7 @@
                                                 <img src="{{ asset('bundles/ffbb/images/icons/bus-icon.png') }}"
                                                      width="20px" height="15px"/>
                                                 <i style="padding-right: 10px"></i>
-                                                <strong>{{ (distanceTotaleRef/9 * 0.185)|round|number_format(0, ',', ' ') }} </strong>
+                                                <strong>{{ (distanceTotaleRef/9 * gesMinibus)|round|number_format(0, ',', ' ') }} </strong>
                                                 KG eq CO2 d'émissions totales de GES pour {{ nbrParticipantsTotalRef }}
                                                 joueurs en minibus pour le scénario
 
@@ -1292,12 +1292,12 @@
                                                             {{ nbrJourDetailRef}} {{ nbrHeureDetailRef }}:{{ nbrMinDetailRef }}
 
                                                         </td>
-                                                        <td style="text-align:right"> {{ (distanceTotaleDetailRef  * 0.80)|round|number_format(0, ',', ' ') }}</td>
-                                                        <td style="text-align:right"> {{ (distanceTotaleDetailRef /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
-                                                        <td style="text-align:right"> {{ (distanceTotaleDetailRef /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
-                                                        <td style="text-align:right"> {{ (distanceTotaleDetailRef * 0.157)|round|number_format(0, ',', ' ') }}</td>
-                                                        <td style="text-align:right"> {{ ((distanceTotaleDetailRef /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
-                                                        <td style="text-align:right"> {{ ((distanceTotaleDetailRef/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
+                                                        <td style="text-align:right"> {{ (distanceTotaleDetailRef  * coutVoiture)|round|number_format(0, ',', ' ') }}</td>
+                                                        <td style="text-align:right"> {{ (distanceTotaleDetailRef /4 * coutCovoiturage)|round|number_format(0, ',', ' ') }}</td>
+                                                        <td style="text-align:right"> {{ (distanceTotaleDetailRef /9 * coutMinibus)|round|number_format(0, ',', ' ') }}</td>
+                                                        <td style="text-align:right"> {{ (distanceTotaleDetailRef * gesVoiture)|round|number_format(0, ',', ' ') }}</td>
+                                                        <td style="text-align:right"> {{ ((distanceTotaleDetailRef /4)*gesCovoiturage)|round|number_format(0, ',', ' ')  }} </td>
+                                                        <td style="text-align:right"> {{ ((distanceTotaleDetailRef/9)*gesMinibus)|round|number_format(0, ',', ' ') }} </td>
                                                     </tr>
                                                     {% set dureeTotaleScRefPasContrainte = dureeTotaleScRefPasContrainte + dureeTotaleDetailRef %}
 
@@ -1326,12 +1326,12 @@
                                                         {% endif %}
                                                         {{ nbrJourScRefPasContrainte}} {{ nbrHeureScRefPasContrainte }}:{{ nbrMinScRefPasContrainte }}
                                                     </td>
-                                                    <td style="text-align:right"> {{ (distanceTotaleRef * 0.80 )|round|number_format(0, ',', ' ')   }}</td>
-                                                    <td style="text-align:right"> {{ (distanceTotaleRef /4 * 0.80)|round|number_format(0, ',', ' ') }}</td>
-                                                    <td style="text-align:right"> {{ (distanceTotaleRef /9 * 1.31)|round|number_format(0, ',', ' ') }}</td>
-                                                    <td style="text-align:right"> {{ (distanceTotaleRef * 0.157)|round|number_format(0, ',', ' ') }}</td>
-                                                    <td style="text-align:right"> {{ ((distanceTotaleRef /4)*0.157)|round|number_format(0, ',', ' ')  }} </td>
-                                                    <td style="text-align:right"> {{ ((distanceTotaleRef/9)*0.185)|round|number_format(0, ',', ' ') }} </td>
+                                                    <td style="text-align:right"> {{ (distanceTotaleRef * coutVoiture )|round|number_format(0, ',', ' ')   }}</td>
+                                                    <td style="text-align:right"> {{ (distanceTotaleRef /4 * coutCovoiturage)|round|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right"> {{ (distanceTotaleRef /9 * coutMinibus)|round|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right"> {{ (distanceTotaleRef * gesVoiture)|round|number_format(0, ',', ' ') }}</td>
+                                                    <td style="text-align:right"> {{ ((distanceTotaleRef /4)*gesCovoiturage)|round|number_format(0, ',', ' ')  }} </td>
+                                                    <td style="text-align:right"> {{ ((distanceTotaleRef/9)*gesMinibus)|round|number_format(0, ',', ' ') }} </td>
                                                 </tr>
 
 
