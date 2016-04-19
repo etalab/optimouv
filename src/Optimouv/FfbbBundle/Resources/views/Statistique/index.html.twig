@@ -127,6 +127,13 @@
                             <div class="col-md-12">
                                 <form name="submitParams" action="{{ path('ffbb_statistiques_export_pdf')}}" method="post">
                                     <button style="width: 120px" type="submit" class="btn btn-statistique pull-right">Exporter</button>
+                                    <input type="hidden" name="typeRapport">
+                                    <input type="hidden" name="idFederation">
+                                    <input type="hidden" name="idDiscipline">
+                                    <input type="hidden" name="idUtilisateur">
+                                    <input type="hidden" name="dateDebutStr">
+                                    <input type="hidden" name="dateFinStr">
+
                                 </form>
                             </div>
                         </div>
@@ -499,6 +506,15 @@
                                         console.log( "params: " + JSON.stringify(params));
 
 
+                                        // remplir les valuers pour les input cachés (export pdf)
+                                        $('input[name="typeRapport"]').val(typeRapport);
+                                        $('input[name="idFederation"]').val(idFederation);
+                                        $('input[name="idDiscipline"]').val(idDiscipline);
+                                        $('input[name="idUtilisateur"]').val(idUtilisateur);
+                                        $('input[name="dateDebutStr"]').val(dateDebutStr);
+                                        $('input[name="dateFinStr"]').val(dateFinStr);
+
+
                                         // AJAX requete
                                         $.ajax({
                                             url: '/admin/statistiques/filtre/',
@@ -509,6 +525,8 @@
                                             {
                                                 // afficher la partie de rapport statistiques
                                                 $("#rappportStatistiques").show();
+
+                                                ///////////////////////////// Traitement pour le tableau ////////////////////////////////////////////////
 
                                                 // afficher le tableau  selon le type de rapport
                                                 if(typeRapport == "utilisateur" || typeRapport == "federation"){
@@ -524,7 +542,6 @@
 
                                                 // parser les données pour le tableau
                                                 var donneesTableau = data.lignesTableau;
-//                                                console.log('donneesTableau: ' + JSON.stringify(donneesTableau));
 
                                                 // vider le contenu des anciens tableaux
                                                 $("#tbodyUtilisateur").empty();
@@ -634,7 +651,52 @@
 
                                                 });
 
+                                                ///////////////////////////// Traitement pour la graphique ////////////////////////////////////////////////
                                                 // parser les données pour la graphique
+//                                                console.log('donneesTableau: ' + JSON.stringify(donneesTableau));
+                                                var data = [{
+                                                    "sale": "202",
+                                                    "year": "2000"
+                                                }, {
+                                                    "sale": "215",
+                                                    "year": "2002"
+                                                }, {
+                                                    "sale": "179",
+                                                    "year": "2004"
+                                                }, {
+                                                    "sale": "199",
+                                                    "year": "2006"
+                                                }, {
+                                                    "sale": "134",
+                                                    "year": "2008"
+                                                }, {
+                                                    "sale": "176",
+                                                    "year": "2010"
+                                                }];
+                                                var data2 = [{
+                                                    "sale": "152",
+                                                    "year": "2000"
+                                                }, {
+                                                    "sale": "189",
+                                                    "year": "2002"
+                                                }, {
+                                                    "sale": "179",
+                                                    "year": "2004"
+                                                }, {
+                                                    "sale": "199",
+                                                    "year": "2006"
+                                                }, {
+                                                    "sale": "134",
+                                                    "year": "2008"
+                                                }, {
+                                                    "sale": "176",
+                                                    "year": "2010"
+                                                }];
+
+
+                                                InitChart(data, data2);
+
+
 
                                             },
                                             error: function(jqXHR, textStatus, errorThrown)
