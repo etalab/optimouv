@@ -118,19 +118,19 @@
                     </div>
 
                     <div class="panel-body">
-                        {#<h4 class="page-header">Synthèse des utilisations - vue graphique </h4>#}
+                        <h4 class="page-header">Synthèse des utilisations - vue graphique </h4>
 
-                        {#{% include 'FfbbBundle:Statistique:graph.html.twig' %}#}
+                        {% include 'FfbbBundle:Statistique:graph.html.twig' %}
 
 
-                        {#<div class="form-group">#}
-                            {#<div class="col-md-12">#}
-                                {#<form name="submitParams" action="{{ path('ffbb_statistiques_export_pdf')}}" method="post">#}
-                                    {#<button style="width: 120px" type="submit" class="btn btn-statistique pull-right">Exporter</button>#}
-                                {#</form>#}
-                            {#</div>#}
-                        {#</div>#}
-                        {#<br>#}
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <form name="submitParams" action="{{ path('ffbb_statistiques_export_pdf')}}" method="post">
+                                    <button style="width: 120px" type="submit" class="btn btn-statistique pull-right">Exporter</button>
+                                </form>
+                            </div>
+                        </div>
+                        <br>
 
                         <h4 class="page-header">Synthèse des utilisations - vue tableur</h4>
 
@@ -226,9 +226,6 @@
 
             // cacher le rapport statistiques
             $("#rappportStatistiques").hide();
-
-            // cacher les tableaux
-
 
 
             function reinitiliaserSelectDisciplines(){
