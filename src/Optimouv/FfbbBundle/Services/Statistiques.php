@@ -143,13 +143,14 @@ class Statistiques {
             $stmt->execute();
             $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+            $erreurInfo = $stmt->errorInfo();
 
-            if(!$resultat){
-                error_log("\n  Erreur de récupération des données depuis la DB, details: ".print_r($stmt->errorInfo(), true)."\n Service: Statistiques, Function: augmenterNombreTableStatistiques", 3, $this->error_log_path);
+            if( $erreurInfo[0] != "00000" ){
+                error_log("\n  Erreur de récupération des données depuis la DB, details: ".print_r($erreurInfo, true)."\n Service: Statistiques, Function: getDonneesStatistiques", 3, $this->error_log_path);
                 die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
             }
 
-            error_log("\n resultat: ".print_r($resultat, true), 3, $this->error_log_path);
+//            error_log("\n resultat: ".print_r($resultat, true), 3, $this->error_log_path);
 
 
             foreach($resultat as $ligneDb){
@@ -197,6 +198,68 @@ class Statistiques {
                 }
             }
 
+
+            // données pour le temps de réponse moyen (table statistiques_date_temps)
+            if($typeRapport == "systeme"){
+                if($idDiscipline == "tous"){
+                    $sql = "SELECT date(temps_fin), type_statistiques, avg(valeur) from statistiques_date_temps ".
+                        "where date(temps_fin) between :dateDebut and :dateFin ".
+                        " and id_federation=:id_federation group by date(temps_fin), type_statistiques ;";
+                    $stmt = $pdo->prepare($sql);
+                }
+                else{
+                    $sql = "SELECT date(temps_fin), type_statistiques, avg(valeur) from statistiques_date_temps ".
+                        " where date(temps_fin) between :dateDebut and :dateFin".
+                        " and id_discipline=:id_discipline and id_federation=:id_federation group by date(temps_fin), type_statistiques  ;";
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->bindParam(':id_discipline', $idDiscipline);
+                }
+
+                $stmt->bindParam(':dateDebut', $dateDebutStr);
+                $stmt->bindParam(':dateFin', $dateFinStr);
+                $stmt->bindParam(':id_federation', $idFederation);
+                $stmt->execute();
+                $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                error_log("\n resultat: ".print_r($resultat, true), 3, $this->error_log_path);
+
+                $erreurInfo = $stmt->errorInfo();
+
+
+                if($erreurInfo[0] != "00000"){
+                    error_log("\n  Erreur de récupération des données depuis la DB, details: ".print_r($erreurInfo, true)."\n Service: Statistiques, Function: getDonneesStatistiques", 3, $this->error_log_path);
+                    die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+                }
+
+
+
+                foreach($resultat as $ligneDb){
+
+                    error_log("\n ligneDb: ".print_r($ligneDb, true), 3, $this->error_log_path);
+
+//                    $dateLigneDb = $ligneDb["temps_fin"];
+//                    $valeur = $ligneDb["valeur"];
+//                    $typeStatistiques = $ligneDb["type_statistiques"];
+//
+//                    # formater la date selon le format français
+//                    $dateLigneTmp = explode("-", $dateLigneDb);
+
+//                    # formater les données selon le type
+//                    if($formatResultat == "jour"){
+//                        $dateLigneMod = $dateLigneTmp[2]. "/". $dateLigneTmp[1]."/".$dateLigneTmp[0];
+//                    }
+//                    elseif($formatResultat == "mois"){
+//                        $dateLigneMod = $dateLigneTmp[1]."/".$dateLigneTmp[0];
+//                    }
+//                    # pour l'année
+//                    else{
+//                        $dateLigneMod = $dateLigneTmp[0];
+//                    }
+
+
+
+                }
+
+            }
 
 
             error_log("\n lignesTableau: ".print_r($lignesTableau, true), 3, $this->error_log_path);
