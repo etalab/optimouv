@@ -523,143 +523,155 @@
                                             dataType : "json",
                                             success: function(data, textStatus, jqXHR)
                                             {
-                                                // afficher la partie de rapport statistiques
-                                                $("#rappportStatistiques").show();
 
-                                                ///////////////////////////// Traitement pour le tableau ////////////////////////////////////////////////
+                                                // récupérer le flag
+                                                var flagDonneesExiste = data.flagDonneesExiste;
 
-                                                // afficher le tableau  selon le type de rapport
-                                                if(typeRapport == "utilisateur" || typeRapport == "federation"){
-                                                    $("#tableSysteme").hide();
-                                                    $("#tableUtilisateur").show();
+                                                if(flagDonneesExiste == 0){
+                                                    alert("Aucune donnée n'est disponible pour votre sélection. Veuillez modifier vos critères.");
                                                 }
-                                                else if(typeRapport == "systeme"){
-                                                    $("#tableUtilisateur").hide();
-                                                    $("#tableSysteme").show();
-                                                }
+                                                else{
+                                                    // afficher la partie de rapport statistiques
+                                                    $("#rappportStatistiques").show();
+
+                                                    ///////////////////////////// Traitement pour le tableau ////////////////////////////////////////////////
+
+                                                    // afficher le tableau  selon le type de rapport
+                                                    if(typeRapport == "utilisateur" || typeRapport == "federation"){
+                                                        $("#tableSysteme").hide();
+                                                        $("#tableUtilisateur").show();
+                                                    }
+                                                    else if(typeRapport == "systeme"){
+                                                        $("#tableUtilisateur").hide();
+                                                        $("#tableSysteme").show();
+                                                    }
 
 //                                                console.log('data: ' + JSON.stringify(data));
 
-                                                // parser les données pour le tableau
-                                                var donneesTableau = data.lignesTableau;
+                                                    // parser les données pour le tableau
+                                                    var donneesTableau = data.lignesTableau;
 
-                                                // vider le contenu des anciens tableaux
-                                                $("#tbodyUtilisateur").empty();
-                                                $("#tbodySysteme").empty();
+                                                    // vider le contenu des anciens tableaux
+                                                    $("#tbodyUtilisateur").empty();
+                                                    $("#tbodySysteme").empty();
 
-                                                $.each(donneesTableau, function(jour, typeStatistique) {
-                                                    console.log('typeStatistique: ' + JSON.stringify(typeStatistique));
+                                                    $.each(donneesTableau, function(jour, typeStatistique) {
+                                                        console.log('typeStatistique: ' + JSON.stringify(typeStatistique));
 
-                                                    var ligneTableau = "<tr>";
-                                                    // données ligne
-                                                    var dateLigne = "<td>" + jour +  "</td>";
-                                                    ligneTableau += dateLigne;
+                                                        var ligneTableau = "<tr>";
+                                                        // données ligne
+                                                        var dateLigne = "<td>" + jour +  "</td>";
+                                                        ligneTableau += dateLigne;
 
-                                                    if("nombreConnexions" in typeStatistique){
-                                                        var nbrConnexions = "<td>" + typeStatistique.nombreConnexions + "</td>";
-                                                    }
-                                                    else{
-                                                        var nbrConnextions = "<td>0</td>";
-                                                    }
-                                                    ligneTableau += nbrConnexions;
-
-                                                    // remplir la ligne selon les données récupérées
-                                                    if("nombreLancementsOptiPoule" in typeStatistique){
-                                                        var nbrLanceOptiPoule = "<td>" + typeStatistique.nombreLancementsOptiPoule + "</td>";
-                                                    }
-                                                    else{
-                                                        var nbrLanceOptiPoule = "<td>0</td>";
-                                                    }
-                                                    ligneTableau += nbrLanceOptiPoule;
-
-                                                    if("nombreLancementsMeilleurLieu" in typeStatistique){
-                                                        var nbrLanceMeilleurLieu = "<td>" + typeStatistique.nombreLancementsMeilleurLieu + "</td>";
-                                                    }
-                                                    else{
-                                                        var nbrLanceMeilleurLieu =  "<td>0</td>";
-                                                    }
-                                                    ligneTableau += nbrLanceMeilleurLieu;
-
-                                                    // 9 colonnes
-                                                    if(typeRapport == "utilisateur" || typeRapport == "federation"){
-
-                                                        if("nombreInterdictions" in typeStatistique){
-                                                            var nbrInterdictions = "<td>" + typeStatistique.nombreInterdictions + "</td>";
+                                                        if("nombreConnexions" in typeStatistique){
+                                                            var nbrConnexions = "<td>" + typeStatistique.nombreConnexions + "</td>";
                                                         }
                                                         else{
-                                                            var nbrInterdictions = "<td>0</td>";
+                                                            var nbrConnextions = "<td>0</td>";
                                                         }
-                                                        ligneTableau += nbrInterdictions;
+                                                        ligneTableau += nbrConnexions;
 
-                                                        if("nombreRepartitionsHomogenes" in typeStatistique){
-                                                            var nbrRepartitionsHomogenes = "<td>" + typeStatistique.nombreRepartitionsHomogenes + "</td>";
-                                                        }
-                                                        else{
-                                                            var nbrRepartitionsHomogenes =  "<td>0</td>";
-                                                        }
-                                                        ligneTableau += nbrRepartitionsHomogenes;
-
-                                                        if("nombreExclusions" in typeStatistique){
-                                                            var nbrExclusions = "<td>" + typeStatistique.nombreExclusions + "</td>";
+                                                        // remplir la ligne selon les données récupérées
+                                                        if("nombreLancementsOptiPoule" in typeStatistique){
+                                                            var nbrLanceOptiPoule = "<td>" + typeStatistique.nombreLancementsOptiPoule + "</td>";
                                                         }
                                                         else{
-                                                            var nbrExclusions = "<td>0</td>";
+                                                            var nbrLanceOptiPoule = "<td>0</td>";
                                                         }
-                                                        ligneTableau += nbrExclusions;
+                                                        ligneTableau += nbrLanceOptiPoule;
 
-
-
-                                                    }
-                                                    // 5 colonnes
-                                                    else if(typeRapport == "systeme"){
-                                                        if("tempsCalculOptiPoule" in typeStatistique){
-                                                            var tempsCalculOptiPoule = "<td>" + typeStatistique.tempsCalculOptiPoule + "</td>";
+                                                        if("nombreLancementsMeilleurLieu" in typeStatistique){
+                                                            var nbrLanceMeilleurLieu = "<td>" + typeStatistique.nombreLancementsMeilleurLieu + "</td>";
                                                         }
                                                         else{
-                                                            var tempsCalculOptiPoule = "<td>0</td>";
+                                                            var nbrLanceMeilleurLieu =  "<td>0</td>";
                                                         }
-                                                        ligneTableau += tempsCalculOptiPoule;
+                                                        ligneTableau += nbrLanceMeilleurLieu;
 
-                                                        if("tempsCalculMeilleurLieu" in typeStatistique){
-                                                            var tempsCalculMeilleurLieu = "<td>" + typeStatistique.tempsCalculMeilleurLieu + "</td>";
+                                                        // 9 colonnes
+                                                        if(typeRapport == "utilisateur" || typeRapport == "federation"){
+
+                                                            if("nombreInterdictions" in typeStatistique){
+                                                                var nbrInterdictions = "<td>" + typeStatistique.nombreInterdictions + "</td>";
+                                                            }
+                                                            else{
+                                                                var nbrInterdictions = "<td>0</td>";
+                                                            }
+                                                            ligneTableau += nbrInterdictions;
+
+                                                            if("nombreRepartitionsHomogenes" in typeStatistique){
+                                                                var nbrRepartitionsHomogenes = "<td>" + typeStatistique.nombreRepartitionsHomogenes + "</td>";
+                                                            }
+                                                            else{
+                                                                var nbrRepartitionsHomogenes =  "<td>0</td>";
+                                                            }
+                                                            ligneTableau += nbrRepartitionsHomogenes;
+
+                                                            if("nombreExclusions" in typeStatistique){
+                                                                var nbrExclusions = "<td>" + typeStatistique.nombreExclusions + "</td>";
+                                                            }
+                                                            else{
+                                                                var nbrExclusions = "<td>0</td>";
+                                                            }
+                                                            ligneTableau += nbrExclusions;
+
+
+
+                                                        }
+                                                        // 5 colonnes
+                                                        else if(typeRapport == "systeme"){
+                                                            if("tempsCalculOptiPoule" in typeStatistique){
+                                                                var tempsCalculOptiPoule = "<td>" + typeStatistique.tempsCalculOptiPoule + "</td>";
+                                                            }
+                                                            else{
+                                                                var tempsCalculOptiPoule = "<td>0</td>";
+                                                            }
+                                                            ligneTableau += tempsCalculOptiPoule;
+
+                                                            if("tempsCalculMeilleurLieu" in typeStatistique){
+                                                                var tempsCalculMeilleurLieu = "<td>" + typeStatistique.tempsCalculMeilleurLieu + "</td>";
+                                                            }
+                                                            else{
+                                                                var tempsCalculMeilleurLieu = "<td>0</td>";
+                                                            }
+                                                            ligneTableau += tempsCalculMeilleurLieu;
+
+
+                                                        }
+                                                        if("nombreRequetesHere" in typeStatistique){
+                                                            var nbrHere = "<td>" + typeStatistique.nombreRequetesHere + "</td>";
                                                         }
                                                         else{
-                                                            var tempsCalculMeilleurLieu = "<td>0</td>";
+                                                            var nbrHere =  "<td>0</td>";
                                                         }
-                                                        ligneTableau += tempsCalculMeilleurLieu;
+                                                        ligneTableau += nbrHere;
+                                                        ligneTableau += "</tr>";
+
+                                                        // ajouter le contenu selon le type de rapport
+                                                        if(typeRapport == "utilisateur" || typeRapport == "federation" ){
+                                                            $("#tbodyUtilisateur").append(ligneTableau);
+                                                        }
+                                                        else{
+                                                            $("#tbodySysteme").append(ligneTableau);
+
+                                                        }
 
 
-                                                    }
-                                                    if("nombreRequetesHere" in typeStatistique){
-                                                        var nbrHere = "<td>" + typeStatistique.nombreRequetesHere + "</td>";
-                                                    }
-                                                    else{
-                                                        var nbrHere =  "<td>0</td>";
-                                                    }
-                                                    ligneTableau += nbrHere;
-                                                    ligneTableau += "</tr>";
+                                                    });
 
-                                                    // ajouter le contenu selon le type de rapport
-                                                    if(typeRapport == "utilisateur" || typeRapport == "federation" ){
-                                                        $("#tbodyUtilisateur").append(ligneTableau);
-                                                    }
-                                                    else{
-                                                        $("#tbodySysteme").append(ligneTableau);
+                                                    ///////////////////////////// Traitement pour la graphique ////////////////////////////////////////////////
+                                                    // parser les données pour la graphique
+                                                    var donneesGraph = data.donneesGraph;
 
-                                                    }
+                                                    console.log('donneesGraph: ' + JSON.stringify(donneesGraph));
+                                                    var data = donneesGraph[0];
+                                                    var data2 = donneesGraph[1];
+
+                                                    InitChart(data, data2);
+
+                                                }
 
 
-                                                });
-
-                                                ///////////////////////////// Traitement pour la graphique ////////////////////////////////////////////////
-                                                // parser les données pour la graphique
-                                                var donneesGraph = data.donneesGraph;
-
-                                                console.log('donneesGraph: ' + JSON.stringify(donneesGraph));
-                                                var data = donneesGraph[0];
-                                                var data2 = donneesGraph[1];
-
-                                                InitChart(data, data2);
 
 
 

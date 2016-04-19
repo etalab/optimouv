@@ -387,8 +387,19 @@ class Statistiques {
 
 //            error_log("\n donneesGraph: ".print_r($donneesGraph, true), 3, $this->error_log_path);
 
+            # ajouter un flag pour indiquer s'il y a des données ou pas
+            if(count($lignesTableau) == 0){
+                $flagDonneesExiste = 0;
+            }
+            else{
+                $flagDonneesExiste = 1;
+
+            }
+
             return array("lignesTableau" => $lignesTableau,
                 "donneesGraph" => $donneesGraph,
+                "flagDonneesExiste" => $flagDonneesExiste,
+
                 );
 
         }
