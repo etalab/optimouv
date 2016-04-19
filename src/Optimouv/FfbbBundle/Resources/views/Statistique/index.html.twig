@@ -527,6 +527,7 @@
                                                 // récupérer le flag
                                                 var flagDonneesExiste = data.flagDonneesExiste;
 
+                                                // afficher un message d'erreur s'il n'y a pas de données
                                                 if(flagDonneesExiste == 0){
                                                     alert("Aucune donnée n'est disponible pour votre sélection. Veuillez modifier vos critères.");
                                                 }
@@ -588,7 +589,7 @@
                                                         }
                                                         ligneTableau += nbrLanceMeilleurLieu;
 
-                                                        // 9 colonnes
+                                                        // 9 colonnes (tableau utilisateur et fédération)
                                                         if(typeRapport == "utilisateur" || typeRapport == "federation"){
 
                                                             if("nombreInterdictions" in typeStatistique){
@@ -618,7 +619,7 @@
 
 
                                                         }
-                                                        // 5 colonnes
+                                                        // 5 colonnes (tableau système)
                                                         else if(typeRapport == "systeme"){
                                                             if("tempsCalculOptiPoule" in typeStatistique){
                                                                 var tempsCalculOptiPoule = "<td>" + typeStatistique.tempsCalculOptiPoule + "</td>";
