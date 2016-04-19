@@ -31,13 +31,85 @@ class Statistiques {
             $pdo = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
         }
         catch (PDOException $e) {
-            error_log("\n Service: Poules, Function: getPdo, \n PDOException: ".print_r($e, true), 3, $this->error_log_path);
+            error_log("\n Service: Statistiques, Function: getPdo, \n PDOException: ".print_r($e, true), 3, $this->error_log_path);
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
 
         return $pdo;
     }
 
+    public function getNomUtilisateurNomFederation($idUtilisateur, $idFederation){
+        try{
+            # obtenir l'objet PDO
+            $pdo = $this->getPdo();
+
+            if (!$pdo) {
+                //erreur de connexion
+                error_log("\n erreur récupération de l'objet PDO, Service: Statistiques, Function: getNomUtilisateurNomFederation ", 3, $this->error_log_path);
+                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+            }
+
+
+            if($idUtilisateur != "tous"){
+                $sql = "SELECT nom, prenom from fos_user where id =:id;";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindParam(':id', $idUtilisateur);
+                $stmt->execute();
+                $resultat = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                $erreurInfo = $stmt->errorInfo();
+                if( $erreurInfo[0] != "00000" ){
+                    error_log("\n  Erreur de récupération des données depuis la DB, details: ".print_r($erreurInfo, true)."\n Service: Statistiques, Function: getNomUtilisateurNomFederation", 3, $this->error_log_path);
+                    die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+                }
+
+                if($resultat != []){
+                    $nomUtilisateur = $resultat["nom"];
+                    $prenomUtilisateur = $resultat["prenom"];
+                }
+                else{
+                    $nomUtilisateur = "";
+                    $prenomUtilisateur = "";
+                }
+            }
+            else{
+                $nomUtilisateur = "tous";
+                $prenomUtilisateur = "tous";
+            }
+
+//            error_log("\n resultat: ".print_r($resultat, true), 3, $this->error_log_path);
+
+
+            $sql = "SELECT nom from federation where id =:id;";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':id', $idFederation);
+            $stmt->execute();
+            $resultat = $stmt->fetch(PDO::FETCH_ASSOC);
+//            error_log("\n resultat: ".print_r($resultat, true), 3, $this->error_log_path);
+
+            if($resultat != []){
+                $nomFederation = $resultat["nom"];
+            }
+            else{
+                $nomFederation = "";
+            }
+
+            $erreurInfo = $stmt->errorInfo();
+            if( $erreurInfo[0] != "00000" ){
+                error_log("\n  Erreur de récupération des données depuis la DB, details: ".print_r($erreurInfo, true)."\n Service: Statistiques, Function: getNomUtilisateurNomFederation", 3, $this->error_log_path);
+                die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+            }
+
+            return array("nomUtilisateur"=>$nomUtilisateur, "prenomUtilisateur"=>$prenomUtilisateur,
+                "nomFederation"=>$nomFederation);
+
+        }
+        catch (PDOException $e) {
+            error_log("\n Service: Statistiques, Function: getPdo, \n PDOException: ".print_r($e, true), 3, $this->error_log_path);
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
+
+    }
 
     public function getDonneesStatistiques(){
 
@@ -313,7 +385,7 @@ class Statistiques {
             array_push($donneesGraph, $donnees2);
 
 
-            error_log("\n donneesGraph: ".print_r($donneesGraph, true), 3, $this->error_log_path);
+//            error_log("\n donneesGraph: ".print_r($donneesGraph, true), 3, $this->error_log_path);
 
             return array("lignesTableau" => $lignesTableau,
                 "donneesGraph" => $donneesGraph,

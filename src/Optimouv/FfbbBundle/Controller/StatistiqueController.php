@@ -62,7 +62,65 @@ class StatistiqueController extends Controller
         $donneesStatistiques = $this->get('service_statistiques')->getDonneesStatistiques();
 
 
-//        error_log("\n donneesStatistiques: ".print_r($donneesStatistiques, true), 3, $this->error_log_path);
+        # obtenir les params envoyé par l'utilisateur
+        if(array_key_exists("typeRapport", $_POST)){
+            $typeRapport = $_POST["typeRapport"];
+        }
+        else{
+            $typeRapport  = "";
+        }
+        if(array_key_exists("idFederation", $_POST)){
+            $idFederation = $_POST["idFederation"];
+        }
+        else{
+            $idFederation  = -1;
+        }
+        if(array_key_exists("idDiscipline", $_POST)){
+            $idDiscipline = $_POST["idDiscipline"];
+        }
+        else{
+            $idDiscipline  = -1;
+        }
+        if(array_key_exists("idUtilisateur", $_POST)){
+            $idUtilisateur = $_POST["idUtilisateur"];
+        }
+        else{
+            $idUtilisateur  = -1;
+        }
+        if(array_key_exists("dateDebutStr", $_POST)){
+            $dateDebutStr = $_POST["dateDebutStr"];
+        }
+        else{
+            $dateDebutStr  = "";
+        }
+        if(array_key_exists("dateFinStr", $_POST)){
+            $dateFinStr = $_POST["dateFinStr"];
+        }
+        else{
+            $dateFinStr  = "";
+        }
+
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('dmY', time());
+
+        $resultat = $this->get('service_statistiques')->getNomUtilisateurNomFederation($idUtilisateur, $idFederation);
+        $nomUtilisateur = $resultat["nomUtilisateur"];
+        $prenomUtilisateur = $resultat["prenomUtilisateur"];
+        $nomFederation = $resultat["nomFederation"];
+
+//        error_log("\n resultat: ".print_r($resultat, true), 3, $this->error_log_path);
+
+        $nomGraph = "Rapport_".$typeRapport."_";
+        if($typeRapport == "utilisateur"){
+            $nomGraph .= $prenomUtilisateur."_".$nomUtilisateur;
+        }
+        else{
+            $nomGraph .= $nomFederation;
+        }
+        $nomGraph .= "_".$dateTimeNow;
+
+        error_log("\n typeRapport: ".print_r($typeRapport, true), 3, $this->error_log_path);
 
 //        return $this->render('FfbbBundle:Statistique:exportPdf.html.twig', array(
 //                "donneesStatistiques" => $donneesStatistiques
@@ -84,7 +142,7 @@ class StatistiqueController extends Controller
             200,
             array(
                 'Content-Type'          => 'application/pdf',
-                'Content-Disposition'   => 'attachment; filename="graph.pdf"',
+                'Content-Disposition'   => 'attachment; filename="'.$nomGraph.'.pdf"',
                 'print-media-type'      => false,
                 'outline'               => true,
 
