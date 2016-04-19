@@ -220,7 +220,6 @@ class Statistiques {
                 $stmt->bindParam(':id_federation', $idFederation);
                 $stmt->execute();
                 $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                error_log("\n resultat: ".print_r($resultat, true), 3, $this->error_log_path);
 
                 $erreurInfo = $stmt->errorInfo();
 
@@ -234,11 +233,14 @@ class Statistiques {
 
                 foreach($resultat as $ligneDb){
 
-                    error_log("\n ligneDb: ".print_r($ligneDb, true), 3, $this->error_log_path);
-
                     $dateLigneDb = $ligneDb["date_filtre"];
-                    $valeur = round($ligneDb["avg_valeur"]);
+                    $valeurEnSecondes = round($ligneDb["avg_valeur"]);
                     $typeStatistiques = $ligneDb["type_statistiques"];
+
+                    // convertir les secondes en format Heures:Minutes:Secondes
+                    $valeur = sprintf('%02d:%02d:%02d', ($valeurEnSecondes/3600),($valeurEnSecondes/60%60), $valeurEnSecondes%60);
+
+
 
                     # formater la date selon le format français
                     $dateLigneTmp = explode("-", $dateLigneDb);
@@ -282,14 +284,12 @@ class Statistiques {
 
 
 
-
-
                 }
 
             }
 
 
-            error_log("\n lignesTableau: ".print_r($lignesTableau, true), 3, $this->error_log_path);
+//            error_log("\n lignesTableau: ".print_r($lignesTableau, true), 3, $this->error_log_path);
 
             return array("lignesTableau" => $lignesTableau,
                 );
