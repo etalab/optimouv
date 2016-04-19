@@ -130,6 +130,7 @@
                             </li>
 
                             {% if (is_granted('ROLE_SUPER_ADMIN') == true) or (is_granted('ROLE_ADMIN') == true) %}
+                                {#<li><a href="{{ path('ffbb_statistiques_index') }}">Statistiques</a></li>#}
                                 <li><a href="#">Statistiques</a></li>
                                 <li><a href="{{ path('administration_panel') }}">Administration</a></li>
                             {% endif %}

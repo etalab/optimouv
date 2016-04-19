@@ -1,81 +1,8 @@
-{#<html lang="en">#}
-
-{#<head>#}
-
-
-    {#<link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">#}
-
-    {#<link href="http://getbootstrap.com/examples/justified-nav/justified-nav.css" rel="stylesheet">#}
-    {##}
-    {#<link href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css" rel="stylesheet">#}
-
-
-{#</head>#}
-
-{#<body>#}
-
-{#<div class="container">#}
-
-    {#<div class="jumbotron">#}
-
-
-        {#<svg id="chart" width="1000" height="500"></svg>#}
-        {#<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>#}
-        {#<script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js" charset="utf-8"></script>#}
-        {#<script>#}
-
-            {#var chart = c3.generate({#}
-                {#bindto: '#chart',#}
-                {#data: {#}
-                    {#columns: [#}
-                        {#['data1', 30, 200, 100, 400, 150, 250],#}
-                        {#['data2', 50, 20, 10, 40, 15, 25]#}
-                    {#],#}
-                    {#axes: {#}
-                        {#data2: 'y2' // ADD#}
-                    {#}#}
-                {#},#}
-                {#axis: {#}
-                    {#y2: {#}
-                        {#show: true // ADD#}
-                    {#}#}
-                {#}#}
-            {#});#}
-
-        {#</script>#}
-    {#</div>#}
-
-{#</div>#}
-
-{#</body>#}
-
-{#</html>#}
-
-
-
-
-{#/////////////////////////////////////////////////////////////////////////////////////////////////////////////////#}
 <html lang="en">
 
 <head>
 
-
-    {#<link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">#}
-
-    {#<link href="http://getbootstrap.com/examples/justified-nav/justified-nav.css" rel="stylesheet">#}
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-
-    <style>
-        .axis path {
-            fill: none;
-            stroke: #777;
-            shape-rendering: crispEdges;
-        }
-        .axis text {
-            font-family: Lato;
-            font-size: 13px;
-        }
-    </style>
 
 </head>
 
@@ -83,11 +10,23 @@
 
 {% include 'FfbbBundle:Statistique:graph.html.twig' %}
 
+<script type="text/javascript">
+
+    console.log( "------------------------------------------------------ DEBUG export PDF graph -------------------------------------------" );
+    var donneesGraph = {{ donneesStatistiques.donneesGraph | json_encode | raw }};
+    console.log('donneesGraph: ' + JSON.stringify(donneesGraph));
+
+    var data = donneesGraph[0];
+    var data2 = donneesGraph[1];
+
+
+    InitChart(data, data2);
+
+</script>
+
 
 
 </body>
 
 </html>
-
-
 

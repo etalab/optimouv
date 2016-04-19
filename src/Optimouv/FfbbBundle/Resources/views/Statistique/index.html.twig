@@ -22,16 +22,21 @@
 
 
 
-                        <form class="form-horizontal" role="form">
+                        <div class="form-horizontal">
                             <div class="form-group">
                                 <label class="control-label col-sm-2" for="typeRapport">TYPE DE RAPPORT </label>
                                 <div class="col-sm-2">
-                                    <select class="form-control" >
+                                    <select class="form-control" id="selectRapport" >
                                         <option value="vide" selected> -- selectionnez une option -- </option>
-                                        <option value="systeme">Rapport système</option>
-                                        <option value="utilisateur">Rapport utilisateur</option>
-                                        <option value="federation">Rapport fédération</option>
-                                        <option value="historique">Résultat de recherche</option>
+                                        {% if (is_granted('ROLE_ADMIN') == true) %}
+                                            <option value="utilisateur">Rapport utilisateur</option>
+                                            <option value="federation">Rapport fédération</option>
+                                        {% endif %}
+
+                                        {% if (is_granted('ROLE_SUPER_ADMIN') == true) %}
+                                            <option value="systeme">Rapport système</option>
+
+                                        {% endif %}
                                     </select>
                                 </div>
                             </div>
@@ -39,10 +44,8 @@
                             <div class="form-group">
                                 <label class="control-label col-sm-2" for="nomFderation">NOM DE LA FEDERATION</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control" >
+                                    <select class="form-control" id="selectFederation" >
                                         <option value="vide" selected> -- selectionnez une option -- </option>
-                                        <option value="idFfbb">FFBB</option>
-                                        <option value="idFff">FFF</option>
                                     </select>
                                 </div>
                             </div>
@@ -50,10 +53,8 @@
                             <div class="form-group">
                                 <label class="control-label col-sm-2" for="nomDiscipline">NOM DE LA DISCIPLINE</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control" >
+                                    <select class="form-control" id="selectDiscipline">
                                         <option value="vide" selected> -- selectionnez une option -- </option>
-                                        <option value="idBasket">Basket Ball</option>
-                                        <option value="idFoot">Football</option>
                                     </select>
                                 </div>
                             </div>
@@ -61,9 +62,8 @@
                             <div class="form-group">
                                 <label class="control-label col-sm-2" for="nomUtilisateur">NOM DE L'UTILISATEUR</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control" >
+                                    <select class="form-control" id="selectUtilisateur" >
                                         <option value="vide" selected> -- selectionnez une option -- </option>
-                                        <option value="idBasket">Tous utilisateurs</option>
                                     </select>
                                 </div>
                             </div>
@@ -72,8 +72,8 @@
                                 <label class="control-label col-sm-2" for="dateDebut">DATE DE DEBUT</label>
                                 <div class="col-sm-2" >
 
-                                    <div class="input-group date">
-                                        <input type="text" class="form-control">
+                                    <div class="input-group date" >
+                                        <input type="text" class="form-control" id="dateDebut">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
                                     </div>
 
@@ -85,8 +85,8 @@
                                 <label class="control-label col-sm-2" for="dateFin">DATE DE FIN</label>
                                 <div class="col-sm-2" >
 
-                                    <div class="input-group date">
-                                        <input type="text" class="form-control">
+                                    <div class="input-group date" >
+                                        <input type="text" class="form-control" id="dateFin">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
                                     </div>
 
@@ -96,10 +96,10 @@
 
                             <div class="form-group">
                                 <div class="control-label col-sm-4 ">
-                                    <button type="submit" class="btn btn-statistique">Accéder</button>
+                                    <button type="submit" class="btn btn-statistique" id="btnGetResultats">Accéder</button>
                                 </div>
                             </div>
-                        </form>
+                        </div>
 
                     </div>
 
@@ -110,7 +110,7 @@
 
 
 
-        <div class="row">
+        <div class="row" id="rappportStatistiques">
             <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -127,13 +127,18 @@
                             <div class="col-md-12">
                                 <form name="submitParams" action="{{ path('ffbb_statistiques_export_pdf')}}" method="post">
                                     <button style="width: 120px" type="submit" class="btn btn-statistique pull-right">Exporter</button>
+                                    <input type="hidden" name="typeRapport">
+                                    <input type="hidden" name="idFederation">
+                                    <input type="hidden" name="idDiscipline">
+                                    <input type="hidden" name="idUtilisateur">
+                                    <input type="hidden" name="dateDebutStr">
+                                    <input type="hidden" name="dateFinStr">
 
                                 </form>
                             </div>
-
                         </div>
-
                         <br>
+
                         <h4 class="page-header">Synthèse des utilisations - vue tableur</h4>
 
                         <table id="tableUtilisateur" class="table table-striped table-bordered table-hover">
@@ -156,70 +161,32 @@
                                     <th style="vertical-align: middle"><h4>Nombre d'interdictions utilisées</h4></th>
                                     <th style="vertical-align: middle"><h4>Nombre de répartitions homogènes utilisées</h4></th>
                                     <th style="vertical-align: middle"><h4>Nombre d'exclusions géographiques utilisés</h4></th>
-                                    <th style="vertical-align: middle"><h4>Nombre de lancements de l'algorithme d'optimisation des poules (comprenant les relances de calculs avec modification des critères)</h4></th>
+                                    {#<th style="vertical-align: middle"><h4>Nombre de lancements de l'algorithme d'optimisation des poules (comprenant les relances de calculs avec modification des critères)</h4></th>#}
                                     <th style="vertical-align: middle"><h4>Nombre de requêtes Here effectuées (toutes fonctions confondues)</h4></th>
 
                                 </tr>
                             </thead>
 
-                            <tbody>
-                                <tr>
-                                    <td> jan-16</td>
-                                    <td> 12</td>
-                                    <td> 10</td>
-                                    <td> 10</td>
-                                    <td> 10</td>
-                                    <td> 10</td>
-                                    <td> 10</td>
-                                    <td> 10</td>
-                                    <td> 10</td>
-                                </tr>
-                                <tr>
-                                    <td> févr-16</td>
-                                    <td> 12</td>
-                                    <td> 10</td>
-                                    <td> 10</td>
-                                    <td> 10</td>
-                                    <td> 10</td>
-                                    <td> 10</td>
-                                    <td> 10</td>
-                                    <td> 10</td>
-                                </tr>
-
-
+                            <tbody id="tbodyUtilisateur">
                             </tbody>
                         </table>
 
 
-                        <table id="tableUtilisateur" class="table table-striped table-bordered table-hover">
+                        <table id="tableSysteme" class="table table-striped table-bordered table-hover">
                             <thead>
                             <tr>
                                 <th style="vertical-align: middle" width="10%"></th>
-                                <th style="vertical-align: middle" width="20%"><h4>Nombre de connexions à Optimouv</h4></th>
-                                <th style="vertical-align: middle" width="20%"><h4>Nombre de calculs de scénarios lancés</h4></th>
-                                <th style="vertical-align: middle" width="20%"><h4>Temps de réponse moyen pour l'obtention des résultats (en minutes)</h4></th>
-                                <th style="vertical-align: middle" width="20%"><h4>Nombre de requêtes Here effectuées (toutes fonctions confondues)</h4></th>
+                                <th style="vertical-align: middle" width="15%"><h4>Nombre de connexions à Optimouv</h4></th>
+                                <th style="vertical-align: middle" width="15%"><h4>Nombre de lancements de la fonction optimisation de poules</h4></th>
+                                <th style="vertical-align: middle" width="15%"><h4>Nombre de lancements de la fonction meilleur lieu de rencontre</h4></th>
+                                <th style="vertical-align: middle" width="15%"><h4>Temps de réponse moyen de la fonction optimisation de poules pour l'obtention des résultats (H:M:S)</h4></th>
+                                <th style="vertical-align: middle" width="15%"><h4>Temps de réponse moyen de la fonction meilleur lieu de rencontre pour l'obtention des résultats (H:M:S)</h4></th>
+                                <th style="vertical-align: middle" width="15%"><h4>Nombre de requêtes Here effectuées (toutes fonctions confondues)</h4></th>
 
                             </tr>
                             </thead>
 
-                            <tbody>
-                            <tr>
-                                <td> jan-16</td>
-                                <td> 12</td>
-                                <td> 10</td>
-                                <td> 10</td>
-                                <td> 10</td>
-                            </tr>
-                            <tr>
-                                <td> févr-16</td>
-                                <td> 12</td>
-                                <td> 10</td>
-                                <td> 10</td>
-                                <td> 10</td>
-                            </tr>
-
-
+                            <tbody id="tbodySysteme">
                             </tbody>
                         </table>
 
@@ -257,9 +224,465 @@
             {# options pour le js Date picker #}
             $('.input-group.date').datepicker({
                 format: "dd/mm/yyyy",
+                startDate:"01/01/2010",
+                endDate:"now",
                 todayBtn: "linked",
                 language: "fr",
                 autoclose: true
+            });
+
+            // cacher le rapport statistiques
+            $("#rappportStatistiques").hide();
+
+
+            function reinitiliaserSelectDisciplines(){
+                $('#selectDiscipline').prop('selectedIndex',0)
+                        .find('option')
+                        .remove()
+                        .end()
+                        .append('<option value="vide">-- selectionnez une option --</option>')
+                ;
+            }
+
+            function reinitiliaserSelectUtilisateurs(){
+                $('#selectUtilisateur').prop('selectedIndex',0)
+                        .find('option')
+                        .remove()
+                        .end()
+                        .append('<option value="vide">-- selectionnez une option --</option>')
+                ;
+            }
+
+            function viderSelectUtilisateurs(){
+                $('#selectUtilisateur').prop('selectedIndex',0)
+                        .find('option')
+                        .remove();
+
+            }
+
+            function reinitiliaserSelectFederations(){
+                $('#selectFederation').prop('selectedIndex',0)
+                        .find('option')
+                        .remove()
+                        .end()
+                        .append('<option value="vide">-- selectionnez une option --</option>')
+                ;
+            }
+
+            function remplirSelectFederations(){
+                reinitiliaserSelectFederations();
+
+                {% for federation in listeFederations  %}
+                    var strFederation = '<option value="{{ federation.id }}">{{ federation.nom }}</option>';
+//                    console.log("strFederation: " + strFederation);
+                    $('#selectFederation').append(strFederation);
+                {% endfor %}
+
+            }
+
+            function reinitiliaserDatePicker(){
+                $("#dateDebut").val('');
+                $("#dateFin").val('');
+
+            }
+
+
+
+            // obtenir les données pour les filtres
+            var listeFederations = {{ listeFederations | json_encode | raw }};
+//            console.log("listeFederations: " + JSON.stringify(listeFederations));
+
+
+            // evenement handler pour select rapport
+            $( "#selectRapport" ).change(function() {
+                console.log( "------------------------------------------------------ DEBUG selectRapport -------------------------------------------" );
+
+                // obtenir le type de rapport
+                var typeRapport = $("#selectRapport option:selected").val();
+                console.log( "typeRapport: " + typeRapport );
+
+                reinitiliaserSelectFederations();
+                reinitiliaserSelectDisciplines();
+                reinitiliaserSelectUtilisateurs();
+                reinitiliaserDatePicker();
+
+                if(typeRapport != "vide" && typeRapport != ""){
+                    remplirSelectFederations();
+                }
+
+
+            });
+
+            // handler pour select federation
+            $( "#selectFederation" ).change(function() {
+                console.log( "------------------------------------------------------ DEBUG selectFederation -------------------------------------------" );
+
+                // obtenir l'index du select option de fédération
+                var indexFedeSelectionner = $("#selectFederation").prop("selectedIndex");
+//                console.log( "indexFedeSelectionner: " + indexFedeSelectionner);
+
+                // pour les autres options (pas vide)
+                if(indexFedeSelectionner != 0){
+                    var federationSelectionner = listeFederations[indexFedeSelectionner-1];
+//                console.log( "federationSelectionner: " + JSON.stringify(federationSelectionner));
+
+                    var disciplinesSelectionner = federationSelectionner["disciplines"];
+//                console.log( "disciplinesSelectionner: " + JSON.stringify(disciplinesSelectionner));
+
+                    // reinitialiser les valeurs
+                    reinitiliaserSelectDisciplines();
+                    reinitiliaserSelectUtilisateurs();
+
+                    for(var i=0; i<disciplinesSelectionner.length; i++){
+                        var disciplineId = disciplinesSelectionner[i]["id"];
+//                        console.log( "disciplineId: " + JSON.stringify(disciplineId));
+                        var disciplineNom = disciplinesSelectionner[i]["nom"];
+//                        console.log( "disciplineNom: " + JSON.stringify(disciplineNom));
+
+
+                        // ajouter des options pour le select disciplines
+                        $('#selectDiscipline')
+                                .append($("<option></option>")
+                                        .attr("value", disciplineId)
+                                        .text(disciplineNom));
+
+                    }
+
+                    // obtenir le type de rapport
+                    var typeRapport = $("#selectRapport option:selected").val();
+//                    console.log( "typeRapport: " + typeRapport );
+
+                    if(typeRapport == "systeme" || typeRapport == "federation" ){
+                        $('#selectDiscipline')
+                                .append($("<option></option>")
+                                        .attr("value", "tous")
+                                        .text("Toutes disciplines"));
+
+                    }
+
+
+                    }
+                // pour l'option vide
+                else{
+                    // reinitialiser les valeurs
+                    reinitiliaserSelectDisciplines();
+                    reinitiliaserSelectUtilisateurs();
+                }
+
+            });
+
+            // handler pour select discipline
+            $( "#selectDiscipline" ).change(function() {
+                console.log( "------------------------------------------------------ DEBUG selectDiscipline -------------------------------------------" );
+
+                // obtenir l'index du select option de discipline
+                var indexDisciplineSelectionner = $("#selectDiscipline").prop("selectedIndex");
+//                console.log( "indexDisciplineSelectionner: " + indexDisciplineSelectionner);
+
+
+                // pour les autres options (pas vide)
+                if(indexDisciplineSelectionner != 0){
+
+                    // obtenir l'index du select option de fédération
+                    var indexFedeSelectionner = $("#selectFederation").prop("selectedIndex");
+//                    console.log( "indexFedeSelectionner: " + indexFedeSelectionner);
+
+                    var federationSelectionner = listeFederations[indexFedeSelectionner-1];
+//                    console.log( "federationSelectionner: " + JSON.stringify(federationSelectionner));
+
+                    // obtenir le type de rapport
+                    var typeRapport = $("#selectRapport option:selected").val();
+//                    console.log( "typeRapport: " + typeRapport );
+
+                    // reinitialiser select option utilisateurs
+                    reinitiliaserSelectUtilisateurs();
+
+                    if(typeRapport == "utilisateur"){
+                        var utilisateursSelectionner = federationSelectionner["disciplines"][indexDisciplineSelectionner-1]["utilisateurs"];
+//                        console.log( "utilisateursSelectionner: " + JSON.stringify(utilisateursSelectionner));
+
+                        for(var i=0; i<utilisateursSelectionner.length; i++){
+                            var utilisateurId = utilisateursSelectionner[i]["id"];
+//                            console.log( "utilisateurId: " + JSON.stringify(utilisateurId));
+                            var utilisateurNom = utilisateursSelectionner[i]["nom"];
+//                            console.log( "utilisateurNom: " + JSON.stringify(utilisateurNom));
+                            var utilisateurPreNom = utilisateursSelectionner[i]["prenom"];
+//                            console.log( "utilisateurPreNom: " + JSON.stringify(utilisateurPreNom));
+
+
+                            // ajouter des options pour le select disciplines
+                            $('#selectUtilisateur')
+                                    .append($("<option></option>")
+                                            .attr("value", utilisateurId)
+                                            .text(utilisateurPreNom + " " + utilisateurNom));
+
+                        }
+
+                    }
+                    else if(typeRapport == "systeme" || typeRapport == "federation" ){
+                        // fixer les utilisateurs à tous pour le rapport fédération et système
+                        viderSelectUtilisateurs();
+
+                        $('#selectUtilisateur')
+                                .append($("<option></option>")
+                                        .attr("value", "tous")
+                                        .text("Tous utilisateurs"));
+
+
+
+                    }
+
+                }
+                // pour l'option vide
+                else{
+                    reinitiliaserSelectUtilisateurs();
+                }
+
+            });
+
+            // handler pour date début
+//            $("#dateDebut").change(function(){
+//                console.log( "------------------------------------------------------ DEBUG date début -------------------------------------------" );
+//                var dateDebut = $("#dateDebut").val();
+//                console.log( "dateDebut: " + dateDebut );
+//
+//                $('.datepicker').datepicker('setStartDate', new Date(dateDebut));
+//            });
+//
+//            // handler pour date fin
+//            $("#dateFin").change(function(){
+//                console.log( "------------------------------------------------------ DEBUG date fin -------------------------------------------" );
+//                var dateFin = $("#dateFin").val();
+//                console.log( "dateFin: " + dateFin );
+//            });
+
+
+            // handler click acceder bouton
+            $("#btnGetResultats").click(function(){
+                console.log( "------------------------------------------------------ DEBUG bouton GetResultats -------------------------------------------" );
+                var dateDebutStr = $("#dateDebut").val();
+                var dateFinStr = $("#dateFin").val();
+
+
+                // comparer les dates données
+                if(dateDebutStr != "" && dateDebutStr != null && dateFinStr != "" && dateFinStr != null){
+                    var anneeDebut = dateDebutStr.split("/")[2];
+                    var moisDebut = dateDebutStr.split("/")[1];
+                    var dateDebut = dateDebutStr.split("/")[0];
+
+                    var anneeFin = dateFinStr.split("/")[2];
+                    var moisFin = dateFinStr.split("/")[1];
+                    var dateFin = dateFinStr.split("/")[0];
+
+                    var dateDebutFormatter = anneeDebut + "/" + moisDebut + "/" + dateDebut;
+                    var dateFinFormatter = anneeFin + "/" + moisFin + "/" + dateFin;
+
+                    var dateDebutObj = new Date(anneeDebut + "-" + moisDebut + "-" + dateDebut);
+//                    console.log( "dateDebutObj: " + dateDebutObj );
+
+                    var dateFinObj = new Date(anneeFin + "-" + moisFin + "-" + dateFin);
+//                    console.log( "dateFinObj: " + dateFinObj );
+
+                    if(dateDebutObj>dateFinObj){
+                        alert("Les dates saisies sont incorrectes. Veuillez modifier votre sélection.");
+                        return;
+                    }
+                    else{
+
+                        var typeRapport = $("#selectRapport option:selected").val();
+                        var idFederation = $("#selectFederation option:selected").val();
+                        var idDiscipline = $("#selectDiscipline option:selected").val();
+                        var idUtilisateur = $("#selectUtilisateur option:selected").val();
+
+                        if(typeRapport != "" && typeRapport != "vide" && typeRapport != null){
+                            if(idFederation != "" && idFederation != "vide" && idFederation != null){
+                                if(idDiscipline != "" && idDiscipline != "vide" && idDiscipline != null){
+                                    if(idUtilisateur != "" && idUtilisateur != "vide" && idUtilisateur != null){
+
+                                        var params = {"typeRapport": typeRapport, "idFederation": idFederation, "idDiscipline": idDiscipline,
+                                            "idUtilisateur": idUtilisateur, "dateDebutStr": dateDebutFormatter, "dateFinStr": dateFinFormatter
+                                        }
+
+                                        console.log( "params: " + JSON.stringify(params));
+
+
+                                        // remplir les valuers pour les input cachés (export pdf)
+                                        $('input[name="typeRapport"]').val(typeRapport);
+                                        $('input[name="idFederation"]').val(idFederation);
+                                        $('input[name="idDiscipline"]').val(idDiscipline);
+                                        $('input[name="idUtilisateur"]').val(idUtilisateur);
+                                        $('input[name="dateDebutStr"]').val(dateDebutFormatter);
+                                        $('input[name="dateFinStr"]').val(dateFinFormatter);
+
+
+                                        // AJAX requete
+                                        $.ajax({
+                                            url: '/admin/statistiques/filtre/',
+                                            type: 'POST',
+                                            data: params,
+                                            dataType : "json",
+                                            success: function(data, textStatus, jqXHR)
+                                            {
+                                                // afficher la partie de rapport statistiques
+                                                $("#rappportStatistiques").show();
+
+                                                ///////////////////////////// Traitement pour le tableau ////////////////////////////////////////////////
+
+                                                // afficher le tableau  selon le type de rapport
+                                                if(typeRapport == "utilisateur" || typeRapport == "federation"){
+                                                    $("#tableSysteme").hide();
+                                                    $("#tableUtilisateur").show();
+                                                }
+                                                else if(typeRapport == "systeme"){
+                                                    $("#tableUtilisateur").hide();
+                                                    $("#tableSysteme").show();
+                                                }
+
+//                                                console.log('data: ' + JSON.stringify(data));
+
+                                                // parser les données pour le tableau
+                                                var donneesTableau = data.lignesTableau;
+
+                                                // vider le contenu des anciens tableaux
+                                                $("#tbodyUtilisateur").empty();
+                                                $("#tbodySysteme").empty();
+
+                                                $.each(donneesTableau, function(jour, typeStatistique) {
+                                                    console.log('typeStatistique: ' + JSON.stringify(typeStatistique));
+
+                                                    var ligneTableau = "<tr>";
+                                                    // données ligne
+                                                    var dateLigne = "<td>" + jour +  "</td>";
+                                                    ligneTableau += dateLigne;
+
+                                                    if("nombreConnexions" in typeStatistique){
+                                                        var nbrConnexions = "<td>" + typeStatistique.nombreConnexions + "</td>";
+                                                    }
+                                                    else{
+                                                        var nbrConnextions = "<td>0</td>";
+                                                    }
+                                                    ligneTableau += nbrConnexions;
+
+                                                    // remplir la ligne selon les données récupérées
+                                                    if("nombreLancementsOptiPoule" in typeStatistique){
+                                                        var nbrLanceOptiPoule = "<td>" + typeStatistique.nombreLancementsOptiPoule + "</td>";
+                                                    }
+                                                    else{
+                                                        var nbrLanceOptiPoule = "<td>0</td>";
+                                                    }
+                                                    ligneTableau += nbrLanceOptiPoule;
+
+                                                    if("nombreLancementsMeilleurLieu" in typeStatistique){
+                                                        var nbrLanceMeilleurLieu = "<td>" + typeStatistique.nombreLancementsMeilleurLieu + "</td>";
+                                                    }
+                                                    else{
+                                                        var nbrLanceMeilleurLieu =  "<td>0</td>";
+                                                    }
+                                                    ligneTableau += nbrLanceMeilleurLieu;
+
+                                                    // 9 colonnes
+                                                    if(typeRapport == "utilisateur" || typeRapport == "federation"){
+
+                                                        if("nombreInterdictions" in typeStatistique){
+                                                            var nbrInterdictions = "<td>" + typeStatistique.nombreInterdictions + "</td>";
+                                                        }
+                                                        else{
+                                                            var nbrInterdictions = "<td>0</td>";
+                                                        }
+                                                        ligneTableau += nbrInterdictions;
+
+                                                        if("nombreRepartitionsHomogenes" in typeStatistique){
+                                                            var nbrRepartitionsHomogenes = "<td>" + typeStatistique.nombreRepartitionsHomogenes + "</td>";
+                                                        }
+                                                        else{
+                                                            var nbrRepartitionsHomogenes =  "<td>0</td>";
+                                                        }
+                                                        ligneTableau += nbrRepartitionsHomogenes;
+
+                                                        if("nombreExclusions" in typeStatistique){
+                                                            var nbrExclusions = "<td>" + typeStatistique.nombreExclusions + "</td>";
+                                                        }
+                                                        else{
+                                                            var nbrExclusions = "<td>0</td>";
+                                                        }
+                                                        ligneTableau += nbrExclusions;
+
+
+
+                                                    }
+                                                    // 5 colonnes
+                                                    else if(typeRapport == "systeme"){
+                                                        if("tempsCalculOptiPoule" in typeStatistique){
+                                                            var tempsCalculOptiPoule = "<td>" + typeStatistique.tempsCalculOptiPoule + "</td>";
+                                                        }
+                                                        else{
+                                                            var tempsCalculOptiPoule = "<td>0</td>";
+                                                        }
+                                                        ligneTableau += tempsCalculOptiPoule;
+
+                                                        if("tempsCalculMeilleurLieu" in typeStatistique){
+                                                            var tempsCalculMeilleurLieu = "<td>" + typeStatistique.tempsCalculMeilleurLieu + "</td>";
+                                                        }
+                                                        else{
+                                                            var tempsCalculMeilleurLieu = "<td>0</td>";
+                                                        }
+                                                        ligneTableau += tempsCalculMeilleurLieu;
+
+
+                                                    }
+                                                    if("nombreRequetesHere" in typeStatistique){
+                                                        var nbrHere = "<td>" + typeStatistique.nombreRequetesHere + "</td>";
+                                                    }
+                                                    else{
+                                                        var nbrHere =  "<td>0</td>";
+                                                    }
+                                                    ligneTableau += nbrHere;
+                                                    ligneTableau += "</tr>";
+
+                                                    // ajouter le contenu selon le type de rapport
+                                                    if(typeRapport == "utilisateur" || typeRapport == "federation" ){
+                                                        $("#tbodyUtilisateur").append(ligneTableau);
+                                                    }
+                                                    else{
+                                                        $("#tbodySysteme").append(ligneTableau);
+
+                                                    }
+
+
+                                                });
+
+                                                ///////////////////////////// Traitement pour la graphique ////////////////////////////////////////////////
+                                                // parser les données pour la graphique
+                                                var donneesGraph = data.donneesGraph;
+
+                                                console.log('donneesGraph: ' + JSON.stringify(donneesGraph));
+                                                var data = donneesGraph[0];
+                                                var data2 = donneesGraph[1];
+
+                                                InitChart(data, data2);
+
+
+
+                                            },
+                                            error: function(jqXHR, textStatus, errorThrown)
+                                            {
+                                                // Handle errors here
+                                                console.log('ERRORS: ' + textStatus);
+                                            }
+                                        });
+
+
+                                    }
+                                }
+                            }
+                        }
+
+
+
+                    }
+                }
+
+
             });
 
         });

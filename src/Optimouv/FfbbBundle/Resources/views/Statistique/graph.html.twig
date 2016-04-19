@@ -1,8 +1,23 @@
+
 <div class="container">
+
+    <style>
+        .axis path {
+            fill: none;
+            stroke: #777;
+            shape-rendering: crispEdges;
+        }
+        .axis text {
+            font-family: Lato;
+            font-size: 13px;
+        }
+    </style>
 
     <div class="jumbotron">
         <svg id="visualisation" width="1000" height="500"></svg>
     </div>
+
+
 
 </div>
 
@@ -11,45 +26,8 @@
 <script type="text/javascript">
 
     {# script pour D3js #}
-    function InitChart() {
-        var data = [{
-            "sale": "202",
-            "year": "2000"
-        }, {
-            "sale": "215",
-            "year": "2002"
-        }, {
-            "sale": "179",
-            "year": "2004"
-        }, {
-            "sale": "199",
-            "year": "2006"
-        }, {
-            "sale": "134",
-            "year": "2008"
-        }, {
-            "sale": "176",
-            "year": "2010"
-        }];
-        var data2 = [{
-            "sale": "152",
-            "year": "2000"
-        }, {
-            "sale": "189",
-            "year": "2002"
-        }, {
-            "sale": "179",
-            "year": "2004"
-        }, {
-            "sale": "199",
-            "year": "2006"
-        }, {
-            "sale": "134",
-            "year": "2008"
-        }, {
-            "sale": "176",
-            "year": "2010"
-        }];
+    function InitChart(data, data2) {
+
         var vis = d3.select("#visualisation"),
                 WIDTH = 1000,
                 HEIGHT = 500,
@@ -94,7 +72,6 @@
                 .attr('stroke-width', 2)
                 .attr('fill', 'none');
     }
-    InitChart();
 
 
 
