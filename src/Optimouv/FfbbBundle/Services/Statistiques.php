@@ -476,6 +476,8 @@ class Statistiques {
                     # enlever la discipline si elle n'a pas d'utilisateurs
                     if($utilisateurs == []){
                         unset($disciplines[$indexDiscipline]);
+                        // reset les clés
+                        $disciplines = array_values($disciplines);
                         continue;
 
                     }
@@ -490,6 +492,8 @@ class Statistiques {
                 }
                 elseif($disciplines == []){
                     unset($federations[$indexFederation]);
+                    // reset les clés
+                    $federations = array_values($federations);
                     continue;
                 }
 
