@@ -150,7 +150,6 @@ class Statistiques {
                 die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
             }
 
-//            error_log("\n resultat: ".print_r($resultat, true), 3, $this->error_log_path);
 
 
             foreach($resultat as $ligneDb){
@@ -191,15 +190,41 @@ class Statistiques {
             // données pour le temps de réponse moyen (table statistiques_date_temps)
             if($typeRapport == "systeme"){
                 if($idDiscipline == "tous"){
-                    $sql = "SELECT date(temps_fin) as date_filtre, type_statistiques, avg(valeur) as avg_valeur from statistiques_date_temps ".
-                        "where date(temps_fin) between :dateDebut and :dateFin ".
-                        " and id_federation=:id_federation group by date(temps_fin), type_statistiques ;";
+                    if($formatResultat == "jour"){
+                        $sql = "SELECT date(temps_fin) as date_filtre, type_statistiques, avg(valeur) as avg_valeur from statistiques_date_temps ".
+                            "where date(temps_fin) between :dateDebut and :dateFin ".
+                            " and id_federation=:id_federation group by date(temps_fin), type_statistiques ;";
+                    }
+                    elseif($formatResultat == "mois"){
+                        $sql = "SELECT date_format(temps_fin, '%Y-%m') as date_filtre, type_statistiques, avg(valeur) as avg_valeur from statistiques_date_temps ".
+                            "where date(temps_fin) between :dateDebut and :dateFin ".
+                            " and id_federation=:id_federation group by month(temps_fin), type_statistiques ;";
+                    }
+                    elseif($formatResultat == "annee"){
+                        $sql = "SELECT year(temps_fin) as date_filtre, type_statistiques, avg(valeur) as avg_valeur from statistiques_date_temps ".
+                            "where date(temps_fin) between :dateDebut and :dateFin ".
+                            " and id_federation=:id_federation group by year(temps_fin), type_statistiques ;";
+                    }
+
                     $stmt = $pdo->prepare($sql);
                 }
-                else{
-                    $sql = "SELECT date(temps_fin) as date_filtre, type_statistiques, avg(valeur) as avg_valeur from statistiques_date_temps ".
-                        " where date(temps_fin) between :dateDebut and :dateFin".
-                        " and id_discipline=:id_discipline and id_federation=:id_federation group by date(temps_fin), type_statistiques  ;";
+                else
+                {
+                    if($formatResultat == "jour"){
+                        $sql = "SELECT date(temps_fin) as date_filtre, type_statistiques, avg(valeur) as avg_valeur from statistiques_date_temps ".
+                            " where date(temps_fin) between :dateDebut and :dateFin".
+                            " and id_discipline=:id_discipline and id_federation=:id_federation group by date(temps_fin), type_statistiques  ;";
+                    }
+                    elseif($formatResultat == "mois"){
+                        $sql = "SELECT date_format(temps_fin, '%Y-%m') as date_filtre, type_statistiques, avg(valeur) as avg_valeur from statistiques_date_temps ".
+                            " where date(temps_fin) between :dateDebut and :dateFin".
+                            " and id_discipline=:id_discipline and id_federation=:id_federation group by month(temps_fin), type_statistiques  ;";
+                    }
+                    elseif($formatResultat == "annee"){
+                        $sql = "SELECT year(temps_fin) as date_filtre, type_statistiques, avg(valeur) as avg_valeur from statistiques_date_temps ".
+                            " where date(temps_fin) between :dateDebut and :dateFin".
+                            " and id_discipline=:id_discipline and id_federation=:id_federation group by year(temps_fin), type_statistiques  ;";
+                    }
                     $stmt = $pdo->prepare($sql);
                     $stmt->bindParam(':id_discipline', $idDiscipline);
                 }
@@ -209,6 +234,7 @@ class Statistiques {
                 $stmt->bindParam(':id_federation', $idFederation);
                 $stmt->execute();
                 $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC);
+//                error_log("\n resultat: ".print_r($resultat, true), 3, $this->error_log_path);
 
                 $erreurInfo = $stmt->errorInfo();
 
@@ -219,7 +245,6 @@ class Statistiques {
                 }
 
 
-
                 foreach($resultat as $ligneDb){
 
                     $dateLigneDb = $ligneDb["date_filtre"];
@@ -228,8 +253,6 @@ class Statistiques {
 
                     // convertir les secondes en format Heures:Minutes:Secondes
                     $valeur = sprintf('%02d:%02d:%02d', ($valeurEnSecondes/3600),($valeurEnSecondes/60%60), $valeurEnSecondes%60);
-
-
 
                     # formater la date selon le format français
                     $dateLigneTmp = explode("-", $dateLigneDb);
