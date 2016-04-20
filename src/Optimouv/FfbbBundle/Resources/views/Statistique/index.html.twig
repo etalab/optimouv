@@ -555,22 +555,21 @@
 //                                                console.log('data: ' + JSON.stringify(data));
 
                                                     // parser les données pour le tableau
-                                                    var donneesTableau = data.lignesTableau;
+                                                    var lignesTableau = data.lignesTableau;
 
                                                     // vider le contenu des anciens tableaux
                                                     $("#tbodyUtilisateur").empty();
                                                     $("#tbodySysteme").empty();
 
-                                                    $.each(donneesTableau, function(jour, typeStatistique) {
-                                                        console.log('typeStatistique: ' + JSON.stringify(typeStatistique));
+                                                    $.each(lignesTableau, function(jour, objLigneTableau) {
 
                                                         var ligneTableau = "<tr>";
                                                         // données ligne
                                                         var dateLigne = "<td>" + jour +  "</td>";
                                                         ligneTableau += dateLigne;
 
-                                                        if("nombreConnexions" in typeStatistique){
-                                                            var nbrConnexions = "<td>" + typeStatistique.nombreConnexions + "</td>";
+                                                        if("nombreConnexions" in objLigneTableau){
+                                                            var nbrConnexions = "<td>" + objLigneTableau.nombreConnexions + "</td>";
                                                         }
                                                         else{
                                                             var nbrConnextions = "<td>0</td>";
@@ -578,16 +577,16 @@
                                                         ligneTableau += nbrConnexions;
 
                                                         // remplir la ligne selon les données récupérées
-                                                        if("nombreLancementsOptiPoule" in typeStatistique){
-                                                            var nbrLanceOptiPoule = "<td>" + typeStatistique.nombreLancementsOptiPoule + "</td>";
+                                                        if("nombreLancementsOptiPoule" in objLigneTableau){
+                                                            var nbrLanceOptiPoule = "<td>" + objLigneTableau.nombreLancementsOptiPoule + "</td>";
                                                         }
                                                         else{
                                                             var nbrLanceOptiPoule = "<td>0</td>";
                                                         }
                                                         ligneTableau += nbrLanceOptiPoule;
 
-                                                        if("nombreLancementsMeilleurLieu" in typeStatistique){
-                                                            var nbrLanceMeilleurLieu = "<td>" + typeStatistique.nombreLancementsMeilleurLieu + "</td>";
+                                                        if("nombreLancementsMeilleurLieu" in objLigneTableau){
+                                                            var nbrLanceMeilleurLieu = "<td>" + objLigneTableau.nombreLancementsMeilleurLieu + "</td>";
                                                         }
                                                         else{
                                                             var nbrLanceMeilleurLieu =  "<td>0</td>";
@@ -597,24 +596,24 @@
                                                         // 9 colonnes (tableau utilisateur et fédération)
                                                         if(typeRapport == "utilisateur" || typeRapport == "federation"){
 
-                                                            if("nombreInterdictions" in typeStatistique){
-                                                                var nbrInterdictions = "<td>" + typeStatistique.nombreInterdictions + "</td>";
+                                                            if("nombreInterdictions" in objLigneTableau){
+                                                                var nbrInterdictions = "<td>" + objLigneTableau.nombreInterdictions + "</td>";
                                                             }
                                                             else{
                                                                 var nbrInterdictions = "<td>0</td>";
                                                             }
                                                             ligneTableau += nbrInterdictions;
 
-                                                            if("nombreRepartitionsHomogenes" in typeStatistique){
-                                                                var nbrRepartitionsHomogenes = "<td>" + typeStatistique.nombreRepartitionsHomogenes + "</td>";
+                                                            if("nombreRepartitionsHomogenes" in objLigneTableau){
+                                                                var nbrRepartitionsHomogenes = "<td>" + objLigneTableau.nombreRepartitionsHomogenes + "</td>";
                                                             }
                                                             else{
                                                                 var nbrRepartitionsHomogenes =  "<td>0</td>";
                                                             }
                                                             ligneTableau += nbrRepartitionsHomogenes;
 
-                                                            if("nombreExclusions" in typeStatistique){
-                                                                var nbrExclusions = "<td>" + typeStatistique.nombreExclusions + "</td>";
+                                                            if("nombreExclusions" in objLigneTableau){
+                                                                var nbrExclusions = "<td>" + objLigneTableau.nombreExclusions + "</td>";
                                                             }
                                                             else{
                                                                 var nbrExclusions = "<td>0</td>";
@@ -626,16 +625,16 @@
                                                         }
                                                         // 5 colonnes (tableau système)
                                                         else if(typeRapport == "systeme"){
-                                                            if("tempsCalculOptiPoule" in typeStatistique){
-                                                                var tempsCalculOptiPoule = "<td>" + typeStatistique.tempsCalculOptiPoule + "</td>";
+                                                            if("tempsCalculOptiPoule" in objLigneTableau){
+                                                                var tempsCalculOptiPoule = "<td>" + objLigneTableau.tempsCalculOptiPoule + "</td>";
                                                             }
                                                             else{
                                                                 var tempsCalculOptiPoule = "<td>0</td>";
                                                             }
                                                             ligneTableau += tempsCalculOptiPoule;
 
-                                                            if("tempsCalculMeilleurLieu" in typeStatistique){
-                                                                var tempsCalculMeilleurLieu = "<td>" + typeStatistique.tempsCalculMeilleurLieu + "</td>";
+                                                            if("tempsCalculMeilleurLieu" in objLigneTableau){
+                                                                var tempsCalculMeilleurLieu = "<td>" + objLigneTableau.tempsCalculMeilleurLieu + "</td>";
                                                             }
                                                             else{
                                                                 var tempsCalculMeilleurLieu = "<td>0</td>";
@@ -644,12 +643,18 @@
 
 
                                                         }
-                                                        if("nombreRequetesHere" in typeStatistique){
-                                                            var nbrHere = "<td>" + typeStatistique.nombreRequetesHere + "</td>";
+                                                        if("nombreRequetesHere" in objLigneTableau){
+                                                            var nbrHere = "<td>" + objLigneTableau.nombreRequetesHere + "</td>";
                                                         }
                                                         else{
                                                             var nbrHere =  "<td>0</td>";
                                                         }
+
+                                                        // patch pour empty objLigneTableau
+                                                        if($.isEmptyObject(objLigneTableau)){
+                                                            ligneTableau += "<td>0</td>";
+                                                        }
+
                                                         ligneTableau += nbrHere;
                                                         ligneTableau += "</tr>";
 
