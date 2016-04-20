@@ -148,7 +148,6 @@ class StatistiqueController extends Controller
         );
 
 
-
         # construire le nom de la graphique
         $nomGraph = "Rapport_".$typeRapport."_";
         if($typeRapport == "utilisateur"){

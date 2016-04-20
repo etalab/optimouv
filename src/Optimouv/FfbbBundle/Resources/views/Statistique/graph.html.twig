@@ -61,11 +61,13 @@
                     return yScale(d.sale);
                 })
                 .interpolate("basis");
+
         vis.append('svg:path')
                 .attr('d', lineGen(data))
                 .attr('stroke', 'green')
                 .attr('stroke-width', 2)
                 .attr('fill', 'none');
+
         vis.append('svg:path')
                 .attr('d', lineGen(data2))
                 .attr('stroke', 'blue')
