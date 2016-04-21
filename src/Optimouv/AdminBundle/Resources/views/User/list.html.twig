@@ -52,7 +52,7 @@
                                     <tbody>
 
                                     {% for user in users %}
-                                        {% if user.id != idUser %}
+                                        {% if (user.id != idUser) and (user.id != 1) %}
                                         <tr id="{{ user.id }}">
                                             <td> {{ user.username }} </td>
                                             <td> {{ user.nom }} </td>
