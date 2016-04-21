@@ -31,6 +31,9 @@
     function InitChart(donneesGraph) {
         console.log('############################################## DEBUG CHART D3JS ################################################');
 
+        // initializer svg
+        $("svg").find("g").remove();
+
         console.log('in function donneesGraph: ' + JSON.stringify(donneesGraph));
 
         var mindate = new Date(donneesGraph.dateDebutGraph),
