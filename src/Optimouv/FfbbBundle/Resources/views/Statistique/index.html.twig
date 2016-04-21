@@ -534,6 +534,10 @@
 
                                                 // afficher un message d'erreur s'il n'y a pas de données
                                                 if(flagDonneesExiste == 0){
+                                                    // afficher la partie de rapport statistiques
+                                                    $("#rappportStatistiques").hide();
+                                                    $("#tableSysteme").hide();
+                                                    $("#tableUtilisateur").hide();
                                                     alert("Aucune donnée n'est disponible pour votre sélection. Veuillez modifier vos critères.");
                                                 }
                                                 else{
