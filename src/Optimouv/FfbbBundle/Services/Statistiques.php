@@ -411,20 +411,39 @@ class Statistiques {
             }
 
 
+            error_log("\n formatResultat: ".print_r($formatResultat, true), 3, $this->error_log_path);
 
             # compléter les dates manquantes dans l'interval donné
 //            error_log("\n lignesTableau: ".print_r($lignesTableau, true), 3, $this->error_log_path);
-            $lignesTableauCompleter = $this->completerDateDonneesStatistiques($lignesTableau);
+            if($formatResultat == "jour"){
+                $lignesTableauCompleter = $this->completerDateDonneesStatistiques($lignesTableau);
+            }
+            else{
+                $lignesTableauCompleter = $lignesTableau;
+            }
+
+
+//            error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
 
             # obtenir la date de début pour la graphique
             reset($lignesTableauCompleter);
             $dateDebutGraph = key($lignesTableauCompleter);
-            $dateDebutGraph = date_format(date_create_from_format('d/m/Y', $dateDebutGraph), 'Y/m/d');
 
             # obtenir la date de fin pour la graphique
             end($lignesTableauCompleter);
             $dateFinGraph = key($lignesTableauCompleter);
-            $dateFinGraph = date_format(date_create_from_format('d/m/Y', $dateFinGraph), 'Y/m/d');
+
+            if($formatResultat == "jour"){
+                $dateDebutGraph = date_format(date_create_from_format('d/m/Y', $dateDebutGraph), 'Y/m/d');
+                $dateFinGraph = date_format(date_create_from_format('d/m/Y', $dateFinGraph), 'Y/m/d');
+            }
+            elseif($formatResultat == "mois"){
+                $dateDebutGraph = date_format(date_create_from_format('m/Y', $dateDebutGraph), 'Y/m');
+                $dateFinGraph = date_format(date_create_from_format('m/Y', $dateFinGraph), 'Y/m');
+            }
+
+//            error_log("\n dateDebutGraph: ".print_r($dateDebutGraph, true), 3, $this->error_log_path);
+//            error_log("\n dateFinGraph: ".print_r($dateFinGraph, true), 3, $this->error_log_path);
 
 
             # ajouter les dates dans les données de graph
@@ -456,6 +475,7 @@ class Statistiques {
         $dateDebut = key($donneesStatistiques);
         # créer un objet DateTime pour la date de début
         $dateTimeDebut = \DateTime::createFromFormat('d/m/Y', $dateDebut);
+//        error_log("\n dateTimeDebut: ".print_r($dateTimeDebut, true), 3, $this->error_log_path);
 
         # obtenir la dernière clé
         end($donneesStatistiques);
@@ -465,6 +485,7 @@ class Statistiques {
         $dateTimeFin = \DateTime::createFromFormat('d/m/Y', $dateFin);
         # ajouter un jour car l'objet DatePeriod n'inclut pas la date de fin
         $dateTimeFin = $dateTimeFin->modify( '+1 day' );
+//        error_log("\n dateTimeFin: ".print_r($dateTimeFin, true), 3, $this->error_log_path);
 
         $donneesCompleter = array();
 
