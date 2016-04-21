@@ -52,14 +52,17 @@
                     right: 50,
                     bottom: 20,
                     left: 50
-                },
-                xScale = d3.time.scale().range([MARGINS.left, WIDTH- MARGINS.right]).domain([mindate, maxdate]),
-                yScale =  d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([134, 215]),
-                xAxis = d3.svg.axis()
+                };
+
+        var xScale = d3.time.scale().range([MARGINS.left, WIDTH- MARGINS.right]).domain([mindate, maxdate]);
+        var yScale =  d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([134, 215]);
+        
+        var xAxis = d3.svg.axis()
                         .scale(xScale)
                         .ticks(d3.time.day, 2)
-                        .tickFormat(d3.time.format("%d/%m/%Y")),
-                yAxis = d3.svg.axis()
+                        .tickFormat(d3.time.format("%d/%m/%Y"));
+
+        var yAxis = d3.svg.axis()
                         .scale(yScale)
                         .orient("left");
 
