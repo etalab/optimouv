@@ -40,9 +40,12 @@
         var dateDebutGraph = donneesGraph.dateDebutGraph;
         var dateFinGraph = donneesGraph.dateFinGraph;
         var formatResultat = donneesGraph.formatResultat ;
+        var nbrLabelXAxis = donneesGraph.nbrLabelXAxis ;
+
 
         console.log('dateDebutGraph: ' + dateDebutGraph);
         console.log('dateFinGraph: ' + dateFinGraph);
+        console.log('nbrLabelXAxis: ' + nbrLabelXAxis);
 
         var mindate = new Date(dateDebutGraph),
                 maxdate = new Date(dateFinGraph);
@@ -65,7 +68,11 @@
             var xScale = d3.time.scale().range([MARGINS.left, WIDTH- MARGINS.right]).domain([mindate, maxdate]);
             var xAxis = d3.svg.axis()
                     .scale(xScale);
-            xAxis.ticks(d3.time.day, 2)
+            
+            var deltaJours = Math.round(nbrLabelXAxis/7) + 1;
+            console.log('deltaJours: ' + deltaJours);
+
+            xAxis.ticks(d3.time.day, deltaJours)
                     .tickFormat(d3.time.format("%d/%m/%Y"));
         }
         else if(formatResultat == "mois"){
