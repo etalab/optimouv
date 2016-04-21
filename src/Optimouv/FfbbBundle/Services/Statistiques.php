@@ -411,7 +411,7 @@ class Statistiques {
             }
 
 
-            error_log("\n lignesTableau: ".print_r($lignesTableau, true), 3, $this->error_log_path);
+//            error_log("\n lignesTableau: ".print_r($lignesTableau, true), 3, $this->error_log_path);
 
             # compléter les dates manquantes dans l'interval donné (s'il y a au moins deux lignes dans les données tabulaires)
             if(count($lignesTableau) > 0){
@@ -421,7 +421,7 @@ class Statistiques {
                 $lignesTableauCompleter = $lignesTableau;
             }
 
-//            error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
+            error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
 
 
             # données pour la graphique
@@ -460,7 +460,7 @@ class Statistiques {
                 $donneesGraph["dateFinGraph"] = $dateFinGraph;
                 $donneesGraph["formatResultat"] = $formatResultat;
 
-//            error_log("\n dateDebutGraph: ".print_r($dateDebutGraph, true), 3, $this->error_log_path);
+//            error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
             }
             else{
                 $flagAfficheGraphique = 0;
@@ -487,29 +487,60 @@ class Statistiques {
         # obtenir la zone par défault du système
         date_default_timezone_set('Europe/Paris');
 
-        # créer un objet DateTime pour la date de début
-        $dateTimeDebut = \DateTime::createFromFormat('d/m/Y', $dateDebutStr);
-
-        # créer un objet DateTime pour la date de fin
-        $dateTimeFin = \DateTime::createFromFormat('d/m/Y', $dateFinStr);
-
-        # ajouter un jour car l'objet DatePeriod n'inclut pas la date de fin
-        if($dateTimeFin){
-            $dateTimeFin = $dateTimeFin->modify( '+1 day' );
-        }
-//        error_log("\n dateTimeFin: ".print_r($dateTimeFin, true), 3, $this->error_log_path);
-
         $donneesCompleter = array();
 
+        if($formatResultat == "jour"){
+            $formatDate = 'd/m/Y';
+            $deltaTemps = "1 day";
 
-        # interval d'un jour
-        $interval = \DateInterval::createFromDateString('1 day');
+        }
+        elseif($formatResultat == "mois"){
+
+            # modifier le format
+            $dateDebutStr = date_format(date_create_from_format('d/m/Y', $dateDebutStr), 'm/Y');
+            $dateFinStr = date_format(date_create_from_format('d/m/Y', $dateFinStr), 'm/Y');
+
+
+            $formatDate = 'm/Y';
+            $deltaTemps = "1 month";
+        }
+        elseif($formatResultat == "annee"){
+            # modifier le format
+            $dateDebutStr = date_format(date_create_from_format('d/m/Y', $dateDebutStr), 'Y');
+            $dateFinStr = date_format(date_create_from_format('d/m/Y', $dateFinStr), 'Y');
+
+            $formatDate = 'Y';
+            $deltaTemps = "1 year";
+
+        }
+
+//        error_log("\n formatDate: ".print_r($formatDate, true), 3, $this->error_log_path);
+//        error_log("\n dateDebutStr: ".print_r($dateDebutStr, true), 3, $this->error_log_path);
+
+        # créer un objet DateTime pour la date de début
+        $dateTimeDebut = \DateTime::createFromFormat($formatDate, $dateDebutStr);
+
+
+        # créer un objet DateTime pour la date de fin
+        $dateTimeFin = \DateTime::createFromFormat($formatDate, $dateFinStr);
+        # ajouter un delta temps car l'objet DatePeriod n'inclut pas la date de fin
+        if($dateTimeFin){
+            $dateTimeFin = $dateTimeFin->modify( '+'.$deltaTemps );
+        }
+
+        # interval selon le delta temps
+        $interval = \DateInterval::createFromDateString($deltaTemps);
+
+
+
+
+
         # periode depuis la date de début jusqu'à la date de fin
         $periode = new \DatePeriod($dateTimeDebut, $interval, $dateTimeFin);
 
 
         foreach ( $periode as $dt ){
-            $dateCourante = $dt->format( "d/m/Y");
+            $dateCourante = $dt->format( $formatDate);
 
 //            error_log("\n dateCourante: ".print_r($dateCourante, true)."\n", 3, $this->error_log_path);
             if(array_key_exists($dateCourante, $donneesStatistiques)){
