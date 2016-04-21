@@ -143,9 +143,9 @@ class StatistiqueController extends Controller
 
         );
 
-        return $this->render('FfbbBundle:Statistique:exportPdf.html.twig',
-            $tableauOutput
-        );
+//        return $this->render('FfbbBundle:Statistique:exportPdf.html.twig',
+//            $tableauOutput
+//        );
 
 
         # construire le nom de la graphique

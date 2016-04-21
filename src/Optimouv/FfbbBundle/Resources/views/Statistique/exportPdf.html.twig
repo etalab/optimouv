@@ -35,13 +35,9 @@
 
     console.log( "------------------------------------------------------ DEBUG export PDF graph -------------------------------------------" );
     var donneesGraph = {{ donneesStatistiques.donneesGraph | json_encode | raw }};
-    console.log('donneesGraph: ' + JSON.stringify(donneesGraph));
 
-    var data = donneesGraph[0];
-    var data2 = donneesGraph[1];
-
-
-    InitChart(data, data2);
+//    console.log('export pdf donneesGraph: ' + JSON.stringify(donneesGraph));
+    InitChart(donneesGraph);
 
 </script>
 

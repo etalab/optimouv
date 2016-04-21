@@ -169,7 +169,7 @@ class Statistiques {
         $dateDebut = strtotime($dateDebutFormatter);
         $dateFin = strtotime($dateFinFormatter);
         $datediff = ceil( ($dateFin - $dateDebut)/(60*60*24) )+1;
-//        error_log("\n datediff: ".print_r($datediff, true), 3, $this->error_log_path);
+//        error_log("\n datediff: ".print_r($_POST, true), 3, $this->error_log_path);
 
 
         # determiner le type d'affichage pour les dates
@@ -377,26 +377,26 @@ class Statistiques {
             # données pour la graphique
             $donneesGraph = [];
 
-            $donnees1 = array();
+//            $donnees1 = array();
 
-//            array_push($donnees1, array("sale"=>202, "year"=>2000));
-            array_push($donnees1, array("sale"=>202, "year"=>"2000-04-01"));
-            array_push($donnees1, array("sale"=>215, "year"=>"2002-04-01"));
-            array_push($donnees1, array("sale"=>179, "year"=>"2004-04-01"));
-            array_push($donnees1, array("sale"=>199, "year"=>"2006-04-01"));
-            array_push($donnees1, array("sale"=>134, "year"=>"2008-04-01"));
-            array_push($donnees1, array("sale"=>176, "year"=>"2010-04-01"));
-
-            $donnees2 = array();
-            array_push($donnees2, array("sale"=>152, "year"=>"2000-04-01"));
-            array_push($donnees2, array("sale"=>189, "year"=>"2002-04-01"));
-            array_push($donnees2, array("sale"=>179, "year"=>"2004-04-01"));
-            array_push($donnees2, array("sale"=>199, "year"=>"2006-04-01"));
-            array_push($donnees2, array("sale"=>134, "year"=>"2008-04-01"));
-            array_push($donnees2, array("sale"=>176, "year"=>"2010-04-01"));
-
-            array_push($donneesGraph,  $donnees1);
-            array_push($donneesGraph, $donnees2);
+////            array_push($donnees1, array("sale"=>202, "year"=>2000));
+//            array_push($donnees1, array("sale"=>202, "year"=>"2000-04-01"));
+//            array_push($donnees1, array("sale"=>215, "year"=>"2002-04-01"));
+//            array_push($donnees1, array("sale"=>179, "year"=>"2004-04-01"));
+//            array_push($donnees1, array("sale"=>199, "year"=>"2006-04-01"));
+//            array_push($donnees1, array("sale"=>134, "year"=>"2008-04-01"));
+//            array_push($donnees1, array("sale"=>176, "year"=>"2010-04-01"));
+//
+//            $donnees2 = array();
+//            array_push($donnees2, array("sale"=>152, "year"=>"2000-04-01"));
+//            array_push($donnees2, array("sale"=>189, "year"=>"2002-04-01"));
+//            array_push($donnees2, array("sale"=>179, "year"=>"2004-04-01"));
+//            array_push($donnees2, array("sale"=>199, "year"=>"2006-04-01"));
+//            array_push($donnees2, array("sale"=>134, "year"=>"2008-04-01"));
+//            array_push($donnees2, array("sale"=>176, "year"=>"2010-04-01"));
+//
+//            array_push($donneesGraph,  $donnees1);
+//            array_push($donneesGraph, $donnees2);
 
 
 
@@ -413,15 +413,65 @@ class Statistiques {
 
 //            error_log("\n lignesTableau: ".print_r($lignesTableau, true), 3, $this->error_log_path);
 
-            # compléter les dates manquantes dans l'interval donné
-            $lignesTableauCompleter = $this->completerDateDonneesStatistiques($lignesTableau);
+            # compléter les dates manquantes dans l'interval donné (s'il y a au moins deux lignes dans les données tabulaires)
+            if(count($lignesTableau) > 0){
+                $lignesTableauCompleter = $this->completerDateDonneesStatistiques($lignesTableau, $formatResultat, $dateDebutStr, $dateFinStr);
+            }
+            else{
+                $lignesTableauCompleter = $lignesTableau;
+            }
 
+            error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
+
+
+            # données pour la graphique
+            if(count($lignesTableauCompleter) > 1){
+                $flagAfficheGraphique = 1;
+
+                # obtenir la date de début pour la graphique
+                reset($lignesTableauCompleter);
+                $dateDebutGraph = key($lignesTableauCompleter);
+
+                # obtenir la date de fin pour la graphique
+                end($lignesTableauCompleter);
+                $dateFinGraph = key($lignesTableauCompleter);
+
+                if($formatResultat == "jour"){
+                    $dateDebutGraph = date_format(date_create_from_format('d/m/Y', $dateDebutGraph), 'Y/m/d');
+                    $dateFinGraph = date_format(date_create_from_format('d/m/Y', $dateFinGraph), 'Y/m/d');
+                }
+                elseif($formatResultat == "mois"){
+
+                    $dateDebutGraph = date_format(date_create_from_format('m/Y', $dateDebutGraph), 'Y/m/d');
+                    $dateFinGraph = date_format(date_create_from_format('m/Y', $dateFinGraph), 'Y/m/d');
+                }
+                elseif($formatResultat == "annee"){
+                    $dateDebutGraph = date_format(date_create_from_format('Y', $dateDebutGraph), 'Y/m/d');
+                    $dateFinGraph = date_format(date_create_from_format('Y', $dateFinGraph), 'Y/m/d');
+                }
+
+                error_log("\n dateDebutGraph: ".print_r($dateDebutGraph, true), 3, $this->error_log_path);
+                error_log("\n dateFinGraph: ".print_r($dateFinGraph, true), 3, $this->error_log_path);
+                error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
+
+
+                # ajouter les dates dans les données de graph
+                $donneesGraph["dateDebutGraph"] = $dateDebutGraph;
+                $donneesGraph["dateFinGraph"] = $dateFinGraph;
+                $donneesGraph["formatResultat"] = $formatResultat;
+
+//            error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
+            }
+            else{
+                $flagAfficheGraphique = 0;
+            }
 
             return array("lignesTableau" => $lignesTableauCompleter,
                 "donneesGraph" => $donneesGraph,
                 "flagDonneesExiste" => $flagDonneesExiste,
+                "flagAfficheGraphique" => $flagAfficheGraphique,
 
-                );
+            );
 
         }
         catch (PDOException $e){
@@ -432,39 +482,65 @@ class Statistiques {
     }
 
     # Fonction pour completer les dates manquantes dans l'interval donné
-    private function completerDateDonneesStatistiques($donneesStatistiques){
+    private function completerDateDonneesStatistiques($donneesStatistiques, $formatResultat, $dateDebutStr, $dateFinStr){
+
         # obtenir la zone par défault du système
         date_default_timezone_set('Europe/Paris');
 
-        # obtenir la première clé
-        reset($donneesStatistiques);
-        $dateDebut = key($donneesStatistiques);
-        # créer un objet DateTime pour la date de début
-        $dateTimeDebut = \DateTime::createFromFormat('d/m/Y', $dateDebut);
-
-        # obtenir la dernière clé
-        end($donneesStatistiques);
-        $dateFin = key($donneesStatistiques);
-
-        # créer un objet DateTime pour la date de fin
-        $dateTimeFin = \DateTime::createFromFormat('d/m/Y', $dateFin);
-        # ajouter un jour car l'objet DatePeriod n'inclut pas la date de fin
-        $dateTimeFin = $dateTimeFin->modify( '+1 day' );
-
         $donneesCompleter = array();
 
+        if($formatResultat == "jour"){
+            $formatDate = 'd/m/Y';
+            $deltaTemps = "1 day";
 
-        # interval d'un jour
-        $interval = \DateInterval::createFromDateString('1 day');
+        }
+        elseif($formatResultat == "mois"){
+
+            # modifier le format
+            $dateDebutStr = date_format(date_create_from_format('d/m/Y', $dateDebutStr), 'm/Y');
+            $dateFinStr = date_format(date_create_from_format('d/m/Y', $dateFinStr), 'm/Y');
+
+
+            $formatDate = 'm/Y';
+            $deltaTemps = "1 month";
+        }
+        elseif($formatResultat == "annee"){
+            # modifier le format
+            $dateDebutStr = date_format(date_create_from_format('d/m/Y', $dateDebutStr), 'Y');
+            $dateFinStr = date_format(date_create_from_format('d/m/Y', $dateFinStr), 'Y');
+
+            $formatDate = 'Y';
+            $deltaTemps = "1 year";
+
+        }
+
+//        error_log("\n formatDate: ".print_r($formatDate, true), 3, $this->error_log_path);
+//        error_log("\n dateDebutStr: ".print_r($dateDebutStr, true), 3, $this->error_log_path);
+
+        # créer un objet DateTime pour la date de début
+        $dateTimeDebut = \DateTime::createFromFormat($formatDate, $dateDebutStr);
+
+
+        # créer un objet DateTime pour la date de fin
+        $dateTimeFin = \DateTime::createFromFormat($formatDate, $dateFinStr);
+        # ajouter un delta temps car l'objet DatePeriod n'inclut pas la date de fin
+        if($dateTimeFin){
+            $dateTimeFin = $dateTimeFin->modify( '+'.$deltaTemps );
+        }
+
+        # interval selon le delta temps
+        $interval = \DateInterval::createFromDateString($deltaTemps);
+
+
+
+
+
         # periode depuis la date de début jusqu'à la date de fin
         $periode = new \DatePeriod($dateTimeDebut, $interval, $dateTimeFin);
 
 
-//        error_log("\n periode: ".print_r($periode, true), 3, $this->error_log_path);
-
-
         foreach ( $periode as $dt ){
-            $dateCourante = $dt->format( "d/m/Y");
+            $dateCourante = $dt->format( $formatDate);
 
 //            error_log("\n dateCourante: ".print_r($dateCourante, true)."\n", 3, $this->error_log_path);
             if(array_key_exists($dateCourante, $donneesStatistiques)){
