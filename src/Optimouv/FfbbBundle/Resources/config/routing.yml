@@ -239,6 +239,19 @@ ffbb_lancer_producer:
     path:     /admin/rencontre/producer/{idGroupe}
     defaults: { _controller: FfbbBundle:Default:lancerProducer }
 
+#Gestion des rapports
+ffbb_editer_rapport:
+    path:     /admin/rapport/edit/{idRapport}
+    defaults: { _controller: FfbbBundle:Rapports:update }
+
+ffbb_update_rapport:
+    path:     /admin/rapport/update
+    defaults: { _controller: FfbbBundle:Rapports:updateRapport }
+
+ffbb_delete_rapport:
+    path:     /admin/rapport/delete/{idRapport}
+    defaults: { _controller: FfbbBundle:Rapports:delete }
+
 ffbb_consulter_rapport:
     path:     /admin/rapport/{idRapport}/{typeAction}
     defaults: { _controller: FfbbBundle:Rapports:consulterRapport }

@@ -77,4 +77,19 @@ class RapportRepository extends \Doctrine\ORM\EntityRepository
         return $result;
 
     }
+
+    public function updateRapport($nom, $id){
+
+        $query = $this->createQueryBuilder('G')
+            ->update('FfbbBundle:Rapport', 'd')
+            ->set('d.nom' , '?1')
+            ->where('d.id = ?2')
+            ->setParameter(1, $nom)
+            ->setParameter(2, $id)
+            ->getQuery();
+
+        $update = $query->execute();
+
+        return $update;
+    }
 }
