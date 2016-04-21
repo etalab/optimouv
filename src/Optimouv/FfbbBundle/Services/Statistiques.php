@@ -173,7 +173,7 @@ class Statistiques {
 
 
         # determiner le type d'affichage pour les dates
-        if($datediff <= 30){
+        if($datediff <= 31){
             $formatResultat = "jour";
         }
         elseif($datediff <=365){
