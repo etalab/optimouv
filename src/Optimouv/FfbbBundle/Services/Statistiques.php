@@ -414,8 +414,9 @@ class Statistiques {
             error_log("\n lignesTableau: ".print_r($lignesTableau, true), 3, $this->error_log_path);
 
             # compléter les dates manquantes dans l'interval donné (s'il y a au moins deux lignes dans les données tabulaires)
-            if($formatResultat == "jour" and count($lignesTableau) > 1){
-                $lignesTableauCompleter = $this->completerDateDonneesStatistiques($lignesTableau);
+//            if($formatResultat == "jour" and count($lignesTableau) > 1){
+            if(count($lignesTableau) > 0){
+                $lignesTableauCompleter = $this->completerDateDonneesStatistiques($lignesTableau, $formatResultat, $dateDebutStr, $dateFinStr);
             }
             else{
                 $lignesTableauCompleter = $lignesTableau;
@@ -427,6 +428,7 @@ class Statistiques {
 //            error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
 
 
+            # données pour la graphique
             if(count($lignesTableauCompleter) > 1){
                 $flagAfficheGraphique = 1;
 
@@ -484,25 +486,29 @@ class Statistiques {
     }
 
     # Fonction pour completer les dates manquantes dans l'interval donné
-    private function completerDateDonneesStatistiques($donneesStatistiques){
+    private function completerDateDonneesStatistiques($donneesStatistiques, $formatResultat, $dateDebutStr, $dateFinStr){
+
         # obtenir la zone par défault du système
         date_default_timezone_set('Europe/Paris');
 
         # obtenir la première clé
-        reset($donneesStatistiques);
-        $dateDebut = key($donneesStatistiques);
+//        reset($donneesStatistiques);
+//        $dateDebut = key($donneesStatistiques);
         # créer un objet DateTime pour la date de début
-        $dateTimeDebut = \DateTime::createFromFormat('d/m/Y', $dateDebut);
+        $dateTimeDebut = \DateTime::createFromFormat('d/m/Y', $dateDebutStr);
 //        error_log("\n dateTimeDebut: ".print_r($dateTimeDebut, true), 3, $this->error_log_path);
 
         # obtenir la dernière clé
-        end($donneesStatistiques);
-        $dateFin = key($donneesStatistiques);
+//        end($donneesStatistiques);
+//        $dateFin = key($donneesStatistiques);
 
         # créer un objet DateTime pour la date de fin
-        $dateTimeFin = \DateTime::createFromFormat('d/m/Y', $dateFin);
+        $dateTimeFin = \DateTime::createFromFormat('d/m/Y', $dateFinStr);
+
         # ajouter un jour car l'objet DatePeriod n'inclut pas la date de fin
-        $dateTimeFin = $dateTimeFin->modify( '+1 day' );
+        if($dateTimeFin){
+            $dateTimeFin = $dateTimeFin->modify( '+1 day' );
+        }
 //        error_log("\n dateTimeFin: ".print_r($dateTimeFin, true), 3, $this->error_log_path);
 
         $donneesCompleter = array();
