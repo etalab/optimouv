@@ -3,6 +3,7 @@
 namespace Optimouv\FfbbBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class RapportsController extends Controller
 {
@@ -114,5 +115,61 @@ class RapportsController extends Controller
 
     }
 
+
+//   Mise à jour du nom du rapport
+    public function updateAction($idRapport)
+    {
+
+         $em = $this->getDoctrine()->getManager();
+        $nom  = $em->getRepository('FfbbBundle:Rapport')->findOneById($idRapport)->getNom();
+
+         return $this->render('FfbbBundle:Rapports:update.html.twig', [
+            "idRapport" => $idRapport,
+            "nom" => $nom,
+        ]);
+
+    }
+
+    public function updateRapportAction()
+    {
+        $nom = $_POST['nom'];
+        $id= $_POST['idRapport'];
+        $em = $this->getDoctrine()->getManager();
+        $update  = $em->getRepository('FfbbBundle:Rapport')->updateRapport($nom, $id);
+        if($update){
+            return $this->redirect($this->generateUrl('ffbb_rapports'));
+        }
+        else{
+            print_r("Un problème de mise à jour des rapports");
+            exit;
+        }
+
+    }
+
+//    Supprimer un rapport
+    public function deleteAction($idRapport)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $connection = $em->getConnection();
+        $statement = $connection->prepare('SET foreign_key_checks = 0');
+        $statement->execute();
+        $entity = $em->getRepository('FfbbBundle:Rapport')->find($idRapport);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Rapport introuvable.');
+        }
+
+
+        $em->remove($entity);
+        $em->flush();
+
+        return new JsonResponse(array(
+            "success" => true,
+            "msg" => "Rapport supprimée"
+        ));
+
+    }
 
 }
