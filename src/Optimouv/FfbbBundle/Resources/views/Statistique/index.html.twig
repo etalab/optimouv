@@ -220,8 +220,23 @@
 {% endblock %}
 
 {% block javascripts %}
-
+    <script type="text/javascript" src="{{ asset('bundles/ffbb/js/datatables.min.js') }}"></script>
+    <script src="{{ asset('bundles/ffbb/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('bundles/ffbb/js/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ asset('bundles/ffbb/js/bootstrap-datepicker.fr.min.js') }}"></script>
     <script type="text/javascript">
+
+        // datatable utilisateur
+        $('#tableUtilisateur').DataTable({
+            responsive: true,
+            "order": [[ 0, "desc" ]]
+        });
+        // datatable système
+        $('#tableSysteme').DataTable({
+            responsive: true,
+            "order": [[ 0, "desc" ]]
+        });
+
 
         $(function() {
             {# options pour le js Date picker #}
@@ -233,6 +248,7 @@
                 language: "fr",
                 autoclose: true
             });
+
 
             // cacher le rapport statistiques
             $("#rappportStatistiques").hide();
