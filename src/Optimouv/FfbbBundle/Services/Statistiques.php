@@ -399,7 +399,6 @@ class Statistiques {
             array_push($donneesGraph, $donnees2);
 
 
-//            error_log("\n donneesGraph: ".print_r($donneesGraph, true), 3, $this->error_log_path);
 
 
             # ajouter un flag pour indiquer s'il y a des données ou pas
@@ -411,6 +410,8 @@ class Statistiques {
 
             }
 
+
+//            error_log("\n lignesTableau: ".print_r($lignesTableau, true), 3, $this->error_log_path);
 
             # compléter les dates manquantes dans l'interval donné
             $lignesTableauCompleter = $this->completerDateDonneesStatistiques($lignesTableau);
@@ -444,8 +445,11 @@ class Statistiques {
         # obtenir la dernière clé
         end($donneesStatistiques);
         $dateFin = key($donneesStatistiques);
+
         # créer un objet DateTime pour la date de fin
         $dateTimeFin = \DateTime::createFromFormat('d/m/Y', $dateFin);
+        # ajouter un jour car l'objet DatePeriod n'inclut pas la date de fin
+        $dateTimeFin = $dateTimeFin->modify( '+1 day' );
 
         $donneesCompleter = array();
 
@@ -456,7 +460,7 @@ class Statistiques {
         $periode = new \DatePeriod($dateTimeDebut, $interval, $dateTimeFin);
 
 
-//        error_log("\n donneesStatistiques: ".print_r($donneesStatistiques, true), 3, $this->error_log_path);
+//        error_log("\n periode: ".print_r($periode, true), 3, $this->error_log_path);
 
 
         foreach ( $periode as $dt ){
