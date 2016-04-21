@@ -414,16 +414,12 @@ class Statistiques {
             error_log("\n lignesTableau: ".print_r($lignesTableau, true), 3, $this->error_log_path);
 
             # compléter les dates manquantes dans l'interval donné (s'il y a au moins deux lignes dans les données tabulaires)
-//            if($formatResultat == "jour" and count($lignesTableau) > 1){
             if(count($lignesTableau) > 0){
                 $lignesTableauCompleter = $this->completerDateDonneesStatistiques($lignesTableau, $formatResultat, $dateDebutStr, $dateFinStr);
             }
             else{
                 $lignesTableauCompleter = $lignesTableau;
             }
-
-//            error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
-
 
 //            error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
 
@@ -491,16 +487,8 @@ class Statistiques {
         # obtenir la zone par défault du système
         date_default_timezone_set('Europe/Paris');
 
-        # obtenir la première clé
-//        reset($donneesStatistiques);
-//        $dateDebut = key($donneesStatistiques);
         # créer un objet DateTime pour la date de début
         $dateTimeDebut = \DateTime::createFromFormat('d/m/Y', $dateDebutStr);
-//        error_log("\n dateTimeDebut: ".print_r($dateTimeDebut, true), 3, $this->error_log_path);
-
-        # obtenir la dernière clé
-//        end($donneesStatistiques);
-//        $dateFin = key($donneesStatistiques);
 
         # créer un objet DateTime pour la date de fin
         $dateTimeFin = \DateTime::createFromFormat('d/m/Y', $dateFinStr);
@@ -518,9 +506,6 @@ class Statistiques {
         $interval = \DateInterval::createFromDateString('1 day');
         # periode depuis la date de début jusqu'à la date de fin
         $periode = new \DatePeriod($dateTimeDebut, $interval, $dateTimeFin);
-
-
-//        error_log("\n periode: ".print_r($periode, true), 3, $this->error_log_path);
 
 
         foreach ( $periode as $dt ){
