@@ -33,7 +33,11 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Nom du rapport</th>
-                                        <th>Type du rapport</th>
+                                        <th>Caractéristiques du rapport</th>
+                                        <th>Nom de la liste</th>
+                                        <th>Nom du groupe</th>
+                                        <th>Utilisateur</th>
+                                        <th>Federation</th>
                                         <th>Date de création</th>
                                         <th>Statut</th>
                                         <th>Action</th>
@@ -45,40 +49,39 @@
                                     <tbody>
 
                                     {% for infoRapport in infoRapports %}
-                                        {% if infoRapport.typeAction in rencontre %}
-                                            <tr id="{{ infoRapport.id }}">
+                                        {% if infoRapport.typeActionRapport in rencontre %}
+                                            <tr id="{{ infoRapport.idRapport }}">
 
-                                                <td> {{ infoRapport.id }} </td>
-                                                <td> {{ infoRapport.nom }} </td>
+                                                <td> {{ infoRapport.idRapport }} </td>
+                                                <td> {{ infoRapport.nomRapport }} </td>
 
-                                                {% if infoRapport.typeAction == "allerRetour" %}
-                                                    <td> Optimisation de poules - match aller retour</td>
-                                                {% elseif infoRapport.typeAction == "allerSimple" %}
-                                                    <td> Optimisation de poules - match aller simple</td>
-                                                {% elseif infoRapport.typeAction == "plateau" %}
-                                                    <td> Optimisation de poules - plateau</td>
-                                                {% elseif infoRapport.typeAction == "barycentre" %}
+
+                                                {% if infoRapport.typeActionRapport == "barycentre" %}
                                                     <td> Meilleur lieu - barycentre</td>
-                                                {% elseif infoRapport.typeAction == "meilleurLieu" %}
+                                                {% elseif infoRapport.typeActionRapport == "meilleurLieu" %}
                                                     <td> Meilleur lieu - lieux définis</td>
-                                                {% elseif infoRapport.typeAction == "exclusion" %}
+                                                {% elseif infoRapport.typeActionRapport == "exclusion" %}
                                                     <td> Meilleur lieu - barycentre avec exclusion</td>
-                                                {% elseif infoRapport.typeAction == "terrainNeutre" %}
+                                                {% elseif infoRapport.typeActionRapport == "terrainNeutre" %}
                                                     <td> Meilleur lieu - lieux définis avec liste de lieux</td>
                                                 {% else %}
-                                                    <td> {{ infoRapport.typeAction }} </td>
+                                                    <td> {{ infoRapport.typeActionRapport }} </td>
                                                 {% endif %}
+                                                <td>{{ infoRapport.nomListe }}</td>
+                                                <td>{{ infoRapport.nomGroupe }}</td>
+                                                <td>{{ infoRapport.nomUser }} {{ infoRapport.prenomUser }}</td>
+                                                <td>{{ infoRapport.federationUser }}</td>
 
 
-                                                <td> {{ infoRapport.dateCreation.date|date('d/m/Y') }} </td>
+                                                <td> {{ infoRapport.dateCreationRapport|date('d/m/Y') }} </td>
 
-                                                {% if infoRapport.statut  == -1 %}
+                                                {% if infoRapport.statutRapport  == -1 %}
                                                     <td> Erreur</td>
-                                                {% elseif infoRapport.statut  == 0 %}
+                                                {% elseif infoRapport.statutRapport  == 0 %}
                                                     <td> En attente</td>
-                                                {% elseif infoRapport.statut == 1 %}
+                                                {% elseif infoRapport.statutRapport == 1 %}
                                                     <td> En cours</td>
-                                                {% elseif infoRapport.statut  == 2 %}
+                                                {% elseif infoRapport.statutRapport  == 2 %}
                                                     <td> Succès</td>
                                                 {% else %}
                                                     <td> Inconnu</td>
@@ -86,21 +89,21 @@
 
 
                                                 <td>
-                                                    {% if infoRapport.statut  == 2 %}
+                                                    {% if infoRapport.statutRapport  == 2 %}
 
                                                         <form name="consulterRapport"
-                                                              action="{{ path('ffbb_consulter_rapport', {'idRapport':infoRapport.id, 'typeAction': infoRapport.typeAction}) }}"
+                                                              action="{{ path('ffbb_consulter_rapport', {'idRapport':infoRapport.idRapport, 'typeAction': infoRapport.typeActionRapport}) }}"
                                                               method="post">
                                                             <input type="hidden" name="typeAction" id="typeAction"
-                                                                   value="{{ infoRapport.typeAction }}">
+                                                                   value="{{ infoRapport.typeActionRapport }}">
                                                             <button type="submit" class="btn btn-consulter-rapport">
                                                                 Visualiser
                                                             </button>
-                                                            <a href="{{ path('ffbb_editer_rapport', {idRapport: infoRapport.id}) }}"
+                                                            <a href="{{ path('ffbb_editer_rapport', {idRapport: infoRapport.idRapport}) }}"
                                                                class="btn btn-ajouter-reparition">Renommer</a>
                                                             <button type="button" name="delete"
                                                                     class="btn btn-ajouter-reparition"
-                                                                    onclick="deleteRapport({{ infoRapport.id }})">
+                                                                    onclick="deleteRapport({{ infoRapport.idRapport }})">
                                                                 Supprimer
                                                             </button>
 
@@ -150,7 +153,11 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Nom du rapport</th>
-                                        <th>Type du rapport</th>
+                                        <th>Caractéristiques du rapport</th>
+                                        <th>Nom de la liste</th>
+                                        <th>Nom du groupe</th>
+                                        <th>Utilisateur</th>
+                                        <th>Federation</th>
                                         <th>Date de création</th>
                                         <th>Statut</th>
                                         <th>Action</th>
@@ -162,40 +169,36 @@
                                     <tbody>
 
                                     {% for infoRapport in infoRapports %}
-                                        {% if infoRapport.typeAction not in rencontre %}
-                                            <tr id="{{ infoRapport.id }}">
+                                        {% if infoRapport.typeActionRapport not in rencontre %}
+                                            <tr id="{{ infoRapport.idRapport }}">
 
-                                                <td> {{ infoRapport.id }} </td>
-                                                <td> {{ infoRapport.nom }} </td>
+                                                <td> {{ infoRapport.idRapport }} </td>
+                                                <td> {{ infoRapport.nomRapport }} </td>
 
-                                                {% if infoRapport.typeAction == "allerRetour" %}
+                                                {% if infoRapport.typeActionRapport == "allerRetour" %}
                                                     <td> Optimisation de poules - match aller retour</td>
-                                                {% elseif infoRapport.typeAction == "allerSimple" %}
+                                                {% elseif infoRapport.typeActionRapport == "allerSimple" %}
                                                     <td> Optimisation de poules - match aller simple</td>
-                                                {% elseif infoRapport.typeAction == "plateau" %}
+                                                {% elseif infoRapport.typeActionRapport == "plateau" %}
                                                     <td> Optimisation de poules - plateau</td>
-                                                {% elseif infoRapport.typeAction == "barycentre" %}
-                                                    <td> Meilleur lieu - barycentre</td>
-                                                {% elseif infoRapport.typeAction == "meilleurLieu" %}
-                                                    <td> Meilleur lieu - lieux définis</td>
-                                                {% elseif infoRapport.typeAction == "exclusion" %}
-                                                    <td> Meilleur lieu - barycentre avec exclusion</td>
-                                                {% elseif infoRapport.typeAction == "terrainNeutre" %}
-                                                    <td> Meilleur lieu - lieux définis avec liste de lieux</td>
+
                                                 {% else %}
-                                                    <td> {{ infoRapport.typeAction }} </td>
+                                                    <td> {{ infoRapport.typeActionRapport }} </td>
                                                 {% endif %}
+                                                <td>{{ infoRapport.nomListe }}</td>
+                                                <td>{{ infoRapport.nomGroupe }}</td>
+                                                <td>{{ infoRapport.nomUser }} {{ infoRapport.prenomUser }}</td>
+                                                <td>{{ infoRapport.federationUser }}</td>
 
+                                                <td> {{ infoRapport.dateCreationRapport|date('d/m/Y') }} </td>
 
-                                                <td> {{ infoRapport.dateCreation.date|date('d/m/Y') }} </td>
-
-                                                {% if infoRapport.statut  == -1 %}
+                                                {% if infoRapport.statutRapport  == -1 %}
                                                     <td> Erreur</td>
-                                                {% elseif infoRapport.statut  == 0 %}
+                                                {% elseif infoRapport.statutRapport  == 0 %}
                                                     <td> En attente</td>
-                                                {% elseif infoRapport.statut == 1 %}
+                                                {% elseif infoRapport.statutRapport == 1 %}
                                                     <td> En cours</td>
-                                                {% elseif infoRapport.statut  == 2 %}
+                                                {% elseif infoRapport.statutRapport  == 2 %}
                                                     <td> Succès</td>
                                                 {% else %}
                                                     <td> Inconnu</td>
@@ -203,21 +206,21 @@
 
 
                                                 <td>
-                                                    {% if infoRapport.statut  == 2 %}
+                                                    {% if infoRapport.statutRapport  == 2 %}
 
                                                         <form name="consulterRapport"
-                                                              action="{{ path('ffbb_consulter_rapport', {'idRapport':infoRapport.id, 'typeAction': infoRapport.typeAction}) }}"
+                                                              action="{{ path('ffbb_consulter_rapport', {'idRapport':infoRapport.idRapport, 'typeAction': infoRapport.typeActionRapport}) }}"
                                                               method="post">
                                                             <input type="hidden" name="typeAction" id="typeAction"
-                                                                   value="{{ infoRapport.typeAction }}">
+                                                                   value="{{ infoRapport.typeActionRapport }}">
                                                             <button type="submit" class="btn btn-consulter-rapport">
                                                                 Visualiser
                                                             </button>
-                                                            <a href="{{ path('ffbb_editer_rapport', {idRapport: infoRapport.id}) }}"
+                                                            <a href="{{ path('ffbb_editer_rapport', {idRapport: infoRapport.idRapport}) }}"
                                                                class="btn btn-ajouter-reparition">Renommer</a>
                                                             <button type="button" name="delete"
                                                                     class="btn btn-ajouter-reparition"
-                                                                    onclick="deleteRapport({{ infoRapport.id }})">
+                                                                    onclick="deleteRapport({{ infoRapport.idRapport }})">
                                                                 Supprimer
                                                             </button>
 
