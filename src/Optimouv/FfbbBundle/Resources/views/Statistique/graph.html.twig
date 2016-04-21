@@ -33,6 +33,7 @@
         var mindate = new Date("2016/04/01"),
                 maxdate = new Date("2016/04/30");
 
+        var nombreTicks = 5;
 
         var svg = d3.select("#visualisation"),
                 WIDTH = 1000,
@@ -47,7 +48,7 @@
                 yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([134, 215]),
                 xAxis = d3.svg.axis()
                         .scale(xScale)
-                        .ticks(5)
+                        .ticks(nombreTicks)
                         .tickFormat(d3.time.format("%d/%m/%Y")),
                 yAxis = d3.svg.axis()
                         .scale(yScale)
