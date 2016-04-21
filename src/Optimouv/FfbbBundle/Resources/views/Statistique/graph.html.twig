@@ -39,29 +39,39 @@
         var mindate = new Date(donneesGraph.dateDebutGraph),
                 maxdate = new Date(donneesGraph.dateFinGraph);
 
-        console.log('mindate: ' + JSON.stringify(mindate));
-        console.log('maxdate: ' + JSON.stringify(maxdate));
+        console.log('mindate: ' + mindate);
+        console.log('maxdate: ' + maxdate);
 
-        var nombreTicks = 5;
+
+        var width = 1000;
+        var height = 500;
+        var margins = {
+            top: 20,
+            right: 50,
+            bottom: 20,
+            left: 50
+        };
+        var xscale = d3.time.scale().range([margins.left, width- margins.right]).domain([mindate, maxdate]);
+        var yscale = d3.scale.linear().range([height - margins.top, margins.bottom]).domain([134, 215]);
+//        console.log("xaxis " + xaxis);
 
         var svg = d3.select("#visualisation"),
-                WIDTH = 1000,
+                WIDTH = width,
                 HEIGHT = 500,
-                MARGINS = {
-                    top: 20,
-                    right: 50,
-                    bottom: 20,
-                    left: 50
-                },
-                xScale = d3.time.scale().range([MARGINS.left, WIDTH - MARGINS.right]).domain([mindate, maxdate]);
-                yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([134, 215]),
+                MARGINS = margins,
+                xScale = xscale;
+                yScale = yscale,
                 xAxis = d3.svg.axis()
-                        .scale(xScale)
-                        .ticks(d3.time.day, 2)
-                        .tickFormat(d3.time.format("%d/%m/%Y")),
+                        .scale(xScale),
                 yAxis = d3.svg.axis()
                         .scale(yScale)
                         .orient("left");
+
+        // formatter
+        //        var xaxis =
+//                .ticks(d3.time.day, 2)
+//                .tickFormat(d3.time.format("%d/%m/%Y"));
+
 
         svg.append("svg:g")
                 .attr("class", "x axis")
