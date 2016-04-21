@@ -413,8 +413,8 @@ class Statistiques {
 
             error_log("\n lignesTableau: ".print_r($lignesTableau, true), 3, $this->error_log_path);
 
-            # compléter les dates manquantes dans l'interval donné
-            if($formatResultat == "jour" and $lignesTableau != []){
+            # compléter les dates manquantes dans l'interval donné (s'il y a au moins deux lignes dans les données tabulaires)
+            if($formatResultat == "jour" and count($lignesTableau) > 1){
                 $lignesTableauCompleter = $this->completerDateDonneesStatistiques($lignesTableau);
             }
             else{
@@ -426,7 +426,10 @@ class Statistiques {
 
 //            error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
 
-            if($lignesTableauCompleter != []){
+
+            if(count($lignesTableauCompleter) > 1){
+                $flagAfficheGraphique = 1;
+
                 # obtenir la date de début pour la graphique
                 reset($lignesTableauCompleter);
                 $dateDebutGraph = key($lignesTableauCompleter);
@@ -440,6 +443,7 @@ class Statistiques {
                     $dateFinGraph = date_format(date_create_from_format('d/m/Y', $dateFinGraph), 'Y/m/d');
                 }
                 elseif($formatResultat == "mois"){
+
                     $dateDebutGraph = date_format(date_create_from_format('m/Y', $dateDebutGraph), 'Y/m/d');
                     $dateFinGraph = date_format(date_create_from_format('m/Y', $dateFinGraph), 'Y/m/d');
                 }
@@ -460,11 +464,16 @@ class Statistiques {
 
 //            error_log("\n dateDebutGraph: ".print_r($dateDebutGraph, true), 3, $this->error_log_path);
             }
+            else{
+                $flagAfficheGraphique = 0;
+            }
 
             return array("lignesTableau" => $lignesTableauCompleter,
                 "donneesGraph" => $donneesGraph,
                 "flagDonneesExiste" => $flagDonneesExiste,
-                );
+                "flagAfficheGraphique" => $flagAfficheGraphique,
+
+            );
 
         }
         catch (PDOException $e){

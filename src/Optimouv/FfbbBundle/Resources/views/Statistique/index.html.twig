@@ -118,28 +118,29 @@
                     </div>
 
                     <div class="panel-body">
-                        <h4 class="page-header">Synthèse des utilisations - vue graphique </h4>
 
-                        {% include 'FfbbBundle:Statistique:graph.html.twig' %}
+                        <div id="graphD3">
+                            <h4 class="page-header">Synthèse des utilisations - vue graphique </h4>
+                            {% include 'FfbbBundle:Statistique:graph.html.twig' %}
 
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <form name="submitParams" action="{{ path('ffbb_statistiques_export_pdf')}}" method="post">
+                                        <button style="width: 120px" type="submit" class="btn btn-statistique pull-right">Exporter</button>
+                                        <input type="hidden" name="typeRapport">
+                                        <input type="hidden" name="idFederation">
+                                        <input type="hidden" name="idDiscipline">
+                                        <input type="hidden" name="idUtilisateur">
+                                        <input type="hidden" name="dateDebutStr">
+                                        <input type="hidden" name="dateFinStr">
+                                        <input type="hidden" name="dateDebutFormatter">
+                                        <input type="hidden" name="dateFinFormatter">
 
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                <form name="submitParams" action="{{ path('ffbb_statistiques_export_pdf')}}" method="post">
-                                    <button style="width: 120px" type="submit" class="btn btn-statistique pull-right">Exporter</button>
-                                    <input type="hidden" name="typeRapport">
-                                    <input type="hidden" name="idFederation">
-                                    <input type="hidden" name="idDiscipline">
-                                    <input type="hidden" name="idUtilisateur">
-                                    <input type="hidden" name="dateDebutStr">
-                                    <input type="hidden" name="dateFinStr">
-                                    <input type="hidden" name="dateDebutFormatter">
-                                    <input type="hidden" name="dateFinFormatter">
-
-                                </form>
+                                    </form>
+                                </div>
                             </div>
+                            <br>
                         </div>
-                        <br>
 
                         <h4 class="page-header">Synthèse des utilisations - vue tableur</h4>
 
@@ -536,8 +537,6 @@
                                                 if(flagDonneesExiste == 0){
                                                     // afficher la partie de rapport statistiques
                                                     $("#rappportStatistiques").hide();
-                                                    $("#tableSysteme").hide();
-                                                    $("#tableUtilisateur").hide();
                                                     alert("Aucune donnée n'est disponible pour votre sélection. Veuillez modifier vos critères.");
                                                 }
                                                 else{
@@ -675,11 +674,23 @@
                                                     });
 
                                                     ///////////////////////////// Traitement pour la graphique ////////////////////////////////////////////////
-                                                    // parser les données pour la graphique
-                                                    var donneesGraph = data.donneesGraph;
+                                                    var flagAfficheGraphique = data.flagAfficheGraphique;
+
+                                                    if(flagAfficheGraphique  == 0){
+                                                        $("#graphD3").hide();
+
+                                                    }
+                                                    else{
+                                                        $("#graphD3").show();
+                                                        // parser les données pour la graphique
+                                                        var donneesGraph = data.donneesGraph;
 
 //                                                    console.log('index donneesGraph: ' + JSON.stringify(donneesGraph));
-                                                    InitChart(donneesGraph);
+                                                        InitChart(donneesGraph);
+                                                    }
+
+
+
 
                                                 }
 

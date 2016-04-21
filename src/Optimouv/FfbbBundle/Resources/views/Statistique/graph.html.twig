@@ -36,13 +36,19 @@
 
         console.log('in function donneesGraph: ' + JSON.stringify(donneesGraph));
 
-        var mindate = new Date(donneesGraph.dateDebutGraph),
-                maxdate = new Date(donneesGraph.dateFinGraph);
+
+        var dateDebutGraph = donneesGraph.dateDebutGraph;
+        var dateFinGraph = donneesGraph.dateFinGraph;
+        var formatResultat = donneesGraph.formatResultat ;
+
+        console.log('dateDebutGraph: ' + dateDebutGraph);
+        console.log('dateFinGraph: ' + dateFinGraph);
+
+        var mindate = new Date(dateDebutGraph),
+                maxdate = new Date(dateFinGraph);
 
         console.log('mindate: ' + mindate);
         console.log('maxdate: ' + maxdate);
-
-
 
         var svg = d3.select("#visualisation"),
                 WIDTH = 1000,
@@ -54,14 +60,35 @@
                     left: 50
                 };
 
-        var xScale = d3.time.scale().range([MARGINS.left, WIDTH- MARGINS.right]).domain([mindate, maxdate]);
-        var yScale =  d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([134, 215]);
-        
-        var xAxis = d3.svg.axis()
-                        .scale(xScale)
-                        .ticks(d3.time.day, 2)
-                        .tickFormat(d3.time.format("%d/%m/%Y"));
 
+        if(formatResultat == "jour"){
+            var xScale = d3.time.scale().range([MARGINS.left, WIDTH- MARGINS.right]).domain([mindate, maxdate]);
+            var xAxis = d3.svg.axis()
+                    .scale(xScale);
+            xAxis.ticks(d3.time.day, 2)
+                    .tickFormat(d3.time.format("%d/%m/%Y"));
+        }
+        else if(formatResultat == "mois"){
+            var mindate = new Date("2016/04/01"),
+                    maxdate = new Date("2016/06/10");
+
+            var xScale = d3.time.scale().range([MARGINS.left, WIDTH- MARGINS.right]).domain([mindate, maxdate]);
+            var xAxis = d3.svg.axis()
+                    .scale(xScale);
+            xAxis.ticks(d3.time.month, 2)
+                    .tickFormat(d3.time.format("%m/%Y"));
+
+        }
+        else if(formatResultat == "annee"){
+            var xScale = d3.time.scale().range([MARGINS.left, WIDTH- MARGINS.right]).domain([mindate, maxdate]);
+            var xAxis = d3.svg.axis()
+                    .scale(xScale);
+            xAxis.ticks(d3.time.year, 2)
+                    .tickFormat(d3.time.format("%Y"));
+
+        }
+
+        var yScale =  d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([134, 215]);
         var yAxis = d3.svg.axis()
                         .scale(yScale)
                         .orient("left");
