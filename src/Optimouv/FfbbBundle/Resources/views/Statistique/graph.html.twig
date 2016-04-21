@@ -43,34 +43,26 @@
         console.log('maxdate: ' + maxdate);
 
 
-        var width = 1000;
-        var height = 500;
-        var margins = {
-            top: 20,
-            right: 50,
-            bottom: 20,
-            left: 50
-        };
-        var xscale = d3.time.scale().range([margins.left, width- margins.right]).domain([mindate, maxdate]);
-        var yscale = d3.scale.linear().range([height - margins.top, margins.bottom]).domain([134, 215]);
-//        console.log("xaxis " + xaxis);
 
         var svg = d3.select("#visualisation"),
-                WIDTH = width,
+                WIDTH = 1000,
                 HEIGHT = 500,
-                MARGINS = margins,
-                xScale = xscale;
-                yScale = yscale,
+                MARGINS = {
+                    top: 20,
+                    right: 50,
+                    bottom: 20,
+                    left: 50
+                },
+                xScale = d3.time.scale().range([MARGINS.left, WIDTH- MARGINS.right]).domain([mindate, maxdate]),
+                yScale =  d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([134, 215]),
                 xAxis = d3.svg.axis()
-                        .scale(xScale),
+                        .scale(xScale)
+                        .ticks(d3.time.day, 2)
+                        .tickFormat(d3.time.format("%d/%m/%Y")),
                 yAxis = d3.svg.axis()
                         .scale(yScale)
                         .orient("left");
 
-        // formatter
-        //        var xaxis =
-//                .ticks(d3.time.day, 2)
-//                .tickFormat(d3.time.format("%d/%m/%Y"));
 
 
         svg.append("svg:g")
