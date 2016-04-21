@@ -28,10 +28,16 @@
 <script type="text/javascript">
 
     {# script pour D3js #}
-    function InitChart(data, data2) {
+    function InitChart(donneesGraph) {
+        console.log('############################################## DEBUG CHART D3JS ################################################');
 
-        var mindate = new Date("2016/04/01"),
-                maxdate = new Date("2016/04/30");
+        console.log('in function donneesGraph: ' + JSON.stringify(donneesGraph));
+
+        var mindate = new Date(donneesGraph.dateDebutGraph),
+                maxdate = new Date(donneesGraph.dateFinGraph);
+
+        console.log('mindate: ' + JSON.stringify(mindate));
+        console.log('maxdate: ' + JSON.stringify(maxdate));
 
         var nombreTicks = 5;
 

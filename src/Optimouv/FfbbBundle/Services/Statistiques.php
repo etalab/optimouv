@@ -169,7 +169,7 @@ class Statistiques {
         $dateDebut = strtotime($dateDebutFormatter);
         $dateFin = strtotime($dateFinFormatter);
         $datediff = ceil( ($dateFin - $dateDebut)/(60*60*24) )+1;
-//        error_log("\n datediff: ".print_r($datediff, true), 3, $this->error_log_path);
+//        error_log("\n datediff: ".print_r($_POST, true), 3, $this->error_log_path);
 
 
         # determiner le type d'affichage pour les dates
@@ -377,26 +377,26 @@ class Statistiques {
             # données pour la graphique
             $donneesGraph = [];
 
-            $donnees1 = array();
+//            $donnees1 = array();
 
-//            array_push($donnees1, array("sale"=>202, "year"=>2000));
-            array_push($donnees1, array("sale"=>202, "year"=>"2000-04-01"));
-            array_push($donnees1, array("sale"=>215, "year"=>"2002-04-01"));
-            array_push($donnees1, array("sale"=>179, "year"=>"2004-04-01"));
-            array_push($donnees1, array("sale"=>199, "year"=>"2006-04-01"));
-            array_push($donnees1, array("sale"=>134, "year"=>"2008-04-01"));
-            array_push($donnees1, array("sale"=>176, "year"=>"2010-04-01"));
-
-            $donnees2 = array();
-            array_push($donnees2, array("sale"=>152, "year"=>"2000-04-01"));
-            array_push($donnees2, array("sale"=>189, "year"=>"2002-04-01"));
-            array_push($donnees2, array("sale"=>179, "year"=>"2004-04-01"));
-            array_push($donnees2, array("sale"=>199, "year"=>"2006-04-01"));
-            array_push($donnees2, array("sale"=>134, "year"=>"2008-04-01"));
-            array_push($donnees2, array("sale"=>176, "year"=>"2010-04-01"));
-
-            array_push($donneesGraph,  $donnees1);
-            array_push($donneesGraph, $donnees2);
+////            array_push($donnees1, array("sale"=>202, "year"=>2000));
+//            array_push($donnees1, array("sale"=>202, "year"=>"2000-04-01"));
+//            array_push($donnees1, array("sale"=>215, "year"=>"2002-04-01"));
+//            array_push($donnees1, array("sale"=>179, "year"=>"2004-04-01"));
+//            array_push($donnees1, array("sale"=>199, "year"=>"2006-04-01"));
+//            array_push($donnees1, array("sale"=>134, "year"=>"2008-04-01"));
+//            array_push($donnees1, array("sale"=>176, "year"=>"2010-04-01"));
+//
+//            $donnees2 = array();
+//            array_push($donnees2, array("sale"=>152, "year"=>"2000-04-01"));
+//            array_push($donnees2, array("sale"=>189, "year"=>"2002-04-01"));
+//            array_push($donnees2, array("sale"=>179, "year"=>"2004-04-01"));
+//            array_push($donnees2, array("sale"=>199, "year"=>"2006-04-01"));
+//            array_push($donnees2, array("sale"=>134, "year"=>"2008-04-01"));
+//            array_push($donnees2, array("sale"=>176, "year"=>"2010-04-01"));
+//
+//            array_push($donneesGraph,  $donnees1);
+//            array_push($donneesGraph, $donnees2);
 
 
 
@@ -411,11 +411,26 @@ class Statistiques {
             }
 
 
-//            error_log("\n lignesTableau: ".print_r($lignesTableau, true), 3, $this->error_log_path);
 
             # compléter les dates manquantes dans l'interval donné
+//            error_log("\n lignesTableau: ".print_r($lignesTableau, true), 3, $this->error_log_path);
             $lignesTableauCompleter = $this->completerDateDonneesStatistiques($lignesTableau);
 
+            # obtenir la date de début pour la graphique
+            reset($lignesTableauCompleter);
+            $dateDebutGraph = key($lignesTableauCompleter);
+            $dateDebutGraph = date_format(date_create_from_format('d/m/Y', $dateDebutGraph), 'Y/m/d');
+
+            # obtenir la date de fin pour la graphique
+            end($lignesTableauCompleter);
+            $dateFinGraph = key($lignesTableauCompleter);
+            $dateFinGraph = date_format(date_create_from_format('d/m/Y', $dateFinGraph), 'Y/m/d');
+
+
+            # ajouter les dates dans les données de graph
+            $donneesGraph["dateDebutGraph"] = $dateDebutGraph;
+            $donneesGraph["dateFinGraph"] = $dateFinGraph;
+//            error_log("\n dateDebutGraph: ".print_r($dateDebutGraph, true), 3, $this->error_log_path);
 
             return array("lignesTableau" => $lignesTableauCompleter,
                 "donneesGraph" => $donneesGraph,
