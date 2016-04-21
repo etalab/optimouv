@@ -59,8 +59,12 @@ class StatistiqueController extends Controller
         # récupérer chemin fichier log du fichier parameters.yml
         $this->error_log_path = $this->container->getParameter("error_log_path");
 
-        $donneesStatistiques = $this->get('service_statistiques')->getDonneesStatistiques();
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('dmY', time());
 
+
+        $em = $this->getDoctrine()->getManager();
 
         # obtenir les params envoyé par l'utilisateur
         if(array_key_exists("typeRapport", $_POST)){
@@ -100,17 +104,51 @@ class StatistiqueController extends Controller
             $dateFinStr  = "";
         }
 
-        # obtenir la date courante du système
-        date_default_timezone_set('Europe/Paris');
-        $dateTimeNow = date('dmY', time());
 
+        # obtenir le nom et prénom de l'utilisateur et le nom de la fédération
         $resultat = $this->get('service_statistiques')->getNomUtilisateurNomFederation($idUtilisateur, $idFederation);
         $nomUtilisateur = $resultat["nomUtilisateur"];
         $prenomUtilisateur = $resultat["prenomUtilisateur"];
         $nomFederation = $resultat["nomFederation"];
 
-//        error_log("\n resultat: ".print_r($resultat, true), 3, $this->error_log_path);
+        # obtenir le nom de discipline et le nom d'utilisateur
+        if($idDiscipline == "tous"){
+            $nomDiscipline = "tous";
+        }
+        else{
+            $discipline = $em->getRepository('FfbbBundle:Discipline')->findOneBy(array('id'=>$idDiscipline));
+            $nomDiscipline = $discipline->getNom();
 
+        }
+
+        if($idUtilisateur == "tous"){
+            $nomUtilisateur = "tous";
+            $prenomUtilisateur = "tous";
+        }
+
+//        error_log("\n typeRapport: ".print_r($typeRapport, true), 3, $this->error_log_path);
+
+        $donneesStatistiques = $this->get('service_statistiques')->getDonneesStatistiques();
+
+        $tableauOutput = array(
+            "donneesStatistiques" => $donneesStatistiques,
+            "typeRapport" => $typeRapport,
+            "dateDebutStr" => $dateDebutStr,
+            "dateFinStr" => $dateFinStr,
+            "nomFederation" => $nomFederation,
+            "nomDiscipline" => $nomDiscipline,
+            "nomUtilisateur" => $nomUtilisateur,
+            "prenomUtilisateur" => $prenomUtilisateur,
+
+
+        );
+
+        return $this->render('FfbbBundle:Statistique:exportPdf.html.twig',
+            $tableauOutput
+        );
+
+
+        # construire le nom de la graphique
         $nomGraph = "Rapport_".$typeRapport."_";
         if($typeRapport == "utilisateur"){
             $nomGraph .= $prenomUtilisateur."_".$nomUtilisateur;
@@ -120,23 +158,9 @@ class StatistiqueController extends Controller
         }
         $nomGraph .= "_".$dateTimeNow;
 
-        error_log("\n typeRapport: ".print_r($typeRapport, true), 3, $this->error_log_path);
-
-//        return $this->render('FfbbBundle:Statistique:exportPdf.html.twig', array(
-//                "donneesStatistiques" => $donneesStatistiques
-//
-//            )
-//        );
-
-
-        $html = $this->renderView('FfbbBundle:Statistique:exportPdf.html.twig', array(
-                "donneesStatistiques" => $donneesStatistiques
-
-            )
+        # render la page d'export pdf
+        $html = $this->renderView('FfbbBundle:Statistique:exportPdf.html.twig', $tableauOutput
         );
-
-
-
         return new Response(
             $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
             200,

@@ -116,7 +116,8 @@
                                     Meilleur lieu de rencontre</a></li>
                             <li><a href="{{ path('ffbb_rapports') }}">Rapports</a></li>
                             {% if (is_granted('ROLE_SUPER_ADMIN') == true) or (is_granted('ROLE_ADMIN') == true) %}
-                                <li><a href="#">Statistiques</a></li>
+                                {#<li><a href="#">Statistiques</a></li>#}
+                                <li><a href="{{ path('ffbb_statistiques_index') }}">Statistiques</a></li>
                                 <li><a href="{{ path('administration_panel') }}">Administration</a></li>
                             {% endif %}
 
@@ -130,8 +131,8 @@
                             </li>
 
                             {% if (is_granted('ROLE_SUPER_ADMIN') == true) or (is_granted('ROLE_ADMIN') == true) %}
-                                {#<li><a href="{{ path('ffbb_statistiques_index') }}">Statistiques</a></li>#}
-                                <li><a href="#">Statistiques</a></li>
+                                <li><a href="{{ path('ffbb_statistiques_index') }}">Statistiques</a></li>
+                                {#<li><a href="#">Statistiques</a></li>#}
                                 <li><a href="{{ path('administration_panel') }}">Administration</a></li>
                             {% endif %}
                         {% elseif ("administration" in url) or ("federation" in url) or ("discipline" in url) or ("repartition" in url) or ("reference" in url)%}
@@ -143,7 +144,8 @@
                             <li><a href="{{ path('ffbb_rapports') }}">Rapports</a>
                             </li>
                             {% if (is_granted('ROLE_SUPER_ADMIN') == true) or (is_granted('ROLE_ADMIN') == true) %}
-                                <li><a href="#">Statistiques</a></li>
+                                {#<li><a href="#">Statistiques</a></li>#}
+                                <li><a href="{{ path('ffbb_statistiques_index') }}">Statistiques</a></li>
                                 <li><a href="{{ path('administration_panel') }}" style="background-color:#4e4646;">Administration</a>
                                 </li>
                             {% endif %}
@@ -158,7 +160,8 @@
                             </li>
 
                             {% if (is_granted('ROLE_SUPER_ADMIN') == true) or (is_granted('ROLE_ADMIN') == true) %}
-                                <li><a href="#" style="background-color:#777171;">Statistiques</a></li>
+                                {#<li><a href="#" style="background-color:#777171;">Statistiques</a></li>#}
+                                <li><a href="{{ path('ffbb_statistiques_index') }}">Statistiques</a></li>
                                 <li><a href="{{ path('administration_panel') }}">Administration</a></li>
                             {% endif %}
 
@@ -170,7 +173,8 @@
                             <li><a href="{{ path('ffbb_rapports') }}">Rapports</a></li>
 
                             {% if (is_granted('ROLE_SUPER_ADMIN') == true) or (is_granted('ROLE_ADMIN') == true) %}
-                                <li><a href="#">Statistiques</a></li>
+                                {#<li><a href="#">Statistiques</a></li>#}
+                                <li><a href="{{ path('ffbb_statistiques_index') }}">Statistiques</a></li>
                                 <li><a href="{{ path('administration_panel') }}">Administration</a></li>
                             {% endif %}
 

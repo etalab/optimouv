@@ -138,6 +138,19 @@ class Statistiques {
         else{
             $idUtilisateur  = -1;
         }
+        if(array_key_exists("dateDebutFormatter", $_POST)){
+            $dateDebutFormatter = $_POST["dateDebutFormatter"];
+        }
+        else{
+            $dateDebutFormatter  = "";
+        }
+        if(array_key_exists("dateFinFormatter", $_POST)){
+            $dateFinFormatter = $_POST["dateFinFormatter"];
+        }
+        else{
+            $dateFinFormatter  = "";
+        }
+
         if(array_key_exists("dateDebutStr", $_POST)){
             $dateDebutStr = $_POST["dateDebutStr"];
         }
@@ -152,16 +165,15 @@ class Statistiques {
         }
 
 
-
         # obtenir le nombre de jours entre les dates
-        $dateDebut = strtotime($dateDebutStr);
-        $dateFin = strtotime($dateFinStr);
+        $dateDebut = strtotime($dateDebutFormatter);
+        $dateFin = strtotime($dateFinFormatter);
         $datediff = ceil( ($dateFin - $dateDebut)/(60*60*24) )+1;
 //        error_log("\n datediff: ".print_r($datediff, true), 3, $this->error_log_path);
 
 
         # determiner le type d'affichage pour les dates
-        if($datediff <= 30){
+        if($datediff <= 31){
             $formatResultat = "jour";
         }
         elseif($datediff <=365){
@@ -210,8 +222,8 @@ class Statistiques {
                     $stmt->bindParam(':id_discipline', $idDiscipline);
                 }
             }
-            $stmt->bindParam(':dateDebut', $dateDebutStr);
-            $stmt->bindParam(':dateFin', $dateFinStr);
+            $stmt->bindParam(':dateDebut', $dateDebutFormatter);
+            $stmt->bindParam(':dateFin', $dateFinFormatter);
             $stmt->bindParam(':id_federation', $idFederation);
             $stmt->execute();
             $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -302,8 +314,8 @@ class Statistiques {
                     $stmt->bindParam(':id_discipline', $idDiscipline);
                 }
 
-                $stmt->bindParam(':dateDebut', $dateDebutStr);
-                $stmt->bindParam(':dateFin', $dateFinStr);
+                $stmt->bindParam(':dateDebut', $dateDebutFormatter);
+                $stmt->bindParam(':dateFin', $dateFinFormatter);
                 $stmt->bindParam(':id_federation', $idFederation);
                 $stmt->execute();
                 $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -366,26 +378,28 @@ class Statistiques {
             $donneesGraph = [];
 
             $donnees1 = array();
-            array_push($donnees1, array("sale"=>202, "year"=>2000));
-            array_push($donnees1, array("sale"=>215, "year"=>2002));
-            array_push($donnees1, array("sale"=>179, "year"=>2004));
-            array_push($donnees1, array("sale"=>199, "year"=>2006));
-            array_push($donnees1, array("sale"=>134, "year"=>2008));
-            array_push($donnees1, array("sale"=>176, "year"=>2010));
+
+//            array_push($donnees1, array("sale"=>202, "year"=>2000));
+            array_push($donnees1, array("sale"=>202, "year"=>"2000-04-01"));
+            array_push($donnees1, array("sale"=>215, "year"=>"2002-04-01"));
+            array_push($donnees1, array("sale"=>179, "year"=>"2004-04-01"));
+            array_push($donnees1, array("sale"=>199, "year"=>"2006-04-01"));
+            array_push($donnees1, array("sale"=>134, "year"=>"2008-04-01"));
+            array_push($donnees1, array("sale"=>176, "year"=>"2010-04-01"));
 
             $donnees2 = array();
-            array_push($donnees2, array("sale"=>152, "year"=>2000));
-            array_push($donnees2, array("sale"=>189, "year"=>2002));
-            array_push($donnees2, array("sale"=>179, "year"=>2004));
-            array_push($donnees2, array("sale"=>199, "year"=>2006));
-            array_push($donnees2, array("sale"=>134, "year"=>2008));
-            array_push($donnees2, array("sale"=>176, "year"=>2010));
+            array_push($donnees2, array("sale"=>152, "year"=>"2000-04-01"));
+            array_push($donnees2, array("sale"=>189, "year"=>"2002-04-01"));
+            array_push($donnees2, array("sale"=>179, "year"=>"2004-04-01"));
+            array_push($donnees2, array("sale"=>199, "year"=>"2006-04-01"));
+            array_push($donnees2, array("sale"=>134, "year"=>"2008-04-01"));
+            array_push($donnees2, array("sale"=>176, "year"=>"2010-04-01"));
 
             array_push($donneesGraph,  $donnees1);
             array_push($donneesGraph, $donnees2);
 
 
-//            error_log("\n donneesGraph: ".print_r($donneesGraph, true), 3, $this->error_log_path);
+
 
             # ajouter un flag pour indiquer s'il y a des données ou pas
             if(count($lignesTableau) == 0){
@@ -396,7 +410,14 @@ class Statistiques {
 
             }
 
-            return array("lignesTableau" => $lignesTableau,
+
+//            error_log("\n lignesTableau: ".print_r($lignesTableau, true), 3, $this->error_log_path);
+
+            # compléter les dates manquantes dans l'interval donné
+            $lignesTableauCompleter = $this->completerDateDonneesStatistiques($lignesTableau);
+
+
+            return array("lignesTableau" => $lignesTableauCompleter,
                 "donneesGraph" => $donneesGraph,
                 "flagDonneesExiste" => $flagDonneesExiste,
 
@@ -407,6 +428,57 @@ class Statistiques {
             error_log("\n erreur PDO, Service: Statistiques, Function: getDonneesStatistiques, erreur: ".print_r($e, true), 3, $this->error_log_path);
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
+
+    }
+
+    # Fonction pour completer les dates manquantes dans l'interval donné
+    private function completerDateDonneesStatistiques($donneesStatistiques){
+        # obtenir la zone par défault du système
+        date_default_timezone_set('Europe/Paris');
+
+        # obtenir la première clé
+        reset($donneesStatistiques);
+        $dateDebut = key($donneesStatistiques);
+        # créer un objet DateTime pour la date de début
+        $dateTimeDebut = \DateTime::createFromFormat('d/m/Y', $dateDebut);
+
+        # obtenir la dernière clé
+        end($donneesStatistiques);
+        $dateFin = key($donneesStatistiques);
+
+        # créer un objet DateTime pour la date de fin
+        $dateTimeFin = \DateTime::createFromFormat('d/m/Y', $dateFin);
+        # ajouter un jour car l'objet DatePeriod n'inclut pas la date de fin
+        $dateTimeFin = $dateTimeFin->modify( '+1 day' );
+
+        $donneesCompleter = array();
+
+
+        # interval d'un jour
+        $interval = \DateInterval::createFromDateString('1 day');
+        # periode depuis la date de début jusqu'à la date de fin
+        $periode = new \DatePeriod($dateTimeDebut, $interval, $dateTimeFin);
+
+
+//        error_log("\n periode: ".print_r($periode, true), 3, $this->error_log_path);
+
+
+        foreach ( $periode as $dt ){
+            $dateCourante = $dt->format( "d/m/Y");
+
+//            error_log("\n dateCourante: ".print_r($dateCourante, true)."\n", 3, $this->error_log_path);
+            if(array_key_exists($dateCourante, $donneesStatistiques)){
+                $donneesCompleter[$dateCourante] = $donneesStatistiques[$dateCourante];
+            }
+            else{
+                $donneesCompleter[$dateCourante] = array();
+
+            }
+        }
+
+//        error_log("\n donneesCompleter: ".print_r($donneesCompleter, true)."\n", 3, $this->error_log_path);
+        return $donneesCompleter;
+
 
     }
 
