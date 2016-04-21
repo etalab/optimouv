@@ -411,50 +411,59 @@ class Statistiques {
             }
 
 
-            error_log("\n formatResultat: ".print_r($formatResultat, true), 3, $this->error_log_path);
+            error_log("\n lignesTableau: ".print_r($lignesTableau, true), 3, $this->error_log_path);
 
             # compléter les dates manquantes dans l'interval donné
-//            error_log("\n lignesTableau: ".print_r($lignesTableau, true), 3, $this->error_log_path);
-            if($formatResultat == "jour"){
+            if($formatResultat == "jour" and $lignesTableau != []){
                 $lignesTableauCompleter = $this->completerDateDonneesStatistiques($lignesTableau);
             }
             else{
                 $lignesTableauCompleter = $lignesTableau;
             }
 
+//            error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
+
 
 //            error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
 
-            # obtenir la date de début pour la graphique
-            reset($lignesTableauCompleter);
-            $dateDebutGraph = key($lignesTableauCompleter);
+            if($lignesTableauCompleter != []){
+                # obtenir la date de début pour la graphique
+                reset($lignesTableauCompleter);
+                $dateDebutGraph = key($lignesTableauCompleter);
 
-            # obtenir la date de fin pour la graphique
-            end($lignesTableauCompleter);
-            $dateFinGraph = key($lignesTableauCompleter);
+                # obtenir la date de fin pour la graphique
+                end($lignesTableauCompleter);
+                $dateFinGraph = key($lignesTableauCompleter);
 
-            if($formatResultat == "jour"){
-                $dateDebutGraph = date_format(date_create_from_format('d/m/Y', $dateDebutGraph), 'Y/m/d');
-                $dateFinGraph = date_format(date_create_from_format('d/m/Y', $dateFinGraph), 'Y/m/d');
-            }
-            elseif($formatResultat == "mois"){
-                $dateDebutGraph = date_format(date_create_from_format('m/Y', $dateDebutGraph), 'Y/m');
-                $dateFinGraph = date_format(date_create_from_format('m/Y', $dateFinGraph), 'Y/m');
-            }
+                if($formatResultat == "jour"){
+                    $dateDebutGraph = date_format(date_create_from_format('d/m/Y', $dateDebutGraph), 'Y/m/d');
+                    $dateFinGraph = date_format(date_create_from_format('d/m/Y', $dateFinGraph), 'Y/m/d');
+                }
+                elseif($formatResultat == "mois"){
+                    $dateDebutGraph = date_format(date_create_from_format('m/Y', $dateDebutGraph), 'Y/m/d');
+                    $dateFinGraph = date_format(date_create_from_format('m/Y', $dateFinGraph), 'Y/m/d');
+                }
+                elseif($formatResultat == "annee"){
+                    $dateDebutGraph = date_format(date_create_from_format('Y', $dateDebutGraph), 'Y/m/d');
+                    $dateFinGraph = date_format(date_create_from_format('Y', $dateFinGraph), 'Y/m/d');
+                }
+
+                error_log("\n dateDebutGraph: ".print_r($dateDebutGraph, true), 3, $this->error_log_path);
+                error_log("\n dateFinGraph: ".print_r($dateFinGraph, true), 3, $this->error_log_path);
+                error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
+
+
+                # ajouter les dates dans les données de graph
+                $donneesGraph["dateDebutGraph"] = $dateDebutGraph;
+                $donneesGraph["dateFinGraph"] = $dateFinGraph;
+                $donneesGraph["formatResultat"] = $formatResultat;
 
 //            error_log("\n dateDebutGraph: ".print_r($dateDebutGraph, true), 3, $this->error_log_path);
-//            error_log("\n dateFinGraph: ".print_r($dateFinGraph, true), 3, $this->error_log_path);
-
-
-            # ajouter les dates dans les données de graph
-            $donneesGraph["dateDebutGraph"] = $dateDebutGraph;
-            $donneesGraph["dateFinGraph"] = $dateFinGraph;
-//            error_log("\n dateDebutGraph: ".print_r($dateDebutGraph, true), 3, $this->error_log_path);
+            }
 
             return array("lignesTableau" => $lignesTableauCompleter,
                 "donneesGraph" => $donneesGraph,
                 "flagDonneesExiste" => $flagDonneesExiste,
-
                 );
 
         }
