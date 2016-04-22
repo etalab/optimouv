@@ -200,6 +200,7 @@ class Statistiques {
             $lignesTableau = array();
 
 
+            // données pour le tableau statistiques_date
             if($typeRapport == "utilisateur"){
                 # obtenir l'id de la fédération
                 $sql = "SELECT date_creation, type_statistiques, valeur from statistiques_date where date_creation between :dateDebut and :dateFin".
@@ -235,12 +236,20 @@ class Statistiques {
                 die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
             }
 
+            // max valeur pour graphe y axis
+            $maxValeurYAxis = 0;
 
-
+            // loop pour le tableau statistiques_date
             foreach($resultat as $ligneDb){
                 $dateLigneDb = $ligneDb["date_creation"];
                 $valeur = $ligneDb["valeur"];
                 $typeStatistiques = $ligneDb["type_statistiques"];
+
+                # comparer avec max Valeur
+                if($valeur > $maxValeurYAxis){
+                    $maxValeurYAxis = $valeur;
+                }
+
 
                 # formater la date selon le format français
                 $dateLigneTmp = explode("-", $dateLigneDb);
@@ -270,6 +279,7 @@ class Statistiques {
                     $lignesTableau[$dateLigneMod] = array($typeStatistiques => $valeur);
                 }
             }
+            error_log("\n maxValeur: ".print_r($maxValeurYAxis, true), 3, $this->error_log_path);
 
 
             // données pour le temps de réponse moyen (table statistiques_date_temps)
@@ -329,7 +339,7 @@ class Statistiques {
                     die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
                 }
 
-
+                // loop pour le tableau statistiques_date_temps
                 foreach($resultat as $ligneDb){
 
                     $dateLigneDb = $ligneDb["date_filtre"];
@@ -410,8 +420,9 @@ class Statistiques {
 
             }
 
-
-//            error_log("\n lignesTableau: ".print_r($lignesTableau, true), 3, $this->error_log_path);
+            # obtenir la valeur max des données
+//            $maxValeur = $this->getMaxValeur($lignesTableau);
+//            error_log("\n maxValeur: ".print_r($maxValeur, true), 3, $this->error_log_path);
 
             # compléter les dates manquantes dans l'interval donné (s'il y a au moins deux lignes dans les données tabulaires)
             if(count($lignesTableau) > 0){
@@ -465,6 +476,7 @@ class Statistiques {
                 $donneesGraph["dateFinGraph"] = $dateFinGraph;
                 $donneesGraph["formatResultat"] = $formatResultat;
                 $donneesGraph["nbrLabelXAxis"] = $nbrLabelXAxis;
+                $donneesGraph["maxValeurYAxis"] = $maxValeurYAxis;
 
 //            error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
             }
@@ -486,6 +498,26 @@ class Statistiques {
         }
 
     }
+
+//    private function getMaxValeur($lignesTableau){
+//        var $maxValeur = 0;
+//        if($lignesTableau != []){
+//            foreach($lignesTableau as $ligneTableau){
+//                if(array_key_exists("", $ligneTableau)){
+//
+//                }
+//                else{
+//                }
+//
+//            }
+//        }
+//        else{
+//            return 0;
+//        }
+//
+//
+//    }
+//
 
     # Fonction pour completer les dates manquantes dans l'interval donné
     private function completerDateDonneesStatistiques($donneesStatistiques, $formatResultat, $dateDebutStr, $dateFinStr){
