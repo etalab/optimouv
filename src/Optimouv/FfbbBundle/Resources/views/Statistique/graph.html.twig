@@ -5,6 +5,7 @@
         .axis path, .axis line  {
             fill: none;
             stroke: black;
+            stroke-width: 1;
             shape-rendering: crispEdges;
             opacity: 0.7;
         }
@@ -43,7 +44,7 @@
         var dateFinGraph = donneesGraph.dateFinGraph;
         var formatResultat = donneesGraph.formatResultat ;
         var nbrLabelXAxis = donneesGraph.nbrLabelXAxis ;
-        var maxValeurYAxis = donneesGraph.maxValeurYAxis ;
+        var maxValeurYAxis = (donneesGraph.maxValeurYAxis)*1.1;
         var typeRapport = donneesGraph.typeRapport ;
 
         var donneesNbrConnexions = donneesGraph.donneesNbrConnexions;
@@ -53,17 +54,18 @@
         var donneesNbrInterdictions = donneesGraph.donneesNbrInterdictions;
         var donneesNbrRepartitionsHomogenes = donneesGraph.donneesNbrRepartitionsHomogenes;
         var donneesNbrExclusions = donneesGraph.donneesNbrExclusions;
+        var tousRapports = [donneesNbrConnexions,donneesNbrLancementOptiPoule, donneesNbrLancementMeilleurLieu, donneesNbrRequetesHere, donneesNbrInterdictions,
+            donneesNbrRepartitionsHomogenes, donneesNbrExclusions];
+        var libelleTousRapports = ['Nombre de connexions', 'Nombre de lancement opti poule', 'Nombre de lancement meilleur lieu', 'Nombre de requete HERE', 'Nombre d\'interdictions',
+                                    'Nombre de répartitions homogènes','Nombre de exclusions']
+
 
 
 //        console.log('dateDebutGraph: ' + dateDebutGraph);
 //        console.log('dateFinGraph: ' + dateFinGraph);
 
-//        console.log('donneesNbrConnexions: ' + JSON.stringify(donneesNbrConnexions));
-
-
         var mindate = new Date(dateDebutGraph);
         var maxdate = new Date(dateFinGraph);
-
 
         var svg = d3.select("#visualisation"),
                 WIDTH = 1000,
@@ -148,7 +150,7 @@
                 })
                 .y(function(d) {
                     return yScale(d.valeur);
-                })
+                });
 //                .interpolate("basis");
 
 
@@ -195,66 +197,64 @@
                     .attr('stroke', couleurs[6])
                     .attr('stroke-width', tailleLigne)
                     .attr('fill', 'none');
-
         }
+
+
         // add legend
-//        var w = 100;
-//        var data = donneesNbrConnexions;
-//        var colors = ["green", "red", "blue" ]
-//        var legend = svg.append("g")
-//                .attr("class", "legend")
-//                .attr("x", w)
-//                .attr("y", 50)
-//                .attr("height", 100)
-//                .attr("width", 100)
-//                .attr('transform', 'translate(20,50)');
-//
-//
-//        legend.selectAll('rect')
-//                .data(data)
-//                .enter()
-//                .append("rect")
-//                .attr("x", w)
-//                .attr("y", function(d, i) {
-//                    return i * 20;
-//                })
-//                .attr("width", function (d) {
-//                    if (colors[data.indexOf(d)] != undefined){
-//                        return 10;
-//                    } else {
-//                        return 0;
-//                    }
-//                })
-//                .attr("height", function (d) {
-//                    if (colors[data.indexOf(d)] != undefined){
-//                        return 10;
-//                    } else {
-//                        return 0;
-//                    }
-//                })
-//                .style("fill", function(d,i) {
-//                    if (colors[data.indexOf(d)] != undefined){
-//                        return colors[data.indexOf(d)][1]
-//                    }
-//                })
-//        ;
-//
-//        legend.selectAll('text')
-//                .data(data)
-//                .enter()
-//                .append("text")
-//                .attr("x", w + 20)
-//                .attr("y", function(d, i) {
-//                    return i * 20 + 9;
-//                })
-//                .text(function(d,i) {
-//                    if (colors[data.indexOf(d)] != undefined){
-//                        return colors[data.indexOf(d)][2]
-//                    }
-//                })
-//                .style("color", "#9C9D9F")
-//                .style("font-size","14px")
-//                .style("font-weight","bold");
+        var w = 100;
+        var legend = svg.append("g")
+                .attr("class", "legend")
+                .attr("x", w)
+                .attr("y", 50)
+                .attr("height", 100)
+                .attr("width", 100)
+                .attr('transform', 'translate(20,50)');
+
+        legend.selectAll('rect')
+                .data(tousRapports)
+                .enter()
+                .append("rect")
+                .attr("x", w)
+                .attr("y", function(d, i) {
+                    return i * 20;
+                })
+                .attr("width", function (d) {
+                    if (d.length > 0){
+                        return 10;
+                    } else {
+                        return 0;
+                    }
+                })
+                .attr("height", function (d) {
+                    if (d.length > 0){
+                        return 10;
+                    } else {
+                        return 0;
+                    }
+                })
+                .style("fill", function(d,i) {
+                    if (d.length > 0){
+                        return  couleurs[i];
+                    }
+                })
+        ;
+
+        legend.selectAll('text')
+                .data(tousRapports)
+                .enter()
+                .append("text")
+                .attr("x", w + 20)
+                .attr("y", function(d, i) {
+                    return i * 20 + 9;
+                })
+                .text(function(d,i) {
+                    if (d.length > 0 ){
+                        return libelleTousRapports[i];
+                    }
+                })
+                .style("color", "#9C9D9F")
+                .style("font-size","14px")
+                .style("font-weight","bold");
 
 
 
