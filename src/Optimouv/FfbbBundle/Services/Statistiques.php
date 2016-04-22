@@ -279,7 +279,6 @@ class Statistiques {
                     $lignesTableau[$dateLigneMod] = array($typeStatistiques => $valeur);
                 }
             }
-            error_log("\n maxValeur: ".print_r($maxValeurYAxis, true), 3, $this->error_log_path);
 
 
             // données pour le temps de réponse moyen (table statistiques_date_temps)
@@ -401,9 +400,11 @@ class Statistiques {
             else{
                 $lignesTableauCompleter = $lignesTableau;
             }
+//            error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
 
 
             # données pour la graphique
+            $donneesGraph = [];
             if(count($lignesTableauCompleter) > 0){
                 $flagAfficheGraphique = 1;
 
@@ -503,7 +504,7 @@ class Statistiques {
                         $formatDate = 'Y';
                     }
                     $dateMod = date_format(date_create_from_format($formatDate, $dateCle), 'Y/m/d');
-//                    error_log("\n dateMod: ".print_r($dateMod, true), 3, $this->error_log_path);
+                    error_log("\n dateMod: ".print_r($dateMod, true), 3, $this->error_log_path);
 
                     array_push($donneesNbrConnexions, array("dateMod"=>$dateMod, "valeur"=> $nombreConnexions));
                     array_push($donneesNbrLancementOptiPoule, array("dateMod"=>$dateMod, "valeur"=> $nombreLancementsOptiPoule));
@@ -517,7 +518,6 @@ class Statistiques {
 
 
                 # ajouter les dates dans les données de graph
-                $donneesGraph = [];
                 $donneesGraph["dateDebutGraph"] = $dateDebutGraph;
                 $donneesGraph["dateFinGraph"] = $dateFinGraph;
                 $donneesGraph["formatResultat"] = $formatResultat;
@@ -537,6 +537,11 @@ class Statistiques {
             else{
                 $flagAfficheGraphique = 0;
             }
+//            error_log("\n flagAfficheGraphique: ".print_r($flagAfficheGraphique, true), 3, $this->error_log_path);
+//            error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
+//            error_log("\n donneesGraph: ".print_r($donneesGraph, true), 3, $this->error_log_path);
+//            error_log("\n flagDonneesExiste: ".print_r($flagDonneesExiste, true), 3, $this->error_log_path);
+//            error_log("\n flagAfficheGraphique: ".print_r($flagAfficheGraphique, true), 3, $this->error_log_path);
 
             return array("lignesTableau" => $lignesTableauCompleter,
                 "donneesGraph" => $donneesGraph,
@@ -561,6 +566,7 @@ class Statistiques {
         date_default_timezone_set('Europe/Paris');
 
         $donneesCompleter = array();
+        error_log("\n donneesStatistiques: ".print_r($donneesStatistiques, true), 3, $this->error_log_path);
 
         if($formatResultat == "jour"){
             $formatDate = 'd/m/Y';
@@ -587,7 +593,7 @@ class Statistiques {
         }
 
 //        error_log("\n formatDate: ".print_r($formatDate, true), 3, $this->error_log_path);
-//        error_log("\n dateDebutStr: ".print_r($dateDebutStr, true), 3, $this->error_log_path);
+//        error_log("\n deltaTemps: ".print_r($deltaTemps, true), 3, $this->error_log_path);
 
         # créer un objet DateTime pour la date de début
         $dateTimeDebut = \DateTime::createFromFormat($formatDate, $dateDebutStr);
