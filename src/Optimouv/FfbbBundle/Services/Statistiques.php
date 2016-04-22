@@ -425,7 +425,7 @@ class Statistiques {
 
 
             # données pour la graphique
-            if(count($lignesTableauCompleter) > 1){
+            if(count($lignesTableauCompleter) > 0){
                 $flagAfficheGraphique = 1;
 
                 # obtenir la date de début pour la graphique

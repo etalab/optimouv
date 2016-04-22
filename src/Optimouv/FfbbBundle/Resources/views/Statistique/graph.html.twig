@@ -16,7 +16,7 @@
     </style>
 
     <div class="jumbotron">
-        <svg id="visualisation" width="1000" height="550"></svg>
+        <svg id="visualisation" width="1000" height="620"></svg>
     </div>
 
 
@@ -105,7 +105,7 @@
                         .scale(yScale)
                         .orient("left");
 
-
+        // x-axis
         svg.append("svg:g")
                 .attr("class", "x axis")
                 .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
@@ -117,6 +117,8 @@
                 .attr("transform", function(d) {
                     return "rotate(-65)"
                 });;
+
+        // y-axis
         svg.append("svg:g")
                 .attr("class", "y axis")
                 .attr("transform", "translate(" + (MARGINS.left) + ",0)")
