@@ -46,13 +46,36 @@ class Rapports
 
     public function getAllInfoRapprt($idUser, $role)
     {
-        $bdd= $this->getPdo();
 
+
+        if($role == "ROLE_SUPER_ADMIN"){
+
+            $infosRapports =  $this->getAllInfoRapprtForAdmin();
+            return $infosRapports;
+
+        }
+        elseif ($role == "ROLE_ADMIN"){
+
+            $infosRapports =  $this->getAllInfoRapprtForFederal($idUser);
+            return $infosRapports;
+        }
+        else{
+            $infosRapports =  $this->getAllInfoRapprtForUser($idUser);
+            return $infosRapports;
+        }
+
+
+
+    }
+
+    public function getAllInfoRapprtForUser($idUser)
+    {
+
+        $bdd= $this->getPdo();
 
 //        déclarer le tableau des infosRapports
         $infosRapports = [];
         $infosRapport = [];
-
 //        récupérer infos user
         $infoUser = $bdd->prepare("SELECT nom, prenom, federation FROM  fos_user WHERE id = :id ;");
         $infoUser->bindParam(':id', $idUser);
@@ -80,7 +103,8 @@ class Rapports
             $rapport = $bdd->prepare("SELECT * FROM parametres where id_groupe = :id ");
             $rapport->bindParam(':id', $idGroupe);
             $rapport->execute();
-            while ($rowRapport = $rapport->fetch(PDO::FETCH_ASSOC)) {
+
+             while ($rowRapport = $rapport->fetch(PDO::FETCH_ASSOC)) {
 
                 //rapport
                 $infosRapport['idRapport'] = $rowRapport['id'];
@@ -98,15 +122,50 @@ class Rapports
                 $infosRapport['nomUser'] = $nomUser;
                 $infosRapport['prenomUser'] = $prenomUser;
                 $infosRapport['federationUser'] = $federationUser;
-
-                array_push($infosRapports, $infosRapport);
-
+                 array_push($infosRapports, $infosRapport);
             }
-
 
         }
 
         return $infosRapports;
-         
+    }
+
+    public function getAllInfoRapprtForFederal($idUser)
+    {
+        $bdd= $this->getPdo();
+        $idUsers = "SELECT id FROM fos_user where federation = (select federation from fos_user where id = :id)" ;
+        $idUsers = $bdd->prepare($idUsers);
+        $idUsers->bindParam(':id', $idUser);
+        $idUsers->execute();
+        $infosRapports = [];
+        while ($rowUser = $idUsers->fetch(PDO::FETCH_ASSOC)) {
+
+            $idUser = $rowUser['id'];
+            $infosRapport =  $this->getAllInfoRapprtForUser($idUser);
+            $infosRapports = $infosRapports + $infosRapport;
+        }
+
+         return $infosRapports;
+    }
+
+    public function getAllInfoRapprtForAdmin()
+    {
+        $bdd= $this->getPdo();
+
+        $idUsers = "SELECT id FROM fos_user" ;
+        $idUsers = $bdd->prepare($idUsers);
+        $idUsers->execute();
+
+        $infosRapports = [];
+        while ($rowUser = $idUsers->fetch(PDO::FETCH_ASSOC)) {
+
+            $idUser = $rowUser['id'];
+            $infosRapport =  $this->getAllInfoRapprtForUser($idUser);
+            $infosRapports = $infosRapports + $infosRapport;
+
+        }
+
+        return $infosRapports;
+
     }
 }
