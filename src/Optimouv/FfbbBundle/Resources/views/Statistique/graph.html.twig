@@ -43,13 +43,21 @@
         var formatResultat = donneesGraph.formatResultat ;
         var nbrLabelXAxis = donneesGraph.nbrLabelXAxis ;
         var maxValeurYAxis = donneesGraph.maxValeurYAxis ;
+        var typeRapport = donneesGraph.typeRapport ;
+
         var donneesNbrConnexions = donneesGraph.donneesNbrConnexions;
+        var donneesNbrLancementOptiPoule = donneesGraph.donneesNbrLancementOptiPoule;
+        var donneesNbrLancementMeilleurLieu = donneesGraph.donneesNbrLancementMeilleurLieu;
+        var donneesNbrRequetesHere = donneesGraph.donneesNbrRequetesHere;
+        var donneesNbrInterdictions = donneesGraph.donneesNbrInterdictions;
+        var donneesNbrRepartitionsHomogenes = donneesGraph.donneesNbrRepartitionsHomogenes;
+        var donneesNbrExclusions = donneesGraph.donneesNbrExclusions;
 
 
 //        console.log('dateDebutGraph: ' + dateDebutGraph);
 //        console.log('dateFinGraph: ' + dateFinGraph);
 
-        console.log('donneesNbrConnexions: ' + JSON.stringify(donneesNbrConnexions));
+//        console.log('donneesNbrConnexions: ' + JSON.stringify(donneesNbrConnexions));
 
 
         var mindate = new Date(dateDebutGraph);
@@ -143,11 +151,110 @@
 //                .interpolate("basis");
 
 
+        var couleurs = ['#d00c05', '#f1c62a', '#0d5c35', '#d400ff', '#5eb6dd', '#8fcf3c', '#ff5900', '#ff73bf', '#52251c', '#0a1574', '#ff9300', '#6b1a6a', '#41ab7b','#c2314e', '#444459', '#b99654', '#a44906', '#023548', '#b2b2b2', '#616600', '#790000', '#147376', '#d4cd4a', '#95b37c', '#006d80' ];
+
+
+        var tailleLigne = 2;
         svg.append('svg:path')
                 .attr('d', lineGen(donneesNbrConnexions))
-                .attr('stroke', 'green')
-                .attr('stroke-width', 2)
+                .attr('stroke', couleurs[0])
+                .attr('stroke-width', tailleLigne)
                 .attr('fill', 'none');
+        svg.append('svg:path')
+                .attr('d', lineGen(donneesNbrLancementOptiPoule))
+                .attr('stroke', couleurs[1])
+                .attr('stroke-width', tailleLigne)
+                .attr('fill', 'none');
+        svg.append('svg:path')
+                .attr('d', lineGen(donneesNbrLancementMeilleurLieu))
+                .attr('stroke', couleurs[2])
+                .attr('stroke-width', tailleLigne)
+                .attr('fill', 'none');
+        svg.append('svg:path')
+                .attr('d', lineGen(donneesNbrRequetesHere))
+                .attr('stroke', couleurs[3])
+                .attr('stroke-width', tailleLigne)
+                .attr('fill', 'none');
+
+
+        // pour le rapport
+        if(typeRapport === "utilisateur" || typeRapport === "federation" ){
+            svg.append('svg:path')
+                    .attr('d', lineGen(donneesNbrInterdictions))
+                    .attr('stroke', couleurs[4])
+                    .attr('stroke-width', tailleLigne)
+                    .attr('fill', 'none');
+            svg.append('svg:path')
+                    .attr('d', lineGen(donneesNbrRepartitionsHomogenes))
+                    .attr('stroke', couleurs[5])
+                    .attr('stroke-width', tailleLigne)
+                    .attr('fill', 'none');
+            svg.append('svg:path')
+                    .attr('d', lineGen(donneesNbrExclusions))
+                    .attr('stroke', couleurs[6])
+                    .attr('stroke-width', tailleLigne)
+                    .attr('fill', 'none');
+
+        }
+        // add legend
+//        var w = 100;
+//        var data = donneesNbrConnexions;
+//        var colors = ["green", "red", "blue" ]
+//        var legend = svg.append("g")
+//                .attr("class", "legend")
+//                .attr("x", w)
+//                .attr("y", 50)
+//                .attr("height", 100)
+//                .attr("width", 100)
+//                .attr('transform', 'translate(20,50)');
+//
+//
+//        legend.selectAll('rect')
+//                .data(data)
+//                .enter()
+//                .append("rect")
+//                .attr("x", w)
+//                .attr("y", function(d, i) {
+//                    return i * 20;
+//                })
+//                .attr("width", function (d) {
+//                    if (colors[data.indexOf(d)] != undefined){
+//                        return 10;
+//                    } else {
+//                        return 0;
+//                    }
+//                })
+//                .attr("height", function (d) {
+//                    if (colors[data.indexOf(d)] != undefined){
+//                        return 10;
+//                    } else {
+//                        return 0;
+//                    }
+//                })
+//                .style("fill", function(d,i) {
+//                    if (colors[data.indexOf(d)] != undefined){
+//                        return colors[data.indexOf(d)][1]
+//                    }
+//                })
+//        ;
+//
+//        legend.selectAll('text')
+//                .data(data)
+//                .enter()
+//                .append("text")
+//                .attr("x", w + 20)
+//                .attr("y", function(d, i) {
+//                    return i * 20 + 9;
+//                })
+//                .text(function(d,i) {
+//                    if (colors[data.indexOf(d)] != undefined){
+//                        return colors[data.indexOf(d)][2]
+//                    }
+//                })
+//                .style("color", "#9C9D9F")
+//                .style("font-size","14px")
+//                .style("font-weight","bold");
+
 
 
 

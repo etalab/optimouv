@@ -440,6 +440,12 @@ class Statistiques {
 
                 # données pour la graphique
                 $donneesNbrConnexions = [];
+                $donneesNbrLancementOptiPoule = [];
+                $donneesNbrLancementMeilleurLieu = [];
+                $donneesNbrRequetesHere = [];
+                $donneesNbrExclusions = [];
+                $donneesNbrInterdictions = [];
+                $donneesNbrRepartitionsHomogenes = [];
 
                 foreach($lignesTableauCompleter as $dateCle => $donneesLigne){
 
@@ -449,29 +455,56 @@ class Statistiques {
                     else{
                         $nombreConnexions = 0;
                     }
+                    if(array_key_exists("nombreLancementsOptiPoule", $donneesLigne)){
+                        $nombreLancementsOptiPoule = $donneesLigne["nombreLancementsOptiPoule"];
+                    }
+                    else{
+                        $nombreLancementsOptiPoule = 0;
+                    }
+                    if(array_key_exists("nombreLancementsMeilleurLieu", $donneesLigne)){
+                        $nombreLancementsMeilleurLieu = $donneesLigne["nombreLancementsMeilleurLieu"];
+                    }
+                    else{
+                        $nombreLancementsMeilleurLieu = 0;
+                    }
+                    if(array_key_exists("nombreRequetesHere", $donneesLigne)){
+                        $nombreRequetesHere = $donneesLigne["nombreRequetesHere"];
+                    }
+                    else{
+                        $nombreRequetesHere = 0;
+                    }
+                    if(array_key_exists("nombreExclusions", $donneesLigne)){
+                        $nombreExclusions = $donneesLigne["nombreExclusions"];
+                    }
+                    else{
+                        $nombreExclusions = 0;
+                    }
+                    if(array_key_exists("nombreInterdictions", $donneesLigne)){
+                        $nombreInterdictions = $donneesLigne["nombreInterdictions"];
+                    }
+                    else{
+                        $nombreInterdictions = 0;
+                    }
+                    if(array_key_exists("nombreRepartitionsHomogenes", $donneesLigne)){
+                        $nombreRepartitionsHomogenes = $donneesLigne["nombreRepartitionsHomogenes"];
+                    }
+                    else{
+                        $nombreRepartitionsHomogenes = 0;
+                    }
+
 
                     $dateMod = date_format(date_create_from_format('d/m/Y', $dateCle), 'Y/m/d');
 //                    error_log("\n dateMod: ".print_r($dateMod, true), 3, $this->error_log_path);
 
-                    $objTmp = [];
-                    $objTmp["dateMod"] = $dateMod;
-                    $objTmp["valeur"] = $nombreConnexions;
-                    array_push($donneesNbrConnexions, $objTmp);
+                    array_push($donneesNbrConnexions, array("dateMod"=>$dateMod, "valeur"=> $nombreConnexions));
+                    array_push($donneesNbrLancementOptiPoule, array("dateMod"=>$dateMod, "valeur"=> $nombreLancementsOptiPoule));
+                    array_push($donneesNbrLancementMeilleurLieu, array("dateMod"=>$dateMod, "valeur"=> $nombreLancementsMeilleurLieu));
+                    array_push($donneesNbrRequetesHere, array("dateMod"=>$dateMod, "valeur"=> $nombreRequetesHere));
+                    array_push($donneesNbrExclusions, array("dateMod"=>$dateMod, "valeur"=> $nombreExclusions));
+                    array_push($donneesNbrInterdictions, array("dateMod"=>$dateMod, "valeur"=> $nombreInterdictions));
+                    array_push($donneesNbrRepartitionsHomogenes, array("dateMod"=>$dateMod, "valeur"=> $nombreRepartitionsHomogenes));
                 }
 //                error_log("\n donneesNbrConnexions: ".print_r($donneesNbrConnexions, true), 3, $this->error_log_path);
-
-//            $donnees1 = array();
-//            array_push($donnees1, array("sale"=>202, "year"=>2000));
-//            array_push($donnees1, array("sale"=>202, "year"=>"2000-04-01"));
-//            array_push($donnees1, array("sale"=>215, "year"=>"2002-04-01"));
-//            array_push($donnees1, array("sale"=>179, "year"=>"2004-04-01"));
-//            array_push($donnees1, array("sale"=>199, "year"=>"2006-04-01"));
-//            array_push($donnees1, array("sale"=>134, "year"=>"2008-04-01"));
-//            array_push($donnees1, array("sale"=>176, "year"=>"2010-04-01"));
-//
-
-
-
 
 
                 # ajouter les dates dans les données de graph
@@ -481,7 +514,15 @@ class Statistiques {
                 $donneesGraph["formatResultat"] = $formatResultat;
                 $donneesGraph["nbrLabelXAxis"] = $nbrLabelXAxis;
                 $donneesGraph["maxValeurYAxis"] = $maxValeurYAxis;
+
+                $donneesGraph["typeRapport"] = $typeRapport;
                 $donneesGraph["donneesNbrConnexions"] = $donneesNbrConnexions;
+                $donneesGraph["donneesNbrLancementOptiPoule"] = $donneesNbrLancementOptiPoule;
+                $donneesGraph["donneesNbrLancementMeilleurLieu"] = $donneesNbrLancementMeilleurLieu;
+                $donneesGraph["donneesNbrRequetesHere"] = $donneesNbrRequetesHere;
+                $donneesGraph["donneesNbrExclusions"] = $donneesNbrExclusions;
+                $donneesGraph["donneesNbrInterdictions"] = $donneesNbrInterdictions;
+                $donneesGraph["donneesNbrRepartitionsHomogenes"] = $donneesNbrRepartitionsHomogenes;
 
             }
             else{
