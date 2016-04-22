@@ -34,10 +34,10 @@
                                         <th>No</th>
                                         <th>Nom du rapport</th>
                                         <th>Caractéristiques du rapport</th>
-                                        <th>Nom de la liste</th>
-                                        <th>Nom du groupe</th>
+                                        <th>Fichier</th>
+                                        <th>Sélection</th>
+                                        <th>Fédération</th>
                                         <th>Utilisateur</th>
-                                        <th>Federation</th>
                                         <th>Date de création</th>
                                         <th>Statut</th>
                                         <th>Action</th>
@@ -69,9 +69,8 @@
                                                 {% endif %}
                                                 <td>{{ infoRapport.nomListe }}</td>
                                                 <td>{{ infoRapport.nomGroupe }}</td>
-                                                <td>{{ infoRapport.nomUser }} {{ infoRapport.prenomUser }}</td>
                                                 <td>{{ infoRapport.federationUser }}</td>
-
+                                                <td>{{ infoRapport.nomUser }} {{ infoRapport.prenomUser }}</td>
 
                                                 <td> {{ infoRapport.dateCreationRapport|date('d/m/Y') }} </td>
 
@@ -154,10 +153,10 @@
                                         <th>No</th>
                                         <th>Nom du rapport</th>
                                         <th>Caractéristiques du rapport</th>
-                                        <th>Nom de la liste</th>
-                                        <th>Nom du groupe</th>
+                                        <th>Fichier</th>
+                                        <th>Sélection</th>
+                                        <th>Fédération</th>
                                         <th>Utilisateur</th>
-                                        <th>Federation</th>
                                         <th>Date de création</th>
                                         <th>Statut</th>
                                         <th>Action</th>
@@ -187,8 +186,8 @@
                                                 {% endif %}
                                                 <td>{{ infoRapport.nomListe }}</td>
                                                 <td>{{ infoRapport.nomGroupe }}</td>
-                                                <td>{{ infoRapport.nomUser }} {{ infoRapport.prenomUser }}</td>
                                                 <td>{{ infoRapport.federationUser }}</td>
+                                                <td>{{ infoRapport.nomUser }} {{ infoRapport.prenomUser }}</td>
 
                                                 <td> {{ infoRapport.dateCreationRapport|date('d/m/Y') }} </td>
 
