@@ -66,22 +66,31 @@
         var donneesNbrExclusions = donneesGraph.donneesNbrExclusions;
 
         if(typeRapport === "utilisateur" || typeRapport === "federation" ){
-            var rapportUtilisateur = [donneesNbrConnexions,donneesNbrLancementOptiPoule, donneesNbrLancementMeilleurLieu, donneesNbrRequetesHere, donneesNbrInterdictions,
-                donneesNbrRepartitionsHomogenes, donneesNbrExclusions];
+            var rapportUtilisateur = [donneesNbrConnexions, donneesNbrLancementOptiPoule, donneesNbrLancementMeilleurLieu, donneesNbrInterdictions,
+                donneesNbrRepartitionsHomogenes, donneesNbrExclusions, donneesNbrRequetesHere ];
             var tailleSvg = 800;
+            var libelleRapportUtilisateur = ['Nombre de connexions à Optimouv',
+                'Nombre de lancements de la fonction optimisation des poules',
+                'Nombre de lancements de la fonction meilleur lieu de rencontre',
+                'Nombre d\'interdictions utilisées',
+                'Nombre de répartitions homogènes utilisées',
+                'Nombre d\'exclusions géographiques utilisées',
+                'Nombre de requête HERE effectuées (toutes fonctions confondues)']
+            var indexCouleurRequetesHere = 6;
         }
         else{
-            var rapportUtilisateur  = [donneesNbrConnexions,donneesNbrLancementOptiPoule, donneesNbrLancementMeilleurLieu, donneesNbrRequetesHere];
+            var rapportUtilisateur  = [donneesNbrConnexions, donneesNbrLancementOptiPoule, donneesNbrLancementMeilleurLieu, donneesNbrRequetesHere];
             var tailleSvg = 700;
+            var libelleRapportUtilisateur = ['Nombre de connexions à Optimouv',
+                'Nombre de lancements de la fonction optimisation des poules',
+                'Nombre de lancements de la fonction meilleur lieu de rencontre',
+                'Nombre de requête HERE effectuées (toutes fonctions confondues)']
+            var indexCouleurRequetesHere = 3;
         }
 
         // fixer la largeur de svg selon le type de rapport
         $("#visualisation").attr("height",  tailleSvg);
 
-        var libelleRapportUtilisateur = ['Nombre de connexions à Optimouv', 'Nombre de lancements de la fonction optimisation des poules',
-            'Nombre de lancements de la fonction meilleur lieu de rencontre', 'Nombre de requête HERE effectuées (toutes fonctions confondues)',
-            'Nombre d\'interdictions utilisées', 'Nombre de répartitions homogènes utilisées',
-            'Nombre d\'exclusions géographiques utilisées']
 
 
 
@@ -197,9 +206,10 @@
                 .attr('stroke', couleurs[2])
                 .attr('stroke-width', tailleLigne)
                 .attr('fill', 'none');
+
         svg.append('svg:path')
                 .attr('d', lineGen(donneesNbrRequetesHere))
-                .attr('stroke', couleurs[3])
+                .attr('stroke', couleurs[indexCouleurRequetesHere])
                 .attr('stroke-width', tailleLigne)
                 .attr('fill', 'none');
 
@@ -208,17 +218,17 @@
         if(typeRapport === "utilisateur" || typeRapport === "federation" ){
             svg.append('svg:path')
                     .attr('d', lineGen(donneesNbrInterdictions))
-                    .attr('stroke', couleurs[4])
+                    .attr('stroke', couleurs[3])
                     .attr('stroke-width', tailleLigne)
                     .attr('fill', 'none');
             svg.append('svg:path')
                     .attr('d', lineGen(donneesNbrRepartitionsHomogenes))
-                    .attr('stroke', couleurs[5])
+                    .attr('stroke', couleurs[4])
                     .attr('stroke-width', tailleLigne)
                     .attr('fill', 'none');
             svg.append('svg:path')
                     .attr('d', lineGen(donneesNbrExclusions))
-                    .attr('stroke', couleurs[6])
+                    .attr('stroke', couleurs[5])
                     .attr('stroke-width', tailleLigne)
                     .attr('fill', 'none');
         }
