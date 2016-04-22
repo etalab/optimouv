@@ -28,7 +28,8 @@
     </style>
 
     <div class="jumbotron">
-        <svg id="visualisation" width="1000" height="800"></svg>
+        {#<svg id="visualisation" width="1000" height="800"></svg>#}
+        <svg id="visualisation" width="1000" height="600"></svg>
     </div>
 
 
@@ -68,7 +69,8 @@
         if(typeRapport === "utilisateur" || typeRapport === "federation" ){
             var rapportUtilisateur = [donneesNbrConnexions, donneesNbrLancementOptiPoule, donneesNbrLancementMeilleurLieu, donneesNbrInterdictions,
                 donneesNbrRepartitionsHomogenes, donneesNbrExclusions, donneesNbrRequetesHere ];
-            var tailleSvg = 800;
+//            var tailleSvg = 800;
+            var tailleSvg = 550;
             var libelleRapportUtilisateur = ['Nombre de connexions à Optimouv',
                 'Nombre de lancements de la fonction optimisation des poules',
                 'Nombre de lancements de la fonction meilleur lieu de rencontre',
@@ -80,7 +82,8 @@
         }
         else{
             var rapportUtilisateur  = [donneesNbrConnexions, donneesNbrLancementOptiPoule, donneesNbrLancementMeilleurLieu, donneesNbrRequetesHere];
-            var tailleSvg = 700;
+//            var tailleSvg = 700;
+            var tailleSvg = 500;
             var libelleRapportUtilisateur = ['Nombre de connexions à Optimouv',
                 'Nombre de lancements de la fonction optimisation des poules',
                 'Nombre de lancements de la fonction meilleur lieu de rencontre',
@@ -102,7 +105,7 @@
 
         var svg = d3.select("#visualisation"),
                 WIDTH = 1000,
-                HEIGHT = 550,
+                HEIGHT = 300,
                 MARGINS = {
                     top: 20,
                     right: 50,
@@ -179,6 +182,7 @@
                 .call(xAxis)
                 .selectAll("text")
                 .style("text-anchor", "end")
+                .style("font-size","10px")
                 .attr("dx", "-.8em")
                 .attr("dy", ".15em")
                 .attr("transform", function(d) {
@@ -255,13 +259,14 @@
 
         // ajouter legende
         var w = 100;
+        var translateYLegende = HEIGHT+100;
         var legend = svg.append("g")
                 .attr("class", "legend")
                 .attr("x", w)
                 .attr("y", 50)
                 .attr("height", 100)
                 .attr("width", 100)
-                .attr('transform', 'translate(100,630)');
+                .attr('transform', 'translate(100,'+ translateYLegende +')');
 
         legend.selectAll('rect')
                 .data(rapportUtilisateur)
