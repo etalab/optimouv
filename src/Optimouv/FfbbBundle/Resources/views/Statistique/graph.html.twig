@@ -70,24 +70,23 @@
             var xAxis = d3.svg.axis()
                     .scale(xScale);
 
-            console.log('nbrLabelXAxis: ' + nbrLabelXAxis);
-
             var deltaJours = Math.floor(nbrLabelXAxis/7) + 1;
-            console.log('deltaJours: ' + deltaJours);
+//            console.log('deltaJours: ' + deltaJours);
 
-//            console.log('d3.time.day: ' + d3.time.day);
             xAxis.ticks(d3.time.day, deltaJours)
                     .tickFormat(d3.time.format("%d/%m/%Y"));
 
         }
         else if(formatResultat == "mois"){
-            var mindate = new Date("2016/04/01"),
-                    maxdate = new Date("2016/06/10");
 
             var xScale = d3.time.scale().range([MARGINS.left, WIDTH- MARGINS.right]).domain([mindate, maxdate]);
             var xAxis = d3.svg.axis()
                     .scale(xScale);
-            xAxis.ticks(d3.time.month, 2)
+
+//            console.log('nbrLabelXAxis: ' + nbrLabelXAxis);
+            var deltaMois = Math.floor(nbrLabelXAxis/7) + 1;
+
+            xAxis.ticks(d3.time.month, deltaMois)
                     .tickFormat(d3.time.format("%m/%Y"));
 
         }
@@ -95,7 +94,11 @@
             var xScale = d3.time.scale().range([MARGINS.left, WIDTH- MARGINS.right]).domain([mindate, maxdate]);
             var xAxis = d3.svg.axis()
                     .scale(xScale);
-            xAxis.ticks(d3.time.year, 2)
+
+
+            var deltaAnnee = Math.floor(nbrLabelXAxis/7) + 1;
+
+            xAxis.ticks(d3.time.year, deltaAnnee)
                     .tickFormat(d3.time.format("%Y"));
 
         }
