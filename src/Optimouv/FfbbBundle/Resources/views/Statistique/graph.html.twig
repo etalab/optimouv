@@ -7,7 +7,7 @@
             stroke: black;
             stroke-width: 1;
             shape-rendering: crispEdges;
-            opacity: 0.7;
+            opacity: 0.9;
         }
         .axis text {
             font-family: Lato;
@@ -15,7 +15,8 @@
         }
         .grid .tick {
             stroke: lightgrey;
-            stroke-opacity: 0.7;
+            stroke-opacity: 0.5;
+            stroke-width: 1;
             shape-rendering: crispEdges;
         }
         .grid path {
@@ -63,9 +64,21 @@
         var donneesNbrInterdictions = donneesGraph.donneesNbrInterdictions;
         var donneesNbrRepartitionsHomogenes = donneesGraph.donneesNbrRepartitionsHomogenes;
         var donneesNbrExclusions = donneesGraph.donneesNbrExclusions;
-        var tousRapports = [donneesNbrConnexions,donneesNbrLancementOptiPoule, donneesNbrLancementMeilleurLieu, donneesNbrRequetesHere, donneesNbrInterdictions,
-            donneesNbrRepartitionsHomogenes, donneesNbrExclusions];
-        var libelleTousRapports = ['Nombre de connexions à Optimouv', 'Nombre de lancements de la fonction optimisation des poules',
+
+        if(typeRapport === "utilisateur" || typeRapport === "federation" ){
+            var rapportUtilisateur = [donneesNbrConnexions,donneesNbrLancementOptiPoule, donneesNbrLancementMeilleurLieu, donneesNbrRequetesHere, donneesNbrInterdictions,
+                donneesNbrRepartitionsHomogenes, donneesNbrExclusions];
+            var tailleSvg = 800;
+        }
+        else{
+            var rapportUtilisateur  = [donneesNbrConnexions,donneesNbrLancementOptiPoule, donneesNbrLancementMeilleurLieu, donneesNbrRequetesHere];
+            var tailleSvg = 700;
+        }
+
+        // fixer la largeur de svg selon le type de rapport
+        $("#visualisation").attr("height",  tailleSvg);
+
+        var libelleRapportUtilisateur = ['Nombre de connexions à Optimouv', 'Nombre de lancements de la fonction optimisation des poules',
             'Nombre de lancements de la fonction meilleur lieu de rencontre', 'Nombre de requête HERE effectuées (toutes fonctions confondues)',
             'Nombre d\'interdictions utilisées', 'Nombre de répartitions homogènes utilisées',
             'Nombre d\'exclusions géographiques utilisées']
@@ -222,7 +235,7 @@
                 .attr('transform', 'translate(100,630)');
 
         legend.selectAll('rect')
-                .data(tousRapports)
+                .data(rapportUtilisateur)
                 .enter()
                 .append("rect")
                 .attr("x", w)
@@ -251,7 +264,7 @@
         ;
 
         legend.selectAll('text')
-                .data(tousRapports)
+                .data(rapportUtilisateur)
                 .enter()
                 .append("text")
                 .attr("x", w + 20)
@@ -260,7 +273,7 @@
                 })
                 .text(function(d,i) {
                     if (d.length > 0 ){
-                        return libelleTousRapports[i];
+                        return libelleRapportUtilisateur[i];
                     }
                 })
                 .style("color", "#9C9D9F")
