@@ -34,10 +34,10 @@
                                         <th>No</th>
                                         <th>Nom du rapport</th>
                                         <th>Caractéristiques du rapport</th>
-                                        <th>Nom de la liste</th>
-                                        <th>Nom du groupe</th>
+                                        <th>Fichier</th>
+                                        <th>Sélection</th>
+                                        <th>Fédération</th>
                                         <th>Utilisateur</th>
-                                        <th>Federation</th>
                                         <th>Date de création</th>
                                         <th>Statut</th>
                                         <th>Action</th>
@@ -57,21 +57,20 @@
 
 
                                                 {% if infoRapport.typeActionRapport == "barycentre" %}
-                                                    <td> Meilleur lieu - barycentre</td>
+                                                    <td> Barycentre</td>
                                                 {% elseif infoRapport.typeActionRapport == "meilleurLieu" %}
-                                                    <td> Meilleur lieu - lieux définis</td>
+                                                    <td> Lieux définis</td>
                                                 {% elseif infoRapport.typeActionRapport == "exclusion" %}
-                                                    <td> Meilleur lieu - barycentre avec exclusion</td>
+                                                    <td> Barycentre avec exclusion</td>
                                                 {% elseif infoRapport.typeActionRapport == "terrainNeutre" %}
-                                                    <td> Meilleur lieu - lieux définis avec liste de lieux</td>
+                                                    <td> Lieux définis avec liste de lieux</td>
                                                 {% else %}
                                                     <td> {{ infoRapport.typeActionRapport }} </td>
                                                 {% endif %}
                                                 <td>{{ infoRapport.nomListe }}</td>
                                                 <td>{{ infoRapport.nomGroupe }}</td>
-                                                <td>{{ infoRapport.nomUser }} {{ infoRapport.prenomUser }}</td>
                                                 <td>{{ infoRapport.federationUser }}</td>
-
+                                                <td>{{ infoRapport.nomUser }} {{ infoRapport.prenomUser }}</td>
 
                                                 <td> {{ infoRapport.dateCreationRapport|date('d/m/Y') }} </td>
 
@@ -154,10 +153,10 @@
                                         <th>No</th>
                                         <th>Nom du rapport</th>
                                         <th>Caractéristiques du rapport</th>
-                                        <th>Nom de la liste</th>
-                                        <th>Nom du groupe</th>
+                                        <th>Fichier</th>
+                                        <th>Sélection</th>
+                                        <th>Fédération</th>
                                         <th>Utilisateur</th>
-                                        <th>Federation</th>
                                         <th>Date de création</th>
                                         <th>Statut</th>
                                         <th>Action</th>
@@ -176,19 +175,19 @@
                                                 <td> {{ infoRapport.nomRapport }} </td>
 
                                                 {% if infoRapport.typeActionRapport == "allerRetour" %}
-                                                    <td> Optimisation de poules - match aller retour</td>
+                                                    <td> Match aller retour</td>
                                                 {% elseif infoRapport.typeActionRapport == "allerSimple" %}
-                                                    <td> Optimisation de poules - match aller simple</td>
+                                                    <td> Match aller simple</td>
                                                 {% elseif infoRapport.typeActionRapport == "plateau" %}
-                                                    <td> Optimisation de poules - plateau</td>
+                                                    <td> Plateau</td>
 
                                                 {% else %}
                                                     <td> {{ infoRapport.typeActionRapport }} </td>
                                                 {% endif %}
                                                 <td>{{ infoRapport.nomListe }}</td>
                                                 <td>{{ infoRapport.nomGroupe }}</td>
-                                                <td>{{ infoRapport.nomUser }} {{ infoRapport.prenomUser }}</td>
                                                 <td>{{ infoRapport.federationUser }}</td>
+                                                <td>{{ infoRapport.nomUser }} {{ infoRapport.prenomUser }}</td>
 
                                                 <td> {{ infoRapport.dateCreationRapport|date('d/m/Y') }} </td>
 

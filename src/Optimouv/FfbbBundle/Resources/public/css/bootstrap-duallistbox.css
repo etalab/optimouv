@@ -101,8 +101,8 @@
 }
 
 .btn-consulter-rapport {
-  color: #fff;
-  background-color: #EE7700;
+  color: #EE7700;
+  background-color: #fff;
    border-color: #ccc;
  }
 .btn-consulter-rapport:hover {
