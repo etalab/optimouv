@@ -450,15 +450,21 @@ class Statistiques {
                     $dateFinGraph = date_format(date_create_from_format('Y', $dateFinGraph), 'Y/m/d');
                 }
 
+
+                # compter les nombre de labels affiché pour x-axis
+                $nbrLabelXAxis = count($lignesTableauCompleter);
+
                 error_log("\n dateDebutGraph: ".print_r($dateDebutGraph, true), 3, $this->error_log_path);
                 error_log("\n dateFinGraph: ".print_r($dateFinGraph, true), 3, $this->error_log_path);
                 error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
+                error_log("\n nbrLabelXAxis: ".print_r($nbrLabelXAxis, true), 3, $this->error_log_path);
 
 
                 # ajouter les dates dans les données de graph
                 $donneesGraph["dateDebutGraph"] = $dateDebutGraph;
                 $donneesGraph["dateFinGraph"] = $dateFinGraph;
                 $donneesGraph["formatResultat"] = $formatResultat;
+                $donneesGraph["nbrLabelXAxis"] = $nbrLabelXAxis;
 
 //            error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
             }
@@ -500,7 +506,6 @@ class Statistiques {
             $dateDebutStr = date_format(date_create_from_format('d/m/Y', $dateDebutStr), 'm/Y');
             $dateFinStr = date_format(date_create_from_format('d/m/Y', $dateFinStr), 'm/Y');
 
-
             $formatDate = 'm/Y';
             $deltaTemps = "1 month";
         }
@@ -530,9 +535,6 @@ class Statistiques {
 
         # interval selon le delta temps
         $interval = \DateInterval::createFromDateString($deltaTemps);
-
-
-
 
 
         # periode depuis la date de début jusqu'à la date de fin

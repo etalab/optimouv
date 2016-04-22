@@ -220,9 +220,12 @@
 {% endblock %}
 
 {% block javascripts %}
+    <script type="text/javascript" src="{{ asset('bundles/ffbb/js/datatables.min.js') }}"></script>
+    <script src="{{ asset('bundles/ffbb/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('bundles/ffbb/js/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ asset('bundles/ffbb/js/bootstrap-datepicker.fr.min.js') }}"></script>
 
     <script type="text/javascript">
-
         $(function() {
             {# options pour le js Date picker #}
             $('.input-group.date').datepicker({
@@ -233,6 +236,7 @@
                 language: "fr",
                 autoclose: true
             });
+
 
             // cacher le rapport statistiques
             $("#rappportStatistiques").hide();
@@ -560,10 +564,15 @@
                                                     // parser les données pour le tableau
                                                     var lignesTableau = data.lignesTableau;
 
+                                                    // supprimer le binding datatable
+                                                    $('#tableUtilisateur').dataTable().fnDestroy();
+                                                    $('#tableSysteme').dataTable().fnDestroy();
+
                                                     // vider le contenu des anciens tableaux
                                                     $("#tbodyUtilisateur").empty();
                                                     $("#tbodySysteme").empty();
 
+                                                    
                                                     $.each(lignesTableau, function(jour, objLigneTableau) {
 
                                                         var ligneTableau = "<tr>";
@@ -672,6 +681,23 @@
 
 
                                                     });
+
+                                                    if(typeRapport == "utilisateur" || typeRapport == "federation" ){
+                                                        // datatable utilisateur
+                                                        var datatableUtilisateur = $('#tableUtilisateur').DataTable({
+                                                            "searching": false
+                                                        });
+                                                    }
+                                                    else if(typeRapport == "systeme" ){
+                                                        // datatable système
+                                                        var datatableSysteme = $('#tableSysteme').DataTable({
+                                                            "searching": false
+                                                        });
+
+                                                    }
+
+
+
 
                                                     ///////////////////////////// Traitement pour la graphique ////////////////////////////////////////////////
                                                     var flagAfficheGraphique = data.flagAfficheGraphique;
