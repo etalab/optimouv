@@ -493,7 +493,16 @@ class Statistiques {
                     }
 
 
-                    $dateMod = date_format(date_create_from_format('d/m/Y', $dateCle), 'Y/m/d');
+                    if($formatResultat == "jour"){
+                        $formatDate = 'd/m/Y';
+                    }
+                    elseif($formatResultat == "mois"){
+                        $formatDate = 'm/Y';
+                    }
+                    elseif($formatResultat == "annee"){
+                        $formatDate = 'Y';
+                    }
+                    $dateMod = date_format(date_create_from_format($formatDate, $dateCle), 'Y/m/d');
 //                    error_log("\n dateMod: ".print_r($dateMod, true), 3, $this->error_log_path);
 
                     array_push($donneesNbrConnexions, array("dateMod"=>$dateMod, "valeur"=> $nombreConnexions));
