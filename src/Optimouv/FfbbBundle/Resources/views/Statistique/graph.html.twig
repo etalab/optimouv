@@ -33,6 +33,7 @@
 
         // initializer svg
         $("svg").find("g").remove();
+        $("svg").find("path").remove();
 
         console.log('in function donneesGraph: ' + JSON.stringify(donneesGraph));
 
@@ -132,9 +133,6 @@
 
         var lineGen = d3.svg.line()
                 .x(function(d) {
-                    console.log("d.dateMod: " + d.dateMod);
-
-                    console.log("parseDate(d.dateMod): " + parseDate(d.dateMod));
                     return xScale(
                             parseDate(d.dateMod)
                     );
@@ -142,7 +140,7 @@
                 .y(function(d) {
                     return yScale(d.valeur);
                 })
-                .interpolate("basis");
+//                .interpolate("basis");
 
 
         svg.append('svg:path')
