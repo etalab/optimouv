@@ -42,17 +42,18 @@
         var formatResultat = donneesGraph.formatResultat ;
         var nbrLabelXAxis = donneesGraph.nbrLabelXAxis ;
         var maxValeurYAxis = donneesGraph.maxValeurYAxis ;
+        var donneesNbrConnexions = donneesGraph.donneesNbrConnexions;
 
 
 //        console.log('dateDebutGraph: ' + dateDebutGraph);
 //        console.log('dateFinGraph: ' + dateFinGraph);
-//        console.log('nbrLabelXAxis: ' + nbrLabelXAxis);
 
-        var mindate = new Date(dateDebutGraph),
-                maxdate = new Date(dateFinGraph);
+        console.log('donneesNbrConnexions: ' + JSON.stringify(donneesNbrConnexions));
 
-//        console.log('mindate: ' + mindate);
-//        console.log('maxdate: ' + maxdate);
+
+        var mindate = new Date(dateDebutGraph);
+        var maxdate = new Date(dateFinGraph);
+
 
         var svg = d3.select("#visualisation"),
                 WIDTH = 1000,
@@ -127,32 +128,27 @@
                 .call(yAxis);
 
 
+        var parseDate = d3.time.format("%Y/%m/%d").parse;
+
         var lineGen = d3.svg.line()
                 .x(function(d) {
-                    return xScale(d.date);
+                    return xScale(parseDate(d.dateMod));
                 })
                 .y(function(d) {
                     return yScale(d.valeur);
                 })
                 .interpolate("basis");
 
-//        svg.append('svg:path')
-//                .attr('d', lineGen(data))
-//                .attr('stroke', 'green')
-//                .attr('stroke-width', 2)
-//                .attr('fill', 'none');
-//
-//        svg.append('svg:path')
-//                .attr('d', lineGen(data2))
-//                .attr('stroke', 'blue')
-//                .attr('stroke-width', 2)
-//                .attr('fill', 'none');
+
+        svg.append('svg:path')
+                .attr('d', lineGen(donneesNbrConnexions))
+                .attr('stroke', 'green')
+                .attr('stroke-width', 2)
+                .attr('fill', 'none');
+
+
+
     }
-
-
-
-
-
 </script>
 
 

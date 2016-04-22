@@ -384,31 +384,6 @@ class Statistiques {
             }
 
 
-            # données pour la graphique
-
-//            $donnees1 = array();
-
-////            array_push($donnees1, array("sale"=>202, "year"=>2000));
-//            array_push($donnees1, array("sale"=>202, "year"=>"2000-04-01"));
-//            array_push($donnees1, array("sale"=>215, "year"=>"2002-04-01"));
-//            array_push($donnees1, array("sale"=>179, "year"=>"2004-04-01"));
-//            array_push($donnees1, array("sale"=>199, "year"=>"2006-04-01"));
-//            array_push($donnees1, array("sale"=>134, "year"=>"2008-04-01"));
-//            array_push($donnees1, array("sale"=>176, "year"=>"2010-04-01"));
-//
-//            $donnees2 = array();
-//            array_push($donnees2, array("sale"=>152, "year"=>"2000-04-01"));
-//            array_push($donnees2, array("sale"=>189, "year"=>"2002-04-01"));
-//            array_push($donnees2, array("sale"=>179, "year"=>"2004-04-01"));
-//            array_push($donnees2, array("sale"=>199, "year"=>"2006-04-01"));
-//            array_push($donnees2, array("sale"=>134, "year"=>"2008-04-01"));
-//            array_push($donnees2, array("sale"=>176, "year"=>"2010-04-01"));
-//
-//            array_push($donneesGraph,  $donnees1);
-//            array_push($donneesGraph, $donnees2);
-
-
-
 
             # ajouter un flag pour indiquer s'il y a des données ou pas
             if(count($lignesTableau) == 0){
@@ -460,8 +435,42 @@ class Statistiques {
 
                 error_log("\n dateDebutGraph: ".print_r($dateDebutGraph, true), 3, $this->error_log_path);
                 error_log("\n dateFinGraph: ".print_r($dateFinGraph, true), 3, $this->error_log_path);
-                error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
                 error_log("\n nbrLabelXAxis: ".print_r($nbrLabelXAxis, true), 3, $this->error_log_path);
+
+
+                # données pour la graphique
+                $donneesNbrConnexions = [];
+
+                foreach($lignesTableauCompleter as $dateCle => $donneesLigne){
+
+                    if(array_key_exists("nombreConnexions", $donneesLigne)){
+                        $nombreConnexions = $donneesLigne["nombreConnexions"];
+                    }
+                    else{
+                        $nombreConnexions = 0;
+                    }
+
+                    $dateMod = date_format(date_create_from_format('d/m/Y', $dateDebutStr), 'Y/m/d');
+                    error_log("\n dateMod: ".print_r($dateMod, true), 3, $this->error_log_path);
+
+                    $objTmp = [];
+                    $objTmp["dateMod"] = $dateMod;
+                    $objTmp["valeur"] = $nombreConnexions;
+                    array_push($donneesNbrConnexions, $objTmp);
+                }
+
+//            $donnees1 = array();
+//            array_push($donnees1, array("sale"=>202, "year"=>2000));
+//            array_push($donnees1, array("sale"=>202, "year"=>"2000-04-01"));
+//            array_push($donnees1, array("sale"=>215, "year"=>"2002-04-01"));
+//            array_push($donnees1, array("sale"=>179, "year"=>"2004-04-01"));
+//            array_push($donnees1, array("sale"=>199, "year"=>"2006-04-01"));
+//            array_push($donnees1, array("sale"=>134, "year"=>"2008-04-01"));
+//            array_push($donnees1, array("sale"=>176, "year"=>"2010-04-01"));
+//
+
+
+
 
 
                 # ajouter les dates dans les données de graph
@@ -471,8 +480,8 @@ class Statistiques {
                 $donneesGraph["formatResultat"] = $formatResultat;
                 $donneesGraph["nbrLabelXAxis"] = $nbrLabelXAxis;
                 $donneesGraph["maxValeurYAxis"] = $maxValeurYAxis;
+                $donneesGraph["donneesNbrConnexions"] = $donneesNbrConnexions;
 
-//            error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
             }
             else{
                 $flagAfficheGraphique = 0;
@@ -493,25 +502,6 @@ class Statistiques {
 
     }
 
-//    private function getMaxValeur($lignesTableau){
-//        var $maxValeur = 0;
-//        if($lignesTableau != []){
-//            foreach($lignesTableau as $ligneTableau){
-//                if(array_key_exists("", $ligneTableau)){
-//
-//                }
-//                else{
-//                }
-//
-//            }
-//        }
-//        else{
-//            return 0;
-//        }
-//
-//
-//    }
-//
 
     # Fonction pour completer les dates manquantes dans l'interval donné
     private function completerDateDonneesStatistiques($donneesStatistiques, $formatResultat, $dateDebutStr, $dateFinStr){
