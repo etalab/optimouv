@@ -44,15 +44,18 @@
         var nbrLabelXAxis = donneesGraph.nbrLabelXAxis ;
 
 
-        console.log('dateDebutGraph: ' + dateDebutGraph);
-        console.log('dateFinGraph: ' + dateFinGraph);
-        console.log('nbrLabelXAxis: ' + nbrLabelXAxis);
+//        console.log('dateDebutGraph: ' + dateDebutGraph);
+//        console.log('dateFinGraph: ' + dateFinGraph);
+//        console.log('nbrLabelXAxis: ' + nbrLabelXAxis);
 
         var mindate = new Date(dateDebutGraph),
                 maxdate = new Date(dateFinGraph);
 
-        console.log('mindate: ' + mindate);
-        console.log('maxdate: ' + maxdate);
+//        console.log('mindate: ' + mindate);
+//        console.log('maxdate: ' + maxdate);
+
+
+        var maxValeurY = 220;
 
         var svg = d3.select("#visualisation"),
                 WIDTH = 1000,
@@ -103,7 +106,7 @@
 
         }
 
-        var yScale =  d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([134, 215]);
+        var yScale =  d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0, maxValeurY]);
         var yAxis = d3.svg.axis()
                         .scale(yScale)
                         .orient("left");
