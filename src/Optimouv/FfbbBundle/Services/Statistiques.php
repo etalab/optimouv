@@ -246,9 +246,9 @@ class Statistiques {
                 $typeStatistiques = $ligneDb["type_statistiques"];
 
                 # comparer avec max Valeur
-                if($valeur > $maxValeurYAxis){
-                    $maxValeurYAxis = $valeur;
-                }
+//                if($valeur > $maxValeurYAxis){
+//                    $maxValeurYAxis = $valeur;
+//                }
 
 
                 # formater la date selon le format français
@@ -452,42 +452,63 @@ class Statistiques {
 
                     if(array_key_exists("nombreConnexions", $donneesLigne)){
                         $nombreConnexions = $donneesLigne["nombreConnexions"];
+                        if($nombreConnexions > $maxValeurYAxis){
+                            $maxValeurYAxis = $nombreConnexions;
+                        }
                     }
                     else{
                         $nombreConnexions = 0;
                     }
                     if(array_key_exists("nombreLancementsOptiPoule", $donneesLigne)){
                         $nombreLancementsOptiPoule = $donneesLigne["nombreLancementsOptiPoule"];
+                        if($nombreLancementsOptiPoule > $maxValeurYAxis){
+                            $maxValeurYAxis = $nombreLancementsOptiPoule;
+                        }
                     }
                     else{
                         $nombreLancementsOptiPoule = 0;
                     }
                     if(array_key_exists("nombreLancementsMeilleurLieu", $donneesLigne)){
                         $nombreLancementsMeilleurLieu = $donneesLigne["nombreLancementsMeilleurLieu"];
+                        if($nombreLancementsMeilleurLieu > $maxValeurYAxis){
+                            $maxValeurYAxis = $nombreLancementsMeilleurLieu;
+                        }
                     }
                     else{
                         $nombreLancementsMeilleurLieu = 0;
                     }
                     if(array_key_exists("nombreRequetesHere", $donneesLigne)){
                         $nombreRequetesHere = $donneesLigne["nombreRequetesHere"];
+                        if($nombreRequetesHere > $maxValeurYAxis){
+                            $maxValeurYAxis = $nombreRequetesHere;
+                        }
                     }
                     else{
                         $nombreRequetesHere = 0;
                     }
-                    if(array_key_exists("nombreExclusions", $donneesLigne)){
+                    if(array_key_exists("nombreExclusions", $donneesLigne)) {
                         $nombreExclusions = $donneesLigne["nombreExclusions"];
+                        if ($nombreExclusions > $maxValeurYAxis) {
+                            $maxValeurYAxis = $nombreExclusions;
+                        }
                     }
                     else{
                         $nombreExclusions = 0;
                     }
                     if(array_key_exists("nombreInterdictions", $donneesLigne)){
                         $nombreInterdictions = $donneesLigne["nombreInterdictions"];
+                        if($nombreInterdictions > $maxValeurYAxis){
+                            $maxValeurYAxis = $nombreInterdictions;
+                        }
                     }
                     else{
                         $nombreInterdictions = 0;
                     }
                     if(array_key_exists("nombreRepartitionsHomogenes", $donneesLigne)){
                         $nombreRepartitionsHomogenes = $donneesLigne["nombreRepartitionsHomogenes"];
+                        if($nombreRepartitionsHomogenes > $maxValeurYAxis){
+                            $maxValeurYAxis = $nombreRepartitionsHomogenes;
+                        }
                     }
                     else{
                         $nombreRepartitionsHomogenes = 0;
