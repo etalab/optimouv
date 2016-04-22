@@ -17,7 +17,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <h3 class="page-header">
-                    <b>Visualisez les rapports d'utilisation de l'application</b>
+                    Visualisez les rapports d'utilisation de l'application
                 </h3>
             </div>
         </div>
@@ -26,7 +26,7 @@
             <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4>  Sélectionnez les caractéristiques du rapport statistique que vous souhaitez visualiser </h4>
+                        Sélectionnez les caractéristiques du rapport statistique que vous souhaitez visualiser
                     </div>
                     <div class="panel-body">
 
@@ -34,7 +34,8 @@
 
                         <div class="form-horizontal">
                             <div class="form-group">
-                                <label class="control-label col-sm-2" for="typeRapport">TYPE DE RAPPORT </label>
+                                {#<label class="control-label col-sm-2" for="typeRapport">TYPE DE RAPPORT </label>#}
+                                <label class="control-label col-sm-4" for="typeRapport">Type de rapport </label>
                                 <div class="col-sm-2">
                                     <select class="form-control" id="selectRapport" >
                                         <option value="vide" selected> -- selectionnez une option -- </option>
@@ -52,7 +53,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-sm-2" for="nomFderation">NOM DE LA FEDERATION</label>
+                                {#<label class="control-label col-sm-2" for="nomFderation">NOM DE LA FEDERATION</label>#}
+                                <label class="control-label col-sm-4" for="nomFderation">Nom de la fédération</label>
                                 <div class="col-sm-2">
                                     <select class="form-control" id="selectFederation" >
                                         <option value="vide" selected> -- selectionnez une option -- </option>
@@ -61,7 +63,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-sm-2" for="nomDiscipline">NOM DE LA DISCIPLINE</label>
+                                {#<label class="control-label col-sm-2" for="nomDiscipline">NOM DE LA DISCIPLINE</label>#}
+                                <label class="control-label col-sm-4" for="nomDiscipline">Nom de la discipline</label>
                                 <div class="col-sm-2">
                                     <select class="form-control" id="selectDiscipline">
                                         <option value="vide" selected> -- selectionnez une option -- </option>
@@ -70,7 +73,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-sm-2" for="nomUtilisateur">NOM DE L'UTILISATEUR</label>
+                                {#<label class="control-label col-sm-2" for="nomUtilisateur">NOM DE L'UTILISATEUR</label>#}
+                                <label class="control-label col-sm-4" for="nomUtilisateur">Nom de l'utilisateur</label>
                                 <div class="col-sm-2">
                                     <select class="form-control" id="selectUtilisateur" >
                                         <option value="vide" selected> -- selectionnez une option -- </option>
@@ -79,7 +83,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-sm-2" for="dateDebut">DATE DE DEBUT</label>
+                                {#<label class="control-label col-sm-2" for="dateDebut">DATE DE DEBUT</label>#}
+                                <label class="control-label col-sm-4" for="dateDebut">Date de début</label>
                                 <div class="col-sm-2" >
 
                                     <div class="input-group date" >
@@ -92,7 +97,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-sm-2" for="dateFin">DATE DE FIN</label>
+                                {#<label class="control-label col-sm-2" for="dateFin">DATE DE FIN</label>#}
+                                <label class="control-label col-sm-4" for="dateFin">Date de fin</label>
                                 <div class="col-sm-2" >
 
                                     <div class="input-group date" >
@@ -106,7 +112,7 @@
 
                             <div class="form-group">
                                 <div class="control-label col-sm-4 ">
-                                    <button type="submit" class="btn btn-statistique" id="btnGetResultats">Accéder</button>
+                                    <button type="submit" class="btn btn-statistique" id="btnGetResultats">Obtenir mon rapport</button>
                                 </div>
                             </div>
                         </div>
