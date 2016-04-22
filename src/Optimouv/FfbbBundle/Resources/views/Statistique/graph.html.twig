@@ -129,14 +129,13 @@
             var xAxis = d3.svg.axis()
                     .scale(xScale);
 
+            var deltaMois = Math.floor(nbrLabelXAxis/7) + 1;
             if(nbrLabelXAxis > 3){
-                var deltaMois = Math.floor(nbrLabelXAxis/7) + 1;
 
                 xAxis.ticks(d3.time.month, deltaMois)
                         .tickFormat(d3.time.format("%m/%Y"));
             }
             else{
-                var deltaMois = Math.floor(nbrLabelXAxis/7) + 1;
 
                 xAxis.ticks(d3.time.week, deltaMois)
                         .tickFormat(d3.time.format("%d/%m/%Y"));
@@ -151,10 +150,20 @@
                     .scale(xScale);
 
 
-            var deltaAnnee = Math.floor(nbrLabelXAxis/7) + 1;
+            if(nbrLabelXAxis > 3){
+                var deltaAnnee = Math.floor(nbrLabelXAxis/7) + 1;
 
-            xAxis.ticks(d3.time.year, deltaAnnee)
-                    .tickFormat(d3.time.format("%Y"));
+                xAxis.ticks(d3.time.year, deltaAnnee)
+                        .tickFormat(d3.time.format("%Y"));
+            }
+            else{
+                var deltaAnnee = Math.floor(nbrLabelXAxis/7) + 2;
+
+                xAxis.ticks(d3.time.month, deltaAnnee)
+                        .tickFormat(d3.time.format("%m/%Y"));
+
+            }
+
 
         }
 
