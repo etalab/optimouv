@@ -200,6 +200,7 @@ class Statistiques {
             $lignesTableau = array();
 
 
+            // données pour le tableau statistiques_date
             if($typeRapport == "utilisateur"){
                 # obtenir l'id de la fédération
                 $sql = "SELECT date_creation, type_statistiques, valeur from statistiques_date where date_creation between :dateDebut and :dateFin".
@@ -235,12 +236,15 @@ class Statistiques {
                 die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
             }
 
+            // max valeur pour graphe y axis
+            $maxValeurYAxis = 0;
 
-
+            // loop pour le tableau statistiques_date
             foreach($resultat as $ligneDb){
                 $dateLigneDb = $ligneDb["date_creation"];
                 $valeur = $ligneDb["valeur"];
                 $typeStatistiques = $ligneDb["type_statistiques"];
+
 
                 # formater la date selon le format français
                 $dateLigneTmp = explode("-", $dateLigneDb);
@@ -329,7 +333,7 @@ class Statistiques {
                     die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
                 }
 
-
+                // loop pour le tableau statistiques_date_temps
                 foreach($resultat as $ligneDb){
 
                     $dateLigneDb = $ligneDb["date_filtre"];
@@ -374,32 +378,6 @@ class Statistiques {
             }
 
 
-            # données pour la graphique
-            $donneesGraph = [];
-
-//            $donnees1 = array();
-
-////            array_push($donnees1, array("sale"=>202, "year"=>2000));
-//            array_push($donnees1, array("sale"=>202, "year"=>"2000-04-01"));
-//            array_push($donnees1, array("sale"=>215, "year"=>"2002-04-01"));
-//            array_push($donnees1, array("sale"=>179, "year"=>"2004-04-01"));
-//            array_push($donnees1, array("sale"=>199, "year"=>"2006-04-01"));
-//            array_push($donnees1, array("sale"=>134, "year"=>"2008-04-01"));
-//            array_push($donnees1, array("sale"=>176, "year"=>"2010-04-01"));
-//
-//            $donnees2 = array();
-//            array_push($donnees2, array("sale"=>152, "year"=>"2000-04-01"));
-//            array_push($donnees2, array("sale"=>189, "year"=>"2002-04-01"));
-//            array_push($donnees2, array("sale"=>179, "year"=>"2004-04-01"));
-//            array_push($donnees2, array("sale"=>199, "year"=>"2006-04-01"));
-//            array_push($donnees2, array("sale"=>134, "year"=>"2008-04-01"));
-//            array_push($donnees2, array("sale"=>176, "year"=>"2010-04-01"));
-//
-//            array_push($donneesGraph,  $donnees1);
-//            array_push($donneesGraph, $donnees2);
-
-
-
 
             # ajouter un flag pour indiquer s'il y a des données ou pas
             if(count($lignesTableau) == 0){
@@ -410,9 +388,6 @@ class Statistiques {
 
             }
 
-
-//            error_log("\n lignesTableau: ".print_r($lignesTableau, true), 3, $this->error_log_path);
-
             # compléter les dates manquantes dans l'interval donné (s'il y a au moins deux lignes dans les données tabulaires)
             if(count($lignesTableau) > 0){
                 $lignesTableauCompleter = $this->completerDateDonneesStatistiques($lignesTableau, $formatResultat, $dateDebutStr, $dateFinStr);
@@ -420,12 +395,12 @@ class Statistiques {
             else{
                 $lignesTableauCompleter = $lignesTableau;
             }
-
-            error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
+//            error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
 
 
             # données pour la graphique
-            if(count($lignesTableauCompleter) > 1){
+            $donneesGraph = [];
+            if(count($lignesTableauCompleter) > 0){
                 $flagAfficheGraphique = 1;
 
                 # obtenir la date de début pour la graphique
@@ -456,8 +431,106 @@ class Statistiques {
 
                 error_log("\n dateDebutGraph: ".print_r($dateDebutGraph, true), 3, $this->error_log_path);
                 error_log("\n dateFinGraph: ".print_r($dateFinGraph, true), 3, $this->error_log_path);
-                error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
                 error_log("\n nbrLabelXAxis: ".print_r($nbrLabelXAxis, true), 3, $this->error_log_path);
+
+
+                # données pour la graphique
+                $donneesNbrConnexions = [];
+                $donneesNbrLancementOptiPoule = [];
+                $donneesNbrLancementMeilleurLieu = [];
+                $donneesNbrRequetesHere = [];
+                $donneesNbrExclusions = [];
+                $donneesNbrInterdictions = [];
+                $donneesNbrRepartitionsHomogenes = [];
+
+                foreach($lignesTableauCompleter as $dateCle => $donneesLigne){
+
+                    if(array_key_exists("nombreConnexions", $donneesLigne)){
+                        $nombreConnexions = $donneesLigne["nombreConnexions"];
+                        if($nombreConnexions > $maxValeurYAxis){
+                            $maxValeurYAxis = $nombreConnexions;
+                        }
+                    }
+                    else{
+                        $nombreConnexions = 0;
+                    }
+                    if(array_key_exists("nombreLancementsOptiPoule", $donneesLigne)){
+                        $nombreLancementsOptiPoule = $donneesLigne["nombreLancementsOptiPoule"];
+                        if($nombreLancementsOptiPoule > $maxValeurYAxis){
+                            $maxValeurYAxis = $nombreLancementsOptiPoule;
+                        }
+                    }
+                    else{
+                        $nombreLancementsOptiPoule = 0;
+                    }
+                    if(array_key_exists("nombreLancementsMeilleurLieu", $donneesLigne)){
+                        $nombreLancementsMeilleurLieu = $donneesLigne["nombreLancementsMeilleurLieu"];
+                        if($nombreLancementsMeilleurLieu > $maxValeurYAxis){
+                            $maxValeurYAxis = $nombreLancementsMeilleurLieu;
+                        }
+                    }
+                    else{
+                        $nombreLancementsMeilleurLieu = 0;
+                    }
+                    if(array_key_exists("nombreRequetesHere", $donneesLigne)){
+                        $nombreRequetesHere = $donneesLigne["nombreRequetesHere"];
+                        if($nombreRequetesHere > $maxValeurYAxis){
+                            $maxValeurYAxis = $nombreRequetesHere;
+                        }
+                    }
+                    else{
+                        $nombreRequetesHere = 0;
+                    }
+                    if(array_key_exists("nombreExclusions", $donneesLigne)) {
+                        $nombreExclusions = $donneesLigne["nombreExclusions"];
+                        if ($nombreExclusions > $maxValeurYAxis) {
+                            $maxValeurYAxis = $nombreExclusions;
+                        }
+                    }
+                    else{
+                        $nombreExclusions = 0;
+                    }
+                    if(array_key_exists("nombreInterdictions", $donneesLigne)){
+                        $nombreInterdictions = $donneesLigne["nombreInterdictions"];
+                        if($nombreInterdictions > $maxValeurYAxis){
+                            $maxValeurYAxis = $nombreInterdictions;
+                        }
+                    }
+                    else{
+                        $nombreInterdictions = 0;
+                    }
+                    if(array_key_exists("nombreRepartitionsHomogenes", $donneesLigne)){
+                        $nombreRepartitionsHomogenes = $donneesLigne["nombreRepartitionsHomogenes"];
+                        if($nombreRepartitionsHomogenes > $maxValeurYAxis){
+                            $maxValeurYAxis = $nombreRepartitionsHomogenes;
+                        }
+                    }
+                    else{
+                        $nombreRepartitionsHomogenes = 0;
+                    }
+
+
+                    if($formatResultat == "jour"){
+                        $formatDate = 'd/m/Y';
+                    }
+                    elseif($formatResultat == "mois"){
+                        $formatDate = 'm/Y';
+                    }
+                    elseif($formatResultat == "annee"){
+                        $formatDate = 'Y';
+                    }
+                    $dateMod = date_format(date_create_from_format($formatDate, $dateCle), 'Y/m/d');
+                    error_log("\n dateMod: ".print_r($dateMod, true), 3, $this->error_log_path);
+
+                    array_push($donneesNbrConnexions, array("dateMod"=>$dateMod, "valeur"=> $nombreConnexions));
+                    array_push($donneesNbrLancementOptiPoule, array("dateMod"=>$dateMod, "valeur"=> $nombreLancementsOptiPoule));
+                    array_push($donneesNbrLancementMeilleurLieu, array("dateMod"=>$dateMod, "valeur"=> $nombreLancementsMeilleurLieu));
+                    array_push($donneesNbrRequetesHere, array("dateMod"=>$dateMod, "valeur"=> $nombreRequetesHere));
+                    array_push($donneesNbrExclusions, array("dateMod"=>$dateMod, "valeur"=> $nombreExclusions));
+                    array_push($donneesNbrInterdictions, array("dateMod"=>$dateMod, "valeur"=> $nombreInterdictions));
+                    array_push($donneesNbrRepartitionsHomogenes, array("dateMod"=>$dateMod, "valeur"=> $nombreRepartitionsHomogenes));
+                }
+//                error_log("\n donneesNbrConnexions: ".print_r($donneesNbrConnexions, true), 3, $this->error_log_path);
 
 
                 # ajouter les dates dans les données de graph
@@ -465,12 +538,26 @@ class Statistiques {
                 $donneesGraph["dateFinGraph"] = $dateFinGraph;
                 $donneesGraph["formatResultat"] = $formatResultat;
                 $donneesGraph["nbrLabelXAxis"] = $nbrLabelXAxis;
+                $donneesGraph["maxValeurYAxis"] = $maxValeurYAxis;
 
-//            error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
+                $donneesGraph["typeRapport"] = $typeRapport;
+                $donneesGraph["donneesNbrConnexions"] = $donneesNbrConnexions;
+                $donneesGraph["donneesNbrLancementOptiPoule"] = $donneesNbrLancementOptiPoule;
+                $donneesGraph["donneesNbrLancementMeilleurLieu"] = $donneesNbrLancementMeilleurLieu;
+                $donneesGraph["donneesNbrRequetesHere"] = $donneesNbrRequetesHere;
+                $donneesGraph["donneesNbrExclusions"] = $donneesNbrExclusions;
+                $donneesGraph["donneesNbrInterdictions"] = $donneesNbrInterdictions;
+                $donneesGraph["donneesNbrRepartitionsHomogenes"] = $donneesNbrRepartitionsHomogenes;
+
             }
             else{
                 $flagAfficheGraphique = 0;
             }
+//            error_log("\n flagAfficheGraphique: ".print_r($flagAfficheGraphique, true), 3, $this->error_log_path);
+//            error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
+//            error_log("\n donneesGraph: ".print_r($donneesGraph, true), 3, $this->error_log_path);
+//            error_log("\n flagDonneesExiste: ".print_r($flagDonneesExiste, true), 3, $this->error_log_path);
+//            error_log("\n flagAfficheGraphique: ".print_r($flagAfficheGraphique, true), 3, $this->error_log_path);
 
             return array("lignesTableau" => $lignesTableauCompleter,
                 "donneesGraph" => $donneesGraph,
@@ -487,6 +574,7 @@ class Statistiques {
 
     }
 
+
     # Fonction pour completer les dates manquantes dans l'interval donné
     private function completerDateDonneesStatistiques($donneesStatistiques, $formatResultat, $dateDebutStr, $dateFinStr){
 
@@ -494,6 +582,7 @@ class Statistiques {
         date_default_timezone_set('Europe/Paris');
 
         $donneesCompleter = array();
+        error_log("\n donneesStatistiques: ".print_r($donneesStatistiques, true), 3, $this->error_log_path);
 
         if($formatResultat == "jour"){
             $formatDate = 'd/m/Y';
@@ -520,7 +609,7 @@ class Statistiques {
         }
 
 //        error_log("\n formatDate: ".print_r($formatDate, true), 3, $this->error_log_path);
-//        error_log("\n dateDebutStr: ".print_r($dateDebutStr, true), 3, $this->error_log_path);
+//        error_log("\n deltaTemps: ".print_r($deltaTemps, true), 3, $this->error_log_path);
 
         # créer un objet DateTime pour la date de début
         $dateTimeDebut = \DateTime::createFromFormat($formatDate, $dateDebutStr);
