@@ -245,11 +245,6 @@ class Statistiques {
                 $valeur = $ligneDb["valeur"];
                 $typeStatistiques = $ligneDb["type_statistiques"];
 
-                # comparer avec max Valeur
-//                if($valeur > $maxValeurYAxis){
-//                    $maxValeurYAxis = $valeur;
-//                }
-
 
                 # formater la date selon le format français
                 $dateLigneTmp = explode("-", $dateLigneDb);
