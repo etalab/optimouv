@@ -132,7 +132,12 @@
 
         var lineGen = d3.svg.line()
                 .x(function(d) {
-                    return xScale(parseDate(d.dateMod));
+                    console.log("d.dateMod: " + d.dateMod);
+
+                    console.log("parseDate(d.dateMod): " + parseDate(d.dateMod));
+                    return xScale(
+                            parseDate(d.dateMod)
+                    );
                 })
                 .y(function(d) {
                     return yScale(d.valeur);

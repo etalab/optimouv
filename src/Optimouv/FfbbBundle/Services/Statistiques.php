@@ -450,14 +450,15 @@ class Statistiques {
                         $nombreConnexions = 0;
                     }
 
-                    $dateMod = date_format(date_create_from_format('d/m/Y', $dateDebutStr), 'Y/m/d');
-                    error_log("\n dateMod: ".print_r($dateMod, true), 3, $this->error_log_path);
+                    $dateMod = date_format(date_create_from_format('d/m/Y', $dateCle), 'Y/m/d');
+//                    error_log("\n dateMod: ".print_r($dateMod, true), 3, $this->error_log_path);
 
                     $objTmp = [];
                     $objTmp["dateMod"] = $dateMod;
                     $objTmp["valeur"] = $nombreConnexions;
                     array_push($donneesNbrConnexions, $objTmp);
                 }
+//                error_log("\n donneesNbrConnexions: ".print_r($donneesNbrConnexions, true), 3, $this->error_log_path);
 
 //            $donnees1 = array();
 //            array_push($donnees1, array("sale"=>202, "year"=>2000));
