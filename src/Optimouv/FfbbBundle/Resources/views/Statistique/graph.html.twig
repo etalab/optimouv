@@ -16,13 +16,14 @@
     </style>
 
     <div class="jumbotron">
-        <svg id="visualisation" width="1000" height="500"></svg>
+        <svg id="visualisation" width="1000" height="550"></svg>
     </div>
 
 
 
 </div>
 
+<script src="{{ asset('bundles/ffbb/bower_components/jquery/dist/jquery.min.js') }}"></script>
 
 
 <script type="text/javascript">
@@ -55,7 +56,7 @@
 
         var svg = d3.select("#visualisation"),
                 WIDTH = 1000,
-                HEIGHT = 500,
+                HEIGHT = 550,
                 MARGINS = {
                     top: 20,
                     right: 50,
@@ -68,12 +69,16 @@
             var xScale = d3.time.scale().range([MARGINS.left, WIDTH- MARGINS.right]).domain([mindate, maxdate]);
             var xAxis = d3.svg.axis()
                     .scale(xScale);
-            
-            var deltaJours = Math.round(nbrLabelXAxis/7) + 1;
+
+            console.log('nbrLabelXAxis: ' + nbrLabelXAxis);
+
+            var deltaJours = Math.floor(nbrLabelXAxis/7) + 1;
             console.log('deltaJours: ' + deltaJours);
 
+//            console.log('d3.time.day: ' + d3.time.day);
             xAxis.ticks(d3.time.day, deltaJours)
                     .tickFormat(d3.time.format("%d/%m/%Y"));
+
         }
         else if(formatResultat == "mois"){
             var mindate = new Date("2016/04/01"),
@@ -101,11 +106,17 @@
                         .orient("left");
 
 
-
         svg.append("svg:g")
                 .attr("class", "x axis")
                 .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
-                .call(xAxis);
+                .call(xAxis)
+                .selectAll("text")
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em")
+                .attr("transform", function(d) {
+                    return "rotate(-65)"
+                });;
         svg.append("svg:g")
                 .attr("class", "y axis")
                 .attr("transform", "translate(" + (MARGINS.left) + ",0)")
