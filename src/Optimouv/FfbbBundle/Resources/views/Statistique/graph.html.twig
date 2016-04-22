@@ -18,7 +18,7 @@
     </style>
 
     <div class="jumbotron">
-        <svg id="visualisation" width="1000" height="620"></svg>
+        <svg id="visualisation" width="1000" height="800"></svg>
     </div>
 
 
@@ -56,8 +56,9 @@
         var donneesNbrExclusions = donneesGraph.donneesNbrExclusions;
         var tousRapports = [donneesNbrConnexions,donneesNbrLancementOptiPoule, donneesNbrLancementMeilleurLieu, donneesNbrRequetesHere, donneesNbrInterdictions,
             donneesNbrRepartitionsHomogenes, donneesNbrExclusions];
-        var libelleTousRapports = ['Nombre de connexions', 'Nombre de lancement opti poule', 'Nombre de lancement meilleur lieu', 'Nombre de requete HERE', 'Nombre d\'interdictions',
-                                    'Nombre de répartitions homogènes','Nombre de exclusions']
+        var libelleTousRapports = ['Nombre de connexions à Optimouv', 'Nombre de lancements de la fonction optimisation des poules',
+            'Nombre de lancements de la fonction meilleur lieu de rencontre', 'Nombre de requête HERE effectuées (toutes fonctions confondues)',
+            'Nombre d\'interdictions utilisées', 'Nombre de répartitions homogènes utilisées','Nombre de exclusions géographiques utilisées']
 
 
 
@@ -200,7 +201,7 @@
         }
 
 
-        // add legend
+        // ajouter legende
         var w = 100;
         var legend = svg.append("g")
                 .attr("class", "legend")
@@ -208,7 +209,7 @@
                 .attr("y", 50)
                 .attr("height", 100)
                 .attr("width", 100)
-                .attr('transform', 'translate(20,50)');
+                .attr('transform', 'translate(100,630)');
 
         legend.selectAll('rect')
                 .data(tousRapports)
