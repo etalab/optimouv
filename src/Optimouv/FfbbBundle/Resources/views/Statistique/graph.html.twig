@@ -54,9 +54,6 @@
 //        console.log('mindate: ' + mindate);
 //        console.log('maxdate: ' + maxdate);
 
-
-//        var maxValeurY = 220;
-
         var svg = d3.select("#visualisation"),
                 WIDTH = 1000,
                 HEIGHT = 550,
@@ -86,7 +83,6 @@
             var xAxis = d3.svg.axis()
                     .scale(xScale);
 
-//            console.log('nbrLabelXAxis: ' + nbrLabelXAxis);
             var deltaMois = Math.floor(nbrLabelXAxis/7) + 1;
 
             xAxis.ticks(d3.time.month, deltaMois)
@@ -131,14 +127,14 @@
                 .call(yAxis);
 
 
-//        var lineGen = d3.svg.line()
-//                .x(function(d) {
-//                    return xScale(d.year);
-//                })
-//                .y(function(d) {
-//                    return yScale(d.sale);
-//                })
-//                .interpolate("basis");
+        var lineGen = d3.svg.line()
+                .x(function(d) {
+                    return xScale(d.date);
+                })
+                .y(function(d) {
+                    return yScale(d.valeur);
+                })
+                .interpolate("basis");
 
 //        svg.append('svg:path')
 //                .attr('d', lineGen(data))

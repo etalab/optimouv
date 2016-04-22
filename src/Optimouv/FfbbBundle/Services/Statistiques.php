@@ -385,7 +385,6 @@ class Statistiques {
 
 
             # données pour la graphique
-            $donneesGraph = [];
 
 //            $donnees1 = array();
 
@@ -420,10 +419,6 @@ class Statistiques {
 
             }
 
-            # obtenir la valeur max des données
-//            $maxValeur = $this->getMaxValeur($lignesTableau);
-//            error_log("\n maxValeur: ".print_r($maxValeur, true), 3, $this->error_log_path);
-
             # compléter les dates manquantes dans l'interval donné (s'il y a au moins deux lignes dans les données tabulaires)
             if(count($lignesTableau) > 0){
                 $lignesTableauCompleter = $this->completerDateDonneesStatistiques($lignesTableau, $formatResultat, $dateDebutStr, $dateFinStr);
@@ -431,8 +426,6 @@ class Statistiques {
             else{
                 $lignesTableauCompleter = $lignesTableau;
             }
-
-            error_log("\n lignesTableauCompleter: ".print_r($lignesTableauCompleter, true), 3, $this->error_log_path);
 
 
             # données pour la graphique
@@ -472,6 +465,7 @@ class Statistiques {
 
 
                 # ajouter les dates dans les données de graph
+                $donneesGraph = [];
                 $donneesGraph["dateDebutGraph"] = $dateDebutGraph;
                 $donneesGraph["dateFinGraph"] = $dateFinGraph;
                 $donneesGraph["formatResultat"] = $formatResultat;
