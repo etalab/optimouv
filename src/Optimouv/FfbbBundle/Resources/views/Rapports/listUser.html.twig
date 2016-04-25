@@ -1,0 +1,236 @@
+
+{# tableau pour les rapports de meilleurs lieux de rencontre #}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Liste de vos rapports ~ Meilleurs lieux de rencontres
+
+    </div>
+
+    <div class="panel-body">
+        <div class="dataTable_wrapper">
+            <div class="span3">
+                <table class="table table-striped table-hover table-bordered table-fixed"
+                       id="tableRapport">
+                    <thead>
+                    <tr>
+                        {#<th>No</th>#}
+                        <th>Nom du rapport</th>
+                        <th>Caractéristiques du rapport</th>
+                        <th>Fichier</th>
+                        <th>Sélection</th>
+                        <th>Fédération</th>
+                        <th>Utilisateur</th>
+                        <th>Date de création</th>
+                        <th>Statut</th>
+                        <th>Action</th>
+
+                    </tr>
+                    </thead>
+
+
+                    <tbody>
+
+                    {% for infoRapport in infoRapports %}
+                        {% if infoRapport.typeActionRapport in rencontre %}
+                            <tr id="{{ infoRapport.idRapport }}">
+
+                                {#<td> {{ infoRapport.idRapport }} </td>#}
+                                <td> {{ infoRapport.nomRapport }} </td>
+
+
+                                {% if infoRapport.typeActionRapport == "barycentre" %}
+                                    <td> Barycentre</td>
+                                {% elseif infoRapport.typeActionRapport == "meilleurLieu" %}
+                                    <td> Lieux définis</td>
+                                {% elseif infoRapport.typeActionRapport == "exclusion" %}
+                                    <td> Barycentre avec exclusion</td>
+                                {% elseif infoRapport.typeActionRapport == "terrainNeutre" %}
+                                    <td> Lieux définis avec liste de lieux</td>
+                                {% else %}
+                                    <td> {{ infoRapport.typeActionRapport }} </td>
+                                {% endif %}
+                                <td>{{ infoRapport.nomListe }}</td>
+                                <td>{{ infoRapport.nomGroupe }}</td>
+                                <td>{{ infoRapport.federationUser }}</td>
+                                <td>{{ infoRapport.nomUser }} {{ infoRapport.prenomUser }}</td>
+
+                                <td> {{ infoRapport.dateCreationRapport|date('d/m/Y') }} </td>
+
+                                {% if infoRapport.statutRapport  == -1 %}
+                                    <td> Erreur</td>
+                                {% elseif infoRapport.statutRapport  == 0 %}
+                                    <td> En attente</td>
+                                {% elseif infoRapport.statutRapport == 1 %}
+                                    <td> En cours</td>
+                                {% elseif infoRapport.statutRapport  == 2 %}
+                                    <td> Succès</td>
+                                {% else %}
+                                    <td> Inconnu</td>
+                                {% endif %}
+
+
+                                <td>
+                                    {% if infoRapport.statutRapport  == 2 %}
+
+                                        <form name="consulterRapport"
+                                              action="{{ path('ffbb_consulter_rapport', {'idRapport':infoRapport.idRapport, 'typeAction': infoRapport.typeActionRapport}) }}"
+                                              method="post">
+                                            <input type="hidden" name="typeAction" id="typeAction"
+                                                   value="{{ infoRapport.typeActionRapport }}">
+                                            <button type="submit" class="btn btn-consulter-rapport">
+                                                Visualiser
+                                            </button>
+                                            <a href="{{ path('ffbb_editer_rapport', {idRapport: infoRapport.idRapport}) }}"
+                                               class="btn btn-ajouter-reparition">Renommer</a>
+                                            <button type="button" name="delete"
+                                                    class="btn btn-ajouter-reparition"
+                                                    onclick="deleteRapport({{ infoRapport.idRapport }})">
+                                                Supprimer
+                                            </button>
+
+
+                                        </form>
+                                    {% else %}
+                                        <button type="submit" class="btn btn-consulter-rapport"
+                                                disabled>Consulter
+                                        </button>
+
+
+                                    {% endif %}
+
+                                </td>
+
+
+                            </tr>
+                        {% endif %}
+
+                    {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+        <!-- /.table-responsive -->
+    </div>
+
+</div>
+
+{# tableau pour les rapports de poules #}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Liste de vos rapports ~ Optimisation des poules
+
+    </div>
+
+    <div class="panel-body">
+        <div class="dataTable_wrapper">
+            <div class="span3">
+                <table class="table table-striped table-hover table-bordered table-fixed"
+                       id="tableRapportPoule">
+                    <thead>
+                    <tr>
+                        {#<th>No</th>#}
+                        <th>Nom du rapport</th>
+                        <th>Caractéristiques du rapport</th>
+                        <th>Fichier</th>
+                        <th>Sélection</th>
+                        <th>Fédération</th>
+                        <th>Utilisateur</th>
+                        <th>Date de création</th>
+                        <th>Statut</th>
+                        <th>Action</th>
+
+                    </tr>
+                    </thead>
+
+
+                    <tbody>
+
+                    {% for infoRapport in infoRapports %}
+                        {% if infoRapport.typeActionRapport not in rencontre %}
+                            <tr id="{{ infoRapport.idRapport }}">
+
+                                {#<td> {{ infoRapport.idRapport }} </td>#}
+                                <td> {{ infoRapport.nomRapport }} </td>
+
+                                {% if infoRapport.typeActionRapport == "allerRetour" %}
+                                    <td> Match aller retour</td>
+                                {% elseif infoRapport.typeActionRapport == "allerSimple" %}
+                                    <td> Match aller simple</td>
+                                {% elseif infoRapport.typeActionRapport == "plateau" %}
+                                    <td> Plateau</td>
+
+                                {% else %}
+                                    <td> {{ infoRapport.typeActionRapport }} </td>
+                                {% endif %}
+                                <td>{{ infoRapport.nomListe }}</td>
+                                <td>{{ infoRapport.nomGroupe }}</td>
+                                <td>{{ infoRapport.federationUser }}</td>
+                                <td>{{ infoRapport.nomUser }} {{ infoRapport.prenomUser }}</td>
+
+                                <td> {{ infoRapport.dateCreationRapport|date('d/m/Y') }} </td>
+
+                                {% if infoRapport.statutRapport  == -1 %}
+                                    <td> Erreur</td>
+                                {% elseif infoRapport.statutRapport  == 0 %}
+                                    <td> En attente</td>
+                                {% elseif infoRapport.statutRapport == 1 %}
+                                    <td> En cours</td>
+                                {% elseif infoRapport.statutRapport  == 2 %}
+                                    <td> Succès</td>
+                                {% else %}
+                                    <td> Inconnu</td>
+                                {% endif %}
+
+
+                                <td>
+                                    {% if infoRapport.statutRapport  == 2 %}
+
+                                        <form name="consulterRapport"
+                                              action="{{ path('ffbb_consulter_rapport', {'idRapport':infoRapport.idRapport, 'typeAction': infoRapport.typeActionRapport}) }}"
+                                              method="post">
+                                            <input type="hidden" name="typeAction" id="typeAction"
+                                                   value="{{ infoRapport.typeActionRapport }}">
+                                            <button type="submit" class="btn btn-consulter-rapport">
+                                                Visualiser
+                                            </button>
+                                            <a href="{{ path('ffbb_editer_rapport', {idRapport: infoRapport.idRapport}) }}"
+                                               class="btn btn-ajouter-reparition">Renommer</a>
+                                            <button type="button" name="delete"
+                                                    class="btn btn-ajouter-reparition"
+                                                    onclick="deleteRapport({{ infoRapport.idRapport }})">
+                                                Supprimer
+                                            </button>
+
+
+                                        </form>
+                                    {% else %}
+                                        <button type="submit" class="btn btn-consulter-rapport"
+                                                disabled>Consulter
+                                        </button>
+
+
+                                    {% endif %}
+
+                                </td>
+
+
+                            </tr>
+                        {% endif %}
+
+                    {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+        <!-- /.table-responsive -->
+    </div>
+
+</div>

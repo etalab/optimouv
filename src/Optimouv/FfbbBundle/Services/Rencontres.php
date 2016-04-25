@@ -1325,6 +1325,16 @@ class Rencontres
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
+        $tabAction[0]= "barycentre";
+        $tabAction[1]= "exclusion";
+        $tabAction[2]= "meilleurLieu";
+        $tabAction[3]= "terrainNeutre";
+        if(in_array($typeAction,$tabAction)){
+            $prefixe_nom = "Meilleur lieu";
+        }
+        else{
+            $prefixe_nom = "Poules";
+        }
         # obtenir l'objet PDO
         $pdo = Rencontres::connexion();
 
@@ -1332,6 +1342,13 @@ class Rencontres
             error_log("\n erreur récupération de l'objet PDO, Service: Rencontres, Function: creerRapport, datetime: ".$dateTimeNow, 3, $this->error_log_path);
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
+
+        //récupérer le nom du groupe
+        $getNomGroupe = $pdo->prepare("select nom from groupe where id = :id ;");
+        $getNomGroupe->bindParam(':id', $idGroupe);
+        $getNomGroupe->execute();
+        $nomGroupe = $getNomGroupe->fetchColumn();
+
 
         # controler si le rapport est déjà dans la table rapport
         try {
@@ -1351,7 +1368,8 @@ class Rencontres
             # insérer dans la table rapport si le rapport est nouveau
             if(!$resultat){
 
-                $nom = "rapport_groupe_".$idGroupe."_action_".$typeAction;
+               //attribuer un nom au groupe
+                $nom = $prefixe_nom.$nomGroupe;
 
 
                 $sql = "INSERT INTO parametres (nom, id_groupe, params, date_creation)
