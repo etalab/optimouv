@@ -1371,7 +1371,6 @@ class Rencontres
                //attribuer un nom au groupe
                 $nom = $prefixe_nom.$nomGroupe;
 
-
                 $sql = "INSERT INTO parametres (nom, id_groupe, params, date_creation)
                           VALUES (:nom, :id_groupe, :type_action, :valeur_exclusion, :date_creation)";
                 $stmt = $pdo->prepare($sql);
@@ -1594,6 +1593,24 @@ class Rencontres
 
         $bdd= Rencontres::connexion();
 
+
+        $tabAction[0]= "barycentre";
+        $tabAction[1]= "exclusion";
+        $tabAction[2]= "meilleurLieu";
+        $tabAction[3]= "terrainNeutre";
+        if(in_array($typeAction,$tabAction)){
+            $prefixe_nom = "Meilleur lieu";
+        }
+        else{
+            $prefixe_nom = "Poules";
+        }
+
+        //récupérer le nom du groupe
+        $getNomGroupe = $bdd->prepare("select nom from groupe where id = :id ;");
+        $getNomGroupe->bindParam(':id', $idGroupe);
+        $getNomGroupe->execute();
+        $nomGroupe = $getNomGroupe->fetchColumn();
+
         //déclaration des parametres pour la req insert dans la table parametres
 
         $statut = 0;
@@ -1601,7 +1618,8 @@ class Rencontres
         //recuperer la date du jour
         $date = new \DateTime();
         $dateCreation = $date->format('Y-m-d');
-        $nomRapport = "rapport_groupe_".$idGroupe."_action_".$typeAction;
+//        $nomRapport = "rapport_groupe_".$idGroupe."_action_".$typeAction;
+        $nomRapport = $prefixe_nom."_".$nomGroupe;
 
         //on ajoute un job dans la table parametres
         //TODO:changer le nom de la table rapport en paramètres
@@ -1628,12 +1646,20 @@ class Rencontres
 
         $statut = 0;
         $typeAction = "exclusion";
+        $prefixe_nom = "Meilleur lieu";
+
+        //récupérer le nom du groupe
+        $getNomGroupe = $bdd->prepare("select nom from groupe where id = :id ;");
+        $getNomGroupe->bindParam(':id', $idGroupe);
+        $getNomGroupe->execute();
+        $nomGroupe = $getNomGroupe->fetchColumn();
+
 
         //recuperer la date du jour
         $date = new \DateTime();
         $dateCreation = $date->format('Y-m-d');
-        $nomRapport = "rapport_groupe_".$idGroupe."_action_".$typeAction;
-
+//        $nomRapport = "rapport_groupe_".$idGroupe."_action_".$typeAction;
+        $nomRapport = $prefixe_nom."_".$nomGroupe;
 
         //on ajoute un job dans la table parametres
         //TODO:changer le nom de la table rapport en paramètres
