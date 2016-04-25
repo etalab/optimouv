@@ -294,13 +294,19 @@ ffbb_statistiques_index:
     path:     /admin/statistiques/index
     defaults: { _controller: FfbbBundle:Statistique:index }
 
-ffbb_statistiques_export_pdf:
-    path:     /admin/statistiques/export/sauvegarde/pdf/
-    defaults: { _controller: FfbbBundle:Statistique:exportPdf }
+#ffbb_statistiques_export_pdf:
+#    path:     /admin/statistiques/export/sauvegarde/pdf/
+#    defaults: { _controller: FfbbBundle:Statistique:exportPdf }
 
 ffbb_statistiques_filtre:
     path:     /admin/statistiques/filtre/
     defaults: { _controller: FfbbBundle:Statistique:filtre}
+
+ffbb_statistiques_pretraitement_export:
+    path:    /admin/statistiques/export/pretraitement-export/
+    defaults: { _controller: FfbbBundle:Statistique:pretraitementExport}
+
+
 
 #Federation
 ffbb_federation_list:

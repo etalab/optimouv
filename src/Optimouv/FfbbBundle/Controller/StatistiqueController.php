@@ -54,7 +54,19 @@ class StatistiqueController extends Controller
         );
     }
 
-    public function exportPdfAction()
+    public function pretraitementExportAction(){
+        # récupérer chemin fichier log du fichier parameters.yml
+        $this->error_log_path = $this->container->getParameter("error_log_path");
+
+
+        $formatExport = $_POST['formatExport'];
+
+        if($formatExport == "pdf"){
+            return $this->exportPdfAction();
+        }
+    }
+
+    private function exportPdfAction()
     {
         # récupérer chemin fichier log du fichier parameters.yml
         $this->error_log_path = $this->container->getParameter("error_log_path");

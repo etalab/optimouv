@@ -159,7 +159,8 @@
 
                             <div class="form-group">
                                 <div class="col-md-12">
-                                    <form name="submitParams" action="{{ path('ffbb_statistiques_export_pdf')}}" method="post">
+                                    {#<form name="submitParams" action="{{ path('ffbb_statistiques_export_pdf')}}" method="post">#}
+                                    <form name="submitParams" action="{{ path('ffbb_statistiques_pretraitement_export')}}" method="post">
                                         <button style="width: 120px" type="submit" class="btn btn-statistique pull-right">Exporter</button>
                                         <input type="hidden" name="typeRapport">
                                         <input type="hidden" name="idFederation">
@@ -169,6 +170,7 @@
                                         <input type="hidden" name="dateFinStr">
                                         <input type="hidden" name="dateDebutFormatter">
                                         <input type="hidden" name="dateFinFormatter">
+                                        <input type="hidden" name="formatExport" value="pdf">
 
                                     </form>
                                 </div>
@@ -231,11 +233,25 @@
 
                         <div class="form-group">
                             <div class="col-md-12">
-                                <select class="btn btn-statistique pull-right" name="formatExport">
-                                    <option value="" disabled="disabled" selected="selected">Choisir un format d'export</option>
-                                    <option class="btn btn-statistique" value="xml">Exporter en XML</option>
-                                    <option value="csv">Exporter en CSV</option>
-                                </select>
+
+                                <form name="exportFichiers" action="{{ path('ffbb_poules_pretraitement_export')}}" method="post">
+                                    <input type="hidden" name="typeRapport">
+                                    <input type="hidden" name="idFederation">
+                                    <input type="hidden" name="idDiscipline">
+                                    <input type="hidden" name="idUtilisateur">
+                                    <input type="hidden" name="dateDebutStr">
+                                    <input type="hidden" name="dateFinStr">
+                                    <input type="hidden" name="dateDebutFormatter">
+                                    <input type="hidden" name="dateFinFormatter">
+
+                                    <select onchange="this.form.submit()" class="btn btn-statistique pull-right" name="formatExport">
+                                        <option value="" disabled="disabled" selected="selected">Choisir un format d'export</option>
+                                        <option value="xml">Exporter en XML</option>
+                                        <option value="csv">Exporter en CSV</option>
+                                    </select>
+
+                                </form>
+
                             </div>
                         </div>
 
