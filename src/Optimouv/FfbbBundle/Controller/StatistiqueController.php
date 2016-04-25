@@ -130,23 +130,6 @@ class StatistiqueController extends Controller
 
         $donneesStatistiques = $this->get('service_statistiques')->getDonneesStatistiques();
 
-        $tableauOutput = array(
-            "donneesStatistiques" => $donneesStatistiques,
-            "typeRapport" => $typeRapport,
-            "dateDebutStr" => $dateDebutStr,
-            "dateFinStr" => $dateFinStr,
-            "nomFederation" => $nomFederation,
-            "nomDiscipline" => $nomDiscipline,
-            "nomUtilisateur" => $nomUtilisateur,
-            "prenomUtilisateur" => $prenomUtilisateur,
-
-
-        );
-
-//        return $this->render('FfbbBundle:Statistique:exportPdf.html.twig',
-//            $tableauOutput
-//        );
-
 
         # construire le nom de la graphique
         $nomGraph = "Rapport_".$typeRapport."_";
@@ -157,6 +140,26 @@ class StatistiqueController extends Controller
             $nomGraph .= $nomFederation;
         }
         $nomGraph .= "_".$dateTimeNow;
+
+
+        $tableauOutput = array(
+            "donneesStatistiques" => $donneesStatistiques,
+            "typeRapport" => $typeRapport,
+            "dateDebutStr" => $dateDebutStr,
+            "dateFinStr" => $dateFinStr,
+            "nomFederation" => $nomFederation,
+            "nomDiscipline" => $nomDiscipline,
+            "nomUtilisateur" => $nomUtilisateur,
+            "prenomUtilisateur" => $prenomUtilisateur,
+            "nomGraph" => $nomGraph,
+
+        );
+
+//        return $this->render('FfbbBundle:Statistique:exportPdf.html.twig',
+//            $tableauOutput
+//        );
+
+
 
         # render la page d'export pdf
         $html = $this->renderView('FfbbBundle:Statistique:exportPdf.html.twig', $tableauOutput
