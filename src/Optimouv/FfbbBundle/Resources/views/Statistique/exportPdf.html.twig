@@ -10,21 +10,24 @@
 </head>
 
 <body>
+{% set kernelRootDir = kernelRootDir[:-3] %}
+<img src="{{ kernelRootDir }}web\bundles\ffbb\accueil\img\Logo-Optimouv.jpg">
+<br><br>
 
 <h3> Export de votre recherche </h3>
 <h4>Type de Rapport : {{ typeRapport }}</h4>
-<h4>Nom de Fédération : {{ nomFederation }}</h4>
+<h4>Fédération : {{ nomFederation }}</h4>
 
 {% if nomDiscipline == "tous" %}
-    <h4>Nom de Discipline: Toutes disciplines </h4>
+    <h4>Discipline: Toutes disciplines </h4>
 {% else %}
-    <h4>Nom de Discipline: {{ nomDiscipline }}</h4>
+    <h4>Discipline: {{ nomDiscipline }}</h4>
 {% endif %}
 
 {% if nomUtilisateur == "tous" %}
-    <h4>Nom d'Utilisateur : Tous utilisateurs</h4>
+    <h4>Utilisateur : Tous utilisateurs</h4>
 {% else %}
-    <h4>Nom d'Utilisateur : {{ nomUtilisateur }}</h4>
+    <h4>Utilisateur : {{ nomUtilisateur }}</h4>
 {% endif %}
 
 <h4>Date de début : {{ dateDebutStr }}</h4>
