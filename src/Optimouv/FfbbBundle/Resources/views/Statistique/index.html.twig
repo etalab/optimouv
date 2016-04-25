@@ -275,6 +275,12 @@
             $("#rappportStatistiques").hide();
 
 
+            function viderSelectDisciplines(){
+                $('#selectDiscipline').prop('selectedIndex',0)
+                        .find('option')
+                        .remove();
+            }
+
             function reinitiliaserSelectDisciplines(){
                 $('#selectDiscipline').prop('selectedIndex',0)
                         .find('option')
@@ -327,6 +333,19 @@
             }
 
 
+            function remplirTousUtilisateurs(){
+                $('#selectUtilisateur')
+                        .append($("<option></option>")
+                                .attr("value", "tous")
+                                .text("Tous utilisateurs"));
+            }
+
+            function remplirToutesDisciplines(){
+                $('#selectDiscipline')
+                        .append($("<option></option>")
+                                .attr("value", "tous")
+                                .text("Toutes disciplines"));
+            }
 
             // obtenir les données pour les filtres
             var listeFederations = {{ listeFederations | json_encode | raw }};
@@ -373,32 +392,55 @@
                     reinitiliaserSelectDisciplines();
                     reinitiliaserSelectUtilisateurs();
 
-                    for(var i=0; i<disciplinesSelectionner.length; i++){
-                        var disciplineId = disciplinesSelectionner[i]["id"];
-//                        console.log( "disciplineId: " + JSON.stringify(disciplineId));
-                        var disciplineNom = disciplinesSelectionner[i]["nom"];
-//                        console.log( "disciplineNom: " + JSON.stringify(disciplineNom));
-
-
-                        // ajouter des options pour le select disciplines
-                        $('#selectDiscipline')
-                                .append($("<option></option>")
-                                        .attr("value", disciplineId)
-                                        .text(disciplineNom));
-
-                    }
-
                     // obtenir le type de rapport
                     var typeRapport = $("#selectRapport option:selected").val();
 //                    console.log( "typeRapport: " + typeRapport );
 
-                    if(typeRapport == "systeme" || typeRapport == "federation" ){
-                        $('#selectDiscipline')
-                                .append($("<option></option>")
-                                        .attr("value", "tous")
-                                        .text("Toutes disciplines"));
+                    if(typeRapport == "utilisateur") {
+                        for(var i=0; i<disciplinesSelectionner.length; i++){
+                            var disciplineId = disciplinesSelectionner[i]["id"];
+                            var disciplineNom = disciplinesSelectionner[i]["nom"];
+
+                            // ajouter des options pour le select disciplines
+                            $('#selectDiscipline')
+                                    .append($("<option></option>")
+                                            .attr("value", disciplineId)
+                                            .text(disciplineNom));
+
+                        }
+                    }
+                    // pour rapport systeme et fédération, on affiche s'il y a plus d'une discipline
+                    else{
+                        if(typeRapport == "systeme" || typeRapport == "federation" ){
+
+                            if(disciplinesSelectionner.length == 1){
+                                viderSelectDisciplines();
+                                viderSelectUtilisateurs();
+                                remplirToutesDisciplines();
+                                remplirTousUtilisateurs();
+
+
+                            }
+                            else{
+                                for(var i=0; i<disciplinesSelectionner.length; i++){
+                                    var disciplineId = disciplinesSelectionner[i]["id"];
+                                    var disciplineNom = disciplinesSelectionner[i]["nom"];
+
+                                    // ajouter des options pour le select disciplines
+                                    $('#selectDiscipline')
+                                            .append($("<option></option>")
+                                                    .attr("value", disciplineId)
+                                                    .text(disciplineNom));
+
+                                }
+                            }
+
+
+                        }
 
                     }
+
+
 
 
                     }
@@ -462,11 +504,11 @@
                     else if(typeRapport == "systeme" || typeRapport == "federation" ){
                         // fixer les utilisateurs à tous pour le rapport fédération et système
                         viderSelectUtilisateurs();
-
-                        $('#selectUtilisateur')
-                                .append($("<option></option>")
-                                        .attr("value", "tous")
-                                        .text("Tous utilisateurs"));
+                        remplirTousUtilisateurs();
+//                        $('#selectUtilisateur')
+//                                .append($("<option></option>")
+//                                        .attr("value", "tous")
+//                                        .text("Tous utilisateurs"));
 
 
 
