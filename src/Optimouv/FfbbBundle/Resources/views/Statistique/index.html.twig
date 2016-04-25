@@ -2,12 +2,43 @@
 
 {% block pagewrapper %}
 
+    <style>
+        .page-header-mod{
+            padding-bottom: 9px;
+            /* margin: 40px 0 20px; */
+            border-bottom: 1px solid #eee;
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+            border-bottom-color: rgb(238, 238, 238);
+        }
+
+        .tableau-numerique{
+            text-align: right;
+            vertical-align: middle;
+        }
+        .tableau-temps{
+            text-align: center;
+            vertical-align: middle;
+        }
+
+    </style>
+
     <div id="page-wrapper">
+
+        <div class="row">
+            <div class="bs-example">
+                <ul class="breadcrumb">
+                    <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
+                    <li class="active">Statistiques</li>
+                </ul>
+            </div>
+
+        </div>
 
         <div class="row">
             <div class="col-lg-12">
                 <h3 class="page-header">
-                    <b>Visualisez les rapports d'utilisation de l'application</b>
+                    Visualisez les rapports d'utilisation de l'application
                 </h3>
             </div>
         </div>
@@ -16,7 +47,7 @@
             <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4>  Sélectionnez les caractéristiques du rapport statistique que vous souhaitez visualiser </h4>
+                        Sélectionnez les caractéristiques du rapport statistique que vous souhaitez visualiser
                     </div>
                     <div class="panel-body">
 
@@ -24,7 +55,7 @@
 
                         <div class="form-horizontal">
                             <div class="form-group">
-                                <label class="control-label col-sm-2" for="typeRapport">TYPE DE RAPPORT </label>
+                                <label class="control-label col-sm-4" for="typeRapport">Type de rapport </label>
                                 <div class="col-sm-2">
                                     <select class="form-control" id="selectRapport" >
                                         <option value="vide" selected> -- selectionnez une option -- </option>
@@ -42,7 +73,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-sm-2" for="nomFderation">NOM DE LA FEDERATION</label>
+                                {#<label class="control-label col-sm-2" for="nomFderation">NOM DE LA FEDERATION</label>#}
+                                <label class="control-label col-sm-4" for="nomFderation">Nom de la fédération</label>
                                 <div class="col-sm-2">
                                     <select class="form-control" id="selectFederation" >
                                         <option value="vide" selected> -- selectionnez une option -- </option>
@@ -51,7 +83,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-sm-2" for="nomDiscipline">NOM DE LA DISCIPLINE</label>
+                                <label class="control-label col-sm-4" for="nomDiscipline">Nom de la discipline</label>
                                 <div class="col-sm-2">
                                     <select class="form-control" id="selectDiscipline">
                                         <option value="vide" selected> -- selectionnez une option -- </option>
@@ -60,7 +92,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-sm-2" for="nomUtilisateur">NOM DE L'UTILISATEUR</label>
+                                <label class="control-label col-sm-4" for="nomUtilisateur">Nom de l'utilisateur</label>
                                 <div class="col-sm-2">
                                     <select class="form-control" id="selectUtilisateur" >
                                         <option value="vide" selected> -- selectionnez une option -- </option>
@@ -69,7 +101,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-sm-2" for="dateDebut">DATE DE DEBUT</label>
+                                <label class="control-label col-sm-4" for="dateDebut">Date de début</label>
                                 <div class="col-sm-2" >
 
                                     <div class="input-group date" >
@@ -82,7 +114,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-sm-2" for="dateFin">DATE DE FIN</label>
+                                <label class="control-label col-sm-4" for="dateFin">Date de fin</label>
                                 <div class="col-sm-2" >
 
                                     <div class="input-group date" >
@@ -95,8 +127,10 @@
                             </div>
 
                             <div class="form-group">
-                                <div class="control-label col-sm-4 ">
-                                    <button type="submit" class="btn btn-statistique" id="btnGetResultats">Accéder</button>
+                                <div class="control-label col-sm-11 ">
+                                    <div class="control-label col-sm-6">
+                                        <button type="submit" class="btn btn-statistique" id="btnGetResultats">Obtenir mon rapport</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -114,13 +148,13 @@
             <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4> Votre rapport </h4>
+                        Votre rapport
                     </div>
 
                     <div class="panel-body">
 
                         <div id="graphD3">
-                            <h4 class="page-header">Synthèse des utilisations - vue graphique </h4>
+                            <div class="page-header-mod">Synthèse des utilisations - vue graphique </div>
                             {% include 'FfbbBundle:Statistique:graph.html.twig' %}
 
                             <div class="form-group">
@@ -142,30 +176,29 @@
                             <br>
                         </div>
 
-                        <h4 class="page-header">Synthèse des utilisations - vue tableur</h4>
+                        <div class="page-header-mod">Synthèse des utilisations - vue tableur</div>
 
                         <table id="tableUtilisateur" class="table table-striped table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th rowspan="2" width="5%"></th>
+                                    <th rowspan="2" width="5%" class="tableau-temps"><h4>Dates choisies</h4></th>
 
-                                    <th width="10%"><h4><b>Connexion</b></h4></th>
-                                    <th colspan="2" width="20%"><h4><b>Fonctions</b></h4></th>
-                                    <th colspan="3" width="30%"><h4><b>Contraintes</b></h4></th>
-                                    <th colspan="2" width="20%"><h4><b>Outils</b></h4></th>
+                                    <th width="10%" ><h4><b>Connexion</b></h4></th>
+                                    <th colspan="2" width="20%" ><h4><b>Fonctions</b></h4></th>
+                                    <th colspan="3" width="30%" ><h4><b>Contraintes</b></h4></th>
+                                    <th colspan="2" width="20%" ><h4><b>Outils</b></h4></th>
 
 
                                 </tr>
 
                                 <tr>
-                                    <th style="vertical-align: middle"><h4>Nombre de connexions à Optimouv</h4></th>
-                                    <th style="vertical-align: middle"><h4>Nombre de lancements de la fonction optimisation de poules</h4></th>
-                                    <th style="vertical-align: middle"><h4>Nombre de lancements de la fonction meilleur lieu de rencontre</h4></th>
-                                    <th style="vertical-align: middle"><h4>Nombre d'interdictions utilisées</h4></th>
-                                    <th style="vertical-align: middle"><h4>Nombre de répartitions homogènes utilisées</h4></th>
-                                    <th style="vertical-align: middle"><h4>Nombre d'exclusions géographiques utilisés</h4></th>
-                                    {#<th style="vertical-align: middle"><h4>Nombre de lancements de l'algorithme d'optimisation des poules (comprenant les relances de calculs avec modification des critères)</h4></th>#}
-                                    <th style="vertical-align: middle"><h4>Nombre de requêtes Here effectuées (toutes fonctions confondues)</h4></th>
+                                    <th ><h4>Nombre de connexions à Optimouv</h4></th>
+                                    <th ><h4>Nombre de lancements de la fonction optimisation de poules</h4></th>
+                                    <th ><h4>Nombre de lancements de la fonction meilleur lieu de rencontre</h4></th>
+                                    <th ><h4>Nombre d'interdictions utilisées</h4></th>
+                                    <th ><h4>Nombre de répartitions homogènes utilisées</h4></th>
+                                    <th ><h4>Nombre d'exclusions géographiques utilisés</h4></th>
+                                    <th ><h4>Nombre de requêtes Here effectuées (toutes fonctions confondues)</h4></th>
 
                                 </tr>
                             </thead>
@@ -178,13 +211,13 @@
                         <table id="tableSysteme" class="table table-striped table-bordered table-hover">
                             <thead>
                             <tr>
-                                <th style="vertical-align: middle" width="10%"></th>
-                                <th style="vertical-align: middle" width="15%"><h4>Nombre de connexions à Optimouv</h4></th>
-                                <th style="vertical-align: middle" width="15%"><h4>Nombre de lancements de la fonction optimisation de poules</h4></th>
-                                <th style="vertical-align: middle" width="15%"><h4>Nombre de lancements de la fonction meilleur lieu de rencontre</h4></th>
-                                <th style="vertical-align: middle" width="15%"><h4>Nombre de requêtes Here effectuées (toutes fonctions confondues)</h4></th>
-                                <th style="vertical-align: middle" width="15%"><h4>Temps de réponse moyen de la fonction optimisation de poules pour l'obtention des résultats (H:M:S)</h4></th>
-                                <th style="vertical-align: middle" width="15%"><h4>Temps de réponse moyen de la fonction meilleur lieu de rencontre pour l'obtention des résultats (H:M:S)</h4></th>
+                                <th class="tableau-temps" width="10%"><h4>Dates choisies</h4></th>
+                                <th width="15%"><h4>Nombre de connexions à Optimouv</h4></th>
+                                <th width="15%"><h4>Nombre de lancements de la fonction optimisation de poules</h4></th>
+                                <th width="15%"><h4>Nombre de lancements de la fonction meilleur lieu de rencontre</h4></th>
+                                <th width="15%"><h4>Nombre de requêtes Here effectuées (toutes fonctions confondues)</h4></th>
+                                <th class="tableau-temps" width="15%"><h4>Temps de réponse moyen de la fonction optimisation de poules pour l'obtention des résultats (H:M:S)</h4></th>
+                                <th class="tableau-temps" width="15%"><h4>Temps de réponse moyen de la fonction meilleur lieu de rencontre pour l'obtention des résultats (H:M:S)</h4></th>
 
                             </tr>
                             </thead>
@@ -198,10 +231,10 @@
 
                         <div class="form-group">
                             <div class="col-md-12">
-                                <select style="width: 120px" class="btn btn-statistique pull-right" name="formatExport">
-                                    <option value="" disabled="disabled" selected="selected">Exporter</option>
-                                    <option class="btn btn-statistique" value="xml">XML</option>
-                                    <option value="csv">CSV</option>
+                                <select class="btn btn-statistique pull-right" name="formatExport">
+                                    <option value="" disabled="disabled" selected="selected">Choisir un format d'export</option>
+                                    <option class="btn btn-statistique" value="xml">Exporter en XML</option>
+                                    <option value="csv">Exporter en CSV</option>
                                 </select>
                             </div>
                         </div>
@@ -241,6 +274,12 @@
             // cacher le rapport statistiques
             $("#rappportStatistiques").hide();
 
+
+            function viderSelectDisciplines(){
+                $('#selectDiscipline').prop('selectedIndex',0)
+                        .find('option')
+                        .remove();
+            }
 
             function reinitiliaserSelectDisciplines(){
                 $('#selectDiscipline').prop('selectedIndex',0)
@@ -294,6 +333,19 @@
             }
 
 
+            function remplirTousUtilisateurs(){
+                $('#selectUtilisateur')
+                        .append($("<option></option>")
+                                .attr("value", "tous")
+                                .text("Tous utilisateurs"));
+            }
+
+            function remplirToutesDisciplines(){
+                $('#selectDiscipline')
+                        .append($("<option></option>")
+                                .attr("value", "tous")
+                                .text("Toutes disciplines"));
+            }
 
             // obtenir les données pour les filtres
             var listeFederations = {{ listeFederations | json_encode | raw }};
@@ -340,32 +392,55 @@
                     reinitiliaserSelectDisciplines();
                     reinitiliaserSelectUtilisateurs();
 
-                    for(var i=0; i<disciplinesSelectionner.length; i++){
-                        var disciplineId = disciplinesSelectionner[i]["id"];
-//                        console.log( "disciplineId: " + JSON.stringify(disciplineId));
-                        var disciplineNom = disciplinesSelectionner[i]["nom"];
-//                        console.log( "disciplineNom: " + JSON.stringify(disciplineNom));
-
-
-                        // ajouter des options pour le select disciplines
-                        $('#selectDiscipline')
-                                .append($("<option></option>")
-                                        .attr("value", disciplineId)
-                                        .text(disciplineNom));
-
-                    }
-
                     // obtenir le type de rapport
                     var typeRapport = $("#selectRapport option:selected").val();
 //                    console.log( "typeRapport: " + typeRapport );
 
-                    if(typeRapport == "systeme" || typeRapport == "federation" ){
-                        $('#selectDiscipline')
-                                .append($("<option></option>")
-                                        .attr("value", "tous")
-                                        .text("Toutes disciplines"));
+                    if(typeRapport == "utilisateur") {
+                        for(var i=0; i<disciplinesSelectionner.length; i++){
+                            var disciplineId = disciplinesSelectionner[i]["id"];
+                            var disciplineNom = disciplinesSelectionner[i]["nom"];
+
+                            // ajouter des options pour le select disciplines
+                            $('#selectDiscipline')
+                                    .append($("<option></option>")
+                                            .attr("value", disciplineId)
+                                            .text(disciplineNom));
+
+                        }
+                    }
+                    // pour rapport systeme et fédération, on affiche s'il y a plus d'une discipline
+                    else{
+                        if(typeRapport == "systeme" || typeRapport == "federation" ){
+
+                            if(disciplinesSelectionner.length == 1){
+                                viderSelectDisciplines();
+                                viderSelectUtilisateurs();
+                                remplirToutesDisciplines();
+                                remplirTousUtilisateurs();
+
+
+                            }
+                            else{
+                                for(var i=0; i<disciplinesSelectionner.length; i++){
+                                    var disciplineId = disciplinesSelectionner[i]["id"];
+                                    var disciplineNom = disciplinesSelectionner[i]["nom"];
+
+                                    // ajouter des options pour le select disciplines
+                                    $('#selectDiscipline')
+                                            .append($("<option></option>")
+                                                    .attr("value", disciplineId)
+                                                    .text(disciplineNom));
+
+                                }
+                            }
+
+
+                        }
 
                     }
+
+
 
 
                     }
@@ -429,11 +504,11 @@
                     else if(typeRapport == "systeme" || typeRapport == "federation" ){
                         // fixer les utilisateurs à tous pour le rapport fédération et système
                         viderSelectUtilisateurs();
-
-                        $('#selectUtilisateur')
-                                .append($("<option></option>")
-                                        .attr("value", "tous")
-                                        .text("Tous utilisateurs"));
+                        remplirTousUtilisateurs();
+//                        $('#selectUtilisateur')
+//                                .append($("<option></option>")
+//                                        .attr("value", "tous")
+//                                        .text("Tous utilisateurs"));
 
 
 
@@ -577,31 +652,31 @@
 
                                                         var ligneTableau = "<tr>";
                                                         // données ligne
-                                                        var dateLigne = "<td>" + jour +  "</td>";
+                                                        var dateLigne = "<td align='middle'>" + jour +  "</td>";
                                                         ligneTableau += dateLigne;
 
                                                         if("nombreConnexions" in objLigneTableau){
-                                                            var nbrConnexions = "<td>" + objLigneTableau.nombreConnexions + "</td>";
+                                                            var nbrConnexions = "<td class='tableau-numerique'>" + objLigneTableau.nombreConnexions + "</td>";
                                                         }
                                                         else{
-                                                            var nbrConnextions = "<td>0</td>";
+                                                            var nbrConnextions = "<td class='tableau-numerique'>0</td>";
                                                         }
                                                         ligneTableau += nbrConnexions;
 
                                                         // remplir la ligne selon les données récupérées
                                                         if("nombreLancementsOptiPoule" in objLigneTableau){
-                                                            var nbrLanceOptiPoule = "<td>" + objLigneTableau.nombreLancementsOptiPoule + "</td>";
+                                                            var nbrLanceOptiPoule = "<td class='tableau-numerique'>" + objLigneTableau.nombreLancementsOptiPoule + "</td>";
                                                         }
                                                         else{
-                                                            var nbrLanceOptiPoule = "<td>0</td>";
+                                                            var nbrLanceOptiPoule = "<td class='tableau-numerique'>0</td>";
                                                         }
                                                         ligneTableau += nbrLanceOptiPoule;
 
                                                         if("nombreLancementsMeilleurLieu" in objLigneTableau){
-                                                            var nbrLanceMeilleurLieu = "<td>" + objLigneTableau.nombreLancementsMeilleurLieu + "</td>";
+                                                            var nbrLanceMeilleurLieu = "<td class='tableau-numerique'>" + objLigneTableau.nombreLancementsMeilleurLieu + "</td>";
                                                         }
                                                         else{
-                                                            var nbrLanceMeilleurLieu =  "<td>0</td>";
+                                                            var nbrLanceMeilleurLieu =  "<td class='tableau-numerique'>0</td>";
                                                         }
                                                         ligneTableau += nbrLanceMeilleurLieu;
 
@@ -609,26 +684,26 @@
                                                         if(typeRapport == "utilisateur" || typeRapport == "federation"){
 
                                                             if("nombreInterdictions" in objLigneTableau){
-                                                                var nbrInterdictions = "<td>" + objLigneTableau.nombreInterdictions + "</td>";
+                                                                var nbrInterdictions = "<td class='tableau-numerique'>" + objLigneTableau.nombreInterdictions + "</td>";
                                                             }
                                                             else{
-                                                                var nbrInterdictions = "<td>0</td>";
+                                                                var nbrInterdictions = "<td class='tableau-numerique'>0</td>";
                                                             }
                                                             ligneTableau += nbrInterdictions;
 
                                                             if("nombreRepartitionsHomogenes" in objLigneTableau){
-                                                                var nbrRepartitionsHomogenes = "<td>" + objLigneTableau.nombreRepartitionsHomogenes + "</td>";
+                                                                var nbrRepartitionsHomogenes = "<td class='tableau-numerique'>" + objLigneTableau.nombreRepartitionsHomogenes + "</td>";
                                                             }
                                                             else{
-                                                                var nbrRepartitionsHomogenes =  "<td>0</td>";
+                                                                var nbrRepartitionsHomogenes =  "<td class='tableau-numerique'>0</td>";
                                                             }
                                                             ligneTableau += nbrRepartitionsHomogenes;
 
                                                             if("nombreExclusions" in objLigneTableau){
-                                                                var nbrExclusions = "<td>" + objLigneTableau.nombreExclusions + "</td>";
+                                                                var nbrExclusions = "<td class='tableau-numerique'>" + objLigneTableau.nombreExclusions + "</td>";
                                                             }
                                                             else{
-                                                                var nbrExclusions = "<td>0</td>";
+                                                                var nbrExclusions = "<td class='tableau-numerique'>0</td>";
                                                             }
                                                             ligneTableau += nbrExclusions;
 
@@ -636,15 +711,15 @@
 
                                                         }
                                                         if("nombreRequetesHere" in objLigneTableau){
-                                                            var nbrHere = "<td>" + objLigneTableau.nombreRequetesHere + "</td>";
+                                                            var nbrHere = "<td class='tableau-numerique'>" + objLigneTableau.nombreRequetesHere + "</td>";
                                                         }
                                                         else{
-                                                            var nbrHere =  "<td>0</td>";
+                                                            var nbrHere =  "<td class='tableau-numerique'>0</td>";
                                                         }
 
                                                         // patch pour empty objLigneTableau
                                                         if($.isEmptyObject(objLigneTableau)){
-                                                            ligneTableau += "<td>0</td>";
+                                                            ligneTableau += "<td class='tableau-numerique'>0</td>";
                                                         }
 
                                                         ligneTableau += nbrHere;
@@ -653,18 +728,18 @@
                                                         // 5 colonnes (tableau système)
                                                         if(typeRapport == "systeme"){
                                                             if("tempsCalculOptiPoule" in objLigneTableau){
-                                                                var tempsCalculOptiPoule = "<td>" + objLigneTableau.tempsCalculOptiPoule + "</td>";
+                                                                var tempsCalculOptiPoule = "<td class='tableau-temps'>" + objLigneTableau.tempsCalculOptiPoule + "</td>";
                                                             }
                                                             else{
-                                                                var tempsCalculOptiPoule = "<td>0</td>";
+                                                                var tempsCalculOptiPoule = "<td class='tableau-temps'>0</td>";
                                                             }
                                                             ligneTableau += tempsCalculOptiPoule;
 
                                                             if("tempsCalculMeilleurLieu" in objLigneTableau){
-                                                                var tempsCalculMeilleurLieu = "<td>" + objLigneTableau.tempsCalculMeilleurLieu + "</td>";
+                                                                var tempsCalculMeilleurLieu = "<td class='tableau-temps'>" + objLigneTableau.tempsCalculMeilleurLieu + "</td>";
                                                             }
                                                             else{
-                                                                var tempsCalculMeilleurLieu = "<td>0</td>";
+                                                                var tempsCalculMeilleurLieu = "<td class='tableau-temps'>0</td>";
                                                             }
                                                             ligneTableau += tempsCalculMeilleurLieu;
 

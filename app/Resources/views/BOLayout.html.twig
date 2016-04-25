@@ -26,7 +26,6 @@
 
         <link href="{{ asset('bundles/ffbb/css/select2.min.css') }}" rel="stylesheet">
         <link href="{{ asset('bundles/ffbb/css/bootstrap-datepicker3.standalone.min.css') }}" rel="stylesheet">
-        <link href="{{ asset('bundles/ffbb/css/graph.css') }}" rel="stylesheet">
 
 
 
@@ -161,7 +160,7 @@
 
                             {% if (is_granted('ROLE_SUPER_ADMIN') == true) or (is_granted('ROLE_ADMIN') == true) %}
                                 {#<li><a href="#" style="background-color:#777171;">Statistiques</a></li>#}
-                                <li><a href="{{ path('ffbb_statistiques_index') }}">Statistiques</a></li>
+                                <li><a href="{{ path('ffbb_statistiques_index') }}" style="background-color:#777171;">Statistiques</a></li>
                                 <li><a href="{{ path('administration_panel') }}">Administration</a></li>
                             {% endif %}
 
