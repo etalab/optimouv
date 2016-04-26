@@ -140,7 +140,7 @@ class StatistiqueController extends Controller
             array_push($headerArray, "NOMBRE DE LANCEMENTS DE LA FONCTION OPTIMISATION DES POULES");
             array_push($headerArray, "NOMBRE DE LANCEMENTS DE LA FONCTION MEILLEUR LIEU DE RENCONTRE");
 
-            if($typeRapport == "utilisateur" || "federation"){
+            if($typeRapport == "utilisateur" || $typeRapport == "federation"){
                 array_push($headerArray, "NOMBRE D'INTERDICTIONS UTILISEES");
                 array_push($headerArray, "NOMBRE DE REPARTITIONS HOMOGENES UTILISEES");
                 array_push($headerArray, "NOMBRE D'EXCLUSIONS GEOGRAPHIQUES UTILISEES");
@@ -191,7 +191,7 @@ class StatistiqueController extends Controller
                 }
                 array_push($tempArray, $nombreLancementsMeilleurLieu);
 
-                if($typeRapport == "utilisateur" || "federation"){
+                if($typeRapport == "utilisateur" || $typeRapport ==  "federation"){
                     // nombre d'interdictions (pour rapports utilisateurs et fédérations)
                     if(array_key_exists("nombreInterdictions", $donneesDateCourante)){
                         $nombreInterdictions = $donneesDateCourante["nombreInterdictions"];
