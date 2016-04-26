@@ -130,9 +130,6 @@ class StatistiqueController extends Controller
             $this->exportCsv($typeRapport, $nomRapport);
         }
         elseif($formatExport == "xml"){
-            header('Content-type: text/xml');
-            header('Content-Disposition: attachment; filename="'.$nomRapport.'.xml"');
-
 
             $infoXML = array(
                 "nomRapport" => $nomRapport,
@@ -141,25 +138,68 @@ class StatistiqueController extends Controller
                 "nomUtilisateur" => $nomUtilisateur,
             );
 
+            $this->exportXml($infoXML);
 
-            $texte = $this->getTexteExportXml($infoXML);
-
-            echo $texte;
-            exit();
         }
 
     }
 
-    private function getTexteExportXml($infoXML){
+    private function exportXml($infoXML){
         # récupérer chemin fichier log du fichier parameters.yml
         $this->error_log_path = $this->container->getParameter("error_log_path");
 
-        $texte = '<?xml version="1.0" encoding="utf-8"?>';
+        $nomRapport = $infoXML["nomRapport"];
+        $nomFederation = $infoXML["nomFederation"];
+        $nomDiscipline = $infoXML["nomDiscipline"];
+        $nomUtilisateur = $infoXML["nomUtilisateur"];
 
+        # remplacement pour toutes disciplines et tous utilisateurs
+        if($nomDiscipline == "tous"){
+            $nomDiscipline = "Toutes disciplines";
+        }
+        if($nomUtilisateur == "tous"){
+            $nomUtilisateur = "Tous utilisateurs";
+        }
+
+
+        if(array_key_exists("dateDebutStr", $_POST)){
+            $dateDebutStr = $_POST["dateDebutStr"];
+        }
+        else{
+            $dateDebutStr  = "";
+        }
+        if(array_key_exists("dateFinStr", $_POST)){
+            $dateFinStr = $_POST["dateFinStr"];
+        }
+        else{
+            $dateFinStr  = "";
+        }
+
+
+        $texte = '<?xml version="1.0" encoding="utf-8"?>';
         $texte .= "\n";
 
+        $texte .= "<resultat>\n";
+        $texte .= "\t<params>\n";
+        $texte .= "\t\t<nom_rapport>$nomRapport</nom_rapport>\n";
+        $texte .= "\t\t<nom_federation>$nomFederation</nom_federation>\n";
+        $texte .= "\t\t<nom_discipline>$nomDiscipline</nom_discipline>\n";
+        $texte .= "\t\t<nom_utilisateur>$nomUtilisateur</nom_utilisateur>\n";
+        $texte .= "\t\t<date_debut>$dateDebutStr</date_debut>\n";
+        $texte .= "\t\t<date_fin>$dateFinStr</date_fin>\n";
 
-        return $texte;
+        $texte .= "\t</params>\n";
+
+        $texte .= "</resultat>";
+
+
+        header('Content-type: text/xml');
+        header('Content-Disposition: attachment; filename="'.$nomRapport.'.xml"');
+
+        echo $texte;
+        exit();
+
+
     }
 
 
@@ -292,11 +332,7 @@ class StatistiqueController extends Controller
         exit;
 
 
-
     }
-
-    
-
 
 
     private function exportPdf()
