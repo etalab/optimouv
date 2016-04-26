@@ -160,11 +160,12 @@ class Rapports
         while ($rowUser = $idUsers->fetch(PDO::FETCH_ASSOC)) {
 
             $idUser = $rowUser['id'];
+            echo '<pre>',print_r($idUser,1),'</pre>';
 //            $infosRapport =  $this->getAllInfoRapprtForUser($idUser);
 //            $infosRapports = $infosRapports + $infosRapport;
 
         }
-        echo '<pre>',print_r($idUser,1),'</pre>';exit;
+       exit;
         return $infosRapports;
 
     }
