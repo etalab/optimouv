@@ -58,8 +58,55 @@ class StatistiqueController extends Controller
         # récupérer chemin fichier log du fichier parameters.yml
         $this->error_log_path = $this->container->getParameter("error_log_path");
 
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('dmY', time());
 
         $formatExport = $_POST['formatExport'];
+
+        # obtenir les params envoyé par l'utilisateur
+        if(array_key_exists("typeRapport", $_POST)){
+            $typeRapport = $_POST["typeRapport"];
+        }
+        else{
+            $typeRapport  = "";
+        }
+        if(array_key_exists("idFederation", $_POST)){
+            $idFederation = $_POST["idFederation"];
+        }
+        else{
+            $idFederation  = -1;
+        }
+        if(array_key_exists("idUtilisateur", $_POST)){
+            $idUtilisateur = $_POST["idUtilisateur"];
+        }
+        else{
+            $idUtilisateur  = -1;
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        # obtenir le nom et prénom de l'utilisateur et le nom de la fédération
+        $resultat = $this->get('service_statistiques')->getNomUtilisateurNomFederation($idUtilisateur, $idFederation);
+        $nomUtilisateur = $resultat["nomUtilisateur"];
+        $prenomUtilisateur = $resultat["prenomUtilisateur"];
+        $nomFederation = $resultat["nomFederation"];
+
+        if($idUtilisateur == "tous"){
+            $nomUtilisateur = "tous";
+            $prenomUtilisateur = "tous";
+        }
+
+
+        $nomRapport = "Rapport_".$typeRapport."_";
+        if($typeRapport == "utilisateur"){
+            $nomRapport .= $prenomUtilisateur."_".$nomUtilisateur;
+        }
+        else{
+            $nomRapport .= $nomFederation;
+        }
+        $nomRapport .= "_".$dateTimeNow;
+
 
         if($formatExport == "pdf"){
             return $this->exportPdf();
@@ -68,16 +115,8 @@ class StatistiqueController extends Controller
 
             $output = fopen("php://output",'w') or die("Can't open php://output");
             header("Content-Type:application/csv");
-            header("Content-Disposition:attachment;filename=model_".".csv");
+            header("Content-Disposition:attachment;filename=$nomRapport.csv");
 
-            # obtenir les params envoyé par l'utilisateur
-            if(array_key_exists("typeRapport", $_POST)){
-                $typeRapport = $_POST["typeRapport"];
-            }
-            else{
-                $typeRapport  = "";
-            }
-//            error_log("\n typeRapport: ".print_r($typeRapport, true), 3, $this->error_log_path);
 
             // créer l'en_tête pour le fichier csv (suivant l'ordre selon le type de rapport)
             $headerArray = array();
@@ -98,25 +137,52 @@ class StatistiqueController extends Controller
             }
             fputcsv($output, $headerArray);
 
+            // obtenir les données du tableau
+            $donneesStatistiques = $this->get('service_statistiques')->getDonneesStatistiques();
+            $donneesTableau = $donneesStatistiques["lignesTableau"];
+            error_log("\n donneesTableau: ".print_r($donneesTableau, true), 3, $this->error_log_path);
 
 
             // créer le contenu pour le fichier csv'
-//            for($i = 0; $i < count($lineIndex); $i++){
-//                $tempArray = array();
-//                // index commence à 1 au lieu de 0
-//                array_push($tempArray, intval($lineIndex[$i])+1);
-//
-//                if( $externalScoreColumnIndex[0] != NULL){
-//                    array_push($tempArray, $externalScoreColumnIndex[$i]);
-//                }
-//                if( $score[0] != NULL){
-//                    array_push($tempArray, $score[$i]);
-//                }
-//                if( $indicatorColumnIndex[0] != NULL){
-//                    array_push($tempArray, $indicatorColumnIndex[$i]);
-//                }
-//                fputcsv($output, $tempArray);
-//            }
+            foreach($donneesTableau as $dateCourante => $donneesDateCourante){
+                $tempArray = array();
+                array_push($tempArray, $dateCourante);
+
+                // nombre de connexions (pour tous rapports)
+                if(array_key_exists("nombreConnexions", $donneesDateCourante)){
+                    $nombreConnexions = $donneesDateCourante["nombreConnexions"];
+                }
+                else{
+                    $nombreConnexions  = 0;
+                }
+                array_push($tempArray, $nombreConnexions);
+
+
+                // nombre de lancements de la fonction optimisation des poules (pour tous rapports)
+                if(array_key_exists("nombreLancementsOptiPoule", $donneesDateCourante)){
+                    $nombreLancementsOptiPoule = $donneesDateCourante["nombreLancementsOptiPoule"];
+                }
+                else{
+                    $nombreLancementsOptiPoule  = 0;
+                }
+                array_push($tempArray, $nombreLancementsOptiPoule);
+
+                // nombre de lancements de la fonction meilleur de lieu (pour tous rapports)
+                if(array_key_exists("nombreLancementsMeilleurLieu", $donneesDateCourante)){
+                    $nombreLancementsMeilleurLieu = $donneesDateCourante["nombreLancementsMeilleurLieu"];
+                }
+                else{
+                    $nombreLancementsMeilleurLieu  = 0;
+                }
+                array_push($tempArray, $nombreLancementsMeilleurLieu);
+
+                if($typeRapport == "utilisateur" || "federation"){
+
+                }
+
+
+                fputcsv($output, $tempArray);
+            }
 
             fclose($output) or die("Can't close php://output");
             exit;
