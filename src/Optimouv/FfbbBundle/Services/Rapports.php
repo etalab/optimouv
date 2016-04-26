@@ -164,9 +164,9 @@ class Rapports
             $infosRapports = $infosRapports + $infosRapport;
 
         }
-        echo '<pre>',print_r($infosRapports,1),'</pre>';
-
-        exit;
+//        echo '<pre>',print_r($infosRapports,1),'</pre>';
+//
+//        exit;
         return $infosRapports;
 
     }
