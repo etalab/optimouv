@@ -165,9 +165,20 @@ use ZipArchive;
          $boolTropVilles = $infoResultat["boolTropVilles"];
 
 
-         $nomFederation = "FFBB"; # FIXME
-         $nomDiscipline ="Basket"; # FIXME
+         $em = $this->getDoctrine()->getManager();
+         # obtenir l'id de l'utilisateur
+         $utilisateur = $this->get("security.token_storage")->getToken()->getUser();
+         $utilisateurId = $utilisateur->getId();
 
+         # obtenir l'id de la discipline
+         $disciplineId = $this->get("service_statistiques")->getDisciplineId($utilisateurId);
+         $discipline = $em->getRepository('FfbbBundle:Discipline')->findOneBy(array('id'=>$disciplineId));
+         $nomDiscipline = $discipline->getNom();
+
+         # obtenir l'id de la fédération
+         $federationId = $this->get("service_statistiques")->getFederationId($disciplineId);
+         $federation = $em->getRepository('FfbbBundle:Federation')->findOneBy(array('id'=>$federationId));
+         $nomFederation = $federation->getNom();
 
          $villeDepart = $infoResultat["villeDepart"];
 
@@ -175,8 +186,6 @@ use ZipArchive;
 
              $coordonneesVille = $infoResultat["coordonneesVille"];
              $coordPointDepart = $infoResultat["coordPointDepart"];
-
-             $em = $this->getDoctrine()->getManager();
 
              //récupération des coeff
              $coutVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(1)->getValeur();
@@ -540,10 +549,20 @@ use ZipArchive;
          $coordonneesVille = $infoResultat["coordonneesVille"];
          $coordPointDepart = $infoResultat["coordPointDepart"];
 
-         $nomFederation = "FFBB"; # FIXME
-         $nomDiscipline ="Basket"; # FIXME
-
          $em = $this->getDoctrine()->getManager();
+         # obtenir l'id de l'utilisateur
+         $utilisateur = $this->get("security.token_storage")->getToken()->getUser();
+         $utilisateurId = $utilisateur->getId();
+
+         # obtenir l'id de la discipline
+         $disciplineId = $this->get("service_statistiques")->getDisciplineId($utilisateurId);
+         $discipline = $em->getRepository('FfbbBundle:Discipline')->findOneBy(array('id'=>$disciplineId));
+         $nomDiscipline = $discipline->getNom();
+
+         # obtenir l'id de la fédération
+         $federationId = $this->get("service_statistiques")->getFederationId($disciplineId);
+         $federation = $em->getRepository('FfbbBundle:Federation')->findOneBy(array('id'=>$federationId));
+         $nomFederation = $federation->getNom();
 
          //récupération des coeff
          $coutVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(1)->getValeur();

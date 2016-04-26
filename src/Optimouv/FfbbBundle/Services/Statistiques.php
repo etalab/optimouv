@@ -429,9 +429,9 @@ class Statistiques {
                 # compter les nombre de labels affiché pour x-axis
                 $nbrLabelXAxis = count($lignesTableauCompleter);
 
-                error_log("\n dateDebutGraph: ".print_r($dateDebutGraph, true), 3, $this->error_log_path);
-                error_log("\n dateFinGraph: ".print_r($dateFinGraph, true), 3, $this->error_log_path);
-                error_log("\n nbrLabelXAxis: ".print_r($nbrLabelXAxis, true), 3, $this->error_log_path);
+//                error_log("\n dateDebutGraph: ".print_r($dateDebutGraph, true), 3, $this->error_log_path);
+//                error_log("\n dateFinGraph: ".print_r($dateFinGraph, true), 3, $this->error_log_path);
+//                error_log("\n nbrLabelXAxis: ".print_r($nbrLabelXAxis, true), 3, $this->error_log_path);
 
 
                 # données pour la graphique
@@ -520,7 +520,7 @@ class Statistiques {
                         $formatDate = 'Y';
                     }
                     $dateMod = date_format(date_create_from_format($formatDate, $dateCle), 'Y/m/d');
-                    error_log("\n dateMod: ".print_r($dateMod, true), 3, $this->error_log_path);
+//                    error_log("\n dateMod: ".print_r($dateMod, true), 3, $this->error_log_path);
 
                     array_push($donneesNbrConnexions, array("dateMod"=>$dateMod, "valeur"=> $nombreConnexions));
                     array_push($donneesNbrLancementOptiPoule, array("dateMod"=>$dateMod, "valeur"=> $nombreLancementsOptiPoule));
