@@ -119,7 +119,7 @@
                                 <li><a href="{{ path('administration_panel') }}">Administration</a></li>
                             {% endif %}
 
-                        {% elseif  app.request.attributes.get('_route') == 'ffbb_rapports' %}
+                        {% elseif  (app.request.attributes.get('_route') == 'ffbb_rapports') or ("rapport" in url) %}
 
                             <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Optimisation des poules</a></li>
 
