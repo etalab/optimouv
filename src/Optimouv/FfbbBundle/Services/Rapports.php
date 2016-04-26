@@ -70,6 +70,7 @@ class Rapports
 
     public function getAllInfoRapprtForUser($idUser)
     {
+        print_r($idUser);
 
         $bdd= $this->getPdo();
 
