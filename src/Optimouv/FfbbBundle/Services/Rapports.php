@@ -70,7 +70,7 @@ class Rapports
 
     public function getAllInfoRapprtForUser($idUser)
     {
-
+ 
         $bdd= $this->getPdo();
 
 //        déclarer le tableau des infosRapports
@@ -126,7 +126,7 @@ class Rapports
             }
 
         }
-
+        echo '<pre>',print_r($infosRapports,1),'</pre>';
         return $infosRapports;
     }
 
@@ -144,7 +144,7 @@ class Rapports
             $infosRapport =  $this->getAllInfoRapprtForUser($idUser);
             $infosRapports = $infosRapports + $infosRapport;
         }
-
+        
          return $infosRapports;
     }
 
@@ -160,11 +160,13 @@ class Rapports
         while ($rowUser = $idUsers->fetch(PDO::FETCH_ASSOC)) {
 
             $idUser = $rowUser['id'];
-            $infosRapport =  $this->getAllInfoRapprtForUser($idUser);
+             $infosRapport =  $this->getAllInfoRapprtForUser($idUser);
             $infosRapports = $infosRapports + $infosRapport;
 
         }
-
+//        echo '<pre>',print_r($infosRapports,1),'</pre>';
+//
+//        exit;
         return $infosRapports;
 
     }
