@@ -97,7 +97,6 @@ class StatistiqueController extends Controller
             $prenomUtilisateur = "tous";
         }
 
-
         $nomRapport = "Rapport_".$typeRapport."_";
         if($typeRapport == "utilisateur"){
             $nomRapport .= $prenomUtilisateur."_".$nomUtilisateur;
@@ -140,7 +139,7 @@ class StatistiqueController extends Controller
             // obtenir les données du tableau
             $donneesStatistiques = $this->get('service_statistiques')->getDonneesStatistiques();
             $donneesTableau = $donneesStatistiques["lignesTableau"];
-            error_log("\n donneesTableau: ".print_r($donneesTableau, true), 3, $this->error_log_path);
+//            error_log("\n donneesTableau: ".print_r($donneesTableau, true), 3, $this->error_log_path);
 
 
             // créer le contenu pour le fichier csv'
@@ -177,9 +176,62 @@ class StatistiqueController extends Controller
                 array_push($tempArray, $nombreLancementsMeilleurLieu);
 
                 if($typeRapport == "utilisateur" || "federation"){
+                    // nombre d'interdictions (pour rapports utilisateurs et fédérations)
+                    if(array_key_exists("nombreInterdictions", $donneesDateCourante)){
+                        $nombreInterdictions = $donneesDateCourante["nombreInterdictions"];
+                    }
+                    else{
+                        $nombreInterdictions  = 0;
+                    }
+                    array_push($tempArray, $nombreInterdictions);
+
+                    // nombre de repartitions homogènes (pour rapports utilisateurs et fédérations)
+                    if(array_key_exists("nombreRepartitionsHomogenes", $donneesDateCourante)){
+                        $nombreRepartitionsHomogenes = $donneesDateCourante["nombreRepartitionsHomogenes"];
+                    }
+                    else{
+                        $nombreRepartitionsHomogenes  = 0;
+                    }
+                    array_push($tempArray, $nombreRepartitionsHomogenes);
+
+                    // nombre d'exclusion (pour rapports utilisateurs et fédérations)
+                    if(array_key_exists("nombreExclusions", $donneesDateCourante)){
+                        $nombreExclusions = $donneesDateCourante["nombreExclusions"];
+                    }
+                    else{
+                        $nombreExclusions  = 0;
+                    }
+                    array_push($tempArray, $nombreRepartitionsHomogenes);
 
                 }
+                // nombre de requetes HERE (pour tous rapports)
+                if(array_key_exists("nombreRequetesHere", $donneesDateCourante)){
+                    $nombreRequetesHere = $donneesDateCourante["nombreRequetesHere"];
+                }
+                else{
+                    $nombreRequetesHere = 0;
+                }
+                array_push($tempArray, $nombreRequetesHere);
 
+                if($typeRapport == "systeme"){
+                    // nombre d'exclusion (pour rapports utilisateurs et fédérations)
+                    if(array_key_exists("tempsCalculOptiPoule", $donneesDateCourante)){
+                        $tempsCalculOptiPoule = $donneesDateCourante["tempsCalculOptiPoule"];
+                    }
+                    else{
+                        $tempsCalculOptiPoule = 0;
+                    }
+                    array_push($tempArray, $tempsCalculOptiPoule);
+
+                    // nombre d'exclusion (pour rapports utilisateurs et fédérations)
+                    if(array_key_exists("tempsCalculMeilleurLieu", $donneesDateCourante)){
+                        $tempsCalculMeilleurLieu = $donneesDateCourante["tempsCalculMeilleurLieu"];
+                    }
+                    else{
+                        $tempsCalculMeilleurLieu = 0;
+                    }
+                    array_push($tempArray, $tempsCalculMeilleurLieu);
+                }
 
                 fputcsv($output, $tempArray);
             }
