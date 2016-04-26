@@ -132,6 +132,7 @@ class StatistiqueController extends Controller
         elseif($formatExport == "xml"){
 
             $infoXML = array(
+                "typeRapport" => $typeRapport,
                 "nomRapport" => $nomRapport,
                 "nomFederation" => $nomFederation,
                 "nomDiscipline" => $nomDiscipline,
@@ -148,6 +149,7 @@ class StatistiqueController extends Controller
         # récupérer chemin fichier log du fichier parameters.yml
         $this->error_log_path = $this->container->getParameter("error_log_path");
 
+        $typeRapport = $infoXML["typeRapport"];
         $nomRapport = $infoXML["nomRapport"];
         $nomFederation = $infoXML["nomFederation"];
         $nomDiscipline = $infoXML["nomDiscipline"];
@@ -175,6 +177,11 @@ class StatistiqueController extends Controller
             $dateFinStr  = "";
         }
 
+        // obtenir les données du tableau
+        $donneesStatistiques = $this->get('service_statistiques')->getDonneesStatistiques();
+        $donneesTableau = $donneesStatistiques["lignesTableau"];
+//        error_log("\n donneesTableau: ".print_r($donneesTableau, true), 3, $this->error_log_path);
+
 
         $texte = '<?xml version="1.0" encoding="utf-8"?>';
         $texte .= "\n";
@@ -187,9 +194,109 @@ class StatistiqueController extends Controller
         $texte .= "\t\t<nom_utilisateur>$nomUtilisateur</nom_utilisateur>\n";
         $texte .= "\t\t<date_debut>$dateDebutStr</date_debut>\n";
         $texte .= "\t\t<date_fin>$dateFinStr</date_fin>\n";
-
         $texte .= "\t</params>\n";
 
+        $texte .= "\t<donnees_tableau>\n";
+
+
+        foreach($donneesTableau as $dateCourante => $donneesDateCourante){
+            $texte .= "\t\t<ligne_tableau>\n";
+            $texte .= "\t\t\t<date_choisie>$dateCourante</date_choisie>\n";
+
+            # nombre de connexions à Optimouv
+            if(array_key_exists("nombreConnexions", $donneesDateCourante)){
+                $nombreConnexions = $donneesDateCourante["nombreConnexions"];
+            }
+            else{
+                $nombreConnexions  = 0;
+            }
+            $texte .= "\t\t\t<nombre_connexions_optimouv>".$nombreConnexions."</nombre_connexions_optimouv>\n";
+
+            # nombre de lancements Optimisation de poule
+            if(array_key_exists("nombreLancementsOptiPoule", $donneesDateCourante)){
+                $nombreLancementsOptiPoule = $donneesDateCourante["nombreLancementsOptiPoule"];
+            }
+            else{
+                $nombreLancementsOptiPoule  = 0;
+            }
+            $texte .= "\t\t\t<nombre_lancements_optimisation_poules>".$nombreLancementsOptiPoule."</nombre_lancements_optimisation_poules>\n";
+
+
+            # nombre de lancements meilleur lieu
+            if(array_key_exists("nombreLancementsMeilleurLieu", $donneesDateCourante)){
+                $nombreLancementsMeilleurLieu = $donneesDateCourante["nombreLancementsMeilleurLieu"];
+            }
+            else{
+                $nombreLancementsMeilleurLieu  = 0;
+            }
+            $texte .= "\t\t\t<nombre_lancements_meilleur_lieu_rencontre>".$nombreLancementsMeilleurLieu."</nombre_lancements_meilleur_lieu_rencontre>\n";
+
+            if($typeRapport == "utilisateur" || $typeRapport ==  "federation"){
+                # nombre d'interdictions
+                if(array_key_exists("nombreInterdictions", $donneesDateCourante)){
+                    $nombreInterdictions = $donneesDateCourante["nombreInterdictions"];
+                }
+                else{
+                    $nombreInterdictions = 0;
+                }
+                $texte .= "\t\t\t<nombre_interdictions>".$nombreInterdictions."</nombre_interdictions>\n";
+
+                # nombre de répartitions homogenes
+                if(array_key_exists("nombreRepartitionsHomogenes", $donneesDateCourante)){
+                    $nombreRepartitionsHomogenes = $donneesDateCourante["nombreRepartitionsHomogenes"];
+                }
+                else{
+                    $nombreRepartitionsHomogenes = 0;
+                }
+                $texte .= "\t\t\t<nombre_repartitions_homogenes>".$nombreRepartitionsHomogenes."</nombre_repartitions_homogenes>\n";
+
+                # nombre d'exclusion géographiques
+                if(array_key_exists("nombreExclusions", $donneesDateCourante)){
+                    $nombreExclusions = $donneesDateCourante["nombreExclusions"];
+                }
+                else{
+                    $nombreExclusions = 0;
+                }
+                $texte .= "\t\t\t<nombre_exclusions_geographiques>".$nombreExclusions."</nombre_exclusions_geographiques>\n";
+
+            }
+
+            # nombre de requetes here
+            if(array_key_exists("nombreRequetesHere", $donneesDateCourante)){
+                $nombreRequetesHere = $donneesDateCourante["nombreRequetesHere"];
+            }
+            else{
+                $nombreRequetesHere = 0;
+            }
+            $texte .= "\t\t\t<nombre_requetes_here>".$nombreRequetesHere."</nombre_requetes_here>\n";
+
+
+            if($typeRapport == "systeme"){
+                # temps de réponse pour calcul opti poule
+                if(array_key_exists("tempsCalculOptiPoule", $donneesDateCourante)){
+                    $tempsCalculOptiPoule = $donneesDateCourante["tempsCalculOptiPoule"];
+                }
+                else{
+                    $tempsCalculOptiPoule = 0;
+                }
+                $texte .= "\t\t\t<temps_calcul_optimisation_poules>".$tempsCalculOptiPoule."</temps_calcul_optimisation_poules>\n";
+
+                # temps de réponse pour calcul meilleur lieu
+                if(array_key_exists("tempsCalculMeilleurLieu", $donneesDateCourante)){
+                    $tempsCalculMeilleurLieu = $donneesDateCourante["tempsCalculMeilleurLieu"];
+                }
+                else{
+                    $tempsCalculMeilleurLieu = 0;
+                }
+                $texte .= "\t\t\t<temps_calcul_meilleur_lieu_rencontre>".$tempsCalculMeilleurLieu."</temps_calcul_meilleur_lieu_rencontre>\n";
+            }
+
+
+
+            $texte .= "\t\t</ligne_tableau>\n";
+        }
+
+        $texte .= "\t</donnees_tableau>\n";
         $texte .= "</resultat>";
 
 
