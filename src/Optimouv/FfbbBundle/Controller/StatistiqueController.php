@@ -102,6 +102,16 @@ class StatistiqueController extends Controller
             $nomUtilisateur = "tous";
             $prenomUtilisateur = "tous";
         }
+        # obtenir le nom de discipline et le nom d'utilisateur
+        if($idDiscipline == "tous"){
+            $nomDiscipline = "tous";
+        }
+        else{
+            $discipline = $em->getRepository('FfbbBundle:Discipline')->findOneBy(array('id'=>$idDiscipline));
+            $nomDiscipline = $discipline->getNom();
+
+        }
+
 
         $nomRapport = "Rapport_".$typeRapport."_";
         if($typeRapport == "utilisateur"){
@@ -253,9 +263,8 @@ class StatistiqueController extends Controller
             $infoXML = array(
                 "nomRapport" => $nomRapport,
                 "nomFederation" => $nomFederation,
-//                "nomDiscipline" => $nomDiscipline,
+                "nomDiscipline" => $nomDiscipline,
                 "nomUtilisateur" => $nomUtilisateur,
-
             );
 
 
@@ -266,6 +275,23 @@ class StatistiqueController extends Controller
         }
 
     }
+
+
+
+    
+    private function getTexteExportXml($infoXML){
+        # récupérer chemin fichier log du fichier parameters.yml
+        $this->error_log_path = $this->container->getParameter("error_log_path");
+
+        $texte = '<?xml version="1.0" encoding="utf-8"?>';
+
+        $texte .= "\n";
+
+
+        return $texte;
+    }
+
+
 
     private function exportPdf()
     {
