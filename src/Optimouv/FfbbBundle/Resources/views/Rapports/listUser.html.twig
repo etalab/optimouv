@@ -78,7 +78,7 @@
                                               method="post">
                                             <input type="hidden" name="typeAction" id="typeAction"
                                                    value="{{ infoRapport.typeActionRapport }}">
-                                            <button type="submit" class="btn btn-consulter-rapport">
+                                            <button type="submit" class="btn btn-visualiser-rapport">
                                                 Visualiser
                                             </button>
                                             <a href="{{ path('ffbb_editer_rapport', {idRapport: infoRapport.idRapport}) }}"
@@ -92,7 +92,7 @@
 
                                         </form>
                                     {% else %}
-                                        <button type="submit" class="btn btn-consulter-rapport"
+                                        <button type="submit" class="btn btn-visualiser-rapport"
                                                 disabled>Consulter
                                         </button>
 
@@ -195,7 +195,7 @@
                                               method="post">
                                             <input type="hidden" name="typeAction" id="typeAction"
                                                    value="{{ infoRapport.typeActionRapport }}">
-                                            <button type="submit" class="btn btn-consulter-rapport">
+                                            <button type="submit" class="btn btn-visualiser-rapport">
                                                 Visualiser
                                             </button>
                                             <a href="{{ path('ffbb_editer_rapport', {idRapport: infoRapport.idRapport}) }}"
@@ -209,7 +209,7 @@
 
                                         </form>
                                     {% else %}
-                                        <button type="submit" class="btn btn-consulter-rapport"
+                                        <button type="submit" class="btn btn-visualiser-rapport"
                                                 disabled>Consulter
                                         </button>
 

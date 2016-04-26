@@ -111,6 +111,18 @@
   border-color: #ccc;
 }
 
+.btn-visualiser-rapport {
+  color: #fff;
+  background-color: #EE7700;
+  border-color: #ccc;
+}
+.btn-visualiser-rapport:hover {
+  color: #fff;
+  background-color: #EE7700;
+  border-color: #ccc;
+}
+
+
 .btn-statistique {
   color: #fff;
   background-color: #777 !important;
