@@ -77,6 +77,12 @@ class StatistiqueController extends Controller
         else{
             $idFederation  = -1;
         }
+        if(array_key_exists("idDiscipline", $_POST)){
+            $idDiscipline = $_POST["idDiscipline"];
+        }
+        else{
+            $idDiscipline  = -1;
+        }
         if(array_key_exists("idUtilisateur", $_POST)){
             $idUtilisateur = $_POST["idUtilisateur"];
         }
@@ -201,7 +207,7 @@ class StatistiqueController extends Controller
                     else{
                         $nombreExclusions  = 0;
                     }
-                    array_push($tempArray, $nombreRepartitionsHomogenes);
+                    array_push($tempArray, $nombreExclusions);
 
                 }
                 // nombre de requetes HERE (pour tous rapports)
@@ -240,7 +246,23 @@ class StatistiqueController extends Controller
             exit;
         }
         elseif($formatExport == "xml"){
+            header('Content-type: text/xml');
+            header('Content-Disposition: attachment; filename="'.$nomRapport.'.xml"');
 
+
+            $infoXML = array(
+                "nomRapport" => $nomRapport,
+                "nomFederation" => $nomFederation,
+//                "nomDiscipline" => $nomDiscipline,
+                "nomUtilisateur" => $nomUtilisateur,
+
+            );
+
+
+            $texte = $this->getTexteExportXml($infoXML);
+
+            echo $texte;
+            exit();
         }
 
     }
