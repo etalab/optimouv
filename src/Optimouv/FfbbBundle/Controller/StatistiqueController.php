@@ -112,7 +112,7 @@ class StatistiqueController extends Controller
 
         }
 
-
+        // construire le nom de rapport
         $nomRapport = "Rapport_".$typeRapport."_";
         if($typeRapport == "utilisateur"){
             $nomRapport .= $prenomUtilisateur."_".$nomUtilisateur;
@@ -127,133 +127,7 @@ class StatistiqueController extends Controller
             return $this->exportPdf();
         }
         elseif($formatExport == "csv"){
-
-            $output = fopen("php://output",'w') or die("Can't open php://output");
-            header("Content-Type:application/csv");
-            header("Content-Disposition:attachment;filename=$nomRapport.csv");
-
-
-            // créer l'en_tête pour le fichier csv (suivant l'ordre selon le type de rapport)
-            $headerArray = array();
-            array_push($headerArray, "DATES CHOISIES");
-            array_push($headerArray, "NOMBRE DE CONNEXIONS A OPTIMOUV");
-            array_push($headerArray, "NOMBRE DE LANCEMENTS DE LA FONCTION OPTIMISATION DES POULES");
-            array_push($headerArray, "NOMBRE DE LANCEMENTS DE LA FONCTION MEILLEUR LIEU DE RENCONTRE");
-
-            if($typeRapport == "utilisateur" || $typeRapport == "federation"){
-                array_push($headerArray, "NOMBRE D'INTERDICTIONS UTILISEES");
-                array_push($headerArray, "NOMBRE DE REPARTITIONS HOMOGENES UTILISEES");
-                array_push($headerArray, "NOMBRE D'EXCLUSIONS GEOGRAPHIQUES UTILISEES");
-            }
-            array_push($headerArray, "NOMBRE DE REQUETES HERE EFFECTUEES (TOUTES FONCTIONS CONFONDUES)");
-            if($typeRapport == "systeme"){
-                array_push($headerArray, "TEMPS DE REPONSE MOYEN DE LA FONCTION OPTIMISATION DE POULES POUR L'OBTENTION DES RESULTATS (H:M:S)");
-                array_push($headerArray, "TEMPS DE REPONSE MOYEN DE LA FONCTION MEILLEUR LIEU DE RENCONTRE POUR L'OBTENTION DES RESULTATS (H:M:S)");
-            }
-            fputcsv($output, $headerArray);
-
-            // obtenir les données du tableau
-            $donneesStatistiques = $this->get('service_statistiques')->getDonneesStatistiques();
-            $donneesTableau = $donneesStatistiques["lignesTableau"];
-//            error_log("\n donneesTableau: ".print_r($donneesTableau, true), 3, $this->error_log_path);
-
-
-            // créer le contenu pour le fichier csv'
-            foreach($donneesTableau as $dateCourante => $donneesDateCourante){
-                $tempArray = array();
-                array_push($tempArray, $dateCourante);
-
-                // nombre de connexions (pour tous rapports)
-                if(array_key_exists("nombreConnexions", $donneesDateCourante)){
-                    $nombreConnexions = $donneesDateCourante["nombreConnexions"];
-                }
-                else{
-                    $nombreConnexions  = 0;
-                }
-                array_push($tempArray, $nombreConnexions);
-
-
-                // nombre de lancements de la fonction optimisation des poules (pour tous rapports)
-                if(array_key_exists("nombreLancementsOptiPoule", $donneesDateCourante)){
-                    $nombreLancementsOptiPoule = $donneesDateCourante["nombreLancementsOptiPoule"];
-                }
-                else{
-                    $nombreLancementsOptiPoule  = 0;
-                }
-                array_push($tempArray, $nombreLancementsOptiPoule);
-
-                // nombre de lancements de la fonction meilleur de lieu (pour tous rapports)
-                if(array_key_exists("nombreLancementsMeilleurLieu", $donneesDateCourante)){
-                    $nombreLancementsMeilleurLieu = $donneesDateCourante["nombreLancementsMeilleurLieu"];
-                }
-                else{
-                    $nombreLancementsMeilleurLieu  = 0;
-                }
-                array_push($tempArray, $nombreLancementsMeilleurLieu);
-
-                if($typeRapport == "utilisateur" || $typeRapport ==  "federation"){
-                    // nombre d'interdictions (pour rapports utilisateurs et fédérations)
-                    if(array_key_exists("nombreInterdictions", $donneesDateCourante)){
-                        $nombreInterdictions = $donneesDateCourante["nombreInterdictions"];
-                    }
-                    else{
-                        $nombreInterdictions  = 0;
-                    }
-                    array_push($tempArray, $nombreInterdictions);
-
-                    // nombre de repartitions homogènes (pour rapports utilisateurs et fédérations)
-                    if(array_key_exists("nombreRepartitionsHomogenes", $donneesDateCourante)){
-                        $nombreRepartitionsHomogenes = $donneesDateCourante["nombreRepartitionsHomogenes"];
-                    }
-                    else{
-                        $nombreRepartitionsHomogenes  = 0;
-                    }
-                    array_push($tempArray, $nombreRepartitionsHomogenes);
-
-                    // nombre d'exclusion (pour rapports utilisateurs et fédérations)
-                    if(array_key_exists("nombreExclusions", $donneesDateCourante)){
-                        $nombreExclusions = $donneesDateCourante["nombreExclusions"];
-                    }
-                    else{
-                        $nombreExclusions  = 0;
-                    }
-                    array_push($tempArray, $nombreExclusions);
-
-                }
-                // nombre de requetes HERE (pour tous rapports)
-                if(array_key_exists("nombreRequetesHere", $donneesDateCourante)){
-                    $nombreRequetesHere = $donneesDateCourante["nombreRequetesHere"];
-                }
-                else{
-                    $nombreRequetesHere = 0;
-                }
-                array_push($tempArray, $nombreRequetesHere);
-
-                if($typeRapport == "systeme"){
-                    // nombre d'exclusion (pour rapports utilisateurs et fédérations)
-                    if(array_key_exists("tempsCalculOptiPoule", $donneesDateCourante)){
-                        $tempsCalculOptiPoule = $donneesDateCourante["tempsCalculOptiPoule"];
-                    }
-                    else{
-                        $tempsCalculOptiPoule = 0;
-                    }
-                    array_push($tempArray, $tempsCalculOptiPoule);
-
-                    // nombre d'exclusion (pour rapports utilisateurs et fédérations)
-                    if(array_key_exists("tempsCalculMeilleurLieu", $donneesDateCourante)){
-                        $tempsCalculMeilleurLieu = $donneesDateCourante["tempsCalculMeilleurLieu"];
-                    }
-                    else{
-                        $tempsCalculMeilleurLieu = 0;
-                    }
-                    array_push($tempArray, $tempsCalculMeilleurLieu);
-                }
-
-                fputcsv($output, $tempArray);
-            }
-
-            fclose($output) or die("Can't close php://output");
-            exit;
+            $this->exportCsv($typeRapport, $nomRapport);
         }
         elseif($formatExport == "xml"){
             header('Content-type: text/xml');
@@ -276,9 +150,6 @@ class StatistiqueController extends Controller
 
     }
 
-
-
-    
     private function getTexteExportXml($infoXML){
         # récupérer chemin fichier log du fichier parameters.yml
         $this->error_log_path = $this->container->getParameter("error_log_path");
@@ -290,6 +161,141 @@ class StatistiqueController extends Controller
 
         return $texte;
     }
+
+
+    private function exportCsv($typeRapport, $nomRapport){
+
+        $output = fopen("php://output",'w') or die("Can't open php://output");
+        header("Content-Type:application/csv");
+        header("Content-Disposition:attachment;filename=$nomRapport.csv");
+
+        // créer l'en_tête pour le fichier csv (suivant l'ordre selon le type de rapport)
+        $headerArray = array();
+        array_push($headerArray, "DATES CHOISIES");
+        array_push($headerArray, "NOMBRE DE CONNEXIONS A OPTIMOUV");
+        array_push($headerArray, "NOMBRE DE LANCEMENTS DE LA FONCTION OPTIMISATION DES POULES");
+        array_push($headerArray, "NOMBRE DE LANCEMENTS DE LA FONCTION MEILLEUR LIEU DE RENCONTRE");
+
+        if($typeRapport == "utilisateur" || $typeRapport == "federation"){
+            array_push($headerArray, "NOMBRE D'INTERDICTIONS UTILISEES");
+            array_push($headerArray, "NOMBRE DE REPARTITIONS HOMOGENES UTILISEES");
+            array_push($headerArray, "NOMBRE D'EXCLUSIONS GEOGRAPHIQUES UTILISEES");
+        }
+        array_push($headerArray, "NOMBRE DE REQUETES HERE EFFECTUEES (TOUTES FONCTIONS CONFONDUES)");
+        if($typeRapport == "systeme"){
+            array_push($headerArray, "TEMPS DE REPONSE MOYEN DE LA FONCTION OPTIMISATION DE POULES POUR L'OBTENTION DES RESULTATS (H:M:S)");
+            array_push($headerArray, "TEMPS DE REPONSE MOYEN DE LA FONCTION MEILLEUR LIEU DE RENCONTRE POUR L'OBTENTION DES RESULTATS (H:M:S)");
+        }
+        fputcsv($output, $headerArray);
+
+        // obtenir les données du tableau
+        $donneesStatistiques = $this->get('service_statistiques')->getDonneesStatistiques();
+        $donneesTableau = $donneesStatistiques["lignesTableau"];
+//            error_log("\n donneesTableau: ".print_r($donneesTableau, true), 3, $this->error_log_path);
+
+
+        // créer le contenu pour le fichier csv'
+        foreach($donneesTableau as $dateCourante => $donneesDateCourante){
+            $tempArray = array();
+            array_push($tempArray, $dateCourante);
+
+            // nombre de connexions (pour tous rapports)
+            if(array_key_exists("nombreConnexions", $donneesDateCourante)){
+                $nombreConnexions = $donneesDateCourante["nombreConnexions"];
+            }
+            else{
+                $nombreConnexions  = 0;
+            }
+            array_push($tempArray, $nombreConnexions);
+
+
+            // nombre de lancements de la fonction optimisation des poules (pour tous rapports)
+            if(array_key_exists("nombreLancementsOptiPoule", $donneesDateCourante)){
+                $nombreLancementsOptiPoule = $donneesDateCourante["nombreLancementsOptiPoule"];
+            }
+            else{
+                $nombreLancementsOptiPoule  = 0;
+            }
+            array_push($tempArray, $nombreLancementsOptiPoule);
+
+            // nombre de lancements de la fonction meilleur de lieu (pour tous rapports)
+            if(array_key_exists("nombreLancementsMeilleurLieu", $donneesDateCourante)){
+                $nombreLancementsMeilleurLieu = $donneesDateCourante["nombreLancementsMeilleurLieu"];
+            }
+            else{
+                $nombreLancementsMeilleurLieu  = 0;
+            }
+            array_push($tempArray, $nombreLancementsMeilleurLieu);
+
+            if($typeRapport == "utilisateur" || $typeRapport ==  "federation"){
+                // nombre d'interdictions (pour rapports utilisateurs et fédérations)
+                if(array_key_exists("nombreInterdictions", $donneesDateCourante)){
+                    $nombreInterdictions = $donneesDateCourante["nombreInterdictions"];
+                }
+                else{
+                    $nombreInterdictions  = 0;
+                }
+                array_push($tempArray, $nombreInterdictions);
+
+                // nombre de repartitions homogènes (pour rapports utilisateurs et fédérations)
+                if(array_key_exists("nombreRepartitionsHomogenes", $donneesDateCourante)){
+                    $nombreRepartitionsHomogenes = $donneesDateCourante["nombreRepartitionsHomogenes"];
+                }
+                else{
+                    $nombreRepartitionsHomogenes  = 0;
+                }
+                array_push($tempArray, $nombreRepartitionsHomogenes);
+
+                // nombre d'exclusion (pour rapports utilisateurs et fédérations)
+                if(array_key_exists("nombreExclusions", $donneesDateCourante)){
+                    $nombreExclusions = $donneesDateCourante["nombreExclusions"];
+                }
+                else{
+                    $nombreExclusions  = 0;
+                }
+                array_push($tempArray, $nombreExclusions);
+
+            }
+            // nombre de requetes HERE (pour tous rapports)
+            if(array_key_exists("nombreRequetesHere", $donneesDateCourante)){
+                $nombreRequetesHere = $donneesDateCourante["nombreRequetesHere"];
+            }
+            else{
+                $nombreRequetesHere = 0;
+            }
+            array_push($tempArray, $nombreRequetesHere);
+
+            if($typeRapport == "systeme"){
+                // nombre d'exclusion (pour rapports utilisateurs et fédérations)
+                if(array_key_exists("tempsCalculOptiPoule", $donneesDateCourante)){
+                    $tempsCalculOptiPoule = $donneesDateCourante["tempsCalculOptiPoule"];
+                }
+                else{
+                    $tempsCalculOptiPoule = 0;
+                }
+                array_push($tempArray, $tempsCalculOptiPoule);
+
+                // nombre d'exclusion (pour rapports utilisateurs et fédérations)
+                if(array_key_exists("tempsCalculMeilleurLieu", $donneesDateCourante)){
+                    $tempsCalculMeilleurLieu = $donneesDateCourante["tempsCalculMeilleurLieu"];
+                }
+                else{
+                    $tempsCalculMeilleurLieu = 0;
+                }
+                array_push($tempArray, $tempsCalculMeilleurLieu);
+            }
+
+            fputcsv($output, $tempArray);
+        }
+
+        fclose($output) or die("Can't close php://output");
+        exit;
+
+
+
+    }
+
+    
 
 
 
