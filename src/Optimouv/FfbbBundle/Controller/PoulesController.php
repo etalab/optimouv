@@ -1481,10 +1481,20 @@ class PoulesController extends Controller
         $infoPoule = $infoPdf["infoPoule"];
         $infoPouleStr = $this->getStrInfoPoule($infoPoule);
 
+        
+        # obtenir l'id de l'utilisateur
+        $utilisateur = $this->get("security.token_storage")->getToken()->getUser();
+        $utilisateurId = $utilisateur->getId();
 
+        # obtenir l'id de la discipline
+        $disciplineId = $this->get("service_statistiques")->getDisciplineId($utilisateurId);
+        $discipline = $em->getRepository('FfbbBundle:Discipline')->findOneBy(array('id'=>$disciplineId));
+        $nomDiscipline = $discipline->getNom();
 
-        $nomFederation = "FFBB"; # FIXME
-        $nomDiscipline ="Basket"; # FIXME
+        # obtenir l'id de la fédération
+        $federationId = $this->get("service_statistiques")->getFederationId($disciplineId);
+        $federation = $em->getRepository('FfbbBundle:Federation')->findOneBy(array('id'=>$federationId));
+        $nomFederation = $federation->getNom();
 
         $coutVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(1)->getValeur();
         $coutCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(2)->getValeur();
@@ -1996,6 +2006,9 @@ class PoulesController extends Controller
 
     public function exportScenarioPdfAction()
     {
+        # récupérer chemin fichier log du fichier parameters.yml
+        $this->error_log_path = $this->container->getParameter("error_log_path");
+
 
         $em = $this->getDoctrine()->getManager();
         $idResultat = $_POST['idResultat'];
@@ -2019,8 +2032,24 @@ class PoulesController extends Controller
         $infoPoule = $infoPdf["infoPoule"];
         $infoPouleStr = $this->getStrInfoPoule($infoPoule);
 
-        $nomFederation = "FFBB"; # FIXME
-        $nomDiscipline ="Basket"; # FIXME
+
+        # obtenir l'id de l'utilisateur
+        $utilisateur = $this->get("security.token_storage")->getToken()->getUser();
+        $utilisateurId = $utilisateur->getId();
+
+        # obtenir l'id de la discipline
+        $disciplineId = $this->get("service_statistiques")->getDisciplineId($utilisateurId);
+        $discipline = $em->getRepository('FfbbBundle:Discipline')->findOneBy(array('id'=>$disciplineId));
+        $nomDiscipline = $discipline->getNom();
+
+        # obtenir l'id de la fédération
+        $federationId = $this->get("service_statistiques")->getFederationId($disciplineId);
+        $federation = $em->getRepository('FfbbBundle:Federation')->findOneBy(array('id'=>$federationId));
+        $nomFederation = $federation->getNom();
+
+//        error_log("\n nomDiscipline: ".print_r($nomDiscipline, true), 3, $this->error_log_path);
+//        error_log("\n nomFederation: ".print_r($nomFederation, true), 3, $this->error_log_path);
+
 
         $coutVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(1)->getValeur();
         $coutCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(2)->getValeur();
