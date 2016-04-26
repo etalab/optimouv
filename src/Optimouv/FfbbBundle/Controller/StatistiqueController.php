@@ -36,8 +36,6 @@ class StatistiqueController extends Controller
         else{
             # obtenir la fédération
             $listeFederations = $this->get("service_statistiques")->getDetailsFederation($federationId);
-
-
         }
 
 
