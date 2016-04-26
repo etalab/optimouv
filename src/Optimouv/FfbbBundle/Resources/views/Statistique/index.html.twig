@@ -458,10 +458,7 @@
 
                     }
 
-
-
-
-                    }
+                }
                 // pour l'option vide
                 else{
                     // reinitialiser les valeurs
@@ -533,22 +530,6 @@
                 }
 
             });
-
-            // handler pour date début
-//            $("#dateDebut").change(function(){
-//                console.log( "------------------------------------------------------ DEBUG date début -------------------------------------------" );
-//                var dateDebut = $("#dateDebut").val();
-//                console.log( "dateDebut: " + dateDebut );
-//
-//                $('.datepicker').datepicker('setStartDate', new Date(dateDebut));
-//            });
-//
-//            // handler pour date fin
-//            $("#dateFin").change(function(){
-//                console.log( "------------------------------------------------------ DEBUG date fin -------------------------------------------" );
-//                var dateFin = $("#dateFin").val();
-//                console.log( "dateFin: " + dateFin );
-//            });
 
 
             // handler click acceder bouton
@@ -802,7 +783,7 @@
                                                         var donneesGraph = data.donneesGraph;
 
 //                                                    console.log('index donneesGraph: ' + JSON.stringify(donneesGraph));
-                                                        InitChart(donneesGraph);
+                                                        initChart(donneesGraph, "affichage");
                                                     }
 
 
