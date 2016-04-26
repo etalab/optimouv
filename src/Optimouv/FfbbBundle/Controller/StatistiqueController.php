@@ -62,11 +62,57 @@ class StatistiqueController extends Controller
         $formatExport = $_POST['formatExport'];
 
         if($formatExport == "pdf"){
-            return $this->exportPdfAction();
+            return $this->exportPdf();
         }
+        elseif($formatExport == "csv"){
+
+            $output = fopen("php://output",'w') or die("Can't open php://output");
+            header("Content-Type:application/csv");
+            header("Content-Disposition:attachment;filename=model_".".csv");
+
+            // créer l'en_tête pour le fichier csv'
+            $headerArray = array();
+            array_push($headerArray, "line index");
+
+//            if( $externalScoreColumnIndex[0] != NULL){
+//                array_push($headerArray, "external score");
+//            }
+//            if( $score[0] != NULL){
+//                array_push($headerArray, "pytreerank score");
+//            }
+//            if( $indicatorColumnIndex[0] != NULL){
+//                array_push($headerArray, "indicator ");
+//            }
+            fputcsv($output, $headerArray);
+//
+//            // créer le contenu pour le fichier csv'
+//            for($i = 0; $i < count($lineIndex); $i++){
+//                $tempArray = array();
+//                // index commence à 1 au lieu de 0
+//                array_push($tempArray, intval($lineIndex[$i])+1);
+//
+//                if( $externalScoreColumnIndex[0] != NULL){
+//                    array_push($tempArray, $externalScoreColumnIndex[$i]);
+//                }
+//                if( $score[0] != NULL){
+//                    array_push($tempArray, $score[$i]);
+//                }
+//                if( $indicatorColumnIndex[0] != NULL){
+//                    array_push($tempArray, $indicatorColumnIndex[$i]);
+//                }
+//                fputcsv($output, $tempArray);
+//            }
+
+            fclose($output) or die("Can't close php://output");
+            exit;
+        }
+        elseif($formatExport == "xml"){
+
+        }
+
     }
 
-    private function exportPdfAction()
+    private function exportPdf()
     {
         # récupérer chemin fichier log du fichier parameters.yml
         $this->error_log_path = $this->container->getParameter("error_log_path");
