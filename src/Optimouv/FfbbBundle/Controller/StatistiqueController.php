@@ -70,22 +70,37 @@ class StatistiqueController extends Controller
             header("Content-Type:application/csv");
             header("Content-Disposition:attachment;filename=model_".".csv");
 
-            // créer l'en_tête pour le fichier csv'
-            $headerArray = array();
-            array_push($headerArray, "line index");
+            # obtenir les params envoyé par l'utilisateur
+            if(array_key_exists("typeRapport", $_POST)){
+                $typeRapport = $_POST["typeRapport"];
+            }
+            else{
+                $typeRapport  = "";
+            }
+//            error_log("\n typeRapport: ".print_r($typeRapport, true), 3, $this->error_log_path);
 
-//            if( $externalScoreColumnIndex[0] != NULL){
-//                array_push($headerArray, "external score");
-//            }
-//            if( $score[0] != NULL){
-//                array_push($headerArray, "pytreerank score");
-//            }
-//            if( $indicatorColumnIndex[0] != NULL){
-//                array_push($headerArray, "indicator ");
-//            }
+            // créer l'en_tête pour le fichier csv (suivant l'ordre selon le type de rapport)
+            $headerArray = array();
+            array_push($headerArray, "DATES CHOISIES");
+            array_push($headerArray, "NOMBRE DE CONNEXIONS A OPTIMOUV");
+            array_push($headerArray, "NOMBRE DE LANCEMENTS DE LA FONCTION OPTIMISATION DES POULES");
+            array_push($headerArray, "NOMBRE DE LANCEMENTS DE LA FONCTION MEILLEUR LIEU DE RENCONTRE");
+
+            if($typeRapport == "utilisateur" || "federation"){
+                array_push($headerArray, "NOMBRE D'INTERDICTIONS UTILISEES");
+                array_push($headerArray, "NOMBRE DE REPARTITIONS HOMOGENES UTILISEES");
+                array_push($headerArray, "NOMBRE D'EXCLUSIONS GEOGRAPHIQUES UTILISEES");
+            }
+            array_push($headerArray, "NOMBRE DE REQUETES HERE EFFECTUEES (TOUTES FONCTIONS CONFONDUES)");
+            if($typeRapport == "systeme"){
+                array_push($headerArray, "TEMPS DE REPONSE MOYEN DE LA FONCTION OPTIMISATION DE POULES POUR L'OBTENTION DES RESULTATS (H:M:S)");
+                array_push($headerArray, "TEMPS DE REPONSE MOYEN DE LA FONCTION MEILLEUR LIEU DE RENCONTRE POUR L'OBTENTION DES RESULTATS (H:M:S)");
+            }
             fputcsv($output, $headerArray);
-//
-//            // créer le contenu pour le fichier csv'
+
+
+
+            // créer le contenu pour le fichier csv'
 //            for($i = 0; $i < count($lineIndex); $i++){
 //                $tempArray = array();
 //                // index commence à 1 au lieu de 0
@@ -122,7 +137,6 @@ class StatistiqueController extends Controller
         $dateTimeNow = date('dmY', time());
 
 
-        $em = $this->getDoctrine()->getManager();
 
         # obtenir les params envoyé par l'utilisateur
         if(array_key_exists("typeRapport", $_POST)){
@@ -162,6 +176,7 @@ class StatistiqueController extends Controller
             $dateFinStr  = "";
         }
 
+        $em = $this->getDoctrine()->getManager();
 
         # obtenir le nom et prénom de l'utilisateur et le nom de la fédération
         $resultat = $this->get('service_statistiques')->getNomUtilisateurNomFederation($idUtilisateur, $idFederation);
@@ -184,7 +199,6 @@ class StatistiqueController extends Controller
             $prenomUtilisateur = "tous";
         }
 
-//        error_log("\n typeRapport: ".print_r($typeRapport, true), 3, $this->error_log_path);
 
         $donneesStatistiques = $this->get('service_statistiques')->getDonneesStatistiques();
 
