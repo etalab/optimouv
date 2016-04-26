@@ -70,8 +70,7 @@ class Rapports
 
     public function getAllInfoRapprtForUser($idUser)
     {
-        print_r($idUser);
-
+ 
         $bdd= $this->getPdo();
 
 //        déclarer le tableau des infosRapports
@@ -127,7 +126,7 @@ class Rapports
             }
 
         }
-
+        echo '<pre>',print_r($infosRapports,1),'</pre>';
         return $infosRapports;
     }
 
