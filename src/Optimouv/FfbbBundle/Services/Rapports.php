@@ -144,7 +144,7 @@ class Rapports
             $infosRapport =  $this->getAllInfoRapprtForUser($idUser);
             $infosRapports = $infosRapports + $infosRapport;
         }
-
+        
          return $infosRapports;
     }
 
@@ -164,7 +164,7 @@ class Rapports
             $infosRapports = $infosRapports + $infosRapport;
 
         }
-
+        echo '<pre>',print_r($infosRapports,1),'</pre>';exit;
         return $infosRapports;
 
     }
