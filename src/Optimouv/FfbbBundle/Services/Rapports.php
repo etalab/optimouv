@@ -142,7 +142,7 @@ class Rapports
 
             $idUser = $rowUser['id'];
             $infosRapport =  $this->getAllInfoRapprtForUser($idUser);
-            $infosRapports = $infosRapports + $infosRapport;
+            $infosRapports = array_merge($infosRapports, $infosRapport); 
         }
         
          return $infosRapports;
