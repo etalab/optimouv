@@ -167,6 +167,7 @@ class StatistiqueController extends Controller
 
         );
 
+        # Pour Debugging # FIXME
 //        return $this->render('FfbbBundle:Statistique:exportPdf.html.twig',
 //            $tableauOutput
 //        );
