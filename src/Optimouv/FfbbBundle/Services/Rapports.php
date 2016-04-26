@@ -159,9 +159,8 @@ class Rapports
         $infosRapports = [];
         while ($rowUser = $idUsers->fetch(PDO::FETCH_ASSOC)) {
 
-//            $idUser = $rowUser['id'];
-            $idUser = 8;
-            $infosRapport =  $this->getAllInfoRapprtForUser($idUser);
+            $idUser = $rowUser['id'];
+             $infosRapport =  $this->getAllInfoRapprtForUser($idUser);
             $infosRapports = $infosRapports + $infosRapport;
 
         }
