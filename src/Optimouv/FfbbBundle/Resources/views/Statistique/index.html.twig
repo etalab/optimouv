@@ -233,7 +233,7 @@
                         <div class="form-group">
                             <div class="col-md-12">
 
-                                <form name="exportFichiers" action="{{ path('ffbb_poules_pretraitement_export')}}" method="post">
+                                <form name="submitParams" action="{{ path('ffbb_statistiques_pretraitement_export')}}" method="post">
                                     <input type="hidden" name="typeRapport">
                                     <input type="hidden" name="idFederation">
                                     <input type="hidden" name="idDiscipline">
@@ -285,6 +285,10 @@
                 autoclose: true
             });
 
+            // reset select option formatExport
+            $('select[name="formatExport"]').change(function() {
+                $('select[name="formatExport"]').prop('selectedIndex',0);
+            });
 
             // cacher le rapport statistiques
             $("#rappportStatistiques").hide();
