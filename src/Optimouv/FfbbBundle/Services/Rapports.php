@@ -126,7 +126,7 @@ class Rapports
             }
 
         }
-        echo '<pre>',print_r($infosRapports,1),'</pre>';
+//        echo '<pre>',print_r($infosRapports,1),'</pre>';
         return $infosRapports;
     }
 
@@ -162,11 +162,12 @@ class Rapports
             $idUser = $rowUser['id'];
              $infosRapport =  $this->getAllInfoRapprtForUser($idUser);
             $infosRapports = $infosRapports + $infosRapport;
+            $infosRapports = array_merge($infosRapports, $infosRapport);
 
         }
-//        echo '<pre>',print_r($infosRapports,1),'</pre>';
-//
-//        exit;
+        echo '<pre>',print_r($infosRapports,1),'</pre>';
+
+        exit;
         return $infosRapports;
 
     }
