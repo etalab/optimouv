@@ -1593,17 +1593,9 @@ class Rencontres
 
         $bdd= Rencontres::connexion();
 
-
-        $tabAction[0]= "barycentre";
-        $tabAction[1]= "exclusion";
-        $tabAction[2]= "meilleurLieu";
-        $tabAction[3]= "terrainNeutre";
-        if(in_array($typeAction,$tabAction)){
-            $prefixe_nom = "Meilleur lieu";
-        }
-        else{
-            $prefixe_nom = "Poules";
-        }
+ 
+        $prefixe_nom = "Meilleur lieu";
+        
 
         //récupérer le nom du groupe
         $getNomGroupe = $bdd->prepare("select nom from groupe where id = :id ;");

@@ -54,6 +54,13 @@ class Poules{
 
             # params d'insertion
             $idGroupe = $_POST["idGroupe"];
+            //récupérer le nom du groupe
+            $getNomGroupe = $bdd->prepare("select nom from groupe where id = :id ;");
+            $getNomGroupe->bindParam(':id', $idGroupe);
+            $getNomGroupe->execute();
+            $nomGroupe = $getNomGroupe->fetchColumn();
+            
+            
             $poulesNbr = intval($_POST["poulesNbr"]);
             $typeAction = $_POST["typeMatch"];
 
@@ -119,7 +126,7 @@ class Poules{
             }
 
 
-            $nom = "rapport_groupe_".$idGroupe."_action_".$typeAction;
+            $nom = "Poules"."_".$nomGroupe;
             $statut = 0;
             $params = json_encode(array("nbrPoule" => $poulesNbr, "interdictions"=> $interdictions,
                 "repartitionHomogene"=> $repartitionsHomogenes, "varEquipeParPoule"=> $varEquipeParPoule,
