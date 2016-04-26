@@ -165,9 +165,6 @@ class Rapports
             $infosRapports = array_merge($infosRapports, $infosRapport);
 
         }
-        echo '<pre>',print_r($infosRapports,1),'</pre>';
-
-        exit;
         return $infosRapports;
 
     }
