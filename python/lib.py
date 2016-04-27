@@ -2510,11 +2510,13 @@ def send_email_to_user(userId, resultId):
 		recipientAddress = get_user_email_from_user_id(userId)
 
 		url="%s/admin/poules/resultat/%s"%(config.INPUT.MainUrl, resultId)
-		subject = u'mise à disposition de vos résultats de calculs'
+		subject = u'OPTIMOUV - mise à disposition de vos résultats de calculs'
 		contentText = u"Bonjour,\n\n" 
 		contentText += u"Le résultat de votre calcul est disponible. "
 		contentText += u"Vous pouvez le consulter en cliquant sur ce lien:\n" 
-		contentText += u"%s"%(url)
+		contentText += u"%s\n\n"%(url)
+		contentText += u"Optimouv\n"
+		contentText += u"support@optimouv.net\n"
 		logging.debug("contentText: \n%s" %contentText)
 		
 		send_email_general(recipientAddress, subject, contentText)
@@ -2538,11 +2540,13 @@ def send_email_general(recipientAddress, subject, contentText ):
 		server.login(senderAccount, senderPassword)
 		
 		msg = MIMEText(contentText)
-		msg['From'] = senderAccount
+# 		msg['From'] = senderAccount
+		msg['From'] = "support@optimouv.net"
 		msg['To'] = recipientAddress
 		msg['Subject'] = subject
 		
-		server.sendmail(senderAccount, [recipientAddress], msg.as_string())
+# 		server.sendmail(senderAccount, [recipientAddress], msg.as_string())
+		server.sendmail("support@optimouv.net", [recipientAddress], msg.as_string())
 		server.quit()	
 	
 	except Exception as e:
