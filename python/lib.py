@@ -3065,16 +3065,13 @@ Function to check final result
 send error message to user if one tries to relaunch based on final result
 final result flag is set when user tries to play the variation of team number in pools
 """
-# def check_final_result(calculatedResult, userId):
 def check_final_result(calculatedResult, userId, reportId):
 	try:
-# 		sql = "select nom from rapport where id=%s"%reportId
 		sql = "select nom from parametres where id=%s"%reportId
 		reportName = db.fetchone(sql)
 
 		if "params" in calculatedResult:
 			if "final" in calculatedResult["params"]:
-# 				if results["params"]["final"] == "yes":
 				if results["params"]["final"] == "oui":
 					
 					TEXT = u"Bonjour,\n\n" 
