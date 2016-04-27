@@ -329,16 +329,17 @@ class CalculRencontreConsumer implements ConsumerInterface
 
     public function sendMail($idRapport,$typeAction)
     {
-
+        $expediteurEmail = 'support@optimouv.net';
 
         $userEmail = $this->getUserEmail($idRapport);
 
-        $body = $this->templating->render('FfbbBundle:Mails:confirmationCalcul.html.twig', array('idRapport' => $idRapport, 'typeAction' => $typeAction));
+        $body = $this->templating->render('FfbbBundle:Mails:confirmationCalcul.html.twig', array('idRapport' => $idRapport, 'typeAction' => $typeAction,
+            'expediteurEmail' => $expediteurEmail));
 
 
         $message = \Swift_Message::newInstance()
-            ->setSubject('Mise à disposition de vos résultats de calculs')
-            ->setFrom('servicetechnique@it4pme.fr')
+            ->setSubject('OPTIMOUV - mise à disposition de vos résultats de calculs')
+            ->setFrom($expediteurEmail)
             ->setTo($userEmail)
             ->setBody($body, 'text/html')
         ;

@@ -1830,7 +1830,7 @@ def create_distance_matrix_from_db(teams, reportId, userId):
 		if nbrRequestsHere > 0:
 			try:
 				sql = """INSERT INTO  statistiques_date (date_creation, type_statistiques, id_utilisateur, id_discipline, id_federation, valeur)
-						VALUES (now(), '%(type_statistiques)s', %(id_utilisateur)s, %(id_discipline)s, %(id_federation)s, %(valeur)s)
+						VALUES (curdate(), '%(type_statistiques)s', %(id_utilisateur)s, %(id_discipline)s, %(id_federation)s, %(valeur)s)
 						on duplicate key UPDATE valeur=valeur+VALUES(valeur);
 					"""%{
 							"type_statistiques": "nombreRequetesHere",
@@ -2509,12 +2509,16 @@ def send_email_to_user(userId, resultId):
 		
 		recipientAddress = get_user_email_from_user_id(userId)
 
+		senderAccount = config.EMAIL.Account
+
 		url="%s/admin/poules/resultat/%s"%(config.INPUT.MainUrl, resultId)
-		subject = u'mise à disposition de vos résultats de calculs'
+		subject = u'OPTIMOUV - mise à disposition de vos résultats de calculs'
 		contentText = u"Bonjour,\n\n" 
 		contentText += u"Le résultat de votre calcul est disponible. "
 		contentText += u"Vous pouvez le consulter en cliquant sur ce lien:\n" 
-		contentText += u"%s"%(url)
+		contentText += u"%s\n\n"%(url)
+		contentText += u"Optimouv\n"
+		contentText += u"%s\n"%(senderAccount)
 		logging.debug("contentText: \n%s" %contentText)
 		
 		send_email_general(recipientAddress, subject, contentText)
@@ -3065,16 +3069,13 @@ Function to check final result
 send error message to user if one tries to relaunch based on final result
 final result flag is set when user tries to play the variation of team number in pools
 """
-# def check_final_result(calculatedResult, userId):
 def check_final_result(calculatedResult, userId, reportId):
 	try:
-# 		sql = "select nom from rapport where id=%s"%reportId
 		sql = "select nom from parametres where id=%s"%reportId
 		reportName = db.fetchone(sql)
 
 		if "params" in calculatedResult:
 			if "final" in calculatedResult["params"]:
-# 				if results["params"]["final"] == "yes":
 				if results["params"]["final"] == "oui":
 					
 					TEXT = u"Bonjour,\n\n" 
