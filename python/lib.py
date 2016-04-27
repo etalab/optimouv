@@ -2543,12 +2543,10 @@ def send_email_general(recipientAddress, subject, contentText ):
 		
 		msg = MIMEText(contentText)
 		msg['From'] = senderAccount
-# 		msg['From'] = "support@optimouv.net"
 		msg['To'] = recipientAddress
 		msg['Subject'] = subject
 		
 		server.sendmail(senderAccount, [recipientAddress], msg.as_string())
-# 		server.sendmail("support@optimouv.net", [recipientAddress], msg.as_string())
 		server.quit()	
 	
 	except Exception as e:
