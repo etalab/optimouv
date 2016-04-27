@@ -126,8 +126,7 @@ class Rapports
             }
 
         }
-//        echo '<pre>',print_r($infosRapports,1),'</pre>';
-        return $infosRapports;
+         return $infosRapports;
     }
 
     public function getAllInfoRapprtForFederal($idUser)
