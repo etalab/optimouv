@@ -1830,7 +1830,7 @@ def create_distance_matrix_from_db(teams, reportId, userId):
 		if nbrRequestsHere > 0:
 			try:
 				sql = """INSERT INTO  statistiques_date (date_creation, type_statistiques, id_utilisateur, id_discipline, id_federation, valeur)
-						VALUES (now(), '%(type_statistiques)s', %(id_utilisateur)s, %(id_discipline)s, %(id_federation)s, %(valeur)s)
+						VALUES (curdate(), '%(type_statistiques)s', %(id_utilisateur)s, %(id_discipline)s, %(id_federation)s, %(valeur)s)
 						on duplicate key UPDATE valeur=valeur+VALUES(valeur);
 					"""%{
 							"type_statistiques": "nombreRequetesHere",
