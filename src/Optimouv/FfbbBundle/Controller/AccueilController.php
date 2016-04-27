@@ -16,4 +16,8 @@ class AccueilController extends Controller
         return $this->render('FfbbBundle:Accueil:connect.html.twig');
 
     }
+    public function mentionsLegalesAction(){
+
+        return $this->render('FfbbBundle:Accueil:mentions.html.twig');
+    }
 }
