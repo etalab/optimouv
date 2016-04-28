@@ -1,14 +1,15 @@
+{%  set lien = "http://"~base_url~path('ffbb_consulter_rapport', {'idRapport': idRapport, 'typeAction': typeAction}) %}
 Bonjour,<br><br>
 
 Le résultat de votre calcul est disponible.<br>
 
-Vous pouvez le consulter en cliquant sur ce lien :
-{%  set lien = "http://"~base_url~path('ffbb_consulter_rapport', {'idRapport': idRapport, 'typeAction': typeAction}) %}
+Vous pouvez le consulter en cliquant sur ce lien : <br>
 <a href={{ lien }}> {{ lien }}</a>
 <br><br>
 
 Optimouv<br>
+<a href={{ expediteurEmail }}> {{ expediteurEmail }}</a>
 
-{{ expediteurEmail }}
+{#{{ expediteurEmail }}#}
 
 
