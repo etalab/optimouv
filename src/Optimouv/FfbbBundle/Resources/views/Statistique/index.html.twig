@@ -72,7 +72,6 @@
                             </div>
 
                             <div class="form-group">
-                                {#<label class="control-label col-sm-2" for="nomFderation">NOM DE LA FEDERATION</label>#}
                                 <label class="control-label col-sm-4" for="nomFderation">Nom de la fédération</label>
                                 <div class="col-sm-2">
                                     <select class="form-control" id="selectFederation" >
@@ -396,15 +395,12 @@
 
                 // obtenir l'index du select option de fédération
                 var indexFedeSelectionner = $("#selectFederation").prop("selectedIndex");
-//                console.log( "indexFedeSelectionner: " + indexFedeSelectionner);
 
                 // pour les autres options (pas vide)
                 if(indexFedeSelectionner != 0){
                     var federationSelectionner = listeFederations[indexFedeSelectionner-1];
-//                console.log( "federationSelectionner: " + JSON.stringify(federationSelectionner));
 
                     var disciplinesSelectionner = federationSelectionner["disciplines"];
-//                console.log( "disciplinesSelectionner: " + JSON.stringify(disciplinesSelectionner));
 
                     // reinitialiser les valeurs
                     reinitiliaserSelectDisciplines();
@@ -412,7 +408,6 @@
 
                     // obtenir le type de rapport
                     var typeRapport = $("#selectRapport option:selected").val();
-//                    console.log( "typeRapport: " + typeRapport );
 
                     if(typeRapport == "utilisateur") {
                         for(var i=0; i<disciplinesSelectionner.length; i++){
@@ -474,22 +469,17 @@
 
                 // obtenir l'index du select option de discipline
                 var indexDisciplineSelectionner = $("#selectDiscipline").prop("selectedIndex");
-//                console.log( "indexDisciplineSelectionner: " + indexDisciplineSelectionner);
-
 
                 // pour les autres options (pas vide)
                 if(indexDisciplineSelectionner != 0){
 
                     // obtenir l'index du select option de fédération
                     var indexFedeSelectionner = $("#selectFederation").prop("selectedIndex");
-//                    console.log( "indexFedeSelectionner: " + indexFedeSelectionner);
 
                     var federationSelectionner = listeFederations[indexFedeSelectionner-1];
-//                    console.log( "federationSelectionner: " + JSON.stringify(federationSelectionner));
 
                     // obtenir le type de rapport
                     var typeRapport = $("#selectRapport option:selected").val();
-//                    console.log( "typeRapport: " + typeRapport );
 
                     // reinitialiser select option utilisateurs
                     reinitiliaserSelectUtilisateurs();
