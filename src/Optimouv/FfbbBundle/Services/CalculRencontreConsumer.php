@@ -27,13 +27,14 @@ class CalculRencontreConsumer implements ConsumerInterface
     private $mailer;
     private $templating;
     private $mailer_user;
+    private $base_url;
 
     /**
      * @var Statistiques $serviceStatistiques
      */
     protected $serviceStatistiques;
 
-    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, ContainerInterface $container, $mailer, EngineInterface $templating, $serviceStatistiques, $mailer_user)
+    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, ContainerInterface $container, $mailer, EngineInterface $templating, $serviceStatistiques, $mailer_user, $base_url)
     {
         $this->database_name = $database_name;
         $this->database_user = $database_user;
@@ -46,6 +47,7 @@ class CalculRencontreConsumer implements ConsumerInterface
         $this->templating = $templating;
         $this->serviceStatistiques = $serviceStatistiques;
         $this->mailer_user = $mailer_user;
+        $this->base_url = $base_url;
     }
 
     public function connexion()
@@ -336,15 +338,26 @@ class CalculRencontreConsumer implements ConsumerInterface
 
         $userEmail = $this->getUserEmail($idRapport);
 
-        $body = $this->templating->render('FfbbBundle:Mails:confirmationCalcul.html.twig', array('idRapport' => $idRapport, 'typeAction' => $typeAction,
-            'expediteurEmail' => $expediteurEmail));
+//        $body = $this->templating->render('FfbbBundle:Mails:confirmationCalcul.html.twig', array('idRapport' => $idRapport, 'typeAction' => $typeAction,
+//            'expediteurEmail' => $expediteurEmail));
 
+        $router = $this->container->get('Router');
+        $urlPrimaire = $router->generate('ffbb_consulter_rapport', array('idRapport'=>$idRapport, 'typeAction'=> $typeAction));
+
+        $body = "Bonjour,\n\n";
+        $body .= "Le résultat de votre calcul est disponible.\n";
+        $body .= "Vous pouvez le consulter en cliquant sur ce lien :\n";
+        $body .= "http://".$this->base_url.$urlPrimaire."\n\n";
+        $body .= "Optimouv\n";
+        $body .= $expediteurEmail;
+        
 
         $message = \Swift_Message::newInstance()
             ->setSubject('OPTIMOUV - mise à disposition de vos résultats de calculs')
             ->setFrom($expediteurEmail)
             ->setTo($userEmail)
-            ->setBody($body, 'text/html')
+//            ->setBody($body, 'text/html')
+            ->setBody($body, 'text/plain')
         ;
         $this->container->get('mailer')->send($message);
 
