@@ -26,13 +26,14 @@ class CalculRencontreConsumer implements ConsumerInterface
     private $container;
     private $mailer;
     private $templating;
+    private $mailer_user;
 
     /**
      * @var Statistiques $serviceStatistiques
      */
     protected $serviceStatistiques;
 
-    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, ContainerInterface $container, $mailer, EngineInterface $templating, $serviceStatistiques)
+    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, ContainerInterface $container, $mailer, EngineInterface $templating, $serviceStatistiques, $mailer_user)
     {
         $this->database_name = $database_name;
         $this->database_user = $database_user;
@@ -44,6 +45,7 @@ class CalculRencontreConsumer implements ConsumerInterface
         $this->mailer = $mailer;
         $this->templating = $templating;
         $this->serviceStatistiques = $serviceStatistiques;
+        $this->mailer_user = $mailer_user;
     }
 
     public function connexion()
@@ -330,6 +332,7 @@ class CalculRencontreConsumer implements ConsumerInterface
     public function sendMail($idRapport,$typeAction)
     {
         $expediteurEmail = 'support@optimouv.net';
+//        $expediteurEmail = $this->mailer_user;
 
         $userEmail = $this->getUserEmail($idRapport);
 
