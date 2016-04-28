@@ -8,16 +8,19 @@
                  <div class="bs-example">
                      <ul class="breadcrumb">
                          <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
-                         <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Choix de la liste d’équipes </a></li>
-                         <li class="active">Gestion de la liste d’équipes</li>
+                         <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Optimisation des poules  </a></li>
+                         <li class="active">Fichiers</li>
                      </ul>
                  </div>
                  <div class="col-lg-12">
-                     <h3>Gérez vos listes d'équipes</h3>
+                     <h2>Etape 2 / 4</h2>
+                     <h3>Gérez vos fichiers d’équipes
+                     </h3>
 
                      <div class="panel panel-default">
                          <div class="panel-heading">
-                             Importez vos listes d'équipes
+                             Importez vos fichiers d’équipes au format csv
+
                          </div>
                          <div class="panel-body">
 
@@ -25,7 +28,7 @@
                                  <input id="input_liste_equipes" type="file" class="btn pull-left">
                              </div>
                              <button id="btn_import_liste_equipes" type="submit"
-                                     class="btn btn-primary  pull-left">Importer une nouvelle liste d'équipes
+                                     class="btn btn-primary  pull-left">Importer
                              </button>
                              <a href="{{ path('ffbb_poules_choisir_liste') }}"
                                 class="btn btn-primary pull-right">Retour</a>
@@ -56,7 +59,8 @@
                  <div class="col-lg-12">
                      <div class="panel panel-default">
                          <div class="panel-heading">
-                             Gérez vos listes d'équipes
+                             Gérez vos fichiers d’équipes
+
                          </div>
                          <!-- /.panel-heading -->
                          <div class="panel-body">
@@ -65,7 +69,7 @@
                                         id="tableListeParticipants">
                                      <thead>
                                      <tr>
-                                         <th>Identifiant</th>
+                                         {#<th>Identifiant</th>#}
                                          <th>Nom</th>
                                          <th>Date de création</th>
                                          <th>Action</th>
@@ -75,7 +79,7 @@
                                      {% for listeParticipants in listesParticipants %}
                                          <tr id="{{ listeParticipants.id }}">
 
-                                             <td> {{ listeParticipants.id }}</td>
+                                             {#<td> {{ listeParticipants.id }}</td>#}
                                              <td> {{ listeParticipants.nom }}</td>
                                              <td> {{ listeParticipants.dateCreation|date('d/m/Y') }}</td>
                                              <td>

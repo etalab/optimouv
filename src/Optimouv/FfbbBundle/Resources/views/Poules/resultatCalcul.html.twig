@@ -11,13 +11,16 @@
                  <div class="bs-example">
                      <ul class="breadcrumb">
                          <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
-                         <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Choix de la liste d'équipes</a></li>
-                         <li class="active">Participants</li>
+                         <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Optimisation des poules</a></li>
+                         <li><a href="{{ path('ffbb_poule_choisir_groupe', {'idListe': idListe}) }}">Votre sélection</a></li>
+                         <li><A href="javascript:history.back()">Options de calcul</a></li>
+                         <li class="active">Scénarii</li>
                      </ul>
                  </div>
 
                  <div class="col-lg-12">
-                     <h3 class="page-header">Vos résultats </h3>
+                     <h3 class="page-header">Vos options de calcul
+                     </h3>
                   </div>
                  <!-- /.col-lg-12 -->
              </div>
@@ -36,7 +39,7 @@
                                  <td>Nom de la liste : {{ nomListe }}</td>
                              </tr>
                              <tr>
-                                 <td>Nom du groupe : {{ nomGroupe }}</td>
+                                 <td>Nom de la sélection: {{ nomGroupe }}</td>
                              </tr>
                              <tr>
 
@@ -130,7 +133,6 @@
                      <div class="panel panel-default">
                          <div class="panel-heading col-lg-12">
                              <div class="col-lg-10" >
-                                 <p>Les scénarios ci-dessous présentent les résultats les plus écoresponsables correspondant à votre recherche </p>
 
                              </div>
                              <div class="col-lg-1">
@@ -168,7 +170,7 @@
              <!-- Input utilisateur -->
              <div class="row">
                  <div class="col-lg-12">
-                     <h3 class="page-header">Modifier vos options de calcul </h3>
+                     <h3 class="page-header">Relancer avec de nouvelles options de calcul</h3>
                      <h5 style="float: right"> <strong> (* champs obligatoires)</strong>  </h5>
                  </div>
 
@@ -403,15 +405,17 @@
                      <!-- /.panel-heading -->
                      <div class="panel-body" id="contrainteInterdictionBody" style="display: none">
 
+                         <h3>Indiquez les équipes qui ne doivent pas se rencontrer </h3>
+                         <br>
                          <table id="mesContraintes" class="table table-striped table-bordered table-hover">
-                             <thead>
-                             <tr>
-                                 <th width="10%"><h4></h4></th>
-                                 <th width="20%"><h4>Equipe N°1</h4></th>
-                                 <th width="20%"><h4>Equipe N°2</h4></th>
-                                 <th width="10%"><h4></h4></th>
-                             </tr>
-                             </thead>
+                             {#<thead>#}
+                             {#<tr>#}
+                                 {#<th width="10%"><h4></h4></th>#}
+                                 {#<th width="20%"><h4>Equipe N°1</h4></th>#}
+                                 {#<th width="20%"><h4>Equipe N°2</h4></th>#}
+                                 {#<th width="10%"><h4></h4></th>#}
+                             {#</tr>#}
+                             {#</thead>#}
                              <tbody id="tbodyInterdictions">
                              {%  if interdictions %}
                                  {% for interdictionNbr, interdictionInfo in interdictions%}

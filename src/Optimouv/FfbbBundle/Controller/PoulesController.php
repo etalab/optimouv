@@ -797,7 +797,8 @@ class PoulesController extends Controller
             'coutMinibus' => $coutMinibus,
             'gesVoiture' => $gesVoiture,
             'gesCovoiturage' => $gesCovoiturage,
-            'gesMinibus' => $gesMinibus
+            'gesMinibus' => $gesMinibus,
+            'idListe' =>$idListe,
 
 
         ));
@@ -814,6 +815,14 @@ class PoulesController extends Controller
         $gesVoiture = $em->getRepository('FfbbBundle:Reference')->findOneById(4)->getValeur();
         $gesCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(5)->getValeur();
         $gesMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(6)->getValeur();
+
+        $idRapport = $em->getRepository('FfbbBundle:Scenario')->findOneById($idResultat)->getIdRapport();
+        $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idRapport);
+        $idGroupe = $idGroupe[0]['idGroupe'];
+        $idListe = $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
+
+
+
 
 
 
@@ -836,8 +845,9 @@ class PoulesController extends Controller
             'coutMinibus' => $coutMinibus,
             'gesVoiture' => $gesVoiture,
             'gesCovoiturage' => $gesCovoiturage,
-            'gesMinibus' => $gesMinibus
-
+            'gesMinibus' => $gesMinibus,
+            'idListe' =>$idListe,
+            'idGroupe' =>$idGroupe,
             ));
     }
 
