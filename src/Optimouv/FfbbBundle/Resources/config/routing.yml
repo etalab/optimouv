@@ -401,3 +401,8 @@ ffbb_coefficients_add:
 ffbb_coefficients_create:
     path:    /admin/donnees-reference/create
     defaults: { _controller: FfbbBundle:Coefficients:create }
+
+#page mentions légales
+ffbb_mentions_legales:
+    path:    /mentions-legales
+    defaults: { _controller: FfbbBundle:Accueil:mentionsLegales }
