@@ -331,7 +331,8 @@ class CalculRencontreConsumer implements ConsumerInterface
 
     public function sendMail($idRapport,$typeAction)
     {
-        $expediteurEmail = $this->mailer_user;
+//        $expediteurEmail = $this->mailer_user;
+        $expediteurEmail = "support@optimouv.net";
 
         $userEmail = $this->getUserEmail($idRapport);
 
