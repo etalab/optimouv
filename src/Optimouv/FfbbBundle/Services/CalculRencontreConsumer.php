@@ -28,13 +28,15 @@ class CalculRencontreConsumer implements ConsumerInterface
     private $templating;
     private $mailer_user;
     private $base_url;
+    private $mailer_sender;
+
 
     /**
      * @var Statistiques $serviceStatistiques
      */
     protected $serviceStatistiques;
 
-    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, ContainerInterface $container, $mailer, EngineInterface $templating, $serviceStatistiques, $mailer_user, $base_url)
+    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, ContainerInterface $container, $mailer, EngineInterface $templating, $serviceStatistiques, $mailer_user, $base_url, $mailer_sender)
     {
         $this->database_name = $database_name;
         $this->database_user = $database_user;
@@ -48,6 +50,7 @@ class CalculRencontreConsumer implements ConsumerInterface
         $this->serviceStatistiques = $serviceStatistiques;
         $this->mailer_user = $mailer_user;
         $this->base_url = $base_url;
+        $this->mailer_sender = $mailer_sender;
     }
 
     public function connexion()
@@ -333,8 +336,7 @@ class CalculRencontreConsumer implements ConsumerInterface
 
     public function sendMail($idRapport,$typeAction)
     {
-//        $expediteurEmail = $this->mailer_user;
-        $expediteurEmail = "support@optimouv.net";
+        $expediteurEmail = $this->mailer_sender;
 
         $userEmail = $this->getUserEmail($idRapport);
 
@@ -350,7 +352,7 @@ class CalculRencontreConsumer implements ConsumerInterface
         $body .= "http://".$this->base_url.$urlPrimaire."\n\n";
         $body .= "Optimouv\n";
         $body .= $expediteurEmail;
-        
+
 
         $message = \Swift_Message::newInstance()
             ->setSubject('OPTIMOUV - mise à disposition de vos résultats de calculs')

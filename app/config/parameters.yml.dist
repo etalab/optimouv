@@ -12,6 +12,7 @@ parameters:
     mailer_port: 587
     mailer_user: serviceclients@it4pme.fr
     mailer_password: MailMw92
+    mailer_sender: support@optimouv.net
     secret:            ThisTokenIsNotSoSecretChangeIt
     # ci-dessous les deux parametres pour Here
     app_id: tObeTMHIXTfmuTUvyDBa
