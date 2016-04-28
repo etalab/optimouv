@@ -23,6 +23,7 @@ class EMAIL:
 	Port="587"
 	Account="vtc.ouss@gmail.com"
 	Password="EJAg$m896!"
+    From="support@optimouv.net"
 
 class MQ:
 	Host="127.0.0.1"
