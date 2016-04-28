@@ -2516,7 +2516,7 @@ def send_email_to_user(userId, resultId):
 		subject = u'OPTIMOUV - mise à disposition de vos résultats de calculs'
 		contentText = u"Bonjour,\n\n" 
 		contentText += u"Le résultat de votre calcul est disponible.\n"
-		contentText += u"Vous pouvez le consulter en cliquant sur ce lien:\n" 
+		contentText += u"Vous pouvez le consulter en cliquant sur ce lien :\n" 
 		contentText += u"%s\n\n"%(url)
 		contentText += u"Optimouv\n"
 		contentText += u"%s\n"%(senderAccount)
@@ -2534,22 +2534,23 @@ General Function to send email
 def send_email_general(recipientAddress, subject, contentText ):
 	try:
 		# Gmail Sign In
-		senderAccount = config.EMAIL.Account
+		loginAccount = config.EMAIL.Account
 		senderPassword = config.EMAIL.Password
 		
 		server = smtplib.SMTP(config.EMAIL.Server, config.EMAIL.Port)
 		server.ehlo()
 		server.starttls()
-		server.login(senderAccount, senderPassword)
+		server.login(loginAccount, senderPassword)
 		
-		senderAccount = "support@optimouv.net"
+		senderAccount = config.EMAIL.From
+		
 		
 		msg = MIMEText(contentText)
 		msg['From'] = senderAccount
 		msg['To'] = recipientAddress
 		msg['Subject'] = subject
-		
-		server.sendmail(senderAccount, [recipientAddress], msg.as_string())
+				
+		server.sendmail(senderAccount, recipientAddress, msg.as_string())
 		server.quit()	
 	
 	except Exception as e:
