@@ -2509,12 +2509,13 @@ def send_email_to_user(userId, resultId):
 		
 		recipientAddress = get_user_email_from_user_id(userId)
 
-		senderAccount = config.EMAIL.Account
+# 		senderAccount = config.EMAIL.Account
+		senderAccount = "support@optimouv.net"
 
 		url="%s/admin/poules/resultat/%s"%(config.INPUT.MainUrl, resultId)
 		subject = u'OPTIMOUV - mise à disposition de vos résultats de calculs'
 		contentText = u"Bonjour,\n\n" 
-		contentText += u"Le résultat de votre calcul est disponible. "
+		contentText += u"Le résultat de votre calcul est disponible.\n"
 		contentText += u"Vous pouvez le consulter en cliquant sur ce lien:\n" 
 		contentText += u"%s\n\n"%(url)
 		contentText += u"Optimouv\n"
@@ -2540,6 +2541,8 @@ def send_email_general(recipientAddress, subject, contentText ):
 		server.ehlo()
 		server.starttls()
 		server.login(senderAccount, senderPassword)
+		
+		senderAccount = "support@optimouv.net"
 		
 		msg = MIMEText(contentText)
 		msg['From'] = senderAccount
