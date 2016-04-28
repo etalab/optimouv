@@ -39,6 +39,12 @@ class ComparaisonController extends Controller
         $gesCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(5)->getValeur();
         $gesMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(6)->getValeur();
 
+        //get IdGroupe
+        $idGroupe = $em->getRepository('FfbbBundle:Rapport')->getIdGroupe($idRapport);
+        $idGroupe = $idGroupe[0]['idGroupe'];
+        //get IdListe
+        $idListe = $em->getRepository('FfbbBundle:Groupe')->findOneById($idGroupe)->getIdListeParticipant();
+
         return $this->render('FfbbBundle:Rencontres:comparaisonScenario.html.twig', array(
              'participants' => $participants,
              'typeAction' => $typeAction,
@@ -49,7 +55,9 @@ class ComparaisonController extends Controller
             'coutMinibus' => $coutMinibus,
             'gesVoiture' => $gesVoiture,
             'gesCovoiturage' => $gesCovoiturage,
-            'gesMinibus' => $gesMinibus
+            'gesMinibus' => $gesMinibus,
+            'idGroupe' => $idGroupe,
+            'idListe' => $idListe
 
 
         ));

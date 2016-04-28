@@ -8,13 +8,14 @@
                  <div class="bs-example">
                      <ul class="breadcrumb">
                          <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
-                         <li><a href="{{ path('ffbb_choisir_liste_participants') }}">Choix de listes</a></li>
-                         <li class="active">Nouveau groupe</li>
+                         <li><a href="{{ path('ffbb_choisir_liste_participants') }}">Meilleur lieu de rencontre </a></li>
+                         <li class="active">Sélection participants</li>
                      </ul>
                  </div>
                  <div class="col-lg-12">
-                     <h3 class="page-header">Constituez votre groupe</h3>
-                     <h4> {{ nomListe }}</h4>
+                     <h2>Etape 3 / 4</h2>
+                     <h3 class="page-header">Sélectionnez vos participants</h3>
+                     <h4> Nom du fichier : {{ nomListe }}</h4>
                  </div>
                  <!-- /.col-lg-12 -->
              </div>
@@ -22,13 +23,13 @@
 
              <div class="row" >
                  <form id="demoform" action="{{ path('ffbb_homepage') }}" method="POST" class="panel-heading">
-                     <input type="text" name="nomGroupe" id="nomGroupe" placeholder="Donnez un nom à votre nouveau groupe" style=" width: 100%;
+                     <input type="text" name="nomGroupe" id="nomGroupe" placeholder="Donnez un nom à votre sélection" style=" width: 100%;
                                               border-top: 1px solid #ccc;
                                               border-left: 1px solid #ccc;
                                               border-right: 1px solid #eee;
                                               border-bottom: 1px solid #eee;
                                               border-radius: 5px; text-indent:10px;
-                                              margin-bottom: 10px !important;" required x-moz-errormessage="Veuillez donner un nom à votre groupe" >
+                                              margin-bottom: 10px !important;" required x-moz-errormessage="Donnez un nom à votre sélection" >
                       <input type="hidden" name="idListeParticipants" value="{{ idListeParticipants }}">
                      {% if idListeLieux is defined %}
                          <input type="hidden" name="idListeLieux" value="{{ idListeLieux }}">
