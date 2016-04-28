@@ -1,22 +1,22 @@
 class INPUT:
-	Iter=5 # number of iteration to calculate P matrix for round trip and one way match
+    Iter=5 # number of iteration to calculate P matrix for round trip and one way match
     IterPlateau=5 # number of iteration to calculate shortest distance for match plateau
-	IterConstraint=10000 # maximum number of iteration before error constraint
+    IterConstraint=10000 # maximum number of iteration before error constraint
     IterLaunch=20 # number of launch iteration for round trip and one way match
     IterLaunchPlateau=10 # number of launch iteration for plateau match
     IterShortestDistancePlateau=540000 # max iteration number is 531441 to be exaxt
     MainUrl= "http://ffbb" # 
-# 	MainUrl= "http://dev.ffbb.it4pme.fr/" # 
+    #MainUrl= "http://dev.ffbb.it4pme.fr/" # 
 	
 class DB:
-	Host="127.0.0.1"
-	Db="optimouv"
-	User="root"
-	Password="trk"
+    Host="127.0.0.1"
+    Db="optimouv"
+    User="root"
+    Password="trk"
 	
 class HERE:
-	AppId="pfKIAUOCwlUoDaS5HMSF"
-	AppCode="eyRBIwonpnFNMXR0fza4vA"
+    AppId="pfKIAUOCwlUoDaS5HMSF"
+    AppCode="eyRBIwonpnFNMXR0fza4vA"
 	
 class EMAIL:
     Server="smtp.gmail.com"
@@ -26,11 +26,11 @@ class EMAIL:
     From="support@optimouv.net"
 
 class MQ:
-	Host="127.0.0.1"
-	User="guest"
-	Password="guest"
-	Queue="poule_queue"
-	Exchange="poule_exchange"
+    Host="127.0.0.1"
+    User="guest"
+    Password="guest"
+    Queue="poule_queue"
+    Exchange="poule_exchange"
 
 class LOG:
-	Path='/tmp/ffbb.log'
+    Path='/tmp/ffbb.log'
