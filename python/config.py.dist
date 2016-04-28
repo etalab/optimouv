@@ -19,10 +19,10 @@ class HERE:
 	AppCode="eyRBIwonpnFNMXR0fza4vA"
 	
 class EMAIL:
-	Server="smtp.gmail.com"
-	Port="587"
-	Account="vtc.ouss@gmail.com"
-	Password="EJAg$m896!"
+    Server="smtp.gmail.com"
+    Port="587"
+    Account="vtc.ouss@gmail.com"
+    Password="EJAg$m896!"
     From="support@optimouv.net"
 
 class MQ:
