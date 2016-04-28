@@ -6,6 +6,16 @@
 
     <div class="row">
         <div class="col-lg-12">
+            <div class="bs-example">
+                <ul class="breadcrumb">
+                    <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
+                    <li><a href="{{ path('ffbb_poules_choisir_liste') }}">Optimisation des poules</a></li>
+                    <li><a href="{{ path('ffbb_poule_choisir_groupe', {'idListe': idListe}) }}">Votre sélection</a></li>
+                    <li><A href="{{ path('ffbb_poules_lancer_groupe', {'idGroupe': idGroupe}) }}">Options de calcul</a></li>
+                    <li><A href="{{ path('ffbb_poules_resultat_calcul', {'idResultat': idResultat})}}">Scénarii</a></li>
+                    <li class="active">Comparaison </li>
+                </ul>
+            </div>
             <h3 class="page-header">Comparez vos scénarios</h3>
         </div>
     </div>
