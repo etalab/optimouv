@@ -797,7 +797,8 @@ class PoulesController extends Controller
             'coutMinibus' => $coutMinibus,
             'gesVoiture' => $gesVoiture,
             'gesCovoiturage' => $gesCovoiturage,
-            'gesMinibus' => $gesMinibus
+            'gesMinibus' => $gesMinibus,
+            'idListe' =>$idListe,
 
 
         ));
