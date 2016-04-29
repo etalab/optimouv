@@ -46,42 +46,47 @@
                 <!-- Navigation -->
                 <nav class="navbar navbar-default  topnav" role="navigation">
                     <div class="row">
-                        <div style="position:relative; float:left; width: 30%">
-                            <img src="{{ asset('bundles/ffbb/accueil/img/ffbb-logo.jpg') }}">
+                        <div style="position: relative; padding-top: 10px">
+                            <div style="position:relative; float:left; width: 30%">
+                                <img src="{{ asset('bundles/ffbb/accueil/img/ffbb-logo.jpg') }}">
+                            </div>
+                            <div style="position:relative; float:left; width: 30%; text-align: center; margin-left: 5%">
+                                <img src="{{ asset('bundles/ffbb/accueil/img/Logo-Optimouv.jpg') }}" alt="optimouv"/>
+                            </div>
+                            <div style="position:relative; float:right; width: 30%; ">
+                                {% if app.user %}
+                                    <ul class="nav navbar-nav navbar-right">
+                                        <li class="dropdown">
+                                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                                <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-user">
+
+                                                <li style="font-weight: normal;"><a href="#"></a> <i
+                                                            class="fa fa-user fa-fw" style="margin-left: 20px"></i>
+                                                    Bienvenue {{ app.user.username }} </li>
+                                                <li class="divider"></li>
+                                                <li><a href="{{ path('admin_user_edit_profile') }}"><i
+                                                                class="fa fa-user fa-fw"></i> Modifier mon profil</a>
+
+                                                </li>
+                                                {#<li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a></li>#}
+                                                <li class="divider"></li>
+                                                <li><a href="{{ path('fos_user_security_logout') }}"><i
+                                                                class="fa fa-sign-out fa-fw"></i> Déconnexion</a>
+                                                </li>
+                                            </ul>
+                                            <!-- /.dropdown-user -->
+                                        </li>
+                                    </ul>
+                                {% endif %}
+
+                                <img src="{{ asset('bundles/ffbb/accueil/img/cop-ministere.png') }}" alt="cop21"
+                                     style="float: right"/>
+
+
+                            </div>
                         </div>
-                        <div style="position:relative; float:left; width: 30%; text-align: center; margin-left: 5%" >
-                            <img src="{{ asset('bundles/ffbb/accueil/img/Logo-Optimouv.jpg') }}" alt="optimouv"/>
-                        </div>
-                        <div  style="position:relative; float:right; width: 30%; ">
-                            {% if app.user %}
-                                <ul class="nav navbar-nav navbar-right">
-                                    <li class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                            <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-user">
-
-                                            <li style="font-weight: normal;"><a href="#" ></a> <i class="fa fa-user fa-fw" style="margin-left: 20px"></i> Bienvenue {{ app.user.username }} </li></a>
-                                            <li class="divider"></li>
-                                            <li><a href="{{ path('admin_user_edit_profile') }}"><i class="fa fa-user fa-fw"></i> Modifier mon profil</a>
-
-                                            </li>
-                                            {#<li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a></li>#}
-                                            <li class="divider"></li>
-                                            <li><a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-sign-out fa-fw"></i> Déconnexion</a>
-                                            </li>
-                                        </ul>
-                                        <!-- /.dropdown-user -->
-                                    </li>
-                                </ul>
-                            {% endif %}
-
-                            <img src="{{ asset('bundles/ffbb/accueil/img/cop-ministere.png') }}" alt="cop21" style="float: right"/>
-
-
-                        </div>
-
-
                     </div>
                     <!-- /.container -->
                 </nav>
