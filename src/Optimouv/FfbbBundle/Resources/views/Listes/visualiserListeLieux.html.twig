@@ -8,14 +8,14 @@
             <div class="bs-example">
                 <ul class="breadcrumb">
                     <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
-                    <li><a href="{{ path('ffbb_choisir_liste_participants') }}">Choix de listes</a></li>
-                    <li><a href="{{ path('ffbb_gerer_liste_participants') }}">Gestion de listes</a></li>
-                    <li class="active">Visualisation de la liste de lieux</li>
+                    <li><a href="{{ path('ffbb_choisir_liste_participants') }}">Meilleur lieu de rencontre </a></li>
+                    <li><a href="{{ path('ffbb_gerer_liste_participants') }}">Fichiers </a></li>
+                    <li class="active">Visualisation fichier </li>
                 </ul>
             </div>
             <div class="col-lg-12">
-                <h3 class="page-header">Liste de lieux </h3>
-                <h4>{{ nomListeLieux }}</h4>
+                <h3 class="page-header">Visualisation des fichiers </h3>
+                <h4>Nom du fichier : {{ nomListeLieux }}</h4>
             </div>
         </div>
 
@@ -23,7 +23,7 @@
             <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        Vos lieux
+                        Votre sélection
                     </div>
 
                     <div class="panel-body">
@@ -97,7 +97,7 @@
 
 
                         <div class="row">
-                            <div class="col-lg-12"> <a href="{{ path('ffbb_gerer_liste_participants') }}" class="pull-right btn btn-default-rencontre">Retour à la liste</a></div>
+                            <div class="col-lg-12"> <a href="{{ path('ffbb_gerer_liste_participants') }}" class="pull-right btn btn-default-rencontre">Retour</a></div>
                         </div>
 
                     </div>

@@ -8,14 +8,14 @@
                  <div class="bs-example">
                      <ul class="breadcrumb">
                          <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
-                         <li><a href="{{ path('ffbb_choisir_liste_participants') }}">Choix de listes</a></li>
-                         <li><a href="{{ path('ffbb_gerer_liste_participants') }}">Gestion de listes</a></li>
-                         <li class="active">Renommage de la liste de lieux</li>
+                         <li><a href="{{ path('ffbb_choisir_liste_participants') }}">Meilleur lieu de rencontre </a></li>
+                         <li><a href="{{ path('ffbb_gerer_liste_participants') }}">Fichiers </a></li>
+                         <li class="active">Renommage fichier</li>
                      </ul>
                  </div>
                  <div class="col-lg-12">
-                     <h3 class="page-header">Renommez votre liste de lieux </h3>
-                     <h4>{{ nomListeLieux }}</h4>
+                     <h3 class="page-header">Renommez votre fichier </h3>
+                     <h4>Nom du fichier : {{ nomListeLieux }}</h4>
                  </div>
                  <!-- /.col-lg-12 -->
              </div>
@@ -32,7 +32,7 @@
                                             <form role="form" action="{{ path('ffbb_update_liste_lieux', {'idListeLieux': idListeLieux}) }}" method="post">
 
                                                  <div class="form-group">
-                                                      <label>Nom de la liste de lieux</label>
+                                                      <label>Nom du fichier</label>
                                                       <input class="form-control" name="nomListeLieux" id="nomListeLieux" placeholder="Entrez le nouveau nom">
                                                  </div>
 
