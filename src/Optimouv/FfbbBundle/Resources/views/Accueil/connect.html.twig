@@ -2,7 +2,7 @@
 
 {% block slideshow %}
     <div>
-        <div class="row" style="min-height: 300px; width: 100%; margin-left: 0px;">
+        <div class="row" style="min-height: 300px; width: 100%; margin-left: 0px; background-color: #fff">
             <img src="{{ asset('bundles/ffbb/images/ca_marche_connectee.jpg') }}" style="width: 100%">
         </div>
 
@@ -60,7 +60,7 @@
         {% set userConnect = app.user.roles %}
 
         {% if ('ROLE_ADMIN' in userConnect) or ('ROLE_SUPER_ADMIN' in userConnect) %}
-            <div class="row" style="min-height: 200px">
+            <div class="row" style="min-height: 200px; margin-bottom: -50px">
                 <div style="position:relative; float:left; background-color: #4E4646; border-radius: 5px; width: 30%; min-height: 150px">
                     <a href="{{ path('administration_panel') }}" style="text-decoration: none;">
                         <div style="text-align: center; padding-top:10px">
