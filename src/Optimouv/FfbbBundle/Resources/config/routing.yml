@@ -405,4 +405,4 @@ ffbb_coefficients_create:
 #page mentions légales
 ffbb_mentions_legales:
     path:    /mentions-legales
-    defaults: { _controller: FfbbBundle:Accueil:mentionsLegales:create }
+    defaults: { _controller: FfbbBundle:Accueil:mentionsLegales}
