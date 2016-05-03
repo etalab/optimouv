@@ -13,6 +13,7 @@ parameters:
     mailer_user: serviceclients@it4pme.fr
     mailer_password: MailMw92
     mailer_sender: support@optimouv.net
+    sender_name: service clients it4pme
     secret:            ThisTokenIsNotSoSecretChangeIt
     # ci-dessous les deux parametres pour Here
     app_id: tObeTMHIXTfmuTUvyDBa
@@ -25,3 +26,10 @@ parameters:
     mq_poule_exchange: poule_exchange
     mq_rencontre_queue: rencontre_queue
     locale: fr
+    #conf RabbitMQ
+    host_RMQ: localhost
+    port_RMQ: 5672
+    user_RMQ: guest
+    password_RMQ: guest
+    vhost_RMQ: /
+    lazy_RMQ: false
