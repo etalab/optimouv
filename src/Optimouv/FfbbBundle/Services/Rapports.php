@@ -159,8 +159,7 @@ class Rapports
         while ($rowUser = $idUsers->fetch(PDO::FETCH_ASSOC)) {
 
             $idUser = $rowUser['id'];
-             $infosRapport =  $this->getAllInfoRapprtForUser($idUser);
-            $infosRapports = $infosRapports + $infosRapport;
+            $infosRapport =  $this->getAllInfoRapprtForUser($idUser);
             $infosRapports = array_merge($infosRapports, $infosRapport);
 
         }

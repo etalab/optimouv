@@ -29,39 +29,6 @@ class RapportsController extends Controller
          $idUtilisateur = $user->getId();
 
         $infosRapports = $this->get('service_rapports')->getAllInfoRapprt($idUtilisateur, $role);
-        
-//
-//
-//        # récupérer chemin fichier log du fichier parameters.yml
-//        $this->error_log_path = $this->container->getParameter("error_log_path");
-//
-//        # obtenir entity manager
-//        $em = $this->getDoctrine()->getManager();
-//
-//        # récupérer tous les groupes appartenant à l'utilisateur courant
-//        $groupesTemp = $em->getRepository('FfbbBundle:Groupe')->getGroupesParIdUtilisateur($idUtilisateur);
-//        $idGroupes = [];
-//        for($i=0; $i<count($groupesTemp); $i++){
-//            array_push($idGroupes, $groupesTemp[$i]["id"]);
-//        }
-//
-//
-//
-//        # récupérer tous les rapports de tous les groupes
-//        $infoRapports = $em->getRepository('FfbbBundle:Rapport')->getRapportsParIdGroupe($idGroupes);
-//
-//
-//        # récupérer l'id du rapport (résultat)
-//        # BUG sur Symphony quand on récupère le statut directement en utilisant le repository du rapport
-//        for($i=0; $i<count($infoRapports); $i++){
-//            $idResultat = $infoRapports[$i]["id"];
-//            $statut  = $this->get('service_poules')->getStatut($idResultat);
-//            # ajouter le statut dans les infos retournées sur le front
-//            $infoRapports[$i]["statut"] = $statut[0]["statut"];
-//
-//        }
-
-
 
         return $this->render('FfbbBundle:Rapports:index.html.twig', [
             "infoRapports" => $infosRapports
