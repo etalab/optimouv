@@ -25,6 +25,7 @@ parameters:
     mq_rencontre_exchange: rencontre_exchange
     mq_poule_exchange: poule_exchange
     mq_rencontre_queue: rencontre_queue
+    mq_poule_queue: poule_queue
     locale: fr
     #conf RabbitMQ
     host_RMQ: localhost
