@@ -311,10 +311,15 @@ class PoulesController extends Controller
         $retour = $this->get('service_poules')->sauvegarderParamsEnDB($utilisateurId);
         $idParams = $retour["data"];
 
-        # envoyer l'id du rapport (params) à  RabbitMQ
-        $this->get('old_sound_rabbit_mq.poule_producer')->publish($idParams);
+//        error_log("\n envoyer id à rabbitmq: ".print_r($idParams , true), 3, "error_log_optimouv.txt");
 
-//        error_log("\n id params: ".print_r($idParams , true), 3, "error_log_optimouv.txt");
+        $queuePoule = $this->getParameter('mq_poule_queue');
+
+
+        # envoyer l'id du rapport (params) à  RabbitMQ
+//        $this->get('old_sound_rabbit_mq.poule_producer')->publish($idParams);
+        $this->get('old_sound_rabbit_mq.poule_producer')->publish($idParams, $queuePoule);
+
 
 
         # incrémenter le nombre de lancements de calcul pour opti poule
