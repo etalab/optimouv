@@ -18,13 +18,15 @@ class Poules{
     private $app_id;
     private $app_code;
     private $error_log_path;
+    private $database_host;
     /**
      * @var Statistiques $serviceStatistiques
      */
     protected $serviceStatistiques;
 
-    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $serviceStatistiques)
+    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $serviceStatistiques)
     {
+        $this->database_host = $database_host;
         $this->database_name = $database_name;
         $this->database_user = $database_user;
         $this->database_password = $database_password;
@@ -32,6 +34,29 @@ class Poules{
         $this->app_code = $app_code;
         $this->error_log_path = $error_log_path;
         $this->serviceStatistiques = $serviceStatistiques;
+    }
+    # retourner un objet PDO qu'on peut utiliser dans d'autres fonctions
+    private function getPdo(){
+        # récupérer les parametres de connexion
+        $host = $this->database_host;
+        $dbname = $this->database_name;
+        $dbuser = $this->database_user;
+        $dbpwd = $this->database_password;
+
+        # obtenir la date courante du système
+        date_default_timezone_set('Europe/Paris');
+        $dateTimeNow = date('Y-m-d_G:i:s', time());
+
+        try {
+            # créer une objet PDO
+            $bdd = new PDO('mysql:host='.$host.';dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
+        } catch (PDOException $e) {
+            error_log("\n Service: Poules, Function: getPdo, datetime: ".$dateTimeNow
+                ."\n PDOException: ".print_r($e, true), 3, $this->error_log_path);
+            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+        }
+
+        return $bdd;
     }
 
     public function sauvegarderParamsEnDB($utilisateurId)
@@ -577,7 +602,6 @@ class Poules{
 
     }
 
-
     # retourner la distance et la dureer pour un trajet donné
     private function getDetailsTrajet($departId, $destinationId){
         # obtenir la date courante du système
@@ -612,29 +636,6 @@ class Poules{
 
 }
 
-
-    # retourner un objet PDO qu'on peut utiliser dans d'autres fonctions
-    private function getPdo(){
-        # récupérer les parametres de connexion
-        $dbname = $this->database_name;
-        $dbuser = $this->database_user;
-        $dbpwd = $this->database_password;
-
-        # obtenir la date courante du système
-        date_default_timezone_set('Europe/Paris');
-        $dateTimeNow = date('Y-m-d_G:i:s', time());
-
-        try {
-            # créer une objet PDO
-            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
-        } catch (PDOException $e) {
-            error_log("\n Service: Poules, Function: getPdo, datetime: ".$dateTimeNow
-                ."\n PDOException: ".print_r($e, true), 3, $this->error_log_path);
-            die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
-        }
-
-        return $bdd;
-    }
 
     # retourner le statut de la tache
     public function getStatut($idResultat){

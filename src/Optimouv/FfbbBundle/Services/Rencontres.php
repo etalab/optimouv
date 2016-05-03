@@ -19,14 +19,16 @@ class Rencontres
     public $app_id;
     public $app_code;
     public $error_log_path;
+    public $database_host;
 
     /**
      * @var Statistiques $serviceStatistiques
      */
     protected $serviceStatistiques;
 
-    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $serviceStatistiques)
+    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $serviceStatistiques)
     {
+        $this->database_host = $database_host;
         $this->database_name = $database_name;
         $this->database_user = $database_user;
         $this->database_password = $database_password;
@@ -41,12 +43,13 @@ class Rencontres
     {
         //params de connexion
 
+        $host = $this->database_host;
         $dbname = $this->database_name;
         $dbuser = $this->database_user;
         $dbpwd = $this->database_password;
 
         try {
-            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
+            $bdd = new PDO('mysql:host='.$host.';dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
 
         } catch (PDOException $e) {
             die('Erreur : ' . $e->getMessage());

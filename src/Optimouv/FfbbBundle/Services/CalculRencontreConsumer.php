@@ -16,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 
 class CalculRencontreConsumer implements ConsumerInterface
 {
-
+    public $database_host;
     public $database_name;
     public $database_user;
     public $database_password;
@@ -36,8 +36,9 @@ class CalculRencontreConsumer implements ConsumerInterface
      */
     protected $serviceStatistiques;
 
-    public function __construct($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, ContainerInterface $container, $mailer, EngineInterface $templating, $serviceStatistiques, $mailer_user, $base_url, $mailer_sender)
+    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, ContainerInterface $container, $mailer, EngineInterface $templating, $serviceStatistiques, $mailer_user, $base_url, $mailer_sender)
     {
+        $this->database_host = $database_host;
         $this->database_name = $database_name;
         $this->database_user = $database_user;
         $this->database_password = $database_password;
@@ -56,13 +57,13 @@ class CalculRencontreConsumer implements ConsumerInterface
     public function connexion()
     {
         //params de connexion
-
+        $host = $this->database_host;
         $dbname = $this->database_name;
         $dbuser = $this->database_user;
         $dbpwd = $this->database_password;
 
         try {
-            $bdd = new PDO('mysql:host=localhost;dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
+            $bdd = new PDO('mysql:host='.$host.';dbname=' . $dbname . ';charset=utf8', $dbuser, $dbpwd);
 
         } catch (PDOException $e) {
             die('Erreur : ' . $e->getMessage());
