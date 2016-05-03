@@ -1992,7 +1992,7 @@ def on_channel_open(channel_):
 """
 Pika Asynchronous consumer
 """
-class ExampleConsumer(object):
+class AsyncConsumer(object):
 	"""This is an example consumer that will handle unexpected interactions
     with RabbitMQ such as channel and connection closures.
 
@@ -2006,7 +2006,6 @@ class ExampleConsumer(object):
 
     """
 	EXCHANGE = config.MQ.Exchange
-
 	EXCHANGE_TYPE = 'direct'
 	QUEUE = config.MQ.Queue
 
@@ -2070,8 +2069,7 @@ class ExampleConsumer(object):
 		if self._closing:
 			self._connection.ioloop.stop()
 		else:
-			print('Connection closed, reopening in 5 seconds: (%s) %s',
-						   reply_code, reply_text)
+			print('Connection closed, reopening in 5 seconds: (%s) %s' %(reply_code, reply_text))
 			self._connection.add_timeout(5, self.reconnect)
 
 	def reconnect(self):
@@ -2113,8 +2111,10 @@ class ExampleConsumer(object):
 		self.add_on_channel_close_callback()
 
 		self._channel.basic_qos(prefetch_count=1)
-		
-		self._channel.basic_consume(callback, queue=config.MQ.Queue, no_ack=False)
+
+		self.setup_exchange(config.MQ.Exchange)		
+# 		self.setup_queue(config.MQ.Queue)
+# 		self._channel.basic_consume(callback, queue=config.MQ.Queue, no_ack=False)
 
 
 	def add_on_channel_close_callback(self):
@@ -2137,8 +2137,7 @@ class ExampleConsumer(object):
 		:param str reply_text: The text reason the channel was closed
 
 		"""
-		print('Channel %i was closed: (%s) %s',
-					   channel, reply_code, reply_text)
+		print('Channel %i was closed: (%s) %s'%(channel, reply_code, reply_text))
 		self._connection.close()
 
 	def setup_exchange(self, exchange_name):
@@ -2149,7 +2148,8 @@ class ExampleConsumer(object):
 		:param str|unicode exchange_name: The name of the exchange to declare
 
 		"""
-		print('Declaring exchange %s', exchange_name)
+		print('Declaring exchange %s' %exchange_name)
+		self._channel.exchange_declare(self.on_exchange_declareok, exchange_name)
 
 	def on_exchange_declareok(self, unused_frame):
 		"""Invoked by pika when RabbitMQ has finished the Exchange.Declare RPC
@@ -2159,7 +2159,8 @@ class ExampleConsumer(object):
 
 		"""
 		print('Exchange declared')
-		self.setup_queue(self.QUEUE)
+# 		self.setup_queue(self.QUEUE)
+		self.setup_queue(config.MQ.Queue)
 
 	def setup_queue(self, queue_name):
 		"""Setup the queue on RabbitMQ by invoking the Queue.Declare RPC
@@ -2169,9 +2170,10 @@ class ExampleConsumer(object):
 		:param str|unicode queue_name: The name of the queue to declare.
 
 		"""
-		print('Declaring queue %s', queue_name)
-		self._channel.queue_declare(self.on_queue_declareok, queue_name)
-
+		print('Declaring queue %s' %queue_name)
+# 		self._channel.queue_declare(self.on_queue_declareok, queue_name)
+		self._channel.queue_declare(self.on_queue_declareok, queue_name, True)
+		
 	def on_queue_declareok(self, method_frame):
 		"""Method invoked by pika when the Queue.Declare RPC call made in
 		setup_queue has completed. In this method we will bind the queue
@@ -2182,10 +2184,8 @@ class ExampleConsumer(object):
 		:param pika.frame.Method method_frame: The Queue.DeclareOk frame
 
 		"""
-		print('Binding %s to %s with %s',
-					self.EXCHANGE, self.QUEUE)
-		self._channel.queue_bind(self.on_bindok, self.QUEUE,
-								 self.EXCHANGE)
+		print('Binding %s to %s' %(self.EXCHANGE, self.QUEUE))
+		self._channel.queue_bind(self.on_bindok, self.QUEUE, self.EXCHANGE)
 
 	def on_bindok(self, unused_frame):
 		"""Invoked by pika when the Queue.Bind method has completed. At this
@@ -2229,8 +2229,7 @@ class ExampleConsumer(object):
 		:param pika.frame.Method method_frame: The Basic.Cancel frame
 
 		"""
-		print('Consumer was cancelled remotely, shutting down: %r',
-					method_frame)
+		print('Consumer was cancelled remotely, shutting down: %r' %method_frame)
 		if self._channel:
 			self._channel.close()
 
@@ -2248,8 +2247,7 @@ class ExampleConsumer(object):
 		:param str|unicode body: The message body
 
 		"""
-		print('Received message # %s from %s: %s',
-					basic_deliver.delivery_tag, properties.app_id, body)
+		print('Received message # %s from %s: %s' %(basic_deliver.delivery_tag, properties.app_id, body))
 		self.acknowledge_message(basic_deliver.delivery_tag)
 
 	def acknowledge_message(self, delivery_tag):
@@ -2259,7 +2257,7 @@ class ExampleConsumer(object):
 		:param int delivery_tag: The delivery tag from the Basic.Deliver frame
 
 		"""
-		print('Acknowledging message %s', delivery_tag)
+		print('Acknowledging message %s' %delivery_tag)
 		self._channel.basic_ack(delivery_tag)
 
 	def stop_consuming(self):
@@ -2348,9 +2346,22 @@ def main():
 		credentials = pika.PlainCredentials(config.MQ.User, config.MQ.Password)
 		parameters = pika.ConnectionParameters(host=config.MQ.Host, credentials=credentials, heartbeat_interval=0)
 
-		# asynchronous RabbitMQ
-		consumer = ExampleConsumer(parameters)
-		consumer.run()
+		# asynchronous RabbitMQ (problem with declaring queue)
+# 		consumer = AsyncConsumer(parameters)
+# 		consumer.run()
+
+		# synchronous RabbitMQ
+		connection = pika.BlockingConnection(parameters)
+		channel = connection.channel()
+		channel.exchange_declare(exchange=config.MQ.Exchange, durable=True)
+		channel.queue_declare(queue=config.MQ.Queue, durable=True)
+		channel.queue_bind(config.MQ.Queue, config.MQ.Exchange, routing_key=None)
+		channel.basic_qos(prefetch_count=1)
+		
+		channel.basic_consume(callback, queue=config.MQ.Queue, no_ack=False)
+		channel.start_consuming()
+		print (' [*] Waiting for messages. To exit press CTRL+C')
+
 
 	except KeyboardInterrupt:
 		consumer.stop()
