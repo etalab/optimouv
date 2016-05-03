@@ -935,8 +935,8 @@ class Listes{
                 $stmt->execute();
 
                 # afficher le statut de la requete executée
-                error_log("\n Service: Listes, Function: creerListeParticipants, datetime: ".$dateTimeNow
-                    ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, $this->error_log_path);
+//                error_log("\n Service: Listes, Function: creerListeParticipants, datetime: ".$dateTimeNow
+//                    ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, $this->error_log_path);
             }
 
             $retour = array(
@@ -1316,8 +1316,8 @@ class Listes{
                             $stmt->execute();
 
                             # afficher le statut de la requete executée
-                            error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
-                                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, $this->error_log_path);
+//                            error_log("\n Service: Listes, Function: creerEntites, datetime: ".$dateTimeNow
+//                                ."\n Error Info: ".print_r($stmt->errorInfo(), true), 3, $this->error_log_path);
 
                             # obtenir l'id de l"entité créée
                             $idEntite = $bdd->lastInsertId();
