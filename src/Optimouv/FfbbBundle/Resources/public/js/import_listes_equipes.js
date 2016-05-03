@@ -44,7 +44,8 @@ function addEventHandlerImportListeEquipes(){
           console.log('nouvelElementDateCreation: ' + nouvelElementDateCreation);
 
           // mettre à jour les boutons
-          var nouvelleStr = '<tr id=' + nouvelElementId +'> <td>' + nouvelElementId + ' </td>';
+          //var nouvelleStr = '<tr id=' + nouvelElementId +'> <td>' + nouvelElementId + ' </td>';
+          var nouvelleStr = '<tr id=' + nouvelElementId + '>' ;
           nouvelleStr = nouvelleStr + '<td> '+ nouvelElementNom  + ' </td>';
           nouvelleStr = nouvelleStr + '<td> '+ nouvelElementDateCreation  + ' </td>';
           nouvelleStr = nouvelleStr + '<td> ';
