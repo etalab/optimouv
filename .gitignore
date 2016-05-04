@@ -8,6 +8,8 @@
 !app/spool/.gitkeep
 /app/phpunit.xml
 /bin/
+/var/logs/*
+!var/logs/.gitkeep
 /vendor/
 /web/bundles/
 # Composer
