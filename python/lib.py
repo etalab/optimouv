@@ -1933,11 +1933,12 @@ def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize):
 			sameCurValueIndex.remove(indexCurPool)
 		
 			P_InitMat[indexCurPool, sameCurValueIndex] = 1
-		# 
+
+		return P_InitMat
+# 
 	except Exception as e:
 		show_exception_traceback()
 
-	return P_InitMat
 
 """
 Function to get team name from team Id (with escaped single apostrophe)
