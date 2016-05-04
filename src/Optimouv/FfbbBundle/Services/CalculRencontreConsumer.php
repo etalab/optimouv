@@ -127,8 +127,9 @@ class CalculRencontreConsumer implements ConsumerInterface
         $database_user = $this->database_user;
         $database_password = $this->database_password;
         $error_log_path = $this->error_log_path;
+        $database_host = $this->database_host;
          //Appel de la classe
-        $serviceRencontre = new Rencontres($database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $this->serviceStatistiques);
+        $serviceRencontre = new Rencontres($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $this->serviceStatistiques);
 
 
 
