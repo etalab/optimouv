@@ -2510,8 +2510,8 @@ def send_email_to_user(userId, resultId):
 		
 		recipientAddress = get_user_email_from_user_id(userId)
 
-# 		senderAccount = config.EMAIL.Account
-		senderAccount = "support@optimouv.net"
+# 		senderAccount = "support@optimouv.net"
+		senderAccount = config.EMAIL.From
 
 		url="%s/admin/poules/resultat/%s"%(config.INPUT.MainUrl, resultId)
 		subject = u'OPTIMOUV - mise à disposition de vos résultats de calculs'
