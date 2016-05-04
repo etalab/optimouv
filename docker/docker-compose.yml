@@ -1,0 +1,93 @@
+version: '2'
+
+services:
+  webserver:
+    container_name: webserver
+    build: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - $BASEDIR:/optimouv/
+    links:
+      - phpfastcgi
+      - rabbitmq
+      - phpmyadmin
+
+  mysql:
+    container_name: mysql
+    build: ./mysql
+    volumes_from:
+      - mysql_data
+    environment:
+      MYSQL_ROOT_PASSWORD: myPass
+
+  mysql_data:
+    container_name: mysql_data
+    build: ./mysql
+    entrypoint: /bin/bash
+    volumes:
+      - /var/lib/mysql
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbit
+      RABBITMQ_DEFAULT_PASS: mq
+
+  phpfastcgi:
+    container_name: phpfastcgi
+    build: ./php
+    volumes:
+      - $BASEDIR:/optimouv/
+    links:
+      - mysql
+      - rabbitmq
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    links:
+      - mysql
+    ports:
+      - 80
+    environment:
+      PMA_HOST: mysql
+
+  worker_mailer:
+    container_name: mailer
+    build: ./php
+    volumes:
+      - $BASEDIR:/optimouv/
+    links:
+      - mysql
+      - rabbitmq
+    restart: always
+    working_dir: /optimouv/workers
+    user: www-data
+    command: ["/optimouv/workers/mailer.sh"]
+
+  worker_bestplace:
+    build: ./php
+    volumes:
+      - $BASEDIR:/optimouv/
+    links:
+      - mysql
+      - rabbitmq
+    restart: always
+    working_dir: /optimouv/workers
+    user: www-data
+    command: ["/optimouv/workers/bestplace.sh"]
+
+  worker_optimisations:
+    build: ./python
+    volumes:
+      - $BASEDIR:/optimouv/
+    links:
+      - mysql
+      - rabbitmq
+    restart: always
+    working_dir: /optimouv/workers/
+    command: ["/optimouv/workers/optimization.sh"]
+

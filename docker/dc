@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export BASEDIR=/home/optimouv/
+docker-compose -p optimouv $*
+
