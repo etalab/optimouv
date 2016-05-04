@@ -4,6 +4,8 @@
 /app/config/parameters.yml
 /app/logs/*
 !app/logs/.gitkeep
+/app/spool/*
+!app/spool/.gitkeep
 /app/phpunit.xml
 /bin/
 /vendor/
