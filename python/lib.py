@@ -507,7 +507,7 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 			base3Tmp = str(convert_decimal_to_base3(i))
 # 			logging.debug("  base3Tmp: %s" %base3Tmp)
 
-			# complete base3 to 12 characters
+			# complete base3 to 12 characters (12 of 3-elements tuples )
 			for k in range(12-len(base3Tmp)):
 				base3Tmp = '0' + base3Tmp
 # 			logging.debug("  base3Tmp: %s" %base3Tmp)
