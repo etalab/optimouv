@@ -18,6 +18,7 @@ parameters:
     # ci-dessous les deux parametres pour Here
     app_id: tObeTMHIXTfmuTUvyDBa
     app_code: 6ST2s3g8BkS7B0Uft0kPeg
+    here_request_limit: 200000
     # chemin errorlog
     error_log_path: error_log_optimouv.txt
     base_url: optimouv
