@@ -221,6 +221,7 @@
   position: relative;
   float: left;
   margin-right: 10px;
+  margin-top: 5px;
 }
 
 .contourBlocRencontre{
@@ -238,6 +239,7 @@
   border-radius: 5px;
   border-color: #40BAC3;
   padding: 15px 0;
+
 }
 .sousTitreBloc{
   font-size: 14px;
