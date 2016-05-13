@@ -2560,10 +2560,13 @@ def send_email_to_user_failure(userId, reportId):
 	try:
 		
 		reportName = get_report_name_from_report_id(reportId)
+		senderAccount = config.EMAIL.From
 
 		contentText = u"Bonjour,\n\n" 
 		contentText += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
-		contentText += u"Veuillez modifier vos critères et contraintes et relancer un calcul. " 
+		contentText += u"Veuillez modifier vos critères et contraintes et relancer un calcul. \n\n" 
+		contentText += u"Optimouv\n"
+		contentText += u"%s\n"%(senderAccount)
 
 		send_email_to_user_failure_with_text(userId, reportId, contentText)
 		
@@ -2578,7 +2581,7 @@ def send_email_to_user_failure_with_text(userId, reportId, contentText):
 	try:
 		recipientAddress = get_user_email_from_user_id(userId)
 
-		subject = u'mise à disposition de vos résultats de calculs'
+		subject = u'OPTIMOUV - mise à disposition de vos résultats de calculs'
 		logging.debug("contentText: \n%s" %contentText)
 		
 		send_email_general(recipientAddress, subject, contentText)
