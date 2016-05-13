@@ -154,13 +154,12 @@ class UserController extends Controller
             date_add($dateExpiration, date_interval_create_from_date_string('10 days'));
         }
 
-
-        $secretKey = "6Lf1NxwTAAAAAP6UYH4-vzxAFxxHYJfq0ddkkK3U";
+        $secretKey=  $this->container->getParameter('cleSecreteCaptcha');
         $ip = $_SERVER['REMOTE_ADDR'];
         $response=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$secretKey."&response=".$captcha."&remoteip=".$ip);
         $responseKeys = json_decode($response,true);
         if(intval($responseKeys["success"]) !== 1) {
-            echo '<h2>Vous êtes un spammer ! Get the @$%K out</h2>';
+            echo '<h2>Erreur de validation de captcha. Contactez votre administrateur.</h2>';
         }
 
         //tester si l'utilisateur existe
