@@ -27,7 +27,7 @@ class Rencontres
      */
     protected $serviceStatistiques;
 
-    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $serviceStatistiques,$here_request_limit )
+    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $serviceStatistiques, $here_request_limit )
     {
         $this->database_host = $database_host;
         $this->database_name = $database_name;
@@ -1244,11 +1244,25 @@ class Rencontres
             # nombre des requetes HERE de géocodage
             $nbrRequetesGeoHere = 0;
 
+            //recuperer la date du jour
+            $date = new \DateTime();
+            $mois = $date->format('m');
+            $annee = $date->format('Y');
+
             // obtenir le nombre de requetes de géo-codage
-//            $listeLieux = $bdd->prepare("SELECT valeur FROM  statistiques_date WHERE type_statistiques = :id ;");
-//            $listeLieux->bindParam(':id', $idListeLieux);
-//            $listeLieux->execute();
-//            $listeLieux = $listeLieux->fetchColumn();
+            $typeStatistiques = "nombreRequetesGeoHere";
+
+            $sql = "SELECT valeur FROM  statistiques_date".
+                " WHERE type_statistiques = :type_statistiques".
+                " and year(date_creation)=:annee and month(date_creation)=:mois;";
+            $stmt = $bdd->prepare($sql);
+            $stmt->bindParam(':type_statistiques', $typeStatistiques);
+            $stmt->bindParam(':annee', $annee);
+            $stmt->bindParam(':mois', $mois);
+            $stmt->execute();
+            $nombreRequetesGeoHere = $stmt->fetchColumn();
+//            error_log("\n nombreRequetesGeoHere: ".print_r($nombreRequetesGeoHere, true), 3, $this->error_log_path);
+//            error_log("\n nombreRequetesGeoHere: ".gettype($nombreRequetesGeoHere), 3, $this->error_log_path);
 
 
 
