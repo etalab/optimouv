@@ -322,24 +322,6 @@ class CalculRencontreConsumer implements ConsumerInterface
 
     }
 
-//    public function sendMail()
-//    {
-//
-//        // the message
-//        $msg = "First line of text\nSecond line of text";
-//
-//        // use wordwrap() if lines are longer than 70 characters
-//        $msg = wordwrap($msg,70);
-//
-//     // send email
-//
-//        try {
-//            mail("oussema.ghodbane@it4pme.fr","My subject",$msg);
-//        } catch (Exception $e) {
-//            echo 'Exception reçue : ',  $e->getMessage(), "\n";
-//        }
-//
-//    }
 
     public function sendMail($idRapport,$typeAction)
     {
