@@ -91,6 +91,11 @@ class UserController extends Controller
         }else{
             $fonction ="";
         }
+        if (isset($_POST['niveauUtilisateur'])) {
+            $niveauUtilisateur = $_POST['niveauUtilisateur'];
+        }else{
+            $niveauUtilisateur ="";
+        }
         if (isset($_POST['email'])) {
             $email = $_POST['email'];
         }
@@ -187,6 +192,7 @@ class UserController extends Controller
             $user->setFederation($federation);
             $user->setDiscipline($discipline);
             $user->setFonction($fonction);
+            $user->setNiveauUtilisateur($niveauUtilisateur);
             $user->setTelephone($telephone);
             $user->setAdresse($adresse);
             $user->setNumLicencie($numLicencie);

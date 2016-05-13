@@ -98,6 +98,13 @@ class User extends BaseUser
      */
     private $dateCreation;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="niveau_utilisateur", type="string", length=50, nullable=true)
+     */
+    private $niveauUtilisateur;
+
 
     public function __construct()
     {
@@ -352,5 +359,29 @@ class User extends BaseUser
     public function getDateCreation()
     {
         return $this->dateCreation;
+    }
+
+    /**
+     * Set niveauUtilisateur
+     *
+     * @param string $niveauUtilisateur
+     *
+     * @return User
+     */
+    public function setNiveauUtilisateur($niveauUtilisateur)
+    {
+        $this->niveauUtilisateur = $niveauUtilisateur;
+
+        return $this;
+    }
+
+    /**
+     * Get niveauUtilisateur
+     *
+     * @return string
+     */
+    public function getNiveauUtilisateur()
+    {
+        return $this->niveauUtilisateur;
     }
 }
