@@ -159,7 +159,7 @@ class UserController extends Controller
             date_add($dateExpiration, date_interval_create_from_date_string('10 days'));
         }
 
-        $secretKey=  $this->container->getParameter('cleSecreteCaptcha');
+        $secretKey=  $this->container->getParameter('cle_secrete_captcha');
         $ip = $_SERVER['REMOTE_ADDR'];
         $response=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$secretKey."&response=".$captcha."&remoteip=".$ip);
         $responseKeys = json_decode($response,true);
