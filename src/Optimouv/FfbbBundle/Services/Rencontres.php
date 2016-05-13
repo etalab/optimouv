@@ -20,13 +20,14 @@ class Rencontres
     public $app_code;
     public $error_log_path;
     public $database_host;
+    public $here_request_limit;
 
     /**
      * @var Statistiques $serviceStatistiques
      */
     protected $serviceStatistiques;
 
-    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $serviceStatistiques)
+    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $serviceStatistiques,$here_request_limit )
     {
         $this->database_host = $database_host;
         $this->database_name = $database_name;
@@ -36,6 +37,7 @@ class Rencontres
         $this->app_code = $app_code;
         $this->error_log_path = $error_log_path;
         $this->serviceStatistiques = $serviceStatistiques;
+        $this->here_request_limit = $here_request_limit;
 
     }
 
@@ -1211,6 +1213,7 @@ class Rencontres
 
         $app_id = $this->app_id;
         $app_code = $this->app_code;
+        $here_request_limit = $this->here_request_limit;
 
         $bdd= Rencontres::connexion();
 
@@ -1238,8 +1241,17 @@ class Rencontres
             # obtenir l'id de l'utilisateur
             $utilisateurId = $this->getUtilisateurIdParGroupeId($idGroupe);
 
-            # nombre des requetes HERE
-            $nbrRequetesHere = 0;
+            # nombre des requetes HERE de géocodage
+            $nbrRequetesGeoHere = 0;
+
+            // obtenir le nombre de requetes de géo-codage
+//            $listeLieux = $bdd->prepare("SELECT valeur FROM  statistiques_date WHERE type_statistiques = :id ;");
+//            $listeLieux->bindParam(':id', $idListeLieux);
+//            $listeLieux->execute();
+//            $listeLieux = $listeLieux->fetchColumn();
+
+
+
 
             for ($i = 0; $i < count($listeLieux); $i++) {
                 //
@@ -1268,7 +1280,7 @@ class Rencontres
                         $v = urlencode($nomVille);
                         $reqGeocode = 'http://geocoder.api.here.com/6.2/geocode.json?country=France&city=' . $v . '&postalCode=' . $codePostal . '&app_id=' . $app_id . '&app_code=' . $app_code . '&gen=8';
 
-                        $nbrRequetesHere += 1;
+                        $nbrRequetesGeoHere += 1;
 
                         $reqGeocodeArray = $this->getReponseCurl($reqGeocode);
 
@@ -1308,8 +1320,8 @@ class Rencontres
             $retour = [];
 
             # incrémenter le nombre des requetes HERE
-            if($nbrRequetesHere > 0){
-                $this->serviceStatistiques->augmenterNombreTableStatistiques($utilisateurId, "nombreRequetesHere", $nbrRequetesHere);
+            if($nbrRequetesGeoHere > 0){
+                $this->serviceStatistiques->augmenterNombreTableStatistiques($utilisateurId, "nombreRequetesGeoHere", $nbrRequetesGeoHere);
             }
 
 
