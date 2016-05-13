@@ -29,6 +29,7 @@ class CalculRencontreConsumer implements ConsumerInterface
     private $mailer_user;
     private $base_url;
     private $mailer_sender;
+    public $here_request_limit;
 
 
     /**
@@ -36,7 +37,7 @@ class CalculRencontreConsumer implements ConsumerInterface
      */
     protected $serviceStatistiques;
 
-    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, ContainerInterface $container, $mailer, EngineInterface $templating, $serviceStatistiques, $mailer_user, $base_url, $mailer_sender)
+    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, ContainerInterface $container, $mailer, EngineInterface $templating, $serviceStatistiques, $mailer_user, $base_url, $mailer_sender, $here_request_limit)
     {
         $this->database_host = $database_host;
         $this->database_name = $database_name;
@@ -52,6 +53,8 @@ class CalculRencontreConsumer implements ConsumerInterface
         $this->mailer_user = $mailer_user;
         $this->base_url = $base_url;
         $this->mailer_sender = $mailer_sender;
+        $this->here_request_limit = $here_request_limit;
+
     }
 
     public function connexion()
@@ -128,8 +131,10 @@ class CalculRencontreConsumer implements ConsumerInterface
         $database_password = $this->database_password;
         $error_log_path = $this->error_log_path;
         $database_host = $this->database_host;
-         //Appel de la classe
-        $serviceRencontre = new Rencontres($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $this->serviceStatistiques);
+        $here_request_limit = $this->here_request_limit;
+
+        //Appel de la classe
+        $serviceRencontre = new Rencontres($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $this->serviceStatistiques, $here_request_limit);
 
 
 
