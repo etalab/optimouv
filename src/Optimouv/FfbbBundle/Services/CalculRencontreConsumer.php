@@ -29,7 +29,7 @@ class CalculRencontreConsumer implements ConsumerInterface
     private $mailer_user;
     private $base_url;
     private $mailer_sender;
-    public $here_request_limit;
+    private $here_request_limit;
 
 
     /**
@@ -138,81 +138,112 @@ class CalculRencontreConsumer implements ConsumerInterface
 
 
 
-
         if($typeAction == "barycentre"){
 
 
             $retour = $serviceRencontre->Barycentre($idGroupe);
-            
-            $idCalcul = $this->stockerResultats($msg,$retour);
 
-            if ($idCalcul) {
+            if($retour["success"]){
+                $idCalcul = $this->stockerResultats($msg, $retour["donneesRetour"]);
 
-                $statut = 2;
+                if ($idCalcul) {
 
-                $this->updateSatut($msg, $statut);
-                $this->sendMail($msg,$typeAction );
+                    $statut = 2;
+
+                    $this->updateSatut($msg, $statut);
+                    $this->sendMail($msg, $typeAction, 0 );
 
 
+                }
             }
+
+
+
 
          }
         elseif($typeAction == "exclusion"){
 
-            $retour = [];
             $retourBarycentre = $serviceRencontre->Barycentre($idGroupe);
             $retourExclusion = $serviceRencontre->Exclusion($params, $idGroupe);
 
-            $retour[0] = $retourBarycentre;
-            $retour[1] = $retourExclusion;
+            if($retourBarycentre["success"] && $retourExclusion["success"]){
+                $retour = [];
+                $retour[0] = $retourBarycentre["donneesRetour"];
+                $retour[1] = $retourExclusion["donneesRetour"];
 
-            $idCalcul = $this->stockerResultats($msg,$retour);
+                $idCalcul = $this->stockerResultats($msg, $retour);
 
-            if ($idCalcul) {
+                if ($idCalcul) {
 
-                $statut = 2;
+                    $statut = 2;
 
-                $this->updateSatut($msg, $statut);
-                $this->sendMail($msg,$typeAction );
+                    $this->updateSatut($msg, $statut);
+                    $this->sendMail($msg, $typeAction, 0 );
+                }
+
             }
+
         }
         elseif($typeAction == "meilleurLieu"){
 
-            $retour = [];
             $retourOp = $serviceRencontre->meilleurLieuRencontre($idGroupe);
             $retourEq = $serviceRencontre->scenarioEquitable($idGroupe);
 
-            $retour[0] = $retourOp;
-            $retour[1] = $retourEq;
+            if($retourOp["success"] && $retourEq["success"]){
+                $retour = [];
+                $retour[0] = $retourOp["donneesRetour"];
+                $retour[1] = $retourEq["donneesRetour"];
 
-            $idCalcul = $this->stockerResultats($msg,$retour);
+                $idCalcul = $this->stockerResultats($msg, $retour);
 
-            if ($idCalcul) {
+                if ($idCalcul) {
 
-                $statut = 2;
+                    $statut = 2;
 
-                $this->updateSatut($msg, $statut);
-                $this->sendMail($msg,$typeAction );
+                    $this->updateSatut($msg, $statut);
+                    $this->sendMail($msg, $typeAction, 0 );
+
+                }
 
             }
+            else{
+                $this->sendMail($msg, $typeAction, $retourOp["codeErreur"] );
+
+            }
+
 
         }
         elseif($typeAction == "terrainNeutre"){
 
-            $retour = [];
+            $retourOp = $serviceRencontre->terrainNeutre($idGroupe);
+            $retourEq = $serviceRencontre->terrainNeutreEquitable($idGroupe);
 
-            $retour[0] = $serviceRencontre->terrainNeutre($idGroupe);
-            $retour[1] = $serviceRencontre->terrainNeutreEquitable($idGroupe);
+            if($retourOp["success"] && $retourEq["success"]){
+                $retour = [];
+                $retour[0] = $retourOp["donneesRetour"];
+                $retour[1] = $retourEq["donneesRetour"];
 
-            $idCalcul = $this->stockerResultats($msg,$retour);
+                $idCalcul = $this->stockerResultats($msg,$retour);
 
-            if ($idCalcul) {
+                if ($idCalcul) {
 
-                $statut = 2;
+                    $statut = 2;
 
-                $this->updateSatut($msg, $statut);
-                $this->sendMail($msg,$typeAction );
+                    $this->updateSatut($msg, $statut);
+                    $this->sendMail($msg, $typeAction, 0 );
+                }
+
             }
+            else{
+                if(!$retourOp["success"]){
+                    $this->sendMail($msg, $typeAction, $retourOp["codeErreur"] );
+                }
+                elseif(!$retourEq["success"]){
+                    $this->sendMail($msg, $typeAction, $retourEq["codeErreur"] );
+                }
+
+            }
+
         }
         else{
 
@@ -323,34 +354,43 @@ class CalculRencontreConsumer implements ConsumerInterface
     }
 
 
-    public function sendMail($idRapport,$typeAction)
+    public function sendMail($idRapport, $typeAction, $statut)
     {
         $expediteurEmail = $this->mailer_sender;
 
         $userEmail = $this->getUserEmail($idRapport);
 
+        // cas de succès
+        if($statut == 0){
+
 //        $body = $this->templating->render('FfbbBundle:Mails:confirmationCalcul.html.twig', array('idRapport' => $idRapport, 'typeAction' => $typeAction,
 //            'expediteurEmail' => $expediteurEmail));
 
-        $router = $this->container->get('Router');
-        $urlPrimaire = $router->generate('ffbb_consulter_rapport', array('idRapport'=>$idRapport, 'typeAction'=> $typeAction));
+            $router = $this->container->get('Router');
+            $urlPrimaire = $router->generate('ffbb_consulter_rapport', array('idRapport'=>$idRapport, 'typeAction'=> $typeAction));
 
-        $body = "Bonjour,\n\n";
-        $body .= "Le résultat de votre calcul est disponible.\n";
-        $body .= "Vous pouvez le consulter en cliquant sur ce lien :\n";
-        $body .= "http://".$this->base_url.$urlPrimaire."\n\n";
-        $body .= "Optimouv\n";
-        $body .= $expediteurEmail;
+            $body = "Bonjour,\n\n";
+            $body .= "Le résultat de votre calcul est disponible.\n";
+            $body .= "Vous pouvez le consulter en cliquant sur ce lien :\n";
+            $body .= "http://".$this->base_url.$urlPrimaire."\n\n";
+            $body .= "Optimouv\n";
+            $body .= $expediteurEmail;
 
 
-        $message = \Swift_Message::newInstance()
-            ->setSubject('OPTIMOUV - mise à disposition de vos résultats de calculs')
-            ->setFrom($expediteurEmail)
-            ->setTo($userEmail)
+            $message = \Swift_Message::newInstance()
+                ->setSubject('OPTIMOUV - mise à disposition de vos résultats de calculs')
+                ->setFrom($expediteurEmail)
+                ->setTo($userEmail)
 //            ->setBody($body, 'text/html')
-            ->setBody($body, 'text/plain')
-        ;
-        $this->container->get('mailer')->send($message);
+                ->setBody($body, 'text/plain')
+            ;
+            $this->container->get('mailer')->send($message);
+
+        }
+        elseif($statut == 1){
+
+        }
+
 
 
     }
