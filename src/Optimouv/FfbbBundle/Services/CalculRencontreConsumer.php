@@ -360,6 +360,8 @@ class CalculRencontreConsumer implements ConsumerInterface
 
         $userEmail = $this->getUserEmail($idRapport);
 
+        $body = "Bonjour,\n\n";
+
         // cas de succès
         if($statut == 0){
 
@@ -369,28 +371,29 @@ class CalculRencontreConsumer implements ConsumerInterface
             $router = $this->container->get('Router');
             $urlPrimaire = $router->generate('ffbb_consulter_rapport', array('idRapport'=>$idRapport, 'typeAction'=> $typeAction));
 
-            $body = "Bonjour,\n\n";
             $body .= "Le résultat de votre calcul est disponible.\n";
             $body .= "Vous pouvez le consulter en cliquant sur ce lien :\n";
             $body .= "http://".$this->base_url.$urlPrimaire."\n\n";
-            $body .= "Optimouv\n";
-            $body .= $expediteurEmail;
 
 
-            $message = \Swift_Message::newInstance()
-                ->setSubject('OPTIMOUV - mise à disposition de vos résultats de calculs')
-                ->setFrom($expediteurEmail)
-                ->setTo($userEmail)
-//            ->setBody($body, 'text/html')
-                ->setBody($body, 'text/plain')
-            ;
-            $this->container->get('mailer')->send($message);
 
         }
         elseif($statut == 1){
+            $body .= "Nous ne pouvons pas effectuer votre calcul pour cause de dépassement du seuil mensuel géocodage HERE.\n";
+            $body .= "Contactez votre administrateur système.\n\n";
 
         }
 
+        $body .= "Optimouv\n";
+        $body .= $expediteurEmail;
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject('OPTIMOUV - mise à disposition de vos résultats de calculs')
+            ->setFrom($expediteurEmail)
+            ->setTo($userEmail)
+            ->setBody($body, 'text/plain')
+        ;
+        $this->container->get('mailer')->send($message);
 
 
     }

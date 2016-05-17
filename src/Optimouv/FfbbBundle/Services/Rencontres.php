@@ -1284,7 +1284,7 @@ class Rencontres
             // obtenir le nombre de requetes de géo-codage
             $typeStatistiques = "nombreRequetesGeoHere";
 
-            $sql = "SELECT valeur FROM  statistiques_date".
+            $sql = "SELECT sum(valeur) FROM  statistiques_date".
                 " WHERE type_statistiques = :type_statistiques".
                 " and year(date_creation)=:annee and month(date_creation)=:mois;";
             $stmt = $bdd->prepare($sql);
@@ -1293,10 +1293,10 @@ class Rencontres
             $stmt->bindParam(':mois', $mois);
             $stmt->execute();
             $nombreRequetesGeoHere = intval($stmt->fetchColumn());
-            error_log("\n nombreRequetesGeoHere: ".print_r($nombreRequetesGeoHere, true), 3, $this->error_log_path);
+//            error_log("\n nombreRequetesGeoHere: ".print_r($nombreRequetesGeoHere, true), 3, $this->error_log_path);
 
             // retourner un message d'erreur quand il y a dépassement du nombre de requetes de Géo-codage HERE
-            if($nombreRequetesGeoHere + count($listeLieux) > $here_request_limit ){
+            if(($nombreRequetesGeoHere + count($listeLieux)) > $here_request_limit ){
                 // code d'erreur 1 indique une erreur pour le dépassement du quota de requestes HERE
                 return array('success' => False, 'donneesRetour'=>array(), 'codeErreur'=>1);
             }
