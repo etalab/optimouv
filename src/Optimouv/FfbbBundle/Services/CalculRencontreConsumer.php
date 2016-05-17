@@ -207,6 +207,7 @@ class CalculRencontreConsumer implements ConsumerInterface
 
             }
             else{
+                $this->updateSatut($msg, -1);
                 $this->sendMail($msg, $typeAction, $retourOp["codeErreur"] );
 
             }
@@ -235,6 +236,7 @@ class CalculRencontreConsumer implements ConsumerInterface
 
             }
             else{
+                $this->updateSatut($msg, -1);
                 if(!$retourOp["success"]){
                     $this->sendMail($msg, $typeAction, $retourOp["codeErreur"] );
                 }
