@@ -91,6 +91,11 @@ class UserController extends Controller
         }else{
             $fonction ="";
         }
+        if (isset($_POST['niveauUtilisateur'])) {
+            $niveauUtilisateur = $_POST['niveauUtilisateur'];
+        }else{
+            $niveauUtilisateur ="";
+        }
         if (isset($_POST['email'])) {
             $email = $_POST['email'];
         }
@@ -154,13 +159,12 @@ class UserController extends Controller
             date_add($dateExpiration, date_interval_create_from_date_string('10 days'));
         }
 
-
-        $secretKey = "6Lf1NxwTAAAAAP6UYH4-vzxAFxxHYJfq0ddkkK3U";
+        $secretKey=  $this->container->getParameter('cle_secrete_captcha');
         $ip = $_SERVER['REMOTE_ADDR'];
         $response=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$secretKey."&response=".$captcha."&remoteip=".$ip);
         $responseKeys = json_decode($response,true);
         if(intval($responseKeys["success"]) !== 1) {
-            echo '<h2>Vous êtes un spammer ! Get the @$%K out</h2>';
+            echo '<h2>Erreur de validation de captcha. Contactez votre administrateur.</h2>';
         }
 
         //tester si l'utilisateur existe
@@ -188,6 +192,7 @@ class UserController extends Controller
             $user->setFederation($federation);
             $user->setDiscipline($discipline);
             $user->setFonction($fonction);
+            $user->setNiveauUtilisateur($niveauUtilisateur);
             $user->setTelephone($telephone);
             $user->setAdresse($adresse);
             $user->setNumLicencie($numLicencie);

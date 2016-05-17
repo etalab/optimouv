@@ -35,3 +35,5 @@ parameters:
     password_RMQ: guest
     vhost_RMQ: /
     lazy_RMQ: false
+    cle_site_captcha: 6Lf1NxwTAAAAAB2S7NRcj1JfKu_rbJkHewmMeM2G
+    cle_secrete_captcha: 6Lf1NxwTAAAAAP6UYH4-vzxAFxxHYJfq0ddkkK3U

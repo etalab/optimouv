@@ -210,6 +210,7 @@
   position: relative;
   float: left;
   margin-right: 10px;
+  margin-top: 5px;
 }
 .moncercle_poule{
   background: #40BAC3;
@@ -220,4 +221,29 @@
   position: relative;
   float: left;
   margin-right: 10px;
+  margin-top: 5px;
+}
+
+.contourBlocRencontre{
+  border: solid 1px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  border-color: #A4BD10;
+  padding: 15px 0;
+}
+.contourBlocPoule{
+  border: solid 1px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  border-color: #40BAC3;
+  padding: 15px 0;
+
+}
+.sousTitreBloc{
+  font-size: 14px;
+  font-style: italic;
+  color: gray;
+  padding-left: 50px;
 }

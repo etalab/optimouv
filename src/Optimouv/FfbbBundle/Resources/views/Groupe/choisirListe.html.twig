@@ -14,137 +14,148 @@
                  </div>
                  <div class="col-lg-12">
                      <h2 style="margin-bottom: 20px">Etape 1 / 4</h2>
-                     <span class="moncercle" style="font-weight: bold; padding-bottom: -20px">1</span>
-                     <h3>Choisissez vos participants et / ou vos lieux à partir des fichiers chargés
-                     </h3>
+
                  </div>
                  <!-- /.col-lg-12 -->
              </div>
              <!-- /.row -->
+             {# premier bloc ~ choisir liste participants#}
+             <div class="row contourBlocRencontre">
+                 <div class="col-lg-9">
+                     <span class="moncercle" style="font-weight: bold; ">1</span>
+                     <h4>Importer et gérer vos fichiers de personnes, d’équipes ou de lieux</h4>
+                     <span class="sousTitreBloc"><i class="glyphicon glyphicon-question-sign"> </i> Si vous avez déjà chargé un fichier passez directement à l’étape 2 ou 3.</span><br>
+                      <span class="sousTitreBloc">Importez vos fichiers de personnes, équipes ou lieux au format de fichier CSV prédéfini. </span>
 
-              <div class="row">
-                   <div class="col-lg-12">
-                        <div class="panel panel-default">
+                 </div>
+                 <div class="col-lg-3">
 
-                             <div class="panel-body">
-                                  <div class="row">
-                                       <div class="col-lg-6">
-                                            <form role="form" action="{{ path('ffbb_nouveau_groupe') }}" method="post" name="liste">
-
-                                                <!-- /. liste participants -->
-                                                <div class="form-group">
-
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-heading">
-                                                            Liste de participants
-                                                        </div>
-                                                        <!-- /.panel-heading -->
-                                                        <div class="panel-body" style="height:250px !important; overflow-y: scroll">
-                                                            <div class="table-responsive">
-                                                                <table class="table table-hover">
-
-                                                                    <tbody id="tableListeParticipants" >
-                                                                    {% for participant in listeParticipants %}
-                                                                        <tr>
-                                                                            <td><input type="radio" name="listeParticipants" id="participant~{{ participant.id }}" value="{{ participant.id }}" required>
-                                                                                {{ participant.nom }}
-                                                                            </td>
-
-                                                                        </tr>
-                                                                    {% endfor %}
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                            <!-- /.table-responsive -->
-                                                        </div>
-                                                        <!-- /.panel-body -->
-
-                                                    </div>
-
-                                                </div><!-- /.fin liste participants -->
-
-                                                <!-- /. liste lieux -->
-                                                <div class="form-group">
-
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-heading">
-                                                            Liste de lieux
-                                                        </div>
-                                                        <!-- /.panel-heading -->
-                                                        <div class="panel-body" style="height:250px !important; overflow-y: scroll">
-                                                            <div class="table-responsive">
-                                                                <table class="table table-hover">
-
-                                                                    <tbody>
-                                                                    {% for lieu in listeLieux %}
-                                                                        <tr>
-                                                                            <td><input type="radio" name="listeLieux" id="participant~{{ lieu.id }}" value="{{ lieu.id }}" >
-                                                                                {{ lieu.nom }}
-                                                                            </td>
+                     <div class="col-lg-12">
+                             <a href="{{ path('ffbb_gerer_liste_participants') }}"
+                                class="btn btn-default-rencontre  pull-right" style="min-width: 200px">Gérer et importer</a>
+                         </div>
 
 
-                                                                        </tr>
-                                                                    {% endfor %}
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                            <!-- /.table-responsive -->
-                                                        </div>
-                                                        <!-- /.panel-body -->
+                     <div class="col-lg-12">
+                         <a href="{{ asset('bundles/ffbb/telechargement/OPTILIEUX_fichiers import.zip') }}" class="pull-right" style="font-size: small">Télécharger les formats de fichiers d'import</a>
+                     </div>
 
-                                                    </div>
+                 </div>
+             </div>
+             {# fin premier bloc ~ choisir liste participants#}
 
-                                                </div><!-- /. fin liste lieux -->
+             <br>
+
+             {# 2 eme bloc ~ choisir liste participants #}
+             <div class="row contourBlocRencontre">
+                 <div class="col-lg-12">
+                     <span class="moncercle" style="font-weight: bold; ">2</span>
+                     <h4>Choisir vos participants et/ou vos lieux à partir des fichiers chargés</h4>
+                     <span class="sousTitreBloc"><i class="glyphicon glyphicon-question-sign"> </i> Si vous avez déjà sélectionné vos participants et/ou  de lieux passez directement à l’étape 3.</span><br>
+                     <span class="sousTitreBloc">Sélectionnez vos participants et/ou vos lieux à partir de vos fichiers préalablement chargés.</span>
+                     <hr>
+                 </div>
+
+                 <!-- bloc liste participants + liste lieux -->
+                 <div class="col-lg-12">
+                     <div class="col-lg-6">
+                         <form role="form" action="{{ path('ffbb_nouveau_groupe') }}" method="post" name="liste">
+
+                             <!-- /. liste participants -->
+                             <div class="form-group">
+
+                                 <div class="panel panel-default">
+                                     <div class="panel-heading">
+                                         Liste de participants
+                                     </div>
+                                     <!-- /.panel-heading -->
+                                     <div class="panel-body" style="height:250px !important; overflow-y: scroll">
+                                         <div class="table-responsive">
+                                             <table class="table table-hover">
+
+                                                 <tbody id="tableListeParticipants" >
+                                                 {% for participant in listeParticipants %}
+                                                     <tr>
+                                                         <td><input type="radio" name="listeParticipants" id="participant~{{ participant.id }}" value="{{ participant.id }}" required>
+                                                             {{ participant.nom }}
+                                                         </td>
+
+                                                     </tr>
+                                                 {% endfor %}
+                                                 </tbody>
+                                             </table>
+                                         </div>
+                                         <!-- /.table-responsive -->
+                                     </div>
+                                     <!-- /.panel-body -->
+
+                                 </div>
+
+                             </div><!-- /.fin liste participants -->
 
 
-                                                        <div class="col-lg-5">
-                                                            <span class="moncercle" style="font-weight: bold">3</span>
-                                                            <button type="submit" class="btn btn-default-rencontre">Créer une sélection</button>
-                                                            {#<span style="font-weight: bold; float: right">ou</span>#}
-                                                        </div>
-                                            </form>
-                                                        <div class="col-lg-7">
-                                                            <button class="btn btn-default-rencontre pull-right" onclick="getCheckedRadioValue()"> Choisir une sélection existante</button>
-                                                            <span class="moncercle" style="float: right; font-weight: bold">4</span>
-                                                        </div>
+                     </div>
+                     <div class="col-lg-6">
+                         <!-- /. liste lieux -->
+                         <div class="form-group">
 
+                             <div class="panel panel-default">
+                                 <div class="panel-heading">
+                                     Liste de lieux
+                                 </div>
+                                 <!-- /.panel-heading -->
+                                 <div class="panel-body" style="height:250px !important; overflow-y: scroll">
+                                     <div class="table-responsive">
+                                         <table class="table table-hover">
 
+                                             <tbody>
+                                             {% for lieu in listeLieux %}
+                                                 <tr>
+                                                     <td><input type="radio" name="listeLieux" id="participant~{{ lieu.id }}" value="{{ lieu.id }}" >
+                                                         {{ lieu.nom }}
+                                                     </td>
+                                                 </tr>
+                                             {% endfor %}
+                                             </tbody>
+                                         </table>
+                                     </div>
+                                     <!-- /.table-responsive -->
+                                 </div>
+                                 <!-- /.panel-body -->
 
-
-
-
-
-                                       </div>
-                                       <!-- /.col-lg-6 (nested) -->
-                                      <div class="col-lg-6">
-                                          <div class="row" style="padding-right: 50px">
-                                              <div style="position: relative;" class="col-lg-4">
-
-                                              </div>
-
-
-                                              <div style="position: relative; float: right " class="col-lg-8">
-                                                  <a href="{{ path('ffbb_gerer_liste_participants') }}"
-                                                     class="btn btn-default-rencontre  pull-right">Gérer et importer</a>
-                                                  <span class="moncercle"
-                                                        style="float: right; font-weight: bold; ">2</span>
-                                              </div>
-                                          </div>
-                                          <br> <br>
-                                          <div class="row" style="padding-right: 15px"> <a href="{{ asset('bundles/ffbb/telechargement/OPTILIEUX_fichiers import.zip') }}" class="pull-right" style="font-size: small">Télécharger les formats de fichiers d'import</a> </div>
-
-                                      </div>
-
-                                       <!-- /.col-lg-6 (nested) -->
-                                  </div>
-                                  <!-- /.row (nested) -->
                              </div>
-                             <!-- /.panel-body -->
-                        </div>
-                        <!-- /.panel -->
-                   </div>
-                   <!-- /.col-lg-12 -->
-              </div>
+
+                         </div><!-- /. fin liste lieux -->
+                     </div>
+
+                 </div> <!-- fin bloc liste participants + liste lieux -->
+
+                 {# btn creer selection #}
+                 <div class="col-lg-12">
+                     <button type="submit" class="btn btn-default-rencontre pull-right" style="min-width: 200px">Créer une sélection</button>
+                 </div>
+                 </form>
+
+             </div>
+             {# fin 2 eme bloc ~ choisir liste participants #}
+             <br>
+
+             {# 3 eme bloc ~ choisir liste participants #}
+             <div class="row contourBlocRencontre">
+                 <div class="col-lg-9">
+                     <span class="moncercle" style="font-weight: bold; ">3</span>
+                     <h4>Commencez votre recherche de meilleur lieu de rencontre</h4>
+                     <span class="sousTitreBloc"><i class="glyphicon glyphicon-question-sign"> </i> Choississez votre sélection de participants et/ou  de lieux et lancer une recherche.</span><br>
+                 </div>
+                 <div class="col-lg-3">
+                     <button class="btn btn-default-rencontre pull-right" onclick="getCheckedRadioValue()" style="min-width: 200px"> Commencer la simulation</button>
+
+                 </div>
+
+             </div>
+
+
+
              </div>
      {% endblock %}
 {% block javascripts %}
