@@ -298,20 +298,20 @@ class Rencontres
         $nbrParticipants = Rencontres::getNombreParticipants($idsEntitesChoisis);
 
 
-        $retour = [];
+        $donneesRetour = [];
 
-        $retour[0] = $villeDepart;
-        $retour[1] = $lanX;
-        $retour[2] = $latY;
-        $retour[3] = $distanceTotale;
-        $retour[4] = $dureeTotale;
-        $retour[5] = $mesVillesXY;
-        $retour[6] = $mesVilles;
-        $retour[7] = $distVille;
-        $retour[8] = $dureeVille;
-        $retour[9] = $nomsTerrainsNeutres;
-        $retour[10] = $nbrParticipants;
-        $retour['nbrParticipants'] = $nbrParticipants;
+        $donneesRetour[0] = $villeDepart;
+        $donneesRetour[1] = $lanX;
+        $donneesRetour[2] = $latY;
+        $donneesRetour[3] = $distanceTotale;
+        $donneesRetour[4] = $dureeTotale;
+        $donneesRetour[5] = $mesVillesXY;
+        $donneesRetour[6] = $mesVilles;
+        $donneesRetour[7] = $distVille;
+        $donneesRetour[8] = $dureeVille;
+        $donneesRetour[9] = $nomsTerrainsNeutres;
+        $donneesRetour[10] = $nbrParticipants;
+        $donneesRetour['nbrParticipants'] = $nbrParticipants;
 
 
         // obtenir la distance totale pour toutes équipes
@@ -319,13 +319,13 @@ class Rencontres
 
 
         # ajouter le nombre de participants dans les résultats
-        $retour["distanceTotale"] = $distanceTotale;
+        $donneesRetour["distanceTotale"] = $distanceTotale;
 
         # ajouter le nombre de participants dans les résultats
-        $retour["nbrParticipantsTotal"] = Rencontres::getTotalNombreParticipants($nbrParticipants);
+        $donneesRetour["nbrParticipantsTotal"] = Rencontres::getTotalNombreParticipants($nbrParticipants);
 
 
-        return $retour;
+        return array('success' => True, 'donneesRetour'=>$donneesRetour);
     }
 
     //Calcul du barycentre
@@ -399,14 +399,13 @@ class Rencontres
 
         $coord = $lanX . '%2C' . $latY; // pour appel la fn routing matrix
 
-        $retour =  Rencontres::routingMatrix($coord, $villes, $idsEntitesMerge, $idGroupe);
+        $donneesRetour =  Rencontres::routingMatrix($coord, $villes, $idsEntitesMerge, $idGroupe);
 
 
         # ajouter le nombre de participants dans les résultats
-        $retour["nbrParticipantsTotal"] =  Rencontres::getTotalNombreParticipants($retour[9]);
+        $donneesRetour["nbrParticipantsTotal"] =  Rencontres::getTotalNombreParticipants($donneesRetour[9]);
 
-
-        return $retour;
+        return array('success' => True, 'donneesRetour'=>$donneesRetour);
     }
 
     //Calcul exclusion géographique
@@ -481,10 +480,10 @@ class Rencontres
             }
 
 
-            $retour = Rencontres::routingMatrix($coord, $villes, $idsEntitesMerge, $idGroupe);
+            $donneesRetour = Rencontres::routingMatrix($coord, $villes, $idsEntitesMerge, $idGroupe);
 
             # ajouter le nombre de participants dans les résultats
-            $retour["nbrParticipantsTotal"] = Rencontres::getTotalNombreParticipants($retour[9]);
+            $donneesRetour["nbrParticipantsTotal"] = Rencontres::getTotalNombreParticipants($donneesRetour[9]);
 
 
         } else {
@@ -494,7 +493,7 @@ class Rencontres
         }
 
 
-        return $retour;
+        return array('success' => True, 'donneesRetour'=>$donneesRetour);
 
     }
 
@@ -620,28 +619,28 @@ class Rencontres
         //récupérer le nombre de participant pour chaque entité
         $nbrParticipants = Rencontres::getNombreParticipants($idsEntitesChoisis);
 
-        $retour = [];
+        $donneesRetour = [];
 
-        $retour[0] = $villeDepart;
-        $retour[1] = $lanX;
-        $retour[2] = $latY;
-        $retour[3] = $distanceTotale;
-        $retour[4] = $dureeTotale;
-        $retour[5] = $mesVillesXY;
-        $retour[6] = $mesVilles;
-        $retour[7] = $distVille;
-        $retour[8] = $dureeVille;
-        $retour[9] = $nbrParticipants;
-        $retour['nbrParticipants'] = $nbrParticipants;
+        $donneesRetour[0] = $villeDepart;
+        $donneesRetour[1] = $lanX;
+        $donneesRetour[2] = $latY;
+        $donneesRetour[3] = $distanceTotale;
+        $donneesRetour[4] = $dureeTotale;
+        $donneesRetour[5] = $mesVillesXY;
+        $donneesRetour[6] = $mesVilles;
+        $donneesRetour[7] = $distVille;
+        $donneesRetour[8] = $dureeVille;
+        $donneesRetour[9] = $nbrParticipants;
+        $donneesRetour['nbrParticipants'] = $nbrParticipants;
 
 
         // obtenir la distance totale pour toutes équipes
         $distanceTotale = Rencontres::getDistanceTotale($distVille, $nbrParticipants);
 
         # ajouter le nombre de participants dans les résultats
-        $retour["distanceTotale"] = $distanceTotale;
+        $donneesRetour["distanceTotale"] = $distanceTotale;
 
-        return $retour;
+        return array('success' => True, 'donneesRetour'=>$donneesRetour);
     }
 
     public function routingMatrix($coord, $villes, $idsEntites, $idGroupe)
@@ -824,32 +823,32 @@ class Rencontres
         //récupérer le nombre de participant pour chaque entité
         $nbrParticipants = Rencontres::getNombreParticipants($idsEntitesMerge);
 
-        $retour = [];
+        $donneesRetour = [];
 
-        $retour[0] = $maVille;
-        $retour[1] = $lanX;
-        $retour[2] = $latY;
-        $retour[3] = $distance;
-        $retour[4] = $duree;
-        $retour[5] = $equipe;
-        $retour[6] = $mesVilles;
-        $retour[7] = $distanceVilles;
-        $retour[8] = $dureeTotale;
-        $retour[9] = $listeTerrain;
-        $retour[10] = $nbrParticipants;
-        $retour['nbrParticipants'] = $nbrParticipants;
+        $donneesRetour[0] = $maVille;
+        $donneesRetour[1] = $lanX;
+        $donneesRetour[2] = $latY;
+        $donneesRetour[3] = $distance;
+        $donneesRetour[4] = $duree;
+        $donneesRetour[5] = $equipe;
+        $donneesRetour[6] = $mesVilles;
+        $donneesRetour[7] = $distanceVilles;
+        $donneesRetour[8] = $dureeTotale;
+        $donneesRetour[9] = $listeTerrain;
+        $donneesRetour[10] = $nbrParticipants;
+        $donneesRetour['nbrParticipants'] = $nbrParticipants;
 
 
         // obtenir la distance totale pour toutes équipes
         $distanceTotale = Rencontres::getDistanceTotale($distanceVilles, $nbrParticipants);
 
         # ajouter le nombre de participants dans les résultats
-        $retour["distanceTotale"] = $distanceTotale;
+        $donneesRetour["distanceTotale"] = $distanceTotale;
 
         # ajouter le nombre de participants dans les résultats
-        $retour["nbrParticipantsTotal"] = Rencontres::getTotalNombreParticipants($nbrParticipants);
+        $donneesRetour["nbrParticipantsTotal"] = Rencontres::getTotalNombreParticipants($nbrParticipants);
 
-        return $retour;
+        return array('success' => True, 'donneesRetour'=>$donneesRetour);
     }
 
     public function terrainNeutreEquitable($idGroupe)
@@ -938,28 +937,28 @@ class Rencontres
         $nbrParticipants = Rencontres::getNombreParticipants($idsEntitesMerge);
 
 
-        $retour = [];
+        $donneesRetour = [];
 
-        $retour[0] = $maVille;
-        $retour[1] = $lanX;
-        $retour[2] = $latY;
-        $retour[3] = $distance;
-        $retour[4] = $duree;
-        $retour[5] = $equipe;
-        $retour[6] = $mesVilles;
-        $retour[7] = $distanceVilles;
-        $retour[8] = $dureeTotale;
-        $retour[9] = $nbrParticipants;
-        $retour['nbrParticipants'] = $nbrParticipants;
+        $donneesRetour[0] = $maVille;
+        $donneesRetour[1] = $lanX;
+        $donneesRetour[2] = $latY;
+        $donneesRetour[3] = $distance;
+        $donneesRetour[4] = $duree;
+        $donneesRetour[5] = $equipe;
+        $donneesRetour[6] = $mesVilles;
+        $donneesRetour[7] = $distanceVilles;
+        $donneesRetour[8] = $dureeTotale;
+        $donneesRetour[9] = $nbrParticipants;
+        $donneesRetour['nbrParticipants'] = $nbrParticipants;
 
         // obtenir la distance totale pour toutes équipes
         $distanceTotale = Rencontres::getDistanceTotale($distanceVilles, $nbrParticipants);
 
         # ajouter le nombre de participants dans les résultats
-        $retour["distanceTotale"] = $distanceTotale;
+        $donneesRetour["distanceTotale"] = $distanceTotale;
 
 
-        return $retour;
+        return array('success' => True, 'donneesRetour'=>$donneesRetour);
     }
 
     public function nomsVilles($idGroupe)
