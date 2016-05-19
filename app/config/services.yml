@@ -26,7 +26,7 @@ services:
 
     login_success_handler:
           class: Optimouv\AdminBundle\Services\LoginSuccessHandler
-          arguments: ["@router", "@security.authorization_checker", "@service_statistiques"]
+          arguments: ["@router", "@doctrine.orm.entity_manager", "@security.authorization_checker", "@service_statistiques", "%max_number_active_users%", "%time_limit_active_users%", "%error_log_path%"]
 
     service_rapports:
           class: Optimouv\FfbbBundle\Services\Rapports
