@@ -105,6 +105,15 @@ class User extends BaseUser
      */
     private $niveauUtilisateur;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="last_activity", type="date", nullable=true)
+     */
+    private $lastActivity;
+
+
+
 
     public function __construct()
     {
@@ -360,6 +369,34 @@ class User extends BaseUser
     {
         return $this->dateCreation;
     }
+
+
+    /**
+     * Set lastActivity
+     *
+     * @param \DateTime $lastActivity
+     *
+     * @return User
+     */
+    public function setLastActivity($lastActivity)
+    {
+        $this->lastActivity= $lastActivity;
+
+        return $this;
+    }
+
+    /**
+     * Get lastActivity
+     *
+     * @return \DateTime
+     */
+    public function getlastActivity()
+    {
+        return $this->lastActivity;
+    }
+
+
+
 
     /**
      * Set niveauUtilisateur
