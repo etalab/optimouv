@@ -108,7 +108,7 @@ class User extends BaseUser
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="last_activity", type="date", nullable=true)
+     * @ORM\Column(name="last_activity", type="datetime", nullable=true)
      */
     private $lastActivity;
 
@@ -372,6 +372,16 @@ class User extends BaseUser
 
 
     /**
+     * Set lastActivity to now
+     *
+     */
+    public function isActiveNow()
+    {
+        $this->setLastActivity(new \DateTime());
+
+    }
+
+    /**
      * Set lastActivity
      *
      * @param \DateTime $lastActivity
@@ -421,4 +431,6 @@ class User extends BaseUser
     {
         return $this->niveauUtilisateur;
     }
+
+
 }
