@@ -37,4 +37,6 @@ parameters:
     lazy_RMQ: false
     cle_site_captcha: 6Lf1NxwTAAAAAB2S7NRcj1JfKu_rbJkHewmMeM2G
     cle_secrete_captcha: 6Lf1NxwTAAAAAP6UYH4-vzxAFxxHYJfq0ddkkK3U
-    here_request_limit: 200000
+    here_request_limit: 200000 # limite pour les requestes de géocodage de HERE
+    max_number_active_users: 50 # nombre maximum des utilisateurs actifs en meme temps
+    time_limit_active_users: 2 # durée limite (en minutes) qui définit si les utilisateurs sont considérés comme actif ou pas
