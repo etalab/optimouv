@@ -115,7 +115,7 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
         
     }
 
-    public function getActive($timeLimit)
+    public function getActiveOtherUsers($timeLimit, $userId)
     {
         // Comme vous le voyez, le délais est redondant ici, l'idéale serait de le rendre configurable via votre bundle
         $delay = new \DateTime();
@@ -124,6 +124,8 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder('u')
             ->where('u.lastActivity > :delay')
             ->setParameter('delay', $delay)
+            ->andWhere('u.id != :userId')
+            ->setParameter('userId', $userId)
         ;
 
         return $qb->getQuery()->getResult();
