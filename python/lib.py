@@ -507,7 +507,7 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 			base3Tmp = str(convert_decimal_to_base3(i))
 # 			logging.debug("  base3Tmp: %s" %base3Tmp)
 
-			# complete base3 to 12 characters
+			# complete base3 to 12 characters (12 of 3-elements tuples )
 			for k in range(12-len(base3Tmp)):
 				base3Tmp = '0' + base3Tmp
 # 			logging.debug("  base3Tmp: %s" %base3Tmp)
@@ -2220,8 +2220,6 @@ def create_init_matrix_with_constraint_manual(teamNbr, poolNbr, poolSize, teams,
 		# initialize unassaign teams
 		unassignedTeams = list(teams)
 
-# 		typeDistributionConstraints = {}
-
 		# distribute teams across the pools
 		for type, teamsPerType in typeDistributionConstraints.items():
 			for indexTeam, teamPerType in enumerate(teamsPerType):
@@ -2233,10 +2231,6 @@ def create_init_matrix_with_constraint_manual(teamNbr, poolNbr, poolSize, teams,
 				
 				# remmove team from the unassaigned list
 				unassignedTeams.remove(teamPerType)
-# 		logging.debug("	poolDistribution: %s" %poolDistribution)
-
-
-# 		logging.debug("prohibitionConstraints: %s" %prohibitionConstraints)
 
 		for prohibition in prohibitionConstraints:
 			team1 = int(prohibition[0])
@@ -2248,6 +2242,7 @@ def create_init_matrix_with_constraint_manual(teamNbr, poolNbr, poolSize, teams,
 			poolTeam1 = False
 			poolTeam2 = False
 			
+			# find pool of team1 and pool of team2
 			for pool, teamsPerPool in poolDistribution.items():
 				if team1 in teamsPerPool:
 					poolTeam1 = pool
@@ -2255,35 +2250,38 @@ def create_init_matrix_with_constraint_manual(teamNbr, poolNbr, poolSize, teams,
 					poolTeam2 = pool
 			
 			# if team1 and team2 are in the same pool according to type distribution constraints
-			if team1 != False and team2 != False and team1 == team2:
+			if poolTeam1 != False and poolTeam2 != False and poolTeam1 == poolTeam2:
 				return {"success": False, "data": None}
 			else:
-				# assign team1
+				# try to assign team1
 				if not poolTeam1:
 					for poolNbrLoop in range(1, poolNbr+1):
 						# add to the first pool if it is not full
 						if len(poolDistribution[poolNbrLoop]) < poolSize:
 							poolDistribution[poolNbrLoop].append(team1)
 							unassignedTeams.remove(team1)
+							poolTeam1 = poolNbrLoop
 							break
-						# if all pools are full
+						# if all pools are full at the last iteration
 						if poolNbrLoop == (poolNbr) and len(poolDistribution[poolNbrLoop]) == poolSize:
 							return {"success": False, "data": None}
 							
-				# assign team2
+				# try to assign team2
 				if not poolTeam2:
 					for poolNbrLoop in range(1, poolNbr+1):
-						# add to the first pool if it is not full
-						if len(poolDistribution[poolNbrLoop]) < poolSize:
+						# add to the first pool if it is not full and it is not the same pool of team1
+						if len(poolDistribution[poolNbrLoop]) < poolSize and poolNbrLoop != poolTeam1:
 							poolDistribution[poolNbrLoop].append(team2)
 							unassignedTeams.remove(team2)
+							poolTeam2 = poolNbrLoop
 							break
-						# if all pools are full
+						# if all pools are full at the last iteration
 						if poolNbrLoop == (poolNbr) and len(poolDistribution[poolNbrLoop]) == poolSize:
 							return {"success": False, "data": None}
 
 # 			logging.debug("poolTeam1: %s" %poolTeam1)
 # 			logging.debug("poolTeam2: %s" %poolTeam2)
+# 			logging.debug("	poolDistribution: %s" %poolDistribution)
 # 			logging.debug("" )
 
 		# try to distribute the remaining teams
@@ -2293,7 +2291,7 @@ def create_init_matrix_with_constraint_manual(teamNbr, poolNbr, poolSize, teams,
 				if len(poolDistribution[poolNbrLoop]) < poolSize:
 					poolDistribution[poolNbrLoop].append(unassignedTeam)
 					break
-				# if all pools are full
+				# if all pools are full at the last iteration
 				if poolNbrLoop == (poolNbr) and len(poolDistribution[poolNbrLoop]) == poolSize:
 					return {"success": False, "data": None}
 			
@@ -2510,7 +2508,6 @@ def send_email_to_user(userId, resultId):
 		
 		recipientAddress = get_user_email_from_user_id(userId)
 
-# 		senderAccount = "support@optimouv.net"
 		senderAccount = config.EMAIL.From
 
 		url="%s/admin/poules/resultat/%s"%(config.INPUT.MainUrl, resultId)
@@ -2545,7 +2542,6 @@ def send_email_general(recipientAddress, subject, contentText ):
 		
 		senderAccount = config.EMAIL.From
 		
-		
 		msg = MIMEText(contentText)
 		msg['From'] = senderAccount
 		msg['To'] = recipientAddress
@@ -2564,10 +2560,13 @@ def send_email_to_user_failure(userId, reportId):
 	try:
 		
 		reportName = get_report_name_from_report_id(reportId)
+		senderAccount = config.EMAIL.From
 
 		contentText = u"Bonjour,\n\n" 
 		contentText += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
-		contentText += u"Veuillez modifier vos critères et contraintes et relancer un calcul. " 
+		contentText += u"Veuillez modifier vos critères et contraintes et relancer un calcul. \n\n" 
+		contentText += u"Optimouv\n"
+		contentText += u"%s\n"%(senderAccount)
 
 		send_email_to_user_failure_with_text(userId, reportId, contentText)
 		
@@ -2582,7 +2581,7 @@ def send_email_to_user_failure_with_text(userId, reportId, contentText):
 	try:
 		recipientAddress = get_user_email_from_user_id(userId)
 
-		subject = u'mise à disposition de vos résultats de calculs'
+		subject = u'OPTIMOUV - mise à disposition de vos résultats de calculs'
 		logging.debug("contentText: \n%s" %contentText)
 		
 		send_email_general(recipientAddress, subject, contentText)

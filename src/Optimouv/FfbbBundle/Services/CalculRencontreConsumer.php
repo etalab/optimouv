@@ -29,6 +29,7 @@ class CalculRencontreConsumer implements ConsumerInterface
     private $mailer_user;
     private $base_url;
     private $mailer_sender;
+    private $here_request_limit;
 
 
     /**
@@ -36,7 +37,7 @@ class CalculRencontreConsumer implements ConsumerInterface
      */
     protected $serviceStatistiques;
 
-    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, ContainerInterface $container, $mailer, EngineInterface $templating, $serviceStatistiques, $mailer_user, $base_url, $mailer_sender)
+    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, ContainerInterface $container, $mailer, EngineInterface $templating, $serviceStatistiques, $mailer_user, $base_url, $mailer_sender, $here_request_limit)
     {
         $this->database_host = $database_host;
         $this->database_name = $database_name;
@@ -52,6 +53,8 @@ class CalculRencontreConsumer implements ConsumerInterface
         $this->mailer_user = $mailer_user;
         $this->base_url = $base_url;
         $this->mailer_sender = $mailer_sender;
+        $this->here_request_limit = $here_request_limit;
+
     }
 
     public function connexion()
@@ -128,9 +131,10 @@ class CalculRencontreConsumer implements ConsumerInterface
         $database_password = $this->database_password;
         $error_log_path = $this->error_log_path;
         $database_host = $this->database_host;
-         //Appel de la classe
-        $serviceRencontre = new Rencontres($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $this->serviceStatistiques);
+        $here_request_limit = $this->here_request_limit;
 
+        //Appel de la classe
+        $serviceRencontre = new Rencontres($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $this->serviceStatistiques, $here_request_limit);
 
 
 
@@ -138,76 +142,110 @@ class CalculRencontreConsumer implements ConsumerInterface
 
 
             $retour = $serviceRencontre->Barycentre($idGroupe);
-            
-            $idCalcul = $this->stockerResultats($msg,$retour);
 
-            if ($idCalcul) {
+            if($retour["success"]){
+                $idCalcul = $this->stockerResultats($msg, $retour["donneesRetour"]);
 
-                $statut = 2;
+                if ($idCalcul) {
 
-                $this->updateSatut($msg, $statut);
-                $this->sendMail($msg,$typeAction );
+                    $statut = 2;
+
+                    $this->updateSatut($msg, $statut);
+                    $this->sendMail($msg, $typeAction, 0 );
 
 
+                }
             }
+
+
+
 
          }
         elseif($typeAction == "exclusion"){
 
-            $retour = [];
             $retourBarycentre = $serviceRencontre->Barycentre($idGroupe);
             $retourExclusion = $serviceRencontre->Exclusion($params, $idGroupe);
 
-            $retour[0] = $retourBarycentre;
-            $retour[1] = $retourExclusion;
+            if($retourBarycentre["success"] && $retourExclusion["success"]){
+                $retour = [];
+                $retour[0] = $retourBarycentre["donneesRetour"];
+                $retour[1] = $retourExclusion["donneesRetour"];
 
-            $idCalcul = $this->stockerResultats($msg,$retour);
+                $idCalcul = $this->stockerResultats($msg, $retour);
 
-            if ($idCalcul) {
+                if ($idCalcul) {
 
-                $statut = 2;
+                    $statut = 2;
 
-                $this->updateSatut($msg, $statut);
-                $this->sendMail($msg,$typeAction );
+                    $this->updateSatut($msg, $statut);
+                    $this->sendMail($msg, $typeAction, 0 );
+                }
+
             }
+
         }
         elseif($typeAction == "meilleurLieu"){
 
-            $retour = [];
             $retourOp = $serviceRencontre->meilleurLieuRencontre($idGroupe);
             $retourEq = $serviceRencontre->scenarioEquitable($idGroupe);
 
-            $retour[0] = $retourOp;
-            $retour[1] = $retourEq;
+            if($retourOp["success"] && $retourEq["success"]){
+                $retour = [];
+                $retour[0] = $retourOp["donneesRetour"];
+                $retour[1] = $retourEq["donneesRetour"];
 
-            $idCalcul = $this->stockerResultats($msg,$retour);
+                $idCalcul = $this->stockerResultats($msg, $retour);
 
-            if ($idCalcul) {
+                if ($idCalcul) {
 
-                $statut = 2;
+                    $statut = 2;
 
-                $this->updateSatut($msg, $statut);
-                $this->sendMail($msg,$typeAction );
+                    $this->updateSatut($msg, $statut);
+                    $this->sendMail($msg, $typeAction, 0 );
+
+                }
 
             }
+            else{
+                $this->updateSatut($msg, -1);
+                $this->sendMail($msg, $typeAction, $retourOp["codeErreur"] );
+
+            }
+
 
         }
         elseif($typeAction == "terrainNeutre"){
 
-            $retour = [];
+            $retourOp = $serviceRencontre->terrainNeutre($idGroupe);
+            $retourEq = $serviceRencontre->terrainNeutreEquitable($idGroupe);
 
-            $retour[0] = $serviceRencontre->terrainNeutre($idGroupe);
-            $retour[1] = $serviceRencontre->terrainNeutreEquitable($idGroupe);
+            if($retourOp["success"] && $retourEq["success"]){
+                $retour = [];
+                $retour[0] = $retourOp["donneesRetour"];
+                $retour[1] = $retourEq["donneesRetour"];
 
-            $idCalcul = $this->stockerResultats($msg,$retour);
+                $idCalcul = $this->stockerResultats($msg,$retour);
 
-            if ($idCalcul) {
+                if ($idCalcul) {
 
-                $statut = 2;
+                    $statut = 2;
 
-                $this->updateSatut($msg, $statut);
-                $this->sendMail($msg,$typeAction );
+                    $this->updateSatut($msg, $statut);
+                    $this->sendMail($msg, $typeAction, 0 );
+                }
+
             }
+            else{
+                $this->updateSatut($msg, -1);
+                if(!$retourOp["success"]){
+                    $this->sendMail($msg, $typeAction, $retourOp["codeErreur"] );
+                }
+                elseif(!$retourEq["success"]){
+                    $this->sendMail($msg, $typeAction, $retourEq["codeErreur"] );
+                }
+
+            }
+
         }
         else{
 
@@ -317,50 +355,44 @@ class CalculRencontreConsumer implements ConsumerInterface
 
     }
 
-//    public function sendMail()
-//    {
-//
-//        // the message
-//        $msg = "First line of text\nSecond line of text";
-//
-//        // use wordwrap() if lines are longer than 70 characters
-//        $msg = wordwrap($msg,70);
-//
-//     // send email
-//
-//        try {
-//            mail("oussema.ghodbane@it4pme.fr","My subject",$msg);
-//        } catch (Exception $e) {
-//            echo 'Exception reçue : ',  $e->getMessage(), "\n";
-//        }
-//
-//    }
 
-    public function sendMail($idRapport,$typeAction)
+    public function sendMail($idRapport, $typeAction, $statut)
     {
         $expediteurEmail = $this->mailer_sender;
 
         $userEmail = $this->getUserEmail($idRapport);
 
+        $body = "Bonjour,\n\n";
+
+        // cas de succès
+        if($statut == 0){
+
 //        $body = $this->templating->render('FfbbBundle:Mails:confirmationCalcul.html.twig', array('idRapport' => $idRapport, 'typeAction' => $typeAction,
 //            'expediteurEmail' => $expediteurEmail));
 
-        $router = $this->container->get('Router');
-        $urlPrimaire = $router->generate('ffbb_consulter_rapport', array('idRapport'=>$idRapport, 'typeAction'=> $typeAction));
+            $router = $this->container->get('Router');
+            $urlPrimaire = $router->generate('ffbb_consulter_rapport', array('idRapport'=>$idRapport, 'typeAction'=> $typeAction));
 
-        $body = "Bonjour,\n\n";
-        $body .= "Le résultat de votre calcul est disponible.\n";
-        $body .= "Vous pouvez le consulter en cliquant sur ce lien :\n";
-        $body .= "http://".$this->base_url.$urlPrimaire."\n\n";
+            $body .= "Le résultat de votre calcul est disponible.\n";
+            $body .= "Vous pouvez le consulter en cliquant sur ce lien :\n";
+            $body .= "http://".$this->base_url.$urlPrimaire."\n\n";
+
+
+
+        }
+        elseif($statut == 1){
+            $body .= "Nous ne pouvons pas effectuer votre calcul pour cause de dépassement du seuil mensuel géocodage HERE.\n";
+            $body .= "Contactez votre administrateur système.\n\n";
+
+        }
+
         $body .= "Optimouv\n";
         $body .= $expediteurEmail;
-
 
         $message = \Swift_Message::newInstance()
             ->setSubject('OPTIMOUV - mise à disposition de vos résultats de calculs')
             ->setFrom($expediteurEmail)
             ->setTo($userEmail)
-//            ->setBody($body, 'text/html')
             ->setBody($body, 'text/plain')
         ;
         $this->container->get('mailer')->send($message);
