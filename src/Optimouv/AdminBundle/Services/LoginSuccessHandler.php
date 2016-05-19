@@ -91,8 +91,6 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface
         // obtenir les autres utilisateurs qui sont actifs
         $users = $this->em->getRepository('AdminBundle:User')->getActiveOtherUsers($this->timeLimitActiveUsers, $utilisateurId);
 
-//        error_log("\n utilisateurId: ".$utilisateurId, 3, $this->error_log_path);
-//        error_log("\n timeLimitActiveUsers: ".$this->timeLimitActiveUsers, 3, $this->error_log_path);
 //        error_log("\n users count: ".count($users), 3, $this->error_log_path);
 
 
