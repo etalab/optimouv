@@ -1387,7 +1387,10 @@ class Listes{
                   UNION
                   SELECT 3 as 'prio', ville_id FROM villes_france_free where ville_nom_simple = '$nomVille'
                   UNION
-                  SELECT 2 as 'prio', ville_id FROM villes_france_free where ville_nom_simple LIKE '%$nomVille%' AND  ville_code_postal LIKE '%$codePostal%'";
+                  SELECT 2 as 'prio', ville_id FROM villes_france_free where ville_nom_simple LIKE '%$nomVille%' AND  ville_code_postal LIKE '%$codePostal%'
+                  UNION
+                  SELECT 4 as 'prio', ville_id FROM villes_france_free where ville_code_postal = '$codePostal'
+                  ";
             $reqID = $bdd->prepare($query);
 
             $reqID->execute();

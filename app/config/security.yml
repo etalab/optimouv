@@ -17,7 +17,7 @@ security:
             pattern: ^/
             remember_me:
                 key:   '%secret%'
-                lifetime: 604800 # 1 week in seconds
+                lifetime: 3600 # 1 hour in seconds
             form_login:
                 login_path: /login
                 use_forward:    false

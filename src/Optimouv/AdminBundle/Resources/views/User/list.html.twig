@@ -91,11 +91,11 @@
                                                 {% set expriration = user.isAccountNonExpired %}
                                                 {% set enabled = user.enabled %}
                                                 {% if not expriration or  (not enabled)  %}{# utilisateur non actif #}
-                                                    <a href="javascript:void(0)"  id="user_active_{{ user.id }}" class="btn btn-consulter-user"
+                                                    <a href="javascript:void(0)"  id="user_active_{{ user.id }}" class="btn btn-warning"
                                                        onclick="activateUserByAdmin({{ user.id }})" >
                                                         Activer
                                                     </a>
-                                                    <a href="javascript:void(0)"  id="user_desactive_{{ user.id }}" class="btn btn-consulter-user" onclick="desactivateUserByAdmin({{ user.id }})"
+                                                    <a href="javascript:void(0)"  id="user_desactive_{{ user.id }}" class="btn btn-danger" onclick="desactivateUserByAdmin({{ user.id }})"
                                                        style="visibility: hidden; margin-left: -74px;">
                                                         Désactiver
                                                     </a>
@@ -103,10 +103,10 @@
                                                 {# ********************** #}
                                                 {% else %} {# utilisateur actif #}
 
-                                                    <a href="javascript:void(0)"  id="user_desactive_{{ user.id }}" class="btn btn-consulter-user" onclick="desactivateUserByAdmin({{ user.id }})">
+                                                    <a href="javascript:void(0)"  id="user_desactive_{{ user.id }}" class="btn btn-danger" onclick="desactivateUserByAdmin({{ user.id }})">
                                                         Désactiver
                                                     </a>
-                                                    <a href="javascript:void(0)"  id="user_active_{{ user.id }}" class="btn btn-consulter-user"
+                                                    <a href="javascript:void(0)"  id="user_active_{{ user.id }}" class="btn btn-warning"
                                                        onclick="activateUserByAdmin({{ user.id }})"  style="visibility: hidden; margin-left: -98px;">
                                                         Activer
                                                     </a>

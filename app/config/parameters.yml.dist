@@ -40,3 +40,5 @@ parameters:
     here_request_limit: 200000 # limite pour les requestes de géocodage de HERE
     max_number_active_users: 50 # nombre maximum des utilisateurs actifs en meme temps
     time_limit_active_users: 2 # durée limite (en minutes) qui définit si les utilisateurs sont considérés comme actif ou pas
+    cookie_liftetime: 3600
+    here_request_limit: 200000
