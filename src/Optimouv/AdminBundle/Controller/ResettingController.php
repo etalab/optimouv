@@ -22,7 +22,9 @@ class ResettingController extends Controller
         $emailUser = $user->getEmail();
         $username = $user->getUsername();
 
-
+        //récupération des params d'envoies de mail
+        $mailer_sender = $this->container->getParameter('mailer_sender');
+        $sender_name = $this->container->getParameter('sender_name');
         $body = $this->renderView('AdminBundle:Mails:resetting.html.twig',
             array(
                 'idUser' => $idUser,
@@ -32,7 +34,7 @@ class ResettingController extends Controller
 
         $message = \Swift_Message::newInstance()
             ->setSubject('Réinitialisation de votre mot de passe')
-            ->setFrom('serviceclients@it4pme.fr')
+            ->setFrom(array($mailer_sender => $sender_name))
             ->setTo($emailUser)
             ->setBody($body, 'text/html')
         ;
