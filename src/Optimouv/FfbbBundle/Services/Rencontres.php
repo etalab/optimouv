@@ -171,7 +171,7 @@ class Rencontres
 
         $retourListeLieux = Rencontres::getListeLieux($idGroupe);
 
-        if(isset($retourListeLieux) && !$retourListeLieux["success"]){
+        if(!$retourListeLieux["success"]){
             return $retourListeLieux;
         }
         else{

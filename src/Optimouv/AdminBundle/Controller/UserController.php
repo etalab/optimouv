@@ -246,6 +246,9 @@ class UserController extends Controller
     public function sendMail($idUser, $email)
     {
 
+        $mailer_sender = $this->container->getParameter('mailer_sender');
+        $sender_name = $this->container->getParameter('sender_name');
+
         $body = $this->renderView('AdminBundle:Mails:register.html.twig',
             array(
                 'idUser' => $idUser,
@@ -254,7 +257,7 @@ class UserController extends Controller
 
         $message = \Swift_Message::newInstance()
             ->setSubject('Activation de votre compte')
-            ->setFrom('serviceclients@it4pme.fr')
+            ->setFrom(array($mailer_sender => $sender_name))
             ->setTo($email)
             ->setBody($body, 'text/html')
         ;
