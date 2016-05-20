@@ -9,6 +9,7 @@ namespace Optimouv\FfbbBundle\Services;
 
 use PDO;
 use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 class Rencontres
 {
@@ -171,167 +172,181 @@ class Rencontres
 
         $retourListeLieux = Rencontres::getListeLieux($idGroupe);
 
-        if(isset($retourListeLieux) && !$retourListeLieux["success"]){
+        // retourner le retour à la fonction appellante (donne une erreur)
+        if( is_array($retourListeLieux) && array_key_exists("success", $retourListeLieux) && $retourListeLieux["success"] === FALSE){
             return $retourListeLieux;
         }
+        // traitement normal
         else{
-            $listeLieux = $retourListeLieux["donneesRetour"];
-            $nomsTerrainsNeutres = $listeLieux[0];
 
-            //on récupère le tableau des villes
-            $retourIndex = Rencontres::index($idGroupe);
-
-            # récupérer l'ids de toutes les entités
-            $idsEntites = $retourIndex[2];
-            $idsEntitesPasRencontre = $retourIndex[3];
+                $listeLieux = $retourListeLieux["donneesRetour"];
 
 
-            $villes = $retourIndex[0];
-            $villesPasRencontre = $retourIndex[1];
+                if( is_array($listeLieux) && isset($listeLieux[0])) {
 
-            $T2 = []; //tableau interm�diaire qui contient les coordonnees des pts d arrivees
+                    // s'il y a une liste de lieux
+                    $nomsTerrainsNeutres = $listeLieux[0];
+                }
+                else{
+                    // s'il n'y a pas de liste de lieux
+                    $nomsTerrainsNeutres = NULL;
 
-            $lesDistances = []; // la somme des distances
-            $lesDurees = []; // la somme des durees
-            $lesPtsDeparts = []; // tableau qui contient tous les points de depart
-            $coordonneesVilles = [];
+                }
 
-            $distanceDest = []; //tableau qui contient toutes les distances vers les destinations d un point de d�part
-            $dureeDest = []; //tableau qui contient toutes les dur�es vers les destinations d un point de d�part
-            $coordonneesDest = []; //tableau qui contient toutes les coordonn�es vers les destinations d un point de d�part
-            $sommeDistances = [];
-            $sommeDurees = [];
+                //on récupère le tableau des villes
+                $retourIndex = Rencontres::index($idGroupe);
 
-            $idEntitesCombination = []; // tableau de toutes les combinations des ids de participants
-
-            $longueurTab = count($villes);
-            for ($i = 0; $i < $longueurTab; ++$i) {
-
-                # enlever le premier élément pour la ville
-                $start = $villes[0];
-                unset($villes[0]);
-                $villesRencontre = array_values($villes);
+                # récupérer l'ids de toutes les entités
+                $idsEntites = $retourIndex[2];
+                $idsEntitesPasRencontre = $retourIndex[3];
 
 
-                # enlever le premier élément pour le nombre de participants
-                $startIdEntite = $idsEntites[0];
-                unset($idsEntites[0]);
-                $idsEntitesRencontre = array_values($idsEntites);
+                $villes = $retourIndex[0];
+                $villesPasRencontre = $retourIndex[1];
+
+                $T2 = []; //tableau interm�diaire qui contient les coordonnees des pts d arrivees
+
+                $lesDistances = []; // la somme des distances
+                $lesDurees = []; // la somme des durees
+                $lesPtsDeparts = []; // tableau qui contient tous les points de depart
+                $coordonneesVilles = [];
+
+                $distanceDest = []; //tableau qui contient toutes les distances vers les destinations d un point de d�part
+                $dureeDest = []; //tableau qui contient toutes les dur�es vers les destinations d un point de d�part
+                $coordonneesDest = []; //tableau qui contient toutes les coordonn�es vers les destinations d un point de d�part
+                $sommeDistances = [];
+                $sommeDurees = [];
+
+                $idEntitesCombination = []; // tableau de toutes les combinations des ids de participants
+
+                $longueurTab = count($villes);
+                for ($i = 0; $i < $longueurTab; ++$i) {
+
+                    # enlever le premier élément pour la ville
+                    $start = $villes[0];
+                    unset($villes[0]);
+                    $villesRencontre = array_values($villes);
 
 
-                $T2 = array_merge($villesRencontre, $villesPasRencontre);
-                $idEntitesTemp = array_merge($idsEntitesRencontre, $idsEntitesPasRencontre);
-
-                $Coordonnes = explode("%2C", $start);
-                $lanY = $Coordonnes[0];
-                $lanX = $Coordonnes[1];
-
-                # obtenir l'id utilisateur
-                $idUtilisateur = $this->getUtilisateurIdParGroupeId($idGroupe);
+                    # enlever le premier élément pour le nombre de participants
+                    $startIdEntite = $idsEntites[0];
+                    unset($idsEntites[0]);
+                    $idsEntitesRencontre = array_values($idsEntites);
 
 
-                $resultat = Rencontres::calculRoute($lanX, $lanY, $T2, $idUtilisateur);
+                    $T2 = array_merge($villesRencontre, $villesPasRencontre);
+                    $idEntitesTemp = array_merge($idsEntitesRencontre, $idsEntitesPasRencontre);
 
-                $distanceDest = $resultat[0];
-                $dureeDest = $resultat[1];
-                $coordonneesDest = $T2;
-                $sommeDistanceDep = array_sum($distanceDest);
-                $sommeDureeDep = array_sum($dureeDest);
+                    $Coordonnes = explode("%2C", $start);
+                    $lanY = $Coordonnes[0];
+                    $lanX = $Coordonnes[1];
 
-                //on groupe les résultats de tous les cas possibles!
-                array_push($lesDistances, $distanceDest);
-                array_push($lesDurees, $dureeDest);
-                array_push($coordonneesVilles, $coordonneesDest);
-                array_push($lesPtsDeparts, $start);
-                array_push($sommeDistances, $sommeDistanceDep);
-                array_push($sommeDurees, $sommeDureeDep);
-                array_push($idEntitesCombination, $idEntitesTemp);
+                    # obtenir l'id utilisateur
+                    $idUtilisateur = $this->getUtilisateurIdParGroupeId($idGroupe);
 
 
-                array_push($villesRencontre, $start);
-                $villes = $villesRencontre;
-                array_push($idsEntitesRencontre, $startIdEntite);
-                $idsEntites = $idsEntitesRencontre;
+                    $resultat = Rencontres::calculRoute($lanX, $lanY, $T2, $idUtilisateur);
+
+                    $distanceDest = $resultat[0];
+                    $dureeDest = $resultat[1];
+                    $coordonneesDest = $T2;
+                    $sommeDistanceDep = array_sum($distanceDest);
+                    $sommeDureeDep = array_sum($dureeDest);
+
+                    //on groupe les résultats de tous les cas possibles!
+                    array_push($lesDistances, $distanceDest);
+                    array_push($lesDurees, $dureeDest);
+                    array_push($coordonneesVilles, $coordonneesDest);
+                    array_push($lesPtsDeparts, $start);
+                    array_push($sommeDistances, $sommeDistanceDep);
+                    array_push($sommeDurees, $sommeDureeDep);
+                    array_push($idEntitesCombination, $idEntitesTemp);
+
+
+                    array_push($villesRencontre, $start);
+                    $villes = $villesRencontre;
+                    array_push($idsEntitesRencontre, $startIdEntite);
+                    $idsEntites = $idsEntitesRencontre;
 
 
 
-            }//fin parcourir longuerTab
+                }//fin parcourir longuerTab
 
-            //Min Somme des distances
-            $distanceMin = min($sommeDistances);
-            $key = array_search($distanceMin, $sommeDistances);//on récupère la position de la somme min
+                //Min Somme des distances
+                $distanceMin = min($sommeDistances);
+                $key = array_search($distanceMin, $sommeDistances);//on récupère la position de la somme min
 
-            $coord = $lesPtsDeparts[$key]; //on récupère le point de depart
+                $coord = $lesPtsDeparts[$key]; //on récupère le point de depart
 
-            $distanceTotale = $sommeDistances[$key];//on recupere la somme des tistances pour notre ville de depart
-            $distanceTotale = $distanceTotale / 1000;
-            $distanceTotale = round($distanceTotale, 0);//on fait l'arrondie de la distance totale
+                $distanceTotale = $sommeDistances[$key];//on recupere la somme des tistances pour notre ville de depart
+                $distanceTotale = $distanceTotale / 1000;
+                $distanceTotale = round($distanceTotale, 0);//on fait l'arrondie de la distance totale
 
-            $dureeTotale = $sommeDurees[$key];//on recupere la somme des durees trajets pour notre ville de depart
+                $dureeTotale = $sommeDurees[$key];//on recupere la somme des durees trajets pour notre ville de depart
 
-            //Nom de la ville de depart
-            $coordVille = explode('%2C', $coord);
+                //Nom de la ville de depart
+                $coordVille = explode('%2C', $coord);
 
-            $lanX = $coordVille[0];
-            $latY = $coordVille[1];
+                $lanX = $coordVille[0];
+                $latY = $coordVille[1];
 
-            $stmt1 = $bdd->prepare("SELECT ville, code_postal from entite where longitude = :longitude AND latitude = :latitude");
-            $stmt1->bindParam(':longitude', $latY);
-            $stmt1->bindParam(':latitude', $lanX);
-            $stmt1->execute();
-            $maVille = $stmt1->fetch(PDO::FETCH_ASSOC);
-            $codePostal = $maVille['code_postal'];
-            $nomVille = $maVille['ville'];
+                $stmt1 = $bdd->prepare("SELECT ville, code_postal from entite where longitude = :longitude AND latitude = :latitude");
+                $stmt1->bindParam(':longitude', $latY);
+                $stmt1->bindParam(':latitude', $lanX);
+                $stmt1->execute();
+                $maVille = $stmt1->fetch(PDO::FETCH_ASSOC);
+                $codePostal = $maVille['code_postal'];
+                $nomVille = $maVille['ville'];
 
-            $villeDepart = $codePostal." | ".$nomVille;
-
-
-            $mesVillesXY = $coordonneesVilles[$key];
-            //Récupérer les noms de villes de destination
-            $mesVilles = Rencontres::mesVilles($mesVillesXY);
+                $villeDepart = $codePostal." | ".$nomVille;
 
 
-            //distance ville
-            $distVille = $lesDistances[$key];
-            $dureeVille = $lesDurees[$key];
-
-            // obtenir les ids choisis selon la clé donnée
-            $idsEntitesChoisis = $idEntitesCombination[$key];
+                $mesVillesXY = $coordonneesVilles[$key];
+                //Récupérer les noms de villes de destination
+                $mesVilles = Rencontres::mesVilles($mesVillesXY);
 
 
-            //récupérer le nombre de participant pour chaque entité
-            $nbrParticipants = Rencontres::getNombreParticipants($idsEntitesChoisis);
+                //distance ville
+                $distVille = $lesDistances[$key];
+                $dureeVille = $lesDurees[$key];
+
+                // obtenir les ids choisis selon la clé donnée
+                $idsEntitesChoisis = $idEntitesCombination[$key];
 
 
-            $donneesRetour = [];
-
-            $donneesRetour[0] = $villeDepart;
-            $donneesRetour[1] = $lanX;
-            $donneesRetour[2] = $latY;
-            $donneesRetour[3] = $distanceTotale;
-            $donneesRetour[4] = $dureeTotale;
-            $donneesRetour[5] = $mesVillesXY;
-            $donneesRetour[6] = $mesVilles;
-            $donneesRetour[7] = $distVille;
-            $donneesRetour[8] = $dureeVille;
-            $donneesRetour[9] = $nomsTerrainsNeutres;
-            $donneesRetour[10] = $nbrParticipants;
-            $donneesRetour['nbrParticipants'] = $nbrParticipants;
+                //récupérer le nombre de participant pour chaque entité
+                $nbrParticipants = Rencontres::getNombreParticipants($idsEntitesChoisis);
 
 
-            // obtenir la distance totale pour toutes équipes
-            $distanceTotale = Rencontres::getDistanceTotale($distVille, $nbrParticipants);
+                $donneesRetour = [];
+
+                $donneesRetour[0] = $villeDepart;
+                $donneesRetour[1] = $lanX;
+                $donneesRetour[2] = $latY;
+                $donneesRetour[3] = $distanceTotale;
+                $donneesRetour[4] = $dureeTotale;
+                $donneesRetour[5] = $mesVillesXY;
+                $donneesRetour[6] = $mesVilles;
+                $donneesRetour[7] = $distVille;
+                $donneesRetour[8] = $dureeVille;
+                $donneesRetour[9] = $nomsTerrainsNeutres;
+                $donneesRetour[10] = $nbrParticipants;
+                $donneesRetour['nbrParticipants'] = $nbrParticipants;
 
 
-            # ajouter le nombre de participants dans les résultats
-            $donneesRetour["distanceTotale"] = $distanceTotale;
-
-            # ajouter le nombre de participants dans les résultats
-            $donneesRetour["nbrParticipantsTotal"] = Rencontres::getTotalNombreParticipants($nbrParticipants);
+                // obtenir la distance totale pour toutes équipes
+                $distanceTotale = Rencontres::getDistanceTotale($distVille, $nbrParticipants);
 
 
-            return array('success' => True, 'donneesRetour'=>$donneesRetour);
+                # ajouter le nombre de participants dans les résultats
+                $donneesRetour["distanceTotale"] = $distanceTotale;
 
+                # ajouter le nombre de participants dans les résultats
+                $donneesRetour["nbrParticipantsTotal"] = Rencontres::getTotalNombreParticipants($nbrParticipants);
+
+
+
+            return array('success' => True, 'donneesRetour'=>$donneesRetour, 'codeErreur'=> 0);
         }
 
 
@@ -414,7 +429,8 @@ class Rencontres
         # ajouter le nombre de participants dans les résultats
         $donneesRetour["nbrParticipantsTotal"] =  Rencontres::getTotalNombreParticipants($donneesRetour[9]);
 
-        return array('success' => True, 'donneesRetour'=>$donneesRetour);
+        return array('success' => True, 'donneesRetour'=>$donneesRetour, 'codeErreur'=> 0);
+
     }
 
     //Calcul exclusion géographique
@@ -502,7 +518,7 @@ class Rencontres
         }
 
 
-        return array('success' => True, 'donneesRetour'=>$donneesRetour);
+        return array('success' => True, 'donneesRetour'=>$donneesRetour, 'codeErreur'=> 0);
 
     }
 
@@ -649,7 +665,7 @@ class Rencontres
         # ajouter le nombre de participants dans les résultats
         $donneesRetour["distanceTotale"] = $distanceTotale;
 
-        return array('success' => True, 'donneesRetour'=>$donneesRetour);
+        return array('success' => True, 'donneesRetour'=>$donneesRetour, 'codeErreur'=> 0);
     }
 
     public function routingMatrix($coord, $villes, $idsEntites, $idGroupe)
@@ -759,9 +775,11 @@ class Rencontres
 
         $retourListeLieux = Rencontres::getListeLieux($idGroupe);
 
-        if(isset($retourListeLieux) && !$retourListeLieux["success"]){
+        // retourner le retour à la fonction appellante
+        if( is_array($retourListeLieux) && array_key_exists("success", $retourListeLieux) && $retourListeLieux["success"] === FALSE){
             return $retourListeLieux;
         }
+        // traitement normal
         else {
             $listeLieux = $retourListeLieux["donneesRetour"];
 
@@ -864,7 +882,7 @@ class Rencontres
             # ajouter le nombre de participants dans les résultats
             $donneesRetour["nbrParticipantsTotal"] = Rencontres::getTotalNombreParticipants($nbrParticipants);
 
-            return array('success' => True, 'donneesRetour'=>$donneesRetour);
+            return array('success' => True, 'donneesRetour'=>$donneesRetour, 'codeErreur'=> 0);
 
 
 
@@ -889,9 +907,11 @@ class Rencontres
 
         $retourListeLieux = Rencontres::getListeLieux($idGroupe);
 
-        if(!$retourListeLieux["success"]){
+        // retourner le retour à la fonction appellante
+        if( is_array($retourListeLieux) && array_key_exists("success", $retourListeLieux) && $retourListeLieux["success"] === FALSE){
             return $retourListeLieux;
         }
+        // traitement normal
         else {
             $listeLieux = $retourListeLieux["donneesRetour"];
 
@@ -987,7 +1007,7 @@ class Rencontres
             $donneesRetour["distanceTotale"] = $distanceTotale;
 
 
-            return array('success' => True, 'donneesRetour'=>$donneesRetour);
+            return array('success' => True, 'donneesRetour'=>$donneesRetour, 'codeErreur'=> 0);
 
 
         }
@@ -1377,8 +1397,13 @@ class Rencontres
             $donneesRetour[0] = $nomsVilles;
             $donneesRetour[1] = $coordVilles;
 
-            return array('success' => True, 'donneesRetour'=>$donneesRetour);
+            // retourne les infos concernant la liste de lieux, code d'erreur = 0
+            return array('success' => True, 'donneesRetour'=>$donneesRetour, 'codeErreur'=> 0);
 
+        }
+        else{
+            // indiquer qu'il n'y a pas de liste de lieux, code d'erreur = 0
+            return array('success' => True, 'donneesRetour'=>array(), 'codeErreur'=>0);
 
         }
     }

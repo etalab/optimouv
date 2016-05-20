@@ -143,7 +143,8 @@ class CalculRencontreConsumer implements ConsumerInterface
 
             $retour = $serviceRencontre->Barycentre($idGroupe);
 
-            if($retour["success"]){
+            if( is_array($retour) && array_key_exists("success", $retour) && array_key_exists("donneesRetour", $retour) && $retour["success"] === TRUE)
+            {
                 $idCalcul = $this->stockerResultats($msg, $retour["donneesRetour"]);
 
                 if ($idCalcul) {
@@ -166,7 +167,8 @@ class CalculRencontreConsumer implements ConsumerInterface
             $retourBarycentre = $serviceRencontre->Barycentre($idGroupe);
             $retourExclusion = $serviceRencontre->Exclusion($params, $idGroupe);
 
-            if($retourBarycentre["success"] && $retourExclusion["success"]){
+            if( is_array($retourBarycentre) && array_key_exists("success", $retourBarycentre) && array_key_exists("donneesRetour", $retourBarycentre) && $retourBarycentre["success"] === TRUE
+                && is_array($retourExclusion) && array_key_exists("success", $retourExclusion) && array_key_exists("donneesRetour", $retourExclusion) && $retourExclusion["success"] === TRUE) {
                 $retour = [];
                 $retour[0] = $retourBarycentre["donneesRetour"];
                 $retour[1] = $retourExclusion["donneesRetour"];
@@ -185,11 +187,12 @@ class CalculRencontreConsumer implements ConsumerInterface
 
         }
         elseif($typeAction == "meilleurLieu"){
-
             $retourOp = $serviceRencontre->meilleurLieuRencontre($idGroupe);
             $retourEq = $serviceRencontre->scenarioEquitable($idGroupe);
 
-            if($retourOp["success"] && $retourEq["success"]){
+            if( is_array($retourOp) && array_key_exists("success", $retourOp) && array_key_exists("donneesRetour", $retourOp) && $retourOp["success"] === TRUE
+                && is_array($retourEq) && array_key_exists("success", $retourEq) && array_key_exists("donneesRetour", $retourEq) && $retourEq["success"] === TRUE) {
+
                 $retour = [];
                 $retour[0] = $retourOp["donneesRetour"];
                 $retour[1] = $retourEq["donneesRetour"];
@@ -207,6 +210,7 @@ class CalculRencontreConsumer implements ConsumerInterface
 
             }
             else{
+                // l'envoi d'un email d'erreur
                 $this->updateSatut($msg, -1);
                 $this->sendMail($msg, $typeAction, $retourOp["codeErreur"] );
 
@@ -219,7 +223,8 @@ class CalculRencontreConsumer implements ConsumerInterface
             $retourOp = $serviceRencontre->terrainNeutre($idGroupe);
             $retourEq = $serviceRencontre->terrainNeutreEquitable($idGroupe);
 
-            if($retourOp["success"] && $retourEq["success"]){
+            if( is_array($retourOp) && array_key_exists("success", $retourOp) && array_key_exists("donneesRetour", $retourOp) && $retourOp["success"] === TRUE
+                && is_array($retourEq) && array_key_exists("success", $retourEq) && array_key_exists("donneesRetour", $retourEq) && $retourEq["success"] === TRUE) {
                 $retour = [];
                 $retour[0] = $retourOp["donneesRetour"];
                 $retour[1] = $retourEq["donneesRetour"];
@@ -236,11 +241,15 @@ class CalculRencontreConsumer implements ConsumerInterface
 
             }
             else{
+                // l'envoi d'un email d'erreur
                 $this->updateSatut($msg, -1);
-                if(!$retourOp["success"]){
+
+                // erreur pour le scénario optimal
+                if(is_array($retourOp) && array_key_exists("success", $retourOp) && array_key_exists("codeErreur", $retourOp)  && $retourOp["success"] === FALSE ){
                     $this->sendMail($msg, $typeAction, $retourOp["codeErreur"] );
                 }
-                elseif(!$retourEq["success"]){
+                // erreur pour le scénario équitable
+                elseif(is_array($retourEq) && array_key_exists("success", $retourEq) && array_key_exists("codeErreur", $retourEq)  && $retourEq["success"] === FALSE ){
                     $this->sendMail($msg, $typeAction, $retourEq["codeErreur"] );
                 }
 
