@@ -14,7 +14,7 @@ services:
 
     service_poules:
         class: Optimouv\FfbbBundle\Services\Poules
-        arguments: ["%database_host%", "%database_name%", "%database_user%", "%database_password%", "%app_id%", "%app_code%", "%error_log_path%", "@service_statistiques"]
+        arguments: ["%database_host%", "%database_name%", "%database_user%", "%database_password%", "%app_id%", "%app_code%", "%error_log_path%", "@service_statistiques", "@service_fonctions_communes" ]
 
     service_calcul_rencontre:
         class: Optimouv\FfbbBundle\Services\CalculRencontreConsumer
@@ -37,3 +37,7 @@ services:
           arguments: ["@security.authorization_checker", "@security.token_storage" , "@doctrine.orm.entity_manager", "%time_limit_active_users%"]
           tags:
               - { name: kernel.event_listener, event: kernel.controller, method: onCoreController }
+
+    service_fonctions_communes:
+        class: Optimouv\FfbbBundle\Services\FonctionsCommunes
+        arguments: ["%database_host%", "%database_name%", "%database_user%", "%database_password%", "%error_log_path%"]
