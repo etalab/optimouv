@@ -158,12 +158,12 @@ class Poules{
 
 
             // récupérer l'id du rapport
-            $courantId = $this->fonctionsCommunes->getNextIdParametres();
+            $courantRapportId = $this->fonctionsCommunes->getNextIdParametres();
 
 //            error_log("\ndernierId: ".print_r($dernierId, true), 3, $this->error_log_path);
 
 
-            $nom = "Poules"."_".$nomGroupe."_".$courantId;
+            $nom = "Poules"."_".$nomGroupe."_".$courantRapportId;
             $statut = 0;
             $params = json_encode(array("nbrPoule" => $poulesNbr, "interdictions"=> $interdictions,
                 "repartitionHomogene"=> $repartitionsHomogenes, "varEquipeParPoule"=> $varEquipeParPoule,

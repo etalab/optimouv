@@ -6,7 +6,7 @@ parameters:
 services:
     service_rencontres:
         class: Optimouv\FfbbBundle\Services\Rencontres
-        arguments: ["%database_host%", "%database_name%", "%database_user%", "%database_password%", "%app_id%", "%app_code%", "%error_log_path%", "@service_statistiques", "%here_request_limit%"]
+        arguments: ["%database_host%", "%database_name%", "%database_user%", "%database_password%", "%app_id%", "%app_code%", "%error_log_path%", "@service_statistiques", "%here_request_limit%", "@service_fonctions_communes"]
 
     service_listes:
         class: Optimouv\FfbbBundle\Services\Listes
