@@ -90,4 +90,9 @@ class ResettingController extends Controller
         }
 
     }
+
+    protected function getEngine()
+    {
+        return $this->container->getParameter('fos_user.template.engine');
+    }
 }
