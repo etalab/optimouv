@@ -27,8 +27,12 @@ class Rencontres
      * @var Statistiques $serviceStatistiques
      */
     protected $serviceStatistiques;
+    /**
+     * @var FonctionsCommunes $fonctionsCommunes
+     */
+    protected $fonctionsCommunes;
 
-    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $serviceStatistiques, $here_request_limit )
+    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $serviceStatistiques, $here_request_limit, $fonctionsCommunes )
     {
         $this->database_host = $database_host;
         $this->database_name = $database_name;
@@ -39,6 +43,7 @@ class Rencontres
         $this->error_log_path = $error_log_path;
         $this->serviceStatistiques = $serviceStatistiques;
         $this->here_request_limit = $here_request_limit;
+        $this->fonctionsCommunes = $fonctionsCommunes;
 
     }
 
@@ -1682,7 +1687,9 @@ class Rencontres
 
         $bdd= Rencontres::connexion();
 
- 
+        // récupérer l'id du rapport
+        $courantRapportId = $this->fonctionsCommunes->getNextIdParametres();
+
         $prefixe_nom = "Meilleur lieu";
         
 
@@ -1700,7 +1707,7 @@ class Rencontres
         $date = new \DateTime();
         $dateCreation = $date->format('Y-m-d');
 //        $nomRapport = "rapport_groupe_".$idGroupe."_action_".$typeAction;
-        $nomRapport = $prefixe_nom."_".$nomGroupe;
+        $nomRapport = $prefixe_nom."_".$nomGroupe."_".$courantRapportId;
 
         //on ajoute un job dans la table parametres
         //TODO:changer le nom de la table rapport en paramètres
@@ -1740,7 +1747,10 @@ class Rencontres
         $date = new \DateTime();
         $dateCreation = $date->format('Y-m-d');
 //        $nomRapport = "rapport_groupe_".$idGroupe."_action_".$typeAction;
-        $nomRapport = $prefixe_nom."_".$nomGroupe;
+
+        // récupérer l'id du rapport
+        $courantRapportId = $this->fonctionsCommunes->getNextIdParametres();
+        $nomRapport = $prefixe_nom."_".$nomGroupe."_".$courantRapportId;
 
         //on ajoute un job dans la table parametres
         //TODO:changer le nom de la table rapport en paramètres
