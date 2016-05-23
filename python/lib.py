@@ -11,6 +11,8 @@ from email.mime.text import MIMEText
 import requests
 import datetime
 import math
+from email.header import Header
+from email.utils import formataddr
 
 """
 Function to print exception traceback
@@ -2543,7 +2545,8 @@ def send_email_general(recipientAddress, subject, contentText ):
 		senderAccount = config.EMAIL.From
 		
 		msg = MIMEText(contentText)
-		msg['From'] = senderAccount
+		# include name and address email at the same time
+		msg['From'] = formataddr((str(Header(senderAccount, 'utf-8')), senderAccount))
 		msg['To'] = recipientAddress
 		msg['Subject'] = subject
 				
