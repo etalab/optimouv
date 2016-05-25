@@ -407,7 +407,7 @@ class UserController extends Controller
             $roleUser = $user->getRoles();
 
             if($idAdmin == $idUser){
-                return $this->redirect($this->generateUrl('ffbb_accueil'));
+                return $this->redirect($this->generateUrl('ffbb_accueil_connect '));
             }
 
             elseif(in_array('ROLE_ADMIN',$roleUser) or in_array('ROLE_SUPER_ADMIN',$roleUser)){
