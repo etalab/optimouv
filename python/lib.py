@@ -3147,7 +3147,7 @@ def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, pro
 		if errorStatus:
 			TEXT = u"Bonjour,\n\n" 
 			TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
-			TEXT += u"Veuillez utiliser les mêmes parametres que vous avez utilisé précédemment . " 
+			TEXT += u"Veuillez utiliser les mêmes parametres que vous avez utilisé précédemment. " 
 			send_email_to_user_failure_with_text(userId, reportId, TEXT)
 		
 	except Exception as e:
@@ -3165,7 +3165,7 @@ def check_request_validity_post_treatment(teamTransfers, varTeamNbrPerPool, user
 		if int(varTeamNbrPerPool)> 1 and teamTransfers:
 			TEXT = u"Bonjour,\n\n" 
 			TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
-			TEXT += u"Veuillez choisir soit la variation du nombre d'équipes par poule soit le changement d'affectation d'équipes par poule . " 
+			TEXT += u"Veuillez choisir soit la variation du nombre d'équipes par poule soit le changement d'affectation d'équipes par poule. " 
 			send_email_to_user_failure_with_text(userId, reportId, TEXT)
 
 	except Exception as e:
