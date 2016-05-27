@@ -1696,6 +1696,7 @@ def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coord
 					"app_code": config.HERE.AppCode,
 					"mode": "fastest;car;traffic:disabled"
 				}
+		senderAccount = config.EMAIL.From
 
 		resp = requests.get(url=hereUrl, params=params)
 		data = json.loads(resp.text)
@@ -1709,9 +1710,11 @@ def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coord
 				if data["response"]["type"] == "SystemError":
 					reportName = get_report_name_from_report_id(reportId)
 					contentText = u"Bonjour,\n\n" 
-					contentText += u"Optimouv rencontre un problème de licence Here.\n"
-					contentText += u"Veuillez contacter votre administrateur système."
-					contentText += u"Cordialement,\n \n L'équipe d’Optimouv \n support@optimouv.net"
+					contentText += u"Optimouv rencontre un problème de licence HERE.\n"
+					contentText += u"Veuillez contacter votre administrateur système.\n\n"
+					contentText += u"Cordialement,\n\n"
+					contentText += u"L'équipe d’Optimouv\n"
+					contentText += u"%s"%(senderAccount)
 					send_email_to_user_failure_with_text(userId, reportId, contentText)
 			else:
 			
@@ -2519,8 +2522,9 @@ def send_email_to_user(userId, resultId):
 		contentText += u"Le résultat de votre calcul est disponible.\n"
 		contentText += u"Vous pouvez le consulter en cliquant sur ce lien :\n" 
 		contentText += u"%s\n\n"%(url)
-		contentText += u"Optimouv\n"
-		contentText += u"%s\n"%(senderAccount)
+		contentText += u"Cordialement,\n\n"
+		contentText += u"L'équipe d’Optimouv\n"
+		contentText += u"%s"%(senderAccount)
 		logging.debug("contentText: \n%s" %contentText)
 		
 		send_email_general(recipientAddress, subject, contentText)
