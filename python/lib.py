@@ -2572,9 +2572,10 @@ def send_email_to_user_failure(userId, reportId):
 
 		contentText = u"Bonjour,\n\n" 
 		contentText += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
-		contentText += u"Veuillez modifier vos critères et contraintes et relancer un calcul. \n\n" 
-		contentText += u"Cordialement,\n \n L'équipe d’Optimouv \n support@optimouv.net"
-		contentText += u"%s\n"%(senderAccount)
+		contentText += u"Veuillez modifier vos critères et contraintes puis relancer un calcul. \n\n" 
+		contentText += u"Cordialement,\n\n"
+		contentText += u"L'équipe d’Optimouv\n"
+		contentText += u"%s"%(senderAccount)
 
 		send_email_to_user_failure_with_text(userId, reportId, contentText)
 		
@@ -2610,22 +2611,25 @@ Function control provided params by user
 def control_params_match_plateau(userId, teamNbr, poolNbr, reportId):
 	try:
 		reportName = get_report_name_from_report_id(reportId)
+		poolSize = int(teamNbr/poolNbr)
+		senderAccount = config.EMAIL.From
 
-		TEXT = u"Bonjour,\n\n" 
-		TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
+		contentText = u"Bonjour,\n\n" 
+		contentText += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
 
 		# team number has to be the multiplication of 9 (9, 18, 27)
 		if teamNbr % 9 != 0:
-			TEXT += u"Veuillez assurer que le nombre de ligne dans votre fichier correspond au match plateau. " 
+			contentText += u"Veuillez vous assurer que le nombre de ligne dans votre fichier correspond bien à des rencontres en match plateau.\n\n" 
 
-			send_email_to_user_failure_with_text(userId, reportId, TEXT)
-		
 		# pool number has to be 9
-		poolSize = int(teamNbr/poolNbr)
-		if poolSize != 9:
-			TEXT += u"Veuillez assurer que le nombre de poule selectionné correspond au nombre de ligne dans votre fichier. " 
+		elif poolSize != 9:
+			contentText += u"Veuillez vous assurer que le nombre de poule sélectionné correspond au nombre de ligne dans votre fichier.\n\n" 
 
-			send_email_to_user_failure_with_text(userId, reportId, TEXT)
+		contentText += u"Cordialement,\n\n"
+		contentText += u"L'équipe d’Optimouv\n"
+		contentText += u"%s"%(senderAccount)
+
+		send_email_to_user_failure_with_text(userId, reportId, contentText)
 
 
 	except Exception as e:
@@ -3085,15 +3089,19 @@ def check_final_result(calculatedResult, userId, reportId):
 	try:
 		sql = "select nom from parametres where id=%s"%reportId
 		reportName = db.fetchone(sql)
+		senderAccount = config.EMAIL.From
 
 		if "params" in calculatedResult:
 			if "final" in calculatedResult["params"]:
 				if results["params"]["final"] == "oui":
 					
-					TEXT = u"Bonjour,\n\n" 
-					TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
-					TEXT += u"Vous ne pouvez lancer le critère de variation du nombre d'équipes par poule qu'une seule fois. " 
-					send_email_to_user_failure_with_text(userId, reportId, TEXT)
+					contentText = u"Bonjour,\n\n" 
+					contentText += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
+					contentText += u"Vous ne pouvez lancer le critère de variation du nombre d'équipes par poule qu'une seule fois.\n\n" 
+					contentText += u"Cordialement,\n\n"
+					contentText += u"L'équipe d’Optimouv\n"
+					contentText += u"%s"%(senderAccount)
+					send_email_to_user_failure_with_text(userId, reportId, contentText)
 					
 		
 	except Exception as e:
@@ -3149,11 +3157,15 @@ def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, pro
 		logging.debug("errorStatus : %s" %(errorStatus))
 
 		# send email if errorStatus is true
+		senderAccount = config.EMAIL.From
 		if errorStatus:
-			TEXT = u"Bonjour,\n\n" 
-			TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
-			TEXT += u"Veuillez utiliser les mêmes parametres que vous avez utilisé précédemment. " 
-			send_email_to_user_failure_with_text(userId, reportId, TEXT)
+			contentText = u"Bonjour,\n\n" 
+			contentText += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
+			contentText += u"Veuillez utiliser les mêmes paramètres que vous avez utilisé précédemment.\n\n" 
+			contentText += u"Cordialement,\n\n"
+			contentText += u"L'équipe d’Optimouv\n"
+			contentText += u"%s"%(senderAccount)
+			send_email_to_user_failure_with_text(userId, reportId, contentText)
 		
 	except Exception as e:
 		show_exception_traceback()
@@ -3167,11 +3179,15 @@ def check_request_validity_post_treatment(teamTransfers, varTeamNbrPerPool, user
 		sql = "select nom from parametres where id=%s"%reportId
 		reportName = db.fetchone(sql)
 
+		senderAccount = config.EMAIL.From
 		if int(varTeamNbrPerPool)> 1 and teamTransfers:
-			TEXT = u"Bonjour,\n\n" 
-			TEXT += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
-			TEXT += u"Veuillez choisir soit la variation du nombre d'équipes par poule soit le changement d'affectation d'équipes par poule. " 
-			send_email_to_user_failure_with_text(userId, reportId, TEXT)
+			contentText = u"Bonjour,\n\n" 
+			contentText += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
+			contentText += u"Veuillez choisir soit la variation du nombre d'équipes par poule soit le changement d'affectation d'équipes par poule.\n\n" 
+			contentText += u"Cordialement,\n\n"
+			contentText += u"L'équipe d’Optimouv\n"
+			contentText += u"%s"%(senderAccount)
+			send_email_to_user_failure_with_text(userId, reportId, contentText)
 
 	except Exception as e:
 		show_exception_traceback()
