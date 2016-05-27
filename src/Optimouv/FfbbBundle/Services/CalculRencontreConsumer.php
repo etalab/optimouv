@@ -387,7 +387,7 @@ class CalculRencontreConsumer implements ConsumerInterface
             ->setSubject('OPTIMOUV - mise à disposition de vos résultats de calculs')
             ->setFrom(array($expediteurEmail => $mailer_sender))
             ->setTo($userEmail)
-            ->setBody($body, 'text/plain')
+            ->setBody($body, 'text/html')
         ;
         $this->container->get('mailer')->send($message);
 
