@@ -10,109 +10,54 @@
                         <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
                         <li><a href="{{ path('ffbb_choisir_liste_participants') }}">Meilleur lieu de rencontre </a></li>
                         <li><a href="{{ path('ffbb_choisir_groupe', {'idListe': idListe}) }}">Votre sélection </a></li>
-                        <li><a href="{{ path('ffbb_villes_groupe', {'idGroupe': idGroupe}) }}">Options de calcul </a></li>
+                        <li><a href="{{ path('ffbb_villes_groupe', {'idGroupe': idGroupe}) }}">Options de calcul </a>
+                        </li>
                         <li class="active">Scénarii barycentre avec exclusion</li>
                     </ul>
                 </div>
                 <div class="col-lg-12">
-                    <h3 class="page-header">Vos scénarii</h3>
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover">
+                    <h3 class="page-header">Vos options de calculs</h3>
+                    <div class="col-lg-6">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover">
 
-                            <tbody>
-                            <tr>
-                                <td>Nom du rapport : {{ nomRapport }}</td>
-                            </tr>
-                            <tr>
-                                <td>Nom du fichier : {{ nomListe }}</td>
-                            </tr>
-                            <tr>
-                                <td>Nom de la sélection : {{ nomGroupe }}</td>
-                            </tr>
+                                <tbody>
+                                <tr>
+                                    <td>Nom du rapport : {{ nomRapport }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Nom du fichier : {{ nomListe }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Nom de la sélection : {{ nomGroupe }}</td>
+                                </tr>
 
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="panel panel-red" style="resize:vertical; overflow-y:auto;">
+                            <div class="panel-heading">
+                                Votre sélection
+                            </div>
+                            <div class="panel-body" style="min-height: 150px; max-height: 190px">
+                                <ul class="list-unstyled" style="padding-left:20px; list-style-image: url('{{ asset('bundles/ffbb/images/puce-mini.png') }}')">
+                                    {% for participant in participants %}
+                                        <li> {{ participant.ville|upper }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
+            {# bloc affichage resultats sur la carte #}
             <div class="row">
-                <div class="col-lg-4">
-                    <div class="panel panel-red" style="resize:vertical; overflow-y:auto;">
-                        <div class="panel-heading">
-                            Votre sélection
-                        </div>
-                        <div class="panel-body" style="min-height: 150px; max-height: 190px">
-                            <ul class="list-unstyled" style="padding-left:20px; list-style-image: url('{{ asset('bundles/ffbb/images/puce-mini.png') }}')">
-                                 {% for participant in participants %}
-                                    <li> {{ participant.ville|upper }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-
-                    </div>
-                </div>
-                <!-- /.col-lg-4 -->
-
-                <div class="col-lg-4">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            Votre option de calcul
-                        </div>
-
-                        <form style="padding-left:20px;" action="{{ path('ffbb_lancer_producer', {'idGroupe':idGroupe}) }}" method="POST" onsubmit="msgLancement()">
-
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" name="rencontre" id="meilleurLieuOption" value="meilleurLieu" required>
-                                    Lieux définis
-                                </label>
-                            </div>
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" name="rencontre" id="BarycentreOption" value="barycentre" disabled>
-                                    Barycentre
-                                </label>
-                            </div>
-
-                            <button type="submit" class="btn btn-default-rencontre  pull-right" >Lancer le calcul
-                            </button>
-
-
-                        </form>
-
-
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            Votre contrainte
-                        </div>
-                        <form name="typeLieuxContrainte" style="padding-left:20px;" action="{{ path('ffbb_lancer_producer', {'idGroupe':idGroupe}) }}" method="POST" onsubmit="msgLancement()">
-
-                            <div style="padding-top: 10px">
-                                Saisissez ici le nombre d'habitants maximum des zones à exclure.
-
-                            </div>
-                            <div class="form-group">
-                                <input name="valeurExclusion" id="valeurExclusion" type="number" class="form-control" min="1000" value="{{ valeurExclusion }}" required>
-                            </div>
-                            <input type="hidden" name="rencontre" value="exclusion">
-                            <button type="submit" class="btn btn-default-rencontre  pull-right" >Lancer le calcul
-                            </button>
-                        </form>
-
-                    </div>
-                </div>
-
-
-                <!-- /.col-lg-4 -->
-            </div>
-            <!-- /.row -->
-
-            <div class="row">
+                <h3 class="page-header">Vos résultats</h3>
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading col-lg-12">
@@ -134,10 +79,6 @@
                                 </form>
                             </div>
                         </div>
-
-
-
-
                         <!-- .panel-heading -->
                         <div class="panel-body">
                             <div class="col-lg-6">
@@ -702,7 +643,58 @@
                 <!-- /.col-lg-12 -->
             </div>
 
+            {# bloc affichage options de cacul#}
+            <div class="row">
+                <h3 class="page-header">Relancer avec de nouvelles options de calcul</h3>
+                <div class="col-lg-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            Votre option de calcul
+                        </div>
 
+                        <form style="padding-left:20px;" action="{{ path('ffbb_lancer_producer', {'idGroupe':idGroupe}) }}" method="POST" onsubmit="msgLancement()">
+
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="rencontre" id="meilleurLieuOption" value="meilleurLieu" required>
+                                    Lieux définis
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="rencontre" id="BarycentreOption" value="barycentre" disabled>
+                                    Barycentre
+                                </label>
+                            </div>
+
+                            <button type="submit" class="btn btn-default-rencontre  pull-right" style="margin-top: 10px">Lancer le calcul
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            Votre contrainte
+                        </div>
+                        <form name="typeLieuxContrainte" style="padding-left:20px;" action="{{ path('ffbb_lancer_producer', {'idGroupe':idGroupe}) }}" method="POST" onsubmit="msgLancement()">
+
+                            <div style="padding-top: 10px">
+                                Saisissez ici le nombre d'habitants maximum des zones à exclure.
+
+                            </div>
+                            <div class="form-group">
+                                <input name="valeurExclusion" id="valeurExclusion" type="number" class="form-control" min="1000" value="{{ valeurExclusion }}" required>
+                            </div>
+                            <input type="hidden" name="rencontre" value="exclusion">
+                            <button type="submit" class="btn btn-default-rencontre  pull-right" style="margin-top: 10px">Lancer le calcul
+                            </button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
         </div>
         <!-- /#page-wrapper -->
     {% block javascript %}

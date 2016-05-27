@@ -35,7 +35,7 @@ class ResettingController extends Controller
                 ));
 
         $message = \Swift_Message::newInstance()
-            ->setSubject('Réinitialisation de votre mot de passe')
+            ->setSubject('OPTIMOUV - Réinitialisation de votre mot de passe')
             ->setFrom(array($mailer_sender => $sender_name))
             ->setTo($emailUser)
             ->setBody($body, 'text/html')

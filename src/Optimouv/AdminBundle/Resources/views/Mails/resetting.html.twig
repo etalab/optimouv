@@ -1,8 +1,13 @@
-Bonjour {{ username }} !
+{# declaration du lien de reset #}
+{%  set lien = "http://"~base_url~path('admin_update_password', {'idUser': idUser}) %}
+
+{# corps du mail#}
+Bonjour,
 <br><br>
 
-Pour réinitialiser votre mot de passe, merci de vous rendre sur ce <a href="http://{{ base_url }}{{ path('admin_update_password', {'idUser': idUser}) }}"> lien</a>.
+Pour réinitialiser votre mot de passe, merci de vous rendre sur ce lien: <a href={{ lien }}> {{ lien }}</a>.
 
 <br> <br>
-Cordialement,
-L'équipe
+Cordialement,<br>
+L'équipe d’Optimouv<br>
+support@optimouv.net

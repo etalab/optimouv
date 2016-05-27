@@ -373,32 +373,15 @@ class CalculRencontreConsumer implements ConsumerInterface
         $mailer_sender = $this->mailer_sender;
         $userEmail = $this->getUserEmail($idRapport);
 
-        $body = "Bonjour,\n\n";
-
         // cas de succès
-        if($statut == 0){
+        if ($statut == 0) {
 
-//        $body = $this->templating->render('FfbbBundle:Mails:confirmationCalcul.html.twig', array('idRapport' => $idRapport, 'typeAction' => $typeAction,
-//            'expediteurEmail' => $expediteurEmail));
+            $body = $this->templating->render('FfbbBundle:Mails:confirmationCalcul.html.twig', array('idRapport' => $idRapport, 'typeAction' => $typeAction));
 
-            $router = $this->container->get('Router');
-            $urlPrimaire = $router->generate('ffbb_consulter_rapport', array('idRapport'=>$idRapport, 'typeAction'=> $typeAction));
+        } elseif ($statut == 1) {
 
-            $body .= "Le résultat de votre calcul est disponible.\n";
-            $body .= "Vous pouvez le consulter en cliquant sur ce lien :\n";
-            $body .= "http://".$this->base_url.$urlPrimaire."\n\n";
-
-
-
+            $body = $this->templating->render('FfbbBundle:Mails:depassementSeuilHereRencontre.html.twig');
         }
-        elseif($statut == 1){
-            $body .= "Nous ne pouvons pas effectuer votre calcul pour cause de dépassement du seuil mensuel géocodage HERE.\n";
-            $body .= "Contactez votre administrateur système.\n\n";
-
-        }
-
-        $body .= "Optimouv\n";
-        $body .= $expediteurEmail;
 
         $message = \Swift_Message::newInstance()
             ->setSubject('OPTIMOUV - mise à disposition de vos résultats de calculs')
