@@ -16,118 +16,51 @@
             </div>
 
             <div class="col-lg-12">
-                <h3 class="page-header">Vos résultats </h3>
-                <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover">
+                <h3 class="page-header">Vos options de calculs </h3>
+                <div class="col-lg-6">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover">
 
-                        <tbody>
-                        <tr>
-                            <td>Nom du rapport : {{ nomRapport }}</td>
-                        </tr>
-                        <tr>
-                            <td>Nom de la liste : {{ nomListe }}</td>
-                        </tr>
-                        <tr>
-                            <td>Nom du groupe : {{ nomGroupe }}</td>
-                        </tr>
+                            <tbody>
+                            <tr>
+                                <td>Nom du rapport : {{ nomRapport }}</td>
+                            </tr>
+                            <tr>
+                                <td>Nom de la liste : {{ nomListe }}</td>
+                            </tr>
+                            <tr>
+                                <td>Nom du groupe : {{ nomGroupe }}</td>
+                            </tr>
 
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="panel panel-red" style="resize:vertical; overflow-y:auto;">
+                        <div class="panel-heading">
+                            Participants
+                        </div>
+                        <div class="panel-body" style="min-height: 150px; max-height: 190px">
+                            <ul class="list-unstyled"
+                                style="padding-left:20px; list-style-image: url('{{ asset('bundles/ffbb/images/puce-mini.png') }}')">
+                                <li>{{ villeDepart|upper }}</li>
+                                {% for participant in participants %}
+                                    <li> {{ participant.ville|upper }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
             <!-- /.col-lg-12 -->
         </div>
         <!-- /.row -->
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="panel panel-red" style="resize:vertical; overflow-y:auto;">
-                    <div class="panel-heading">
-                        Participants
-                    </div>
-                    <div class="panel-body" style="min-height: 150px; max-height: 190px">
-                        <ul class="list-unstyled"
-                            style="padding-left:20px; list-style-image: url('{{ asset('bundles/ffbb/images/puce-mini.png') }}')">
-                            <li>{{ villeDepart|upper }}</li>
-                            {% for participant in participants %}
-                                <li> {{ participant.ville|upper }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!-- /.col-lg-4 -->
-
-            <div class="col-lg-4">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        Type de lieu
-                    </div>
-
-                    <form style="padding-left:20px;" action="{{ path('ffbb_lancer_producer', {'idGroupe':idGroupe}) }}" method="POST" onsubmit="msgLancement()">
-
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="rencontre" id="meilleurLieuOption" value="meilleurLieu"
-                                       disabled>
-                                Lieux définis
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="rencontre" id="BarycentreOption" value="barycentre" required>
-                                Barycentre
-                            </label>
-                        </div>
-
-                        <button type="submit" class="btn btn-default-rencontre  pull-right">Lancer le calcul
-                        </button>
-
-
-                    </form>
-
-
-                </div>
-            </div>
-
-            <div class="col-lg-4">
-                <div class="panel panel-red" style="resize:vertical; overflow-y:auto;">
-                    <div class="panel-heading">
-                        Lieux possibles
-                    </div>
-                    {% if terrainsNeutres  is defined and terrainsNeutres is not null%}
-                    <div class="panel-body" style="min-height: 150px; max-height: 190px">
-                        <ul class="list-unstyled" style="padding-left:20px; list-style-image: url('{{ asset('bundles/ffbb/images/puce-mini.png') }}')">
-                            {% for terrainNeutre in terrainsNeutres %}
-                                <li> {{ terrainNeutre }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-
-                </div>
-                <form style="padding-left:20px;"  action="{{ path('ffbb_lancer_producer', {'idGroupe':idGroupe}) }}" method="POST" onsubmit="msgLancementTerrainNeutre()">
-
-                    <input type="hidden" name="rencontre" value="terrainNeutre">
-
-                    <button type="submit" class="btn btn-default-rencontre  pull-right">Lancer le calcul </button>
-
-
-                </form>
-                {% else %}
-
-                    <p style="padding-left: 15px; padding-top: 10px;"> Vous n'avez pas sélectionné de lieux supplémentaires pour votre recherche</p>
-
-                {% endif %}
-
-            </div>
-
-
-
-            <!-- /.col-lg-4 -->
-        </div>
-        <!-- /.row -->
-
+        {# Bloc affichage des resultats sur les cartes #}
         <div class="row" style="padding-top: 20px">
+            <h3 class="page-header">Vos résultats</h3>
             <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-heading col-lg-12">
@@ -723,10 +656,73 @@
             <!-- /.col-lg-12 -->
         </div>
 
-        <div>
+        {# Bloc options de calcul #}
+        <div class="row">
+            <h3 class="page-header">Relancer avec de nouvelles options de calcul</h3>
+            <div class="col-lg-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Type de lieu
+                    </div>
+
+                    <form style="padding-left:20px;" action="{{ path('ffbb_lancer_producer', {'idGroupe':idGroupe}) }}" method="POST" onsubmit="msgLancement()">
+
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="rencontre" id="meilleurLieuOption" value="meilleurLieu"
+                                       disabled>
+                                Lieux définis
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="rencontre" id="BarycentreOption" value="barycentre" required>
+                                Barycentre
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-default-rencontre  pull-right" style="margin-top: 20px">Lancer le calcul
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="panel panel-red" style="resize:vertical; overflow-y:auto;">
+                    <div class="panel-heading">
+                        Lieux possibles
+                    </div>
+                    {% if terrainsNeutres  is defined and terrainsNeutres is not null%}
+                    <div class="panel-body" style="min-height: 150px; max-height: 190px">
+                        <ul class="list-unstyled" style="padding-left:20px; list-style-image: url('{{ asset('bundles/ffbb/images/puce-mini.png') }}')">
+                            {% for terrainNeutre in terrainsNeutres %}
+                                <li> {{ terrainNeutre }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                </div>
+                <form style="padding-left:20px;"  action="{{ path('ffbb_lancer_producer', {'idGroupe':idGroupe}) }}" method="POST" onsubmit="msgLancementTerrainNeutre()">
+
+                    <input type="hidden" name="rencontre" value="terrainNeutre">
+
+                    <button type="submit" class="btn btn-default-rencontre  pull-right">Lancer le calcul </button>
 
 
+                </form>
+                {% else %}
+
+                    <p style="padding-left: 15px; padding-top: 10px;"> Vous n'avez pas sélectionné de lieux supplémentaires pour votre recherche</p>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- /.col-lg-4 -->
         </div>
+        <!-- /.row -->
 
     </div>
     <!-- /#page-wrapper -->

@@ -1,8 +1,13 @@
+{# declaration du lien d'activation #}
+{%  set lien = "http://"~base_url~path('admin_user_activate', {'idUser': idUser}) %}
+
+{# corps du mail#}
 Bonjour,
 <br><br>
 
-Pour activer votre compte, merci de vous rendre sur ce <a href="http://{{ base_url }}{{ path('admin_user_activate', {'idUser': idUser}) }}"> lien</a>.
+Pour activer votre compte, merci de vous rendre sur ce lien: <a href={{ lien }}> {{ lien }}</a>.
 
 <br> <br>
-Cordialement,
-L'équipe
+Cordialement,<br>
+L'équipe d’Optimouv<br>
+support@optimouv.net

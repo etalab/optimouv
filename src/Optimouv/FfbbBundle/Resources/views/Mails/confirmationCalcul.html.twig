@@ -1,15 +1,16 @@
+{# declaration du lien du rapport #}
 {%  set lien = "http://"~base_url~path('ffbb_consulter_rapport', {'idRapport': idRapport, 'typeAction': typeAction}) %}
+
+{# corps du mail#}
 Bonjour,<br><br>
 
 Le résultat de votre calcul est disponible.<br>
 
-Vous pouvez le consulter en cliquant sur ce lien : <br>
-<a href={{ lien }}> {{ lien }}</a>
-<br><br>
+Vous pouvez le consulter en cliquant sur ce lien : <a href={{ lien }}> {{ lien }}</a>
 
-Optimouv<br>
-<a href={{ expediteurEmail }}> {{ expediteurEmail }}</a>
-
-{#{{ expediteurEmail }}#}
+<br> <br>
+Cordialement,<br>
+L'équipe d’Optimouv<br>
+support@optimouv.net
 
 

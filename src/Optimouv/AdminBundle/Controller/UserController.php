@@ -6,6 +6,10 @@ use Optimouv\AdminBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * Class UserController
+ * @package Optimouv\AdminBundle\Controller
+ */
 class UserController extends Controller
 {
     public function userAddAction()
@@ -20,7 +24,7 @@ class UserController extends Controller
         //test si utilisateur connecté
         if(!is_string($user)){
             $roleUser = $user->getRoles();
-            
+
             //connecté en tant qu'admin fédéral
             if (in_array('ROLE_ADMIN',$roleUser)) {
 
@@ -31,7 +35,7 @@ class UserController extends Controller
                     'federation' => $federation
                 ));
 
-            }          
+            }
             //connecté en tant qu'admin général
             elseif (in_array('ROLE_SUPER_ADMIN',$roleUser)){
 
@@ -40,11 +44,11 @@ class UserController extends Controller
 
                 //récuperation de la liste de discipline
                 $disciplines = $this->get('service_poules')->getListDiscipline();
-                
+
                 return $this->render('AdminBundle:User:addByAdmin.html.twig', array(
                     "liste_federation" => $federations,
                     "liste_disciplines" => $disciplines
-                ));   
+                ));
             }
         }
         else{
@@ -61,10 +65,11 @@ class UserController extends Controller
                 "liste_disciplines" => $disciplines
             ));
         }
-       
+
 
 
     }
+
 
     public function userCreateAction()
     {
@@ -256,7 +261,7 @@ class UserController extends Controller
             ));
 
         $message = \Swift_Message::newInstance()
-            ->setSubject('Activation de votre compte')
+            ->setSubject('OPTIMOUV - Activation de votre compte')
             ->setFrom(array($mailer_sender => $sender_name))
             ->setTo($email)
             ->setBody($body, 'text/html')

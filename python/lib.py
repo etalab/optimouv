@@ -1709,8 +1709,9 @@ def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coord
 				if data["response"]["type"] == "SystemError":
 					reportName = get_report_name_from_report_id(reportId)
 					contentText = u"Bonjour,\n\n" 
-					contentText += u"Optimouv rencontre un problème de licence.\n"
-					contentText += u"Veuillez contacter votre administrateur. "
+					contentText += u"Optimouv rencontre un problème de licence Here.\n"
+					contentText += u"Veuillez contacter votre administrateur système."
+					contentText += u"Cordialement,\n \n L'équipe d’Optimouv \n support@optimouv.net"
 					send_email_to_user_failure_with_text(userId, reportId, contentText)
 			else:
 			
@@ -2568,7 +2569,7 @@ def send_email_to_user_failure(userId, reportId):
 		contentText = u"Bonjour,\n\n" 
 		contentText += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
 		contentText += u"Veuillez modifier vos critères et contraintes et relancer un calcul. \n\n" 
-		contentText += u"Optimouv\n"
+		contentText += u"Cordialement,\n \n L'équipe d’Optimouv \n support@optimouv.net"
 		contentText += u"%s\n"%(senderAccount)
 
 		send_email_to_user_failure_with_text(userId, reportId, contentText)
