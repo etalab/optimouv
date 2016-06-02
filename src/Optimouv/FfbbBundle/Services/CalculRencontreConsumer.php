@@ -31,6 +31,10 @@ class CalculRencontreConsumer implements ConsumerInterface
     private $mailer_sender;
     private $here_request_limit;
     private $sender_name;
+    /**
+     * @var FonctionsCommunes $fonctionsCommunes
+     */
+    protected $fonctionsCommunes;
 
 
     /**
@@ -38,7 +42,7 @@ class CalculRencontreConsumer implements ConsumerInterface
      */
     protected $serviceStatistiques;
 
-    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, ContainerInterface $container, $mailer, EngineInterface $templating, $serviceStatistiques, $mailer_user, $base_url, $mailer_sender, $here_request_limit, $sender_name)
+    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, ContainerInterface $container, $mailer, EngineInterface $templating, $serviceStatistiques, $mailer_user, $base_url, $mailer_sender, $here_request_limit, $sender_name, $fonctionsCommunes)
     {
         $this->database_host = $database_host;
         $this->database_name = $database_name;
@@ -56,7 +60,7 @@ class CalculRencontreConsumer implements ConsumerInterface
         $this->mailer_sender = $mailer_sender;
         $this->here_request_limit = $here_request_limit;
         $this->mailer_sender = $mailer_sender;
-
+        $this->fonctionsCommunes = $fonctionsCommunes;
     }
 
     public function connexion()
@@ -134,9 +138,11 @@ class CalculRencontreConsumer implements ConsumerInterface
         $error_log_path = $this->error_log_path;
         $database_host = $this->database_host;
         $here_request_limit = $this->here_request_limit;
+        $fonctionsCommunes = $this->fonctionsCommunes;
+        $serviceStatistiques = $this->serviceStatistiques;
 
         //Appel de la classe
-        $serviceRencontre = new Rencontres($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $this->serviceStatistiques, $here_request_limit);
+        $serviceRencontre = new Rencontres($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $serviceStatistiques, $here_request_limit, $fonctionsCommunes);
 
 
 

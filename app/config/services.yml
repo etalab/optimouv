@@ -18,7 +18,7 @@ services:
 
     service_calcul_rencontre:
         class: Optimouv\FfbbBundle\Services\CalculRencontreConsumer
-        arguments: ["%database_host%", "%database_name%", "%database_user%", "%database_password%", "%app_id%", "%app_code%", "%error_log_path%", "@service_container", "@mailer", "@templating", "@service_statistiques", "%mailer_user%", "%base_url%", "%mailer_sender%", "%here_request_limit%", "%sender_name%" ]
+        arguments: ["%database_host%", "%database_name%", "%database_user%", "%database_password%", "%app_id%", "%app_code%", "%error_log_path%", "@service_container", "@mailer", "@templating", "@service_statistiques", "%mailer_user%", "%base_url%", "%mailer_sender%", "%here_request_limit%", "%sender_name%", "@service_fonctions_communes" ]
 
     service_statistiques:
         class: Optimouv\FfbbBundle\Services\Statistiques
