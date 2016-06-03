@@ -1420,7 +1420,18 @@ class Listes{
                         }
                     }
                 }
+
+                // si on n'a pas trouve prio 2 alors on cherche prio 3
+                if ($ideal === false) {
+                    foreach ($result as $line) {
+                        if ($line['prio'] == 3) {
+                            $ideal = $line['ville_id'];
+                            break;
+                        }
+                    }
+                }
             }
+
 
             // test si pas de ville idéale et plus de 1 ville approximative
             if ($count >= 2 && $ideal === false) {

@@ -31,6 +31,10 @@ class CalculRencontreConsumer implements ConsumerInterface
     private $mailer_sender;
     private $here_request_limit;
     private $sender_name;
+    /**
+     * @var FonctionsCommunes $fonctionsCommunes
+     */
+    protected $fonctionsCommunes;
 
 
     /**
@@ -38,7 +42,7 @@ class CalculRencontreConsumer implements ConsumerInterface
      */
     protected $serviceStatistiques;
 
-    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, ContainerInterface $container, $mailer, EngineInterface $templating, $serviceStatistiques, $mailer_user, $base_url, $mailer_sender, $here_request_limit, $sender_name)
+    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, ContainerInterface $container, $mailer, EngineInterface $templating, $serviceStatistiques, $mailer_user, $base_url, $mailer_sender, $here_request_limit, $sender_name, $fonctionsCommunes)
     {
         $this->database_host = $database_host;
         $this->database_name = $database_name;
@@ -56,7 +60,7 @@ class CalculRencontreConsumer implements ConsumerInterface
         $this->mailer_sender = $mailer_sender;
         $this->here_request_limit = $here_request_limit;
         $this->mailer_sender = $mailer_sender;
-
+        $this->fonctionsCommunes = $fonctionsCommunes;
     }
 
     public function connexion()
@@ -134,12 +138,12 @@ class CalculRencontreConsumer implements ConsumerInterface
         $error_log_path = $this->error_log_path;
         $database_host = $this->database_host;
         $here_request_limit = $this->here_request_limit;
+        $fonctionsCommunes = $this->fonctionsCommunes;
+        $serviceStatistiques = $this->serviceStatistiques;
 
         //Appel de la classe
-        $serviceRencontre = new Rencontres($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $this->serviceStatistiques, $here_request_limit);
-
-
-
+        $serviceRencontre = new Rencontres($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $serviceStatistiques, $here_request_limit, $fonctionsCommunes);
+        
         if($typeAction == "barycentre"){
 
 
@@ -150,20 +154,13 @@ class CalculRencontreConsumer implements ConsumerInterface
                 $idCalcul = $this->stockerResultats($msg, $retour["donneesRetour"]);
 
                 if ($idCalcul) {
-
                     $statut = 2;
-
                     $this->updateSatut($msg, $statut);
                     $this->sendMail($msg, $typeAction, 0 );
-
-
                 }
             }
 
-
-
-
-         }
+        }
         elseif($typeAction == "exclusion"){
 
             $retourBarycentre = $serviceRencontre->Barycentre($idGroupe);
@@ -178,15 +175,11 @@ class CalculRencontreConsumer implements ConsumerInterface
                 $idCalcul = $this->stockerResultats($msg, $retour);
 
                 if ($idCalcul) {
-
                     $statut = 2;
-
                     $this->updateSatut($msg, $statut);
                     $this->sendMail($msg, $typeAction, 0 );
                 }
-
             }
-
         }
         elseif($typeAction == "meilleurLieu"){
             $retourOp = $serviceRencontre->meilleurLieuRencontre($idGroupe);
@@ -204,12 +197,9 @@ class CalculRencontreConsumer implements ConsumerInterface
                 if ($idCalcul) {
 
                     $statut = 2;
-
                     $this->updateSatut($msg, $statut);
                     $this->sendMail($msg, $typeAction, 0 );
-
                 }
-
             }
             else{
                 // l'envoi d'un email d'erreur
@@ -217,8 +207,6 @@ class CalculRencontreConsumer implements ConsumerInterface
                 $this->sendMail($msg, $typeAction, $retourOp["codeErreur"] );
 
             }
-
-
         }
         elseif($typeAction == "terrainNeutre"){
 
@@ -254,18 +242,14 @@ class CalculRencontreConsumer implements ConsumerInterface
                 elseif(is_array($retourEq) && array_key_exists("success", $retourEq) && array_key_exists("codeErreur", $retourEq)  && $retourEq["success"] === FALSE ){
                     $this->sendMail($msg, $typeAction, $retourEq["codeErreur"] );
                 }
-
             }
-
         }
         else{
 
             die("type de job non reconnu!");
         }
 
-
-
-
+        
         # noter le temps de fin de traitement
         $tempsFin = new \DateTime();
 
@@ -370,7 +354,7 @@ class CalculRencontreConsumer implements ConsumerInterface
     public function sendMail($idRapport, $typeAction, $statut)
     {
         $expediteurEmail = $this->mailer_sender;
-        $mailer_sender = $this->mailer_sender;
+        $sender_name = $this->sender_name;
         $userEmail = $this->getUserEmail($idRapport);
 
         // cas de succès
@@ -385,9 +369,9 @@ class CalculRencontreConsumer implements ConsumerInterface
 
         $message = \Swift_Message::newInstance()
             ->setSubject('OPTIMOUV - mise à disposition de vos résultats de calculs')
-            ->setFrom(array($expediteurEmail => $mailer_sender))
+            ->setFrom(array($expediteurEmail => $sender_name))
             ->setTo($userEmail)
-            ->setBody($body, 'text/plain')
+            ->setBody($body, 'text/html')
         ;
         $this->container->get('mailer')->send($message);
 

@@ -37,7 +37,6 @@
                                        id="tableFede">
                                     <thead>
                                     <tr>
-                                        <th>Login</th>
                                         <th>Nom </th>
                                         <th>Prénom </th>
                                         <th>Fédération </th>
@@ -55,7 +54,6 @@
                                     {% for user in users %}
                                         {% if (user.id != idUser) and (user.id != 1) %}
                                         <tr id="{{ user.id }}">
-                                            <td> {{ user.username }} </td>
                                             <td> {{ user.nom }} </td>
                                             <td> {{ user.prenom }} </td>
                                             <td>
