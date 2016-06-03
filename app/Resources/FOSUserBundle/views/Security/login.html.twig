@@ -1,16 +1,10 @@
 {% extends "FOSUserBundle::layout.html.twig" %}
 
 {% block fos_user_content %}
-{#{% if error %}#}
-    {#<div>{{ error|trans({}, 'FOSUserBundle') }}</div>#}
-{#{% endif %}#}
-
-
-    <br>
-    <div class="row">
+     <div class="row" style="margin-top: 50px">
         <div class="row">
             <div class="col-lg-3"></div>
-            <div class="col-md-6">
+            <div class="col-lg-6">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div class="text-center">
@@ -42,6 +36,11 @@
                                 </form><!--/end form-->
 
                             </div>
+                            {% if error %}
+                                <div>
+                                    <i style="color: #9e2e21;"> Erreur d'authentification. Veuillez vérifier vos paramètres de connexion.</i>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
