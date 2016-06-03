@@ -387,19 +387,7 @@ class UserController extends Controller
         $params['id'] = $idUser;
         $params['nom'] = $_POST['nom'];
         $params['prenom'] = $_POST['prenom'];
-        $params['login'] = $_POST['username'];
-        $params['email'] = $_POST['email'];
         $params['tel'] = $_POST['tel'];
-//        $password = $_POST['password'];
-
-        /*
-        //encrypt password
-        $factory = $this->get('security.encoder_factory');
-        $user = $em->getRepository('AdminBundle:User')->findOneById($idUser);
-        $encoder = $factory->getEncoder($user);
-        $params['password'] = $encoder->encodePassword($password, $user->getSalt());
-*/
-
         $params['adresse'] = $_POST['adresse'];
         $params['numLicencie'] = $_POST['numLicencie'];
 
@@ -412,7 +400,7 @@ class UserController extends Controller
             $roleUser = $user->getRoles();
 
             if($idAdmin == $idUser){
-                return $this->redirect($this->generateUrl('ffbb_accueil_connect '));
+                return $this->redirectToRoute('ffbb_accueil_connect');
             }
 
             elseif(in_array('ROLE_ADMIN',$roleUser) or in_array('ROLE_SUPER_ADMIN',$roleUser)){
