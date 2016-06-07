@@ -23,13 +23,14 @@ class ResettingController extends Controller
         $idUser = $user->getId();
         $emailUser = $user->getEmail();
         $username = $user->getUsername();
+        $token = $user->getToken();
 
         //récupération des params d'envoies de mail
         $mailer_sender = $this->container->getParameter('mailer_sender');
         $sender_name = $this->container->getParameter('sender_name');
         $body = $this->renderView('AdminBundle:Mails:resetting.html.twig',
             array(
-                'idUser' => $idUser,
+                'idUser' => $token,
                 'username' => $username
 
                 ));
@@ -68,7 +69,7 @@ class ResettingController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        $username =  $em->getRepository('AdminBundle:User')->findOneById($idUser)->getUsername();
+        $username =  $em->getRepository('AdminBundle:User')->findOneByToken($idUser)->getUsername();
         $user = $this->container->get('fos_user.user_manager')->findUserByUsernameOrEmail($username);
 
         //encrypt password
@@ -78,9 +79,9 @@ class ResettingController extends Controller
 
         $connection = $em->getConnection();
 
-        $update = $connection->prepare("UPDATE fos_user SET password = :password WHERE id = :id");
+        $update = $connection->prepare("UPDATE fos_user SET password = :password WHERE token = :token");
         $update->bindParam(':password', $password);
-        $update->bindParam(':id', $idUser);
+        $update->bindParam(':token', $idUser);
         $update->execute();
 
         if($role){

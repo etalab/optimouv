@@ -17,7 +17,7 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
             ->update('AdminBundle:User', 'u')
             ->set('u.enabled' , '?1')
             ->set('u.locked' , '?2')
-            ->where('u.id = ?3')
+            ->where('u.token = ?3')
             ->setParameter(1, true)
             ->setParameter(2, false)
             ->setParameter(3, $idUser)
@@ -35,11 +35,13 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
             ->set('u.enabled' , '?1')
             ->set('u.expiresAt' , '?2')
             ->set('u.locked' , '?3')
-            ->where('u.id = ?4')
+            ->set('u.expired' , '?4')
+            ->where('u.id = ?5')
             ->setParameter(1, true)
             ->setParameter(2, null)
             ->setParameter(3, false)
-            ->setParameter(4, $idUser)
+            ->setParameter(4, false)
+            ->setParameter(5, $idUser)
             ->getQuery();
 
         $activation = $query->execute();
@@ -53,9 +55,11 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
         $query = $this->createQueryBuilder('G')
             ->update('AdminBundle:User', 'u')
             ->set('u.enabled' , '?1')
-            ->where('u.id = ?2')
+            ->set('u.expired' , '?2')
+            ->where('u.id = ?3')
             ->setParameter(1, false)
-            ->setParameter(2, $idUser)
+            ->setParameter(2, true)
+            ->setParameter(3, $idUser)
             ->getQuery();
 
         $activation = $query->execute();
@@ -91,12 +95,15 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
 
         $query = $this->createQueryBuilder('G')
             ->update('AdminBundle:User', 'u')
+            ->set('u.username' , '?1')
             ->set('u.telephone' , '?4')
             ->set('u.adresse' , '?5')
             ->set('u.numLicencie' , '?6')
             ->set('u.nom' , '?7')
             ->set('u.prenom' , '?8')
             ->where('u.id = ?9')
+            ->setParameter(1, $params['login'])
+            ->setParameter(2, $params['email'])
             ->setParameter(4, $params['tel'])
             ->setParameter(5, $params['adresse'])
             ->setParameter(6, $params['numLicencie'])

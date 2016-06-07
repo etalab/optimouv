@@ -172,6 +172,9 @@ class UserController extends Controller
             echo '<h2>Erreur de validation de captcha. Contactez votre administrateur.</h2>';
         }
 
+        //generer un identifiant unique pour l'utilisateur
+        $token = uniqid('op');
+
         //tester si l'utilisateur existe
         $user = $this->getDoctrine()
             ->getRepository('AdminBundle:User')
@@ -202,6 +205,7 @@ class UserController extends Controller
             $user->setAdresse($adresse);
             $user->setNumLicencie($numLicencie);
             $user->setDateCreation($dateCreation);
+            $user->setToken($token);
 
             if($role == "admin"){
                 $user->setRoles(array('ROLE_ADMIN'));
@@ -223,7 +227,7 @@ class UserController extends Controller
             $em->persist($user);
             $em->flush();
             $idUser = $user->getId();
-            $sendingMail = $this->sendMail($idUser, $email);
+            $sendingMail = $this->sendMail($token, $email);
             if($sendingMail){
 
                 //tester si ustilisateur connecté
@@ -248,7 +252,7 @@ class UserController extends Controller
 
     }
 
-    public function sendMail($idUser, $email)
+    public function sendMail($token, $email)
     {
 
         $mailer_sender = $this->container->getParameter('mailer_sender');
@@ -256,7 +260,7 @@ class UserController extends Controller
 
         $body = $this->renderView('AdminBundle:Mails:register.html.twig',
             array(
-                'idUser' => $idUser,
+                'idUser' => $token,
 
             ));
 
