@@ -295,15 +295,16 @@ class Rencontres
                 $lanX = $coordVille[0];
                 $latY = $coordVille[1];
 
-                $stmt1 = $bdd->prepare("SELECT ville, code_postal from entite where longitude = :longitude AND latitude = :latitude");
+                $stmt1 = $bdd->prepare("SELECT nom, ville, code_postal from entite where longitude = :longitude AND latitude = :latitude");
                 $stmt1->bindParam(':longitude', $latY);
                 $stmt1->bindParam(':latitude', $lanX);
                 $stmt1->execute();
                 $maVille = $stmt1->fetch(PDO::FETCH_ASSOC);
                 $codePostal = $maVille['code_postal'];
                 $nomVille = $maVille['ville'];
+                $nomEntite = $maVille['nom'];
 
-                $villeDepart = $codePostal." | ".$nomVille;
+                $villeDepart = $codePostal." | ".$nomEntite." | ".$nomVille;
 
 
                 $mesVillesXY = $coordonneesVilles[$key];
@@ -392,7 +393,12 @@ class Rencontres
 
         $lanX = $lan / $length;
         $latY = $lat / $length;
-       
+
+        //ramener le nom du groupe pour l'attribuer au nom du barycentre
+        $nomGroupe = $bdd->prepare("SELECT nom from groupe where id = :id");
+        $nomGroupe->bindParam(':id', $idGroupe);
+        $nomGroupe->execute();
+        $nomGroupe = $nomGroupe->fetchColumn();
 
         $stmt1 = $bdd->prepare("SELECT ville_nom, ville_longitude_deg, ville_latitude_deg, ville_code_postal,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
                                 from villes_france_free
@@ -404,7 +410,7 @@ class Rencontres
         $lanX = $result['ville_longitude_deg'];
         $ville = $result['ville_nom'];
         $codePostal = $result['ville_code_postal'];
-        $nom = 'Barycentre_Groupe_' . $idGroupe;
+        $nom = 'Barycentre_' . $nomGroupe;
         
         //vérifier si le barycentre existe deja
         $barycentre = $bdd->prepare("SELECT id from entite where longitude = :longitude AND latitude = :latitude");
@@ -441,7 +447,6 @@ class Rencontres
     //Calcul exclusion géographique
     public function Exclusion($valeurExclusion, $idGroupe)
     {
-
 
         $bdd= Rencontres::connexion();
 
@@ -492,7 +497,13 @@ class Rencontres
             $barycentre->execute();
             $res = $barycentre->fetchColumn();
 
-            $nom = 'Barycentre_Groupe_' . $idGroupe;
+            //ramener le nom du groupe pour l'attribuer au nom du barycentre
+            $nomGroupe = $bdd->prepare("SELECT nom from groupe where id = :id");
+            $nomGroupe->bindParam(':id', $idGroupe);
+            $nomGroupe->execute();
+            $nomGroupe = $nomGroupe->fetchColumn();
+
+            $nom = 'Barycentre_' . $nomGroupe;
             //recuperer la date du jour
             $date = new \DateTime();
             $dateCreation = $date->format('Y-m-d');
@@ -687,7 +698,7 @@ class Rencontres
 
 
         //////////////////////
-        $stmt1 = $bdd->prepare("SELECT ville, code_postal from entite where longitude=:longitude and latitude = :latitude ;");
+        $stmt1 = $bdd->prepare("SELECT nom, ville, code_postal from entite where longitude=:longitude and latitude = :latitude ;");
 
         $stmt1->bindParam(':longitude', $lanX);
         $stmt1->bindParam(':latitude', $latY);
@@ -695,8 +706,9 @@ class Rencontres
         $result = $stmt1->fetch(PDO::FETCH_ASSOC);
         $codePostal = $result['code_postal'];
         $nomVille = $result['ville'];
+        $nomEntite = $result['nom'];
 
-        $barycentreVille = $codePostal." | ".$nomVille;
+        $barycentreVille = $codePostal." | ".$nomEntite." | ".$nomVille;
 
 
         if (!$barycentreVille) {
@@ -711,7 +723,7 @@ class Rencontres
             $codePostal = $result['ville_code_postal'];
             $nomVille = $result['ville_nom'];
 
-            $barycentreVille = $nomVille." | ".$codePostal;
+            $barycentreVille = $codePostal." | ".$nomVille;
 
         }
 
@@ -848,15 +860,16 @@ class Rencontres
             //Récupérer les noms de villes de destination
             $mesVilles = Rencontres::mesVilles($equipe);
 
-            $stmt1 = $bdd->prepare("SELECT code_postal, ville from entite where longitude = :longitude AND latitude = :latitude");
+            $stmt1 = $bdd->prepare("SELECT code_postal, ville, nom from entite where longitude = :longitude AND latitude = :latitude");
             $stmt1->bindParam(':longitude', $latY);
             $stmt1->bindParam(':latitude', $lanX);
             $stmt1->execute();
             $maVille = $stmt1->fetch(PDO::FETCH_ASSOC);
             $codePostal = $maVille['code_postal'];
             $nomVille = $maVille['ville'];
+            $nomEntite = $maVille['nom'];
 
-            $maVille = $codePostal." | ".$nomVille;
+            $maVille = $codePostal." | ".$nomEntite." | ".$nomVille;
 
 
             //récupérer le nombre de participant pour chaque entité
@@ -977,15 +990,16 @@ class Rencontres
             //Récupérer les noms de villes de destination
             $mesVilles = Rencontres::mesVilles($equipe);
 
-            $stmt1 = $bdd->prepare("SELECT code_postal, ville from entite where longitude = :longitude AND latitude = :latitude");
+            $stmt1 = $bdd->prepare("SELECT code_postal, ville, nom from entite where longitude = :longitude AND latitude = :latitude");
             $stmt1->bindParam(':longitude', $latY);
             $stmt1->bindParam(':latitude', $lanX);
             $stmt1->execute();
             $maVille = $stmt1->fetch(PDO::FETCH_ASSOC);
             $codePostal = $maVille['code_postal'];
             $nomVille = $maVille['ville'];
+            $nomEntite = $maVille['nom'];
 
-            $maVille = $codePostal." | ".$nomVille;
+            $maVille = $codePostal." | ".$nomEntite." | ".$nomVille;
 
             //récupérer le nombre de participant pour chaque entité
             $nbrParticipants = Rencontres::getNombreParticipants($idsEntitesMerge);
@@ -1035,14 +1049,15 @@ class Rencontres
         $villes = [];
 
         for ($i = 0; $i < count($reqVilles); $i++) {
-            $stmt = $bdd->prepare("SELECT ville, code_postal FROM  entite WHERE id = :idEntite ;");
+            $stmt = $bdd->prepare("SELECT nom, ville, code_postal FROM  entite WHERE id = :idEntite ;");
             $stmt->bindParam(':idEntite', $reqVilles[$i]);
             $stmt->execute();
             $maVille = $stmt->fetch(PDO::FETCH_ASSOC);
             $codePostal = $maVille['code_postal'];
             $nomVille = $maVille['ville'];
+            $nomEntite = $maVille['nom'];
 
-            $maVille = $codePostal." | ".$nomVille;
+            $maVille = $codePostal." | ".$nomEntite." | ".$nomVille;
 
             array_push($villes, $maVille);
 
@@ -1066,15 +1081,16 @@ class Rencontres
             $lanX = $start[0];
             $latY = $start[1];
 
-            $stmt1 = $bdd->prepare("SELECT code_postal, ville from entite where longitude = :longitude AND latitude = :latitude");
+            $stmt1 = $bdd->prepare("SELECT code_postal, ville, nom from entite where longitude = :longitude AND latitude = :latitude");
             $stmt1->bindParam(':longitude', $latY);
             $stmt1->bindParam(':latitude', $lanX);
             $stmt1->execute();
             $maVille = $stmt1->fetch(PDO::FETCH_ASSOC);
             $codePostal = $maVille['code_postal'];
             $nomVille = $maVille['ville'];
+            $nomEntite = $maVille['nom'];
 
-            $maVille = $codePostal." | ".$nomVille;
+            $maVille = $codePostal." | ".$nomEntite." | ".$nomVille;
 
             //Ramener tous les noms des villes
             array_push($mesVilles, $maVille);
@@ -1329,7 +1345,7 @@ class Rencontres
 
             for ($i = 0; $i < count($listeLieux); $i++) {
                 //
-                $stmt = $bdd->prepare("SELECT id, ville, code_postal, longitude, latitude FROM  entite WHERE id = :id");
+                $stmt = $bdd->prepare("SELECT id, nom, ville, code_postal, longitude, latitude FROM  entite WHERE id = :id");
                 $stmt->bindParam(':id', $listeLieux[$i]);
                 $stmt->execute();
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -1338,6 +1354,7 @@ class Rencontres
                     $lat = $row['latitude'];
                     $long = $row['longitude'];
                     $nomVille = $row['ville'];
+                    $nomEntite = $row['nom'];
                     $codePostal = $row['code_postal'];
 
 
@@ -1345,7 +1362,7 @@ class Rencontres
                     if ($long && $lat) {
                         $coordVille = $lat . '%2C' . $long;
                         //ramner le nom de la ville concatiner avec le code postal
-                        $ville =  $codePostal." | ".$nomVille;
+                        $ville =  $codePostal." | ".$nomEntite." | ".$nomVille;
                         array_push($nomsVilles, $ville);
                         array_push($coordVilles, $coordVille);
                     } // sinon il faut interroger le serveur HERE
@@ -1380,16 +1397,12 @@ class Rencontres
                         $update->bindParam(':id', $idVille);
                         $update->execute();
                         //ramner le nom de la ville concatiner avec le code postal
-                        $ville =  $codePostal." | ".$nomVille;
+                        $ville =  $codePostal." | ".$nomEntite." | ".$nomVille;
                         array_push($nomsVilles, $ville);
                         array_push($coordVilles, $coordVille);
 
                     }
-
-
                 }
-
-
             }
 
             # incrémenter le nombre des requetes HERE
@@ -1540,12 +1553,9 @@ class Rencontres
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
 
-
-
         return $idScenario;
 
     }
-
 
     private function getDistanceTotale($distanceEquipe, $nbrParticipants){
 

@@ -14,7 +14,7 @@
                        id="tableRapport">
                     <thead>
                     <tr>
-                        {#<th>No</th>#}
+                        <th  style="display: none">No</th>
                         <th>Nom du rapport</th>
                         <th>Caractéristiques du rapport</th>
                         <th>Fichier</th>
@@ -35,7 +35,7 @@
                         {% if infoRapport.typeActionRapport in rencontre %}
                             <tr id="{{ infoRapport.idRapport }}">
 
-                                {#<td> {{ infoRapport.idRapport }} </td>#}
+                                <td  style="display: none"> {{ infoRapport.idRapport }} </td>
                                 <td> {{ infoRapport.nomRapport }} </td>
 
 
@@ -140,7 +140,7 @@
                        id="tableRapportPoule">
                     <thead>
                     <tr>
-                        {#<th>No</th>#}
+                        <th  style="display: none">No</th>
                         <th>Nom du rapport</th>
                         <th>Caractéristiques du rapport</th>
                         <th>Fichier</th>
@@ -161,7 +161,7 @@
                         {% if infoRapport.typeActionRapport not in rencontre %}
                             <tr id="{{ infoRapport.idRapport }}">
 
-                                {#<td> {{ infoRapport.idRapport }} </td>#}
+                                <td  style="display: none"> {{ infoRapport.idRapport }} </td>
                                 <td> {{ infoRapport.nomRapport }} </td>
 
                                 {% if infoRapport.typeActionRapport == "allerRetour" %}

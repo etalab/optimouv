@@ -16,7 +16,7 @@
                        id="tableRapportAdmin">
                     <thead>
                     <tr>
-                        {#<th>No</th>#}
+                        <th  style="display: none">No</th>
                         <th>Nom du rapport</th>
                         <th>Caractéristiques du rapport</th>
                         <th>Fichier</th>
@@ -37,7 +37,7 @@
                         {% if (infoRapport.typeActionRapport in rencontre) and (infoRapport.idUtilisateur == idUser)%}
                             <tr id="{{ infoRapport.idRapport }}">
 
-                                {#<td> {{ infoRapport.idRapport }} </td>#}
+                                <td  style="display: none"> {{ infoRapport.idRapport }} </td>
                                 <td> {{ infoRapport.nomRapport }} </td>
 
 
@@ -141,7 +141,7 @@
                        id="tableRapportPouleAdmin">
                     <thead>
                     <tr>
-                        {#<th>No</th>#}
+                        <th  style="display: none">No</th>
                         <th>Nom du rapport</th>
                         <th>Caractéristiques du rapport</th>
                         <th>Fichier</th>
@@ -162,7 +162,7 @@
                         {% if (infoRapport.typeActionRapport not in rencontre) and (infoRapport.idUtilisateur == idUser) %}
                             <tr id="{{ infoRapport.idRapport }}">
 
-                                {#<td> {{ infoRapport.idRapport }} </td>#}
+                                <td  style="display: none"> {{ infoRapport.idRapport }} </td>
                                 <td> {{ infoRapport.nomRapport }} </td>
 
                                 {% if infoRapport.typeActionRapport == "allerRetour" %}
@@ -274,7 +274,7 @@
                        id="tableRapport">
                     <thead>
                     <tr>
-                        {#<th>No</th>#}
+                        <th  style="display: none">No</th>
                         <th>Nom du rapport</th>
                         <th>Caractéristiques du rapport</th>
                         <th>Fichier</th>
@@ -295,7 +295,7 @@
                         {% if (infoRapport.typeActionRapport in rencontre) and (infoRapport.idUtilisateur != idUser) %}
                             <tr id="{{ infoRapport.idRapport }}">
 
-                                {#<td> {{ infoRapport.idRapport }} </td>#}
+                                <td  style="display: none"> {{ infoRapport.idRapport }} </td>
                                 <td> {{ infoRapport.nomRapport }} </td>
 
 
@@ -341,15 +341,28 @@
                                             <button type="submit" class="btn btn-visualiser-rapport">
                                                 Visualiser
                                             </button>
+                                            <a href="{{ path('ffbb_editer_rapport', {idRapport: infoRapport.idRapport}) }}"
+                                               class="btn btn-ajouter-reparition">Renommer</a>
+                                            <button type="button" name="delete"
+                                                    class="btn btn-ajouter-reparition"
+                                                    onclick="deleteRapport({{ infoRapport.idRapport }})">
+                                                Supprimer
+                                            </button>
                                             
 
 
                                         </form>
                                     {% else %}
                                         <button type="submit" class="btn btn-visualiser-rapport"
-                                                disabled>Consulter
+                                                disabled>Visualiser
                                         </button>
-
+                                        <a href="{{ path('ffbb_editer_rapport', {idRapport: infoRapport.idRapport}) }}"
+                                           class="btn btn-ajouter-reparition">Renommer</a>
+                                        <button type="button" name="delete"
+                                                class="btn btn-ajouter-reparition"
+                                                onclick="deleteRapport({{ infoRapport.idRapport }})">
+                                            Supprimer
+                                        </button>
 
                                     {% endif %}
 
@@ -387,7 +400,7 @@
                        id="tableRapportPoule">
                     <thead>
                     <tr>
-                        {#<th>No</th>#}
+                        <th  style="display: none">No</th>
                         <th>Nom du rapport</th>
                         <th>Caractéristiques du rapport</th>
                         <th>Fichier</th>
@@ -408,7 +421,7 @@
                         {% if (infoRapport.typeActionRapport not in rencontre) and (infoRapport.idUtilisateur != idUser) %}
                             <tr id="{{ infoRapport.idRapport }}">
 
-                                {#<td> {{ infoRapport.idRapport }} </td>#}
+                                <td  style="display: none"> {{ infoRapport.idRapport }} </td>
                                 <td> {{ infoRapport.nomRapport }} </td>
 
                                 {% if infoRapport.typeActionRapport == "allerRetour" %}
@@ -452,7 +465,13 @@
                                             <button type="submit" class="btn btn-visualiser-rapport">
                                                 Visualiser
                                             </button>
-                                            
+                                            <a href="{{ path('ffbb_editer_rapport', {idRapport: infoRapport.idRapport}) }}"
+                                               class="btn btn-ajouter-reparition">Renommer</a>
+                                            <button type="button" name="delete"
+                                                    class="btn btn-ajouter-reparition"
+                                                    onclick="deleteRapport({{ infoRapport.idRapport }})">
+                                                Supprimer
+                                            </button>
 
 
                                         </form>
@@ -467,8 +486,6 @@
                                                 onclick="deleteRapport({{ infoRapport.idRapport }})">
                                             Supprimer
                                         </button>
-
-
                                     {% endif %}
 
                                 </td>
