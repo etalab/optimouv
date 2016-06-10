@@ -358,11 +358,20 @@ class UserController extends Controller
 
         //récupérer id utilisateur
         $idUser = $user->id;
-
         $user  = $em->getRepository('AdminBundle:User')->findOneById($idUser);
+
+        $federation = $user->getFederation();
+        $federation = explode('|', $federation);
+        $idFederation = $federation[0];
+        $nomFederation = $federation[1];
+
+        // récupérer id discipline
+        $disciplineUser = $user->getDiscipline()->getNom();
 
         return $this->render('AdminBundle:User:update.html.twig', [
             "user" => $user,
+            "nomFederation" => $nomFederation,
+            "disciplineUser" => $disciplineUser
 
         ]);
 
@@ -379,7 +388,7 @@ class UserController extends Controller
         $disciplinesFede =  $em->getRepository('FfbbBundle:Discipline')->findByFederation($idFederation);
 
         // récupérer id discipline
-        $disciplineUser = $user->getDiscipline();
+        $disciplineUser = $user->getDiscipline()->getNom();
 
 
         return $this->render('AdminBundle:User:update.html.twig', [
