@@ -376,25 +376,102 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $user  = $em->getRepository('AdminBundle:User')->findOneById($idUser);
+        $federation = $user->getFederation();
+        $federation = explode('|', $federation);
+        $idFederation = $federation[0];
+        $nomFederation = $federation[1];
+        $disciplinesFede =  $em->getRepository('FfbbBundle:Discipline')->findByFederation($idFederation);
+
+        // récupérer id discipline
+        $disciplineUser = $user->getDiscipline();
+
 
         return $this->render('AdminBundle:User:update.html.twig', [
             "user" => $user,
+            "nomFederation" => $nomFederation,
+            "disciplinesFede" => $disciplinesFede,
+            "disciplineUser" => $disciplineUser
 
         ]);
     }
     
     public function updateUserAction($idUser)
     {
+
         $em = $this->getDoctrine()->getManager();
-
-        $params =[];
+        $params = [];
         $params['id'] = $idUser;
-        $params['nom'] = $_POST['nom'];
-        $params['prenom'] = $_POST['prenom'];
-        $params['tel'] = $_POST['tel'];
-        $params['adresse'] = $_POST['adresse'];
-        $params['numLicencie'] = $_POST['numLicencie'];
+        //récupérer les anciennes valeurs
+        $user  = $em->getRepository('AdminBundle:User')->findOneById($idUser);
+        
 
+        if(isset($_POST['civilite'])){
+            $params['civilite'] = $_POST['civilite'];
+        }else{
+            $params['civilite'] = $user->getCivilite();
+        }
+        
+        if (isset($_POST['nom'])){
+            $params['nom'] = $_POST['nom'];
+        }else{
+            $params['nom'] = $user->getNom();
+        }
+
+        if(isset($_POST['prenom'])){
+            $params['prenom'] = $_POST['prenom'];
+        }else{
+            $params['prenom'] = $user->getPrenom();
+        }
+
+        if(isset($_POST['fonction'])){
+            $params['fonction'] = $_POST['fonction'];
+        }else{
+            $params['fonction'] = $user->getFonction();
+        }
+
+        if(isset($_POST['niveauUtilisateur'])){
+            $params['niveauUtilisateur'] = $_POST['niveauUtilisateur'];
+        }else{
+            $params['niveauUtilisateur'] = $user->getNiveauUtilisateur();
+        }
+
+        if(isset($_POST['discipline'])){
+            $params['discipline'] = $_POST['discipline'];
+        } else{
+            $params['discipline'] = $user->getDiscipline()->getId();
+        }
+
+        if(isset($_POST['profil'])){
+            if(($_POST['profil']  == "admin")){
+                $params['profil'] = serialize(array('ROLE_ADMIN'));
+            }else{
+                $params['profil'] = serialize([]);
+            }
+
+        } else{
+            $params['profil'] = $user->getRoles();
+        }
+        if(isset($_POST['tel'])){
+            $params['tel'] = $_POST['tel'];
+        } else{
+            $params['tel'] = $user->getTelephone();
+        }
+
+        if(isset($_POST['adresse'])){
+            $params['adresse'] = $_POST['adresse'];
+        }else{
+            $params['adresse'] =$user->getAdresse();
+        }
+
+        if(isset($_POST['numLicencie'])){
+            $params['numLicencie'] = $_POST['numLicencie'];
+        }else{
+            $params['numLicencie'] = $user->getNumLicencie();
+        }
+
+        $connection = $em->getConnection();
+        $statement = $connection->prepare('SET foreign_key_checks = 0');
+        $statement->execute();
         $update  = $em->getRepository('AdminBundle:User')->updateUser($params);
 
         if($update){

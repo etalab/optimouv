@@ -39,9 +39,27 @@
              {% set idUser = user.id %}
              <div class="row">
                  {# mise à jour informations générales #}
+                 {# afficher le role de l'utilisateur pour le super admin #}
+                 {% set userConnect = app.user %}
+
                  <div class="col-lg-6" style="border-right: #939393 solid ">
                      <form role="form" action="{{ path('administration_users_update', {idUser: idUser}) }}" method="post">
                          <input type="hidden" name="idFede" value="{{ idUser }}">
+
+                         {% set civilite = user.civilite %}
+                         <div class="form-group">
+                             <label>Civilité</label>
+                             <select class="form-control" name="civilite" id="civilite" >
+                                 {% if (civilite == 'monsieur') %}
+                                     <option value="monsieur" selected>Monsieur</option>
+                                     <option value="madame">Madame</option>
+                                 {% else %}
+                                     <option value="monsieur">Monsieur</option>
+                                     <option value="madame" selected>Madame</option>
+                                 {% endif %}
+
+                             </select>
+                         </div>
 
                          <div class="form-group">
                              <label >Nom </label>
@@ -54,9 +72,82 @@
                          </div>
 
                          <div class="form-group">
-                             <label  style="font-weight: bold">Email *</label>
+                             <label>Email </label>
                              <input type="text" class="form-control" name="email" value="{{ user.email }}" disabled>
                          </div>
+
+                         <div class="form-group">
+                             <label>Fonction</label>
+                             <input type="text" class="form-control"  name="fonction" id="fonction" value="{{ user.fonction }}">
+                         </div>
+                         {# récupérer l'ancienne valeur du niveau#}
+                         {% set niveau = user.niveauUtilisateur %}
+
+                         <div class="form-group">
+                             <label>Niveau utilisateur</label>
+                             <select name="niveauUtilisateur" class="form-control" required>
+                                 {% if niveau == 'national' %}
+                                     <option value="national" selected>National</option>
+                                     <option value="régional">Régional</option>
+                                     <option value="départemental">Départemental</option>
+                                 {% elseif niveau == 'régional' %}
+                                     <option value="national" >National</option>
+                                     <option value="régional" selected>Régional</option>
+                                     <option value="départemental">Départemental</option>
+                                 {% else %}
+                                     <option value="national" >National</option>
+                                     <option value="régional">Régional</option>
+                                     <option value="départemental" selected>Départemental</option>
+                                 {% endif %}
+                             </select>
+                         </div>
+                         <div class="form-group">
+                             <label>Fédération</label>
+                             <input type="text" id="federation" class="form-control" name="federation" value="{{ nomFederation }}" disabled>
+                         </div>
+
+                             <div class="form-group">
+                                 <label>Discipline</label>
+                                 {% if 'ROLE_SUPER_ADMIN' in userConnect.roles %}
+                                     <select name="discipline" name="discipline" class="form-control" required>
+                                         {% for discipline in disciplinesFede %}
+                                            <option value="{{ discipline.id }}">{{ discipline.nom }}</option>
+                                         {% endfor %}
+                                     </select>
+                                 {% else %}
+                                     <input type="text" class="form-control" name="discipline" value="{{ disciplineUser }}" disabled>
+                                 {% endif %}
+                             </div>
+
+
+                         {# récupérer le role de la personne à éditer #}
+                         {%  set profil = user.roles %}
+                         {% if ('ROLE_ADMIN' in profil) %}
+                             {% set profil = 'admin' %}
+                             {% set profilValue = 'Administrateur  fédéral' %}
+                         {% else  %}
+                              {% set profil = 'user' %}
+                              {% set profilValue = 'Utilisateur' %}
+                         {% endif %}
+
+                         {% if (userConnect.id != user.id) %}
+                             <div class="form-group">
+                                 <label>Profil </label>
+                                 {% if 'ROLE_SUPER_ADMIN' in userConnect.roles %}
+                                     <select class="form-control" name="profil" required>
+                                         {% if (profil == 'admin') %}
+                                             <option value="admin" selected>Administrateur  fédéral</option>
+                                             <option value="user">Utilisateur</option>
+                                         {% else %}
+                                             <option value="admin">Administrateur  fédéral</option>
+                                             <option value="user" selected>Utilisateur</option>
+                                         {% endif %}
+                                     </select>
+                                 {% else %}
+                                     <input type="text" name="profil" value="{{ profilValue }}" disabled>
+                                 {% endif %}
+                             </div>
+                         {% endif %}
 
                          <div class="form-group">
                              <label  >Téléphone</label>
