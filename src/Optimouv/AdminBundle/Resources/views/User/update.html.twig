@@ -8,12 +8,18 @@
                  <div class="bs-example">
                      <ul class="breadcrumb">
                          <li><a href="{{ path('ffbb_accueil_connect') }}">Accueil</a></li>
-                         <li><a href="{{ path('administration_panel') }}">Administration</a></li>
-                         {% if currentPath == "admin_user_edit_profile" %}
-                             <li class="active">Gérer mon profil</li>
+                         {# afficher un breadcrump selon l'utilisateur #}
+                         {% if (is_granted('ROLE_ADMIN')) or (is_granted('ROLE_SUPER_ADMIN')) %}
+                             <li><a href="{{ path('administration_panel') }}">Administration</a></li>
+                             {# tester si l'admin veut gérer son compte #}
+                             {% if currentPath == "admin_user_edit_profile" %}
+                                 <li class="active">Gérer mon profil</li>
 
+                             {% else %}
+                                 <li><a href="{{ path('administration_users_list') }}">Liste des utilisateurs</a></li>
+                                 <li class="active">Mise à jour du profil utilisateur</li>
+                             {% endif %}
                          {% else %}
-                             <li><a href="{{ path('administration_users_list') }}">Liste des utilisateurs</a></li>
                              <li class="active">Mise à jour du profil utilisateur</li>
                          {% endif %}
                      </ul>
