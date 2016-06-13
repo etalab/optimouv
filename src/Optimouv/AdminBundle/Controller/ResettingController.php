@@ -23,13 +23,18 @@ class ResettingController extends Controller
         $idUser = $user->getId();
         $emailUser = $user->getEmail();
         $username = $user->getUsername();
- 
+
+        /** générer un token unique */
+        $tokenGenerator = uniqid('op');
+        $em = $this->getDoctrine()->getManager();
+        $em->getRepository('AdminBundle:User')->insertToken($idUser, $tokenGenerator);
+
         //récupération des params d'envoies de mail
         $mailer_sender = $this->container->getParameter('mailer_sender');
         $sender_name = $this->container->getParameter('sender_name');
         $body = $this->renderView('AdminBundle:Mails:resetting.html.twig',
             array(
-                'idUser' => $idUser,
+                'idUser' => $tokenGenerator,
                 'username' => $username
 
                 ));
@@ -76,12 +81,7 @@ class ResettingController extends Controller
         $encoder = $factory->getEncoder($user);
         $password = $encoder->encodePassword($password, $user->getSalt());
 
-        $connection = $em->getConnection();
-
-        $update = $connection->prepare("UPDATE fos_user SET password = :password WHERE id = :id");
-        $update->bindParam(':password', $password);
-        $update->bindParam(':id', $idUser);
-        $update->execute();
+        $em->getRepository('AdminBundle:User')->updatePwd($idUser, $password);
 
         if($role){
 
@@ -93,5 +93,39 @@ class ResettingController extends Controller
 
     }
 
+    //update pwd après action mot de passe oublié
+    public function updateResetPwdAction()
+    {
+        
+        $token = $_POST['idUser'];
+        $password = $_POST['password'];
+        
+        $em = $this->getDoctrine()->getManager();
+        $userByToken = $em->getRepository('AdminBundle:User')->findOneByConfirmationToken($token); //vérifier si le token est valide
+
+        if(isset($userByToken)){
+            $username =  $userByToken->getUsername();
+            $idUser =  $userByToken->getId();
+            $user = $this->container->get('fos_user.user_manager')->findUserByUsernameOrEmail($username);
+
+            //encrypt password
+            $factory = $this->get('security.encoder_factory');
+            $encoder = $factory->getEncoder($user);
+            $password = $encoder->encodePassword($password, $user->getSalt());
+
+            $connection = $em->getConnection();
+
+            $update = $connection->prepare("UPDATE fos_user SET password = :password, confirmation_token = NULL WHERE id = :idUser");
+            $update->bindParam(':password', $password);
+            $update->bindParam(':idUser', $idUser);
+            $update->execute();
+
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+        else{
+            die('Un problème est survenue. Veuillez contacter votre administrateur');
+        }
+       
+    }
      
 }

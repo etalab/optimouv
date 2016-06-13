@@ -140,8 +140,34 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
 
         return $qb->getQuery()->getResult();
     }
-   
 
+    public function insertToken($idUser, $tokenGenerator)
+    {
+        $query = $this->createQueryBuilder('G')
+            ->update('AdminBundle:User', 'u')
+            ->set('u.confirmationToken' , '?1')
+            ->where('u.id = ?2')
+            ->setParameter(1, $tokenGenerator)
+            ->setParameter(2, $idUser)
+            ->getQuery();
+
+        $update = $query->execute();
+        return $update;
+    }
+
+    public function updatePwd($idUser, $password)
+    {
+        $query = $this->createQueryBuilder('G')
+            ->update('AdminBundle:User', 'u')
+            ->set('u.password' , '?1')
+            ->where('u.id = ?2')
+            ->setParameter(1, $password)
+            ->setParameter(2, $idUser)
+            ->getQuery();
+
+        $update = $query->execute();
+        return $update;
+    }
     
 }
 
