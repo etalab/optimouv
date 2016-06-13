@@ -111,16 +111,7 @@ class User extends BaseUser
      * @ORM\Column(name="last_activity", type="datetime", nullable=true)
      */
     private $lastActivity;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="token", type="string", length=100, nullable=true)
-     */
-    private $token;
-
-
-
+    
 
     public function __construct()
     {
@@ -439,29 +430,4 @@ class User extends BaseUser
         return $this->niveauUtilisateur;
     }
 
-
-
-    /**
-     * Set token
-     *
-     * @param string $token
-     *
-     * @return User
-     */
-    public function setToken($token)
-    {
-        $this->token = $token;
-
-        return $this;
-    }
-
-    /**
-     * Get token
-     *
-     * @return string
-     */
-    public function getToken()
-    {
-        return $this->token;
-    }
 }
