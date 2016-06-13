@@ -17,7 +17,7 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
             ->update('AdminBundle:User', 'u')
             ->set('u.enabled' , '?1')
             ->set('u.locked' , '?2')
-            ->where('u.id = ?3')
+            ->where('u.confirmationToken = ?3')
             ->setParameter(1, true)
             ->setParameter(2, false)
             ->setParameter(3, $idUser)

@@ -171,7 +171,10 @@ class UserController extends Controller
         if(intval($responseKeys["success"]) !== 1) {
             echo '<h2>Erreur de validation de captcha. Contactez votre administrateur.</h2>';
         }
-        
+
+        //generer un identifiant unique pour l'utilisateur
+        $token = uniqid('op');
+
         //tester si l'utilisateur existe
         $user = $this->getDoctrine()
             ->getRepository('AdminBundle:User')
@@ -202,6 +205,7 @@ class UserController extends Controller
             $user->setAdresse($adresse);
             $user->setNumLicencie($numLicencie);
             $user->setDateCreation($dateCreation);
+            $user->setConfirmationToken($token);
 
             if($role == "admin"){
                 $user->setRoles(array('ROLE_ADMIN'));
@@ -223,7 +227,7 @@ class UserController extends Controller
             $em->persist($user);
             $em->flush();
             $idUser = $user->getId();
-            $sendingMail = $this->sendMail($idUser, $email);
+            $sendingMail = $this->sendMail($token, $email);
             if($sendingMail){
 
                 //tester si ustilisateur connecté
@@ -273,11 +277,25 @@ class UserController extends Controller
     public function userActivateAction($idUser)
     {
         $em = $this->getDoctrine()->getManager();
+        $userByToken = $em->getRepository('AdminBundle:User')->findOneByConfirmationToken($idUser);
+        if($userByToken){
+            $id = $userByToken->getId();
+            //Activation utilisateur
+            $activation = $em->getRepository('AdminBundle:User')->activateUser($idUser);
+            if($activation){
+                $connection = $em->getConnection();
+                $update = $connection->prepare("UPDATE fos_user SET confirmation_token = NULL WHERE id = :id");
+                $update->bindParam(':id', $id);
+                $update->execute();
+            }
 
-        //Activation utilisateur
-        $em->getRepository('AdminBundle:User')->activateUser($idUser);
-       
-//        return $this->redirect($this->generateUrl('fos_user_security_login '));
+            return $this->redirectToRoute('fos_user_security_login');
+        }
+        else{
+            die('Un problème est survenue. Veuillez contacter votre administrateur');
+        }
+
+
         return $this->redirectToRoute('fos_user_security_login');
     }
 
