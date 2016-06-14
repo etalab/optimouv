@@ -294,9 +294,6 @@ class UserController extends Controller
         else{
             die('Un problème est survenue. Veuillez contacter votre administrateur');
         }
-
-
-        return $this->redirectToRoute('fos_user_security_login');
     }
 
     public function UsersListAction()
