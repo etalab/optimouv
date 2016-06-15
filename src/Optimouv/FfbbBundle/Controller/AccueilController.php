@@ -8,7 +8,13 @@ class AccueilController extends Controller
 {
     public function indexAction()
     {
-         return $this->render('FfbbBundle:Accueil:index.html.twig');
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return $this->render('FfbbBundle:Accueil:index.html.twig');
+        }
+        else{
+            return $this->redirectToRoute('ffbb_accueil_connect');
+        }
+
     }
 
     public function connectAction()
