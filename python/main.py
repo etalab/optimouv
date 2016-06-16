@@ -1349,7 +1349,7 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		logging.debug(" #################################### REFERENCE RESULT #################################################")
 	
 		# get info for reference scenario from DB
-		returnRefScenarioPlateau =  get_ref_scenario_plateau(teams)
+		returnRefScenarioPlateau =  get_ref_scenario_plateau(teams, userId, reportId)
 # 		logging.debug("returnRefScenarioPlateau: \n%s"%returnRefScenarioPlateau)
 
 		returnPoolDistributionRef = create_reference_pool_distribution_from_db(teams, poolSize)

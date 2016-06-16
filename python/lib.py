@@ -2901,10 +2901,11 @@ def get_list_encounters_plateau(hostTeamId, hostTeamName, otherTeamsIds, otherTe
 		show_exception_traceback()
 
 
+
 """
 Function to get reference scenario for match plateau
 """
-def get_ref_scenario_plateau(teamsIds):
+def get_ref_scenario_plateau(teamsIds, userId, reportId):
 	try:
 		refScenario = {"status" : "no", "data": {} }
 		
@@ -2916,6 +2917,21 @@ def get_ref_scenario_plateau(teamsIds):
 		for team in teamsIds:
 			sql = "select id, nom, ville, code_postal,  poule, ref_plateau from entite where id=%s"%team
 			hostTeamId, hostTeamName, hostTeamCity, hostTeamPostalCode, poolId, refPlateau = db.fetchone_multi(sql)
+
+			# check if there is any reference for match plateau
+			if refPlateau is None:
+				sql = "select nom from parametres where id=%s"%reportId
+				reportName = db.fetchone(sql)
+
+				senderAccount = config.EMAIL.From
+				contentText = u"Bonjour,\n\n" 
+				contentText += u"Aucun résultat n'est disponible pour votre rapport : %s. \n" %reportName
+				contentText += u"Veuillez vérifier qu'il existe les données de référence pour le match plateau dans le fichier csv utilisé.\n\n" 
+				contentText += u"Cordialement,\n\n"
+				contentText += u"L'équipe d’Optimouv\n"
+				contentText += u"%s"%(senderAccount)
+				send_email_to_user_failure_with_text(userId, reportId, contentText)
+
 
 			# escape single quote			
 			hostTeamName = hostTeamName.replace("'", u"''")
