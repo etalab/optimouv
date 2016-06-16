@@ -29,7 +29,11 @@ framework:
     session:
         # handler_id set to null will use default session handler from php.ini
         handler_id:  ~
-        cookie_lifetime: '%cookie_liftetime%' #définir la durée de vie des cookies
+#        cookie_lifetime: '%cookie_liftetime%' #définir la durée de vie des cookies
+        gc_maxlifetime: '%cookie_liftetime%' #cas utilisateur est non actif
+        gc_probability: 3
+        gc_divisor: 4
+
     fragments:       ~
     http_method_override: true
 
