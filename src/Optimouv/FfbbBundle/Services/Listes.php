@@ -395,8 +395,8 @@ class Listes{
 
                             # les champs optionnels
                             $adresse = $donnéesLigne[6];
-                            $longitude = $donnéesLigne[7];
-                            $latitude = $donnéesLigne[8];
+                            $latitude = $donnéesLigne[7];
+                            $longitude = $donnéesLigne[8];
                             $projection = $donnéesLigne[9];
                             $licencies = $donnéesLigne[10];
 
@@ -626,8 +626,8 @@ class Listes{
 
                             # les champs optionnels
                             $adresse = $donnéesLigne[6];
-                            $longitude = $donnéesLigne[7];
-                            $latitude = $donnéesLigne[8];
+                            $latitude = $donnéesLigne[7];
+                            $longitude = $donnéesLigne[8];
                             $projection = $donnéesLigne[9];
 
                         }
@@ -740,8 +740,8 @@ class Listes{
 
                             # les champs optionnels
                             $adresse = $donnéesLigne[5];
-                            $longitude = $donnéesLigne[6];
-                            $latitude = $donnéesLigne[7];
+                            $latitude = $donnéesLigne[6];
+                            $longitude = $donnéesLigne[7];
                             $projection = $donnéesLigne[8];
                             $typeEquipement = $donnéesLigne[9];
                             $nombreEquipement = $donnéesLigne[10];
@@ -1628,13 +1628,13 @@ class Listes{
                         .$genericMsg;
                     return $retour;
                 }
-                if($entete[7] != "LONGITUDE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 8 de l'en-tête correspond au template donné (LONGITUDE).!"
+                if($entete[7] != "LATITUDE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 9 de l'en-tête correspond au template donné (LATITUDE).!"
                         .$genericMsg;
                     return $retour;
                 }
-                if($entete[8] != "LATITUDE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 9 de l'en-tête correspond au template donné (LATITUDE).!"
+                if($entete[8] != "LONGITUDE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 8 de l'en-tête correspond au template donné (LONGITUDE).!"
                         .$genericMsg;
                     return $retour;
                 }
@@ -1722,13 +1722,13 @@ class Listes{
                         .$genericMsg;
                     return $retour;
                 }
-                if($entete[7] != "LONGITUDE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 8 de l'en-tête correspond au template donné (LONGITUDE).!"
+                if($entete[7] != "LATITUDE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 9 de l'en-tête correspond au template donné (LATITUDE).!"
                         .$genericMsg;
                     return $retour;
                 }
-                if($entete[8] != "LATITUDE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 9 de l'en-tête correspond au template donné (LATITUDE).!"
+                if($entete[8] != "LONGITUDE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 8 de l'en-tête correspond au template donné (LONGITUDE).!"
                         .$genericMsg;
                     return $retour;
                 }
@@ -1762,13 +1762,13 @@ class Listes{
                         .$genericMsg;
                     return $retour;
                 }
-                if($entete[6] != "LONGITUDE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 7 de l'en-tête correspond au template donné (LONGITUDE).!"
+                if($entete[6] != "LATITUDE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 8 de l'en-tête correspond au template donné (LATITUDE).!"
                         .$genericMsg;
                     return $retour;
                 }
-                if($entete[7] != "LATITUDE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 8 de l'en-tête correspond au template donné (LATITUDE).!"
+                if($entete[7] != "LONGITUDE" ){
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 7 de l'en-tête correspond au template donné (LONGITUDE).!"
                         .$genericMsg;
                     return $retour;
                 }
