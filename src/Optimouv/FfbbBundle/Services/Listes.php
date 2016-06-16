@@ -1098,14 +1098,23 @@ class Listes{
                             // obtenir la valeur pour chaque paramètre
                             $typeEntite = $donnéesLigne[0];
 
+
+                            // convertir l'encodage pour le nom
+                            $nom = $donnéesLigne[1];
+                            $nom = $this->detecterEtConvertirEncodage($nom);
+
+
                             // obtenir les valeurs selon le type d'entité
                             if (strtolower($typeEntite) == "equipe") {
-                                $nom = $donnéesLigne[1];
                                 $codePostal = $donnéesLigne[2];
                                 $ville = $donnéesLigne[3];
                                 $participants = $donnéesLigne[4];
                                 $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
+
+                                // convertir l'encodage pour l'adresse
                                 $adresse = $donnéesLigne[6];
+                                $adresse = $this->detecterEtConvertirEncodage($adresse);
+
                                 $latitude = $donnéesLigne[7];
                                 $longitude = $donnéesLigne[8];
                                 $projection = $donnéesLigne[9];
@@ -1237,12 +1246,20 @@ class Listes{
 
                             }
                             elseif (strtolower($typeEntite) == "personne") {
-                                $nom = $donnéesLigne[1];
+
+                                // convertir l'encodage pour le prénom
                                 $prenom = $donnéesLigne[2];
+                                $prenom = $this->detecterEtConvertirEncodage($prenom);
+
                                 $codePostal = $donnéesLigne[3];
                                 $ville = $donnéesLigne[4];
                                 $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
+
+                                // convertir l'encodage pour l'adresse
                                 $adresse = $donnéesLigne[6];
+                                $adresse = $this->detecterEtConvertirEncodage($adresse);
+
+
                                 $latitude = $donnéesLigne[7];
                                 $longitude = $donnéesLigne[8];
                                 $projection = $donnéesLigne[9];
@@ -1281,15 +1298,25 @@ class Listes{
                                 $stmt->bindParam(':id_ville_france', $idVilleFrance);
                             }
                             elseif ($typeEntite == "LIEU") {
-                                $nom = $donnéesLigne[1];
                                 $codePostal = $donnéesLigne[2];
                                 $ville = $donnéesLigne[3];
                                 $lieuRencontrePossible = $this->getBoolean($donnéesLigne[4]);
+
+                                // convertir l'encodage pour l'adresse
                                 $adresse = $donnéesLigne[5];
+                                $adresse = $this->detecterEtConvertirEncodage($adresse);
+
                                 $latitude = $donnéesLigne[6];
                                 $longitude = $donnéesLigne[7];
+
+                                // convertir l'encodage pour la projection
                                 $projection = $donnéesLigne[8];
+                                $projection = $this->detecterEtConvertirEncodage($projection);
+
+                                // convertir l'encodage pour le type d'équipement
                                 $typeEquipement = $donnéesLigne[9];
+                                $typeEquipement = $this->detecterEtConvertirEncodage($typeEquipement);
+
                                 $nombreEquipement = $donnéesLigne[10];
                                 $capaciteRencontre = $this->getBoolean($donnéesLigne[11]);
                                 $capacitePhaseFinale = $this->getBoolean($donnéesLigne[12]);
@@ -1469,6 +1496,47 @@ class Listes{
 
     }
 
+
+
+    /*
+    * Fonction pour détecter l'encodage utilisé et transcoder la chaine de charactère donné en entrée en UTF-8
+    */
+    private function detecterEtConvertirEncodage($inputStr){
+        // détecter l'encodage MacRoman
+        if($this->isMacRomanEncoded($inputStr)){
+            $outputStr = iconv('mac', 'UTF-8', $inputStr);
+        }
+        // faire le transcodage en UTF-8 si l'encodage utilisé n'est pas en UTF-8
+        else{
+            // détecter l'encodage UTF-8 et ISO-8859-1
+            $detectedEncoding = mb_detect_encoding($inputStr, 'UTF-8, ISO-8859-1', true);
+
+            if ($detectedEncoding != "UTF-8") {
+                $outputStr = mb_convert_encoding($inputStr, "UTF-8", $detectedEncoding);
+            }
+            else{
+                $outputStr = $inputStr;
+            }
+        }
+
+        return $outputStr;
+
+    }
+
+    /*
+     * Fonction pour détecter si la chaine de caractère est encodé en MacRoman
+     */
+    private function isMacRomanEncoded($str) {
+
+        $testBytes = array(0x88, 0x8D, 0x8E, 0x8F, 0x9A );
+        foreach ($testBytes as $testByte) {
+            if (mb_strpos($str, chr($testByte)) !== false) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     # vérifier l'existence du nom fichier dans la table liste de participants et liste de lieux
     private function verifierExistenceNomFichier($nomFichier, $idUtilisateur, $rencontre, $isEquipe){
         # obtenir la date courante du système
@@ -1581,6 +1649,7 @@ class Listes{
         elseif($rencontre == 0 & $isEquipe == 1){
             $nombreColonnesEntetes = [12, 18];
         }
+        
 
         if(!in_array(count($entete), $nombreColonnesEntetes)){
             $retour["msg"] = "Veuillez vérifier que le nombre des colonnes dans votre fichier correspond aux templates données.!"
@@ -1629,12 +1698,12 @@ class Listes{
                     return $retour;
                 }
                 if($entete[7] != "LATITUDE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 9 de l'en-tête correspond au template donné (LATITUDE).!"
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 8 de l'en-tête correspond au template donné (LATITUDE).!"
                         .$genericMsg;
                     return $retour;
                 }
                 if($entete[8] != "LONGITUDE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 8 de l'en-tête correspond au template donné (LONGITUDE).!"
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 9 de l'en-tête correspond au template donné (LONGITUDE).!"
                         .$genericMsg;
                     return $retour;
                 }
@@ -1723,12 +1792,12 @@ class Listes{
                     return $retour;
                 }
                 if($entete[7] != "LATITUDE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 9 de l'en-tête correspond au template donné (LATITUDE).!"
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 8 de l'en-tête correspond au template donné (LATITUDE).!"
                         .$genericMsg;
                     return $retour;
                 }
                 if($entete[8] != "LONGITUDE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 8 de l'en-tête correspond au template donné (LONGITUDE).!"
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 9 de l'en-tête correspond au template donné (LONGITUDE).!"
                         .$genericMsg;
                     return $retour;
                 }
@@ -1763,12 +1832,12 @@ class Listes{
                     return $retour;
                 }
                 if($entete[6] != "LATITUDE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 8 de l'en-tête correspond au template donné (LATITUDE).!"
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 7 de l'en-tête correspond au template donné (LATITUDE).!"
                         .$genericMsg;
                     return $retour;
                 }
                 if($entete[7] != "LONGITUDE" ){
-                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 7 de l'en-tête correspond au template donné (LONGITUDE).!"
+                    $retour["msg"] = "Veuillez vérifier que le nom de la colonne 8 de l'en-tête correspond au template donné (LONGITUDE).!"
                         .$genericMsg;
                     return $retour;
                 }
