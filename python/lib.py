@@ -2625,11 +2625,12 @@ def control_params_match_plateau(userId, teamNbr, poolNbr, reportId):
 		elif poolSize != 9:
 			contentText += u"Veuillez vous assurer que le nombre de poule sélectionné correspond au nombre de ligne dans votre fichier.\n\n" 
 
-		contentText += u"Cordialement,\n\n"
-		contentText += u"L'équipe d’Optimouv\n"
-		contentText += u"%s"%(senderAccount)
+		if teamNbr % 9 != 0 or poolSize != 9:
+			contentText += u"Cordialement,\n\n"
+			contentText += u"L'équipe d’Optimouv\n"
+			contentText += u"%s"%(senderAccount)
 
-		send_email_to_user_failure_with_text(userId, reportId, contentText)
+			send_email_to_user_failure_with_text(userId, reportId, contentText)
 
 
 	except Exception as e:
