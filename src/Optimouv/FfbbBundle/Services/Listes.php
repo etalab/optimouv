@@ -1106,11 +1106,10 @@ class Listes{
                                 $participants = $donnéesLigne[4];
                                 $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
                                 $adresse = $donnéesLigne[6];
-                                $longitude = $donnéesLigne[7];
-                                $latitude = $donnéesLigne[8];
+                                $latitude = $donnéesLigne[7];
+                                $longitude = $donnéesLigne[8];
                                 $projection = $donnéesLigne[9];
                                 $licencies = $donnéesLigne[10];
-
 
 
                                 # corriger le code postal si un zéro est manquant dans le premier chiffre
@@ -1244,8 +1243,8 @@ class Listes{
                                 $ville = $donnéesLigne[4];
                                 $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
                                 $adresse = $donnéesLigne[6];
-                                $longitude = $donnéesLigne[7];
-                                $latitude = $donnéesLigne[8];
+                                $latitude = $donnéesLigne[7];
+                                $longitude = $donnéesLigne[8];
                                 $projection = $donnéesLigne[9];
 
                                 # nombre de participants par défaut pour personne
@@ -1287,8 +1286,8 @@ class Listes{
                                 $ville = $donnéesLigne[3];
                                 $lieuRencontrePossible = $this->getBoolean($donnéesLigne[4]);
                                 $adresse = $donnéesLigne[5];
-                                $longitude = $donnéesLigne[6];
-                                $latitude = $donnéesLigne[7];
+                                $latitude = $donnéesLigne[6];
+                                $longitude = $donnéesLigne[7];
                                 $projection = $donnéesLigne[8];
                                 $typeEquipement = $donnéesLigne[9];
                                 $nombreEquipement = $donnéesLigne[10];
