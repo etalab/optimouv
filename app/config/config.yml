@@ -31,7 +31,7 @@ framework:
         handler_id:  ~
 #        cookie_lifetime: '%cookie_liftetime%' #définir la durée de vie des cookies
         gc_maxlifetime: '%cookie_liftetime%' #cas utilisateur est non actif
-        gc_probability: 3
+        gc_probability: 3 #probabilité que le garbage passe et teste la validite de la session
         gc_divisor: 4
 
     fragments:       ~
@@ -47,6 +47,7 @@ twig:
            base_url: %base_url%
            cle_site_captcha: %cle_site_captcha%
            kernelRootDir: %kernel.root_dir%
+           guide_utilisateur: %guide_utilisateur%
 
 # Assetic Configuration
 assetic:

@@ -805,11 +805,11 @@ class Statistiques {
                 $disciplines = $stmt->fetchALL(PDO::FETCH_ASSOC);
 
 
-                if(!$disciplines ){
-                    error_log("\n  Erreur lors de la récupération de la liste de disciplines pour une fédération, Service: Statistiques, Function: getDetailsFederation, errorInfo: "
-                        .print_r($pdo->errorInfo(), true) , 3, $this->error_log_path);
-                    die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
-                }
+//                if(!$disciplines ){
+//                    error_log("\n  Erreur lors de la récupération de la liste de disciplines pour une fédération, Service: Statistiques, Function: getDetailsFederation, errorInfo: "
+//                        .print_r($pdo->errorInfo(), true) , 3, $this->error_log_path);
+//                    die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
+//                }
 
                 // obtenir les détails des utilisateurs
                 foreach($disciplines as $indexDiscipline=> &$discipline ){

@@ -22,6 +22,8 @@ class Rencontres
     public $error_log_path;
     public $database_host;
     public $here_request_limit;
+    public $here_request_limit_debut;
+    public $here_request_limit_fin;
 
     /**
      * @var Statistiques $serviceStatistiques
@@ -32,7 +34,7 @@ class Rencontres
      */
     protected $fonctionsCommunes;
 
-    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $serviceStatistiques, $here_request_limit, $fonctionsCommunes )
+    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $serviceStatistiques, $here_request_limit, $fonctionsCommunes, $here_request_limit_debut, $here_request_limit_fin )
     {
         $this->database_host = $database_host;
         $this->database_name = $database_name;
@@ -44,6 +46,8 @@ class Rencontres
         $this->serviceStatistiques = $serviceStatistiques;
         $this->here_request_limit = $here_request_limit;
         $this->fonctionsCommunes = $fonctionsCommunes;
+        $this->here_request_limit_debut = $here_request_limit_debut;
+        $this->here_request_limit_fin = $here_request_limit_fin;
 
     }
 
@@ -1288,6 +1292,14 @@ class Rencontres
         $app_code = $this->app_code;
         $here_request_limit = $this->here_request_limit;
 
+        $here_request_limit_debut =  $this->here_request_limit_debut;
+        $here_request_limit_fin = $this->here_request_limit_fin ;
+
+        //convert string to date
+       $dateDebut =  \DateTime::createFromFormat('Y/m/d', $here_request_limit_debut)->format('Y-d-m');
+       $dateFin =  \DateTime::createFromFormat('Y/m/d', $here_request_limit_fin)->format('Y-d-m');
+        
+
         $bdd= Rencontres::connexion();
 
         $reqLieux = $bdd->prepare("SELECT id_liste_lieux FROM  groupe WHERE id = :id;");
@@ -1327,13 +1339,14 @@ class Rencontres
 
             $sql = "SELECT sum(valeur) FROM  statistiques_date".
                 " WHERE type_statistiques = :type_statistiques".
-                " and year(date_creation)=:annee and month(date_creation)=:mois;";
+                " and date_creation >= :dateDebut and date_creation <=:dateFin;";
             $stmt = $bdd->prepare($sql);
             $stmt->bindParam(':type_statistiques', $typeStatistiques);
-            $stmt->bindParam(':annee', $annee);
-            $stmt->bindParam(':mois', $mois);
+            $stmt->bindParam(':dateDebut', $dateDebut);
+            $stmt->bindParam(':dateFin', $dateFin);
             $stmt->execute();
             $nombreRequetesGeoHere = intval($stmt->fetchColumn());
+        
 //            error_log("\n nombreRequetesGeoHere: ".print_r($nombreRequetesGeoHere, true), 3, $this->error_log_path);
 
             // retourner un message d'erreur quand il y a dépassement du nombre de requetes de Géo-codage HERE

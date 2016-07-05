@@ -31,6 +31,8 @@ class CalculRencontreConsumer implements ConsumerInterface
     private $mailer_sender;
     private $here_request_limit;
     private $sender_name;
+    private $here_request_limit_debut;
+    private $here_request_limit_fin;
     /**
      * @var FonctionsCommunes $fonctionsCommunes
      */
@@ -42,7 +44,7 @@ class CalculRencontreConsumer implements ConsumerInterface
      */
     protected $serviceStatistiques;
 
-    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, ContainerInterface $container, $mailer, EngineInterface $templating, $serviceStatistiques, $mailer_user, $base_url, $mailer_sender, $here_request_limit, $sender_name, $fonctionsCommunes)
+    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, ContainerInterface $container, $mailer, EngineInterface $templating, $serviceStatistiques, $mailer_user, $base_url, $mailer_sender, $here_request_limit, $sender_name, $fonctionsCommunes, $here_request_limit_debut, $here_request_limit_fin )
     {
         $this->database_host = $database_host;
         $this->database_name = $database_name;
@@ -61,6 +63,8 @@ class CalculRencontreConsumer implements ConsumerInterface
         $this->here_request_limit = $here_request_limit;
         $this->mailer_sender = $mailer_sender;
         $this->fonctionsCommunes = $fonctionsCommunes;
+        $this->here_request_limit_debut = $here_request_limit_debut;
+        $this->here_request_limit_fin = $here_request_limit_fin;
     }
 
     public function connexion()
@@ -140,9 +144,11 @@ class CalculRencontreConsumer implements ConsumerInterface
         $here_request_limit = $this->here_request_limit;
         $fonctionsCommunes = $this->fonctionsCommunes;
         $serviceStatistiques = $this->serviceStatistiques;
+        $here_request_limit_debut =  $this->here_request_limit_debut;
+        $here_request_limit_fin = $this->here_request_limit_fin ;
 
         //Appel de la classe
-        $serviceRencontre = new Rencontres($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $serviceStatistiques, $here_request_limit, $fonctionsCommunes);
+        $serviceRencontre = new Rencontres($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $serviceStatistiques, $here_request_limit, $fonctionsCommunes, $here_request_limit_debut, $here_request_limit_fin);
         
         if($typeAction == "barycentre"){
 

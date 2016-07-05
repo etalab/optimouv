@@ -30,12 +30,12 @@ class StatistiqueController extends Controller
         # pour l'admin générale
         if($autorisationChecker->isGranted("ROLE_SUPER_ADMIN")){
             # obtenir la liste de toutes fédérations
-            $listeFederations = $this->get("service_statistiques")->getDetailsFederation("tous");
+            $listeFederations = $this->get("service_statistiques")->getDetailsFederation("tous"); ///
         }
         # pour l'admin fédérale
         else{
             # obtenir la fédération
-            $listeFederations = $this->get("service_statistiques")->getDetailsFederation($federationId);
+            $listeFederations = $this->get("service_statistiques")->getDetailsFederation($federationId); ////
         }
 
 

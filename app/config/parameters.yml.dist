@@ -42,3 +42,7 @@ parameters:
     time_limit_active_users: 2 # durée limite (en minutes) qui définit si les utilisateurs sont considérés comme actif ou pas
     cookie_liftetime: 3600
     here_request_limit: 200000
+    guide_utilisateur: https://avenirgreen.my.salesforce.com/sfc/p/U0000000JavK/a/U0000000bmvr/zfk9Vh9d.vMRFcaWOBLNcv8MwFpCDLXNuSJOY3Uz6Qk
+    here_request_limit_debut: 2016-01-01
+    here_request_limit_fin: 2016-07-31
+
