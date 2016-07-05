@@ -14,7 +14,7 @@
 /web/bundles/
 # Composer
 /composer.phar
-
+*.bak
 
 # .idea dossier phpStorm
 /.idea

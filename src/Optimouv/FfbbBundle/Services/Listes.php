@@ -1107,7 +1107,11 @@ class Listes{
                             // obtenir les valeurs selon le type d'entité
                             if (strtolower($typeEntite) == "equipe") {
                                 $codePostal = $donnéesLigne[2];
+
+                                // convertir l'encodage pour la ville
                                 $ville = $donnéesLigne[3];
+                                $ville = $this->detecterEtConvertirEncodage($ville);
+
                                 $participants = $donnéesLigne[4];
                                 $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
 
@@ -1117,7 +1121,11 @@ class Listes{
 
                                 $latitude = $donnéesLigne[7];
                                 $longitude = $donnéesLigne[8];
+
+                                // convertir l'encodage pour la projection
                                 $projection = $donnéesLigne[9];
+                                $projection = $this->detecterEtConvertirEncodage($projection);
+
                                 $licencies = $donnéesLigne[10];
 
 
@@ -1252,7 +1260,11 @@ class Listes{
                                 $prenom = $this->detecterEtConvertirEncodage($prenom);
 
                                 $codePostal = $donnéesLigne[3];
+
+                                // convertir l'encodage pour la ville
                                 $ville = $donnéesLigne[4];
+                                $ville = $this->detecterEtConvertirEncodage($ville);
+
                                 $lieuRencontrePossible = $this->getBoolean($donnéesLigne[5]);
 
                                 // convertir l'encodage pour l'adresse
@@ -1262,7 +1274,10 @@ class Listes{
 
                                 $latitude = $donnéesLigne[7];
                                 $longitude = $donnéesLigne[8];
+
+                                // convertir l'encodage pour la projection
                                 $projection = $donnéesLigne[9];
+                                $projection = $this->detecterEtConvertirEncodage($projection);
 
                                 # nombre de participants par défaut pour personne
                                 $participants = 1;
@@ -1299,7 +1314,11 @@ class Listes{
                             }
                             elseif ($typeEntite == "LIEU") {
                                 $codePostal = $donnéesLigne[2];
+
+                                // convertir l'encodage pour la ville
                                 $ville = $donnéesLigne[3];
+                                $ville = $this->detecterEtConvertirEncodage($ville);
+
                                 $lieuRencontrePossible = $this->getBoolean($donnéesLigne[4]);
 
                                 // convertir l'encodage pour l'adresse
@@ -1649,7 +1668,7 @@ class Listes{
         elseif($rencontre == 0 & $isEquipe == 1){
             $nombreColonnesEntetes = [12, 18];
         }
-        
+
 
         if(!in_array(count($entete), $nombreColonnesEntetes)){
             $retour["msg"] = "Veuillez vérifier que le nombre des colonnes dans votre fichier correspond aux templates données.!"
