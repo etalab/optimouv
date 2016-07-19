@@ -303,7 +303,6 @@ class UserController extends Controller
         //récupérer toute la liste des utilisateurs pour l'admin fédéral
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $roleUser = $user->getRoles();
-
         //récupérer id utilisateur
         $idUser = $user->id;
 
@@ -461,16 +460,6 @@ class UserController extends Controller
             $params['discipline'] = $user->getDiscipline()->getId();
         }
 
-        if(isset($_POST['profil'])){
-            if(($_POST['profil']  == "admin")){
-                $params['profil'] = serialize(array('ROLE_ADMIN'));
-            }else{
-                $params['profil'] = serialize([]);
-            }
-
-        } else{
-            $params['profil'] = $user->getRoles();
-        }
         if(isset($_POST['tel'])){
             $params['tel'] = $_POST['tel'];
         } else{
@@ -488,6 +477,8 @@ class UserController extends Controller
         }else{
             $params['numLicencie'] = $user->getNumLicencie();
         }
+
+
 
         $connection = $em->getConnection();
         $statement = $connection->prepare('SET foreign_key_checks = 0');
