@@ -417,8 +417,6 @@ class UserController extends Controller
     public function updateUserAction($idUser)
     {
 
-        print_r($_POST['profil']);exit;
-
 
         $em = $this->getDoctrine()->getManager();
         $params = [];
@@ -481,7 +479,25 @@ class UserController extends Controller
             $params['numLicencie'] = $user->getNumLicencie();
         }
 
+        if(isset($_POST['profil'])){
+            if(($_POST['profil']  == "admin")){
+                $params['profil'] = serialize(array('ROLE_ADMIN'));
+            }else{
+                $params['profil'] = serialize([]);
+            }
 
+        } else{
+            $role = $user->getRoles();
+            if(in_array('ROLE_ADMIN', $role)){
+                $params['profil'] = serialize(array('ROLE_ADMIN'));
+            }
+            elseif (in_array('ROLE_SUPER_ADMIN', $role)){
+                $params['profil'] = serialize(array('ROLE_SUPER_ADMIN'));
+            }
+            else{
+                $params['profil'] = serialize([]);
+            }
+        }
 
         $connection = $em->getConnection();
         $statement = $connection->prepare('SET foreign_key_checks = 0');
