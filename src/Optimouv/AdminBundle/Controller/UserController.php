@@ -417,6 +417,9 @@ class UserController extends Controller
     public function updateUserAction($idUser)
     {
 
+        print_r($_POST['profil']);exit;
+
+
         $em = $this->getDoctrine()->getManager();
         $params = [];
         $params['id'] = $idUser;
