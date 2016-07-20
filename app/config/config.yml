@@ -31,8 +31,8 @@ framework:
         handler_id:  ~
 #        cookie_lifetime: '%cookie_liftetime%' #définir la durée de vie des cookies
         gc_maxlifetime: '%cookie_liftetime%' #cas utilisateur est non actif
-        gc_probability: 3 #probabilité que le garbage passe et teste la validite de la session
-        gc_divisor: 4
+       # gc_probability: 3 #probabilité que le garbage passe et teste la validite de la session
+       # gc_divisor: 4
 
     fragments:       ~
     http_method_override: true
