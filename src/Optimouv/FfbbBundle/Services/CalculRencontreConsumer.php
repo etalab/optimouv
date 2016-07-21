@@ -20,8 +20,6 @@ class CalculRencontreConsumer implements ConsumerInterface
     public $database_name;
     public $database_user;
     public $database_password;
-    public $app_id;
-    public $app_code;
     public $error_log_path;
     private $container;
     private $mailer;
@@ -33,6 +31,13 @@ class CalculRencontreConsumer implements ConsumerInterface
     private $sender_name;
     private $here_request_limit_debut;
     private $here_request_limit_fin;
+
+    public $route_app_id;
+    public $route_app_code;
+    public $geocode_app_id;
+    public $geocode_app_code;
+
+
     /**
      * @var FonctionsCommunes $fonctionsCommunes
      */
@@ -44,14 +49,12 @@ class CalculRencontreConsumer implements ConsumerInterface
      */
     protected $serviceStatistiques;
 
-    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, ContainerInterface $container, $mailer, EngineInterface $templating, $serviceStatistiques, $mailer_user, $base_url, $mailer_sender, $here_request_limit, $sender_name, $fonctionsCommunes, $here_request_limit_debut, $here_request_limit_fin )
+    public function __construct($database_host, $database_name, $database_user, $database_password, $route_app_id, $route_app_code, $geocode_app_id, $geocode_app_code, $error_log_path, ContainerInterface $container, $mailer, EngineInterface $templating, $serviceStatistiques, $mailer_user, $base_url, $mailer_sender, $here_request_limit, $sender_name, $fonctionsCommunes, $here_request_limit_debut, $here_request_limit_fin )
     {
         $this->database_host = $database_host;
         $this->database_name = $database_name;
         $this->database_user = $database_user;
         $this->database_password = $database_password;
-        $this->app_id = $app_id;
-        $this->app_code = $app_code;
         $this->error_log_path = $error_log_path;
         $this->container = $container;
         $this->mailer = $mailer;
@@ -65,6 +68,13 @@ class CalculRencontreConsumer implements ConsumerInterface
         $this->fonctionsCommunes = $fonctionsCommunes;
         $this->here_request_limit_debut = $here_request_limit_debut;
         $this->here_request_limit_fin = $here_request_limit_fin;
+
+        $this->route_app_id = $route_app_id;
+        $this->route_app_code = $route_app_code;
+        $this->geocode_app_id = $geocode_app_id;
+        $this->geocode_app_code = $geocode_app_code;
+
+
     }
 
     public function connexion()
@@ -134,8 +144,6 @@ class CalculRencontreConsumer implements ConsumerInterface
         include_once 'Rencontres.php';
 
         //passer les params du constructeur
-        $app_id = $this->app_id;
-        $app_code = $this->app_code;
         $database_name = $this->database_name;
         $database_user = $this->database_user;
         $database_password = $this->database_password;
@@ -148,7 +156,7 @@ class CalculRencontreConsumer implements ConsumerInterface
         $here_request_limit_fin = $this->here_request_limit_fin ;
 
         //Appel de la classe
-        $serviceRencontre = new Rencontres($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $serviceStatistiques, $here_request_limit, $fonctionsCommunes, $here_request_limit_debut, $here_request_limit_fin);
+        $serviceRencontre = new Rencontres($database_host, $database_name, $database_user, $database_password, $this->route_app_id, $this->route_app_code, $this->geocode_app_id, $this->geocode_app_code, $error_log_path, $serviceStatistiques, $here_request_limit, $fonctionsCommunes, $here_request_limit_debut, $here_request_limit_fin);
         
         if($typeAction == "barycentre"){
 

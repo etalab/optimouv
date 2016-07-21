@@ -17,13 +17,16 @@ class Rencontres
     public $database_name;
     public $database_user;
     public $database_password;
-    public $app_id;
-    public $app_code;
     public $error_log_path;
     public $database_host;
     public $here_request_limit;
     public $here_request_limit_debut;
     public $here_request_limit_fin;
+
+    public $route_app_id;
+    public $route_app_code;
+    public $geocode_app_id;
+    public $geocode_app_code;
 
     /**
      * @var Statistiques $serviceStatistiques
@@ -34,20 +37,22 @@ class Rencontres
      */
     protected $fonctionsCommunes;
 
-    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $serviceStatistiques, $here_request_limit, $fonctionsCommunes, $here_request_limit_debut, $here_request_limit_fin )
+    public function __construct($database_host, $database_name, $database_user, $database_password, $route_app_id, $route_app_code, $geocode_app_id, $geocode_app_code, $error_log_path, $serviceStatistiques, $here_request_limit, $fonctionsCommunes, $here_request_limit_debut, $here_request_limit_fin )
     {
         $this->database_host = $database_host;
         $this->database_name = $database_name;
         $this->database_user = $database_user;
         $this->database_password = $database_password;
-        $this->app_id = $app_id;
-        $this->app_code = $app_code;
         $this->error_log_path = $error_log_path;
         $this->serviceStatistiques = $serviceStatistiques;
         $this->here_request_limit = $here_request_limit;
         $this->fonctionsCommunes = $fonctionsCommunes;
         $this->here_request_limit_debut = $here_request_limit_debut;
         $this->here_request_limit_fin = $here_request_limit_fin;
+        $this->route_app_id = $route_app_id;
+        $this->route_app_code = $route_app_code;
+        $this->geocode_app_id = $geocode_app_id;
+        $this->geocode_app_code = $geocode_app_code;
 
     }
 
@@ -1155,8 +1160,8 @@ class Rencontres
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
-        $app_id = $this->app_id;
-        $app_code = $this->app_code;
+        $route_app_id = $this->route_app_id;
+        $route_app_code = $this->route_app_code;
 
         $bdd = Rencontres::connexion();
 
@@ -1217,7 +1222,7 @@ class Rencontres
                     array_push($dureeTotale, $duree);
 
                 } else {
-                    $reqRoute = 'http://route.api.here.com/routing/7.2/calculateroute.json?waypoint0=' . $coordStart . '&waypoint1=' . $villes[$i] . '&mode=fastest%3Bcar%3Btraffic%3Adisabled&app_id=' . $app_id . '&app_code=' . $app_code;
+                    $reqRoute = 'http://route.api.here.com/routing/7.2/calculateroute.json?waypoint0=' . $coordStart . '&waypoint1=' . $villes[$i] . '&mode=fastest%3Bcar%3Btraffic%3Adisabled&app_id=' . $route_app_id. '&app_code=' . $route_app_code;
 
                     $nbrRequetesHere += 1;
 
@@ -1288,8 +1293,8 @@ class Rencontres
     public function getListeLieux($idGroupe)
     {
 
-        $app_id = $this->app_id;
-        $app_code = $this->app_code;
+        $geocode_app_id = $this->geocode_app_id;
+        $geocode_app_code = $this->geocode_app_code;
         $here_request_limit = $this->here_request_limit;
 
         $here_request_limit_debut =  $this->here_request_limit_debut;
@@ -1382,7 +1387,7 @@ class Rencontres
                     else {
 
                         $v = urlencode($nomVille);
-                        $reqGeocode = 'http://geocoder.api.here.com/6.2/geocode.json?country=France&city=' . $v . '&postalCode=' . $codePostal . '&app_id=' . $app_id . '&app_code=' . $app_code . '&gen=8';
+                        $reqGeocode = 'http://geocoder.api.here.com/6.2/geocode.json?country=France&city=' . $v . '&postalCode=' . $codePostal . '&app_id=' . $geocode_app_id . '&app_code=' . $geocode_app_code . '&gen=8';
 
                         $nbrRequetesGeoHere += 1;
 

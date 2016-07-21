@@ -32,8 +32,13 @@ parameters:
     lazy_RMQ: false
 
     # conf HERE
-    app_id: tObeTMHIXTfmuTUvyDBa
-    app_code: 6ST2s3g8BkS7B0Uft0kPeg
+    map_app_id: tObeTMHIXTfmuTUvyDBa
+    map_app_code: 6ST2s3g8BkS7B0Uft0kPeg
+    route_app_id: tObeTMHIXTfmuTUvyDBa
+    route_app_code: 6ST2s3g8BkS7B0Uft0kPeg
+    geocode_app_id: tObeTMHIXTfmuTUvyDBa
+    geocode_app_code: 6ST2s3g8BkS7B0Uft0kPeg
+
     here_request_limit: 200000 # limite pour les requestes de géocodage de HERE
     here_request_limit_debut: 2016-01-01
     here_request_limit_fin: 2016-07-31
