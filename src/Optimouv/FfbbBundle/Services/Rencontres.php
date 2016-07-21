@@ -1655,9 +1655,9 @@ class Rencontres
         if ($curl_response === false) {
             $errorInfo = curl_error($curl);
             curl_close($curl);
-            error_log(print_R($errorInfo, TRUE), 3, $this->error_log_path);
-
-            error_log("\n service: rencontres, function: getReponseCurl ", 3, $this->error_log_path);
+            error_log("url: $url\n", 3, $this->error_log_path);
+            error_log(print_R($errorInfo, TRUE)."\n", 3, $this->error_log_path);
+            error_log("service: rencontres, function: getReponseCurl \n", 3, $this->error_log_path);
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
 
         }
