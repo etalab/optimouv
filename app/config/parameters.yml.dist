@@ -2,11 +2,14 @@
 # Set parameters here that may be different on each deployment target of the app, e.g. development, staging, production.
 # http://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
 parameters:
+    # conf mysql/mariadb
     database_host:     127.0.0.1
     database_port:     ~
     database_name:     symfony
     database_user:     root
     database_password: ~
+
+    # conf swiftmailer
     mailer_transport: smtp
     mailer_host: smtp.it4pme.fr
     mailer_port: 587
@@ -15,34 +18,37 @@ parameters:
     mailer_sender: support@optimouv.net
     sender_name: service clients it4pme
     secret:            ThisTokenIsNotSoSecretChangeIt
-    # ci-dessous les deux parametres pour Here
-    app_id: tObeTMHIXTfmuTUvyDBa
-    app_code: 6ST2s3g8BkS7B0Uft0kPeg
-    here_request_limit: 200000
-    # chemin errorlog
-    error_log_path: error_log_optimouv.txt
-    base_url: optimouv
-    path_wkhtmltopdf: "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
+
+    # conf rabbitmq
     mq_rencontre_exchange: rencontre_exchange
     mq_poule_exchange: poule_exchange
     mq_rencontre_queue: rencontre_queue
     mq_poule_queue: poule_queue
-    locale: fr
-    #conf RabbitMQ
     host_RMQ: localhost
     port_RMQ: 5672
     user_RMQ: guest
     password_RMQ: guest
     vhost_RMQ: /
     lazy_RMQ: false
+
+    # conf HERE
+    app_id: tObeTMHIXTfmuTUvyDBa
+    app_code: 6ST2s3g8BkS7B0Uft0kPeg
+    here_request_limit: 200000 # limite pour les requestes de géocodage de HERE
+    here_request_limit_debut: 2016-01-01
+    here_request_limit_fin: 2016-07-31
+
+    # conf application web
+    locale: fr
+    base_url: optimouv
+    path_wkhtmltopdf: "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
     cle_site_captcha: 6Lf1NxwTAAAAAB2S7NRcj1JfKu_rbJkHewmMeM2G
     cle_secrete_captcha: 6Lf1NxwTAAAAAP6UYH4-vzxAFxxHYJfq0ddkkK3U
-    here_request_limit: 200000 # limite pour les requestes de géocodage de HERE
     max_number_active_users: 50 # nombre maximum des utilisateurs actifs en meme temps
     time_limit_active_users: 2 # durée limite (en minutes) qui définit si les utilisateurs sont considérés comme actif ou pas
     cookie_liftetime: 3600
-    here_request_limit: 200000
     guide_utilisateur: https://avenirgreen.my.salesforce.com/sfc/p/U0000000JavK/a/U0000000bmvr/zfk9Vh9d.vMRFcaWOBLNcv8MwFpCDLXNuSJOY3Uz6Qk
-    here_request_limit_debut: 2016-01-01
-    here_request_limit_fin: 2016-07-31
+
+    # autres
+    error_log_path: error_log_optimouv.txt     # chemin errorlog
 
