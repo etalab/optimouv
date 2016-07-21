@@ -1692,8 +1692,8 @@ def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coord
 		hereUrl = "http://route.api.here.com/routing/7.2/calculateroute.json"
 		params = { 	"waypoint0": coordDepart,
 					"waypoint1": coordDestination,
-					"app_id": config.HERE.AppId,
-					"app_code": config.HERE.AppCode,
+					"app_id": config.HERE.RouteAppId,
+					"app_code": config.HERE.RouteAppCode,
 					"mode": "fastest;car;traffic:disabled"
 				}
 		senderAccount = config.EMAIL.From
