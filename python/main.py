@@ -1690,6 +1690,7 @@ Main callback function which executes PyTreeRank ALgorithm
 """
 def callback(ch, method, properties, body):
 	try:
+		
 		beginTime = datetime.datetime.now()
 		logging.debug("\n")
 		logging.debug("starting current time : %s" %beginTime.strftime('%Y-%m-%d %H:%M:%S'))
@@ -1957,11 +1958,12 @@ def callback(ch, method, properties, body):
 		# insert calculation time to DB
 		insert_calculation_time_to_db(userId, beginTime, endTime, processingTimeSeconds)
 
+		# ack message
+		ch.basic_ack(delivery_tag = method.delivery_tag)
 
 	except Exception as e:
 		show_exception_traceback()
 	finally:
-		ch.basic_ack(delivery_tag = method.delivery_tag)
 		gc.collect()
 		db.disconnect()
 		sys.exit()
