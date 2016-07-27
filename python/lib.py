@@ -93,7 +93,6 @@ def adjust_pool_attribution_based_on_pool_variation(teamPoolResult, poolNbr, poo
 			
 		# treat differently according to the pool number category
 		if poolNbrCategory == "even":
-			logging.debug("poolNbrCategory: %s" %poolNbrCategory)
 
 			# create dictionary to transform pool
 			transformDict = {}
@@ -104,13 +103,11 @@ def adjust_pool_attribution_based_on_pool_variation(teamPoolResult, poolNbr, poo
 				# variation for even numbered member
 				elif pool%2 == 0:
 					transformDict[pool] = poolSize + varTeamNbrPerPool
-			logging.debug("transformDict: %s" %transformDict)
 			
 			# change members in all pools
 			for pool in teamPoolResult:
 				# determine the number of pool size of the current pool
 				currentPoolSize = teamPoolResultTransformed.count(pool)
-# 					logging.debug("currentPoolSize: %s" %currentPoolSize)
 
 				if currentPoolSize < transformDict[pool]:
 					teamPoolResultTransformed.append(pool)
@@ -120,7 +117,6 @@ def adjust_pool_attribution_based_on_pool_variation(teamPoolResult, poolNbr, poo
 					teamPoolResultTransformed.append(pool)
 
 		elif poolNbrCategory == "odd":
-			logging.debug("poolNbrCategory: %s" %poolNbrCategory)
 
 			# create dictionary to transform pool
 			transformDict = {}
@@ -134,7 +130,6 @@ def adjust_pool_attribution_based_on_pool_variation(teamPoolResult, poolNbr, poo
 				# variation for even numbered member
 				elif pool%2 == 0:
 					transformDict[pool] = poolSize + varTeamNbrPerPool
-			logging.debug("transformDict: %s" %transformDict)
 			
 			# change members in all pools except the last pool
 			for pool in teamPoolResult:
@@ -143,7 +138,6 @@ def adjust_pool_attribution_based_on_pool_variation(teamPoolResult, poolNbr, poo
 				else:
 					# determine the number of pool size of the current pool
 					currentPoolSize = teamPoolResultTransformed.count(pool)
-# 					logging.debug("currentPoolSize: %s" %currentPoolSize)
 
 					if currentPoolSize < transformDict[pool]:
 						teamPoolResultTransformed.append(pool)
@@ -153,7 +147,6 @@ def adjust_pool_attribution_based_on_pool_variation(teamPoolResult, poolNbr, poo
 						teamPoolResultTransformed.append(pool)
 						
 		
-		logging.debug("teamPoolResultTransformed: %s" %teamPoolResultTransformed)
 		return teamPoolResultTransformed
 	except Exception as e:
 		show_exception_traceback()
@@ -184,7 +177,6 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 
 			# calculate the pool size of the row
 			poolSizeRow = rowContent.count(1.0) + 1
-# 			logging.debug("  poolSizeRow: %s" %poolSizeRow)
 
 			tempPool = [] # create a temporary pool (this pool has max size of poolSizeRow)
 			tempPool.append(teamDepart) # add first element in the pool
@@ -195,8 +187,6 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 					continue
 
 				valueMat = int(P_Mat[indexRow][indexCol])
-# 				logging.debug("  valueMat: %s" %valueMat)
-# 				logging.debug("  teamDestination: %s" %teamDestination)
 	
 				performanceCounter += 1
 	
@@ -208,10 +198,8 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 				if len(tempPool) == poolSizeRow:
 					tempPool = sorted(tempPool)
 					if tempPool not in tempPools:
-# 						logging.debug("  tempPool: %s" %tempPool)
 						
 						if len(tempPools) < poolNbr:
-# 							logging.debug("  tempPool: %s" %tempPool)
 							tempPools.append(tempPool)
 							assignedTeams.extend(tempPool)
 						else: 
@@ -257,11 +245,9 @@ def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSi
 
 			# get the row content
 			rowContent = list(P_Mat[indexRow])
-# 			logging.debug("  rowContent: %s" %rowContent)
 
 			# calculate the pool size of the row
 			poolSizeRow = rowContent.count(1.0) + 1
-# 			logging.debug("  poolSizeRow: %s" %poolSizeRow)
 
 			# move to the next row if the pool size is smalller than expected
 			if(poolSizeRow == poolSize):
@@ -274,8 +260,6 @@ def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSi
 						continue
 	
 					valueMat = int(P_Mat[indexRow][indexCol])
-	# 				logging.debug("  valueMat: %s" %valueMat)
-	# 				logging.debug("  teamDestination: %s" %teamDestination)
 		
 					performanceCounter += 1
 		
@@ -287,10 +271,8 @@ def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSi
 					if len(tempPool) == poolSizeRow:
 						tempPool = sorted(tempPool)
 						if tempPool not in tempPools:
-	# 						logging.debug("  tempPool: %s" %tempPool)
 							
 							if len(tempPools) < poolNbr:
-	# 							logging.debug("  tempPool: %s" %tempPool)
 								tempPools.append(tempPool)
 								assignedTeams.extend(tempPool)
 							else: 
@@ -335,15 +317,10 @@ def get_host_combination_index_from_base3(combinationInput, base3Tmp):
 		combinationOutput = {}
 		for day, combinationPerDay in combinationInput.items():
 			
-# 			logging.debug("  day: %s" %day)
 			fromIndex = (day-1)*3
-# 			logging.debug("  fromIndex: %s" %fromIndex)
 			toIndex = ((day-1)*3)+2
-# 			logging.debug("  toIndex: %s" %toIndex)
 			
 			combinationPerDayInput = base3Tmp[fromIndex:toIndex+1]
-# 			logging.debug("  combinationPerDayInput: %s" %combinationPerDayInput)
-			
 			
 			combinationOutput[day] = [int(value) for value in combinationPerDayInput]
 		
@@ -362,11 +339,8 @@ def get_member_combination_ids_from_host_combination_index(plateauDistributionPe
 			memberCombinationIds[day] = {}
 			
 			for indexGroup, group in enumerate(contentDay):
-# 				logging.debug("  group: %s" %group)
 				hostIndex = combination[day][indexGroup]
-# 				logging.debug("  hostIndex: %s" %hostIndex)
 				hostId = group[hostIndex]
-# 				logging.debug("  hostId: %s" %hostId)
 				
 				# get member ids
 				memberIds = list(group)
@@ -419,9 +393,6 @@ def check_welcome_constraint_match_plateau(memberCombinationIds, teams):
 				if hostIdTmp not in welcomingTeams:
 					welcomingTeams.append(hostIdTmp) 
 		
-# 		logging.debug("welcomingTeams: %s" %welcomingTeams)
-# 		logging.debug("teams: %s" %teams)
-
 		# compare list of welcoming teams with all teams
 		if sorted(welcomingTeams) == teams:
 			statusCheckWelcomeConstraint = 1
@@ -478,20 +449,11 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 			for indexGroup, group in enumerate(contentDay, start=1):
 				hostCombinationIndex[day].append(0)
 		
-# 		logging.debug("  hostCombinationIndex: %s" %hostCombinationIndex)
-		
 		# calculate the total number of  host combination
 		hostCombinationNbr = 1
 		for day, contentDay in plateauDistributionPerPool.items():
-# 			logging.debug("  day: %s" %day)
 			for indexGroup, group in enumerate(contentDay, start=1):
-# 				logging.debug("  indexGroup: %s group: %s" %(indexGroup, group))
 				hostCombinationNbr *= len(group)
-
-		logging.debug("  hostCombinationNbr: %s" %hostCombinationNbr)
-		logging.debug("  plateauDistributionPerPool:%s"%plateauDistributionPerPool)
-		logging.debug("  welcomeConstraintExistMatchPlateau:%s"%welcomeConstraintExistMatchPlateau)
-		logging.debug("  teams:%s"%teams)
 
 		# find the shortest distance
 		bestHostCombinationIndex = {}
@@ -499,42 +461,34 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 		bestDistanceMemberCombination = 0
 		bestIterationNbr = 0
 		for i in range(hostCombinationNbr):
-			if i%100 == 0:
-				logging.debug("  i: %s " %(i))
 
 			if i == config.INPUT.IterShortestDistancePlateau:
 				break
 			
 			# convert iteration number to base 3
 			base3Tmp = str(convert_decimal_to_base3(i))
-# 			logging.debug("  base3Tmp: %s" %base3Tmp)
 
 			# complete base3 to 12 characters (12 of 3-elements tuples )
 			for k in range(12-len(base3Tmp)):
 				base3Tmp = '0' + base3Tmp
-# 			logging.debug("  base3Tmp: %s" %base3Tmp)
 
 			# get combination of index host for each day  
 			hostCombinationIndex = get_host_combination_index_from_base3(hostCombinationIndex, base3Tmp)
-# 			logging.debug("  hostCombinationIndex: %s" %hostCombinationIndex)
 
 			# get host names from combination
 			memberCombinationIds = get_member_combination_ids_from_host_combination_index(plateauDistributionPerPool, hostCombinationIndex)
-# 			logging.debug("  memberCombinationIds: %s" %memberCombinationIds)
 			
 			# if the flag of welcome constraint is checked
 			if(int(welcomeConstraintExistMatchPlateau) == 1):
 				# check welcome constraint for match plateau 
 				
 				statusCheckWelcomeConstraintMatchPlateau = check_welcome_constraint_match_plateau(memberCombinationIds, teams)
-# 				logging.debug("  statusCheckWelcomeConstraintMatchPlateau: %s" %statusCheckWelcomeConstraintMatchPlateau)
 				
 				if statusCheckWelcomeConstraintMatchPlateau == 0:
 					continue
 			
 			# each member can only become host at most txo times (two days)
 			statusCheckMaxTimesHost = check_max_times_host_match_plateau(memberCombinationIds)
-			logging.debug("  statusCheckMaxTimesHost: %s" %statusCheckMaxTimesHost)
 			
 			if statusCheckMaxTimesHost == 0:
 				continue
@@ -542,7 +496,6 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 			
 			# calculate distance total for a specific member combination
 			distanceMemberCombination = get_distance_for_member_combination_ids(memberCombinationIds)
-# 			logging.debug("  distanceMemberCombination: %s" %distanceMemberCombination)
 
 			# assign the value for the first time
 			if bestDistanceMemberCombination == 0:
@@ -558,12 +511,6 @@ def calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPo
 				bestIterationNbr = i
 
 
-		
-		logging.debug("  bestIterationNbr: %s" %bestIterationNbr)
-# 		logging.debug("  bestDistanceMemberCombination: %s" %bestDistanceMemberCombination)
-# 		logging.debug("  bestHostCombinationIndex: %s" %bestHostCombinationIndex)
-# 		logging.debug("  bestMemberCombinationIds: %s" %bestMemberCombinationIds)
-		
 		result = {	"bestDistance": bestDistanceMemberCombination, 
 					"bestHostCombinationIndex": bestHostCombinationIndex,
 					"bestMemberCombinationIds": bestMemberCombinationIds,
@@ -650,12 +597,8 @@ def create_encounters_from_pool_distribution_plateau(poolDistribution, welcomeCo
 	try:
 		encountersPlateau = {}
 
-		logging.debug("")
-
-
 		bestDistancePerPool = {}
 		for pool, teams in poolDistribution.items():
-			logging.debug("  teams: %s" %teams)
 			encountersPlateau[pool] = {}
 
 			# init vars
@@ -666,12 +609,10 @@ def create_encounters_from_pool_distribution_plateau(poolDistribution, welcomeCo
 
 				# assign random value for each team
 				teamRandomValues = [round(random.random() * 100) for i in range(len(teams))]
-	# 			logging.debug("  teamRandomValues: %s" %teamRandomValues)
 	
 				# get the index values of the sorted random values
 				indexSortedTeamRandomValues = list(range(1, len(teamRandomValues)+1))
 				indexSortedTeamRandomValues = sorted( indexSortedTeamRandomValues, key=lambda k: teamRandomValues[indexSortedTeamRandomValues.index(k)] )
-				logging.debug("  indexSortedTeamRandomValues: %s" %indexSortedTeamRandomValues)
 	
 	
 				# assign teams based on their random number values according to the established matrix
@@ -699,41 +640,28 @@ def create_encounters_from_pool_distribution_plateau(poolDistribution, welcomeCo
 															[ secondTeamAssigned, sixthTeamAssigned, eighthTeamAssigned], 
 															[ firstTeamAssigned, fifthTeamAssigned, seventhTeamAssigned] ],
 												}
-				logging.debug("  plateauDistributionPerPoolTmp: %s" %plateauDistributionPerPoolTmp)
 	
 				returnShortestDistance = calculate_shortest_distance_plateau_from_3_4_matrix(plateauDistributionPerPoolTmp, welcomeConstraintExistMatchPlateau, teams)
-	# 			logging.debug("  returnShortestDistance: %s" %returnShortestDistance)
 				
 				# for first iteration
 				if i == 0:
 					bestDistancePerPool[pool] = returnShortestDistance["bestDistance"]
-					logging.debug("  bestDistance: %s" %bestDistancePerPool[pool])
-
 					bestMemberCombinationIds = returnShortestDistance["bestMemberCombinationIds"]
-# 					logging.debug("  bestMemberCombinationIds: %s" %bestMemberCombinationIds)	
 
 				# for second onward iterations
 				else:
 					if returnShortestDistance["bestDistance"] < bestDistancePerPool[pool]:
 						bestDistancePerPool[pool] = returnShortestDistance["bestDistance"]
-						logging.debug("  bestDistance: %s" %bestDistancePerPool[pool])
-				
 						bestMemberCombinationIds = returnShortestDistance["bestMemberCombinationIds"]
-# 						logging.debug("  bestMemberCombinationIds: %s" %bestMemberCombinationIds)
 		
 
 			logging.debug(" -----------------------  FINISHED ITERATION PLATEAU FOR POOL: %s  ----------------------------------------"%pool)
-			logging.debug(" bestMemberCombinationIds: %s "%bestMemberCombinationIds)
 		
 			# get encounter details from member combination ids
 			encountersDetailsPlateauPerPool = get_encounters_details_from_member_combination_ids(bestMemberCombinationIds)
-# 			logging.debug(" encountersDetailsPlateauPerPool: \n%s "%json.dumps(encountersDetailsPlateauPerPool))
 			
 			encountersPlateau[pool] = encountersDetailsPlateauPerPool
 			
-		logging.debug(" ")
-		logging.debug(" bestDistancePerPool: %s "%bestDistancePerPool)
-# 		logging.debug("  encountersPlateau: \n%s" %json.dumps(encountersPlateau))
 
 		return encountersPlateau 
 
@@ -759,7 +687,6 @@ def create_encounters_from_pool_distribution(poolDistribution):
 
 						# calculate distance and travel time
 						sql = "select distance, duree from trajet where depart=%s and destination=%s" %(member1, member2)
-# 						logging.debug("  sql: %s" %(sql))
 						distance, travelTime = db.fetchone_multi(sql)
 
 						sql = "select participants, nom, ville, code_postal from entite where id=%s" %member1
@@ -772,13 +699,9 @@ def create_encounters_from_pool_distribution(poolDistribution):
 		
 						# Escape single apostrophe for name and city
 						name1 = name1.replace("'", u"''")
-# 						logging.debug("  name1: %s" %(name1))
 						name2 = name2.replace("'", u"''")
-# 						logging.debug("  name2: %s" %(name2))
 						city1 = city1.replace("'", u"''")
-# 						logging.debug("  city1: %s" %(city1))
 						city2 = city2.replace("'", u"''")
-# 						logging.debug("  city2: %s" %(city2))
 
 						encounter = {"equipeDepartId": member1, "equipeDestinationId": member2, 
 														"distance": distance, "duree": travelTime,
@@ -820,7 +743,6 @@ def create_encounters_from_pool_distribution_one_way(poolDistribution):
 
 						# calculate distance and travel time
 						sql = "select distance, duree from trajet where depart=%s and destination=%s" %(member1, member2)
-# 						logging.debug("  sql: %s" %(sql))
 						distance, travelTime = db.fetchone_multi(sql)
 
 						sql = "select participants, nom, ville, code_postal from entite where id=%s" %member1
@@ -833,13 +755,9 @@ def create_encounters_from_pool_distribution_one_way(poolDistribution):
 		
 						# Escape single apostrophe for name and city
 						name1 = name1.replace("'", u"''")
-# 						logging.debug("  name1: %s" %(name1))
 						name2 = name2.replace("'", u"''")
-# 						logging.debug("  name2: %s" %(name2))
 						city1 = city1.replace("'", u"''")
-# 						logging.debug("  city1: %s" %(city1))
 						city2 = city2.replace("'", u"''")
-# 						logging.debug("  city2: %s" %(city2))
 
 						encounter = {"equipeDepartId": member1, "equipeDestinationId": member2, 
 														"distance": distance, "duree": travelTime,
@@ -864,7 +782,6 @@ def create_pool_details_from_encounters(encounters, poolDistribution):
 		poolDetails = {}
 		
 		for pool, encountersDetails in encounters.items():
-# 			poolDetails[pool] = {"totalDistance": 0, "totalTravelTime": 0, "totalDistanceAllParticipants": 0, "totalParticipants": 0}
 			poolDetails[pool] = {"distanceTotale": 0, "dureeTotale": 0, "distanceTotaleTousParticipants": 0, "nbrParticipantsTotal": 0}
 		
 			members = poolDistribution[pool]
@@ -873,15 +790,11 @@ def create_pool_details_from_encounters(encounters, poolDistribution):
 			for member in members:
 				sql = "select participants from entite where id=%s" %member
 				nbrParticipants = db.fetchone(sql)
-# 				poolDetails[pool]["totalParticipants"] += int(resultSql)
 				poolDetails[pool]["nbrParticipantsTotal"] += int(nbrParticipants)
 		
 			# get sum of other details
 			for encounterNbr, encounterDetails in encountersDetails.items():
-# 				logging.debug("  encounterDetails: %s" %(encounterDetails, ))
-# 				poolDetails[pool]["totalDistance"] += encounterDetails["distance"]
 				poolDetails[pool]["distanceTotale"] += encounterDetails["distance"]
-# 				poolDetails[pool]["totalTravelTime"] += encounterDetails["travelTime"]
 				poolDetails[pool]["dureeTotale"] += encounterDetails["duree"]
 				poolDetails[pool]["distanceTotaleTousParticipants"] += encounterDetails["distanceTousParticipants"]
 		
@@ -897,8 +810,6 @@ Function to create pool details from encounters for match plateau
 def create_pool_details_from_encounters_plateau(encountersPlateau, poolDistribution):
 	try:
 		poolDetailsPlateau = {}
-	
-# 		logging.debug("  poolDistribution: %s" %(poolDistribution))
 	
 		for pool, contentPool in encountersPlateau.items():
 			poolDetailsPlateau[pool] = {	"distanceTotale": 0,
@@ -955,9 +866,7 @@ def get_indexes_prohibition_constraints(prohibitionConstraints, teams):
 	try:
 		indexesProhibitionConstraints = []
 
-
 		for constraint in prohibitionConstraints:
-# 			logging.debug("  prohibitionConstraints: %s" %(prohibitionConstraints))
 			member1 = int(constraint[0])
 			member2 = int(constraint[1])
 			indexesTmp = [ teams.index(member1), teams.index(member2) ]
@@ -1017,17 +926,14 @@ def create_rules_for_prohibition_constraints(indexesProhibitionConstraints, P_Ma
 			for indexMemberOf2 in indexesMembersOf2:
 				listTemp = sorted([member1, indexMemberOf2])
 				rulesMember1.append(listTemp) 
-# 				logging.debug("  rulesMember1: %s" %(rulesMember1))
 
 			# between member2 and current team members of member1
 			for indexMemberOf1 in indexesMembersOf1:
 				listTemp = sorted([member2, indexMemberOf1])
 				rulesMember2.append(listTemp) 
-# 				logging.debug("  rulesMember2: %s" %(rulesMember2))
 
 			# concatenate the two rules
 			rulesConstraint = rulesMember1 + rulesMember2
-# 				logging.debug("  rulesConstraint: %s" %(rulesConstraint))
 
 			rulesConstraints += rulesConstraint
 		
@@ -1044,20 +950,14 @@ def get_p_matrix_for_round_trip_match_optimal_without_constraint(P_InitMat, D_Ma
 	try:		
 		# calculate initial distance
 		initDistance = calculate_V_value(P_InitMat, D_Mat)
-		logging.debug("  initDistance: %s" %initDistance)
 	
 		# calculate initial T_Value
 		T_Value = 0.1 * initDistance
-		logging.debug("  T_Value initial: %s" %T_Value)
 
 		for nbIter in range(iter):
-			logging.debug("  ----------------------------------------------------------------------------------------------------")
-			logging.debug("  nbIter: %s" %nbIter)
-			logging.debug("  ----------------------------------------------------------------------------------------------------")
 	
 			# Function T_value
 			T_Value *= 0.99
-			logging.debug("  T_Value current: %s" %T_Value)
 	
 			### get index to change row and column
 			while True:
@@ -1068,7 +968,6 @@ def get_p_matrix_for_round_trip_match_optimal_without_constraint(P_InitMat, D_Ma
 				P_ij = P_InitMat[i][j]
 			
 				if i <= j and int(P_ij) == 0:
-					logging.debug("  i: %s, j: %s" %(i, j))
 					break
 	# 			
 			P_TransMat = np.copy(P_InitMat)
@@ -1077,17 +976,10 @@ def get_p_matrix_for_round_trip_match_optimal_without_constraint(P_InitMat, D_Ma
 			P_TransMat[transIndex,:] = P_TransMat[list(reversed(transIndex)),:]
 			# change two rows according to transIndex
 			P_TransMat[:,transIndex] = P_TransMat[:,list(reversed(transIndex))]
-	# 		logging.debug("  P_InitMat: \n%s" %P_InitMat)
-	# 		logging.debug("  P_TransMat: \n%s" %P_TransMat)
 	# 
 			V_oriValue = calculate_V_value(P_InitMat, D_Mat)
-			logging.debug("  V_oriValue: %s" %V_oriValue)
-	
 			V_transValue = calculate_V_value(P_TransMat, D_Mat)
-			logging.debug("  V_transValue: %s" %V_transValue)
-	
 			deltaV = V_oriValue - V_transValue
-			logging.debug("  deltaV: %s" %deltaV)
 			
 			# temperature function 
 			# reinitialize temperature in the middle of loop
@@ -1101,10 +993,8 @@ def get_p_matrix_for_round_trip_match_optimal_without_constraint(P_InitMat, D_Ma
 				pass
 			else:
 				randValue = random.random()
-	# 			logging.debug("randValue: %s" %randValue)
 	
 				expValue = math.exp(-deltaV/T_Value)
-	# 			logging.debug("expValue: %s" %expValue)
 	
 				if randValue <= expValue:
 					pass
@@ -1126,25 +1016,14 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 	try:		
 		# calculate initial distance
 		initDistance = calculate_V_value(P_InitMat, D_Mat)
-		logging.debug("  initDistance: %s" %initDistance)
 	
 		# calculate initial T_Value
 		T_Value = 0.1 * initDistance
-		logging.debug("  T_Value initial: %s" %T_Value)
-		
-		logging.debug("  iterConstraint: %s" %iterConstraint)
-		logging.debug("	 prohibitionConstraints: \n%s" %json.dumps(prohibitionConstraints))
-		logging.debug("  typeDistributionConstraints: \n%s" %json.dumps(typeDistributionConstraints))
 
 		for nbIter in range(iter):
-			logging.debug("  ----------------------------------------------------------------------------------------------------")
-			logging.debug("  nbIter: %s" %nbIter)
-			logging.debug("  ----------------------------------------------------------------------------------------------------")
 	
 			# Function T_value
 			T_Value *= 0.99
-			logging.debug("  T_Value current: %s" %T_Value)
-	
 
 			### get index to change row and column
 			while True:
@@ -1172,7 +1051,6 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 						
 					##### apply type distribution constraints #####
 					# create temporary P matrix if the transIndex is applied 
-					
 					P_TransMatTmp = np.copy(P_InitMat)
 					P_TransMatTmp[transIndex,:] = P_TransMatTmp[list(reversed(transIndex)),:]  # change two columns according to transIndex
 					P_TransMatTmp[:,transIndex] = P_TransMatTmp[:,list(reversed(transIndex))] # change two rows according to transIndex
@@ -1181,41 +1059,27 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 						poolDistributionTmp = create_pool_distribution_from_matrix_one_way(P_TransMatTmp, teamNbr, poolNbr, poolSize, teams)
 					else:
 						poolDistributionTmp = create_pool_distribution_from_matrix(P_TransMatTmp, teamNbr, poolNbr, poolSize, teams)
-# 					logging.debug("  poolDistributionTmp: \n%s" %poolDistributionTmp)
-
-
 
 					statusProhibitionConstraints = check_prohibition_constraints(prohibitionConstraints, poolDistributionTmp)
-					logging.debug("	statusProhibitionConstraints: %s" %statusProhibitionConstraints)
 
 					statusTypeDistributionConstraints = check_type_distribution_constraints(typeDistributionConstraints, poolDistributionTmp)
-					logging.debug("	statusTypeDistributionConstraints: %s" %statusTypeDistributionConstraints)
 
 					# if the transformed matrix fulfills the type distribution constraints
 					if statusProhibitionConstraints == 0 and statusTypeDistributionConstraints == 0:
-						logging.debug("  i: %s, j: %s" %(i, j))
-						logging.debug("  iterConstraint: %s" %(iterConstraint))
 						break
 		
-
-			
 			P_TransMat = np.copy(P_InitMat)
 	
 			# change two columns according to transIndex
 			P_TransMat[transIndex,:] = P_TransMat[list(reversed(transIndex)),:]
 			# change two rows according to transIndex
 			P_TransMat[:,transIndex] = P_TransMat[:,list(reversed(transIndex))]
-	# 		logging.debug("  P_InitMat: \n%s" %P_InitMat)
-
 
 			V_oriValue = calculate_V_value(P_InitMat, D_Mat)
-			logging.debug("  V_oriValue: %s" %V_oriValue)
 	
 			V_transValue = calculate_V_value(P_TransMat, D_Mat)
-			logging.debug("  V_transValue: %s" %V_transValue)
 	
 			deltaV = V_oriValue - V_transValue
-			logging.debug("  deltaV: %s" %deltaV)
 			
 			# temperature function 
 			# reinitialize temperature in the middle of loop
@@ -1229,21 +1093,13 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 				pass
 			else:
 				randValue = random.random()
-# 				logging.debug("randValue: %s" %randValue)
 	
 				expValue = math.exp(-deltaV/T_Value)
-# 				logging.debug("expValue: %s" %expValue)
 	
 				if randValue <= expValue:
 					pass
 				else:
 					P_InitMat = P_TransMat
-
-		logging.debug("")
-
-# 		logging.debug("  P_InitMat: \n%s" %P_InitMat)
-# 		logging.debug("  P_TransMat: \n%s" %P_TransMat)
-# 		logging.debug("  P_TransMatTmp: \n%s" %P_TransMatTmp)
 
 		return {"status": "yes", "data": P_InitMat}
 	
@@ -1260,20 +1116,14 @@ def get_p_matrix_for_round_trip_match_equitable_without_constraint(P_InitMat, D_
 	try:		
 		# calculate initial distance
 		initDistance = calculate_V_value_equitable(P_InitMat, D_Mat)
-		logging.debug("  initDistance: %s" %initDistance)
 	
 		# calculate initial T_Value
 		T_Value = 0.1 * initDistance
-		logging.debug("  T_Value initial: %s" %T_Value)
 
 		for nbIter in range(iter):
-			logging.debug("  ----------------------------------------------------------------------------------------------------")
-			logging.debug("  nbIter: %s" %nbIter)
-			logging.debug("  ----------------------------------------------------------------------------------------------------")
 	
 			# Function T_value
 			T_Value *= 0.99
-			logging.debug("  T_Value current: %s" %T_Value)
 	
 			### get index to change row and column
 			while True:
@@ -1284,7 +1134,6 @@ def get_p_matrix_for_round_trip_match_equitable_without_constraint(P_InitMat, D_
 				P_ij = P_InitMat[i][j]
 			
 				if i <= j and int(P_ij) == 0:
-					logging.debug("  i: %s, j: %s" %(i, j))
 					break
 	# 			
 			P_TransMat = np.copy(P_InitMat)
@@ -1293,28 +1142,18 @@ def get_p_matrix_for_round_trip_match_equitable_without_constraint(P_InitMat, D_
 			P_TransMat[transIndex,:] = P_TransMat[list(reversed(transIndex)),:]
 			# change two rows according to transIndex
 			P_TransMat[:,transIndex] = P_TransMat[:,list(reversed(transIndex))]
-	# 		logging.debug("  P_InitMat: \n%s" %P_InitMat)
-	# 		logging.debug("  P_TransMat: \n%s" %P_TransMat)
 	# 
 			V_oriValue_equitable = calculate_V_value_equitable(P_InitMat, D_Mat)
-			logging.debug("  V_oriValue_equitable: %s" %V_oriValue_equitable)
 	
 			V_transValue_equitable = calculate_V_value_equitable(P_TransMat, D_Mat)
-			logging.debug("  V_transValue_equitable: %s" %V_transValue_equitable)
 	
 			deltaV_equitable = V_oriValue_equitable - V_transValue_equitable
-			logging.debug("  deltaV_equitable: %s" %deltaV_equitable)
 			
 			######################################################################################################
 			V_oriValue = calculate_V_value(P_InitMat, D_Mat)
-			logging.debug("  V_oriValue: %s" %V_oriValue)
 			V_transValue = calculate_V_value(P_TransMat, D_Mat)
-			logging.debug("  V_transValue: %s" %V_transValue)
 			deltaV = V_oriValue - V_transValue
-			logging.debug("  deltaV: %s" %deltaV)
 			######################################################################################################
-			
-			
 			
 			# temperature function 
 			# reinitialize temperature in the middle of loop
@@ -1328,10 +1167,8 @@ def get_p_matrix_for_round_trip_match_equitable_without_constraint(P_InitMat, D_
 				pass
 			else:
 				randValue = random.random()
-# 				logging.debug("  randValue: %s" %randValue)
 	
 				expValue = math.exp(-deltaV_equitable/T_Value)
-# 				logging.debug("  expValue: %s" %expValue)
 	
 				if randValue <= expValue:
 					pass
@@ -1352,24 +1189,14 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 	try:		
 		# calculate initial distance
 		initDistance = calculate_V_value_equitable(P_InitMat, D_Mat)
-		logging.debug("  initDistance: %s" %initDistance)
 	
 		# calculate initial T_Value
 		T_Value = 0.1 * initDistance
-		logging.debug("  T_Value initial: %s" %T_Value)
-
-		logging.debug("  iterConstraint: %s" %iterConstraint)
-
-
+	
 		for nbIter in range(iter):
-			logging.debug("  ----------------------------------------------------------------------------------------------------")
-			logging.debug("  nbIter: %s" %nbIter)
-			logging.debug("  ----------------------------------------------------------------------------------------------------")
 	
 			# Function T_value
 			T_Value *= 0.99
-			logging.debug("  T_Value current: %s" %T_Value)
-	
 	
 			### get index to change row and column
 			while True:
@@ -1389,7 +1216,6 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 				j = transIndex[1]
 				P_ij = P_InitMat[i][j]
 			
-			
 				# break if the constraints are satisfied
 				# P_ij == 0 means that both teams are in different pool 
 				if i <= j and int(P_ij) == 0:
@@ -1406,18 +1232,12 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 						else:	
 							poolDistributionTmp = create_pool_distribution_from_matrix(P_TransMatTmp, teamNbr, poolNbr, poolSize, teams)
 
-						
 						statusProhibitionConstraints = check_prohibition_constraints(prohibitionConstraints, poolDistributionTmp)
-						logging.debug("  statusProhibitionConstraints: %s" %statusProhibitionConstraints)
-
 
 						statusTypeDistributionConstraints = check_type_distribution_constraints(typeDistributionConstraints, poolDistributionTmp)
-						logging.debug("	statusTypeDistributionConstraints: %s" %statusTypeDistributionConstraints)
 
 						# if the transformed matrix fulfills the type distribution constraints
 						if statusProhibitionConstraints == 0 and statusTypeDistributionConstraints == 0:
-							logging.debug("  i: %s, j: %s" %(i, j))
-							logging.debug("  iterConstraint: %s" %(iterConstraint))
 							break
 						
 
@@ -1427,28 +1247,18 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 			P_TransMat[transIndex,:] = P_TransMat[list(reversed(transIndex)),:]
 			# change two rows according to transIndex
 			P_TransMat[:,transIndex] = P_TransMat[:,list(reversed(transIndex))]
-	# 		logging.debug("  P_InitMat: \n%s" %P_InitMat)
-	# 		logging.debug("  P_TransMat: \n%s" %P_TransMat)
 	# 
 			V_oriValue_equitable = calculate_V_value_equitable(P_InitMat, D_Mat)
-			logging.debug("  V_oriValue_equitable: %s" %V_oriValue_equitable)
 	
 			V_transValue_equitable = calculate_V_value_equitable(P_TransMat, D_Mat)
-			logging.debug("  V_transValue_equitable: %s" %V_transValue_equitable)
 	
 			deltaV_equitable = V_oriValue_equitable - V_transValue_equitable
-			logging.debug("  deltaV_equitable: %s" %deltaV_equitable)
 			
 # 			######################################################################################################
 			V_oriValue = calculate_V_value(P_InitMat, D_Mat)
-			logging.debug("  V_oriValue: %s" %V_oriValue)
 			V_transValue = calculate_V_value(P_TransMat, D_Mat)
-			logging.debug("  V_transValue: %s" %V_transValue)
 			deltaV = V_oriValue - V_transValue
-			logging.debug("  deltaV: %s" %deltaV)
 # 			######################################################################################################
-			
-			
 			
 			# temperature function 
 			# reinitialize temperature in the middle of loop
@@ -1462,10 +1272,8 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 				pass
 			else:
 				randValue = random.random()
-# 				logging.debug("  randValue: %s" %randValue)
 	
 				expValue = math.exp(-deltaV_equitable/T_Value)
-# 				logging.debug("  expValue: %s" %expValue)
 	
 				if randValue <= expValue:
 					pass
@@ -1518,8 +1326,6 @@ def get_info_pool_from_pool_distribution(poolDistribution):
 				infoPool[poolSize] = 1
 			else:
 				infoPool[poolSize] += 1
-				
-
 
 		return infoPool
 
@@ -1535,13 +1341,9 @@ def check_existence_ref_scenario(teams):
 	try:
 		withRef = False
 
-# 		logging.debug(" teams: %s" %sorted(teams))
-
 		for teamId in teams:
 			sql = "select poule from entite where id=%s"%teamId
-			logging.debug(" sql: %s" %sql)
 			poule = db.fetchone(sql)
-			logging.debug(" poule: %s" %poule)
 			
 			if poule != '' and poule != None:
 				return True
@@ -1580,7 +1382,6 @@ def create_reference_pool_distribution_from_db(teams, poolSize):
 				if poolId not in listChars:
 					listChars.append(poolId)
 				poolId = (listChars.index(poolId)) + 1
-# 				logging.debug(" poolId: %s" %poolId)
 				#############################################################################################################
 
 
@@ -1602,8 +1403,6 @@ def create_reference_pool_distribution_from_db(teams, poolSize):
 				maxPoolSizeRef = len(members)
 		poolDistributionReference["maxPoolSizeRef"] = maxPoolSizeRef
 		poolDistributionReference["poolNbrRef"] = poolNbrRef
-		logging.debug(" maxPoolSizeRef: %s" %maxPoolSizeRef)
-		logging.debug(" poolNbrRef: %s" %poolNbrRef)
 
 		# add phantom teams to the created distribution 
 		# in the case of pool size in ref scenario is the same as the pool size specified by user
@@ -1612,49 +1411,14 @@ def create_reference_pool_distribution_from_db(teams, poolSize):
 			for pool, poolTeams in poolDistributionReferenceTmp.items():
 				if len(poolTeams) < maxPoolSizeRef:
 					sizeDiff = maxPoolSizeRef - len(poolTeams)
-					logging.debug("sizeDiff: %s" %sizeDiff)
 					for i in range(sizeDiff):
 						phantomTeam = phantomTeams.pop()
 						poolDistributionReference["data"][pool].append(phantomTeam)
 			
-					
-
-# 		logging.debug(" teams: %s" %teams)
-# 		logging.debug(" phantomTeams: %s" %phantomTeams)
-# 		logging.debug(" len teams: %s" %len(teams))
 		return poolDistributionReference
 	except Exception as e:
 		show_exception_traceback()
 
-
-"""
-Function to create distance matrix from an XLS file
-"""
-def create_distance_matrix_from_xl(inputFile):
-	try:
-		logging.debug("####################################### READ XLSX DISTANCE MATRIX ##############################################")
-	# 		wb = load_workbook('/home/henz/project/ffbb/matrice_od_144_real.xlsx')
-		wb = load_workbook(inputFile)
-		ws = wb.active
-		
-	# 		dataObj = ws['C5:EP148']
-		dataObj = ws['B4:AW51']
-		listValues = []
-		for rowEl in dataObj:
-			listValuesRow = []
-			for el in rowEl:
-				valueTmp = el.value
-				listValuesRow.append(valueTmp)
-			listValues.append(listValuesRow)
-	# 		logging.debug("listValues: %s" %str(listValues))
-		
-		D_Mat = np.array(listValues)
-		logging.debug("shape D_Mat: %s" %str(D_Mat.shape))
-# 		logging.debug("D_Mat: \n%s" %str(D_Mat))
-	except Exception as e:
-		show_exception_traceback()
-
-	return D_Mat
 
 """
 Function to get coordinates for longitude and latitude 
@@ -1673,7 +1437,6 @@ def get_coordinates_from_city_id(entityId):
 			
 			# update coordinates in table entite
 			sql = "update entite set longitude=%s, latitude=%s where id=%s" %(lon, lat, entityId)
-			logging.debug("sql: %s" %(sql))
 			db.execute(sql)
 			db.commit()
 			
@@ -1703,7 +1466,6 @@ def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coord
 					
 		# get distance from HERE response
 		if data["response"]:
-# 			logging.debug("data[response]: %s" %data["response"])
 			
 			# if license error
 			if "type" in data["response"]:
@@ -1721,10 +1483,8 @@ def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coord
 				distance = data['response']['route'][0]['summary']['distance']
 				travelTime = data['response']['route'][0]['summary']['baseTime']
 
-
 		# insert to table trajet
 		dateCreation = datetime.datetime.now().date()
-# 		logging.debug("dateCreation: %s" %dateCreation)
 
 		try:
 			
@@ -1794,7 +1554,6 @@ def create_distance_matrix_from_db(teams, reportId, userId):
 		
 			# get destination cities
 			destinations = list(teams) # make a copy of teams list
-# 	 		logging.debug("destinations: %s" %destinations)
 			
 			for indexDestination, destination in enumerate(destinations):
 				
@@ -1804,30 +1563,22 @@ def create_distance_matrix_from_db(teams, reportId, userId):
 				else:
 					# get distance from table trajet
 					sql = "select distance from trajet where depart=%s and destination=%s "%(depart, destination)
-# 					logging.debug("sql: %s" %sql)
 					distance = db.fetchone(sql)
-# 					logging.debug("\n")
-# 					logging.debug("distance DB: %s" %distance)
 					
 					# call HERE server if distance is None (not found in the table trajet)
 					if distance == None:
-						logging.debug("depart: %s" %depart)
-						logging.debug("destination: %s" %destination)
 						
 						## get latitude and longitude for the depart team
 						coordDepart = get_coordinates_from_city_id(depart)
-						logging.debug("coordDepart: %s" %coordDepart)
 						
 						## get latitude and longitude for the destination team
 						coordDestination = get_coordinates_from_city_id(destination)
-						logging.debug("coordDestination: %s" %coordDestination)
 						
 						# increment number of HERE requests
 						nbrRequestsHere += 1
 						
 						# get distance and travel time from HERE web service
 						resultsHere = get_distance_travel_time_from_here_ws(depart, destination, coordDepart, coordDestination, reportId, userId)
-						logging.debug("resultsHere: %s" %resultsHere)
 
 						# get distance from results Here
 						distance = resultsHere["distance"]
@@ -1881,7 +1632,6 @@ def insert_calculation_time_to_db(userId, startTime, endTime, duration):
 					"valeur": duration
 				
 				}
-# 		logging.debug("sql: %s" %sql)
 		db.execute(sql)
 		db.commit()
 
@@ -1902,22 +1652,12 @@ def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize):
 		P_InitMat = np.zeros((teamNbr, teamNbr))
 		
 		# determine max and min pool size from normal pool size and variation team number per pool
-		
-		logging.debug("teamNbr: %s" %teamNbr)
-		logging.debug("poolNbr: %s" %poolNbr)
-		logging.debug("poolSize: %s" %poolSize)
-# 		logging.debug("varTeamNbrPerPool: %s" %varTeamNbrPerPool)
-# 		logging.debug("poolSizeMax: %s" %poolSizeMax)
-# 		logging.debug("poolSizeMin: %s" %poolSizeMin)
 
 		# generate a random value for each team
 		teamRandomValues = [round(random.random() * 100) for i in range(teamNbr)]
-		logging.debug("teamRandomValues: %s" %teamRandomValues)
 		
 		# get the index values of the sorted random values
 		indexSortedTeamRandomValues = sorted( range(len(teamRandomValues)), key=lambda k: teamRandomValues[k] )
-		
-
 		
 		# attribute pool number to the sorted team values
 		teamPoolSorted = []
@@ -1929,8 +1669,6 @@ def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize):
 		teamPoolResult = [0] * teamNbr
 		for i in range(teamNbr):
 			teamPoolResult[indexSortedTeamRandomValues[i]] = teamPoolSorted[i]
-		logging.debug("teamPoolResult: %s" %teamPoolResult)
-		logging.debug("len teamPoolResult: %s" %len(teamPoolResult))
 		
 		
 		# get index of the teams with the same pool number (create 2D Matrix from list)
@@ -2087,29 +1825,21 @@ def check_type_distribution_constraints(typeDistributionConstraints, poolDistrib
 
 		for constraintType, constraintTeamMembers in typeDistributionConstraints.items():
 			constraintTeamMembersNbr = len(constraintTeamMembers)
-# 			logging.debug("constraintTeamMembers: %s" %constraintTeamMembers)
-# 			logging.debug("constraintTeamMembersNbr: %s" %constraintTeamMembersNbr)
 
 			expectedMemberDistribution = distribute_team_members_type_distribution_constraints(poolNbr, constraintTeamMembersNbr)
-# 			logging.debug("expectedMemberDistribution: %s" %expectedMemberDistribution)
 
 			currentMemberDistribution = []
 			for pool, poolMembers in poolDistribution.items():
 				
-# 				logging.debug("poolMembers: %s" %poolMembers)
-# 				logging.debug("poolNbr: %s" %poolNbr)
-
 				# check for each constraintTeamMember
 				constraintTeamMembers_inPoolMembersNbr = 0
 				for constraintTeamMember in constraintTeamMembers:
 					if int(constraintTeamMember) in poolMembers:
 						constraintTeamMembers_inPoolMembersNbr += 1
 				currentMemberDistribution.append(constraintTeamMembers_inPoolMembersNbr)
-# 				logging.debug("constraintTeamMembers_inPoolMembersNbr: %s" %constraintTeamMembers_inPoolMembersNbr)
 
 			# sort current member distribution
 			currentMemberDistribution = sorted(currentMemberDistribution, reverse=True)
-# 			logging.debug("currentMemberDistribution: %s" %currentMemberDistribution)
 			
 			# check if current member distribution equals to expected member distribution
 			if(currentMemberDistribution != expectedMemberDistribution):
@@ -2127,40 +1857,27 @@ def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterCo
 	try:
 		logging.debug("-------------------------------------- CREATE INIT MATRIX WITH CONSTRAINT --------------------------------" )
 
-		logging.debug("prohibitionConstraints: %s" %prohibitionConstraints)
-		logging.debug("typeDistributionConstraints: %s" %typeDistributionConstraints)
-		
 		for iterNbr in range(iterConstraint):
-
-			logging.debug("-------------------------------------------------------------------------------------------------------" )
-			logging.debug("	iterNbr: %s" %iterNbr)
-			logging.debug("-------------------------------------------------------------------------------------------------------" )
 
 			# Initialisation matrix P
 			P_InitMat = np.zeros((teamNbr, teamNbr))
 			
 			# generate a random value for each team
 			teamRandomValues = [round(random.random() * 100) for i in range(teamNbr)]
-# 			logging.debug("	teamRandomValues: %s" %teamRandomValues)
 			
 			# get the index values of the sorted random values
 			indexSortedTeamRandomValues = sorted( range(len(teamRandomValues)), key=lambda k: teamRandomValues[k] )
-	# 		logging.debug("indexSortedTeamRandomValues: %s" %indexSortedTeamRandomValues)
 			
 			# attribute pool number to the sorted team values
 			teamPoolSorted = []
 			for i in range(poolNbr):
 				tempList = [i+1]*poolSize
 				teamPoolSorted += tempList
-	# 		logging.debug("teamPoolSorted: %s" %teamPoolSorted)
 			
 			# get the pool number of the original (unsorted) team values
 			teamPoolResult = [0] * teamNbr
 			for i in range(teamNbr):
 				teamPoolResult[indexSortedTeamRandomValues[i]] = teamPoolSorted[i] 
-# 			logging.debug("	len teamPoolResult: %s" %len(teamPoolResult))
-# 			logging.debug("	teamPoolResult: %s" %teamPoolResult)
-	# 		logging.debug("teams: %s" %teams)
 
 			# create pool distribution
 			poolDistribution = {}
@@ -2173,16 +1890,11 @@ def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterCo
 				else:
 					poolDistribution[pool].append(team)
 
-			logging.debug("	poolDistribution: %s" %poolDistribution)
-			
 			# apply prohibition constraints to the pool distribution
 			statusProhibitionConstraints = check_prohibition_constraints(prohibitionConstraints, poolDistribution)
-			logging.debug("	statusProhibitionConstraints: %s" %statusProhibitionConstraints)
 
 			# apply type distribution constraints to the pool distribution
 			statusTypeDistributionConstraints = check_type_distribution_constraints(typeDistributionConstraints, poolDistribution)
-			logging.debug("	statusTypeDistributionConstraints: %s" %statusTypeDistributionConstraints)
-			
 
 			# if the initial P Matrix does not have any problem with the distribution constraints
 			if statusProhibitionConstraints == 0 and statusTypeDistributionConstraints == 0:
@@ -2199,7 +1911,6 @@ def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterCo
 				P_InitMat[indexCurPool, sameCurValueIndex] = 1
 				
 
-			np.savetxt("/tmp/p_init_mat_with_constraint.csv", P_InitMat, delimiter=",", fmt='%d')
 			return {"success": True, "data": P_InitMat}
 		else:
 			return {"success": False, "data": None}
@@ -2222,7 +1933,6 @@ def create_init_matrix_with_constraint_manual(teamNbr, poolNbr, poolSize, teams,
 		for pool in range(1, poolNbr+1):
 			poolDistribution[pool] = []
 
-
 		# initialize unassaign teams
 		unassignedTeams = list(teams)
 
@@ -2231,7 +1941,6 @@ def create_init_matrix_with_constraint_manual(teamNbr, poolNbr, poolSize, teams,
 			for indexTeam, teamPerType in enumerate(teamsPerType):
 				teamPerType = int(teamPerType)
 				assignedPoolNbr = (indexTeam%poolNbr)+1
-# 				logging.debug("assignedPoolNbr: %s" %assignedPoolNbr)
 				
 				poolDistribution[assignedPoolNbr].append(teamPerType)
 				
@@ -2240,9 +1949,7 @@ def create_init_matrix_with_constraint_manual(teamNbr, poolNbr, poolSize, teams,
 
 		for prohibition in prohibitionConstraints:
 			team1 = int(prohibition[0])
-# 			logging.debug("team1: %s" %team1)
 			team2 = int(prohibition[1])
-# 			logging.debug("team2: %s" %team2)
 			
 			# find pool of team1 and team2
 			poolTeam1 = False
@@ -2285,11 +1992,6 @@ def create_init_matrix_with_constraint_manual(teamNbr, poolNbr, poolSize, teams,
 						if poolNbrLoop == (poolNbr) and len(poolDistribution[poolNbrLoop]) == poolSize:
 							return {"success": False, "data": None}
 
-# 			logging.debug("poolTeam1: %s" %poolTeam1)
-# 			logging.debug("poolTeam2: %s" %poolTeam2)
-# 			logging.debug("	poolDistribution: %s" %poolDistribution)
-# 			logging.debug("" )
-
 		# try to distribute the remaining teams
 		for unassignedTeam in unassignedTeams:
 			for poolNbrLoop in range(1, poolNbr+1):
@@ -2301,14 +2003,9 @@ def create_init_matrix_with_constraint_manual(teamNbr, poolNbr, poolSize, teams,
 				if poolNbrLoop == (poolNbr) and len(poolDistribution[poolNbrLoop]) == poolSize:
 					return {"success": False, "data": None}
 			
-		
-		logging.debug("	poolDistribution: %s" %poolDistribution)
-		
 
 		P_Mat = create_matrix_from_pool_distribution(poolDistribution, teamNbr, teams)
-# 		logging.debug("	P_Mat.shape: %s" %(P_Mat.shape,))
 
-# 		np.savetxt("/tmp/p_init_mat_manual.txt", P_Mat, delimiter=",", fmt='%d', newline='\n\n') # DEBUG
 		return {"success": True, "data": P_Mat}
 
 	except Exception as e:
@@ -2342,9 +2039,6 @@ def create_matrix_from_pool_distribution(poolDistribution, teamNbr, teams):
 		# Initialisation matrix P
 		P_Mat = np.zeros((teamNbr, teamNbr))
 		
-# 		logging.debug("poolDistribution: %s" %poolDistribution)
-# 		logging.debug("teams: %s" %teams)
-		
 		# create pool distribution using indexes
 		indexesPoolDistribution = {}
 		
@@ -2356,8 +2050,6 @@ def create_matrix_from_pool_distribution(poolDistribution, teamNbr, teams):
 				indexesPoolDistribution[pool].append(index)
 				
 		
-# 		logging.debug("indexesPoolDistribution: %s" %indexesPoolDistribution)
-		
 		# fill in P_Mat
 		for pool, indexesTeamMembers in indexesPoolDistribution.items():
 			for indexFirstMember in indexesTeamMembers:
@@ -2365,11 +2057,7 @@ def create_matrix_from_pool_distribution(poolDistribution, teamNbr, teams):
 				indexesOtherMembers.remove(indexFirstMember)
 				for indexSecondMember in indexesOtherMembers:
 					P_Mat[indexFirstMember][indexSecondMember] = 1
-# 					logging.debug("indexFirstMember: %s" %indexFirstMember)
-# 					logging.debug("indexSecondMember: %s" %indexSecondMember)
-			
 		
-# 		logging.debug("P_Mat: \n%s" %P_Mat)
 		return P_Mat
 	except Exception as e:
 		show_exception_traceback()
@@ -2388,7 +2076,6 @@ def	get_coords_pool_distribution(poolDistribution):
 				sql = "select latitude, longitude from entite where id=%s"%member
 				lat, lon = db.fetchone_multi(sql)
 				poolDistributionCoords[pool].append((lat, lon))
-# 				logging.debug(" lat: %s lon: %s" %(lat, lon))
 			
 		return poolDistributionCoords
 	except Exception as e:
@@ -2410,9 +2097,7 @@ def get_list_details_from_list_ids_for_entity(listIds):
 		sql = "select ville from entite where id in (%s)"%(listIds)
 		listDetails["cities"] = db.fetchone_column(sql)
 		
-# 		logging.debug(" listDetails: %s" %(listDetails,))
 		return listDetails
-		
 		
 	except Exception as e:
 		show_exception_traceback()
@@ -2425,17 +2110,13 @@ Function to make variation of team number per pool
 def variation_team_number_per_pool(poolsIds, varTeamNbrPerPool):
 	try:
 
-		logging.debug(" poolsIds: %s" %(poolsIds,))
-		
 		poolNbr = len(poolsIds.keys())
-		logging.debug(" poolNbr: %s" %(poolNbr,))
 
 		poolsIdsCopy = dict.copy(poolsIds)
 		resultPoolsIds = {}
 
 		# if pool number is even
 		if poolNbr % 2 == 0:
-			logging.debug(" even pool number")
 			
 			tmpTeams = []
 			for index, (pool, teams) in enumerate(poolsIdsCopy.items(), start=1):
@@ -2453,7 +2134,6 @@ def variation_team_number_per_pool(poolsIds, varTeamNbrPerPool):
 
 		# if pool number is odd
 		if poolNbr % 2 == 1:
-			logging.debug(" odd pool number")
 		
 			tmpTeams = []
 			for index, (pool, teams) in enumerate(poolsIdsCopy.items(), start=1):
@@ -2471,8 +2151,6 @@ def variation_team_number_per_pool(poolsIds, varTeamNbrPerPool):
 						tmpTeams = []
 					resultPoolsIds[pool] = teams
 				
-# 		logging.debug(" resultPoolsIds: %s" %(resultPoolsIds,))
-
 		return resultPoolsIds
 	except Exception as e:
 		show_exception_traceback()
@@ -2591,7 +2269,6 @@ def send_email_to_user_failure_with_text(userId, reportId, contentText):
 		recipientAddress = get_user_email_from_user_id(userId)
 
 		subject = u'OPTIMOUV - mise à disposition de vos résultats de calculs'
-		logging.debug("contentText: \n%s" %contentText)
 		
 		send_email_general(recipientAddress, subject, contentText)
 
@@ -2696,7 +2373,6 @@ def save_result_to_db(launchType, reportId, groupId, results):
 						"results": json.dumps(results),
 						
 					}
-	# 		logging.debug("sql: %s" %sql)
 			db.execute(sql)
 			db.commit()
 			
@@ -2726,7 +2402,6 @@ def save_result_to_db_post_treatment(launchType, reportId, groupId, results):
 					for indexCity, city in enumerate(contentProhibition["villes"]):
 						results["params"]["interdictions"][indexProhibition]["villes"][indexCity] = city.replace("'", u"''")
 
-		
 			# characters substitution for type distribution constraints
 			if "repartitionsHomogenes" in results["params"]:
 				for teamType, contentTypeDistribution in results["params"]["repartitionsHomogenes"].items():
@@ -2734,15 +2409,12 @@ def save_result_to_db_post_treatment(launchType, reportId, groupId, results):
 						results["params"]["repartitionsHomogenes"][teamType]["noms"][indexName] = name.replace("'", u"''")
 					for indexCity, city in enumerate(contentTypeDistribution["villes"]):
 						results["params"]["repartitionsHomogenes"][teamType]["villes"][indexCity] = city.replace("'", u"''") 
-# 						logging.debug(" city: %s" %(city,))
-				
 		
 		# escape single apostrophe for city names
 		# ref scenario
 		resultsRef = results["scenarioRef"]
 		if resultsRef:
 			replace_single_quote_for_result(resultsRef["rencontreDetails"])
-# 		logging.debug("resultsRef : %s" %resultsRef)
 
 		# optimal scenario
 		resultsOptimalWithoutConstraint = results["scenarioOptimalSansContrainte"]
@@ -2763,9 +2435,6 @@ def save_result_to_db_post_treatment(launchType, reportId, groupId, results):
 		if resultsEquitableWithConstraint:
 			replace_single_quote_for_result(resultsEquitableWithConstraint["rencontreDetails"])
 
-		
-		
-		
 		name = "%s_rapport_%s_groupe_%s"%(launchType , reportId, groupId) 
 		km = 0
 		travelTime = 0
@@ -2798,7 +2467,6 @@ def save_result_to_db_post_treatment(launchType, reportId, groupId, results):
 						"results": json.dumps(results),
 						
 					}
-	# 		logging.debug("sql: %s" %sql)
 			db.execute(sql)
 			db.commit()
 			
@@ -2859,7 +2527,6 @@ def get_list_encounters_plateau(hostTeamId, hostTeamName, otherTeamsIds, otherTe
 					"travelNames":  [], 
 					"participantsNbr": 0
 				}
-# 		logging.debug("results: %s "%(results))
 		
 		# encounter ids
 		for otherTeamId in otherTeamsIds:
@@ -2877,7 +2544,6 @@ def get_list_encounters_plateau(hostTeamId, hostTeamName, otherTeamsIds, otherTe
 			cityFrom = travelId[1]
 			
 			sql = "select distance, duree from trajet where depart=%s and destination=%s"%(cityFrom, cityTo)
-# 			logging.debug("sql: %s "%(sql))
 			distance, travelTime = db.fetchone_multi(sql)
 			
 			results["groupDistance"] += distance
@@ -2887,7 +2553,6 @@ def get_list_encounters_plateau(hostTeamId, hostTeamName, otherTeamsIds, otherTe
 			participantsNbr = db.fetchone(sql)
 			
 			results["participantsNbr"] += participantsNbr
-# 			logging.debug("distance: %s "%(distance))
 
 			results["groupDistanceAllParticipants"] += (participantsNbr * distance)
 
@@ -2910,7 +2575,6 @@ def get_ref_scenario_plateau(teamsIds, userId, reportId):
 		refScenario = {"status" : "no", "data": {} }
 		
 		teamNames = get_team_names_from_ids(teamsIds)
-		logging.debug("teamNames: %s "%(teamNames))
 		
 		listChars = []
 		
@@ -2938,7 +2602,6 @@ def get_ref_scenario_plateau(teamsIds, userId, reportId):
 			hostTeamCity = hostTeamCity.replace("'", u"''")
 			
 			refPlateau = json.loads(refPlateau)
-# 			logging.debug("refPlateau: %s "%(refPlateau))
 
 			firstDay = int(refPlateau["premierJourReception"])
 			# continue to next value if value of firstDay is zero
@@ -2962,9 +2625,7 @@ def get_ref_scenario_plateau(teamsIds, userId, reportId):
 			firstDayFirstTeamCity = firstDayFirstTeamCity.replace("'", u"''")
 			firstDaySecondTeamCity = firstDaySecondTeamCity.replace("'", u"''")
 
-			
 			listEncountersGroup = get_list_encounters_plateau(hostTeamId, hostTeamName, [firstDayFirstTeamId, firstDaySecondTeamId] , [firstDayFirstTeamName, firstDaySecondTeamName] )
-# 			logging.debug("listEncountersGroup: %s "%(listEncountersGroup))
 
 			contentTmp = {	"hoteId": hostTeamId, 
 							"hoteNom": hostTeamName,
@@ -2991,7 +2652,7 @@ def get_ref_scenario_plateau(teamsIds, userId, reportId):
 			refScenario["status"] = "yes"
 
 			secondDay = int(refPlateau["deuxiemeJourReception"])
-# 			logging.debug("secondDay: %s "%(secondDay))
+
 			# continue to next value if value of firstDay is zero
 			if secondDay != 0 and secondDay != "0":
 				secondDayFirstTeamName = refPlateau["deuxiemeJourEquipe1"]
@@ -3016,7 +2677,6 @@ def get_ref_scenario_plateau(teamsIds, userId, reportId):
 			if poolId not in listChars:
 				listChars.append(poolId)
 			poolId = (listChars.index(poolId)) + 1
-# 				logging.debug(" poolId: %s" %poolId)
 			#############################################################################################################
 
 			# pool not yet in reference dict
@@ -3069,11 +2729,6 @@ def get_ref_scenario_plateau(teamsIds, userId, reportId):
 				else:
 					refScenario["data"][poolId][secondDay] = [contentTmp]
 					
-					
-		
-# 		logging.debug("refScenario: \n%s"%(json.dumps(refScenario)))
-# 		logging.debug("\n")
-		
 		return refScenario
 	
 	except Exception as e:
@@ -3092,7 +2747,6 @@ def replace_single_quote_for_result(result):
 				contentEncounter["equipeDestinationNom"] = contentEncounter["equipeDestinationNom"].replace("'", u"''")
 				contentEncounter["equipeDepartVille"] = contentEncounter["equipeDepartVille"].replace("'", u"''")
 				contentEncounter["equipeDestinationVille"] = contentEncounter["equipeDestinationVille"].replace("'", u"''")
-# 				logging.debug("contentEncounter : %s" %contentEncounter)
 
 	except Exception as e:
 		show_exception_traceback()
@@ -3137,17 +2791,13 @@ def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, pro
 		if ( calculatedResult["typeMatch"] != launchType) or (int(calculatedResult["nombrePoule"]) != int(poolNbr)):
 			errorStatus = True
 		
-# 		logging.debug("calculatedResult : \n%s" %json.dumps(calculatedResult))
-		
 		# map list of strings to list of ints for prohibition constraints
 		prohibitionConstraintsInput = [sorted(list(map(int, prohibitionConstraint))) for prohibitionConstraint in prohibitionConstraints]
-		logging.debug("prohibitionConstraintsInput : %s" %prohibitionConstraintsInput)
 
 		# map list of strings to list of ints for type distribution constraints
 		typeDistributionConstraintsInput = {}
 		for type, members in typeDistributionConstraints.items(): 
 			typeDistributionConstraintsInput[type] = sorted(list(map(int, members)))
-		logging.debug("typeDistributionConstraintsInput : %s" %typeDistributionConstraintsInput)
 
 		if "params" in calculatedResult:
 			# check prohibition constraints
@@ -3156,10 +2806,8 @@ def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, pro
 				prohibitionConstraintsSavedUnformatted = calculatedResult["params"]["interdictions"]
 				for prohibitionNbr, prohibitionConstraintSavedUnformatted in prohibitionConstraintsSavedUnformatted.items():
 					prohibitionConstraintsSaved.append(sorted(prohibitionConstraintSavedUnformatted["ids"]))
-				logging.debug("prohibitionConstraintsSaved: %s" %(prohibitionConstraintsSaved))
 			if prohibitionConstraintsInput != prohibitionConstraintsSaved: 
 				errorStatus = True
-# 				logging.debug("prohibitionConstraintsInput == prohibitionConstraintsSaved : %s" %(prohibitionConstraintsInput == prohibitionConstraintsSaved))
 			# check type distribution constraints
 			typeDistributionConstraintsSaved = {}
 			if "repartitionsHomogenes" in calculatedResult["params"]:
@@ -3168,10 +2816,6 @@ def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, pro
 					typeDistributionConstraintsSaved[type] = sorted(typeDistributionConstraintSavedUnformatted["ids"])
 			if typeDistributionConstraintsInput != typeDistributionConstraintsSaved: 
 				errorStatus = True
-# 				logging.debug("typeDistributionConstraintsInput == typeDistributionConstraintsSaved : %s" %(typeDistributionConstraintsInput == typeDistributionConstraintsSaved))
-				
-		
-		logging.debug("errorStatus : %s" %(errorStatus))
 
 		# send email if errorStatus is true
 		senderAccount = config.EMAIL.From
@@ -3210,70 +2854,13 @@ def check_request_validity_post_treatment(teamTransfers, varTeamNbrPerPool, user
 		show_exception_traceback()
 
 
-"""
-Function to insert params to DB
-"""
-def test_insert_params_to_db():
-	try:
-# 		groupId = 68
-		groupId = 190
-# 		actionType = "allerRetour"
-		actionType = "allerSimple"
-		name = "rapport_groupe_%s_action_%s"%(groupId, actionType)
-		exclusionValue = 0
-		creationDate = time.strftime("%Y-%m-%d")
-		statut = 1
-# 		params = {	"nbrPoule": 3, 
-# 					"interdictions": {"1": [8631, 8632]}, 
-# 					"repartitionHomogene": {}
-# 				}
-# 		params = {	"nbrPoule": 3, 
-# 					"varEquipeParPoule": 2, 
-# 					"interdictions": {}, 
-# 					"repartitionHomogene": {"espoir": [8631, 8632]}
-# 				}
-# 		params = {	"nbrPoule": 3, 
-# 					"varEquipeParPoule": 2, 
-# 					"interdictions": {}, 
-# 					"repartitionHomogene": {}
-# 				}
-		params = {	"nbrPoule": 4, 
-					"varEquipeParPoule": 1, 
-					"interdictions": {}, 
-					"repartitionHomogene": {}
-				}
-		
-		sql = """insert into parametres (nom, id_groupe, type_action, valeur_exclusion , date_creation, params, statut)
-				values ( '%(name)s', %(groupId)s, '%(actionType)s', %(exclusionValue)s , '%(creationDate)s', '%(params)s', %(statut)s
-					)
-			"""%{	"name": name,
-					"groupId": groupId,
-					"actionType": actionType,
-					"exclusionValue": exclusionValue,
-					"creationDate": creationDate,
-					"params": json.dumps(params),
-					"statut": statut,
-					
-				}
-		logging.debug("sql: %s" %sql)
-		db.execute(sql)
-		db.commit()
-		
-		sys.exit()
-
-
-	except Exception as e:
-		show_exception_traceback()
-
 
 """
 Function to update job status
 """
 def update_job_status(jobId, status):
 	try:
-# 		sql = "update rapport set statut=%(status)s where id=%(jobId)s"%{"status": int(status), "jobId": int(jobId)}
 		sql = "update parametres set statut=%(status)s where id=%(jobId)s"%{"status": int(status), "jobId": int(jobId)}
-		logging.debug("sql: %s" %sql)
 		db.execute(sql)
 		db.commit()
 
