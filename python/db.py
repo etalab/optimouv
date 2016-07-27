@@ -13,6 +13,8 @@ def connect():
 		__db.cnx = mdb.connect(config.DB.Host, config.DB.User, config.DB.Password, config.DB.Db  )
 		__db.csr = __db.cnx.cursor()
 		__db.uncommited = 0
+	else:
+		__db.cnx.ping()	
 
 def disconnect():
 	if __db.cnx:
