@@ -47,7 +47,6 @@ def calculate_V_value(input_P_mat, input_D_mat):
 					D_mat_value = 0
 				
 				outputDistance += (P_mat_value * D_mat_value ) 
-# 				logging.debug("  outputDistance: %s" %outputDistance)
 		return outputDistance
 	except Exception as e:
 		show_exception_traceback()
@@ -389,7 +388,6 @@ def check_welcome_constraint_match_plateau(memberCombinationIds, teams):
 		for day, contentDay in memberCombinationIds.items():
 			for group, contentGroup in contentDay.items():
 				hostIdTmp = int(contentGroup["hostId"])
-# 				logging.debug("hostIdTmp: %s" %hostIdTmp)
 				if hostIdTmp not in welcomingTeams:
 					welcomingTeams.append(hostIdTmp) 
 		
@@ -1001,8 +999,6 @@ def get_p_matrix_for_round_trip_match_optimal_without_constraint(P_InitMat, D_Ma
 				else:
 					P_InitMat = P_TransMat
 
-		logging.debug("")
-
 		return P_InitMat
 		
 	except Exception as e:
@@ -1398,7 +1394,6 @@ def create_reference_pool_distribution_from_db(teams, poolSize):
 		poolNbrRef = 0
 		for pool, members in poolDistributionReference["data"].items():
 			poolNbrRef += 1
-# 			logging.debug(" members: %s" %members)
 			if maxPoolSizeRef < len(members):
 				maxPoolSizeRef = len(members)
 		poolDistributionReference["maxPoolSizeRef"] = maxPoolSizeRef
@@ -1497,7 +1492,6 @@ def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coord
 							"duree": travelTime,
 							"date_creation": dateCreation,
 						}
-	# 		logging.debug("sql: %s" %sql)
 			db.execute(sql)
 			db.commit()
 		except Exception as e:
@@ -1597,7 +1591,6 @@ def create_distance_matrix_from_db(teams, reportId, userId):
 							"valeur": nbrRequestsHere
 						
 						}
-# 				logging.debug("sql: %s" %sql)
 				db.execute(sql)
 				db.commit()
 
@@ -2025,7 +2018,6 @@ def create_phantom_distance_matrix(D_Mat, teamNbr, poolNbr, poolSize):
 			for col in range(teamNbr):
 				D_Mat_phantom[row][col] = D_Mat[row][col]
 
-# 		logging.debug("D_Mat_phantom: \n%s" %(D_Mat_phantom,))
 		return D_Mat_phantom
 
 	except Exception as e:
@@ -2203,7 +2195,6 @@ def send_email_to_user(userId, resultId):
 		contentText += u"Cordialement,\n\n"
 		contentText += u"L'équipe d’Optimouv\n"
 		contentText += u"%s"%(senderAccount)
-		logging.debug("contentText: \n%s" %contentText)
 		
 		send_email_general(recipientAddress, subject, contentText)
 		
@@ -2339,7 +2330,6 @@ def save_result_to_db(launchType, reportId, groupId, results):
 						results["params"]["repartitionsHomogenes"][teamType]["noms"][indexName] = name.replace("'", u"''")
 					for indexCity, city in enumerate(contentTypeDistribution["villes"]):
 						results["params"]["repartitionsHomogenes"][teamType]["villes"][indexCity] = city.replace("'", u"''") 
-# 						logging.debug(" city: %s" %(city,))
 		
 		name = "%s_rapport_%s_groupe_%s"%(launchType , reportId, groupId) 
 		km = 0
