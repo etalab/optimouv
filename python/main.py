@@ -22,7 +22,7 @@ from lib import *
 Function to print exception traceback
 useful for debugging purposes
 """
-def show_exception_traceback():
+def show_exception_traceback(reportId = None):
 	exc_type, exc_value, exc_tb = sys.exc_info()
 	fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
 	print("############################################ EXCEPTION OCCURRED ####################################################")
@@ -38,12 +38,10 @@ def show_exception_traceback():
 	logging.debug("Error Detail: %s " %exc_value)
 	logging.debug("Filename: %s" %fname)
 	logging.debug("Line number: %s " %exc_tb.tb_lineno)
-	
-	try:
+			
+	if reportId:
 		update_job_status(reportId, -1)
-	except NameError:
-		pass	
-		
+			
 	sys.exit()
 
 
@@ -185,7 +183,7 @@ def optimize_pool_post_treatment_team_transfers(D_Mat, teamNbr, poolNbr, poolSiz
 		return results
 
 	except Exception as e:
-		show_exception_traceback()
+		show_exception_traceback(reportId)
 
 
 """
@@ -418,7 +416,7 @@ def optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbr, poolNbr, poolSize,
 		return results
 
 	except Exception as e:
-		show_exception_traceback()
+		show_exception_traceback(reportId)
 	
 		
 """
@@ -759,7 +757,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 
 		return results 
 	except Exception as e:
-		show_exception_traceback()
+		show_exception_traceback(reportId)
 
 """
 Function to optimize pool for One Way Match (Match Aller Simple)
@@ -1100,7 +1098,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 
 		return results
 	except Exception as e:
-		show_exception_traceback()
+		show_exception_traceback(reportId)
 
 
 """
@@ -1461,7 +1459,7 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		return results
 
 	except Exception as e:
-		show_exception_traceback()
+		show_exception_traceback(reportId)
 
 
 """
@@ -1479,10 +1477,6 @@ def callback(ch, method, properties, body):
 		# get report id from RabbitMQ
 		reportId = str(body)
 		print("starting calculation for reportId: %s at %s" %(reportId, beginTimeStr))
-
-# 		import pymysql
-# 		raise pymysql.err.OperationalError
-
 
 		# update job status to 1 (running)
 		update_job_status(reportId, 1)
@@ -1715,7 +1709,7 @@ def callback(ch, method, properties, body):
 
 
 	except Exception as e:
-		show_exception_traceback()
+		show_exception_traceback(reportId)
 	finally:
 		gc.collect()
 		db.disconnect()

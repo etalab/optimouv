@@ -19,7 +19,7 @@ from email.utils import formataddr
 Function to print exception traceback
 useful for debugging purposes
 """
-def show_exception_traceback():
+def show_exception_traceback(reportId = None):
 	exc_type, exc_value, exc_tb = sys.exc_info()
 	fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
 	print("############################################ EXCEPTION OCCURRED ####################################################")
@@ -36,10 +36,9 @@ def show_exception_traceback():
 	logging.debug("Filename: %s" %fname)
 	logging.debug("Line number: %s " %exc_tb.tb_lineno)
 	
-	try:
+	if reportId:
 		update_job_status(reportId, -1)
-	except NameError:
-		pass	
+
 	sys.exit()
 
 """
@@ -1111,7 +1110,7 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 	
 		
 	except Exception as e:
-		show_exception_traceback()
+		show_exception_traceback(reportId)
 
 
 
@@ -1290,7 +1289,7 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 		return {"status": "yes", "data": P_InitMat}
 		
 	except Exception as e:
-		show_exception_traceback()
+		show_exception_traceback(reportId)
 
 """
 Function to eliminate phantom team members in pool distribution
@@ -1516,7 +1515,7 @@ def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coord
 		return returnDict
 	
 	except Exception as e:
-		show_exception_traceback()
+		show_exception_traceback(reportId)
 		
 
 
@@ -1614,7 +1613,7 @@ def create_distance_matrix_from_db(teams, reportId, userId):
 		return D_Mat
 
 	except Exception as e:
-		show_exception_traceback()
+		show_exception_traceback(reportId)
 
 
 """
@@ -2174,7 +2173,7 @@ def get_report_name_from_report_id(reportId):
 		return reportName
 
 	except Exception as e:
-		show_exception_traceback()
+		show_exception_traceback(reportId)
 
 """
 Function to get user email from user id
@@ -2263,7 +2262,7 @@ def send_email_to_user_failure(userId, reportId):
 		send_email_to_user_failure_with_text(userId, reportId, contentText)
 		
 	except Exception as e:
-		show_exception_traceback()
+		show_exception_traceback(reportId)
 
 
 """
@@ -2283,7 +2282,7 @@ def send_email_to_user_failure_with_text(userId, reportId, contentText):
 		sys.exit()
 
 	except Exception as e:
-		show_exception_traceback()
+		show_exception_traceback(reportId)
 
 
 
@@ -2316,7 +2315,7 @@ def control_params_match_plateau(userId, teamNbr, poolNbr, reportId):
 
 
 	except Exception as e:
-		show_exception_traceback()
+		show_exception_traceback(reportId)
 
 
 
@@ -2326,6 +2325,7 @@ Function to save result into DB
 def save_result_to_db(launchType, reportId, groupId, results):
 	try:
 		resultId = -1
+		
 		
 		if "params" in results:
 			# characters substitution for prohibition constraints
@@ -2388,7 +2388,7 @@ def save_result_to_db(launchType, reportId, groupId, results):
 
 		return resultId
 	except Exception as e:
-		show_exception_traceback()
+		show_exception_traceback(reportId)
 
 
 """
@@ -2483,7 +2483,7 @@ def save_result_to_db_post_treatment(launchType, reportId, groupId, results):
 		
 		return resultId
 	except Exception as e:
-		show_exception_traceback()
+		show_exception_traceback(reportId)
 
 
 
@@ -2738,7 +2738,7 @@ def get_ref_scenario_plateau(teamsIds, userId, reportId):
 		return refScenario
 	
 	except Exception as e:
-		show_exception_traceback()
+		show_exception_traceback(reportId)
 		
 
 
@@ -2780,9 +2780,8 @@ def check_final_result(calculatedResult, userId, reportId):
 					contentText += u"%s"%(senderAccount)
 					send_email_to_user_failure_with_text(userId, reportId, contentText)
 					
-		
 	except Exception as e:
-		show_exception_traceback()
+		show_exception_traceback(reportId)
 
 """
 Function to check params for post treatment (variation of team members per pool) round trip and one way match
@@ -2835,7 +2834,7 @@ def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, pro
 			send_email_to_user_failure_with_text(userId, reportId, contentText)
 		
 	except Exception as e:
-		show_exception_traceback()
+		show_exception_traceback(reportId)
 
 
 """
@@ -2857,7 +2856,7 @@ def check_request_validity_post_treatment(teamTransfers, varTeamNbrPerPool, user
 			send_email_to_user_failure_with_text(userId, reportId, contentText)
 
 	except Exception as e:
-		show_exception_traceback()
+		show_exception_traceback(reportId)
 
 
 
