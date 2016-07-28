@@ -25,15 +25,10 @@ useful for debugging purposes
 def show_exception_traceback(reportId = None):
 	exc_type, exc_value, exc_tb = sys.exc_info()
 	fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-	print("############################################ EXCEPTION OCCURRED ####################################################")
-	print("Error Class: %s" %exc_type)
-	print("Error Detail: %s " %exc_value)
-	print("Filename: %s" %fname)
-	print("Line number: %s " %exc_tb.tb_lineno)
+	print("EXCEPTION OCCURRED !")
 
-	currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 	logging.error("")
-	logging.error("################################# EXCEPTION OCCURRED AT %s  #######################################"%currentTimeStr)
+	logging.error("################################# EXCEPTION OCCURRED #######################################")
 	logging.error("Error Class: %s" %exc_type)
 	logging.error("Error Detail: %s " %exc_value)
 	logging.error("Filename: %s" %fname)
@@ -41,6 +36,7 @@ def show_exception_traceback(reportId = None):
 			
 	if reportId:
 		update_job_status(reportId, -1)
+		logging.error("reportId: %s " %reportId)
 			
 	sys.exit()
 
@@ -90,7 +86,7 @@ def parse_cli_args():
 Function to initialize and setup the logging functionality
 """
 def init_log_file():
-	logging.basicConfig(filename=config.LOG.Path, level=logging.ERROR, format='%(asctime)s %(message)s', datefmt='%F %T')
+	logging.basicConfig(filename=config.LOG.Path, level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%F %T')
 	
 	# set pika debug level to ERROR
 	logging.getLogger("pika").setLevel(logging.ERROR)
