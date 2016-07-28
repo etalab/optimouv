@@ -1072,7 +1072,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 """
 Function to optimize pool for Plateau Match (Match Plateau)
 """
-def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom, welcomeConstraintExistMatchPlateau):
+def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom, welcomeConstraintExistMatchPlateau, channel, method):
 	try:
 		results = {"typeMatch": "plateau", "nombrePoule": poolNbr, "taillePoule": poolSize, 
 					"scenarioRef": {}, "scenarioOptimalSansContrainte": {}, "scenarioOptimalAvecContrainte": {}, 
@@ -1141,7 +1141,7 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		#################################### REFERENCE RESULT ######################################
 	
 		# get info for reference scenario from DB
-		returnRefScenarioPlateau =  get_ref_scenario_plateau(teams, userId, reportId)
+		returnRefScenarioPlateau =  get_ref_scenario_plateau(teams, userId, reportId, channel, method)
 
 		returnPoolDistributionRef = create_reference_pool_distribution_from_db(teams, poolSize)
 		
@@ -1492,7 +1492,7 @@ def callback(channel, method, properties, body):
 		
 		# check team number and pool number for match plateau
 		if launchType == "plateau":
-			control_params_match_plateau(userId, teamNbr, poolNbr, reportId)
+			control_params_match_plateau(userId, teamNbr, poolNbr, reportId, channel, method)
 		
 		
 		# update teams and other params by including phantom teams
@@ -1542,7 +1542,7 @@ def callback(channel, method, properties, body):
 						break
 
 		############################# CREATE DISTANCE MATRIX ##################################
-		D_Mat = create_distance_matrix_from_db(teams, reportId, userId)
+		D_Mat = create_distance_matrix_from_db(teams, reportId, userId, channel, method)
 
 		# modify the distance matrix if there are phantom members (add zeros columns and rows) 
 		if flagPhantom == 1:
@@ -1572,7 +1572,7 @@ def callback(channel, method, properties, body):
 					P_InitMat_oneWayWithConstraint = np.triu(P_InitMat_withConstraint)
 				else:
 					logging.error("Failure to create P Init Matrix which fulfills all constraints ")
-					send_email_to_user_failure(userId, reportId)
+					send_email_to_user_failure(userId, reportId, channel, method)
 		else:
 			P_InitMat_withConstraint = None
 			P_InitMat_oneWayWithConstraint = None
@@ -1588,10 +1588,10 @@ def callback(channel, method, properties, body):
 		elif launchType == "allerSimple" and varTeamNbrPerPool == 0 and not teamTransfers:
 			results = optimize_pool_one_way_match(P_InitMat_oneWaywithoutConstraint, P_InitMat_oneWayWithConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom)
 		elif launchType == "plateau" and varTeamNbrPerPool == 0 and not teamTransfers:
-			results = optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom, welcomeConstraintExistMatchPlateau)
+			results = optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConstraint, D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, userId, varTeamNbrPerPool, flagPhantom, welcomeConstraintExistMatchPlateau, channel, method)
 
 		### check values for params teamTransfer and varTeamNbrPerPool
-		check_request_validity_post_treatment(teamTransfers, varTeamNbrPerPool, userId, reportId)
+		check_request_validity_post_treatment(teamTransfers, varTeamNbrPerPool, userId, reportId, channel, method)
 
 		### Post treatment variation of team number
 		if varTeamNbrPerPool > 0 and ( launchType in  ["allerRetour", "allerSimple"] and not teamTransfers):
@@ -1603,10 +1603,10 @@ def callback(channel, method, properties, body):
 			calculatedResult = json.loads(db.fetchone(sql))
 			
 			# check whether it is a final result (the variation of team members per pool has already been performed)
-			check_final_result(calculatedResult, userId, reportId)
+			check_final_result(calculatedResult, userId, reportId, channel, method)
 
 			# check given params if they are the same or not as the stocked params
-			check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints, userId, reportId)
+			check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints, userId, reportId, channel, method)
 
 			results = optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, oldResultId, userId, varTeamNbrPerPool, flagPhantom, calculatedResult, P_InitMat_withConstraint, P_InitMat_oneWayWithConstraint)
 

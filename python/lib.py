@@ -1446,7 +1446,7 @@ def get_coordinates_from_city_id(entityId):
 """
 Function to probe HERE web service and fill in table trajet
 """
-def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coordDepart, coordDestination, reportId, userId):
+def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coordDepart, coordDestination, reportId, userId, channel, method):
 	try:
 		
 		hereUrl = "http://route.api.here.com/routing/7.2/calculateroute.json"
@@ -1474,7 +1474,7 @@ def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coord
 					contentText += u"Cordialement,\n\n"
 					contentText += u"L'équipe d’Optimouv\n"
 					contentText += u"%s"%(senderAccount)
-					send_email_to_user_failure_with_text(userId, reportId, contentText)
+					send_email_to_user_failure_with_text(userId, reportId, contentText, channel, method)
 			else:
 			
 				distance = data['response']['route'][0]['summary']['distance']
@@ -1530,7 +1530,7 @@ def get_discipline_and_federation_id(userId):
 """
 Function to create distance matrix from DB
 """
-def create_distance_matrix_from_db(teams, reportId, userId):
+def create_distance_matrix_from_db(teams, reportId, userId, channel, method):
 	try:
 		# get size for the matrix
 		teamNbr = len(teams)
@@ -1574,7 +1574,7 @@ def create_distance_matrix_from_db(teams, reportId, userId):
 						nbrRequestsHere += 1
 						
 						# get distance and travel time from HERE web service
-						resultsHere = get_distance_travel_time_from_here_ws(depart, destination, coordDepart, coordDestination, reportId, userId)
+						resultsHere = get_distance_travel_time_from_here_ws(depart, destination, coordDepart, coordDestination, reportId, userId, channel, method)
 
 						# get distance from results Here
 						distance = resultsHere["distance"]
@@ -2232,7 +2232,7 @@ def send_email_general(recipientAddress, subject, contentText ):
 """
 Function to send email to user when there is no results (there are too many constraints)
 """
-def send_email_to_user_failure(userId, reportId):
+def send_email_to_user_failure(userId, reportId, channel, method):
 	try:
 
 		reportName = get_report_name_from_report_id(reportId)
@@ -2245,7 +2245,7 @@ def send_email_to_user_failure(userId, reportId):
 		contentText += u"L'équipe d’Optimouv\n"
 		contentText += u"%s"%(senderAccount)
 
-		send_email_to_user_failure_with_text(userId, reportId, contentText)
+		send_email_to_user_failure_with_text(userId, reportId, contentText, channel, method)
 		
 	except Exception as e:
 		show_exception_traceback(reportId)
@@ -2254,7 +2254,7 @@ def send_email_to_user_failure(userId, reportId):
 """
 Function to send email to user when the provided params are unexpected (for match plateau)
 """
-def send_email_to_user_failure_with_text(userId, reportId, contentText):
+def send_email_to_user_failure_with_text(userId, reportId, contentText, channel, method):
 	try:
 		recipientAddress = get_user_email_from_user_id(userId)
 
@@ -2264,6 +2264,10 @@ def send_email_to_user_failure_with_text(userId, reportId, contentText):
 
 		# update job status
 		update_job_status(reportId, -1)
+
+		# ack message
+		channel.basic_ack(delivery_tag = method.delivery_tag)
+
 
 		sys.exit()
 
@@ -2275,7 +2279,7 @@ def send_email_to_user_failure_with_text(userId, reportId, contentText):
 """
 Function control provided params by user
 """
-def control_params_match_plateau(userId, teamNbr, poolNbr, reportId):
+def control_params_match_plateau(userId, teamNbr, poolNbr, reportId, channel, method):
 	try:
 		reportName = get_report_name_from_report_id(reportId)
 		poolSize = int(teamNbr/poolNbr)
@@ -2297,7 +2301,7 @@ def control_params_match_plateau(userId, teamNbr, poolNbr, reportId):
 			contentText += u"L'équipe d’Optimouv\n"
 			contentText += u"%s"%(senderAccount)
 
-			send_email_to_user_failure_with_text(userId, reportId, contentText)
+			send_email_to_user_failure_with_text(userId, reportId, contentText, channel, method)
 
 
 	except Exception as e:
@@ -2560,7 +2564,7 @@ def get_list_encounters_plateau(hostTeamId, hostTeamName, otherTeamsIds, otherTe
 """
 Function to get reference scenario for match plateau
 """
-def get_ref_scenario_plateau(teamsIds, userId, reportId):
+def get_ref_scenario_plateau(teamsIds, userId, reportId, channel, method):
 	try:
 		refScenario = {"status" : "no", "data": {} }
 		
@@ -2584,7 +2588,7 @@ def get_ref_scenario_plateau(teamsIds, userId, reportId):
 				contentText += u"Cordialement,\n\n"
 				contentText += u"L'équipe d’Optimouv\n"
 				contentText += u"%s"%(senderAccount)
-				send_email_to_user_failure_with_text(userId, reportId, contentText)
+				send_email_to_user_failure_with_text(userId, reportId, contentText, channel, method)
 
 
 			# escape single quote			
@@ -2746,7 +2750,7 @@ Function to check final result
 send error message to user if one tries to relaunch based on final result
 final result flag is set when user tries to play the variation of team number in pools
 """
-def check_final_result(calculatedResult, userId, reportId):
+def check_final_result(calculatedResult, userId, reportId, channel, method):
 	try:
 		sql = "select nom from parametres where id=%s"%reportId
 		reportName = db.fetchone(sql)
@@ -2762,7 +2766,7 @@ def check_final_result(calculatedResult, userId, reportId):
 					contentText += u"Cordialement,\n\n"
 					contentText += u"L'équipe d’Optimouv\n"
 					contentText += u"%s"%(senderAccount)
-					send_email_to_user_failure_with_text(userId, reportId, contentText)
+					send_email_to_user_failure_with_text(userId, reportId, contentText, channel, method)
 					
 	except Exception as e:
 		show_exception_traceback(reportId)
@@ -2770,7 +2774,7 @@ def check_final_result(calculatedResult, userId, reportId):
 """
 Function to check params for post treatment (variation of team members per pool) round trip and one way match
 """
-def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints, userId, reportId):
+def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints, userId, reportId, channel, method):
 	try:
 		errorStatus = False
 		
@@ -2815,7 +2819,7 @@ def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, pro
 			contentText += u"Cordialement,\n\n"
 			contentText += u"L'équipe d’Optimouv\n"
 			contentText += u"%s"%(senderAccount)
-			send_email_to_user_failure_with_text(userId, reportId, contentText)
+			send_email_to_user_failure_with_text(userId, reportId, contentText, channel, method)
 		
 	except Exception as e:
 		show_exception_traceback(reportId)
@@ -2824,7 +2828,7 @@ def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, pro
 """
 Function to check request validity (post treatment can only launch variation of team number per pool or team transfer to other pool)
 """
-def check_request_validity_post_treatment(teamTransfers, varTeamNbrPerPool, userId, reportId):
+def check_request_validity_post_treatment(teamTransfers, varTeamNbrPerPool, userId, reportId, channel, method):
 	try:		
 		sql = "select nom from parametres where id=%s"%reportId
 		reportName = db.fetchone(sql)
@@ -2837,7 +2841,7 @@ def check_request_validity_post_treatment(teamTransfers, varTeamNbrPerPool, user
 			contentText += u"Cordialement,\n\n"
 			contentText += u"L'équipe d’Optimouv\n"
 			contentText += u"%s"%(senderAccount)
-			send_email_to_user_failure_with_text(userId, reportId, contentText)
+			send_email_to_user_failure_with_text(userId, reportId, contentText, channel, method)
 
 	except Exception as e:
 		show_exception_traceback(reportId)
