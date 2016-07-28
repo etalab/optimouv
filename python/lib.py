@@ -603,7 +603,6 @@ def create_encounters_from_pool_distribution_plateau(poolDistribution, welcomeCo
 			bestDistancePerPool[pool] = 0
 			bestMemberCombinationIds = {}
 			for i in range(config.INPUT.IterPlateau):
-				logging.debug(" ----------------------------------  iteration match plateau: %s ----------------------------------------" %i)
 
 				# assign random value for each team
 				teamRandomValues = [round(random.random() * 100) for i in range(len(teams))]
@@ -653,8 +652,6 @@ def create_encounters_from_pool_distribution_plateau(poolDistribution, welcomeCo
 						bestMemberCombinationIds = returnShortestDistance["bestMemberCombinationIds"]
 		
 
-			logging.debug(" -----------------------  FINISHED ITERATION PLATEAU FOR POOL: %s  ----------------------------------------"%pool)
-		
 			# get encounter details from member combination ids
 			encountersDetailsPlateauPerPool = get_encounters_details_from_member_combination_ids(bestMemberCombinationIds)
 			

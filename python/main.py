@@ -15,7 +15,6 @@ from email.mime.text import MIMEText
 import time
 import pika
 from pika.adapters import SelectConnection
-# from openpyxl import load_workbook
 from lib import *
 
 """
@@ -78,9 +77,13 @@ def parse_cli_args():
 Function to initialize and setup the logging functionality
 """
 def init_log_file():
-	with open(config.LOG.Path, 'w'):
+	with open(config.LOG.Path, 'a'):
 		pass
 	logging.basicConfig(filename=config.LOG.Path, level=logging.DEBUG)
+	
+	# set pika debug level to warning
+	logging.getLogger("pika").setLevel(logging.WARNING)
+
 
 """
 Function to optimize pool post treatment for team transfers between pool
@@ -90,7 +93,6 @@ def optimize_pool_post_treatment_team_transfers(D_Mat, teamNbr, poolNbr, poolSiz
 		# duplicate results
 		results = calculatedResult
 		
-# 		logging.debug(" results: %s" %(json.dumps(results),))
 		iter = config.INPUT.Iter
 
 		typeMatch = results["typeMatch"]
@@ -298,7 +300,6 @@ def optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbr, poolNbr, poolSize,
 				P_Mat_OptimalWithConstraint = np.triu(P_Mat_OptimalWithConstraint)
 				
 			for iterLaunch in range(config.INPUT.IterLaunch):
-				logging.debug(" -----------------------------   iterLaunch: %s -------------------------------------" %iterLaunch)
 				# launch calculation based on ref scenario only if the params are comparable
 				P_Mat_OptimalWithConstraintReturn = get_p_matrix_for_round_trip_match_optimal_with_constraint(P_Mat_OptimalWithConstraint, D_Mat, iter, teamNbr, poolNbr, poolSize, teams, prohibitionConstraints, typeDistributionConstraints, iterConstraint, reportId, userId, isOneWay)#
 
@@ -512,7 +513,6 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 
 		# optimal scenario without constraint
 		for iterLaunch in range(config.INPUT.IterLaunch):
-			logging.debug(" -----------------------------   iterLaunch: %s -------------------------------------" %iterLaunch)
 			# launch calculation based on ref scenario only if the params are comparable
 			if iterLaunch == 0:
 				if ( (returnPoolDistributionRef["status"] == "yes") and (returnPoolDistributionRef["poolNbrRef"] == poolNbr) and (returnPoolDistributionRef["maxPoolSizeRef"] == poolSize) ):
@@ -817,7 +817,6 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			# take upper part of matrix
 			P_Mat_ref = np.triu(P_Mat_ref)
 	
-# 			logging.debug(" P_Mat_ref: \n%s" %(P_Mat_ref,))
 			chosenDistanceRef = calculate_V_value(P_Mat_ref, D_Mat)
 	
 			# eliminate phnatom teams
@@ -1655,7 +1654,7 @@ def callback(ch, method, properties, body):
 		# ack message
 		ch.basic_ack(delivery_tag = method.delivery_tag)
 
-		print("finish calculation for reportId: %s at %s" %(reportId, endTimeStr))
+		print("finished calculation for reportId: %s at %s" %(reportId, endTimeStr))
 
 
 	except Exception as e:
