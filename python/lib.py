@@ -29,12 +29,12 @@ def show_exception_traceback(reportId = None):
 	print("Line number: %s " %exc_tb.tb_lineno)
 
 	currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-	logging.debug("")
-	logging.debug("################################# EXCEPTION OCCURRED AT %s  #######################################"%currentTimeStr)
-	logging.debug("Error Class: %s" %exc_type)
-	logging.debug("Error Detail: %s " %exc_value)
-	logging.debug("Filename: %s" %fname)
-	logging.debug("Line number: %s " %exc_tb.tb_lineno)
+	logging.error("")
+	logging.error("################################# EXCEPTION OCCURRED AT %s  #######################################"%currentTimeStr)
+	logging.error("Error Class: %s" %exc_type)
+	logging.error("Error Detail: %s " %exc_value)
+	logging.error("Filename: %s" %fname)
+	logging.error("Line number: %s " %exc_tb.tb_lineno)
 	
 	if reportId:
 		update_job_status(reportId, -1)
@@ -1033,14 +1033,10 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 			while True:
 				
 				if iterConstraint == 0:
-					logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-					currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-					logging.debug("Failure to create interchange rows and  columns (i, j) which fulfills all constraints at %s"%currentTimeStr)
-					logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+					logging.error("Failure to create interchange rows and  columns (i, j) which fulfills all constraints ")
 					
 					return {"status": "no", "data": {}}
 					
-# 					send_email_to_user_failure(userId, reportId)
 				iterConstraint -= 1
 				
 				transIndex = random.sample(range(teamNbr), 2)
@@ -1206,14 +1202,10 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 			### get index to change row and column
 			while True:
 				if iterConstraint == 0:
-					logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-					currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-					logging.debug("Failure to create interchange rows and  columns (i, j) which fulfills all constraints at %s"%currentTimeStr)
-					logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+					logging.error("Failure to create interchange rows and  columns (i, j) which fulfills all constraints")
 
 					return {"status": "no", "data": {}}
 					
-# 					send_email_to_user_failure(userId, reportId)
 				iterConstraint -= 1
 
 				transIndex = random.sample(range(teamNbr), 2)
@@ -1505,8 +1497,7 @@ def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coord
 			db.execute(sql)
 			db.commit()
 		except Exception as e:
-			currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-			logging.debug("Insertion error to table trajet at %s, details %s" %(currentTimeStr, e))
+			logging.error("Insertion error to table trajet, details %s" %(e))
 			sys.exit()
 
 
@@ -1606,8 +1597,7 @@ def create_distance_matrix_from_db(teams, reportId, userId):
 				db.commit()
 
 			except Exception as e:
-				currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-				logging.debug("Insertion error to table statistiques_date at %s, details %s" %(currentTimeStr, e))
+				logging.error("Insertion error to table statistiques_date, details %s" %(e))
 				sys.exit()
 
 		return D_Mat
@@ -1640,10 +1630,8 @@ def insert_calculation_time_to_db(userId, startTime, endTime, duration):
 		db.execute(sql)
 		db.commit()
 
-
 	except Exception as e:
-		currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-		logging.debug("Insertion error to table statistiques_date_temps at %s, details %s" %( currentTimeStr, e))
+		logging.debug("Insertion error to table statistiques_date_temps, details %s" %(e))
 		sys.exit()
 
 
@@ -1653,7 +1641,7 @@ Function to create initilization matrix without constraint
 def create_init_matrix_without_constraint(teamNbr, poolNbr, poolSize):
 
 	try:
-		logging.debug("-------------------------------------- CREATE INIT MATRIX WITHOUT CONSTRAINT --------------------------------" )
+		# -------------------------------------- CREATE INIT MATRIX WITHOUT CONSTRAINT --------------------------------#
 		# Initialisation matrix P
 		P_InitMat = np.zeros((teamNbr, teamNbr))
 		
@@ -1861,8 +1849,7 @@ Function to create initilization matrix with constraint
 def create_init_matrix_with_constraint(teamNbr, poolNbr, poolSize, teams, iterConstraint, prohibitionConstraints, typeDistributionConstraints):
 
 	try:
-		logging.debug("-------------------------------------- CREATE INIT MATRIX WITH CONSTRAINT --------------------------------" )
-
+		# -------------------------------------- CREATE INIT MATRIX WITH CONSTRAINT -------------------------------- #
 		for iterNbr in range(iterConstraint):
 
 			# Initialisation matrix P
@@ -1932,8 +1919,7 @@ Function to create initilization matrix with constraint manually
 def create_init_matrix_with_constraint_manual(teamNbr, poolNbr, poolSize, teams, iterConstraint, prohibitionConstraints, typeDistributionConstraints):
 
 	try:
-		logging.debug("-------------------------------------- CREATE INIT MATRIX WITH CONSTRAINT MANUALLY --------------------------------" )
-
+		# -------------------------------------- CREATE INIT MATRIX WITH CONSTRAINT MANUALLY -------------------------------- #
 		# initialize pool distribution
 		poolDistribution = {}
 		for pool in range(1, poolNbr+1):
@@ -2248,7 +2234,7 @@ Function to send email to user when there is no results (there are too many cons
 """
 def send_email_to_user_failure(userId, reportId):
 	try:
-		
+
 		reportName = get_report_name_from_report_id(reportId)
 		senderAccount = config.EMAIL.From
 
@@ -2382,8 +2368,7 @@ def save_result_to_db(launchType, reportId, groupId, results):
 			
 			resultId = db.lastinsertedid()
 		except Exception as e:
-			currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-			logging.debug("Insertion error to table resultats at %s, details %s" %(currentTimeStr, e))
+			logging.error("Insertion error to table resultats, details %s" %(e))
 			sys.exit()
 
 		return resultId
@@ -2477,8 +2462,7 @@ def save_result_to_db_post_treatment(launchType, reportId, groupId, results):
 			
 			resultId = db.lastinsertedid()
 		except Exception as e:
-			currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-			logging.debug("Insertion error to table resultats at %s, details %s" %( currentTimeStr, e))
+			logging.error("Insertion error to table resultats, details %s" %(e))
 			sys.exit()
 		
 		return resultId

@@ -32,12 +32,12 @@ def show_exception_traceback(reportId = None):
 	print("Line number: %s " %exc_tb.tb_lineno)
 
 	currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-	logging.debug("")
-	logging.debug("################################# EXCEPTION OCCURRED AT %s  #######################################"%currentTimeStr)
-	logging.debug("Error Class: %s" %exc_type)
-	logging.debug("Error Detail: %s " %exc_value)
-	logging.debug("Filename: %s" %fname)
-	logging.debug("Line number: %s " %exc_tb.tb_lineno)
+	logging.error("")
+	logging.error("################################# EXCEPTION OCCURRED AT %s  #######################################"%currentTimeStr)
+	logging.error("Error Class: %s" %exc_type)
+	logging.error("Error Detail: %s " %exc_value)
+	logging.error("Filename: %s" %fname)
+	logging.error("Line number: %s " %exc_tb.tb_lineno)
 			
 	if reportId:
 		update_job_status(reportId, -1)
@@ -90,9 +90,7 @@ def parse_cli_args():
 Function to initialize and setup the logging functionality
 """
 def init_log_file():
-	with open(config.LOG.Path, 'a'):
-		pass
-	logging.basicConfig(filename=config.LOG.Path, level=logging.DEBUG)
+	logging.basicConfig(filename=config.LOG.Path, level=logging.ERROR, format='%(asctime)s %(message)s', datefmt='%F %T')
 	
 	# set pika debug level to ERROR
 	logging.getLogger("pika").setLevel(logging.ERROR)
@@ -212,9 +210,6 @@ def optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbr, poolNbr, poolSize,
 			results["params"]["varEquipeParPoulePossible"] = 0
 
 		############# optimal scenario without constraint #################
-		currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-		logging.debug(" ####################### RESULT OPTIMAL WITHOUT CONSTRAINT AT %s #################################"%currentTimeStr)
-
 		resultsOptimalWithoutConstraint = results["scenarioOptimalSansContrainte"]
 		if resultsOptimalWithoutConstraint:
 			
@@ -262,9 +257,6 @@ def optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbr, poolNbr, poolSize,
 		############# equitable scenario without constraint #################
 		resultsEquitableWithoutConstraint = results["scenarioEquitableSansContrainte"]
 		
-		currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-		logging.debug(" ####################### RESULT EQUITABLE WITHOUT CONSTRAINT AT %s ###################################"%currentTimeStr)
-		
 		if resultsEquitableWithoutConstraint:
 
 			poolDistribution_EquitableWithoutConstraint = variation_team_number_per_pool(resultsEquitableWithoutConstraint["poulesId"], varTeamNbrPerPool)
@@ -306,9 +298,6 @@ def optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbr, poolNbr, poolSize,
 			results["scenarioEquitableSansContrainte"]["estimationGenerale"] = sumInfo_EquitableWithoutConstraint
 
 		############# optimal scenario with constraint #################
-		currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-		logging.debug(" ####################### RESULT OPTIMAL WITH CONSTRAINT AT %s #################################"%currentTimeStr)
-
 		resultsOptimalWithConstraint = results["scenarioOptimalAvecContrainte"]
 		if resultsOptimalWithConstraint:
 
@@ -360,9 +349,6 @@ def optimize_pool_post_treatment_var_team_nbr(D_Mat, teamNbr, poolNbr, poolSize,
 
 
 		############# equitable scenario with constraint #################
-		currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-		logging.debug(" ######################### RESULT EQUITABLE WITH CONSTRAINT AT %s ###############################"%currentTimeStr)
-
 		resultsEquitableWithConstraint = results["scenarioEquitableAvecContrainte"]
 		if resultsEquitableWithConstraint:
 
@@ -483,7 +469,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			if len(results["params"]["varEquipeParPouleProposition"]) > 3:
 				results["params"]["varEquipeParPouleProposition"] = results["params"]["varEquipeParPouleProposition"][:3]
 
-		logging.debug(" ########################################## ROUND TRIP　MATCH ###############################################")
+		########################################## ROUND TRIP　MATCH ###############################################
 		iter = config.INPUT.Iter
 		
 		# add status constraints in the result
@@ -492,9 +478,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		else:
 			results["contraintsExiste"] = 0
 
-		currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-		logging.debug(" ############################# REFERENCE RESULT AT %s ####################################"%currentTimeStr)
-
+		############################# REFERENCE RESULT ####################################
 		returnPoolDistributionRef = create_reference_pool_distribution_from_db(teams, poolSize)
 		
 		# process only if there is a reference
@@ -533,8 +517,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			# add boolean to results
 			results["refExiste"] = 0
 
-		currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-		logging.debug(" ####################### RESULT OPTIMAL WITHOUT CONSTRAINT AT %s ###############################"%currentTimeStr)
+		####################### RESULT OPTIMAL WITHOUT CONSTRAINT ###############################
 
 		# optimal scenario without constraint
 		for iterLaunch in range(config.INPUT.IterLaunch):
@@ -578,9 +561,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 		results["scenarioOptimalSansContrainte"]["estimationGenerale"] = sumInfo_OptimalWithoutConstraint
 
 
-		currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-		logging.debug(" ####################### RESULT EQUITABLE WITHOUT CONSTRAINT AT %s ##############################"%currentTimeStr)
-
+		####################### RESULT EQUITABLE WITHOUT CONSTRAINT ##############################
 		# equitable scenario without constraint
 		# launch calculation based on ref scenario only if the params are comparable
 		for iterLaunch in range(config.INPUT.IterLaunch):
@@ -620,9 +601,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 
 
 		if statusConstraints:
-			
-			currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-			logging.debug(" ####################### RESULT OPTIMAL WITH CONSTRAINT AT %s ###############################" %currentTimeStr)
+			####################### RESULT OPTIMAL WITH CONSTRAINT AT %s ###############################
 
 			# optimal scenario with constraint   
 			for iterLaunch in range(config.INPUT.IterLaunch):
@@ -686,8 +665,7 @@ def optimize_pool_round_trip_match(P_InitMat_withoutConstraint, P_InitMat_withCo
 			sumInfo_OptimalWithConstraint = get_sum_info_from_pool_details(poolDetails_OptimalWithConstraint)
 			results["scenarioOptimalAvecContrainte"]["estimationGenerale"] = sumInfo_OptimalWithConstraint
 
-			currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-			logging.debug(" ######################### RESULT EQUITABLE WITH CONSTRAINT AT %s ###############################"%currentTimeStr)
+			######################### RESULT EQUITABLE WITH CONSTRAINT ###############################
 	
 			# equitable scenario without constraint
 			for iterLaunch in range(config.INPUT.IterLaunch):
@@ -821,8 +799,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			if len(results["params"]["varEquipeParPouleProposition"]) > 3:
 				results["params"]["varEquipeParPouleProposition"] = results["params"]["varEquipeParPouleProposition"][:3]
 
-
-		logging.debug(" ########################################## ONE WAY　MATCH ###############################################")
+		########################################## ONE WAY　MATCH ###############################################
 		iter = config.INPUT.Iter
 		
 		# add status constraints in the result
@@ -831,9 +808,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		else:
 			results["contraintsExiste"] = 0
 		
-		currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-		logging.debug(" #################################### REFERENCE RESULT AT %s #####################################"%currentTimeStr)
-
+		#################################### REFERENCE RESULT #####################################
 		returnPoolDistributionRef = create_reference_pool_distribution_from_db(teams, poolSize)
 		
 		# process only if there is a reference
@@ -875,9 +850,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			# add boolean to results
 			results["refExiste"] = 0
 
-		currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-		logging.debug(" ####################### RESULT OPTIMAL WITHOUT CONSTRAINT AT %s #################################"%currentTimeStr)
-
+		####################### RESULT OPTIMAL WITHOUT CONSTRAINT #################################
 		# optimal scenario without constraint
 		for iterLaunch in range(config.INPUT.IterLaunch):
 			# launch calculation based on ref scenario only if the params are comparable
@@ -920,9 +893,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		sumInfo_OptimalWithoutConstraint = get_sum_info_from_pool_details(poolDetails_OptimalWithoutConstraint)
 		results["scenarioOptimalSansContrainte"]["estimationGenerale"] = sumInfo_OptimalWithoutConstraint
 
-		currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-		logging.debug(" ####################### RESULT EQUITABLE WITHOUT CONSTRAINT AT %s ##############################"%currentTimeStr)
-
+		####################### RESULT EQUITABLE WITHOUT CONSTRAINT ##############################
 		# equitable scenario without constraint
 		for iterLaunch in range(config.INPUT.IterLaunch):
 			# launch calculation based on ref scenario only if the params are comparable
@@ -961,8 +932,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		results["scenarioEquitableSansContrainte"]["estimationGenerale"] = sumInfo_EquitableWithoutConstraint
 
 		if statusConstraints:
-			currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-			logging.debug(" ####################### RESULT OPTIMAL WITH CONSTRAINT AT %s #################################"%currentTimeStr)
+			####################### RESULT OPTIMAL WITH CONSTRAINT #################################
 
 			# optimal scenario with constraint   
 			for iterLaunch in range(config.INPUT.IterLaunch):
@@ -1026,9 +996,7 @@ def optimize_pool_one_way_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			sumInfo_OptimalWithConstraint = get_sum_info_from_pool_details(poolDetails_OptimalWithConstraint)
 			results["scenarioOptimalAvecContrainte"]["estimationGenerale"] = sumInfo_OptimalWithConstraint
 
-			currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-			logging.debug(" ######################### RESULT EQUITABLE WITH CONSTRAINT AT %s ###############################"%currentTimeStr)
-	
+			######################### RESULT EQUITABLE WITH CONSTRAINT ###############################
 			# equitable scenario without constraint
 			for iterLaunch in range(config.INPUT.IterLaunch):
 				# launch calculation based on ref scenario only if the params are comparable
@@ -1161,8 +1129,7 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			results["params"]["varEquipeParPoulePossible"] = 0
 			results["params"]["varEquipeParPouleProposition"] = [0]
 
-		logging.debug(" ########################################## PLATEAU　MATCH ###############################################")
-
+		########################################## PLATEAU　MATCH ###############################################
 		iter = config.INPUT.Iter
 		
 		# add status constraints in the result
@@ -1171,8 +1138,7 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		else:
 			results["contraintsExiste"] = 0
 
-		currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-		logging.debug(" #################################### REFERENCE RESULT AT %s ######################################" %currentTimeStr)
+		#################################### REFERENCE RESULT ######################################
 	
 		# get info for reference scenario from DB
 		returnRefScenarioPlateau =  get_ref_scenario_plateau(teams, userId, reportId)
@@ -1216,8 +1182,7 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			# add boolean to results
 			results["refExiste"] = 0
 
-		currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-		logging.debug(" ####################### RESULT OPTIMAL WITHOUT CONSTRAINT AT %s #####################################"%currentTimeStr)
+		####################### RESULT OPTIMAL WITHOUT CONSTRAINT #####################################
 
 		# optimize distance pool only if pool numer is more than 1
 		if poolNbr > 1:
@@ -1261,9 +1226,7 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		sumInfo_OptimalWithoutConstraint = get_sum_info_from_pool_details(poolDetails_OptimalWithoutConstraint_Plateau)
 		results["scenarioOptimalSansContrainte"]["estimationGenerale"] = sumInfo_OptimalWithoutConstraint
 
-		currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-		logging.debug(" ####################### RESULT EQUITABLE WITHOUT CONSTRAINT AT %s #################################"%currentTimeStr)
-	
+		####################### RESULT EQUITABLE WITHOUT CONSTRAINT #################################
 		# optimize distance pool only if pool numer is more than 1
 		if poolNbr > 1:
 			# optimal scenario without constraint
@@ -1309,8 +1272,7 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 		results["scenarioEquitableSansContrainte"]["estimationGenerale"] = sumInfo_EquitableWithoutConstraint
 
 		if statusConstraints:
-			currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-			logging.debug(" ####################### RESULT OPTIMAL WITH CONSTRAINT AT %s #################################"%currentTimeStr)
+			####################### RESULT OPTIMAL WITH CONSTRAINT #################################
 		
 			# optimize distance pool only if pool numer is more than 1
 			if poolNbr > 1:
@@ -1381,8 +1343,7 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 			sumInfo_OptimalWithConstraint = get_sum_info_from_pool_details(poolDetails_OptimalWithConstraint_Plateau)
 			results["scenarioOptimalAvecContrainte"]["estimationGenerale"] = sumInfo_OptimalWithConstraint
 
-			currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-			logging.debug(" ######################### RESULT EQUITABLE WITH CONSTRAINT AT %s ##################################"%currentTimeStr)
+			######################### RESULT EQUITABLE WITH CONSTRAINT ##################################
 	
 			# optimize distance pool only if pool numer is more than 1
 			if poolNbr > 1:
@@ -1465,23 +1426,23 @@ def optimize_pool_plateau_match(P_InitMat_withoutConstraint, P_InitMat_withConst
 """
 Main callback function which executes PyTreeRank ALgorithm
 """
-def callback(ch, method, properties, body):
+def callback(channel, method, properties, body):
 	try:
-		
 		
 		beginTime = datetime.datetime.now()
 		beginTimeStr = beginTime.strftime('%Y-%m-%d %H:%M:%S')
-		logging.debug("starting current time : %s" %beginTimeStr)
 
 		body = body.decode('utf-8')
 		# get report id from RabbitMQ
 		reportId = str(body)
+
+		logging.info("starting calculation for reportId: %s" %reportId)
 		print("starting calculation for reportId: %s at %s" %(reportId, beginTimeStr))
 
 		# update job status to 1 (running)
 		update_job_status(reportId, 1)
 		
-		logging.debug("####################################### READ PARAMS FROM USER ##############################################")
+		####################################### READ PARAMS FROM USER ##############################################
 		# get params from DB
 		sql = "select id_groupe, type_action, params from parametres where id=%s"%reportId
 		groupId, launchType, params = db.fetchone_multi(sql)
@@ -1514,10 +1475,9 @@ def callback(ch, method, properties, body):
 		else:
 			welcomeConstraintExistMatchPlateau = 0
 
-		logging.debug("########################################### READ DATA FROM DB ##############################################")
+		########################################### READ DATA FROM DB ##############################################
 		# get user id 
 		sql = "select id_utilisateur from groupe where id=%s"%groupId
-
 		userId = db.fetchone(sql)
 
 		# get entites from DB
@@ -1563,7 +1523,7 @@ def callback(ch, method, properties, body):
 		# get status for constraints existence
 		statusConstraints = statusProhibitionConstraints or statusTypeDistributionConstraints
 
-		logging.debug("########################################### CALCULATE POOL SIZE #############################################")
+		########################################### CALCULATE POOL SIZE #############################################
 		# Manage case where there is not enough teams to make even distribution of pools
 		if teamNbr%poolNbr == 0:
 			poolSize = int(teamNbr/poolNbr)
@@ -1581,16 +1541,14 @@ def callback(ch, method, properties, body):
 						teamsWithPhantom.append(phantomMemberId)
 						break
 
-		currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-		logging.debug("############################# CREATE DISTANCE MATRIX AT %s ##################################"%currentTimeStr)
+		############################# CREATE DISTANCE MATRIX ##################################
 		D_Mat = create_distance_matrix_from_db(teams, reportId, userId)
 
 		# modify the distance matrix if there are phantom members (add zeros columns and rows) 
 		if flagPhantom == 1:
 			D_Mat = create_phantom_distance_matrix(D_Mat, teamNbr, poolNbr, poolSize)
 			
-		currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-		logging.debug("############################# CREATE INITIALISATION MATRIX AT %s ##############################"%currentTimeStr)
+		############################# CREATE INITIALISATION MATRIX ##############################
 		P_InitMat_withoutConstraint = create_init_matrix_without_constraint(teamNbrWithPhantom, poolNbr, poolSize)
 
 		# get P_Init Mat for one way
@@ -1613,20 +1571,16 @@ def callback(ch, method, properties, body):
 					P_InitMat_withConstraint = statusCreateInitMatrixManual["data"]
 					P_InitMat_oneWayWithConstraint = np.triu(P_InitMat_withConstraint)
 				else:
-					logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-					currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-					logging.debug("Failure to create P Init Matrix which fulfills all constraints at %s"%currentTimeStr)
+					logging.error("Failure to create P Init Matrix which fulfills all constraints ")
 					send_email_to_user_failure(userId, reportId)
-					logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 		else:
 			P_InitMat_withConstraint = None
 			P_InitMat_oneWayWithConstraint = None
 
-		logging.debug("####################################### COMPARE DISTANCES TWO WAY AND ONE WAY ###############################")
+		####################################### COMPARE DISTANCES TWO WAY AND ONE WAY ###############################
 		distanceInitRoundTrip = calculate_V_value(P_InitMat_withoutConstraint, D_Mat)
 
-		currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-		logging.debug("##################################### OPTIMIZE POOL AT %s ###################################"%currentTimeStr)
+		##################################### OPTIMIZE POOL ###################################
 
 		### Pre treatment
 		if launchType == "allerRetour" and varTeamNbrPerPool == 0 and not teamTransfers:
@@ -1641,8 +1595,7 @@ def callback(ch, method, properties, body):
 
 		### Post treatment variation of team number
 		if varTeamNbrPerPool > 0 and ( launchType in  ["allerRetour", "allerSimple"] and not teamTransfers):
-			currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-			logging.debug("############################### POST TREATMENT VARIATION OF TEAM NUMBER AT %s ##############################"%currentTimeStr)
+			############################### POST TREATMENT VARIATION OF TEAM NUMBER ##############################
 			# get old result id 
 			oldResultId = params["idAncienResultat"]
 			
@@ -1659,9 +1612,7 @@ def callback(ch, method, properties, body):
 
 		### Post treatment team transfers between pools
 		if varTeamNbrPerPool == 0 and ( launchType in  ["allerRetour", "allerSimple"] and  teamTransfers):
-			currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-			logging.debug("############################### POST TREATMENT TEAM TRANSFERS AT %s #############################"%currentTimeStr)
-
+			############################### POST TREATMENT TEAM TRANSFERS #############################
 			# get old result id 
 			oldResultId = params["idAncienResultat"]
 			
@@ -1678,15 +1629,13 @@ def callback(ch, method, properties, body):
 
 
 		if varTeamNbrPerPool == 0 and not teamTransfers:
-			logging.debug("############################################# INSERT RESULT INTO DB #########################################")
 			resultId = save_result_to_db(launchType, reportId, groupId, results)
 		else:
-			logging.debug("############################################# INSERT RESULT INTO DB #########################################")
 			resultId = save_result_to_db_post_treatment(launchType, reportId, groupId, results)
 
-		logging.debug("############################################# SEND EMAIL ####################################################")
+		# send email to user in case of success
 		send_email_to_user(userId, resultId)
-		logging.debug("################################################## FINISHED #################################################")
+		################################################## FINISHED #################################################
 
 		# update job status to 2 (finished)
 		update_job_status(reportId, 2)
@@ -1694,16 +1643,16 @@ def callback(ch, method, properties, body):
 		endTime = datetime.datetime.now()
 		endTimeStr = endTime.strftime('%Y-%m-%d %H:%M:%S')
 		
-		logging.debug("finishing current time : %s" %endTimeStr)
+		logging.info("finished calculation for reportId: %s " %reportId)
 		processingTime = endTime - beginTime
 		processingTimeSeconds = processingTime.seconds
-		logging.debug("processing time : %s seconds\n" %processingTimeSeconds)
+		logging.info("processing time : %s seconds\n" %processingTimeSeconds)
 
 		# insert calculation time to DB
 		insert_calculation_time_to_db(userId, beginTime, endTime, processingTimeSeconds)
 
 		# ack message
-		ch.basic_ack(delivery_tag = method.delivery_tag)
+		channel.basic_ack(delivery_tag = method.delivery_tag)
 
 		print("finished calculation for reportId: %s at %s" %(reportId, endTimeStr))
 
