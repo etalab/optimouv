@@ -79,7 +79,7 @@ class Rencontres
         $reqVilles->execute();
         $listeVilles = $reqVilles->fetchColumn();
         $reqVilles = explode(",", $listeVilles);
-
+        $bdd= null;
 
         $villes = [];
         $villesPasRencontre = [];
@@ -90,6 +90,7 @@ class Rencontres
 
         for ($i = 0; $i < count($reqVilles); $i++) {
 
+            $bdd= Rencontres::connexion();
             //on teste si toutes les entites sont géocodées
             $stmt = $bdd->prepare("SELECT id, longitude, latitude, id_ville_france FROM  entite WHERE id = :id ");
             $stmt->bindParam(':id', $reqVilles[$i]);
@@ -99,6 +100,7 @@ class Rencontres
             $longitude = $row['longitude'];
             $latitude = $row['latitude'];
             $idVille = $row['id_ville_france'];
+            $bdd = null;
 
             if (empty($longitude) && empty($latitude)) {
 
@@ -110,24 +112,25 @@ class Rencontres
                 $date = new \DateTime();
                 $dateModification = $date->format('Y-m-d');
 
+                $bdd= Rencontres::connexion();
                 $update = $bdd->prepare("UPDATE entite SET longitude = :Longitude, latitude= :Latitude, date_modification = :dateModification WHERE id = :idEntite");
-
                 $update->bindParam(':idEntite', $idEntite);
                 $update->bindParam(':Longitude', $longitude);
                 $update->bindParam(':Latitude', $latitude);
                 $update->bindParam(':dateModification', $dateModification);
                 $update->execute();
-
+                $bdd = null;
             }
 
         }
 
-
+        $bdd= Rencontres::connexion();
         //$villes va contenir toutes les entites qui peuvent accepter des matchs
         $stmt = $bdd->prepare("SELECT id, longitude, latitude FROM  entite WHERE find_in_set (id, :id) AND lieu_rencontre_possible = :lieuRencontre");
         $stmt->bindParam(':id', $listeVilles);
         $stmt->bindParam(':lieuRencontre', $lieuRencontrePossible);
         $stmt->execute();
+        $bdd = null;
 
         while ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
@@ -141,7 +144,7 @@ class Rencontres
             array_push($villes, $coordonne);
 
         }
-
+        $bdd= Rencontres::connexion();
         //$villesPasRencontre va contenir toutes les entites qui ne peuvent pas accepter des matchs
         $stmt = $bdd->prepare("SELECT id, longitude, latitude FROM  entite WHERE find_in_set (id, :id) AND lieu_rencontre_possible <> :lieuRencontre");
         $stmt->bindParam(':id', $listeVilles);
@@ -160,6 +163,7 @@ class Rencontres
             array_push($villesPasRencontre, $coordonne);
 
         }
+        $bdd = null;
 
         $retour = [];
 
@@ -178,7 +182,6 @@ class Rencontres
         $bdd= Rencontres::connexion();
 
         //Récupération de détail de la liste de lieux
-
         $retourListeLieux = Rencontres::getListeLieux($idGroupe);
 
         // retourner le retour à la fonction appellante (donne une erreur)
@@ -189,7 +192,6 @@ class Rencontres
         else{
 
                 $listeLieux = $retourListeLieux["donneesRetour"];
-
 
                 if( is_array($listeLieux) && isset($listeLieux[0])) {
 
@@ -310,11 +312,9 @@ class Rencontres
 
                 $villeDepart = $codePostal." | ".$nomEntite." | ".$nomVille;
 
-
                 $mesVillesXY = $coordonneesVilles[$key];
                 //Récupérer les noms de villes de destination
                 $mesVilles = Rencontres::mesVilles($mesVillesXY);
-
 
                 //distance ville
                 $distVille = $lesDistances[$key];
@@ -322,7 +322,6 @@ class Rencontres
 
                 // obtenir les ids choisis selon la clé donnée
                 $idsEntitesChoisis = $idEntitesCombination[$key];
-
 
                 //récupérer le nombre de participant pour chaque entité
                 $nbrParticipants = Rencontres::getNombreParticipants($idsEntitesChoisis);
@@ -354,8 +353,7 @@ class Rencontres
                 # ajouter le nombre de participants dans les résultats
                 $donneesRetour["nbrParticipantsTotal"] = Rencontres::getTotalNombreParticipants($nbrParticipants);
 
-
-
+            $bdd = null;
             return array('success' => True, 'donneesRetour'=>$donneesRetour, 'codeErreur'=> 0);
         }
 
@@ -366,12 +364,9 @@ class Rencontres
     public function Barycentre($idGroupe)
     {
 
-        $bdd= Rencontres::connexion();
-
         //recuperer la date du jour
         $date = new \DateTime();
         $dateCreation = $date->format('Y-m-d');
-
 
         //on récupère le tableau des villes
 //        $villes = $this->index($idGroupe);
@@ -398,33 +393,39 @@ class Rencontres
         $lanX = $lan / $length;
         $latY = $lat / $length;
 
+        $bdd= Rencontres::connexion();
         //ramener le nom du groupe pour l'attribuer au nom du barycentre
         $nomGroupe = $bdd->prepare("SELECT nom from groupe where id = :id");
         $nomGroupe->bindParam(':id', $idGroupe);
         $nomGroupe->execute();
         $nomGroupe = $nomGroupe->fetchColumn();
+        $bdd = null;
 
+        $bdd= Rencontres::connexion();
         $stmt1 = $bdd->prepare("SELECT ville_nom, ville_longitude_deg, ville_latitude_deg, ville_code_postal,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
                                 from villes_france_free
                                 order by Proximite limit 1;");
         $stmt1->execute();
         $result = $stmt1->fetch(PDO::FETCH_ASSOC);
+        $bdd = null;
         
         $latY = $result['ville_latitude_deg'];
         $lanX = $result['ville_longitude_deg'];
         $ville = $result['ville_nom'];
         $codePostal = $result['ville_code_postal'];
         $nom = 'Barycentre_' . $nomGroupe;
-        
+
+        $bdd= Rencontres::connexion();
         //vérifier si le barycentre existe deja
         $barycentre = $bdd->prepare("SELECT id from entite where longitude = :longitude AND latitude = :latitude");
         $barycentre->bindParam(':longitude', $lanX);
         $barycentre->bindParam(':latitude', $latY);
         $barycentre->execute();
         $res = $barycentre->fetchColumn();
-
+        $bdd = null;
         
         if (!$res) {
+            $bdd= Rencontres::connexion();
             $insert = $bdd->prepare("INSERT INTO  entite (nom, ville, code_postal, longitude, latitude, date_creation) VALUES ( :nom, :ville, :codePostal, :Longitude,:Latitude, :dateCreation );");
             $insert->bindParam(':nom', $nom);
             $insert->bindParam(':ville', $ville);
@@ -432,8 +433,8 @@ class Rencontres
             $insert->bindParam(':Longitude', $lanX);
             $insert->bindParam(':Latitude', $latY);
             $insert->bindParam(':dateCreation', $dateCreation);
-
             $insert->execute();
+            $bdd = null;
         }
 
         $coord = $lanX . '%2C' . $latY; // pour appel la fn routing matrix
@@ -452,7 +453,6 @@ class Rencontres
     public function Exclusion($valeurExclusion, $idGroupe)
     {
 
-        $bdd= Rencontres::connexion();
 
         if ($valeurExclusion) {
 
@@ -478,7 +478,7 @@ class Rencontres
             $lanX = $lan / $length;
             $latY = $lat / $length;
 
-
+            $bdd= Rencontres::connexion();
             $stmt1 = $bdd->prepare("SELECT ville_longitude_deg, ville_latitude_deg,ville_code_postal,ville_nom_reel, ville_population_2012,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
                           from villes_france_free
                           where ville_population_2012 < :valeurExclusion
@@ -487,6 +487,7 @@ class Rencontres
 
             $stmt1->execute();
             $result = $stmt1->fetch(PDO::FETCH_ASSOC);
+            $bdd = null;
 
             $lanX = $result['ville_latitude_deg'];
             $latY = $result['ville_longitude_deg'];
@@ -494,18 +495,22 @@ class Rencontres
             $ville = $result['ville_nom_reel'];
             $codePostal = $result['ville_code_postal'];
 
+            $bdd= Rencontres::connexion();
             //vérifier si le barycentre existe deja
             $barycentre = $bdd->prepare("SELECT id from entite where longitude = :longitude AND latitude = :latitude");
             $barycentre->bindParam(':longitude', $latY);
             $barycentre->bindParam(':latitude',  $lanX);
             $barycentre->execute();
             $res = $barycentre->fetchColumn();
+            $bdd = null;
 
+            $bdd= Rencontres::connexion();
             //ramener le nom du groupe pour l'attribuer au nom du barycentre
             $nomGroupe = $bdd->prepare("SELECT nom from groupe where id = :id");
             $nomGroupe->bindParam(':id', $idGroupe);
             $nomGroupe->execute();
             $nomGroupe = $nomGroupe->fetchColumn();
+            $bdd = null;
 
             $nom = 'Barycentre_' . $nomGroupe;
             //recuperer la date du jour
@@ -513,6 +518,7 @@ class Rencontres
             $dateCreation = $date->format('Y-m-d');
 
             if (!$res) {
+                $bdd= Rencontres::connexion();
                 $insert = $bdd->prepare("INSERT INTO  entite (nom, ville, code_postal, longitude, latitude, date_creation) VALUES ( :nom, :ville, :codePostal, :Longitude,:Latitude, :dateCreation );");
                 $insert->bindParam(':nom', $nom);
                 $insert->bindParam(':ville', $ville);
@@ -522,8 +528,8 @@ class Rencontres
                 $insert->bindParam(':dateCreation', $dateCreation);
 
                 $insert->execute();
+                $bdd = null;
             }
-
 
             $donneesRetour = Rencontres::routingMatrix($coord, $villes, $idsEntitesMerge, $idGroupe);
 
@@ -537,7 +543,6 @@ class Rencontres
             die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
         }
 
-
         return array('success' => True, 'donneesRetour'=>$donneesRetour, 'codeErreur'=> 0);
 
     }
@@ -545,7 +550,7 @@ class Rencontres
     //Calcul du scénario équitable
     public function scenarioEquitable($idGroupe)
     {
-        $bdd= Rencontres::connexion();
+
         //on récupère le tableau des villes
         $retourIndex = Rencontres::index($idGroupe);
 
@@ -641,11 +646,14 @@ class Rencontres
         $lanX = $coordVille[0];
         $latY = $coordVille[1];
 
+        $bdd= Rencontres::connexion();
         $stmt1 = $bdd->prepare("SELECT ville_code_postal,ville_nom,(6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
                                     from villes_france_free
                                     order by Proximite limit 1;");
         $stmt1->execute();
         $result = $stmt1->fetch(PDO::FETCH_ASSOC);
+        $bdd = null;
+
         $nomVille = $result['ville_nom'];
         $codePostal = $result['ville_code_postal'];
         $villeDepart = $codePostal." | ".$nomVille;
@@ -694,13 +702,11 @@ class Rencontres
         date_default_timezone_set('Europe/Paris');
         $dateTimeNow = date('Y-m-d_G:i:s', time());
 
-        $bdd=  Rencontres::connexion();
-
         $coord = explode('%2C', $coord);
         $lanX = $coord[0];
         $latY = $coord[1];
 
-
+        $bdd=  Rencontres::connexion();
         //////////////////////
         $stmt1 = $bdd->prepare("SELECT nom, ville, code_postal from entite where longitude=:longitude and latitude = :latitude ;");
 
@@ -708,6 +714,8 @@ class Rencontres
         $stmt1->bindParam(':latitude', $latY);
         $stmt1->execute();
         $result = $stmt1->fetch(PDO::FETCH_ASSOC);
+        $bdd = null;
+
         $codePostal = $result['code_postal'];
         $nomVille = $result['ville'];
         $nomEntite = $result['nom'];
@@ -717,6 +725,7 @@ class Rencontres
 
         if (!$barycentreVille) {
 
+            $bdd=  Rencontres::connexion();
             $stmt1 = $bdd->prepare("SELECT ville_nom, ville_code_postal,
                         (6366*acos(cos(radians($lanX))*cos(radians(ville_latitude_deg))*cos(radians(ville_longitude_deg)-radians($latY))+sin(radians($lanX))*sin(radians(ville_latitude_deg)))) as Proximite
                         from villes_france_free
@@ -724,6 +733,7 @@ class Rencontres
 
             $stmt1->execute();
             $barycentreVille = $stmt1->fetch(PDO::FETCH_ASSOC);
+            $bdd = null;
             $codePostal = $result['ville_code_postal'];
             $nomVille = $result['ville_nom'];
 
@@ -780,7 +790,6 @@ class Rencontres
     public function terrainNeutre($idGroupe)
     {
 
-        $bdd= Rencontres::connexion();
         # obtenir le nombre de participants pour cette groupe
         $nbrParticipants = Rencontres::getParticipantsPourGroupe($idGroupe);
 
@@ -863,7 +872,7 @@ class Rencontres
 
             //Récupérer les noms de villes de destination
             $mesVilles = Rencontres::mesVilles($equipe);
-
+            $bdd= Rencontres::connexion();
             $stmt1 = $bdd->prepare("SELECT code_postal, ville, nom from entite where longitude = :longitude AND latitude = :latitude");
             $stmt1->bindParam(':longitude', $latY);
             $stmt1->bindParam(':latitude', $lanX);
@@ -874,7 +883,7 @@ class Rencontres
             $nomEntite = $maVille['nom'];
 
             $maVille = $codePostal." | ".$nomEntite." | ".$nomVille;
-
+            $bdd = null;
 
             //récupérer le nombre de participant pour chaque entité
             $nbrParticipants = Rencontres::getNombreParticipants($idsEntitesMerge);
@@ -915,8 +924,6 @@ class Rencontres
 
     public function terrainNeutreEquitable($idGroupe)
     {
-
-        $bdd= Rencontres::connexion();
 
         $equipe = Rencontres::index($idGroupe);
 
@@ -993,7 +1000,7 @@ class Rencontres
 
             //Récupérer les noms de villes de destination
             $mesVilles = Rencontres::mesVilles($equipe);
-
+            $bdd= Rencontres::connexion();
             $stmt1 = $bdd->prepare("SELECT code_postal, ville, nom from entite where longitude = :longitude AND latitude = :latitude");
             $stmt1->bindParam(':longitude', $latY);
             $stmt1->bindParam(':latitude', $lanX);
@@ -1004,7 +1011,7 @@ class Rencontres
             $nomEntite = $maVille['nom'];
 
             $maVille = $codePostal." | ".$nomEntite." | ".$nomVille;
-
+            $bdd = null;
             //récupérer le nombre de participant pour chaque entité
             $nbrParticipants = Rencontres::getNombreParticipants($idsEntitesMerge);
 
@@ -1029,7 +1036,6 @@ class Rencontres
             # ajouter le nombre de participants dans les résultats
             $donneesRetour["distanceTotale"] = $distanceTotale;
 
-
             return array('success' => True, 'donneesRetour'=>$donneesRetour, 'codeErreur'=> 0);
 
 
@@ -1049,10 +1055,12 @@ class Rencontres
         $reqVilles->execute();
         $reqVilles = $reqVilles->fetchColumn();
         $reqVilles = explode(",", $reqVilles);
+        $bdd = null;
 
         $villes = [];
 
         for ($i = 0; $i < count($reqVilles); $i++) {
+            $bdd= Rencontres::connexion();
             $stmt = $bdd->prepare("SELECT nom, ville, code_postal FROM  entite WHERE id = :idEntite ;");
             $stmt->bindParam(':idEntite', $reqVilles[$i]);
             $stmt->execute();
@@ -1064,7 +1072,7 @@ class Rencontres
             $maVille = $codePostal." | ".$nomEntite." | ".$nomVille;
 
             array_push($villes, $maVille);
-
+            $bdd = null;
         }
 
         return $villes;
@@ -1075,8 +1083,6 @@ class Rencontres
     public function mesVilles($villes)
     {
 
-        $bdd= Rencontres::connexion();
-
         $mesVilles = [];
         //geocoder inversement les villes pour ramener les noms de villes
         for ($l = 0; $l < count($villes); ++$l) {
@@ -1084,7 +1090,7 @@ class Rencontres
             $start = explode('%2C', $villes[$l]);
             $lanX = $start[0];
             $latY = $start[1];
-
+            $bdd= Rencontres::connexion();
             $stmt1 = $bdd->prepare("SELECT code_postal, ville, nom from entite where longitude = :longitude AND latitude = :latitude");
             $stmt1->bindParam(':longitude', $latY);
             $stmt1->bindParam(':latitude', $lanX);
@@ -1098,6 +1104,7 @@ class Rencontres
 
             //Ramener tous les noms des villes
             array_push($mesVilles, $maVille);
+            $bdd = null;
         }
         return $mesVilles;
     }
@@ -1124,7 +1131,7 @@ class Rencontres
         $reqGroupe->execute();
         $idGroupe = $bdd->lastInsertId();
         $this->index($idGroupe);
-
+        $bdd = null;
         return $idGroupe;
 
     }
@@ -1144,7 +1151,7 @@ class Rencontres
         $retour = [];
         $retour[0] = $Latitude;
         $retour[1] = $Longitude;
-
+        $bdd = null;
         return $retour;
 
     }
@@ -1165,10 +1172,10 @@ class Rencontres
         $stmt1->bindParam(':latitude', $latY);
         $stmt1->execute();
         $result = $stmt1->fetch(PDO::FETCH_ASSOC);
-
         $idStart = $result['id'];
 
         $coordStart = $latY . '%2C' . $lanX;
+        $bdd = null;
 
         $distanceTotale = [];
         $dureeTotale = [];
@@ -1190,21 +1197,22 @@ class Rencontres
                 $X = $coordVille[1];
 
                 //recuperer l id de la ville
-
+                $bdd = Rencontres::connexion();
                 $reqID = $bdd->prepare("SELECT id FROM entite where longitude = :X AND  latitude= :Y;");
                 $reqID->bindParam(':X', $X);
                 $reqID->bindParam(':Y', $Y);
                 $reqID->execute();
                 $idVille = $reqID->fetchColumn();
-
+                $bdd = null;
 
                 //tester si on a deja le calcul de trajet entre le point start et notre point actuel
-
+                $bdd = Rencontres::connexion();
                 $req = $bdd->prepare("SELECT distance, duree FROM trajet where depart = :idStart AND destination = :idVille;");
                 $req->bindParam(':idStart', $idStart);
                 $req->bindParam(':idVille', $idVille);
                 $req->execute();
                 $res = $req->fetch(PDO::FETCH_ASSOC);
+                $bdd = null;
 
 //                error_log("\n Service: Rencontres".print_r($res, true)."\n", 3, $this->error_log_path);
 
@@ -1237,6 +1245,7 @@ class Rencontres
                     //insérer dans la base la distance + la duree
 
                     if (isset($distance, $duree)) {
+                        $bdd = Rencontres::connexion();
                         $insert = $bdd->prepare("INSERT INTO  trajet (depart, destination, distance, duree, date_creation) VALUES ( :idStart, :idVille, :distance,:duree, :dateCreation);");
                         $insert->bindParam(':idStart', $idStart);
                         $insert->bindParam(':idVille', $idVille);
@@ -1244,6 +1253,7 @@ class Rencontres
                         $insert->bindParam(':duree', $duree);
                         $insert->bindParam(':dateCreation', $dateCreation);
                         $insert->execute();
+                        $bdd = null;
 
                     }
 
@@ -1280,7 +1290,7 @@ class Rencontres
         $stmt1->bindParam(':id', $idGroupe);
         $stmt1->execute();
         $idUtilisateur = $stmt1->fetchColumn();
-
+        $bdd = null;
         return $idUtilisateur;
 
     }
@@ -1306,15 +1316,16 @@ class Rencontres
         $reqLieux->bindParam(':id', $idGroupe);
         $reqLieux->execute();
         $reqLieux = $reqLieux->fetchColumn();
-
+        $bdd = null;
         $idListeLieux = intval($reqLieux);
 
         if (isset($reqLieux)) {
-
+            $bdd = Rencontres::connexion();
             $listeLieux = $bdd->prepare("SELECT lieux FROM  liste_lieux WHERE id = :id ;");
             $listeLieux->bindParam(':id', $idListeLieux);
             $listeLieux->execute();
             $listeLieux = $listeLieux->fetchColumn();
+            $bdd = null;
 
             //convertir la chaine en chaine
             $listeLieux = explode(",", $listeLieux);
@@ -1337,6 +1348,7 @@ class Rencontres
             // obtenir le nombre de requetes de géo-codage
             $typeStatistiques = "nombreRequetesGeoHere";
 
+            $bdd = Rencontres::connexion();
             $sql = "SELECT sum(valeur) FROM  statistiques_date".
                 " WHERE type_statistiques = :type_statistiques".
                 " and date_creation >= :dateDebut and date_creation <=:dateFin;";
@@ -1346,6 +1358,7 @@ class Rencontres
             $stmt->bindParam(':dateFin', $dateFin);
             $stmt->execute();
             $nombreRequetesGeoHere = intval($stmt->fetchColumn());
+            $bdd = null;
         
 //            error_log("\n nombreRequetesGeoHere: ".print_r($nombreRequetesGeoHere, true), 3, $this->error_log_path);
 
@@ -1357,7 +1370,7 @@ class Rencontres
 
 
             for ($i = 0; $i < count($listeLieux); $i++) {
-                //
+                $bdd = Rencontres::connexion();
                 $stmt = $bdd->prepare("SELECT id, nom, ville, code_postal, longitude, latitude FROM  entite WHERE id = :id");
                 $stmt->bindParam(':id', $listeLieux[$i]);
                 $stmt->execute();
@@ -1417,6 +1430,7 @@ class Rencontres
                     }
                 }
             }
+            $bdd = null;
 
             # incrémenter le nombre des requetes HERE
             if($nbrRequetesGeoHere > 0){
@@ -1438,7 +1452,6 @@ class Rencontres
 
         }
     }
-
 
     public function creerRapport($idGroupe, $typeAction, $valeurExclusion){
         # obtenir la date courante du système
@@ -1469,9 +1482,10 @@ class Rencontres
         $getNomGroupe->execute();
         $nomGroupe = $getNomGroupe->fetchColumn();
 
-
+        $pdo = null;
         # controler si le rapport est déjà dans la table rapport
         try {
+            $pdo = Rencontres::connexion();
             $sql = "SELECT id FROM parametres WHERE id_groupe = :id_groupe and type_action = :type_action and params = :valeur_exclusion " ;
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':id_groupe', $idGroupe);
@@ -1483,14 +1497,14 @@ class Rencontres
 
             # obtenir le résultat
             $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+            $pdo = null;
 
             # insérer dans la table rapport si le rapport est nouveau
             if(!$resultat){
 
                //attribuer un nom au groupe
                 $nom = $prefixe_nom.$nomGroupe;
-
+                $pdo = Rencontres::connexion();
                 $sql = "INSERT INTO parametres (nom, id_groupe, params, date_creation)
                           VALUES (:nom, :id_groupe, :type_action, :valeur_exclusion, :date_creation)";
                 $stmt = $pdo->prepare($sql);
@@ -1509,6 +1523,7 @@ class Rencontres
 
                 # obtenir l'id de l"entité créée
                 $idRapport = $pdo->lastInsertId();
+                $pdo = null;
             }
             else{
                 $idRapport = -1; # l'id rapport si on ne fait pas l'insertion
@@ -1559,6 +1574,7 @@ class Rencontres
 
                 # obtenir l'id de l"entité créée
                 $idScenario = $pdo->lastInsertId();
+            $pdo = null;
 
         } catch (PDOException $e) {
             error_log("\n Service: Rencontres, Function: creerScenario, datetime: ".$dateTimeNow
@@ -1626,7 +1642,7 @@ class Rencontres
                 $nbrParticipants += $nbrParticipantsTemp;
             }
 
-
+            $bdd = null;
         } catch (Exception $e) {
             error_log(print_r($e, TRUE), 3, $this->error_log_path);
             die('Erreur : ' . $e->getMessage());
@@ -1668,7 +1684,7 @@ class Rencontres
     private function getNombreParticipants($idsEntites)
     {
 
-        $bdd= Rencontres::connexion();
+        $bdd = Rencontres::connexion();
         $count = count($idsEntites);
 
         $nbrParticipants = [];
@@ -1684,8 +1700,7 @@ class Rencontres
             $result = $stmt1->fetchColumn();
 
             array_push($nbrParticipants, $result);
-
-
+            $bdd = null;
         }
         return $nbrParticipants;
     }
@@ -1707,20 +1722,18 @@ class Rencontres
     public function Producer($idGroupe, $typeAction)
     {
 
-
-        $bdd= Rencontres::connexion();
-
         // récupérer l'id du rapport
         $courantRapportId = $this->fonctionsCommunes->getNextIdParametres();
 
         $prefixe_nom = "Meilleur lieu";
-        
 
+        $bdd = Rencontres::connexion();
         //récupérer le nom du groupe
         $getNomGroupe = $bdd->prepare("select nom from groupe where id = :id ;");
         $getNomGroupe->bindParam(':id', $idGroupe);
         $getNomGroupe->execute();
         $nomGroupe = $getNomGroupe->fetchColumn();
+        $bdd = null;
 
         //déclaration des parametres pour la req insert dans la table parametres
 
@@ -1731,10 +1744,9 @@ class Rencontres
         $dateCreation = $date->format('Y-m-d');
 //        $nomRapport = "rapport_groupe_".$idGroupe."_action_".$typeAction;
         $nomRapport = $prefixe_nom."_".$nomGroupe."_".$courantRapportId;
-
+        $bdd = Rencontres::connexion();
         //on ajoute un job dans la table parametres
-        //TODO:changer le nom de la table rapport en paramètres
-        $insert = $bdd->prepare("INSERT INTO  parametres (nom, id_groupe, type_action, statut, date_creation) VALUES (:nomRapport, :idGroupe, :typeAction, :statut, :dateCreation );");
+         $insert = $bdd->prepare("INSERT INTO  parametres (nom, id_groupe, type_action, statut, date_creation) VALUES (:nomRapport, :idGroupe, :typeAction, :statut, :dateCreation );");
         $insert->bindParam(':nomRapport', $nomRapport);
         $insert->bindParam(':idGroupe', $idGroupe);
         $insert->bindParam(':typeAction', $typeAction);
@@ -1742,6 +1754,7 @@ class Rencontres
         $insert->bindParam(':dateCreation', $dateCreation);
         $insert->execute();
         $idTache = $bdd->lastInsertId();
+        $bdd = null;
 
         return $idTache;
 
@@ -1750,21 +1763,19 @@ class Rencontres
     public function producerExclusion($idGroupe, $valeurExclusion)
     {
 
-        $bdd = Rencontres::connexion();
-
-
         //déclaration des parametres pour la req insert dans la table parametres
 
         $statut = 0;
         $typeAction = "exclusion";
         $prefixe_nom = "Meilleur lieu";
 
+        $bdd = Rencontres::connexion();
         //récupérer le nom du groupe
         $getNomGroupe = $bdd->prepare("select nom from groupe where id = :id ;");
         $getNomGroupe->bindParam(':id', $idGroupe);
         $getNomGroupe->execute();
         $nomGroupe = $getNomGroupe->fetchColumn();
-
+        $bdd = null;
 
         //recuperer la date du jour
         $date = new \DateTime();
@@ -1776,7 +1787,7 @@ class Rencontres
         $nomRapport = $prefixe_nom."_".$nomGroupe."_".$courantRapportId;
 
         //on ajoute un job dans la table parametres
-        //TODO:changer le nom de la table rapport en paramètres
+        $bdd = Rencontres::connexion();
         $insert = $bdd->prepare("INSERT INTO  parametres (nom, id_groupe, type_action, statut, params, date_creation) VALUES (:nomRapport, :idGroupe, :typeAction, :statut, :params, :dateCreation );");
         $insert->bindParam(':nomRapport', $nomRapport);
         $insert->bindParam(':idGroupe', $idGroupe);
@@ -1786,6 +1797,7 @@ class Rencontres
         $insert->bindParam(':dateCreation', $dateCreation);
         $insert->execute();
         $idTache = $bdd->lastInsertId();
+        $bdd = null;
 
         return $idTache;
 
