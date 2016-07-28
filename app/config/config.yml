@@ -42,8 +42,8 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     globals:
-           app_id: %app_id%
-           app_code: %app_code%
+           map_app_id: %map_app_id%
+           map_app_code: %map_app_code%
            base_url: %base_url%
            cle_site_captcha: %cle_site_captcha%
            kernelRootDir: %kernel.root_dir%

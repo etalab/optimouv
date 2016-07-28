@@ -15,8 +15,6 @@ class Poules{
     private $database_name;
     private $database_user;
     private $database_password;
-    private $app_id;
-    private $app_code;
     private $error_log_path;
     private $database_host;
     /**
@@ -28,14 +26,12 @@ class Poules{
      */
     protected $fonctionsCommunes;
 
-    public function __construct($database_host, $database_name, $database_user, $database_password, $app_id, $app_code, $error_log_path, $serviceStatistiques, $fonctionsCommunes )
+    public function __construct($database_host, $database_name, $database_user, $database_password, $error_log_path, $serviceStatistiques, $fonctionsCommunes )
     {
         $this->database_host = $database_host;
         $this->database_name = $database_name;
         $this->database_user = $database_user;
         $this->database_password = $database_password;
-        $this->app_id = $app_id;
-        $this->app_code = $app_code;
         $this->error_log_path = $error_log_path;
         $this->serviceStatistiques = $serviceStatistiques;
         $this->fonctionsCommunes = $fonctionsCommunes;
