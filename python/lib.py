@@ -2264,6 +2264,9 @@ def send_email_to_user_failure_with_text(userId, reportId, contentText, channel,
 		# ack message
 		channel.basic_ack(delivery_tag = method.delivery_tag)
 
+		print('Normal error for reportId: %s' %reportId)
+		logging.info('Normal error for reportId: %s' %reportId)
+		
 
 		sys.exit()
 
