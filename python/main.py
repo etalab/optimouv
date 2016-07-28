@@ -1427,12 +1427,13 @@ def callback(ch, method, properties, body):
 	try:
 		
 		beginTime = datetime.datetime.now()
-		logging.debug("starting current time : %s" %beginTime.strftime('%Y-%m-%d %H:%M:%S'))
+		beginTimeStr = beginTime.strftime('%Y-%m-%d %H:%M:%S')
+		logging.debug("starting current time : %s" %beginTimeStr)
 
 		body = body.decode('utf-8')
 		# get report id from RabbitMQ
 		reportId = str(body)
-		print("reportId: %s" %reportId)
+		print("starting calculation for reportId: %s at %s" %(reportId, beginTimeStr))
 
 		# update job status to 1 (running)
 		update_job_status(reportId, 1)
@@ -1641,7 +1642,9 @@ def callback(ch, method, properties, body):
 		update_job_status(reportId, 2)
 
 		endTime = datetime.datetime.now()
-		logging.debug("finishing current time : %s" %endTime.strftime('%Y-%m-%d %H:%M:%S'))
+		endTimeStr = endTime.strftime('%Y-%m-%d %H:%M:%S')
+		
+		logging.debug("finishing current time : %s" %endTimeStr)
 		processingTime = endTime - beginTime
 		processingTimeSeconds = processingTime.seconds
 		logging.debug("processing time : %s seconds" %processingTimeSeconds)
@@ -1651,6 +1654,9 @@ def callback(ch, method, properties, body):
 
 		# ack message
 		ch.basic_ack(delivery_tag = method.delivery_tag)
+
+		print("finish calculation for reportId: %s at %s" %(reportId, endTimeStr))
+
 
 	except Exception as e:
 		show_exception_traceback()
@@ -1673,7 +1679,7 @@ def main():
 	
 		# get config.py location entered by user
 		config_loc = args.config_loc
-		print ("config_loc: %s" %config_loc)
+		print ("config file: %s" %config_loc)
 	
 		# import config module using absolute path	#  
 		config = absImport(config_loc)
