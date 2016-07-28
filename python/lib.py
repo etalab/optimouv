@@ -14,6 +14,7 @@ import math
 from email.header import Header
 from email.utils import formataddr
 
+
 """
 Function to print exception traceback
 useful for debugging purposes
@@ -26,6 +27,19 @@ def show_exception_traceback():
 	print("Error Detail: %s " %exc_value)
 	print("Filename: %s" %fname)
 	print("Line number: %s " %exc_tb.tb_lineno)
+
+	currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+	logging.debug("")
+	logging.debug("################################# EXCEPTION OCCURRED AT %s  #######################################"%currentTimeStr)
+	logging.debug("Error Class: %s" %exc_type)
+	logging.debug("Error Detail: %s " %exc_value)
+	logging.debug("Filename: %s" %fname)
+	logging.debug("Line number: %s " %exc_tb.tb_lineno)
+	
+	try:
+		update_job_status(reportId, -1)
+	except NameError:
+		pass	
 	sys.exit()
 
 """
@@ -225,8 +239,6 @@ Function to create pool distribution from P Matrix
 def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSize, teams):
 	try:
 
-		logging.debug(" ------------------------- create_pool_distribution_from_matrix_one_way ------------------------- ")
-		
 		# Dict containing the distribution of groups in the pools
 		poolDistribution = {}
 	

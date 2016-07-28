@@ -17,6 +17,7 @@ import pika
 from pika.adapters import SelectConnection
 from lib import *
 
+
 """
 Function to print exception traceback
 useful for debugging purposes
@@ -29,6 +30,20 @@ def show_exception_traceback():
 	print("Error Detail: %s " %exc_value)
 	print("Filename: %s" %fname)
 	print("Line number: %s " %exc_tb.tb_lineno)
+
+	currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+	logging.debug("")
+	logging.debug("################################# EXCEPTION OCCURRED AT %s  #######################################"%currentTimeStr)
+	logging.debug("Error Class: %s" %exc_type)
+	logging.debug("Error Detail: %s " %exc_value)
+	logging.debug("Filename: %s" %fname)
+	logging.debug("Line number: %s " %exc_tb.tb_lineno)
+	
+	try:
+		update_job_status(reportId, -1)
+	except NameError:
+		pass	
+		
 	sys.exit()
 
 
@@ -81,9 +96,11 @@ def init_log_file():
 		pass
 	logging.basicConfig(filename=config.LOG.Path, level=logging.DEBUG)
 	
-	# set pika debug level to warning
-	logging.getLogger("pika").setLevel(logging.WARNING)
+	# set pika debug level to ERROR
+	logging.getLogger("pika").setLevel(logging.ERROR)
 
+	# set request debug level to ERROR
+	logging.getLogger("requests").setLevel(logging.ERROR)
 
 """
 Function to optimize pool post treatment for team transfers between pool
@@ -1453,6 +1470,7 @@ Main callback function which executes PyTreeRank ALgorithm
 def callback(ch, method, properties, body):
 	try:
 		
+		
 		beginTime = datetime.datetime.now()
 		beginTimeStr = beginTime.strftime('%Y-%m-%d %H:%M:%S')
 		logging.debug("starting current time : %s" %beginTimeStr)
@@ -1461,6 +1479,10 @@ def callback(ch, method, properties, body):
 		# get report id from RabbitMQ
 		reportId = str(body)
 		print("starting calculation for reportId: %s at %s" %(reportId, beginTimeStr))
+
+# 		import pymysql
+# 		raise pymysql.err.OperationalError
+
 
 		# update job status to 1 (running)
 		update_job_status(reportId, 1)
