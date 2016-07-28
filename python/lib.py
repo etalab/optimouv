@@ -1023,7 +1023,8 @@ def get_p_matrix_for_round_trip_match_optimal_with_constraint(P_InitMat, D_Mat, 
 				
 				if iterConstraint == 0:
 					logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-					logging.debug("Failure to create interchange rows and  columns (i, j) which fulfills all constraints")
+					currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+					logging.debug("Failure to create interchange rows and  columns (i, j) which fulfills all constraints at %s"%currentTimeStr)
 					logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 					
 					return {"status": "no", "data": {}}
@@ -1195,7 +1196,8 @@ def get_p_matrix_for_round_trip_match_equitable_with_constraint(P_InitMat, D_Mat
 			while True:
 				if iterConstraint == 0:
 					logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-					logging.debug("Failure to create interchange rows and  columns (i, j) which fulfills all constraints")
+					currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+					logging.debug("Failure to create interchange rows and  columns (i, j) which fulfills all constraints at %s"%currentTimeStr)
 					logging.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
 					return {"status": "no", "data": {}}
@@ -1492,7 +1494,8 @@ def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coord
 			db.execute(sql)
 			db.commit()
 		except Exception as e:
-			logging.debug("Insertion error to table trajet, details %s" %e)
+			currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+			logging.debug("Insertion error to table trajet at %s, details %s" %(currentTimeStr, e))
 			sys.exit()
 
 
@@ -1592,7 +1595,8 @@ def create_distance_matrix_from_db(teams, reportId, userId):
 				db.commit()
 
 			except Exception as e:
-				logging.debug("Insertion error to table statistiques_date, details %s" %e)
+				currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+				logging.debug("Insertion error to table statistiques_date at %s, details %s" %(currentTimeStr, e))
 				sys.exit()
 
 		return D_Mat
@@ -1627,7 +1631,8 @@ def insert_calculation_time_to_db(userId, startTime, endTime, duration):
 
 
 	except Exception as e:
-		logging.debug("Insertion error to table statistiques_date_temps, details %s" %e)
+		currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+		logging.debug("Insertion error to table statistiques_date_temps at %s, details %s" %( currentTimeStr, e))
 		sys.exit()
 
 
@@ -2365,7 +2370,8 @@ def save_result_to_db(launchType, reportId, groupId, results):
 			
 			resultId = db.lastinsertedid()
 		except Exception as e:
-			logging.debug("Insertion error to table resultats, details %s" %e)
+			currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+			logging.debug("Insertion error to table resultats at %s, details %s" %(currentTimeStr, e))
 			sys.exit()
 
 		return resultId
@@ -2459,7 +2465,8 @@ def save_result_to_db_post_treatment(launchType, reportId, groupId, results):
 			
 			resultId = db.lastinsertedid()
 		except Exception as e:
-			logging.debug("Insertion error to table resultats, details %s" %e)
+			currentTimeStr = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+			logging.debug("Insertion error to table resultats at %s, details %s" %( currentTimeStr, e))
 			sys.exit()
 		
 		return resultId
