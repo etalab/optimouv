@@ -42,12 +42,12 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     globals:
-           map_app_id: %map_app_id%
-           map_app_code: %map_app_code%
-           base_url: %base_url%
-           cle_site_captcha: %cle_site_captcha%
-           kernelRootDir: %kernel.root_dir%
-           guide_utilisateur: %guide_utilisateur%
+           map_app_id: "%map_app_id%"
+           map_app_code: "%map_app_code%"
+           base_url: "%base_url%"
+           cle_site_captcha: "%cle_site_captcha%"
+           kernelRootDir: "%kernel.root_dir%"
+           guide_utilisateur: "%guide_utilisateur%"
 
 # Assetic Configuration
 assetic:
@@ -158,4 +158,4 @@ knp_snappy:
         enabled:    true
         binary:     "%path_wkhtmltopdf%"
         options:    []
-    temporary_folder: %kernel.cache_dir%/snappy
+    temporary_folder: "%kernel.cache_dir%/snappy"

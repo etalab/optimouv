@@ -14,6 +14,7 @@ use PDO;
 use Symfony\Component\DependencyInjection\ContainerInterface ;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 
+
 class CalculRencontreConsumer implements ConsumerInterface
 {
     public $database_host;
@@ -123,22 +124,26 @@ class CalculRencontreConsumer implements ConsumerInterface
         //on change le statut de la tâche pour dire qu elle est passee a en cours de traitement
         $statut = 1;
 
-        //TODO: changer le nom de la table rapport en parametres
         $update = $pdo->prepare("UPDATE parametres SET statut = :statut WHERE id = :id");
         $update->bindParam(':id', $msg);
         $update->bindParam(':statut', $statut);
         $update->execute();
 
+        unset($pdo);
 
+        $pdo= $this->connexion();
         //recupere les details de l operation
         $req = $pdo->prepare("SELECT * from parametres where id = :id ");
         $req->bindParam(':id', $msg);
         $req->execute();
+
         $res = $req->fetchAll(PDO::FETCH_ASSOC);
 
+        unset($pdo);
         $typeAction = $res[0]['type_action'];
         $idGroupe = $res[0]['id_groupe'];
         $params = $res[0]['params'];
+
 
         //on recupere le service de rencontre
         include_once 'Rencontres.php';
@@ -194,6 +199,7 @@ class CalculRencontreConsumer implements ConsumerInterface
                     $this->sendMail($msg, $typeAction, 0 );
                 }
             }
+
         }
         elseif($typeAction == "meilleurLieu"){
             $retourOp = $serviceRencontre->meilleurLieuRencontre($idGroupe);
@@ -260,7 +266,8 @@ class CalculRencontreConsumer implements ConsumerInterface
         }
         else{
 
-            die("type de job non reconnu!");
+            error_log("\n type de job non reconnu, Service: CalculRencontreConsumer, Id tache: $msg", 3, $this->error_log_path);
+            return true;
         }
 
         
@@ -296,8 +303,6 @@ class CalculRencontreConsumer implements ConsumerInterface
             $tempsDebut = $tempsDebut->format('Y-m-d H:i:s');
             $tempsFin = $tempsFin->format('Y-m-d H:i:s');
 
-//            error_log("\n type tempsFin: ".gettype($tempsFin), 3, $this->error_log_path);
-
             # insérer dans la base de données
             $sql = "INSERT INTO  statistiques_date_temps (temps_debut, temps_fin , type_statistiques, id_utilisateur, id_discipline, id_federation, valeur)
                     VALUES (:temps_debut, :temps_fin,  :type_statistiques, :id_utilisateur, :id_discipline, :id_federation, :valeur);";
@@ -315,9 +320,7 @@ class CalculRencontreConsumer implements ConsumerInterface
                 error_log("\n  Erreur d'insertion des données dans DB, details: ".print_r($stmt->errorInfo(), true)."\n Service: CalculRencontreConsumer, Function: insererTempsCalculEnDB", 3, $this->error_log_path);
                 die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
             }
-
-
-
+            unset($pdo);
         }
         catch (PDOException $e){
             error_log("\n erreur PDO, Service: CalculRencontreConsumer, Function: insererTempsCalculEnDB, erreur: ".print_r($e, true), 3, $this->error_log_path);
@@ -333,20 +336,16 @@ class CalculRencontreConsumer implements ConsumerInterface
 
         //on recupere les parametres de connexion
         $bdd= $this->connexion();
-
         //recuperation la date du jour
         $date = new \DateTime();
         $dateCreation = $date->format('Y-m-d');
-
-        //TODO: changer le nom de la table à resultats
-
         $insert = $bdd->prepare("INSERT INTO  resultats (id_rapport, details_calcul, date_creation) VALUES ( :idTache, :detailsCalcul, :dateCreation);");
         $insert->bindParam(':idTache', $idTache);
         $insert->bindParam(':detailsCalcul', $resultats);
         $insert->bindParam(':dateCreation', $dateCreation);
         $insert->execute();
         $idCalcul = $bdd->lastInsertId();
-
+        unset($bdd);
         return $idCalcul;
         
     }
@@ -355,12 +354,11 @@ class CalculRencontreConsumer implements ConsumerInterface
     {
         //on recupere les parametres de connexion
         $bdd= $this->connexion();
-
-        //TODO: changer le nom de la table rapport en parametres
         $update = $bdd->prepare("UPDATE parametres SET statut = :statut WHERE id = :id");
         $update->bindParam(':id', $id);
         $update->bindParam(':statut', $statut);
         $update->execute();
+        unset($bdd);
 
     }
 
@@ -394,16 +392,13 @@ class CalculRencontreConsumer implements ConsumerInterface
 
     public function getUserEmail($idRapport)
     {
-
         //on recupere les parametres de connexion
         $bdd= $this->connexion();
-
         $stmt1 = $bdd->prepare("select email from fos_user where id = (select id_utilisateur from groupe where id = (SELECT id_groupe FROM parametres where id = :id));");
-
         $stmt1->bindParam(':id', $idRapport);
         $stmt1->execute();
         $userEmail = $stmt1->fetchColumn();
-
+        unset($bdd);
         return $userEmail;
 
     }
