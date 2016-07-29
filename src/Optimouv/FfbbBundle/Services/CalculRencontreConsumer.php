@@ -129,6 +129,8 @@ class CalculRencontreConsumer implements ConsumerInterface
         $update->bindParam(':statut', $statut);
         $update->execute();
 
+        unset($pdo);
+
         $pdo= $this->connexion();
         //recupere les details de l operation
         $req = $pdo->prepare("SELECT * from parametres where id = :id ");
@@ -137,7 +139,7 @@ class CalculRencontreConsumer implements ConsumerInterface
 
         $res = $req->fetchAll(PDO::FETCH_ASSOC);
 
-
+        unset($pdo);
         $typeAction = $res[0]['type_action'];
         $idGroupe = $res[0]['id_groupe'];
         $params = $res[0]['params'];
@@ -264,7 +266,8 @@ class CalculRencontreConsumer implements ConsumerInterface
         }
         else{
 
-            die("type de job non reconnu!");
+            error_log("\n type de job non reconnu, Service: CalculRencontreConsumer, Id tache: $msg", 3, $this->error_log_path);
+            return true;
         }
 
         
@@ -317,7 +320,7 @@ class CalculRencontreConsumer implements ConsumerInterface
                 error_log("\n  Erreur d'insertion des données dans DB, details: ".print_r($stmt->errorInfo(), true)."\n Service: CalculRencontreConsumer, Function: insererTempsCalculEnDB", 3, $this->error_log_path);
                 die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
             }
-
+            unset($pdo);
         }
         catch (PDOException $e){
             error_log("\n erreur PDO, Service: CalculRencontreConsumer, Function: insererTempsCalculEnDB, erreur: ".print_r($e, true), 3, $this->error_log_path);
@@ -342,7 +345,7 @@ class CalculRencontreConsumer implements ConsumerInterface
         $insert->bindParam(':dateCreation', $dateCreation);
         $insert->execute();
         $idCalcul = $bdd->lastInsertId();
-
+        unset($bdd);
         return $idCalcul;
         
     }
@@ -355,6 +358,7 @@ class CalculRencontreConsumer implements ConsumerInterface
         $update->bindParam(':id', $id);
         $update->bindParam(':statut', $statut);
         $update->execute();
+        unset($bdd);
 
     }
 
@@ -394,7 +398,7 @@ class CalculRencontreConsumer implements ConsumerInterface
         $stmt1->bindParam(':id', $idRapport);
         $stmt1->execute();
         $userEmail = $stmt1->fetchColumn();
-
+        unset($bdd);
         return $userEmail;
 
     }
