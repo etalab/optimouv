@@ -1616,10 +1616,10 @@ def callback(channel, method, properties, body):
 			calculatedResult = json.loads(db.fetchone(sql))
 
 			# check whether it is a final result (the variation of team members per pool has already been performed)
-			check_final_result(calculatedResult, userId, reportId)
+			check_final_result(calculatedResult, userId, reportId, channel, method)
 
 			# check given params if they are the same or not as the stocked params
-			check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints, userId, reportId)
+			check_given_params_post_treatment(calculatedResult, launchType, poolNbr, prohibitionConstraints, typeDistributionConstraints, userId, reportId, channel, method)
 
 			results = optimize_pool_post_treatment_team_transfers(D_Mat, teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, prohibitionConstraints, typeDistributionConstraints, iterConstraint, statusConstraints, reportId, oldResultId, userId, teamTransfers, flagPhantom, calculatedResult)
 
