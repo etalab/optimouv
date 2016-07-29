@@ -13,7 +13,7 @@ use PhpAmqpLib\Message\AMQPMessage;
 use PDO;
 use Symfony\Component\DependencyInjection\ContainerInterface ;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Exception;
+
 
 class CalculRencontreConsumer implements ConsumerInterface
 {
@@ -129,8 +129,6 @@ class CalculRencontreConsumer implements ConsumerInterface
         $update->bindParam(':statut', $statut);
         $update->execute();
 
-        $pdo= null;
-
         $pdo= $this->connexion();
         //recupere les details de l operation
         $req = $pdo->prepare("SELECT * from parametres where id = :id ");
@@ -143,7 +141,7 @@ class CalculRencontreConsumer implements ConsumerInterface
         $typeAction = $res[0]['type_action'];
         $idGroupe = $res[0]['id_groupe'];
         $params = $res[0]['params'];
-        $pdo= null;
+
 
         //on recupere le service de rencontre
         include_once 'Rencontres.php';
@@ -319,7 +317,7 @@ class CalculRencontreConsumer implements ConsumerInterface
                 error_log("\n  Erreur d'insertion des données dans DB, details: ".print_r($stmt->errorInfo(), true)."\n Service: CalculRencontreConsumer, Function: insererTempsCalculEnDB", 3, $this->error_log_path);
                 die('Une erreur interne est survenue. Veuillez recharger l\'application. ');
             }
-            $pdo = null;
+
         }
         catch (PDOException $e){
             error_log("\n erreur PDO, Service: CalculRencontreConsumer, Function: insererTempsCalculEnDB, erreur: ".print_r($e, true), 3, $this->error_log_path);
@@ -344,7 +342,7 @@ class CalculRencontreConsumer implements ConsumerInterface
         $insert->bindParam(':dateCreation', $dateCreation);
         $insert->execute();
         $idCalcul = $bdd->lastInsertId();
-        $pdo = null;
+
         return $idCalcul;
         
     }
@@ -357,7 +355,7 @@ class CalculRencontreConsumer implements ConsumerInterface
         $update->bindParam(':id', $id);
         $update->bindParam(':statut', $statut);
         $update->execute();
-        $pdo= null;
+
     }
 
 
@@ -396,7 +394,7 @@ class CalculRencontreConsumer implements ConsumerInterface
         $stmt1->bindParam(':id', $idRapport);
         $stmt1->execute();
         $userEmail = $stmt1->fetchColumn();
-        $pdo= null;
+
         return $userEmail;
 
     }
