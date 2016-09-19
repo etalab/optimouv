@@ -7,6 +7,7 @@ FROM php:fpm
 #libxml2-dev for soap and wddx php ext
 RUN apt-get update && \
     apt-get install -y \
+        libssl-dev \
         libicu-dev \
         zlib1g-dev \
         libbz2-dev \
