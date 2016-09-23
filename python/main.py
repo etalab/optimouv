@@ -1424,7 +1424,6 @@ Main callback function which executes PyTreeRank ALgorithm
 """
 def callback(channel, method, properties, body):
 	try:
-		
 		beginTime = datetime.datetime.now()
 		beginTimeStr = beginTime.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -1445,7 +1444,6 @@ def callback(channel, method, properties, body):
 		
 		# parse json
 		params = json.loads(params)
-
 		poolNbr = params["nbrPoule"]
 
 		# get constraint variation team number per pool
@@ -1459,7 +1457,7 @@ def callback(channel, method, properties, body):
 			teamTransfers = params["changeAffectEquipes"]
 		else:
 			teamTransfers = {}
-
+		
 		iterConstraint = config.INPUT.IterConstraint
 
 		# flag to indicate if there are phantom teams (used if the pool size is a float instead of an int)
@@ -1475,21 +1473,18 @@ def callback(channel, method, properties, body):
 		# get user id 
 		sql = "select id_utilisateur from groupe where id=%s"%groupId
 		userId = db.fetchone(sql)
-
 		# get entites from DB
 		sql = "select equipes from groupe where id=%d" %groupId
-
 		# convert list of strings to list of ints
 		teams = sorted(list(map(int, db.fetchone(sql).split(","))))
+		# Patch to remove duplicates team ids from team list
+		teams = list(set(teams))
 		teamNbr = len(teams)
-		
 		# check if teams have ref scenario or not
 		withRef = check_existence_ref_scenario(teams)
-		
 		# check team number and pool number for match plateau
 		if launchType == "plateau":
 			control_params_match_plateau(userId, teamNbr, poolNbr, reportId, channel, method)
-		
 		
 		# update teams and other params by including phantom teams
 		teamsWithPhantom = list(teams)
@@ -1559,7 +1554,6 @@ def callback(channel, method, properties, body):
 				P_InitMat_oneWayWithConstraint = np.triu(P_InitMat_withConstraint)
 				
 			else:
-				
 				# try to create init matrix manually
 				statusCreateInitMatrixManual = create_init_matrix_with_constraint_manual(teamNbrWithPhantom, poolNbr, poolSize, teamsWithPhantom, iterConstraint, prohibitionConstraints, typeDistributionConstraints)
 				
@@ -1660,7 +1654,21 @@ def callback(channel, method, properties, body):
 		db.disconnect()
 		sys.exit()
 
-
+def debugGroup():
+	sql = "select id, equipes from groupe"
+	
+	resultSet = db.fetch(sql)
+	
+	for row in resultSet:
+		teams = sorted(list(map(int, row[1].split(","))))
+		
+		newlist = list(set(teams))
+		
+		#if row[0] in [131, 134]:
+			#logging.info('[DEBUG GROUP] #### Error during duplicates test %s %s ' %(newlist, row))
+	# convert list of strings to list of ints
+	# teams = sorted(list(map(int, db.fetchone(sql).split(","))))
+	# teamNbr = len(teams)
 
 """
 Main function
@@ -1681,7 +1689,10 @@ def main():
 	
 		# Init log file
 		init_log_file()
-
+		
+		#if config.LOG.DebugGroup:
+			#debugGroup()
+		
 		# rabbitmq connection
 		credentials = pika.PlainCredentials(config.MQ.User, config.MQ.Password)
 		parameters = pika.ConnectionParameters(host=config.MQ.Host, credentials=credentials, heartbeat_interval=0)

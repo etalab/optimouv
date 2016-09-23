@@ -28,3 +28,7 @@
 # Python config and cache files
 /python/config.py
 /python/__pycache__/
+/nbproject/private/
+/nbproject/*
+*/*.kate-swp
+*.kate-swp

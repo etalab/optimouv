@@ -10,6 +10,8 @@ use Optimouv\FfbbBundle\Form\EntiteType;
 use Symfony\Component\HttpFoundation\Response;
 use PDO;
 use ZipArchive;
+use Doctrine\Common\Util\Debug;
+
 class PoulesController extends Controller
 {
     public function indexAction()
@@ -384,7 +386,11 @@ class PoulesController extends Controller
 
 
         $tousLesGroupes = $em->getRepository('FfbbBundle:Groupe')->getGroupList($idListe);
-
+		foreach ($tousLesGroupes as $group)
+		{
+			$teams = array_unique(explode(',', $group->getEquipes()));
+			$group->setNbParticipants(count($teams));
+		}
         # récupérer idListe pour le breadcrump
         $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
 
@@ -406,6 +412,12 @@ class PoulesController extends Controller
         # récupérer idListe pour le breadcrump
         $nomListe =  $em->getRepository('FfbbBundle:ListeParticipants')->findOneById($idListe)->getNom();
         $tousLesGroupes = $em->getRepository('FfbbBundle:Groupe')->getGroupList($idListe);
+
+        foreach ($tousLesGroupes as $group)
+        {
+            $teams = array_unique(explode(',', $group->getEquipes()));
+            $group->setNbParticipants(count($teams));
+        }
         return $this->render('FfbbBundle:Poules:gererGroupe.html.twig', [
             'tousLesGroupes' => $tousLesGroupes,
             'idListe' => $idListe,

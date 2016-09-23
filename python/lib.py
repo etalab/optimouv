@@ -193,7 +193,7 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 				# continue to the next row if teamDepart is already in the list of assigned teams
 				if teamDestination in assignedTeams:
 					continue
-
+				
 				valueMat = int(P_Mat[indexRow][indexCol])
 	
 				performanceCounter += 1
@@ -212,8 +212,7 @@ def create_pool_distribution_from_matrix(P_Mat, teamNbr, poolNbr, poolSize, team
 							assignedTeams.extend(tempPool)
 						else: 
 							break
-				
-
+						
 		firstPoolName = ord('A')
 		# obtain group distribution per pool
 		for pool in range(poolNbr):
@@ -233,7 +232,6 @@ Function to create pool distribution from P Matrix
 """
 def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSize, teams):
 	try:
-
 		# Dict containing the distribution of groups in the pools
 		poolDistribution = {}
 	
@@ -251,12 +249,14 @@ def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSi
 
 			# get the row content
 			rowContent = list(P_Mat[indexRow])
-
+			
 			# calculate the pool size of the row
 			poolSizeRow = rowContent.count(1.0) + 1
-
 			# move to the next row if the pool size is smalller than expected
 			if(poolSizeRow == poolSize):
+				logging.info('[DEBUG] indexRow %s ' %indexRow)
+				logging.info('[DEBUG] teamDepart %s ' %teamDepart)
+				logging.info('[DEBUG] matrix line  %s ' %P_Mat[indexRow])
 				tempPool = [] # create a temporary pool (this pool has max size of poolSizeRow)
 				tempPool.append(teamDepart) # add first element in the pool
 	
@@ -268,7 +268,7 @@ def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSi
 					valueMat = int(P_Mat[indexRow][indexCol])
 		
 					performanceCounter += 1
-		
+
 					# add teamDestination to temporary pool if the pool size has not been reached and if the teamDestination is not yet in temporary pool 
 					if ( len(tempPool) < poolSizeRow) and (teamDestination not in tempPool) and (valueMat == 1):
 						tempPool.append(teamDestination)
@@ -277,7 +277,6 @@ def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSi
 					if len(tempPool) == poolSizeRow:
 						tempPool = sorted(tempPool)
 						if tempPool not in tempPools:
-							
 							if len(tempPools) < poolNbr:
 								tempPools.append(tempPool)
 								assignedTeams.extend(tempPool)
@@ -1456,9 +1455,22 @@ def get_distance_travel_time_from_here_ws(cityIdDepart, cityIdDestination, coord
 
 		resp = requests.get(url=hereUrl, params=params)
 		data = json.loads(resp.text)
-					
+		
+		# Check api response for coordinates error
+		if 'response' not in data and 'additionalData' in data:
+			if data['additionalData'][0]['value'] == 'NGEO_ERROR_ROUTE_NO_END_POINT':
+				reportName = get_report_name_from_report_id(reportId)
+				contentText = u"Bonjour,\n\n" 
+				contentText += u"Une erreur est survenue,\n"
+				contentText += u"Il semblerait que les coordonées GPS fournies soient erronées.\n\n"
+				contentText += u"Veuillez revoir.\n\n"
+				contentText += u"Cordialement,\n\n"
+				contentText += u"L'équipe d’Optimouv\n"
+				contentText += u"%s"%(senderAccount)
+				send_email_to_user_failure_with_text(userId, reportId, contentText, channel, method)
+			
 		# get distance from HERE response
-		if data["response"]:
+		elif data["response"]:
 			
 			# if license error
 			if "type" in data["response"]:
@@ -2230,7 +2242,6 @@ Function to send email to user when there is no results (there are too many cons
 """
 def send_email_to_user_failure(userId, reportId, channel, method):
 	try:
-
 		reportName = get_report_name_from_report_id(reportId)
 		senderAccount = config.EMAIL.From
 
@@ -2299,7 +2310,6 @@ def control_params_match_plateau(userId, teamNbr, poolNbr, reportId, channel, me
 			contentText += u"Cordialement,\n\n"
 			contentText += u"L'équipe d’Optimouv\n"
 			contentText += u"%s"%(senderAccount)
-
 			send_email_to_user_failure_with_text(userId, reportId, contentText, channel, method)
 
 
@@ -2828,7 +2838,7 @@ def check_given_params_post_treatment(calculatedResult, launchType, poolNbr, pro
 Function to check request validity (post treatment can only launch variation of team number per pool or team transfer to other pool)
 """
 def check_request_validity_post_treatment(teamTransfers, varTeamNbrPerPool, userId, reportId, channel, method):
-	try:		
+	try:
 		sql = "select nom from parametres where id=%s"%reportId
 		reportName = db.fetchone(sql)
 

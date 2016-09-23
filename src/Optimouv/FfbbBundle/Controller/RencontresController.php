@@ -49,10 +49,13 @@ use ZipArchive;
          $terrainsNeutres = $retourOp[9];
          $nbrParticipantsTotal = $retourOp["nbrParticipantsTotal"];
          $distanceTotale = $retourOp["distanceTotale"];
-
+         $date = new \DateTime();
+         $totalTime = 0;
          foreach ($retourOp[6] as $key => $value) {
-
-             $participants[] = array('ville' => $value, 'distance' => $retourOp[7][$key], 'duree' => $retourOp[8][$key], 'nbrParticipants' => $retourOp[10][$key]);
+             $date->setTimestamp($retourOp[8][$key]);
+             $totalTime += $retourOp[8][$key];
+             //$participants[] = array('ville' => $value, 'distance' => $retourOp[7][$key], 'duree' => $retourOp[8][$key], 'nbrParticipants' => $retourOp[10][$key]);
+             $participants[] = array('ville' => $value, 'distance' => $retourOp[7][$key], 'duree' => $date->format('H:i'), 'nbrParticipants' => $retourOp[10][$key]);
          }
 
          /////////////////////////////////
@@ -95,6 +98,7 @@ use ZipArchive;
          $gesCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(5)->getValeur();
          $gesMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(6)->getValeur();
 
+         $date->setTimestamp($totalTime);
 
          return $this->render('FfbbBundle:Rencontres:index.html.twig', array(
 
@@ -132,7 +136,9 @@ use ZipArchive;
              'coutMinibus' => $coutMinibus,
              'gesVoiture' => $gesVoiture,
              'gesCovoiturage' => $gesCovoiturage,
-             'gesMinibus' => $gesMinibus
+             'gesMinibus' => $gesMinibus,
+
+             'totatTime' => $date->format('H:i')
 
          ));
      }

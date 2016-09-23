@@ -20,6 +20,8 @@ services:
       - mysql_data
     environment:
       MYSQL_ROOT_PASSWORD: myPass
+    ports:
+          - "3307:3306"
 
   mysql_data:
     container_name: mysql_data
@@ -32,6 +34,8 @@ services:
     container_name: rabbitmq
     image: rabbitmq:3-management
     hostname: rabbitmq
+    ports:
+      - "39339:15672"
     environment:
       RABBITMQ_DEFAULT_USER: rabbit
       RABBITMQ_DEFAULT_PASS: mq

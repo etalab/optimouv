@@ -186,7 +186,6 @@ class Rencontres
 
         //Récupération de détail de la liste de lieux
         $retourListeLieux = Rencontres::getListeLieux($idGroupe);
-
         // retourner le retour à la fonction appellante (donne une erreur)
         if( is_array($retourListeLieux) && array_key_exists("success", $retourListeLieux) && $retourListeLieux["success"] === FALSE){
             return $retourListeLieux;
@@ -209,7 +208,6 @@ class Rencontres
 
                 //on récupère le tableau des villes
                 $retourIndex = Rencontres::index($idGroupe);
-
                 # récupérer l'ids de toutes les entités
                 $idsEntites = $retourIndex[2];
                 $idsEntitesPasRencontre = $retourIndex[3];
@@ -357,7 +355,6 @@ class Rencontres
 
                 # ajouter le nombre de participants dans les résultats
                 $donneesRetour["nbrParticipantsTotal"] = Rencontres::getTotalNombreParticipants($nbrParticipants);
-
             return array('success' => True, 'donneesRetour'=>$donneesRetour, 'codeErreur'=> 0);
         }
 
@@ -1421,7 +1418,7 @@ class Rencontres
 
                         // détecter si la réponse est vide
                         if ($reqGeocodeArray['Response']['View'] == []) {
-                            die("Erreur interne, l\'API HERE ne reconnait pas cette ville: " . $nomVille.
+                            die("Erreur interne, l'API HERE ne reconnait pas cette ville: " . $nomVille.
                                 ".\r Veuillez assurer que tous les lieux se trouvent en France Métropolitaine");
                         }
 
