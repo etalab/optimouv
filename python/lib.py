@@ -254,9 +254,6 @@ def create_pool_distribution_from_matrix_one_way(P_Mat, teamNbr, poolNbr, poolSi
 			poolSizeRow = rowContent.count(1.0) + 1
 			# move to the next row if the pool size is smalller than expected
 			if(poolSizeRow == poolSize):
-				logging.info('[DEBUG] indexRow %s ' %indexRow)
-				logging.info('[DEBUG] teamDepart %s ' %teamDepart)
-				logging.info('[DEBUG] matrix line  %s ' %P_Mat[indexRow])
 				tempPool = [] # create a temporary pool (this pool has max size of poolSizeRow)
 				tempPool.append(teamDepart) # add first element in the pool
 	

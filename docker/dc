@@ -1,5 +1,5 @@
 #!/bin/bash
 
-export BASEDIR=/home/enrique/git/Optimouv/
+export BASEDIR=/home/optimouv/
 docker-compose -p optimouv $*
 
