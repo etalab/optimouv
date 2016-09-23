@@ -294,7 +294,7 @@
                                                                         <td><strong> {{ participant.ville|slice(8) }}</strong>
                                                                         </td>
                                                                         <td style="text-align:right"> {{ (participant.distance // 1000)|number_format(0, ',', ' ') }}</td>
-                                                                        <td style="text-align:center"> {{ (participant.duree/3600)|round }}:{{ ((participant.duree%3600)/60)|round}}</td>
+                                                                        <td style="text-align:center"> {# (participant.duree/3600)|round }}:{{ ((participant.duree%3600)/60)|round#} {{ participant.duree }}</td>
                                                                         <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants * coutVoiture)|round|number_format(0, ',', ' ') }}</td>
                                                                         <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants /4 * coutCovoiturage)|round|number_format(0, ',', ' ') }}</td>
                                                                         <td style="text-align:right"> {{ (participant.distance / 1000 * participant.nbrParticipants /9 * coutMinibus)|round|number_format(0, ',', ' ') }}</td>
@@ -302,12 +302,12 @@
                                                                         <td style="text-align:right"> {{ (participant.distance / 1000 *(participant.nbrParticipants/4)*gesCovoiturage)|round|number_format(0, ',', ' ') }} </td>
                                                                         <td style="text-align:right"> {{ (participant.distance / 1000 *(participant.nbrParticipants/9)*gesMinibus)|round|number_format(0, ',', ' ') }} </td>
                                                                     </tr>
-                                                                    {% set dureeTotale = dureeTotale + participant.duree %}
+                                                                    {# set dureeTotale = dureeTotale + participant.duree #}
                                                                 {% endfor %}
                                                                 <tr>
                                                                     <td><strong> Totaux </strong></td>
                                                                     <td style="text-align:right"> {{ distanceMin|number_format(0, ',', ' ') }}</td>
-                                                                    <td style="text-align:center"> {{ (dureeTotale/3600)|round }}:{{ ((dureeTotale%3600)/60)|round}}</td>
+                                                                    <td style="text-align:center"> {# (dureeTotale/3600)|round }}:{{ ((dureeTotale%3600)/60)|round#}{{ totalTime }}</td>
                                                                     <td style="text-align:right"> {{ (distanceTotale  * coutVoiture)|round|number_format(0, ',', ' ') }}</td>
                                                                     <td style="text-align:right"> {{ (distanceTotale /4 * coutCovoiturage)|round|number_format(0, ',', ' ') }}</td>
                                                                     <td style="text-align:right"> {{ (distanceTotale /9 * coutMinibus)|round|number_format(0, ',', ' ') }}</td>

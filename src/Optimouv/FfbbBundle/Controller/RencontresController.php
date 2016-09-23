@@ -905,10 +905,17 @@ use ZipArchive;
         $coordonneesVille = $retour[5];
         $nbrParticipantsTotal = $retour["nbrParticipantsTotal"];
         $distanceTotale = $retour[10];
+        $date = new \DateTime();
+        $totalTime = 0;
 
         foreach($retour[6] as $key => $value ){
-            $participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key], 'nbrParticipants' => $retour[9][$key]);
-        }
+            $date->setTimestamp($retour[8][$key]);
+            $totalTime += $retour[8][$key];
+            //var_dump($date->format('H:i'));
+            //$participants[] = array('ville' => $value, 'distance' => $retourOp[7][$key], 'duree' => $retourOp[8][$key], 'nbrParticipants' => $retourOp[10][$key]);
+            $participants[] = array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $date->format('H:i'), 'nbrParticipants' => $retour[10][$key]);
+            //$participants[]= array('ville' => $value, 'distance' => $retour[7][$key], 'duree' => $retour[8][$key], 'nbrParticipants' => $retour[9][$key]);
+        }//var_dump($participants);exit;
 
 
         # récupérer idListe pour le breadcrump
@@ -942,6 +949,8 @@ use ZipArchive;
         $gesCovoiturage = $em->getRepository('FfbbBundle:Reference')->findOneById(5)->getValeur();
         $gesMinibus = $em->getRepository('FfbbBundle:Reference')->findOneById(6)->getValeur();
 
+        $date->setTimestamp($totalTime);
+
         return $this->render('FfbbBundle:Rencontres:barycentre.html.twig', array(
 
             //Données du scénario optimal
@@ -966,8 +975,9 @@ use ZipArchive;
             'coutMinibus' => $coutMinibus,
             'gesVoiture' => $gesVoiture,
             'gesCovoiturage' => $gesCovoiturage,
-            'gesMinibus' => $gesMinibus
+            'gesMinibus' => $gesMinibus,
 
+            'totalTime' => $date->format('H:i')
 
         ));
 
