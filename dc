@@ -1,0 +1,5 @@
+#!/bin/bash
+
+BASEDIR=`dirname "$(realpath -s $0)"`
+export BASEDIR
+docker-compose -p optimouv -f $BASEDIR/docker/docker-compose.yml "$*"
