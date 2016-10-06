@@ -14,11 +14,13 @@ La [Fédération Française de Basketball (FFBB)][ffbb] et le [Ministère charg�
 en partenariat avec l’[ADEME][] et le [WWF][],
 ont collaboré à l’étude et au développement de cet outil.
 
-![Logo FFBB][logo-ffbb]![Logo Ministère des Sports][logo-cnds]
-
 Découvrez la vidéo de présentation sur <http://www.ffbb.com/video-optimouv-quest-ce-que-cest>
 
-![Label COP21][label-cop21]![Logo IT4PME][logo-it4pme]
+![Logo FFBB][logo-ffbb]![Logo Ministère des Sports][logo-cnds]
+
+![Logo ADEME][logo-ademe]![Logo WWF][logo-wwf]![Logo IT4PME][logo-it4pme]
+
+![Label COP21][label-cop21]
 
 [ffbb]: http://www.ffbb.com/
 [ministere-sports]: http://www.sports.gouv.fr/
@@ -26,5 +28,7 @@ Découvrez la vidéo de présentation sur <http://www.ffbb.com/video-optimouv-qu
 [WWF]: http://www.wwf.fr/
 [logo-ffbb]: images/logo-ffbb.png
 [logo-cnds]: images/logo-cnds.png
+[logo-wwf]: images/logo-wwf.png
+[logo-ademe]: images/logo-ademe.png
 [logo-it4pme]: images/logo-it4pme.png
 [label-cop21]: images/label-COP21.png

@@ -81,6 +81,14 @@ Vous pouvez obtenir de l'aide et l'integralité des commandes disponibles avec:
 
 La documentation complète est disponible sur <https://optimouv.readthedocs.io>.
 
+## Partenaires
+
+![Logo FFBB][logo-ffbb]![Logo Ministère des Sports][logo-cnds]
+
+![Logo ADEME][logo-ademe]![Logo WWF][logo-wwf]![Logo IT4PME][logo-it4pme]
+
+![Label COP21][label-cop21]
+
 
 [ffbb]: http://www.ffbb.com/
 [ministere-sports]: http://www.sports.gouv.fr/
@@ -90,3 +98,10 @@ La documentation complète est disponible sur <https://optimouv.readthedocs.io>.
 [Docker Compose]: https://docs.docker.com/compose/
 [HERE]: https://here.com
 [reCAPTCHA]: https://www.google.com/recaptcha/
+
+[logo-ffbb]: docs/images/logo-ffbb.png
+[logo-cnds]: docs/images/logo-cnds.png
+[logo-wwf]: docs/images/logo-wwf.png
+[logo-ademe]: docs/images/logo-ademe.png
+[logo-it4pme]: docs/images/logo-it4pme.png
+[label-cop21]: docs/images/label-COP21.png
