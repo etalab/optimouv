@@ -24,7 +24,7 @@ Le script `dc` à la racine du dépôt permet de simplifier les appels à `docke
 Vous pouvez démarrer l'application avec:
 
 ```shell
-./dc up
+./dev up
 ```
 
 Le première execution de cette commande effectue un certains nombre d'actions:
@@ -38,14 +38,19 @@ principalement dépendant de la vitesse votre connection à internet.
 
 Une fois toutes ces opérations terminées, vous pouvez vous connecter sur:
 
-- http://localhost:8888 pour accéder à l'application
-- http://localhost:8889 pour accéder à phpmyadmin
+- http://localhost:8000 pour accéder à l'application
+- http://localhost:8001 pour accéder à phpmyadmin
+- http://localhost:8002 pour accéder à la documentation
 
 Vous pouvez obtenir de l'aide et l'integralité des commandes disponibles avec:
 
 ```shell
-./dc --help
+./dev --help
 ```
+
+## Documentation
+
+La documentation complète est disponible sur <https://optimouv.readthedocs.io>.
 
 
 [ffbb]: http://www.ffbb.com/

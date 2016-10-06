@@ -1,0 +1,8 @@
+# Exemple de surcharge des paramètres
+# Expose NGinx sur le port 80
+version: '2'
+
+services:
+  web:
+    ports:
+      - 80:80

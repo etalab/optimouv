@@ -2,34 +2,26 @@ version: '2'
 
 services:
   webserver:
-    container_name: webserver
-    build: ./nginx
+    image: nginx
     ports:
-      - "80:80"
+      - 8000:80
     volumes:
-      - $BASEDIR:/optimouv/
+      - ${BASEDIR}:/optimouv
+      - ./nginx/optimouv.conf:/etc/nginx/conf.d/default.conf:ro
     links:
       - phpfastcgi
       - rabbitmq
       - phpmyadmin
 
   mysql:
-    container_name: mysql
-    build: ./mysql
-    volumes_from:
-      - mysql_data
+    image: mariadb
     environment:
       MYSQL_ROOT_PASSWORD: myPass
-
-  mysql_data:
-    container_name: mysql_data
-    build: ./mysql
-    entrypoint: /bin/bash
     volumes:
-      - /var/lib/mysql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./mysql/optimouv.cnf:/etc/mysql/conf.d/optimouv.cnf:ro
 
   rabbitmq:
-    container_name: rabbitmq
     image: rabbitmq:3-management
     hostname: rabbitmq
     environment:
@@ -37,29 +29,26 @@ services:
       RABBITMQ_DEFAULT_PASS: mq
 
   phpfastcgi:
-    container_name: phpfastcgi
     build: ./php
     volumes:
-      - $BASEDIR:/optimouv/
+      - ${BASEDIR}:/optimouv
     links:
       - mysql
       - rabbitmq
 
   phpmyadmin:
-    container_name: phpmyadmin
     image: phpmyadmin/phpmyadmin
     links:
       - mysql
     ports:
-      - 80
+      - 8001:80
     environment:
       PMA_HOST: mysql
 
   worker_mailer:
-    container_name: mailer
     build: ./php
     volumes:
-      - $BASEDIR:/optimouv/
+      - ${BASEDIR}:/optimouv
     links:
       - mysql
       - rabbitmq
@@ -71,7 +60,7 @@ services:
   worker_bestplace:
     build: ./php
     volumes:
-      - $BASEDIR:/optimouv/
+      - ${BASEDIR}:/optimouv
     links:
       - mysql
       - rabbitmq
@@ -83,7 +72,7 @@ services:
   worker_optimisations:
     build: ./python
     volumes:
-      - $BASEDIR:/optimouv/
+      - ${BASEDIR}:/optimouv
     links:
       - mysql
       - rabbitmq
@@ -91,3 +80,9 @@ services:
     working_dir: /optimouv/workers/
     command: ["/optimouv/workers/optimization.sh"]
 
+  doc:
+    build: ./mkdocs
+    volumes:
+      - ${BASEDIR}:/src
+    ports:
+      - 8002:8000

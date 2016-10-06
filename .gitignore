@@ -32,3 +32,6 @@
 /nbproject/*
 */*.kate-swp
 *.kate-swp
+
+# Docker
+/docker/docker-compose.override.yml

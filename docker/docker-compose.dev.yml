@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  doc:
+    build: ./mkdocs
+    volumes:
+      - ${BASEDIR}:/src
+    ports:
+      - 8002:8000
