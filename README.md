@@ -1,6 +1,6 @@
 # Optimouv
 
-Le logiciel Optimouv propose des solutions d’organisations des compétitions par des choix du lieu de rencontres
+Le logiciel Optimouv propose des solutions d’organisation des compétitions par des choix du lieu de rencontres
 optimisés au regard des déplacements tout en tenant compte des contraintes sportives.
 
 L’objectif recherché de cet outil est la réduction du nombre de kilomètres parcourus par les clubs et les pratiquants
@@ -16,7 +16,7 @@ Découvrez la vidéo de présentation sur http://www.ffbb.com/video-optimouv-que
 
 - Un OS de type Unix avec bash comme shell
 - [Docker][] et [Docker Compose][]
-- Un compte et une applcation [HERE][]
+- Un compte et une application [HERE][]
 - Un compte et une application [reCAPTCHA][]
 
 ## Principe
@@ -67,7 +67,7 @@ principalement dépendant de la vitesse votre connection à internet.
 Une fois toutes ces opérations terminées, vous pouvez vous connecter sur:
 
 - <http://localhost:8000> pour accéder à l'application
-- <http://localhost:8001> pour accéder à phpmyadmin
+- <http://localhost:8001> pour accéder à phpMyAdmin
 - <http://localhost:8002> pour accéder à l'interface web de RabbitMQ
 - <http://localhost:8003> pour accéder à la documentation
 
