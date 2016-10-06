@@ -77,6 +77,17 @@ Vous pouvez obtenir de l'aide et l'integralité des commandes disponibles avec:
 ./dev --help
 ```
 
+### Permissions incorrectes
+
+Si vous n'arrivez pas à vous connecter à l'application et que vous observez
+des erreurs de permission dans les logs de `docker-compose`
+ou dans `var/logs/php_error.log`, changez les droits des répertoires nécéssaires:
+
+```shell
+chmod -R a+w app/cache app/logs app/spool var
+```
+
+
 ## Documentation
 
 La documentation complète est disponible sur <https://optimouv.readthedocs.io>.
