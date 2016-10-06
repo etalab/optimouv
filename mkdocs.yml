@@ -1,0 +1,9 @@
+site_name: Optimouv
+repo_url: https://github.com/etalab/optimouv
+theme: readthedocs
+pages:
+    - Accueil: index.md
+    - Présentation: presentation.md
+    - Installation: installation.md
+    - Exploitation: exploitation.md
+    - Notes de mise à jour: maj.md
