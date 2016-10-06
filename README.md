@@ -66,10 +66,10 @@ principalement dépendant de la vitesse votre connection à internet.
 
 Une fois toutes ces opérations terminées, vous pouvez vous connecter sur:
 
-- http://localhost:8000 pour accéder à l'application
-- http://localhost:8001 pour accéder à phpmyadmin
-- http://localhost:8002 pour accéder à l'interface web de RabbitMQ
-- http://localhost:8003 pour accéder à la documentation
+- <http://localhost:8000> pour accéder à l'application
+- <http://localhost:8001> pour accéder à phpmyadmin
+- <http://localhost:8002> pour accéder à l'interface web de RabbitMQ
+- <http://localhost:8003> pour accéder à la documentation
 
 Vous pouvez obtenir de l'aide et l'integralité des commandes disponibles avec:
 
