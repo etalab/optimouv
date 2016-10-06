@@ -2,58 +2,54 @@
 # Set parameters here that may be different on each deployment target of the app, e.g. development, staging, production.
 # http://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
 parameters:
-    # conf mysql/mariadb
-    database_host:     127.0.0.1
-    database_port:     ~
-    database_name:     symfony
-    database_user:     root
-    database_password: ~
+    database_host: mysql
+    database_port: null
+    database_name: optimouv
+    database_user: root
+    database_password: myPass
 
-    # conf swiftmailer
     mailer_transport: smtp
-    mailer_host: smtp.it4pme.fr
-    mailer_port: 587
-    mailer_user: serviceclients@it4pme.fr
-    mailer_password: MailMw92
-    mailer_sender: support@optimouv.net
-    sender_name: service clients it4pme
-    secret:            ThisTokenIsNotSoSecretChangeIt
+    mailer_host: HOSTNAME_SERVEUR_SORTANT
+    mailer_port: PORT_SERVEUR_SORTANT
+    mailer_user: USERNAME
+    mailer_password: PASSWORD
+    mailer_sender: ADRESSE_EMAIL
+    sender_name: 'Service Optimouv'
 
-    # conf rabbitmq
+    map_app_id: METTRE_VOTRE_ID_POUR_LA_CARTE
+    map_app_code: METTRE_VOTRE_CODE_POUR_LA_CARTE
+    route_app_id: METTRE_VOTRE_ID_POUR_LE_CALCUL_DE_ROUTE
+    route_app_code: METTRE_VOTRE_CODE_POUR_LE_CALCUL_DE_ROUTE
+    geocode_app_id: METTRE_VOTRE_ID_POUR_LES_REQUETES_GEOCODE
+    geocode_app_code: METTRE_VOTRE_CODE_POUR_LES_REQUETES_GEOCODE
+
+    here_request_limit: 200000
+
+    base_url: METTRE_ICI_LE_HOSTNAME
+    locale: fr
+    secret: ThisTokenIsNotSoSecretChangeIt
+    error_log_path: /optimouv/var/logs/symfony.log
+    path_wkhtmltopdf: /optimouv/vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64
+
     mq_rencontre_exchange: rencontre_exchange
     mq_poule_exchange: poule_exchange
     mq_rencontre_queue: rencontre_queue
     mq_poule_queue: poule_queue
-    host_RMQ: localhost
+    host_RMQ: rabbitmq
     port_RMQ: 5672
-    user_RMQ: guest
-    password_RMQ: guest
+    user_RMQ: rabbit
+    password_RMQ: mq
     vhost_RMQ: /
     lazy_RMQ: false
 
-    # conf HERE
-    map_app_id: tObeTMHIXTfmuTUvyDBa
-    map_app_code: 6ST2s3g8BkS7B0Uft0kPeg
-    route_app_id: tObeTMHIXTfmuTUvyDBa
-    route_app_code: 6ST2s3g8BkS7B0Uft0kPeg
-    geocode_app_id: tObeTMHIXTfmuTUvyDBa
-    geocode_app_code: 6ST2s3g8BkS7B0Uft0kPeg
+    cle_site_captcha: METTRE_ICI_LA_CLE_DU_SITE
+    cle_secrete_captcha: METTRE_ICI_LA_CLE_SECRETE
 
-    here_request_limit: 200000 # limite pour les requestes de géocodage de HERE
-    here_request_limit_debut: 2016-01-01
-    here_request_limit_fin: 2016-07-31
-
-    # conf application web
-    locale: fr
-    base_url: optimouv
-    path_wkhtmltopdf: "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
-    cle_site_captcha: 6Lf1NxwTAAAAAB2S7NRcj1JfKu_rbJkHewmMeM2G
-    cle_secrete_captcha: 6Lf1NxwTAAAAAP6UYH4-vzxAFxxHYJfq0ddkkK3U
-    max_number_active_users: 50 # nombre maximum des utilisateurs actifs en meme temps
-    time_limit_active_users: 2 # durée limite (en minutes) qui définit si les utilisateurs sont considérés comme actif ou pas
     cookie_liftetime: 3600
-    guide_utilisateur: https://avenirgreen.my.salesforce.com/sfc/p/U0000000JavK/a/U0000000bmvr/zfk9Vh9d.vMRFcaWOBLNcv8MwFpCDLXNuSJOY3Uz6Qk
+    max_number_active_users: 50
+    time_limit_active_users: 5
 
-    # autres
-    error_log_path: error_log_optimouv.txt     # chemin errorlog
 
+    guide_utilisateur: 'https://amycompany.com/optimouv/manual'
+    here_request_limit_debut: 2016/01/01
+    here_request_limit_fin: 2016/07/31

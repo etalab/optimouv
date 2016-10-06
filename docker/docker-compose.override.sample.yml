@@ -1,8 +1,18 @@
 # Exemple de surcharge des paramètres
-# Expose NGinx sur le port 80
 version: '2'
 
 services:
-  web:
+  # Expose NGinx sur le port 80
+  webserver:
     ports:
       - 80:80
+
+  # Défini un mot de passe pour MySQL
+  mysql:
+    environment:
+      MYSQL_ROOT_PASSWORD: newPass
+
+  # Défini un mot de passe pour RabbitMQ
+  rabbitmq:
+    environment:
+      RABBITMQ_DEFAULT_PASS: rabbitpassword

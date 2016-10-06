@@ -40,8 +40,6 @@ services:
     image: phpmyadmin/phpmyadmin
     links:
       - mysql
-    ports:
-      - 8001:80
     environment:
       PMA_HOST: mysql
 
@@ -79,10 +77,3 @@ services:
     restart: always
     working_dir: /optimouv/workers/
     command: ["/optimouv/workers/optimization.sh"]
-
-  doc:
-    build: ./mkdocs
-    volumes:
-      - ${BASEDIR}:/src
-    ports:
-      - 8002:8000

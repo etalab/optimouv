@@ -1,0 +1,29 @@
+#!/bin/bash
+
+BASEDIR=`dirname "$(realpath -s $0)"`
+export BASEDIR
+FILES="-f ${BASEDIR}/docker/docker-compose.yml -f ${BASEDIR}/docker/docker-compose.dev.yml"
+if [ -f $BASEDIR/docker/docker-compose.override.yml ]
+then
+    FILES="${FILES} -f ${BASEDIR}/docker/docker-compose.override.yml"
+fi
+COMPOSE="docker-compose -p optimouv ${FILES}"
+
+echo '>>> Build docker images'
+$COMPOSE build
+
+echo '>>> Install php dependencies'
+$COMPOSE run --rm phpfastcgi bash <<-EOF
+    cd /optimouv
+    composer install --prefer-dist --no-interaction
+    # Wait for MySQL
+    echo -n 'Waiting for MySQL'
+    while ! curl -s http://mysql:3306 > /dev/null
+    do
+      echo -n '.'
+      sleep 1
+    done
+    echo ''  # For new line
+    php app/console cache:clear --env=dev --no-debug
+    php app/console cache:clear --env=prod --no-debug
+EOF

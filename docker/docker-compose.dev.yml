@@ -1,9 +1,17 @@
 version: '2'
 
 services:
+  phpmyadmin:
+    ports:
+      - 8001:80
+
+  rabbitmq:
+    ports:
+       - 8002:15672
+
   doc:
     build: ./mkdocs
     volumes:
       - ${BASEDIR}:/src
     ports:
-      - 8002:8000
+      - 8003:8000

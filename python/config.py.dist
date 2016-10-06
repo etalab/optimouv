@@ -1,36 +1,35 @@
 class INPUT:
-    Iter=5 # number of iteration to calculate P matrix for round trip and one way match
-    IterPlateau=5 # number of iteration to calculate shortest distance for match plateau
-    IterConstraint=10000 # maximum number of iteration before error constraint
-    IterLaunch=20 # number of launch iteration for round trip and one way match
-    IterLaunchPlateau=10 # number of launch iteration for plateau match
-    IterShortestDistancePlateau=540000 # max iteration number is 531441 to be exaxt
-    MainUrl= "http://ffbb" # 
-    #MainUrl= "http://dev.ffbb.it4pme.fr/" # 
-	
+    Iter = 5 # number of iteration to calculate P matrix for round trip and one way match
+    IterPlateau = 5 # number of iteration to calculate shortest distance for match plateau
+    IterConstraint = 10000 # maximum number of iteration before error constraint
+    IterLaunch = 20 # number of launch iteration for round trip and one way match
+    IterLaunchPlateau = 10 # number of launch iteration for plateau match
+    IterShortestDistancePlateau = 540000 # max iteration number is 531441 to be exaxt
+    MainUrl = 'http://localhost' # public URL
+
 class DB:
-    Host="127.0.0.1"
-    Db="optimouv"
-    User="root"
-    Password="trk"
-	
+    Host  =  'mysql'
+    Db  =  'optimouv'
+    User  =  'root'
+    Password  =  'myPass'
+
 class HERE:
-    RouteAppId="pfKIAUOCwlUoDaS5HMSF"
-    RouteAppCode="eyRBIwonpnFNMXR0fza4vA"
-	
+    RouteAppId = 'Votre ID Here Maps'
+    RouteAppCode = 'Votre App Code Here Maps'
+
 class EMAIL:
-    Server="smtp.gmail.com"
-    Port="587"
-    Account="vtc.ouss@gmail.com"
-    Password="EJAg$m896!"
-    From="support@optimouv.net"
+    Server = 'smtp.mycompany.com'
+    Port = '587'
+    Account = 'mon.compte@mycompany.com'
+    Password = 'password'
+    From = 'support@mycompany.com'
 
 class MQ:
-    Host="127.0.0.1"
-    User="guest"
-    Password="guest"
-    Queue="poule_queue"
-    Exchange="poule_exchange"
+    Host = 'rabbitmq'
+    User = 'rabbit'
+    Password = 'mq'
+    Queue = 'poule_queue'
+    Exchange = 'poule_exchange'
 
 class LOG:
-    Path='/tmp/ffbb.log'
+    Path = '/optimouv/var/logs/python.log'

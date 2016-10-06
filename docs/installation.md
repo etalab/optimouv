@@ -7,6 +7,8 @@ Démarrer le processus d’installation :
 * Disposer d’une VM Debian 8.
 * Installer [Docker](https://docs.docker.com/linux/step_one/)
 * Installer [Docker Compose](https://docs.docker.com/compose/install/).
+* Un compte et une applcation [HERE][]
+* Un compte et une application [reCAPTCHA][]
 
 ## Préparation
 
@@ -23,7 +25,8 @@ Ainsi on se trouve dans le dossier de l’application.
 
 Le dossier `docker` contient les règles des différents fichiers de configuration de docker.
 Le fichier `dc` est un script shell fourni afin de faciliter l’utilisation de docker-compose.
-Un fichier `docker/docker-compose.override.yml` peut être créé pour surcharger certains paramètres.
+Un fichier `docker/docker-compose.override.yml` peut être créé pour surcharger certains paramètres
+(un fichier d'exemple `docker/docker-compose.override.sample.yml` est fourni).
 
 Lancer la construction des images Docker, prévoir environ 3 minutes de construction :
 
